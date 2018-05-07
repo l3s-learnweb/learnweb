@@ -1,24 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	lang="#{userBean.localeCode}">
-
-<ui:composition template="/templates/main/main_old.xhtml">
+<ui:composition template="/templates/main/main_old.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
-            <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
+            <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
+			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
 	<ui:param name="helpText" value=""/>	
@@ -98,7 +92,7 @@
 		});
 		</script>
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();load_editor(); "/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();load_editor(); "/>
 		</h:form>
 
 		<h:outputStylesheet library="resource-submission" name="submit.css" />
@@ -315,4 +309,3 @@
 		</ui:decorate>
 	</ui:define>
 </ui:composition>
-</html>

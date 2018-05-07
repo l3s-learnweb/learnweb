@@ -500,6 +500,7 @@ iframe { border:none }
 #right_pane_wrapper{
 	width: 95%;
 	margin: auto;
+	padding-bottom: 2rem;
 }
 #right_pane .ui-layout-unit-header{
 	background: #fff !important;

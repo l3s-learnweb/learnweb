@@ -1,80 +1,78 @@
-<html xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:p="http://primefaces.org/ui">
-	
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
 <ui:composition>
-	<div class="group-menu">
-		<h3 class="group_link">
-			<h:outputLink value="myhome/groups.jsf" style="font-weight:normal;">
-				<h:outputText value="#{msg.groupOverview}"/>
-				<h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}" id="new_group_count" 
-					styleClass="bold_red" style="padding-left:3px;"/>
-			</h:outputLink>
-		</h3>
-		<p:tooltip for="new_group_count"  showEffect="fade" hideEffect="fade">
-			<h:outputFormat value="#{msg.new_groups_message}">
-			    <f:param value="#{userBean.newGroupsCount}" />
-			</h:outputFormat>
-		</p:tooltip>
-	</div>
+    <div class="group-menu">
+        <h3 class="group_link">
+            <h:outputLink value="myhome/groups.jsf" style="font-weight:normal;">
+                <h:outputText value="#{msg.groupOverview}"/>
+                <h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}"
+                              id="new_group_count" styleClass="bold_red" style="padding-left:3px;"/>
+            </h:outputLink>
+        </h3>
+        <p:tooltip for="new_group_count" showEffect="fade" hideEffect="fade">
+            <h:outputFormat value="#{msg.new_groups_message}">
+                <f:param value="#{userBean.newGroupsCount}"/>
+            </h:outputFormat>
+        </p:tooltip>
+    </div>
 
-	<ui:fragment rendered="#{!userBean.groupResourcesPage}">
-		<h:panelGroup layout="block" id="group_menu" styleClass="group-menu">
-			<ui:repeat value="#{userBean.groupMenu}" var="group">
-				<div class="panelmenu">
-					<h3 class="group_link">
-						<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
-					</h3>
-				</div>
-			</ui:repeat>
-		</h:panelGroup>
-	</ui:fragment>
+    <ui:fragment rendered="#{!userBean.groupResourcesPage}">
+        <h:panelGroup layout="block" id="group_menu" styleClass="group-menu">
+            <ui:repeat value="#{userBean.groupMenu}" var="group">
+                <div class="panelmenu">
+                    <h3 class="group_link">
+                        <a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+                    </h3>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+    </ui:fragment>
 
-	<ui:fragment rendered="#{userBean.groupResourcesPage}">
-	
-		<h:panelGroup layout="block" id="group_menu_tree" styleClass="group-menu">
-			<ui:repeat value="#{userBean.groupMenu}" var="group">
-				<h:panelGroup rendered="#{groupDetailBean.groupId != group.id}">
-					<div class="panelmenu">
-						<h3 class="group_link">
-							<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
-						</h3>
-					</div>
-				</h:panelGroup>
-				<h:panelGroup rendered="#{groupDetailBean.groupId == group.id}">
-					<div class="panelmenu active folder-tree">
-						<div id="folders_tree_wrap">
-							<h:form id="folders_tree_form">								
-							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">				        						     						        
-							        <p:ajax event="select" update=":breadcrumbs :resourcesView :paginator :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();scroller();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
-							        <p:ajax event="expand" oncomplete="resourceDND();"/>
-        							<p:ajax event="collapse" oncomplete="resourceDND();"/>
+    <ui:fragment rendered="#{userBean.groupResourcesPage}">
+        <h:panelGroup layout="block" id="group_menu_tree" styleClass="group-menu">
+            <ui:repeat value="#{userBean.groupMenu}" var="group">
+                <h:panelGroup rendered="#{groupDetailBean.groupId != group.id}">
+                    <div class="panelmenu">
+                        <h3 class="group_link">
+                            <a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+                        </h3>
+                    </div>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{groupDetailBean.groupId == group.id}">
+                    <div class="panelmenu active folder-tree">
+                        <div id="folders_tree_wrap">
+                            <h:form id="folders_tree_form">
+                                <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">
+                                    <p:ajax event="select" update=":breadcrumbs :resourcesView :paginator :right_pane_wrapper" listener="#{groupDetailBean.onGroupMenuNodeSelect}" oncomplete="updateCarousel();scroller();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
+                                    <p:ajax event="expand" oncomplete="resourceDND();"/>
+                                    <p:ajax event="collapse" oncomplete="resourceDND();"/>
 
-							        <p:treeNode type="root">
-							        	<h:outputText id="root" value="#{node.name}"/>
-							        </p:treeNode>
+                                    <p:treeNode type="root">
+                                        <h:outputText id="root" value="#{node.name}"/>
+                                    </p:treeNode>
 
-							        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-								        <h:outputText value="#{node.name}"/>
-							        </p:treeNode>
-							    </p:tree>
-							</h:form>
-						</div>				
-					</div>
-				</h:panelGroup>
-			</ui:repeat>		
-		</h:panelGroup>
-		
-	</ui:fragment>
-	
-	<!-- 
-	<br/>
-	<h:form rendered="#{userBean.searchHistoryEnabled} and false">
-		<h:outputLink onclick="PF('shared_resultsets_dialog').show();return false;">
-			<h:outputText value="View Shared Resultsets" style="padding-left:15px;" />
-		</h:outputLink>
-	</h:form>	
-	 -->
+                                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </h:form>
+                        </div>
+                    </div>
+                </h:panelGroup>
+            </ui:repeat>
+        </h:panelGroup>
+    </ui:fragment>
+
+    <!--
+    <br/>
+    <h:form rendered="#{userBean.searchHistoryEnabled} and false">
+        <h:outputLink onclick="PF('shared_resultsets_dialog').show();return false;">
+            <h:outputText value="View Shared Resultsets" style="padding-left:15px;" />
+        </h:outputLink>
+    </h:form>
+     -->
 </ui:composition>
 </html>

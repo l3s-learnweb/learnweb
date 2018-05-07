@@ -26,10 +26,9 @@ import org.jsoup.safety.Whitelist;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.rm.ExtendedMetadata;
-import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
-public class Resource extends GroupItem implements HasId, Serializable // AbstractResultItem,
+public class Resource extends AbstractResource implements Serializable // AbstractResultItem,
 {
     private static final long serialVersionUID = -8486919346993051937L;
     private final static Logger log = Logger.getLogger(Resource.class);
@@ -58,6 +57,18 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         // learnweb types
         survey,
         glossary,
+        ;
+
+        @Override
+        public String toString()
+        {
+            switch(this) {
+                case text:
+                    return "Document";
+                default:
+                    return super.toString();
+            }
+        }
     }
 
     public enum ResourceViewRights

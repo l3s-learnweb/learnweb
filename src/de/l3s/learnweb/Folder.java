@@ -1,13 +1,12 @@
 package de.l3s.learnweb;
 
-import de.l3s.util.HasId;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Folder extends GroupItem implements Serializable, HasId
+public class Folder extends AbstractResource implements Serializable
 {
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);

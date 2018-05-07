@@ -647,12 +647,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
         return canAddResources(user);
     }
 
-    public boolean canDeleteResource(User user, GroupItem resource) throws SQLException
+    public boolean canDeleteResource(User user, AbstractResource resource) throws SQLException
     {
         return canEditResource(user, resource); // currently they share the same policy
     }
 
-    public boolean canEditResource(User user, GroupItem resource) throws SQLException
+    public boolean canEditResource(User user, AbstractResource resource) throws SQLException
     {
         if(user == null) // not logged in
             return false;
@@ -709,6 +709,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         if(user.isAdmin() || getCourse().isModerator(user))
             return true;
 
+        //noinspection Duplicates
         switch(policyView)
         {
         case ALL_LEARNWEB_USERS:
@@ -732,6 +733,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         if(user.isAdmin() || getCourse().isModerator(user))
             return true;
 
+        //noinspection Duplicates
         switch(policyAnnotate)
         {
         case ALL_LEARNWEB_USERS:

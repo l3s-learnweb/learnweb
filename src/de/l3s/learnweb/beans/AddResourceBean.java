@@ -51,18 +51,16 @@ import de.l3s.util.StringHelper;
 @ManagedBean
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
-    private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
     private final static Logger log = Logger.getLogger(AddResourceBean.class);
     private final static long serialVersionUID = 1736402639245432708L;
 
+    private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
+
     private Resource resource;
 
-    // the id of the group and folder the new resource will be added to
-    private int resourceTargetGroupId = 0;
-    private int resourceTargetFolderId = 0;
-
-    private Folder targetFolder;
     private Group targetGroup;
+    private Folder targetFolder;
+
     private LANGUAGE[] glossaryLaguage = { LANGUAGE.DE, LANGUAGE.EN, LANGUAGE.FR, LANGUAGE.IT, LANGUAGE.NL };
     private String newUrl;
     @Deprecated
@@ -84,17 +82,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
-    }
-
-    public Resource getClickedResource()
-    {
-        return resource;
-    }
-
-    public void setClickedResource(Resource clickedResource)
-    {
-        log.warn("setClickedResource() was called but is not implemented");
-        // this method might be called due to the strange right_panel implementation
     }
 
     public void createFile()
@@ -299,9 +286,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setThumbnail4(iconResource.getThumbnail4());
 
             // add resource to a group if selected
-            resource.setGroupId(resourceTargetGroupId);
-            resource.setFolderId(resourceTargetFolderId);
-            getUser().setActiveGroup(resourceTargetGroupId);
+            resource.setGroupId(getTargetGroupId());
+            resource.setFolderId(getTargetFolderId());
+            getUser().setActiveGroup(getTargetGroupId());
 
             if(resource.getId() == -1)
             {
@@ -311,7 +298,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             else
                 resource.save();
 
-            log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
@@ -340,17 +327,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
-            // add resource to a group if selected
-            if(resourceTargetGroupId != 0)
-            {
-                resource.setGroupId(resourceTargetGroupId);
-                getUser().setActiveGroup(resourceTargetGroupId);
-            }
 
-            if(resourceTargetFolderId != 0)
-            {
-                resource.setFolderId(resourceTargetFolderId);
-            }
+            // add resource to a group if selected
+            resource.setGroupId(getTargetGroupId());
+            resource.setFolderId(getTargetFolderId());
+            getUser().setActiveGroup(getTargetGroupId());
 
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
@@ -362,7 +343,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
-            log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
@@ -444,9 +425,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected
-            resource.setGroupId(resourceTargetGroupId);
-            resource.setFolderId(resourceTargetFolderId);
-            getUser().setActiveGroup(resourceTargetGroupId);
+            resource.setGroupId(getTargetGroupId());
+            resource.setFolderId(getTargetFolderId());
+            getUser().setActiveGroup(getTargetGroupId());
 
             if(resource.getId() == -1) // a new resource which is not stored in the database yet
                 resource = getUser().addResource(resource);
@@ -459,24 +440,24 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 new CreateThumbnailThread(resource).start();
             }
 
-            log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
 
             //detailed logging of new metadata (author, language, media source, media type
             if(resource.getAuthor() != null)
             {
-                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Author");
+                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Author");
             }
             if(resource.getLanguage() != null)
             {
-                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Language");
+                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Language");
             }
             if(resource.getMsource() != null)
             {
-                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Media source");
+                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Media source");
             }
             if(resource.getMtype() != null)
             {
-                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Media types");
+                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Media types");
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
@@ -501,50 +482,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource.setSource("Internet");
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-    }
-
-    public int getResourceTargetGroupId()
-    {
-        return resourceTargetGroupId;
-    }
-
-    public void setResourceTargetGroupId(int resourceTargetGroupId)
-    {
-        try
-        {
-            Group group = getLearnweb().getGroupManager().getGroupById(resourceTargetGroupId);
-            if(group != null)
-            {
-                this.targetGroup = group;
-                this.resourceTargetGroupId = group.getId();
-            }
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
-    }
-
-    public int getResourceTargetFolderId()
-    {
-        return resourceTargetFolderId;
-    }
-
-    public void setResourceTargetFolderId(int resourceTargetFolderId)
-    {
-        try
-        {
-            Folder folder = getLearnweb().getGroupManager().getFolder(resourceTargetFolderId);
-            if(folder != null)
-            {
-                this.targetFolder = folder;
-                this.resourceTargetFolderId = folder.getId();
-            }
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
     }
 
     public String getNewUrl()
@@ -728,16 +665,61 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public static void main(String[] args) throws SQLException, InterruptedException
+    public void setTargetGroupId(int targetGroupId)
     {
-        /*
-        Resource resource = Learnweb.getInstance().getResourceManager().getResource(190236);
-        log.debug(resource);
+        try
+        {
+            Group group = getLearnweb().getGroupManager().getGroupById(targetGroupId);
+            this.targetGroup = group;
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
 
-        new CreateThumbnailThread(resource).start();
+    public void setTargetFolderId(int targetFolderId)
+    {
+        try
+        {
+            Folder folder = getLearnweb().getGroupManager().getFolder(targetFolderId);
+            this.targetFolder = folder;
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
 
-        Thread.sleep(99999999);
-        */
+    public int getTargetGroupId() {
+        if (targetGroup != null)
+            return targetGroup.getId();
+
+        return targetFolder != null ? targetFolder.getGroupId() : 0;
+    }
+
+    public int getTargetFolderId() {
+        return targetFolder != null ? targetFolder.getId() : 0;
+    }
+
+    public Group getTargetGroup()
+    {
+        return targetGroup;
+    }
+
+    public void setTargetGroup(Group targetGroup)
+    {
+        this.targetGroup = targetGroup;
+    }
+
+    public Folder getTargetFolder()
+    {
+        return targetFolder;
+    }
+
+    public void setTargetFolder(Folder targetFolder)
+    {
+        this.targetFolder = targetFolder;
     }
 
     public FileEditorBean getFileEditorBean()

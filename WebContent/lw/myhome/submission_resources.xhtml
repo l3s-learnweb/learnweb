@@ -1,19 +1,16 @@
 <ui:composition template="/templates/main/main_old.xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	lang="#{userBean.localeCode}">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 	
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submitResourcesBean.submissionId}"/>
 			<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
-			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
+			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
+			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
@@ -28,8 +25,8 @@
 			var resources_to_select = max_resources;
 		</script>
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();selectresourceDND(); load_editor(); "/>
-			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submitResourcesBean.actionUpdateSelectedItems}" update=":add_resource_panel :resourceGrid2" oncomplete="update_header(); selectresourceDND(); updateMaxResources();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();selectresourceDND(); load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submitResourcesBean.actionUpdateSelectedItems}" update=":right_pane_wrapper :resourceGrid2" oncomplete="update_header(); selectresourceDND(); updateMaxResources();"/>
 		</h:form>
 		
 		<h:panelGroup rendered="#{not submitResourcesBean.submitted}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></h:panelGroup>
@@ -93,7 +90,7 @@
 				</h:panelGroup>
 				<div class="clear"></div>
 				<h:form id="submit_resources_form" prependId="false">
-					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submitResourcesBean.actionSubmitItems}" update=":add_resource_panel :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submitResourcesBean.submitted}"/>
+					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submitResourcesBean.actionSubmitItems}" update=":right_pane_wrapper :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submitResourcesBean.submitted}"/>
 				</h:form>
 		</h:panelGroup>
 		</h:panelGroup>
@@ -159,8 +156,8 @@
 				
 				</div>
 				<div id="lightbox_footer" style="background: rgba(0, 0, 0, .80);">
-					<span id="archive_timestamp_overlay_text">
-					<button class="greenbutton" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
+					<span class="archive_timestamp_overlay_text">
+						<button class="greenbutton" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
 					</span>
 				</div>
 			</div>

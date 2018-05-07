@@ -1,12 +1,15 @@
-<ui:composition template="/templates/main/main_old.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition template="/templates/main/main_old.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="loginRequired" value="true"/>
+    <ui:param name="disableGrowl" value="false"/>
     <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
     <ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
-    <ui:param name="disableGrowl" value="false"/>
 
     <ui:define name="head-meta">
         <ui:fragment rendered="#{userBean.user.organisation.id eq 480}">
@@ -22,9 +25,9 @@
         <f:metadata>
             <f:viewParam name="group_id" value="#{groupDetailBean.groupId}"/>
             <f:viewParam name="folder_id" value="#{groupDetailBean.selectedFolderId}"/>
-            <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
-            <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}"/>
-            <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}"/>
+            <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
+            <f:viewAction action="#{groupDetailBean.onLoad}"/>
+            <f:viewAction action="#{rightPaneBean.onLoad}"/>
         </f:metadata>
     </ui:define>
 
@@ -32,19 +35,19 @@
 
         <h:form>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupDetailBean.actionSelectGroupItem}"
-                             update=":add_resource_panel :growl" oncomplete="update_header();resourceDND();"/>
+                             update=":right_pane_wrapper :growl" oncomplete="update_header();resourceDND();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupDetailBean.actionEditGroupItem}"
-                             update=":add_resource_panel :growl" oncomplete="update_header()"/>
+                             update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
             <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}"
-                             update=":add_resource_panel :growl :resourcesView" oncomplete="update_header();"/>
+                             update=":right_pane_wrapper :growl :resourcesView" oncomplete="update_header();"/>
             <p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}"
-                             update=":group_menu_tree :breadcrumbs :resourcesView :paginator :add_resource_panel :growl" oncomplete="update_header();resourceDND();scroller();"/>
+                             update=":group_menu_tree :breadcrumbs :resourcesView :paginator :right_pane_wrapper :growl" oncomplete="update_header();resourceDND();scroller();"/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}"
-                             update=":group_menu_tree :resourcesView :paginator :add_resource_panel :growl" oncomplete="resourceDND();update_header();"/>
+                             update=":group_menu_tree :resourcesView :paginator :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();"/>
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}"
-                             update=":add_resource_panel :growl" oncomplete="update_header()"/>
+                             update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                             update=":add_resource_panel :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
+                             update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
             <p:remoteCommand name="filterByCategoryCommand" actionListener="#{groupDetailBean.onCategoryFilterClick}"
                              update=":resourcesView :paginator" oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"/>
         </h:form>
@@ -85,17 +88,17 @@
                     <p:submenu label="#{msg.create}" icon="fa fa-plus-square">
                         <p:menuitem value="#{msg.office_document}"
                                     onclick="doAction('new-file', 'document'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-word-o" update=":add_resource_panel" oncomplete="update_header()"
+                                    icon="fa fa-file-word-o" update=":right_pane_wrapper" oncomplete="update_header()"
                                     actionListener="#{addResourceBean.clearForm()}">
                         </p:menuitem>
                         <p:menuitem value="#{msg.office_spreadsheet}"
                                     onclick="doAction('new-file','spreadsheet'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-excel-o" update=":add_resource_panel" oncomplete="update_header()"
+                                    icon="fa fa-file-excel-o" update=":right_pane_wrapper" oncomplete="update_header()"
                                     actionListener="#{addResourceBean.clearForm()}">
                         </p:menuitem>
                         <p:menuitem value="#{msg.office_presentation}"
                                     onclick="doAction('new-file', 'presentation'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-powerpoint-o" update=":add_resource_panel"
+                                    icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
                                     oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
                         </p:menuitem>
                     </p:submenu>
@@ -375,15 +378,6 @@
                     </p:tabView>
                 </h:form>
 
-                <p:dialog id="popup_layout"
-                          header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}"
-                          widgetVar="rdetail_dialog" appendTo="@(body)" width="600" height="450" modal="true"
-                          closable="true">
-                    <ui:include src="/templates/resources/blank.xhtml">
-                        <ui:param name="bean" value="#{groupDetailBean}"/>
-                    </ui:include>
-                </p:dialog>
-
                 <h:outputText id="cat_tree" value="#{groupDetailBean.groupCatJson}" style="display:none"/>
                 <h:outputText id="group_name" value="#{groupDetailBean.group.title}" style="display:none"/>
                 <h:outputText id="group_resource" value="#{groupDetailBean.group.resourcesCount}" style="display:none"/>
@@ -499,23 +493,19 @@
             </h:panelGroup>
         </p:dialog>
 
-        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination"
-                  appendTo="@(body)" closable="false" minWidth="540" modal="true">
+        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false" minWidth="540" modal="true">
             <h:panelGrid columns="2">
                 <h:outputText value="#{msg.add_to}:"/>
 
                 <h:form>
-                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true"
-                            dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedTargetNode}"
-                            style="max-height:28rem; overflow:auto;">
+                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
                         <p:ajax event="select" listener="#{groupDetailBean.onTargetNodeSelect}"/>
 
                         <p:treeNode type="group">
                             <h:outputText id="group" value="#{node.title}"/>
                         </p:treeNode>
 
-                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open"
-                                    collapsedIcon="ui-icon-folder-collapsed">
+                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                             <h:outputText value="#{node.name}"/>
                         </p:treeNode>
                     </p:tree>
@@ -523,16 +513,14 @@
             </h:panelGrid>
 
             <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-                <p:button value="#{msg.cancel}" styleClass="graybutton"
-                          onclick="PF('selectDestination').hide(); return false;"/>
-                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
+                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('selectDestination').hide(); return false;"/>
+                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false;"/>
             </h:panelGroup>
         </p:dialog>
 
-        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false"
-                  minWidth="540" modal="true">
+        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
             <h:panelGrid columns="1">
-                <p:inputText id="modal_tag_name" value="#{resourceDetailBean.clickedComment.text}"/>
+                <p:inputText id="modal_tag_name"/>
             </h:panelGrid>
 
             <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">

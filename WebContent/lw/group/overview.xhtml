@@ -1,31 +1,29 @@
-<ui:composition template="/templates/main/main_old.xhtml" 
-	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/templates/main/main_old.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+			<f:viewAction action="#{groupDetailBean.onLoad}" />
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:param name="loginRequired" value="true"  />
-	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" escape="false" />
+	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 	<ui:param name="helpText" value="#{msg.groupOverviewHelp}"/>
- 
+
 	<ui:define name="center_layout">
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{groupDetailBean.group}" />
 			<ui:param name="active" value="overview" />
-			
+
 			<ui:define name="title">
-				<h2>
-					#{groupDetailBean.group.title}
-				</h2> 
+				<h2>#{groupDetailBean.group.title}</h2>
 				 #{msg.created_by} #{groupDetailBean.group.leader.username} (#{groupDetailBean.group.resourcesCount} #{msg.resources})
-				
+
 				<h:form id="center_header_form">
 					<p:commandLink
 						rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}"
@@ -33,13 +31,12 @@
 						styleClass="resource_button greenbutton"
 						update=":growl :group_menu @form :datagrid" partialSubmit="true"
 						process="@this" value="#{msg.join_group}">
-						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
-							value="#{groupDetailBean.group}" />
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 				</h:form>
 			</ui:define>
 		</ui:decorate>
-		
+
 		<script type="text/javascript">
 		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
@@ -48,13 +45,13 @@
 
 		<ui:fragment rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
 			<h3 class="error">
-				#{msg.group_resources_access_denied}				
+				#{msg.group_resources_access_denied}
 				<h:outputText rendered="${groupDetailBean.group.policyView != 'GROUP_LEADER' and groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.group_resources_access_denied_join_first}"/>
 			</h3>
 		</ui:fragment>
-		
-		<ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">		
-			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable" style="width: 100%;">				
+
+		<ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
+			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable" style="width: 100%;">
 				<h:column >
 					<div class="newsfeed_user_image_div">
 				    	<img id="userpic" src="#{datagrid.logEntry.userImage}" alt="profile image" width="30" height="30" class="newsfeed_user_image"/>
@@ -63,71 +60,70 @@
 						<h:outputText value="#{datagrid.text}" escape="false"  />
 						<h:panelGroup rendered="#{datagrid.queryNeeded}">
 							<h:outputText value=" #{msg.with_query} " escape="false" />
-							
+
 							<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
-							<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>						
+							<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
 									<f:param name="query" value="#{datagrid.resource.query}"/>
 							        <f:param name="action" value="web"/>
 							</h:outputLink>
-							
+
 							<h:outputText value=" #{msg.from_source} #{datagrid.resource.source} " escape="false" />
 						</h:panelGroup>
 					</div>
-						
-					<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>	
-						
+
+					<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>
+
 					<br></br>
 					<br></br>
 					<h:panelGroup rendered="#{datagrid.resourceAction}">
 						<div class="newsfeed_left">
-						
+
 							<h:form>
-								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
-				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedGroupItem}" value="#{datagrid.resource}"/>
-				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
-									<ui:fragment rendered="#{not empty datagrid.resource.thumbnail1}"><img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/></ui:fragment>											
+								<p:commandLink styleClass="newsfeed_query_link" update=":right_pane_wrapper" oncomplete="update_header()">
+				        			<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{datagrid.resource}"/>
+									<ui:fragment rendered="#{not empty datagrid.resource.thumbnail1}"><img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/></ui:fragment>
 								</p:commandLink>
 							</h:form>
-				
+
 	                    </div>
-							
+
 						<div class="newsfeed_right">
 							<h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
-								
-								
+
+
 							<br />
-							<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" 
+							<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}"
 								escape="false" styleClass="newsfeed_author"/>
-							
+
 						</div>
 					</h:panelGroup>
-						
+
 					<br class="clear"></br>
 					<h:panelGroup rendered="#{datagrid.resourceAction}">
 						<br></br>
 						<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
-						
-						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" 
+
+						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}"
 							escape="false" styleClass="newsfeed_tags"/>
-						
+
 					</h:panelGroup>
 					<hr width="auto" class="newsfeed_separator"></hr>
-				</h:column>				
+				</h:column>
 			</h:dataTable>
 			<br></br>
 			<h:form>
 				<h:panelGroup id="history" class="newsfeed_history">
-					<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" 
+					<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}"
 						update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"/>
 				</h:panelGroup>
 			</h:form>
 		</ui:fragment>
 		<br></br>
-		
-	
+
+
 		<h:panelGroup id="filters"><!-- dummy element --></h:panelGroup>
 	</ui:define>
-	
+
 	<ui:define name="right_layout">
 		<ui:decorate  template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{groupDetailBean}" />

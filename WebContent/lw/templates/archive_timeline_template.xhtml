@@ -1,112 +1,115 @@
-<ui:composition 
-	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-	
-		<h:outputScript library="archive-timeline" name="highcharts.js" target="head"/>
-		
-		<h:outputScript library="js" name="jquery.tooltipster.min.js"/>
-		<h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
-		
-		<h:outputScript library="archive-timeline" name="responsive-calendar.js" target="head"/>
-		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
-		
-		<h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
-		<h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
-	 
-		<script>
-			Highcharts.setOptions({
-				lang: {
-						months: ${resourceDetailBean.monthNames},
-						shortMonths: ${resourceDetailBean.shortMonthNames},
-						resetZoom: '#{msg.resetZoom}',
-						resetZoomTitle: '#{msg.resetZoomTitle}'
-				}
-			});
-			
-			var no_of_versions = '#{msg.no_of_versions}';
-			var timeline_title = '#{msg["Archive.timeline_title"]}';
-			var timeline_series_name = '#{msg["Archive.timeline_series_name"]}';
-			var msgClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
-			var msgTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
-			
-			function loadCharts()
-			{
-				loadTimeline(#{resourceDetailBean.archiveTimelineJsonData});
-				loadCalendar(#{resourceDetailBean.archiveCalendarJsonData});
-			}
-			
-			$.fn.tooltipster('setDefaults', {
-				interactive: true,
-		    	interactiveTolerance: 150,
-		    	theme:'tooltipster-custom-theme'
-			});
-			
-			function loadCalendar(calendar_data){
-				$('.responsive-calendar').responsiveCalendar({
-					allRows: false,
-					translateMonths: ${resourceDetailBean.monthNames},
-					events: calendar_data,
-				    onActiveDayHover: function(events) {
-					    var thisDayEvent, key;
-					    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
-					    thisDayEvent = events[key];
-						if(!$(this).parent().hasClass('tooltipstered'))
-					    {
-							$(this).parent().tooltipster({
-					    	content:$(archiveVersionsList(thisDayEvent))
-					    	});
-					    }
-					    $(this).parent().tooltipster("show");
-					} 
-				});
-			}
-			
-			$(document).ready(function() 
-			{
-				if(document.getElementById("container") != null)
-					loadCharts();
-			});
-		</script>	
-		<br/>
-	<div class='box'>
-		<div id="container"></div>
-		<div id="calendar">
-			<!-- Responsive calendar - START -->
-			<div class="responsive-calendar">
-				<div class="controls">
-					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary" 
-						style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
-							#{msg.previous}
-						</h:panelGroup></a>
-					<h4 id="head-year-month">
-						<span id="year" data-head-year="data-head-year"></span> <span id="month" data-head-month="data-head-month"></span>
-					</h4>
-					<a class="pull-right" data-go="next">
-						<h:panelGroup layout="block" class="btn btn-primary" 
-							style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
-							#{msg.next} 
-						</h:panelGroup>
-					</a>
-				</div>
-				<hr />
-				<h:panelGroup layout="block" class="day-headers">
-					<ui:repeat var="day" value="${resourceDetailBean.shortWeekDays}">
-						<h:panelGroup layout="block" class="day header">
-							#{day}
-						</h:panelGroup>
-					</ui:repeat>
-				</h:panelGroup>
-				<div class="days" data-group="days">
-					<!-- the place where days will be generated -->
-				</div>
-			</div>
-			<!-- Responsive calendar - END -->
-			<h:outputLink style="float:right;color:#489a83" onclick="return returnToTimeline();">
-				#{msg.back_to_timeline_view}
-			</h:outputLink>
-		</div>
-	</div>
-	
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:outputScript library="archive-timeline" name="highcharts.js" target="head"/>
+
+    <h:outputScript library="js" name="jquery.tooltipster.min.js"/>
+    <h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
+
+    <h:outputScript library="archive-timeline" name="responsive-calendar.js" target="head"/>
+    <h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
+
+    <h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
+    <h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
+
+    <script>
+        Highcharts.setOptions({
+            lang: {
+                months: ${rightPaneBean.monthNames},
+                shortMonths: ${rightPaneBean.shortMonthNames},
+                resetZoom: '#{msg.resetZoom}',
+                resetZoomTitle: '#{msg.resetZoomTitle}'
+            }
+        });
+
+        var no_of_versions = '#{msg.no_of_versions}';
+        var timeline_title = '#{msg["Archive.timeline_title"]}';
+        var timeline_series_name = '#{msg["Archive.timeline_series_name"]}';
+        var msgClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
+        var msgTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
+
+        function loadCharts()
+        {
+            loadTimeline(#{rightPaneBean.archiveTimelineJsonData});
+            loadCalendar(#{rightPaneBean.archiveCalendarJsonData});
+        }
+
+        $.fn.tooltipster('setDefaults', {
+            interactive: true,
+            interactiveTolerance: 150,
+            theme: 'tooltipster-custom-theme'
+        });
+
+        function loadCalendar(calendar_data)
+        {
+            $('.responsive-calendar').responsiveCalendar({
+                allRows: false,
+                translateMonths: ${rightPaneBean.monthNames},
+                events: calendar_data,
+                onActiveDayHover: function (events)
+                {
+                    var thisDayEvent, key;
+                    key = $(this).data('year') + '-' + addLeadingZero($(this).data('month')) + '-' + addLeadingZero($(this).data('day'));
+                    thisDayEvent = events[key];
+                    if (!$(this).parent().hasClass('tooltipstered'))
+                    {
+                        $(this).parent().tooltipster({
+                            content: $(archiveVersionsList(thisDayEvent))
+                        });
+                    }
+                    $(this).parent().tooltipster("show");
+                }
+            });
+        }
+
+        $(document).ready(function ()
+        {
+            if (document.getElementById("container") != null)
+                loadCharts();
+        });
+    </script>
+
+    <br/>
+    <div class='box'>
+        <div id="container"></div>
+        <div id="calendar">
+            <!-- Responsive calendar - START -->
+            <div class="responsive-calendar">
+                <div class="controls">
+                    <a class="pull-left" data-go="prev">
+                        <h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
+                            #{msg.previous}
+                        </h:panelGroup>
+                    </a>
+                    <h4 id="head-year-month">
+                        <span id="year" data-head-year="data-head-year"></span>
+                        <span id="month" data-head-month="data-head-month"></span>
+                    </h4>
+                    <a class="pull-right" data-go="next">
+                        <h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
+                            #{msg.next}
+                        </h:panelGroup>
+                    </a>
+                </div>
+                <hr/>
+                <h:panelGroup layout="block" class="day-headers">
+                    <ui:repeat var="day" value="${rightPaneBean.shortWeekDays}">
+                        <h:panelGroup layout="block" class="day header">
+                            #{day}
+                        </h:panelGroup>
+                    </ui:repeat>
+                </h:panelGroup>
+                <div class="days" data-group="days">
+                    <!-- the place where days will be generated -->
+                </div>
+            </div>
+            <!-- Responsive calendar - END -->
+            <h:outputLink style="float:right;color:#489a83" onclick="return returnToTimeline();">
+                #{msg.back_to_timeline_view}
+            </h:outputLink>
+        </div>
+    </div>
+
 </ui:composition>	

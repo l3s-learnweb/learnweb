@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
@@ -34,8 +33,6 @@ import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.Submission;
 import de.l3s.learnweb.SubmissionManager;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
-import de.l3s.office.FileEditorBean;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
 
@@ -58,12 +55,9 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     private Submission newSubmission = new Submission();
     private Submission selectedSubmission = new Submission();
     private boolean submitted = false;
-    private RPAction rightPanelAction = null;
 
-    private Resource clickedResource;
-    private Folder clickedFolder;
     private List<Resource> resources;
-    private List<Resource> selectedResources = new ArrayList<Resource>(4);
+    private List<Resource> selectedResources = new ArrayList<>(4);
 
     private List<Submission> pastSubmissions;
     private List<Submission> currentSubmissions;
@@ -74,23 +68,17 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     private List<User> users; //To fetch list of users for a given course
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
-    @ManagedProperty(value = "#{resourceDetailBean}")
-    private ResourceDetailBean resourceDetailBean;
 
-    @ManagedProperty(value = "#{fileEditorBean}")
-    private FileEditorBean fileEditorBean;
+    @ManagedProperty(value = "#{rightPaneBean}")
+    private RightPaneBean rightPaneBean;
 
-    public SubmitResourcesBean() throws SQLException
+    public SubmitResourcesBean()
     {
         if(getUser() == null) // not logged in
             return;
 
-        clickedResource = new Resource();
-        surveyResourcesList = new ArrayList<SelectItem>();
-        editSurveyResourcesList = new ArrayList<SelectItem>();
-
-        if(getParameterInt("resource_id") != null)
-            setRightPanelAction("viewResource");
+        surveyResourcesList = new ArrayList<>();
+        editSurveyResourcesList = new ArrayList<>();
     }
 
     public List<PeerAssesmentPair> getPeerAssessmentPairs()
@@ -161,8 +149,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     /**
      * To display my resources in the lightbox that pops up in the submission_resources page
-     *
-     * @return
      */
     public List<Resource> getResources()
     {
@@ -185,23 +171,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         return selectedResources;
     }
 
-    public Resource getClickedResource()
-    {
-        return clickedResource;
-    }
-
-    public Folder getClickedFolder()
-    {
-        return clickedFolder;
-    }
-
-    public void setClickedResource(Resource resource)
-    {
-        clickedResource = resource;
-        this.getResourceDetailBean().setClickedResource(clickedResource);
-        this.rightPanelAction = RPAction.viewResource;
-    }
-
     public void actionSelectGroupItem()
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -216,9 +185,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    this.setClickedResource(resource);
-                    if((resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet")) && resource.getStorageType() == 1)
-                        getFileEditorBean().fillInFileInfo(resource);
+                    rightPaneBean.setViewResource(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -268,7 +235,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
             Date submissionDate = new Date(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
-            List<Resource> clonedSelectedResources = new ArrayList<Resource>();
+            List<Resource> clonedSelectedResources = new ArrayList<>();
             for(Resource r : selectedResources)
             {
                 log.debug("resource: " + r.getId() + "; submission: " + submissionId + "; user:" + userId);
@@ -356,10 +323,9 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
                             getLearnweb().getSubmissionManager().deleteSubmissionResource(submissionId, resource.getId(), userId);
                         }
                     }
-                    if(resource.equals(clickedResource))
-                    {
-                        setClickedResource(new Resource());
-                    }
+
+                    if(rightPaneBean.isTheResourceClicked(resource))
+                        rightPaneBean.resetPane();
                 }
             }
 
@@ -399,47 +365,14 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    public ResourceDetailBean getResourceDetailBean()
+    public RightPaneBean getRightPaneBean()
     {
-        return resourceDetailBean;
+        return rightPaneBean;
     }
 
-    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
-        this.resourceDetailBean = resourceDetailBean;
-    }
-
-    public FileEditorBean getFileEditorBean()
-    {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
-
-    public RPAction getRightPanelAction()
-    {
-        return rightPanelAction;
-    }
-
-    public void setRightPanelAction(RPAction rightPanelAction)
-    {
-        this.rightPanelAction = rightPanelAction;
-    }
-
-    public void setRightPanelAction(String value)
-    {
-        try
-        {
-            this.rightPanelAction = RPAction.valueOf(value);
-        }
-        catch(Exception e)
-        {
-            this.rightPanelAction = null;
-            log.debug(e);
-        }
+        this.rightPaneBean = rightPaneBean;
     }
 
     public int getSubmissionId()

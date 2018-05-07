@@ -1,114 +1,103 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">	
-	
-<ui:composition template="/templates/main/main_old.xhtml"> 
-	
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.activity_stream}"/>	
-	<ui:param name="helpText" value="#{msg.myhomeActivityHelp}" />		
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-			
-	<ui:define name="center_layout">
-		<p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
-			<div style="width: 28rem;">
-				<ui:include src="/templates/user/guide.xhtml"/>
-			</div>	
-		</p:panel>
-		<p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
-			<div style="width: 28rem;">
-				<ui:include src="/aw/guide.xhtml"/>
-			</div>	
-		</p:panel>
-		
-		<div class="center-header" id="group_header">
-			<h2>
-				#{msg.activity_stream}
-			</h2> 	
-			<span class="header_detail">
+<ui:composition template="/templates/main/main_old.xhtml">
+
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg.activity_stream}"/>
+    <ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
+
+    <ui:define name="center_layout">
+        <p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
+            <div style="width: 28rem;">
+                <ui:include src="/templates/user/guide.xhtml"/>
+            </div>
+        </p:panel>
+        <p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
+            <div style="width: 28rem;">
+                <ui:include src="/aw/guide.xhtml"/>
+            </div>
+        </p:panel>
+
+        <div class="center-header" id="group_header">
+            <h2>
+                #{msg.activity_stream}
+            </h2>
+            <span class="header_detail">
 				#{msg.activity_message}
 			</span>
-		</div>
+        </div>
 
-		<script type="text/javascript">
-			/* <!-- */
-			//$("#center_pane").prepend($("#group_header"));
-			/* --> */
-		</script>
-			
-		<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%" styleClass="not-selectable">
-			<h:column>
-				<div class="newsfeed_user_image_div">
-				    <img id="userpic" src="#{datagrid.logEntry.userImage}" width="30" height="30" class="newsfeed_user_image" 
-				    	alt="Profile foto"/>
-				</div>
-				<div class="newsfeed_text">
-					<h:outputText value="#{datagrid.text}" escape="false"  />
-					<h:panelGroup rendered="#{datagrid.queryNeeded}">
-						<h:outputText value=" #{msg.with_query} " escape="false"  />
-						
-						<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
-							<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-					
-							<f:param name="query" value="#{datagrid.resource.query}"/>
-					        <f:param name="action" value="web"/>
-						</h:outputLink>
-						
-						<h:outputText value=" #{msg.from_source} #{datagrid.resource.source} " escape="false"  />
-					</h:panelGroup>
-				</div>
-				
-				<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>	
-				
-				<br/>
-				<br/>
-				<h:panelGroup rendered="#{datagrid.resourceAction}">
-					<div class="newsfeed_left">
-					
-						<h:form>
-							<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
-			        			<f:setPropertyActionListener target="#{activityResourceBean.clickedGroupItem}" value="#{datagrid.resource}"/>
-			        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>									 
-								<ui:fragment rendered="#{not empty datagrid.resource.thumbnail3}"><img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/></ui:fragment>											
-										
-							</p:commandLink>
-						</h:form>							
-	
-                   </div>
-					
-					<div class="newsfeed_right">
-						<h:outputText value="#{datagrid.resource.shortDescription} " escape="false"  styleClass="newsfeed_description"/>
-					
-						<br />
-						<h:outputText value="#{author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" 
-							escape="false" styleClass="newsfeed_author"/>
-					</div>
-				</h:panelGroup>
-				
-				<br class="clear" />
-				<h:panelGroup rendered="#{datagrid.resourceAction}">
-					<br />
-					<h:outputText value="#{msg.tags}: " escape="false" styleClass="newsfeed_tag" 
-						rendered="#{not empty datagrid.resource.tagsAsString}" />
-					
-					<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" 
-						escape="false" styleClass="newsfeed_tags"/>
-					
-				</h:panelGroup>
-				<hr width="auto" class="newsfeed_separator" />
-			</h:column>	
-							
-		</h:dataTable>
-	</ui:define>
-	
-	<ui:define name="right_layout">
-		<ui:decorate  template="/templates/resources/right_pane.xhtml">
-			<ui:param name="bean" value="#{activityResourceBean}" />
-		</ui:decorate >
-	</ui:define>
-		
+        <script type="text/javascript">
+            /* <!-- */
+            //$("#center_pane").prepend($("#group_header"));
+            /* --> */
+        </script>
+
+        <h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%" styleClass="not-selectable">
+            <h:column>
+                <div class="newsfeed_user_image_div">
+                    <img id="userpic" src="#{datagrid.logEntry.userImage}" width="30" height="30" class="newsfeed_user_image"
+                         alt="Profile foto"/>
+                </div>
+                <div class="newsfeed_text">
+                    <h:outputText value="#{datagrid.text}" escape="false"/>
+                    <h:panelGroup rendered="#{datagrid.queryNeeded}">
+                        <h:outputText value=" #{msg.with_query} " escape="false"/>
+
+                        <h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
+                            <h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
+
+                            <f:param name="query" value="#{datagrid.resource.query}"/>
+                            <f:param name="action" value="web"/>
+                        </h:outputLink>
+
+                        <h:outputText value=" #{msg.from_source} #{datagrid.resource.source} " escape="false"/>
+                    </h:panelGroup>
+                </div>
+
+                <h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>
+
+                <br/>
+                <br/>
+                <h:panelGroup rendered="#{datagrid.resourceAction}">
+                    <div class="newsfeed_left">
+                        <h:form>
+                            <p:commandLink styleClass="newsfeed_query_link" update=":right_pane_wrapper" oncomplete="update_header();">
+                                <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{datagrid.resource}"/>
+                                <ui:fragment rendered="#{not empty datagrid.resource.thumbnail3}">
+                                    <img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/>
+                                </ui:fragment>
+                            </p:commandLink>
+                        </h:form>
+                    </div>
+
+                    <div class="newsfeed_right">
+                        <h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
+                        <br/>
+                        <h:outputText value="#{msg.author}: #{datagrid.resource.author}" rendered="#{not empty datagrid.resource.author}" escape="false" styleClass="newsfeed_author"/>
+                    </div>
+                </h:panelGroup>
+
+                <br class="clear"/>
+                <h:panelGroup rendered="#{datagrid.resourceAction}">
+                    <br/>
+                    <h:outputText value="#{msg.tags}: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
+                    <h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" escape="false" styleClass="newsfeed_tags"/>
+                </h:panelGroup>
+                <hr width="auto" class="newsfeed_separator"/>
+            </h:column>
+
+        </h:dataTable>
+    </ui:define>
+
+    <ui:define name="right_layout">
+        <ui:decorate template="/templates/resources/right_pane.xhtml"></ui:decorate>
+    </ui:define>
+
 </ui:composition>
 </html>

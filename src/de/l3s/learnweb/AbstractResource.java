@@ -1,8 +1,10 @@
 package de.l3s.learnweb;
 
+import de.l3s.util.HasId;
+
 import java.sql.SQLException;
 
-public abstract class GroupItem
+public abstract class AbstractResource implements HasId
 {
     abstract public int getId();
 
@@ -26,7 +28,7 @@ public abstract class GroupItem
 
     abstract public void setUser(User user);
 
-    abstract public GroupItem save() throws SQLException;
+    abstract public AbstractResource save() throws SQLException;
 
     abstract public void delete() throws SQLException;
 

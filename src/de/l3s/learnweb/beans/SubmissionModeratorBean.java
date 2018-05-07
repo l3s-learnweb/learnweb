@@ -15,14 +15,10 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Submission;
 import de.l3s.learnweb.SubmissionManager.SubmittedResources;
-import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
-import de.l3s.office.FileEditorBean;
 import de.l3s.util.StringHelper;
 
 /**
- *
  * @author Philipp
- *
  */
 @ManagedBean
 @ViewScoped
@@ -33,26 +29,20 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
 
     private int submissionId = -1;
 
-    // required to show resources in right panel
-    private Resource clickedResource;
-    private RPAction rightPanelAction;
-    @ManagedProperty(value = "#{resourceDetailBean}")
-    private ResourceDetailBean resourceDetailBean;
-    @ManagedProperty(value = "#{fileEditorBean}")
-    private FileEditorBean fileEditorBean;
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
+
+    @ManagedProperty(value = "#{rightPaneBean}")
+    private RightPaneBean rightPaneBean;
 
     public void onLoad()
     {
         try
         {
             submission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-
             if(null == submission)
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "missing parameter");
-                return;
             }
         }
         catch(SQLException e)
@@ -92,9 +82,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    this.setClickedResource(resource);
-                    if((resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet")) && resource.getStorageType() == 1)
-                        getFileEditorBean().fillInFileInfo(resource);
+                    rightPaneBean.setViewResource(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -107,41 +95,14 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
         }
     }
 
-    public Resource getClickedResource()
+    public RightPaneBean getRightPaneBean()
     {
-        return clickedResource;
+        return rightPaneBean;
     }
 
-    public void setClickedResource(Resource resource)
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
-        clickedResource = resource;
-        this.getResourceDetailBean().setClickedResource(clickedResource);
-        this.rightPanelAction = RPAction.viewResource;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
-
-    public RPAction getRightPanelAction()
-    {
-        return rightPanelAction;
-    }
-
-    public ResourceDetailBean getResourceDetailBean()
-    {
-        return resourceDetailBean;
-    }
-
-    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
-    {
-        this.resourceDetailBean = resourceDetailBean;
-    }
-
-    public FileEditorBean getFileEditorBean()
-    {
-        return fileEditorBean;
+        this.rightPaneBean = rightPaneBean;
     }
 
     public SubmittedResources getSelectedUserSubmission()

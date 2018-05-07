@@ -87,6 +87,8 @@ public class UserBean implements Serializable
 
     // organization specific settings
     private boolean optionContentAnnotationFieldEnabled;
+    private boolean optionStarRatingEnabled;
+    private boolean optionThumbRatingEnabled;
 
     public UserBean()
     {
@@ -207,6 +209,8 @@ public class UserBean implements Serializable
             // get options
             Organisation org = user.getOrganisation();
             optionContentAnnotationFieldEnabled = org.getOption(Organisation.Option.Resource_Show_Content_Annotation_Field);
+            optionThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
+            optionStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
 
         }
         else
@@ -707,6 +711,16 @@ public class UserBean implements Serializable
     public boolean isOptionContentAnnotationFieldEnabled()
     {
         return optionContentAnnotationFieldEnabled;
+    }
+
+    public boolean isStarRatingEnabled()
+    {
+        return optionStarRatingEnabled;
+    }
+
+    public boolean isThumbRatingEnabled()
+    {
+        return optionThumbRatingEnabled;
     }
 
     public DOMAIN getDomain()

@@ -1,72 +1,33 @@
 package de.l3s.learnweb.beans;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import de.l3s.learnweb.*;
+import de.l3s.learnweb.solrClient.FileInspector;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.RateEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.RateEvent;
-
-import de.l3s.learnweb.ArchiveUrl;
-import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.File;
-import de.l3s.learnweb.File.TYPE;
-import de.l3s.learnweb.FileManager;
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Organisation;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceMetadataExtractor;
-import de.l3s.learnweb.ResourcePreviewMaker;
-import de.l3s.learnweb.Tag;
-import de.l3s.learnweb.TimelineData;
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.solrClient.FileInspector;
-import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.office.FileEditorBean;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 @ManagedBean
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
-    private final static long serialVersionUID = -4468979717844804599L;
+    private static final long serialVersionUID = 4911923763255682055L;
     private final static Logger log = Logger.getLogger(ResourceDetailBean.class);
 
     private final static String hypothesisProxy = "https://via.hypothes.is/";
 
-    private int resourceId = 0;
-    private Resource clickedResource = new Resource();
     private Tag selectedTag;
     private String tagName;
     private Comment clickedComment;
     private String newComment;
-
-    // organization specific settings
-    private boolean optionStarRatingEnabled;
-    private boolean optionThumbRatingEnabled;
-
-    @ManagedProperty(value = "#{fileEditorBean}")
-    private FileEditorBean fileEditorBean;
 
     //added by Chloe: to allow addition of new extended metadata
     private String selectedTopcat;
@@ -77,163 +38,27 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private String[] selectedPurposes;
     private String newBotcat = "";
 
-    public ResourceDetailBean() throws SQLException
-    {
-        User user = getUser();
-        if(user == null)
-            return;
+    @ManagedProperty(value = "#{rightPaneBean}")
+    private RightPaneBean rightPaneBean;
 
-        Organisation org = user.getOrganisation();
-        optionThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
-        optionStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
-    }
-
+    @SuppressWarnings("unused")
     public void setStarRatingRounded(int value)
     {
         // dummy method, is required by p:rating
     }
 
-    public void preRenderView(ComponentSystemEvent event)
-    {
-        if(isAjaxRequest())
-        {
-            return;
-        }
-
-        if(resourceId > 0)
-        {
-            try
-            {
-                clickedResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-
-                if(clickedResource == null)
-                {
-                    addInvalidParameterMessage("resource_id");
-                    return;
-                }
-
-                if(clickedResource.isOfficeResource())
-                {
-                    getFileEditorBean().fillInFileInfo(clickedResource);
-                }
-                log(Action.opening_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
-            }
-            catch(Exception e)
-            {
-                addFatalMessage(e);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getArchiveTimelineJsonData()
-    {
-        JSONArray highChartsData = new JSONArray();
-        try
-        {
-            List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(clickedResource.getId(), clickedResource.getUrl());
-
-            for(TimelineData timelineData : timelineMonthlyData)
-            {
-                JSONArray innerArray = new JSONArray();
-                innerArray.add(timelineData.getTimestamp().getTime());
-                innerArray.add(timelineData.getNumberOfVersions());
-                highChartsData.add(innerArray);
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while fetching the archive data aggregated by month for a resource", e);
-            addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-        }
-        return highChartsData.toJSONString();
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getArchiveCalendarJsonData()
-    {
-        JSONObject archiveDates = new JSONObject();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
-            List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(clickedResource.getId(), clickedResource.getUrl());
-            for(TimelineData timelineData : timelineDailyData)
-            {
-                JSONObject archiveDay = new JSONObject();
-                archiveDay.put("number", timelineData.getNumberOfVersions());
-                archiveDay.put("badgeClass", "badge-warning");
-                List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(clickedResource.getId(), timelineData.getTimestamp(), clickedResource.getUrl());
-                JSONArray archiveVersions = new JSONArray();
-                for(ArchiveUrl archiveUrl : archiveUrlsData)
-                {
-                    JSONObject archiveVersion = new JSONObject();
-                    archiveVersion.put("url", archiveUrl.getArchiveUrl());
-                    archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, UtilBean.getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
-                    archiveVersions.add(archiveVersion);
-                }
-                archiveDay.put("dayEvents", archiveVersions);
-                archiveDates.put(dateFormat.format(timelineData.getTimestamp()), archiveDay);
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while fetching the archive data aggregated by day for a resource", e);
-            addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-        }
-        return archiveDates.toJSONString();
-    }
-
-    //Function to get short week day names for the calendar
-    public List<String> getShortWeekDays()
-    {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
-        List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
-        Collections.rotate(dayNames.subList(1, 8), -1);
-        return dayNames.subList(1, 8);
-    }
-
-    //Function to localized month names for the calendar
-    @SuppressWarnings("unchecked")
-    public String getMonthNames()
-    {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
-        JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getMonths())
-        {
-            if(!month.equals(""))
-                monthNames.add(month);
-        }
-
-        return monthNames.toJSONString();
-    }
-
-    //Function to get localized short month names for the timeline
-    @SuppressWarnings("unchecked")
-    public String getShortMonthNames()
-    {
-        DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
-        JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getShortMonths())
-        {
-            if(!month.equals(""))
-                monthNames.add(month);
-        }
-
-        return monthNames.toJSONString();
-    }
-
     public void archiveCurrentVersion()
     {
         boolean addToQueue = true;
-        if(clickedResource.getArchiveUrls().size() > 0)
+        if(rightPaneBean.getClickedResource().getArchiveUrls().size() > 0)
         {
-            long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+            long timeDifference = (new Date().getTime() - rightPaneBean.getClickedResource().getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
             addToQueue = timeDifference > 300;
         }
 
         if(addToQueue)
         {
-            String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+            String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(rightPaneBean.getClickedResource());
             if(response.equalsIgnoreCase("archive_success"))
                 addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
             else if(response.equalsIgnoreCase("robots_error"))
@@ -250,7 +75,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            clickedResource.deleteTag(selectedTag);
+            rightPaneBean.getClickedResource().deleteTag(selectedTag);
             addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
         }
         catch(Exception e)
@@ -282,9 +107,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         try
         {
-            clickedResource.addTag(tagName, getUser());
+            rightPaneBean.getClickedResource().addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-            log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
+            log(LogEntry.Action.tagging_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), tagName);
             tagName = ""; // clear tag input field
         }
         catch(Exception e)
@@ -309,10 +134,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
             // first delete old thumbnails
             FileManager fileManager = getLearnweb().getFileManager();
-            Collection<File> files = clickedResource.getFiles().values();
+            Collection<File> files = rightPaneBean.getClickedResource().getFiles().values();
             for(File file : files)
             {
-                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARED || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
+                if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
                 {
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);
@@ -320,15 +145,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
 
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-            rpm.processResource(clickedResource);
+            rpm.processResource(rightPaneBean.getClickedResource());
 
-            clickedResource.save();
+            rightPaneBean.getClickedResource().save();
         }
         catch(Exception e)
         {
             addFatalMessage(e);
         }
-
     }
 
     private void showTagWarningMessage()
@@ -398,7 +222,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return true;
 
         Tag tag = (Tag) tagO;
-        User owner = clickedResource.getTags().getElementOwner(tag);
+        User owner = rightPaneBean.getClickedResource().getTags().getElementOwner(tag);
         if(user.equals(owner))
             return true;
         return false;
@@ -421,9 +245,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            clickedResource.deleteComment(clickedComment);
+            rightPaneBean.getClickedResource().deleteComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(Action.deleting_comment, clickedResource.getGroupId(), clickedComment.getResourceId(), clickedComment.getId() + "");
+            log(LogEntry.Action.deleting_comment, rightPaneBean.getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId() + "");
         }
         catch(Exception e)
         {
@@ -435,8 +259,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            Comment comment = clickedResource.addComment(newComment, getUser());
-            log(Action.commenting_resource, clickedResource.getGroupId(), clickedResource.getId(), comment.getId() + "");
+            Comment comment = rightPaneBean.getClickedResource().addComment(newComment, getUser());
+            log(LogEntry.Action.commenting_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), comment.getId() + "");
             addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
             newComment = "";
         }
@@ -455,10 +279,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
 
             FileManager fileManager = getLearnweb().getFileManager();
-            Collection<File> files = clickedResource.getFiles().values();
+            Collection<File> files = rightPaneBean.getClickedResource().getFiles().values();
             for(File file : files)
             {
-                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARED || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
+                if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
                 {
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);
@@ -466,20 +290,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
 
             //Getting mime type
-            FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), clickedResource.getFileName());
+            FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), rightPaneBean.getClickedResource().getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
             if(type.equals("application"))
                 type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
 
             if(type.equalsIgnoreCase("pdf"))
             {
-                rpm.processPdf(clickedResource, FileInspector.openStream(archiveUrl));
+                rpm.processPdf(rightPaneBean.getClickedResource(), FileInspector.openStream(archiveUrl));
             }
             else
-                rpm.processArchivedVersion(clickedResource, archiveUrl);
+                rpm.processArchivedVersion(rightPaneBean.getClickedResource(), archiveUrl);
 
-            clickedResource.save();
-            log(Action.resource_thumbnail_update, clickedResource.getGroupId(), clickedResource.getId(), "");
+            rightPaneBean.getClickedResource().save();
+            log(LogEntry.Action.resource_thumbnail_update, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         }
         catch(Exception e)
@@ -488,50 +312,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void selectResource()
+    public Resource getClickedResource()
     {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String resourceIdStr = params.get("resourceId");
-
-        try
-        {
-            int resourceId = Integer.parseInt(resourceIdStr);
-            Resource res = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-
-            this.setClickedResource(res);
-        }
-        catch(Exception e)
-        {
-
-        }
+        return rightPaneBean.getClickedResource();
     }
 
     // -------------------  Simple getters and setters ---------------------------
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
-    }
-
-    public Resource getClickedResource()
-    {
-        return clickedResource;
-    }
-
-    public void setClickedResource(Resource clickedResource)
-    {
-        this.clickedResource = clickedResource;
-        if(clickedResource != null && clickedResource.isOfficeResource())
-        {
-            fileEditorBean.fillInFileInfo(clickedResource);
-        }
-    }
-
     public Tag getSelectedTag()
     {
         return selectedTag;
@@ -574,18 +360,18 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public boolean isStarRatedByUser() throws Exception
     {
-        if(getUser() == null || null == clickedResource)
+        if(getUser() == null || null == rightPaneBean.getClickedResource())
             return false;
 
-        return clickedResource.isRatedByUser(getUser().getId());
+        return rightPaneBean.getClickedResource().isRatedByUser(getUser().getId());
     }
 
     public boolean isThumbRatedByUser() throws SQLException
     {
-        if(getUser() == null || null == clickedResource)
+        if(getUser() == null || null == rightPaneBean.getClickedResource())
             return false;
 
-        return clickedResource.isThumbRatedByUser(getUser().getId());
+        return rightPaneBean.getClickedResource().isThumbRatedByUser(getUser().getId());
     }
 
     public void handleRate(RateEvent rateEvent)
@@ -604,7 +390,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            clickedResource.rate((Integer) rateEvent.getRating(), getUser());
+            rightPaneBean.getClickedResource().rate((Integer) rateEvent.getRating(), getUser());
         }
         catch(Exception e)
         {
@@ -613,7 +399,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(Action.rating_resource, clickedResource.getGroupId(), clickedResource.getId());
+        log(LogEntry.Action.rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -634,7 +420,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            clickedResource.thumbRate(getUser(), direction);
+            rightPaneBean.getClickedResource().thumbRate(getUser(), direction);
         }
         catch(Exception e)
         {
@@ -643,7 +429,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(Action.thumb_rating_resource, clickedResource.getGroupId(), clickedResource.getId());
+        log(LogEntry.Action.thumb_rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -658,30 +444,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         handleThumbRating(-1);
     }
 
-    public boolean isStarRatingEnabled()
-    {
-        return optionStarRatingEnabled;
-    }
-
-    public boolean isThumbRatingEnabled()
-    {
-        return optionThumbRatingEnabled;
-    }
-
-    public FileEditorBean getFileEditorBean()
-    {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
-
     //methods to add new extended metadata to a resource
     public void addNewMetadata()
     {
-        //now move to clickedResource addNewLevels()
+        //now move to rightPaneBean.getClickedResource() addNewLevels()
         if(null == getUser())
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
@@ -695,14 +461,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             try
             {
-                clickedResource.addNewLevels(selectedLevels, getUser());
+                rightPaneBean.getClickedResource().addNewLevels(selectedLevels, getUser());
 
                 String sLevels = "";
                 for(int i = 0; i < selectedLevels.length; i++)
                 {
                     sLevels += selectedLevels[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "language levels: " + sLevels);
+                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "language levels: " + sLevels);
                 selectedLevels = null; // clear lang level field
             }
             catch(Exception e)
@@ -713,17 +479,17 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         if(selectedTargets.length > 0)
         {
-            //now move to clickedResource addNewTargets()
+            //now move to rightPaneBean.getClickedResource() addNewTargets()
             try
             {
-                clickedResource.addNewTargets(selectedTargets, getUser());
+                rightPaneBean.getClickedResource().addNewTargets(selectedTargets, getUser());
 
                 String sTargets = "";
                 for(int i = 0; i < selectedTargets.length; i++)
                 {
                     sTargets += selectedTargets[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "audiences: " + sTargets);
+                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "audiences: " + sTargets);
                 selectedTargets = null;
             }
             catch(SQLException e)
@@ -736,17 +502,17 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         if(selectedPurposes.length > 0)
         {
-            //now move to clickedResource addNewPurposes()
+            //now move to rightPaneBean.getClickedResource() addNewPurposes()
             try
             {
-                clickedResource.addNewPurposes(selectedPurposes, getUser());
+                rightPaneBean.getClickedResource().addNewPurposes(selectedPurposes, getUser());
 
                 String sPurposes = "";
                 for(int i = 0; i < selectedPurposes.length; i++)
                 {
                     sPurposes += selectedPurposes[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "purposes: " + sPurposes);
+                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "purposes: " + sPurposes);
                 selectedPurposes = null;
             }
             catch(SQLException e)
@@ -773,10 +539,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
             try
             {
-                clickedResource.addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
+                rightPaneBean.getClickedResource().addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
 
                 String sCat = selectedTopcat + "/" + selectedMidcat + "/" + selectedBotcat;
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "category: " + sCat);
+                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "category: " + sCat);
 
             }
             catch(SQLException e)
@@ -787,7 +553,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
 
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-        return;
     }
 
     //getter and setter for extended metadata variables
@@ -864,12 +629,21 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void onOpenExtendedMetadataDialog()
     {
         //log.debug("onOpenExtendedMetadataDialog");
-        int groupId = clickedResource == null ? 0 : clickedResource.getGroupId();
-        log(Action.extended_metadata_open_dialog, groupId, 0);
+        int groupId = rightPaneBean.getClickedResource() == null ? 0 : rightPaneBean.getClickedResource().getGroupId();
+        log(LogEntry.Action.extended_metadata_open_dialog, groupId, 0);
     }
     public String getHypothesisLink()
     {
-        return hypothesisProxy + clickedResource.getUrl();
+        return hypothesisProxy + rightPaneBean.getClickedResource().getUrl();
     }
 
+    public RightPaneBean getRightPaneBean()
+    {
+        return rightPaneBean;
+    }
+
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    {
+        this.rightPaneBean = rightPaneBean;
+    }
 }

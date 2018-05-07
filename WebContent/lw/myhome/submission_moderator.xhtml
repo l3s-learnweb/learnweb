@@ -1,23 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	lang="#{userBean.localeCode}">
-
-<ui:composition template="/templates/main/main_old.xhtml">
+<ui:composition template="/templates/main/main_old.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="submission_id"
-				value="#{submissionModeratorBean.submissionId}" />
+			<f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}" />
+			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:viewAction action="#{submissionModeratorBean.onLoad}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent"
-				listener="#{resourceDetailBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
 
@@ -26,13 +18,10 @@
 	<ui:param name="helpText" value="" />
 
 	<ui:define name="center_layout">
-		<script type="text/javascript">
-			
-		</script>
 		<h:form>
 			<p:remoteCommand name="selectGroupItemCommand"
 				actionListener="#{submitResourcesBean.actionSelectGroupItem}"
-				update=":add_resource_panel :growl"
+				update=":right_pane_wrapper :growl"
 				oncomplete="update_header();load_editor(); " />
 		</h:form>
 
@@ -133,4 +122,3 @@
 		</ui:decorate>
 	</ui:define>
 </ui:composition>
-</html>

@@ -1,10 +1,10 @@
 <ui:composition template="/templates/main/main_old.xhtml"
 				xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:h="http://java.sun.com/jsf/html"
-				xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:p="http://primefaces.org/ui"
-				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+				xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.myResourcesTitle}" />
@@ -14,22 +14,22 @@
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{myResourcesBean.groupId}" />
 			<f:viewParam name="folder_id" value="#{myResourcesBean.selectedFolderId}" />
-			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" />
-			<f:viewParam name="save_url" value="#{myResourcesBean.urlToSave}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{myResourcesBean.preRenderView}"/>
+            <f:viewParam name="save_url" value="#{myResourcesBean.urlToSave}" />
+			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
+            <f:viewAction action="#{myResourcesBean.onLoad}"/>
+			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:define name="center_layout">
 
 		<h:form>
-			<p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}" update=":folder_layout_options :breadcrumb :context-menu :datagrid :add_resource_panel :growl" oncomplete="resourceDND();update_header();scroller();"/>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();resourceDND(); "/>
-			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}" update=":breadcrumb :datagrid :add_resource_panel :growl " oncomplete="resourceDND();update_header();"/>
-			<p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
-			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
-			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":add_resource_panel :datagrid :growl" oncomplete="update_header();resourceDND();"/>
+			<p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}" update=":folder_layout_options :breadcrumb :context-menu :datagrid :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();scroller();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();resourceDND(); "/>
+			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}" update=":breadcrumb :datagrid :right_pane_wrapper :growl " oncomplete="resourceDND();update_header();"/>
+			<p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
+			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}" update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
+			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane_wrapper :datagrid :growl" oncomplete="update_header();resourceDND();"/>
 		</h:form>
 
 		<div class="center-header" id="group_header">
@@ -39,59 +39,59 @@
 			    <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px">
 					<p:submenu label="#{msg.create}" icon="fa fa-plus-square">
 						<p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o"
-							update=":add_resource_panel" oncomplete="update_header()"
+							update=":right_pane_wrapper" oncomplete="update_header()"
 							actionListener="#{addResourceBean.clearForm()}">
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.storageType}" value="1" />
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.type}" value="document" />
 							<f:setPropertyActionListener
-								target="#{myResourcesBean.rightPanelAction}" value="newFile" />
+									target="#{rightPaneBean.paneAction}" value="newFile" />
 						</p:menuitem>
 						<p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o"
-							update=":add_resource_panel" oncomplete="update_header()"
+							update=":right_pane_wrapper" oncomplete="update_header()"
 							actionListener="#{addResourceBean.clearForm()}">
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.storageType}" value="1" />
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.type}" value="spreadsheet" />
 							<f:setPropertyActionListener
-								target="#{myResourcesBean.rightPanelAction}" value="newFile" />
+									target="#{rightPaneBean.paneAction}" value="newFile" />
 						</p:menuitem>
 						<p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o"
-							update=":add_resource_panel" oncomplete="update_header()"
+							update=":right_pane_wrapper" oncomplete="update_header()"
 							actionListener="#{addResourceBean.clearForm()}">
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.storageType}" value="1" />
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.type}" value="presentation" />
 							<f:setPropertyActionListener
-								target="#{myResourcesBean.rightPanelAction}" value="newFile" />
+									target="#{rightPaneBean.paneAction}" value="newFile" />
 						</p:menuitem>
 					</p:submenu>
 
-					<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+					<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":right_pane_wrapper" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
-						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
+						<f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="newResource"/>
 					</p:menuitem>
-					<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+					<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" update=":right_pane_wrapper" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
-						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
+						<f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="newResource"/>
 					</p:menuitem>
-					<p:menuitem value="Add Glossary" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+					<p:menuitem value="Add Glossary" icon="ui-icon-link" update=":right_pane_wrapper" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
 						<f:setPropertyActionListener target="#{addResourceBean.resource.type}" value="glossary"></f:setPropertyActionListener>
-						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
+						<f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="newResource"/>
 					</p:menuitem>			        
 			    </p:tieredMenu>
 			
 			</h:form>
 			<h:form styleClass="layout_button" id="folder_layout_options" prependId="false">
-				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.folderView}">
-					<f:setPropertyActionListener target="#{myResourcesBean.folderView}" value="false"/>
+				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
+					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="list"/>
 				</p:commandButton>
-				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and !myResourcesBean.folderView}">
-					<f:setPropertyActionListener target="#{myResourcesBean.folderView}" value="true"/>
+				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
+					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="grid"/>
 				</p:commandButton>
 			</h:form>
 
@@ -104,8 +104,8 @@
 
 						<ui:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
 							<li>
-								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :datagrid :add_resource_panel" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
-									<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :datagrid :right_pane_wrapper" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
+									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false"/>
 								</p:commandLink>
 								
@@ -157,7 +157,7 @@
 
 		<p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
 			<h:panelGrid columns="1">
-				<p:inputText id="modal_tag_name" value="#{resourceDetailBean.clickedComment.text}" />
+				<p:inputText id="modal_tag_name"/>
 			</h:panelGrid>
 
 			<h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
@@ -165,12 +165,14 @@
 				<p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
 			</h:panelGroup>
 		</p:dialog>
+
 		<h:panelGroup id="resourcesView" layout="block"
-					  pt:data-canAddResources="true"
+                      pt:data-canAddResources="true"
 					  pt:data-canMoveResources="false">
 			<h:panelGroup layout="block" id="datagrid" styleClass="datagrid">
 				<h:panelGroup id="folderGrid" layout="block" styleClass="folder-grid">
-					<h:panelGroup rendered="#{!myResourcesBean.folderView or !myResourcesBean.rootFolder}">
+
+                    <h:panelGroup rendered="#{myResourcesBean.resourcesView == 'grid' or !myResourcesBean.rootFolder}">
 						<ui:repeat var="folder" value="#{myResourcesBean.folders}">
 							<h:panelGroup layout="block" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}">
 								<h:panelGroup styleClass="folder-item group-resources-item" layout="block"
@@ -225,12 +227,13 @@
 							</h:panelGroup>
 						</ui:repeat>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{myResourcesBean.rootFolder and myResourcesBean.folderView}" styleClass="myresource-listview">
+
+					<h:panelGroup rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}" styleClass="myresource-listview">
 						<ui:repeat var="folder" value="#{myResourcesBean.folders}">
 							<hr/>
 							<h:form>
-								<p:commandLink styleClass="resource_command_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
-									<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+								<p:commandLink styleClass="resource_command_link" update=":breadcrumb :datagrid :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
+									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
 								</p:commandLink>
 							</h:form>
@@ -268,15 +271,16 @@
 							</div>
 							<br/>
 							<h:form>
-								<p:commandLink styleClass="more_resources_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
-										<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
-										<h:outputText value="#{msg.show_all_my_resources_in_this_group}" />
+								<p:commandLink styleClass="more_resources_link" update=":breadcrumb :datagrid :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
+                                    <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
+                                    <h:outputText value="#{msg.show_all_my_resources_in_this_group}" />
 								</p:commandLink>
 							</h:form>
 							<div class="clear"></div>
 						</ui:repeat>
 					</h:panelGroup>
 				</h:panelGroup>
+
 				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
 					<ui:repeat var="res" value="#{myResourcesBean.resources}" >
 
@@ -336,23 +340,20 @@
 				</h:panelGroup>
 			</h:panelGroup>
 		</h:panelGroup>
+
 		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu">
-			<ui:fragment rendered="${myResourcesBean.clickedResource.canAnnotateResource(userBean.user)}">
-				<div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.addTag}</span>
-					</div>
+			<div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
+				<div class="context-menu-item-wrapper">
+					<span class="context-menu-item-icon" />
+					<span class="context-menu-item-content">#{msg.addTag}</span>
 				</div>
-			</ui:fragment>
-			<ui:fragment rendered="${myResourcesBean.clickedResource.canEditResource(userBean.user)}">
-				<div class="context-menu-item action-edit" role="menuitem" data-action="add-tag" data-per="canEditResource">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.edit}</span>
-					</div>
+			</div>
+			<div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
+				<div class="context-menu-item-wrapper">
+					<span class="context-menu-item-icon" />
+					<span class="context-menu-item-content">#{msg.edit}</span>
 				</div>
-			</ui:fragment>
+			</div>
 			<div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
 				<div class="context-menu-item-wrapper">
 					<span class="context-menu-item-icon" />
@@ -360,19 +361,17 @@
 				</div>
 			</div>
 			<div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.open}</span>
-					</div>
-			</div>
-			<ui:fragment rendered="${myResourcesBean.clickedResource.canDeleteResource(userBean.user)}">
-				<div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.delete}</span>
-					</div>
+				<div class="context-menu-item-wrapper">
+					<span class="context-menu-item-icon" />
+					<span class="context-menu-item-content">#{msg.open}</span>
 				</div>
-			</ui:fragment>
+			</div>
+			<div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
+				<div class="context-menu-item-wrapper">
+					<span class="context-menu-item-icon" />
+					<span class="context-menu-item-content">#{msg.delete}</span>
+				</div>
+			</div>
 		</h:panelGroup>
 
 		<script type="text/javascript">

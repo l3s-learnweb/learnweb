@@ -15,11 +15,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
+import de.l3s.learnweb.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -32,25 +32,13 @@ import org.primefaces.model.TreeNode;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.AbstractPaginator;
-import de.l3s.learnweb.Folder;
-import de.l3s.learnweb.GoogleDriveManager;
-import de.l3s.learnweb.Group;
-import de.l3s.learnweb.GroupItem;
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Link;
 import de.l3s.learnweb.Link.LinkType;
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Organisation.Option;
-import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager.Order;
-import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.rm.CategoryTree;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.rm.beans.ExtendedMetadataSearch;
@@ -85,16 +73,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private int editedGroupLeaderId;
 
     private User clickedUser;
-    private GroupItem clickedGroupItem; // Preview of resource/folder
-    private RPAction rightPanelAction = RPAction.none;
 
     private boolean allLogs = false;
     private boolean reloadLogs = false;
     private boolean isNewestResourceHidden = false;
-
-    // New folder form
-    private String newFolderName;
-    private String newFolderDescription;
 
     // New link form
     @NotEmpty
@@ -148,25 +130,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private CategoryTree groupCatTree;
     private String groupCatJson; //JSONified groupCatTree for javascript function
 
-    @ManagedProperty(value = "#{resourceDetailBean}")
-    private ResourceDetailBean resourceDetailBean;
+    @ManagedProperty(value = "#{rightPaneBean}")
+    private RightPaneBean rightPaneBean;
 
     @ManagedProperty(value = "#{addResourceBean}")
     private AddResourceBean addResourceBean;
 
-    private final int pageSize;
+    @ManagedProperty(value = "#{addFolderBean}")
+    private AddFolderBean addFolderBean;
 
-    public enum RPAction
-    {
-        none,
-        newResource,
-        viewResource,
-        editResource,
-        newFolder,
-        editFolder,
-        viewFolder,
-        newFile
-    }
+    private final int pageSize;
 
     public GroupDetailBean() throws SQLException
     {
@@ -179,9 +152,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        if(getParameterInt("resource_id") != null)
-            setRightPanelAction("viewResource");
-
         updateLinksList();
 
         clickedUser = new User(); // TODO initialize with null
@@ -190,10 +160,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         searchFilters.setMode(MODE.group);
 
         //updateResourcesFromSolr(); //not necessary on most pages
-
     }
 
-    public void preRenderView(ComponentSystemEvent e)
+    public void onLoad()
     {
         User user = getUser();
         if(null != user && null != group)
@@ -541,20 +510,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
-    public void editClickedResource()
-    {
-        log(Action.edit_resource, clickedGroupItem.getGroupId(), clickedGroupItem.getId(), null);
-
-        try
-        {
-            clickedGroupItem.save();
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
-    }
-
     public void onSortingChanged(ValueChangeEvent e)
     {
         // TODO implement
@@ -632,8 +587,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void updateTargetForAddResourceBean()
     {
-        this.getAddResourceBean().setResourceTargetGroupId(selectedResourceTargetGroupId);
-        this.getAddResourceBean().setResourceTargetFolderId(selectedResourceTargetFolderId);
+        addResourceBean.setTargetGroupId(selectedResourceTargetGroupId);
+        addResourceBean.setTargetFolderId(selectedResourceTargetFolderId);
     }
 
     public List<Link> getLinks() throws SQLException
@@ -642,28 +597,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             updateLinksList();
 
         return links;
-    }
-
-    public RPAction getRightPanelAction()
-    {
-        return rightPanelAction;
-    }
-
-    public void setRightPanelAction(RPAction rightPanelAction)
-    {
-        this.rightPanelAction = rightPanelAction;
-    }
-
-    public void setRightPanelAction(String value)
-    {
-        try
-        {
-            this.rightPanelAction = RPAction.valueOf(value);
-        }
-        catch(Exception e)
-        {
-            this.rightPanelAction = null;
-        }
     }
 
     public User getClickedUser()
@@ -835,112 +768,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return getLearnweb().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
     }
 
-    /**
-     * Action used to create new folder
-     */
-    public void addFolder() throws SQLException
-    {
-        if(getGroup().canAddResources(getUser()) && newFolderName != null && !newFolderName.isEmpty())
-        {
-            Folder newFolder = new Folder(groupId, newFolderName, newFolderDescription);
-            newFolder.setParentFolderId(getSelectedFolderId());
-            newFolder.setUser(getUser());
-            newFolder.save();
-
-            log(Action.add_folder, newFolder.getGroupId(), newFolder.getId(), newFolder.getTitle());
-
-            addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getTitle());
-        }
-
-        newFolderName = null;
-        newFolderDescription = null;
-    }
-
-    /**
-     * Action used to create edit folder
-     */
-    public void editFolder() throws SQLException
-    {
-        if(clickedGroupItem != null && clickedGroupItem.getId() > 0 && clickedGroupItem.canEditResource(getUser()))
-        {
-            log(Action.edit_folder, groupId, clickedGroupItem.getId(), clickedGroupItem.getTitle());
-
-            try
-            {
-                clickedGroupItem.save();
-                addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedGroupItem.getTitle());
-            }
-            catch(SQLException e)
-            {
-                addFatalMessage(e);
-            }
-        }
-    }
-
-    public GroupItem getClickedGroupItem()
-    {
-        return clickedGroupItem;
-    }
-
-    public void setClickedGroupItem(GroupItem clickedGroupItem)
-    {
-        if(clickedGroupItem == null)
-        {
-            if(this.clickedGroupItem instanceof Resource)
-                this.getResourceDetailBean().setClickedResource(null);
-
-            this.clickedGroupItem = null;
-            this.rightPanelAction = RPAction.none;
-        }
-        else
-        {
-            this.clickedGroupItem = clickedGroupItem;
-            if(clickedGroupItem instanceof Resource)
-            {
-                this.getResourceDetailBean().setClickedResource((Resource) clickedGroupItem);
-                this.rightPanelAction = RPAction.viewResource;
-            }
-            else
-            {
-                this.rightPanelAction = RPAction.viewFolder;
-            }
-        }
-    }
-
-    @Deprecated
-    public Resource getClickedResource()
-    {
-        if(clickedGroupItem instanceof Resource)
-        {
-            return (Resource) getClickedGroupItem();
-        }
-
-        return null;
-    }
-
-    @Deprecated
-    public void setClickedResource(Resource clickedResource)
-    {
-        setClickedGroupItem(clickedResource);
-    }
-
-    @Deprecated
-    public Folder getClickedFolder()
-    {
-        if(clickedGroupItem instanceof Folder)
-        {
-            return (Folder) getClickedGroupItem();
-        }
-
-        return null;
-    }
-
-    @Deprecated
-    public void setClickedFolder(Folder clickedFolder)
-    {
-        setClickedGroupItem(clickedFolder);
-    }
-
     public Folder getSelectedFolder()
     {
         return selectedFolder;
@@ -948,13 +775,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setSelectedFolder(Folder folder)
     {
-        this.selectedFolder = folder;
+        selectedFolder = folder;
         updateResourcesFromSolr();
         buildBreadcrumbsForFolder(folder);
 
-        this.clickedGroupItem = null;
-        this.rightPanelAction = RPAction.none;
-        this.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
+        rightPaneBean.resetPane();
     }
 
     public TreeNode getSelectedNode()
@@ -967,7 +792,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.selectedNode = selectedNode;
     }
 
-    public void onNodeSelect(NodeSelectEvent event)
+    public void onGroupMenuNodeSelect(NodeSelectEvent event)
     {
         if(selectedNode != null)
         {
@@ -978,26 +803,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             log.error("selectedNode is null on onNodeSelect called.", new Exception());
         }
-    }
-
-    public String getNewFolderName()
-    {
-        return newFolderName;
-    }
-
-    public void setNewFolderName(String newFolderName)
-    {
-        this.newFolderName = newFolderName;
-    }
-
-    public String getNewFolderDescription()
-    {
-        return newFolderDescription;
-    }
-
-    public void setNewFolderDescription(String newFolderDescription)
-    {
-        this.newFolderDescription = newFolderDescription;
     }
 
     public void setGroup(Group group)
@@ -1220,14 +1025,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return copyableGroups;
     }
 
-    public ResourceDetailBean getResourceDetailBean()
+    public RightPaneBean getRightPaneBean()
     {
-        return resourceDetailBean;
+        return rightPaneBean;
     }
 
-    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
-        this.resourceDetailBean = resourceDetailBean;
+        this.rightPaneBean = rightPaneBean;
     }
 
     public AddResourceBean getAddResourceBean()
@@ -1238,6 +1043,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setAddResourceBean(AddResourceBean addResourceBean)
     {
         this.addResourceBean = addResourceBean;
+    }
+
+    public AddFolderBean getAddFolderBean()
+    {
+        return addFolderBean;
+    }
+
+    public void setAddFolderBean(AddFolderBean addFolderBean)
+    {
+        this.addFolderBean = addFolderBean;
     }
 
     public void actionOpenFolder()
@@ -1279,7 +1094,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                 if(folder != null)
-                    this.setClickedGroupItem(folder);
+                    rightPaneBean.setViewResource(folder);
                 else
                     throw new NullPointerException("Target folder does not exists");
             }
@@ -1288,7 +1103,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    this.setClickedGroupItem(resource);
+                    rightPaneBean.setViewResource(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -1317,8 +1132,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                 if(folder != null && folder.canEditResource(getUser()))
                 {
-                    this.setClickedGroupItem(folder);
-                    this.setRightPanelAction(RPAction.editFolder);
+                    rightPaneBean.setViewResource(folder);
+                    rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.editFolder);
                 }
                 else
                 {
@@ -1330,8 +1145,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null && resource.canEditResource(getUser()))
                 {
-                    this.setClickedGroupItem(resource);
-                    this.setRightPanelAction(RPAction.editResource);
+                    rightPaneBean.setViewResource(resource);
+                    rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.editResource);
                 }
                 else
                 {
@@ -1353,47 +1168,52 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void actionCreateGroupItem()
     {
         String type = getParameter("type");
-        String docType = getParameter("docType");
+
+        // Set target group and folder in beans
         switch(type)
         {
-        case "folder":
-            this.setRightPanelAction(RPAction.newFolder);
-            break;
-        case "file":
-            this.setRightPanelAction(RPAction.newResource);
-            this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-            break;
-        case "url":
-            this.setRightPanelAction(RPAction.newResource);
-            this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(Resource.WEB_RESOURCE);
-            break;
-        case "glossary":
-            this.setRightPanelAction(RPAction.newResource);
-            this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-            this.getAddResourceBean().getResource().setType(ResourceType.glossary);
-            break;
-        case "survey":
-            this.setRightPanelAction(RPAction.newResource);
-            this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-            this.getAddResourceBean().getResource().setType(ResourceType.survey);
-            break;
-        case "newFile":
-            this.setRightPanelAction(RPAction.newFile);
-            this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setType(docType);
-            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-            break;
-        default:
-            log.warn("Unsupported item type: " + type);
-            break;
+            case "folder":
+                addFolderBean.clearForm();
+                addFolderBean.setTargetGroup(group);
+                addFolderBean.setTargetFolder(selectedFolder);
+                break;
+            default:
+                addResourceBean.clearForm();
+                addResourceBean.setTargetGroup(group);
+                addResourceBean.setTargetFolder(selectedFolder);
+                addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
+                break;
         }
 
-        this.getAddResourceBean().setResourceTargetGroupId(this.groupId);
-        this.getAddResourceBean().setResourceTargetFolderId(this.getSelectedFolderId());
+        // Set target view and defaults
+        switch(type)
+        {
+            case "folder":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+                break;
+            case "file":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                break;
+            case "url":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
+                break;
+            case "glossary":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(ResourceType.glossary);
+                break;
+            case "survey":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(ResourceType.survey);
+                break;
+            case "newFile":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+                addResourceBean.getResource().setType(getParameter("docType"));
+                break;
+            default:
+                log.warn("Unsupported item type: " + type);
+                break;
+        }
     }
 
     public void actionUpdateGroupItems()
@@ -1407,23 +1227,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
             switch(action)
             {
-            case "copy":
-                this.actionCopyGroupItems(items);
-                break;
-            case "move":
-                JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
-                this.moveGroupItems(items, dest);
-                break;
-            case "delete":
-                this.deleteGroupItems(items);
-                break;
-            case "add-tag":
-                String tag = params.get("tag");
-                this.addTagToGroupItems(items, tag);
-                break;
-            default:
-                log.warn("Unsupported action: " + action);
-                break;
+                case "copy":
+                    this.actionCopyGroupItems(items);
+                    break;
+                case "move":
+                    JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
+                    this.moveGroupItems(items, dest);
+                    break;
+                case "delete":
+                    this.deleteGroupItems(items);
+                    break;
+                case "add-tag":
+                    String tag = params.get("tag");
+                    this.addTagToGroupItems(items, tag);
+                    break;
+                default:
+                    log.warn("Unsupported action: " + action);
+                    break;
             }
         }
         catch(JSONException e)
@@ -1635,8 +1455,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                         int folderGroupId = folder.getGroupId();
                         String folderName = folder.getTitle();
-                        if(clickedGroupItem != null && clickedGroupItem.equals(folder))
-                            setClickedGroupItem(null);
+                        if(rightPaneBean.isTheResourceClicked(folder))
+                            rightPaneBean.resetPane();
 
                         if(selectedFolder != null && selectedFolder.equals(folder))
                             selectedFolder = null;
@@ -1666,8 +1486,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                         int resourceGroupId = resource.getGroupId();
                         String resourceTitle = resource.getTitle();
-                        if(clickedGroupItem != null && clickedGroupItem.equals(resource))
-                            setClickedGroupItem(null);
+                        if(rightPaneBean.isTheResourceClicked(resource))
+                            rightPaneBean.resetPane();
 
                         resource.delete();
                         numResources++;
@@ -1693,8 +1513,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 if(numResources > 0)
                 {
                     this.updateResourcesFromSolr();
-                    getResourceDetailBean().setClickedResource(new Resource());
-                    getResourceDetailBean().setResourceId(-1);
+                    rightPaneBean.resetPane();
                 }
             }
 
