@@ -605,7 +605,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -695,7 +695,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     {
         if(StringUtils.isEmpty(format))
         {
-            log.error("Given format is empty: " + format, new Exception());
+            log.error("Resource: " + getId() + "; Given format is empty: " + format, new Exception());
             return;
         }
 

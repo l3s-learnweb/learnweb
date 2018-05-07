@@ -9,22 +9,24 @@ import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 
 /**
- * 
+ *
  * This class is only for developing purpose.
  * Replace ApplicationBean with this class if you want to run a bean outside FacesContext (in console for example)
- * 
+ *
  * @author Philipp
  *
  */
 public class ApplicationDebuggingBean implements Serializable
 {
-
     private static final long serialVersionUID = 6714523666863887982L;
-
+    protected User user;
     //private long startTime;
 
     public ApplicationDebuggingBean()
@@ -46,12 +48,14 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * returns the currently logged in user.
-     * 
+     *
      * @return null if not logged in
      */
     protected User getUser()
     {
-        return null;
+        if(null == user)
+            Logger.getLogger(ApplicationDebuggingBean.class).warn("getUser() returns null of you do not manually set a user");
+        return user;
     }
 
     protected Learnweb getLearnweb()
@@ -63,7 +67,7 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * get a message from the message property files depending on the currently used local
-     * 
+     *
      * @param msgKey
      * @param args
      * @return
@@ -97,7 +101,7 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * adds a global message to the jsf context. this will be display by the p:messages tag
-     * 
+     *
      * @param severity
      * @param msgKey
      * @param args
@@ -108,7 +112,7 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * adds a global message to the jsf context. this will be display for a minute by the p:growl tag
-     * 
+     *
      * @param severity
      * @param msgKey
      * @param args
@@ -119,7 +123,7 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * returns the currently used template directory. By default this is "lw/"
-     * 
+     *
      * @return
      */
     protected String getTemplateDir()
@@ -130,31 +134,30 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * retrieves an object that was previously set by setPreference()
-     * 
+     *
      * @param key
      * @return
      */
-    public Object getPreference(String key)
+    public String getPreference(String key)
     {
         return null;
     }
 
     /**
-     * returns defaultValue if no correspondig value is found for the key
-     * 
+     * returns defaultValue if no corresponding value is found for the key
+     *
      * @param key
      * @param defaultValue
      * @return
      */
-    public Object getPreference(String key, Object defaultValue)
+    public String getPreference(String key, String defaultValue)
     {
-        Object obj = getPreference(key);
-        return obj == null ? defaultValue : obj;
+        return defaultValue;
     }
 
     /**
      * Stores an object in the session
-     * 
+     *
      * @param key
      * @param value
      */
@@ -163,4 +166,13 @@ public class ApplicationDebuggingBean implements Serializable
 
     }
 
+    protected void addFatalMessage(Throwable exception)
+    {
+        addFatalMessage(null, exception);
+    }
+
+    protected void addFatalMessage(String desc, Throwable exception)
+    {
+        Logger.getLogger(ApplicationDebuggingBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+    }
 }

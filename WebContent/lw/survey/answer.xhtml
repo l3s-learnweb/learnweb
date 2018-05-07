@@ -85,7 +85,7 @@
 							</c:if>
 							<c:if test="#{field.type eq 'ONE_RADIO'}">
 								<h:outputText value="#{field.label}" />
-								<p:selectOneRadio id="input_oneradio_#{field.id}"
+								<h:selectOneRadio id="input_oneradio_#{field.id}"
 									value="#{surveyBean.userAnswers.answers[field.id]}" label=""
 									multiple="true" title="#{field.info}"
 									required="#{field.required}" 
@@ -94,20 +94,20 @@
 									styleClass="my-radio-button">
 									<f:selectItems value="#{field.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
-								</p:selectOneRadio>
+								</h:selectOneRadio>
 							</c:if>
 							<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
 								<h:outputText value="#{field.label}" />
-								<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
+								<h:selectManyCheckbox id="input_manycheckbox_#{field.id}"
 									value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
 									label="" multiple="true" title="#{field.info}"
 									required="#{field.required}"
 									filter="#{field.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px"
-									layout="grid" columns="1">
+									layout="pageDirection" columns="1">
 									<f:selectItems value="#{field.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
-								</p:selectManyCheckbox>
+								</h:selectManyCheckbox>
 							</c:if>
 
 						</c:forEach>

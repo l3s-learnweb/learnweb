@@ -100,6 +100,9 @@ public class SurveyBean extends ApplicationBean implements Serializable
      */
     public void onLoadEdit()
     {
+        if(null == resource) // access validation detected in onLoad()
+            return;
+
         if(isSubmitted())
             addMessage(FacesMessage.SEVERITY_ERROR, "survey_already_submitted");
         else if(!isValidSubmissionDate(resource))

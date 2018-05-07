@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -13,6 +14,8 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import org.apache.log4j.Logger;
 
 @ApplicationScoped
 @ManagedBean
@@ -96,8 +99,25 @@ public class UtilBean implements Serializable
 
     public static String getLocaleMessage(String msgKey, Object... args)
     {
+        // guess locale
+        Locale locale;
+        try
+        {
+            locale = UtilBean.getUserBean().getLocale();
+        }
+        catch(Exception e)
+        {
+            Logger.getLogger(UtilBean.class).error("Can't load current locale", e);
+            locale = Locale.ENGLISH;
+        }
+
+        return getLocaleMessage(locale, msgKey, args);
+    }
+
+    public static String getLocaleMessage(Locale locale, String msgKey, Object... args)
+    {
         // get bundle by locale. The bundles are cached in the ResourceBundle class.
-        ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", UtilBean.getUserBean().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", locale);
 
         String msg;
         try
