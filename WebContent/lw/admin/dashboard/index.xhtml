@@ -101,7 +101,7 @@
                                 <p:panel header="Total Concepts">
                                     <f:facet name="actions">
                                         <p:button id="totalConcepts" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                        <p:tooltip for="totalConcepts" value="Total number of concepts ()" />
+                                        <p:tooltip for="totalConcepts" value="Concept - a general notion" />
                                     </f:facet>
                                     <div class="count">
                                         <h:outputText value="#{dashboardBean.totalConcepts}"/>
@@ -112,7 +112,7 @@
                                 <p:panel header="Total Terms">
                                     <f:facet name="actions">
                                         <p:button id="totalTerms" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                        <p:tooltip for="totalTerms" value="Total number of terms ()" />
+                                        <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept" />
                                     </f:facet>
                                     <div class="count">
                                         <h:outputText value="#{dashboardBean.totalTerms}"/>
@@ -137,7 +137,7 @@
                                          style="margin-bottom:20px">
                                     <f:facet name="actions">
                                         <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                        <p:tooltip for="userActivityTypes" value="Number of interactions divided by four categories" />
+                                        <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
                                     </f:facet>
                                     <p:chart type="bar" model="#{dashboardBean.usersActivityTypesChart}"
                                              xaxisAngle="60"
@@ -152,7 +152,7 @@
                                              style="margin-bottom:20px">
                                         <f:facet name="actions">
                                             <p:button id="usersSourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                            <p:tooltip for="usersSourcesChart" value="Percentage ratio of visited pages (sorted by categories) by users" />
+                                            <p:tooltip for="usersSourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
                                         </f:facet>
                                         <p:chart type="pie" model="#{dashboardBean.usersSourcesChart}"/>
                                     </p:panel>
@@ -163,7 +163,7 @@
                                     <p:panel id="glossary" header="Users' Glossary" style="margin-bottom:20px">
                                         <f:facet name="actions">
                                             <p:button id="usersGlossary" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                            <p:tooltip for="usersGlossary" value="The number of concepts and terms by a user" />
+                                            <p:tooltip for="usersGlossary" value="Number of concepts and terms by a user" />
                                         </f:facet>
                                         <p:chart type="bar" model="#{dashboardBean.usersGlossaryChart}"
                                                  style="height:300px"/>
@@ -175,10 +175,10 @@
                             <div class="ui-g-12">
                                 <h:form>
                                     <p:panel id="fields" header="Fields" style="margin-bottom:20px">
-                                        <!--<f:facet name="actions">
+                                        <f:facet name="actions">
                                             <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                            <p:tooltip for="fieldsTable" value="Description" />
-                                        </f:facet>-->
+                                            <p:tooltip for="fieldsTable" value="??" />
+                                        </f:facet>
                                         <h:panelGrid columns="1">
                                             <p:dataTable value="#{dashboardBean.glossaryFieldsSummeryPerUser}" var="gfs"
                                                          styleClass="countries_list">
@@ -282,6 +282,10 @@
                             <div class="ui-g-12">
                                 <h:form>
                                     <p:panel id="description" header="Description field" style="margin-bottom:20px">
+                                        <f:facet name="actions">
+                                            <p:button id="descriptionFieldTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                            <p:tooltip for="descriptionFieldTable" value="Table with the entries’ description and number of words in the description" />
+                                        </f:facet>
 										<p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}" styleClass="countries_list"
 											tableStyle="table-layout:auto">
 											<p:column headerText="#{msg.username}" sortable="true" sortBy="#{ldl.user.username}" filterable="true" filterBy="#{ldl.user.username}" filterMatchMode="contains">

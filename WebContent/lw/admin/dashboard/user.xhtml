@@ -42,6 +42,10 @@
                     <div class="ui-g">
                         <div class="ui-g-2">
                             <p:panel header="Total Concepts">
+                                <f:facet name="actions">
+                                    <p:button id="totalConcepts" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                    <p:tooltip for="totalConcepts" value="Concept - a general notion" />
+                                </f:facet>
                                 <div class="count">
                                     <h:outputText value="#{dashboardUserBean.totalConcepts}"/>
                                 </div>
@@ -49,6 +53,10 @@
                         </div>
                         <div class="ui-g-2">
                             <p:panel header="Total Terms">
+                                <f:facet name="actions">
+                                    <p:button id="totalTerms" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                    <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept" />
+                                </f:facet>
                                 <div class="count">
                                     <h:outputText value="#{dashboardUserBean.totalTerms}"/>
                                 </div>
@@ -56,6 +64,10 @@
                         </div>
                         <div class="ui-g-2">
                             <p:panel header="Total Sources">
+                                <f:facet name="actions">
+                                    <p:button id="totalSources" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                    <p:tooltip for="totalSources" value="??" />
+                                </f:facet>
                                 <div class="count">
                                     <h:outputText value="#{dashboardUserBean.totalSources}"/>
                                 </div>
@@ -100,28 +112,41 @@
                         </div>
                     </div>
 
+                    <div class="ui-g">
+                        <div class="ui-g-9">
+                            <p:panel id="chart_plot_Interactions" header="Interactions" style="margin-bottom:20px">
+                                <f:facet name="actions">
+                                    <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                    <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
+                                </f:facet>
+                                <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;"/>
+                            </p:panel>
+                        </div>
+                        <div class="ui-g-3">
+                            <p:panel id="chart_bar_userActivity" header="Users' Activity types"
+                                     style="margin-bottom:20px">
+                                <f:facet name="actions">
+                                    <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                    <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
+                                </f:facet>
+                                <p:chart type="bar" model="#{dashboardUserBean.usersActivityTypesChart}" xaxisAngle="60"
+                                         style="height:300px"/>
+                            </p:panel>
+                        </div>
+                    </div>
+
                     <div class="page_header" style="margin:5px;">
                         <span>Glossary</span>
                     </div>
                     <p:panel style="min-width:628px; margin:5px;">
                         <div class="ui-g">
-                            <div class="ui-g-9">
-                                <p:panel id="chart_plot_Interactions" header="Interactions" style="margin-bottom:20px">
-                                    <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;"/>
-                                </p:panel>
-                            </div>
-                            <div class="ui-g-3">
-                                <p:panel id="chart_bar_userActivity" header="Users' Activity types"
-                                         style="margin-bottom:20px">
-                                    <p:chart type="bar" model="#{dashboardUserBean.usersActivityTypesChart}" xaxisAngle="60"
-                                             style="height:300px"/>
-                                </p:panel>
-                            </div>
-                        </div>
-                        <div class="ui-g">
                             <div class="ui-g-4">
                                 <h:form>
                                     <p:panel id="chart_plot_userFields" header="Fields" style="margin-bottom:20px">
+                                        <f:facet name="actions">
+                                            <p:button id="fieldsChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                            <p:tooltip for="fieldsChart" value="??" />
+                                        </f:facet>
                                         <p:chart type="bar" model="#{dashboardUserBean.userFieldsChart}" xaxisAngle="60"
                                                  style="height:300px"/>
                                     </p:panel>
@@ -131,26 +156,12 @@
                                 <p:panel id="table_descriptions"
                                          header="Descriptions of entries from class-mates" stickyHeader="true"
                                          style="height:361px; overflow-y: scroll;">
-                                    <!--<p:dataTable value="">
-                                        <p:column headerText="insulin">
-                                            <h:outputText>Insulin (from the Latin, insula meaning island) is a peptide hormone produced by beta cells of the pancreatic islets. It regulates the metabolism of carbohydrates, fats and protein by promoting the absorption of, especially, glucose from the blood into fat, liver and skeletal muscle cells.<br/></h:outputText>
-                                            <h:outputText>a hormone that controls how glucose is absorbed and used by the body.<br/></h:outputText>
-                                            <h:outputText>ormone prodotto dal pancreas</h:outputText>
-                                        </p:column>
-                                    </p:dataTable>
-                                    <p:dataTable value="">
-                                        <p:column headerText="Carbohydrates">
-                                            <h:outputText>Carbohydrates are found in a wide array of both healthy and unhealthy foods. Carbohydrates provide the body with glucose, which is converted to energy used to support bodily functions and physical activity.<br/></h:outputText>
-                                            <h:outputText>Carbohydrates are biomolecules containing carbon, hydrogen and oxygen; they can be simple or complex, depending on their chemical structure. Along with proteins and fats, carbohydrates are macronutrients and provide energy to the human body: they are converted by our digestive system into glucose, which is employed as energy for cells, tissues and organs; moreover, extra sugar is stored in our liver and muscles for when it is needed. The body cannot produce carbohydrates on its own, so they must be obtained through diet.<br/></h:outputText>
-                                            <h:outputText>any of a class of substances made of carbon, hydrogen, and oxygen, including starches and sugars.</h:outputText>
-                                        </p:column>
-                                    </p:dataTable>-->
                                     <p:dataTable value="#{dashboardUserBean.usersGlossaryDescriptions}" var="descr"
                                                  styleClass="countries_list">
                                         <p:column headerText="Description">
                                             <h:outputText value="#{descr}"/>
                                         </p:column>
-                                        <p:column headerText="Lenght">
+                                        <p:column headerText="Length">
                                             <h:outputText value="#{descr.length()}"/>
                                         </p:column>
                                     </p:dataTable>
@@ -165,17 +176,21 @@
                         <div class="ui-g">
                             <div class="ui-g-4">
                                 <p:panel id="pie_chart_sources" header="Sources" style="margin-bottom:20px">
+                                    <f:facet name="actions">
+                                        <p:button id="sourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="sourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
+                                    </f:facet>
                                     <p:chart type="pie" model="#{dashboardUserBean.usersSourcesChart}"/>
                                 </p:panel>
                             </div>
                             <div class="ui-g-6">
-                                <!--<p:panel id="chart_plot_proxySources" header="User Proxy sources" style="margin-bottom:20px">
-                                    <p:chart type="bar" model="#{dashboardUserBean.proxySourcesChart}"/>
-                                </p:panel>-->
-
                                 <p:panel id="table_sources_list" header="User Proxy sources list" widgetVar="panel"
                                          stickyHeader="true"
                                          style="margin-bottom:20px; height:362px; overflow-y: scroll;">
+                                    <f:facet name="actions">
+                                        <p:button id="sourcesListTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="sourcesListTable" value="The ratio between how many times user visited the web page" />
+                                    </f:facet>
                                     <h:form>
                                         <p:dataTable var="pll" value="#{dashboardUserBean.usersProxySourcesList}" styleClass="countries_list">
                                             <p:column headerText="Web Site">
@@ -193,6 +208,10 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12">
                                         <p:panel header="Total events">
+                                            <f:facet name="actions">
+                                                <p:button id="eventsNumber" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                                <p:tooltip for="eventsNumber" value="Events like mouse movements, clicks, etc." />
+                                            </f:facet>
                                             <div class="count">
                                                 <h:outputText value="#{dashboardUserBean.trackerStatistic.totalEvents}"/>
                                             </div>
@@ -202,6 +221,10 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12">
                                         <p:panel header="Time stay">
+                                            <f:facet name="actions">
+                                                <p:button id="timeStay" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                                <p:tooltip for="timeStay" value="Total time when web pages were opened by the user" />
+                                            </f:facet>
                                             <div class="count">
                                                 <h:outputText value="#{dashboardUserBean.trackerStatistic.timeStayFormatted}"/>
                                             </div>
@@ -211,6 +234,10 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12">
                                         <p:panel header="Time active">
+                                            <f:facet name="actions">
+                                                <p:button id="timeActive" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                                <p:tooltip for="timeActive" value="Active time on web pages" />
+                                            </f:facet>
                                             <div class="count">
                                                 <h:outputText value="#{dashboardUserBean.trackerStatistic.timeActiveFormatted}"/>
                                             </div>
@@ -220,6 +247,10 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12">
                                         <p:panel header="Clicks">
+                                            <f:facet name="actions">
+                                                <p:button id="clicks" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                                <p:tooltip for="clicks" value="Mouse clicks" />
+                                            </f:facet>
                                             <div class="count">
                                                 <h:outputText value="#{dashboardUserBean.trackerStatistic.clicks}"/>
                                             </div>
@@ -229,6 +260,10 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12">
                                         <p:panel header="Key presses">
+                                            <f:facet name="actions">
+                                                <p:button id="keyPresses" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                                <p:tooltip for="keyPresses" value="Total number of key presses on the keyboard" />
+                                            </f:facet>
                                             <div class="count">
                                                 <h:outputText value="#{dashboardUserBean.trackerStatistic.keyPresses}"/>
                                             </div>
