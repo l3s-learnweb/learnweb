@@ -129,7 +129,7 @@
                                         <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
                                     </f:facet>
                                     <p:chart type="line" model="#{dashboardBean.interactionsChart}"
-                                             style="height:300px;"/>
+                                             style="height:300px;" responsive="true"/>
                                 </p:panel>
                             </div>
                             <div class="ui-g-3">
@@ -140,8 +140,7 @@
                                         <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
                                     </f:facet>
                                     <p:chart type="bar" model="#{dashboardBean.usersActivityTypesChart}"
-                                             xaxisAngle="60"
-                                             style="height:300px"/>
+                                             xaxisAngle="60" style="height:300px" responsive="true"/>
                                 </p:panel>
                             </div>
                         </div>
@@ -154,7 +153,7 @@
                                             <p:button id="usersSourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                             <p:tooltip for="usersSourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
                                         </f:facet>
-                                        <p:chart type="pie" model="#{dashboardBean.usersSourcesChart}"/>
+                                        <p:chart type="pie" model="#{dashboardBean.usersSourcesChart}" style="height:400px" responsive="true"/>
                                     </p:panel>
                                 </h:form>
                             </div>
@@ -166,7 +165,7 @@
                                             <p:tooltip for="usersGlossary" value="Number of concepts and terms by a user" />
                                         </f:facet>
                                         <p:chart type="bar" model="#{dashboardBean.usersGlossaryChart}"
-                                                 style="height:300px"/>
+                                                 style="height:400px" responsive="true"/>
                                     </p:panel>
                                 </h:form>
                             </div>
@@ -315,7 +314,6 @@
                     </h:panelGroup>
                 </div>
             </div>
-
 
             <footer>
                 <div class="pull-right">

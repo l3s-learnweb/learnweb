@@ -65,8 +65,9 @@ class DashboardChartsFactory
         model.setDataFormat("percent");
         model.setShowDataLabels(true);
         model.setDataLabelThreshold(3);
-        model.setLegendPosition("w");
+        model.setLegendPosition("s");
         model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+        model.setLegendCols(2);
 
         if(glossarySourcesWithCounters.isEmpty())
         {

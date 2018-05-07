@@ -119,7 +119,7 @@
                                     <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                     <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
                                 </f:facet>
-                                <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;"/>
+                                <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;" responsive="true"/>
                             </p:panel>
                         </div>
                         <div class="ui-g-3">
@@ -130,7 +130,7 @@
                                     <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
                                 </f:facet>
                                 <p:chart type="bar" model="#{dashboardUserBean.usersActivityTypesChart}" xaxisAngle="60"
-                                         style="height:300px"/>
+                                         style="height:300px" responsive="true"/>
                             </p:panel>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                                             <p:tooltip for="fieldsChart" value="??" />
                                         </f:facet>
                                         <p:chart type="bar" model="#{dashboardUserBean.userFieldsChart}" xaxisAngle="60"
-                                                 style="height:300px"/>
+                                                 style="height:300px" responsive="true"/>
                                     </p:panel>
                                 </h:form>
                             </div>
@@ -180,7 +180,7 @@
                                         <p:button id="sourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                         <p:tooltip for="sourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
                                     </f:facet>
-                                    <p:chart type="pie" model="#{dashboardUserBean.usersSourcesChart}"/>
+                                    <p:chart type="pie" model="#{dashboardUserBean.usersSourcesChart}" responsive="true"/>
                                 </p:panel>
                             </div>
                             <div class="ui-g-6">
