@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -27,7 +26,6 @@ import de.l3s.glossary.LanguageItem;
 import de.l3s.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Resource;
 
 @ViewScoped
 @ManagedBean
@@ -45,7 +43,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private String selectedTopicOne;
     private String selectedTopicTwo;
     private String selectedTopicThree;
-    public String description; // TODO private
+    private String description;
     private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
@@ -60,25 +58,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
     private GlossaryItems selectedGlossaryItem;
-    private Resource glossaryResource;
 
     private int glossaryEntryCount;
 
-    public void preRenderView() // TODO use only on onload method
+    public void onload()
     {
-        if(isAjaxRequest())
-            return;
-
         if(resourceId > 0 && !getLearnweb().getGlossariesManager().checkIfExists(resourceId))
         {
             getGlossaryItems(resourceId);
             setlanguagePair(resourceId);
             setFilteredItems(getItems());
+            loadGlossary();
             glossaryEntryCount = getGlossaryEntryCount(resourceId);
             try
             {
-                glossaryResource = getLearnweb().getResourceManager().getResource(resourceId);
-                groupId = glossaryResource.getGroupId();
+                groupId = getLearnweb().getResourceManager().getResource(resourceId).getGroupId();
                 log(Action.glossary_open, groupId, resourceId);
             }
             catch(Exception e)
@@ -89,8 +83,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    @PostConstruct
-    public void init() // TODO use only on onload method
+    public void loadGlossary()
     {
         //Add topic One
         availableTopicOnes.add(new SelectItem("Environment"));
@@ -101,14 +94,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         uses.add("technical");
         uses.add("popular");
         uses.add("informal");
-        try
-        {
-            resourceId = getParameterInt("resource_id"); // don't sue that any more
-        }
-        catch(Exception e)
-        {
-            resourceId = 0;
-        }
 
         if(resourceId > 0)
         {
@@ -475,7 +460,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             //Set owner details
             HSSFRow rowN = sheet.createRow(sheet.getLastRowNum() + 2);
-            String owner = "Owner username: " + glossaryResource.getUser().getUsername() + ((glossaryResource.getUser().getFullName() == null) ? "" : ", Fullname: " + glossaryResource.getUser().getFullName());
+            String owner = "Owner username: " + getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername()
+                    + ((getLearnweb().getResourceManager().getResource(resourceId).getUser().getFullName() == null) ? "" : ", Fullname: " + getLearnweb().getResourceManager().getResource(resourceId).getUser().getFullName());
             rowN.createCell(0).setCellValue(owner);
             HSSFCellStyle copyrightStyle = wb.createCellStyle();
             HSSFFont hSSFFont = wb.createFont();
@@ -483,7 +469,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             hSSFFont.setFontHeightInPoints((short) 16);
             hSSFFont.setColor(HSSFColor.RED.index);
             copyrightStyle.setFont(hSSFFont);
+            copyrightStyle.setLocked(true);
             rowN.getCell(0).setCellStyle(copyrightStyle);
+            sheet.protectSheet("learnweb");
         }
         catch(Exception e)
         {
@@ -716,16 +704,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public int getGlossaryEntryCount()
     {
         return glossaryEntryCount;
-    }
-
-    public Resource getGlossaryResource()
-    {
-        return glossaryResource;
-    }
-
-    public void setGlossaryResource(Resource glossaryResource)
-    {
-        this.glossaryResource = glossaryResource;
     }
 
 }

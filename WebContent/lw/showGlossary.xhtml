@@ -13,8 +13,7 @@
 		<f:metadata>
 
 			<f:viewParam name="resource_id" value="#{glossaryBean.resourceId}"></f:viewParam>
-			<f:event type="preRenderView"
-				listener="#{glossaryBean.preRenderView}" />
+			<f:viewAction action="#{glossaryBean.onload()}"/>
 		</f:metadata>
 	</ui:define>
 	<ui:define name="center_layout">
