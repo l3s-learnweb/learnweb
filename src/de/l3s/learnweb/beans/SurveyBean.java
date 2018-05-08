@@ -100,7 +100,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
      */
     public void onLoadEdit()
     {
-        if(null == resource) // access validation detected in onLoad()
+        if(null == resource) // access violation detected in onLoad()
             return;
 
         if(isSubmitted())
