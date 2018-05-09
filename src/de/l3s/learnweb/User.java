@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -287,7 +288,7 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         if (StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email)) {
             this.isEmailConfirmed = false;
-            this.emailConfirmationToken = MD5.hash(Learnweb.salt3 + this.id + email);
+            this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
         }
 
         this.email = email;
@@ -470,7 +471,7 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * Defines the group, the user ist currently working on
      *
-     * @param group
+     * @param groupId
      * @throws SQLException
      */
     public void setActiveGroup(int groupId) throws SQLException
