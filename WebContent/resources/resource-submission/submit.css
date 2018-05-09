@@ -204,3 +204,14 @@
 .active {
 	background-color: #47998291;
 }
+
+.fa-caret-right.open {
+	transform: rotate(90deg);
+	transition: transform 0.2s linear;
+}
+
+.icon_wrapper{
+	float: right;
+	padding-right: 8px;
+	padding-top: 2px;
+}
