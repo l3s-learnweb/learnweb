@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -49,6 +50,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private boolean mailRequired = false;
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
+
+    @ManagedProperty(value = "#{confirmRequiredBean}")
+    private ConfirmRequiredBean confirmRequiredBean;
 
     public String getUsername()
     {
@@ -133,6 +137,11 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         log(Action.register, 0, 0);
         if(null != course && course.getDefaultGroupId() != 0)
             log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
+
+        if (!user.getIsEmailConfirmed()) {
+            confirmRequiredBean.setLoggedInUser(user);
+            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+        }
 
         return LoginBean.loginUser(this, user);
     }
@@ -226,5 +235,15 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     public boolean isWizardParamInvalid()
     {
         return wizardParamInvalid;
+    }
+
+    public ConfirmRequiredBean getConfirmRequiredBean()
+    {
+        return confirmRequiredBean;
+    }
+
+    public void setConfirmRequiredBean(final ConfirmRequiredBean confirmRequiredBean)
+    {
+        this.confirmRequiredBean = confirmRequiredBean;
     }
 }
