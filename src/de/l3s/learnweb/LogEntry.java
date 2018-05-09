@@ -50,7 +50,7 @@ public class LogEntry implements Serializable
         group_changing_restriction, // target_id = group_id
         group_adding_link, // target_id = group_id; param = title
         group_adding_document, // target_id = group_id; param = title
-        unused5,
+        opening_folder, // target_id = id of the tagged resource
         group_removing_resource, // target_id = resource id
         deleting_folder, // param = folder name; target_id = folder_id
         downloading, // target_id = resource_id, param = file_id

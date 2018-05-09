@@ -140,8 +140,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             resetPane();
         } else if (clickedAbstractResource instanceof Folder) {
             paneAction = RightPaneAction.viewFolder;
-            // TODO: action should be replaced to opening_folder
-            log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
+            log(Action.opening_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
         } else {
             paneAction = RightPaneAction.viewResource;
             log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
