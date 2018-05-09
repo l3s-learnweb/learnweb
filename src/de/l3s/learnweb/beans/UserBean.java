@@ -705,6 +705,9 @@ public class UserBean implements Serializable
         if(user == null || !user.getOrganisation().getOption(Option.Misc_Proxy_enabled))
             return url;
 
+        if(user.getOrganisationId() == 1369)
+            return "https://via.hypothes.is/" + url;
+
         return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
     }
 

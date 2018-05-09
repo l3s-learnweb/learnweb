@@ -1,18 +1,27 @@
 package de.l3s.learnweb.dashboard;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import org.apache.log4j.Logger;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.PieChartModel;
+
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 import de.l3s.util.MapHelper;
-import org.apache.log4j.Logger;
-import org.primefaces.model.chart.*;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.*;
 
 @ManagedBean
 @ViewScoped
@@ -72,10 +81,13 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            if (paramUserId != null) {
+            if(paramUserId != null)
+            {
                 selectedUser = getLearnweb().getUserManager().getUser(paramUserId);
                 selectedUsersIds = Collections.singletonList(paramUserId);
-            } else {
+            }
+            else
+            {
                 selectedUser = user;
                 selectedUsersIds = Collections.singletonList(user.getId());
             }
@@ -111,10 +123,13 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
         actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
-        glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
         trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
-        descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
         proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+
+        //  TODO fix error
+        //glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
+        // descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
+
     }
 
     public Date getStartDate()
@@ -208,7 +223,8 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
 
     public DashboardManager.TrackerStatistic getTrackerStatistic()
     {
-        if (trackerStatistics.isEmpty()) {
+        if(trackerStatistics.isEmpty())
+        {
             return new DashboardManager.TrackerStatistic();
         }
 
@@ -228,7 +244,7 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
     public String getRatioTermConcept()
     {
         float res = 0;
-        if (totalConcepts == 0)
+        if(totalConcepts == 0)
             res = 0;
         else
             res = (float) totalTerms / totalConcepts;
