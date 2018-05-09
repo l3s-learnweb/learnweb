@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -22,9 +23,8 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
 
     private User user = null;
 
-    public ConfirmEmailBean()
-    {
-    }
+    @ManagedProperty(value = "#{confirmRequiredBean}")
+    private ConfirmRequiredBean confirmRequiredBean;
 
     public void onLoad() throws SQLException
     {
@@ -45,6 +45,13 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
         user.setIsEmailConfirmed(true);
         user.setEmailConfirmationToken(null);
         user.save();
+
+        if (user.equals(confirmRequiredBean.getLoggedInUser())) {
+            LoginBean.loginUser(this, user);
+            // TODO: this message do not shown after redirect
+            addMessage(FacesMessage.SEVERITY_INFO, "email_confirm_successful", user.getUsername());
+            UtilBean.redirect("/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true");
+        }
     }
 
     public String getEmail()
@@ -76,5 +83,15 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
     public User getUser()
     {
         return user;
+    }
+
+    public ConfirmRequiredBean getConfirmRequiredBean()
+    {
+        return confirmRequiredBean;
+    }
+
+    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean)
+    {
+        this.confirmRequiredBean = confirmRequiredBean;
     }
 }

@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.AuthCredentials;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 
 /**
@@ -305,34 +307,12 @@ public class UserManager
 
         User user = new User();
         user.setUsername(username);
-
-        if (StringUtils.isNotEmpty(email)) {
-            user.setEmail(email);
-            user.setIsEmailConfirmed(false);
-            user.setEmailConfirmationToken(MD5.hash(Learnweb.salt3 + user.getId() + user.getEmail()));
-        }
-
+        user.setEmail(email);
         user.setInterwebToken(iwToken);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password, false);
         user.setPreferences(new HashMap<String, String>());
         user = save(user);
-
-        if (user.getEmailConfirmationToken() != null) {
-            String confirmEmailUrl = learnweb.getServerUrl() + "/lw/user/confirm_email.jsf?" +
-                    "email=" + URLEncoder.encode(user.getEmail(), "UTF-8") +
-                    "&token=" + user.getEmailConfirmationToken();
-
-            Mail message = new Mail();
-            message.setSubject("Confirmation email request from Learnweb");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-            message.setText("Hi " + user.getRealUsername() + ",\n\n" +
-                    "Thank you for registration on Learnweb, to continue using our system you need to confirm your email.\n" +
-                    "There is your confirmation link:\n" + confirmEmailUrl + "\n\n" +
-                    "Or just ignore this email, if you haven't requested it.\n\n" +
-                    "Best regards,\nLearnweb Team");
-            message.sendMail();
-        }
 
         course.addUser(user);
 
@@ -387,12 +367,7 @@ public class UserManager
     /**
      * Saves the User to the database.
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
-     *
-     * @param user
-     * @return
-     * @throws SQLException
      */
-
     public User save(User user) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -432,18 +407,50 @@ public class UserManager
         replace.setBoolean(27, user.isAcceptTermsAndConditions());
         replace.executeUpdate();
 
+        boolean isNew = false;
         if(user.getId() < 0) // get the assigned id
         {
             ResultSet rs = replace.getGeneratedKeys();
             if(!rs.next())
                 throw new SQLException("database error: no id generated");
             user.setId(rs.getInt(1));
+            isNew = true;
 
             cache.put(user); // add the createUser to the cache
         }
         replace.close();
 
+        sendEmailConfirmation(user, isNew);
         return user;
+    }
+
+    /**
+     * @param isNew Can be used to send different message 'on update' and 'on create' user.
+     */
+    private void sendEmailConfirmation(User user, boolean isNew) {
+        if (user.getEmailConfirmationToken() != null) {
+            try
+            {
+                String confirmEmailUrl = learnweb.getServerUrl() + "/lw/user/confirm_email.jsf?" +
+                        "email=" + URLEncoder.encode(user.getEmail(), "UTF-8") +
+                        "&token=" + user.getEmailConfirmationToken();
+
+                Mail message = new Mail();
+                message.setSubject("Confirmation email request from Learnweb");
+                message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+                message.setText("Hi " + user.getRealUsername() + ",\n\n" +
+                        (isNew ? "Thank you for registration on Learnweb, to continue using our system you need to confirm your email.\n" : "") +
+                        "There is your confirmation link:\n" + confirmEmailUrl + "\n\n" +
+                        "Or just ignore this email, if you haven't requested it.\n\n" +
+                        "Best regards,\nLearnweb Team");
+
+                message.sendMail();
+            }
+            catch(UnsupportedEncodingException | MessagingException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

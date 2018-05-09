@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -284,6 +285,11 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setEmail(String email)
     {
+        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email)) {
+            this.isEmailConfirmed = false;
+            this.emailConfirmationToken = MD5.hash(Learnweb.salt3 + this.id + email);
+        }
+
         this.email = email;
     }
 

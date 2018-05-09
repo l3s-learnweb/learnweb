@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,9 @@ public class LoginBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String password;
     private boolean captchaRequired;
+
+    @ManagedProperty(value = "#{confirmRequiredBean}")
+    private ConfirmRequiredBean confirmRequiredBean;
 
     public LoginBean()
     {
@@ -80,11 +84,11 @@ public class LoginBean extends ApplicationBean implements Serializable
         }
 
         //Gets the ip and username info from protection manager
-        ProtectionManager PM = getLearnweb().getProtectionManager();
+        ProtectionManager pm = getLearnweb().getProtectionManager();
         Date now = new Date();
 
-        Date ipban = PM.getBannedUntil(ip);
-        Date userban = PM.getBannedUntil(username);
+        Date ipban = pm.getBannedUntil(ip);
+        Date userban = pm.getBannedUntil(username);
 
         if(ipban != null && ipban.after(now))
         {
@@ -104,14 +108,18 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(null == user)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            PM.updateFailedAttempts(ip, username);
+            pm.updateFailedAttempts(ip, username);
             return null;
         }
         else
         {
-            PM.updateSuccessfuldAttempts(ip, username);
-
+            pm.updateSuccessfuldAttempts(ip, username);
             getLearnweb().getRequestManager().recordLogin(ip, username);
+
+            if (!user.getIsEmailConfirmed()) {
+                confirmRequiredBean.setLoggedInUser(user);
+                return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+            }
         }
 
         return loginUser(this, user);
@@ -123,16 +131,10 @@ public class LoginBean extends ApplicationBean implements Serializable
     }
 
     /**
-     *
-     * @param bean
-     * @param user
      * @param disableLog Only useful when a moderator logs into a user account
-     * @return
-     * @throws SQLException
      */
     public static String loginUser(ApplicationBean bean, User user, boolean disableLog) throws SQLException
     {
-        // TODO Oleh: redirect to confirm_required page
         UtilBean.getUserBean().setUser(user); // logs the user in
         //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
         user.setCurrentLoginDate(new Date());
@@ -212,4 +214,13 @@ public class LoginBean extends ApplicationBean implements Serializable
             return "/lw/index.xhtml?faces-redirect=true";
     }
 
+    public ConfirmRequiredBean getConfirmRequiredBean()
+    {
+        return confirmRequiredBean;
+    }
+
+    public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean)
+    {
+        this.confirmRequiredBean = confirmRequiredBean;
+    }
 }
