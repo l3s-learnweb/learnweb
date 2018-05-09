@@ -705,10 +705,19 @@ public class UserBean implements Serializable
         if(user == null || !user.getOrganisation().getOption(Option.Misc_Proxy_enabled))
             return url;
 
-        if(user.getOrganisationId() == 1369)
+        if(user.getOrganisationId() == 1369) // fakenews project
+        {
+            if(url.startsWith("https://via.hypothes.is"))
+                return url;
             return "https://via.hypothes.is/" + url;
+        }
+        else
+        {
+            if(url.startsWith("https://waps.io") || url.startsWith("http://waps.io"))
+                return url;
+            return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
+        }
 
-        return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
     }
 
     public boolean isOptionContentAnnotationFieldEnabled()
