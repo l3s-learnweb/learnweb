@@ -277,40 +277,6 @@
                                 </h:form>
                             </div>
                         </div>
-                        <div class="ui-g">
-                            <div class="ui-g-12">
-                                <h:form>
-                                    <p:panel id="description" header="Description field" style="margin-bottom:20px">
-                                        <f:facet name="actions">
-                                            <p:button id="descriptionFieldTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                            <p:tooltip for="descriptionFieldTable" value="Table with the entries’ description and number of words in the description" />
-                                        </f:facet>
-										<p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}" styleClass="countries_list"
-											tableStyle="table-layout:auto">
-											<p:column headerText="#{msg.username}" sortable="true" sortBy="#{ldl.user.username}" filterable="true" filterBy="#{ldl.user.username}" filterMatchMode="contains">
-                                                 #{ldl.user.username}
-                                             </p:column>
-
-											<p:column styleClass="align-right" style="min-width:70px;" headerText="Entry id" sortBy="#{ldl.entryId}" sortable="true">
-                                                 #{ldl.entryId}
-                                             </p:column>
-
-											<p:column styleClass="align-right" headerText="Lang" sortBy="#{ldl.lang}" sortable="true">
-                                                 #{ldl.lang}
-                                             </p:column>
-
-											<p:column headerText="Description" sortBy="#{ldl.description}" sortable="true">
-                                                 #{ldl.description}
-                                             </p:column>
-
-											<p:column styleClass="align-right" headerText="Length" sortBy="#{ldl.length}" sortable="true">
-                                                 #{ldl.length}
-                                             </p:column>
-										</p:dataTable>
-									</p:panel>
-                                </h:form>
-                            </div>
-                        </div>
                     </h:panelGroup>
                 </div>
             </div>
