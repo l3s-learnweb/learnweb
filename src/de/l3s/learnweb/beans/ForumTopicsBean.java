@@ -18,6 +18,7 @@ import de.l3s.learnweb.ForumManager;
 import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.LogEntry.Action;
 
 @ManagedBean
 @ViewScoped
@@ -87,6 +88,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
         fm.save(newPost);
 
+        log(Action.forum_post_added, groupId, topic.getId(), newTopicTitle);
         return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
 

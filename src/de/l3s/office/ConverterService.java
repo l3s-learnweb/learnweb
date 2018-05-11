@@ -31,7 +31,16 @@ public class ConverterService
     {
         String fileExt = file.getName().substring(file.getName().lastIndexOf("."));
         String key = FileUtility.generateRevisionId(file);
-        return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
+        String fullFilesUrl = "";
+        if(!file.getUrl().contains("http"))
+        {
+            fullFilesUrl = "http://" + FileUtility.LOCAL_IP + ":8089" + file.getName();
+        }
+        else
+        {
+            fullFilesUrl = file.getName();
+        }
+        return new ConverterRequest(fileExt, "png", file.getName(), fullFilesUrl, key, new OfficeThumbnailParams());
     }
 
     public ConverterService(Learnweb learnweb)

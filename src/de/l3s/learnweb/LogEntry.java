@@ -76,9 +76,11 @@ public class LogEntry implements Serializable
         edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type)
         group_metadata_search, // param = filter:value only if it is not null
         group_category_search, // param = clicked category
-
         //editing link to hypothesis, experimental
-        group_changing_discussion_link;
+        group_changing_discussion_link,
+
+        changing_resource,
+        forum_reply_message;
 
         public static List<Action> getResourceActions()
         {
@@ -119,9 +121,9 @@ public class LogEntry implements Serializable
         System.out.println(" END CASE");
     }
 
-    private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
+    private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.changing_resource, Action.edit_resource,
+            Action.thumb_rating_resource);
     //private final static HashSet<Action> folderActions = Sets.newHashSet(Action.deleting_folder, Action.add_folder, Action.edit_folder);
-
     private int userId;
     private Action action;
     private int groupId;
@@ -278,6 +280,19 @@ public class LogEntry implements Serializable
         case group_changing_discussion_link:
             description = usernameLink + UtilBean.getLocaleMessage("log_changing_discussion_link", resourceTitle);
             break;
+        case changing_resource:
+            description = usernameLink + UtilBean.getLocaleMessage("log_document_changing", resourceTitle, groupLink);
+            break;
+
+        case forum_post_added:
+            String topicLink = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
+            description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
+            break;
+
+        case forum_reply_message:
+            String topic = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
+            description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
+            break;
         default:
             description = "no message for action " + action.name(); // should never happen;
         }
@@ -341,6 +356,12 @@ public class LogEntry implements Serializable
             }
         }
         return resource;
+    }
+
+    public boolean isQueryNeeded()
+    {
+        return action == Action.adding_resource && resource != null && !resource.getQuery().equalsIgnoreCase("none");
+
     }
 
 }

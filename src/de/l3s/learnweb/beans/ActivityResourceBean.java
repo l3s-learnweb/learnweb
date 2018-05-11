@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -11,7 +10,6 @@ import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.User;
 
 @ManagedBean
@@ -32,11 +30,14 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
             Action.group_deleting,
             Action.rating_resource,
             Action.tagging_resource,
-            Action.thumb_rating_resource
+            Action.thumb_rating_resource,
+            Action.forum_post_added,
+            Action.changing_resource,
+            Action.forum_reply_message
     };
 
     private static final long serialVersionUID = -7630987853810267209L;
-    private ArrayList<NewsEntry> newslist;
+    private List<LogEntry> newslist;
 
     private boolean reloadLogs = false;
 
@@ -44,29 +45,18 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     {
         // TODO: can be removed later (for demo purpose only)
         User user = getUser();
-        if (!user.getIsEmailConfirmed()) {
+        if(!user.getIsEmailConfirmed())
+        {
             addMessage(FacesMessage.SEVERITY_WARN, "Email confirmation required!", "Your email is not confirmed, please, check your mailbox.");
         }
     }
 
     private void generateNewsList() throws SQLException
     {
-        //HashSet<Integer> deletedResources = new HashSet<Integer>();
-        List<LogEntry> feed = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
-
-        if(feed != null)
-        {
-            //ResourceManager resourceManager = getLearnweb().getResourceManager();
-            newslist = new ArrayList<NewsEntry>();
-            for(LogEntry l : feed)
-            {
-                newslist.add(new NewsEntry(l));
-
-            }
-        }
+        newslist = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
     }
 
-    public ArrayList<NewsEntry> getNewslist() throws SQLException
+    public List<LogEntry> getNewslist() throws SQLException
     {
         if(null == newslist || reloadLogs)
         {

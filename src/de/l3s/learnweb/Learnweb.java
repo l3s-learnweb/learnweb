@@ -8,10 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
@@ -31,6 +34,7 @@ import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.learnweb.web.RequestManager;
+import de.l3s.learnweb.wrapper.SummaryOverview;
 import de.l3s.office.ConverterService;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
@@ -569,10 +573,10 @@ public class Learnweb
         }
     }
 
-    private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,19,21,32) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
+    private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
     private final static Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
             Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource,
-            Action.group_deleting_link };
+            Action.group_deleting_link, Action.changing_resource, Action.forum_post_added, Action.forum_reply_message };
 
     /**
      *
@@ -647,17 +651,76 @@ public class Learnweb
         if(limit > 0)
             limitStr = "LIMIT " + limit;
 
-        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
-        select.setInt(1, groupId);
-
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr))
         {
-            log.add(new LogEntry(rs));
-        }
-        select.close();
+            select.setInt(1, groupId);
 
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                log.add(new LogEntry(rs));
+            }
+        }
         return log;
+    }
+
+    public SummaryOverview getLogsByGroup(int groupId, List<Action> actions, LocalDateTime from, LocalDateTime to) throws SQLException
+    {
+        SummaryOverview summary = new SummaryOverview();
+        String actionsString = actions.stream()
+                .map(a -> String.valueOf(a.ordinal()))
+                .collect(Collectors.joining(","));
+        String fromDate = Timestamp.valueOf(from).toString();
+        String toDate = Timestamp.valueOf(to).toString();
+        try(PreparedStatement select = getConnection().prepareStatement(
+                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between " + "\"" + fromDate + "\"" + " AND " + "\""
+                        + toDate + "\"" + " ORDER BY timestamp DESC "))
+        {
+            select.setInt(1, groupId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                LogEntry logEntry = new LogEntry(rs);
+                switch(logEntry.getAction())
+                {
+                case deleting_resource:
+                    summary.getDeletedResources().add(logEntry);
+                    break;
+                case adding_resource:
+                    Resource resource = logEntry.getResource();
+                    if(resource != null && logEntry.getResourceId() != 0)
+                    {
+                        summary.getAddedResources().add(logEntry);
+                    }
+                    break;
+                case forum_post_added:
+                case forum_reply_message:
+                    summary.getForumsInfo().add(logEntry);
+                    break;
+                case group_joining:
+                case group_leaving:
+                    summary.getMembersInfo().add(logEntry);
+                    break;
+                case changing_resource:
+                    Resource logEntryResource = logEntry.getResource();
+                    if(logEntryResource != null && logEntry.getResourceId() != 0)
+                    {
+                        if(summary.getUpdatedResources().keySet().contains(logEntryResource))
+                        {
+                            summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                        }
+                        else
+                        {
+                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Arrays.asList(logEntry)));
+                        }
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+        return summary;
     }
 
     public List<LogEntry> getActivityLogOfUserGroups(int userId, LogEntry.Action[] actions, int limit) throws SQLException

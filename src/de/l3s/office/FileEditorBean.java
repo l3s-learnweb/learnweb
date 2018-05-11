@@ -74,7 +74,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return getServerUrlWithoutContextPath() + request.getContextPath();
     }
-    
+
     private String getServerUrlWithoutContextPath()
     {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -119,7 +119,14 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void setFullFilesUrl()
     {
-        fullFilesUrl = resource.getFileUrl();
+        if(!resource.getFileUrl().contains("http"))
+        {
+            fullFilesUrl = "http://" + FileUtility.LOCAL_IP + ":8089" + resource.getFileUrl();
+        }
+        else
+        {
+            fullFilesUrl = resource.getFileUrl().replace("localhost", FileUtility.LOCAL_IP);
+        }
     }
 
     public String getFullFilesUrl()

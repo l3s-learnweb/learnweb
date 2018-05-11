@@ -20,6 +20,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import de.l3s.learnweb.AbstractResource;
+import de.l3s.learnweb.ArchiveUrl;
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.TimelineData;
+
 @ManagedBean
 @ViewScoped
 public class RightPaneBean extends ApplicationBean implements Serializable
@@ -36,7 +42,8 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         newFolder,
         editFolder,
         viewFolder,
-        newFile
+        newFile,
+        viewUpdatedResource
     }
 
     private int resourceId = 0; // url param, force resource view
@@ -89,7 +96,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     {
         if(clickedAbstractResource != null && clickedAbstractResource.canEditResource(getUser()))
         {
-            if (clickedAbstractResource instanceof Folder)
+            if(clickedAbstractResource instanceof Folder)
                 log(Action.edit_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
             else
                 log(Action.edit_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), null);
@@ -106,55 +113,70 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String getPanelTitle() {
+    public String getPanelTitle()
+    {
         switch(this.paneAction)
         {
-            case newResource:
-                return UtilBean.getLocaleMessage("upload_resource");
-            case viewResource:
-                return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
-            case editResource:
-                return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
-            case newFolder:
-                return UtilBean.getLocaleMessage("create_folder");
-            case editFolder:
-                return UtilBean.getLocaleMessage("edit_folder");
-            case viewFolder:
-                return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
-            case newFile:
-                return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
-            default:
-                return UtilBean.getLocaleMessage("click_to_view_details");
+        case newResource:
+            return UtilBean.getLocaleMessage("upload_resource");
+        case viewResource:
+        case viewUpdatedResource:
+            return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
+        case editResource:
+            return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
+        case newFolder:
+            return UtilBean.getLocaleMessage("create_folder");
+        case editFolder:
+            return UtilBean.getLocaleMessage("edit_folder");
+        case viewFolder:
+            return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
+        case newFile:
+            return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
+        default:
+            return UtilBean.getLocaleMessage("click_to_view_details");
         }
     }
 
-    public void resetPane() {
+    public void resetPane()
+    {
         setClickedAbstractResource(null);
         paneAction = RightPaneAction.none;
     }
 
-    public void setViewResource(AbstractResource resourceToView) {
+    public void setViewResource(AbstractResource resourceToView)
+    {
         setClickedAbstractResource(resourceToView);
 
-        if (resourceToView == null) {
+        if(resourceToView == null)
+        {
             resetPane();
-        } else if (clickedAbstractResource instanceof Folder) {
+        }
+        else if(clickedAbstractResource instanceof Folder)
+        {
             paneAction = RightPaneAction.viewFolder;
             log(Action.opening_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
-        } else {
+        }
+        else
+        {
             paneAction = RightPaneAction.viewResource;
             log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
         }
     }
 
-    public void setEditResource(AbstractResource resourceToEdit) {
+    public void setEditResource(AbstractResource resourceToEdit)
+    {
         setClickedAbstractResource(resourceToEdit);
 
-        if (resourceToEdit == null) {
+        if(resourceToEdit == null)
+        {
             resetPane();
-        } else if (clickedAbstractResource instanceof Folder) {
+        }
+        else if(clickedAbstractResource instanceof Folder)
+        {
             paneAction = RightPaneAction.editFolder;
-        } else {
+        }
+        else
+        {
             paneAction = RightPaneAction.editResource;
         }
     }
@@ -176,7 +198,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
     public Folder getClickedFolder()
     {
-        if (clickedAbstractResource instanceof Folder)
+        if(clickedAbstractResource instanceof Folder)
             return (Folder) clickedAbstractResource;
 
         return null;
@@ -184,7 +206,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
     public Resource getClickedResource()
     {
-        if (clickedAbstractResource instanceof Resource)
+        if(clickedAbstractResource instanceof Resource)
             return (Resource) clickedAbstractResource;
 
         return null;
@@ -203,13 +225,12 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             fileEditorBean.fillInFileInfo(getClickedResource());
     }
 
-
     /* Archive view utils  */
 
     /**
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings({ "unchecked", "unused" })
     public String getArchiveTimelineJsonData()
     {
         Resource resource = getClickedResource();
@@ -237,7 +258,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     /**
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings({ "unchecked", "unused" })
     public String getArchiveCalendarJsonData()
     {
         Resource resource = getClickedResource();
@@ -287,7 +308,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
      * Function to localized month names for the calendar
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings({ "unchecked", "unused" })
     public String getMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -305,7 +326,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
      * Function to get localized short month names for the timeline
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings({ "unchecked", "unused" })
     public String getShortMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -318,7 +339,6 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
         return monthNames.toJSONString();
     }
-
 
     /* Load beans  */
 

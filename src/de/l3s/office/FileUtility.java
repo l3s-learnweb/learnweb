@@ -13,6 +13,7 @@ import de.l3s.learnweb.Resource.ResourceType;
 
 public class FileUtility
 {
+    public static final String LOCAL_IP = "130.75.87.189";
 
     private static final String TEXT = "text";
 

@@ -41,11 +41,11 @@
         <h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%" styleClass="not-selectable">
             <h:column>
                 <div class="newsfeed_user_image_div">
-                    <img id="userpic" src="#{datagrid.logEntry.userImage}" width="30" height="30" class="newsfeed_user_image"
+                    <img id="userpic" src="#{datagrid.userImage}" width="30" height="30" class="newsfeed_user_image"
                          alt="Profile foto"/>
                 </div>
                 <div class="newsfeed_text">
-                    <h:outputText value="#{datagrid.text}" escape="false"/>
+                    <h:outputText value="#{datagrid.description}" escape="false"/>
                     <h:panelGroup rendered="#{datagrid.queryNeeded}">
                         <h:outputText value=" #{msg.with_query} " escape="false"/>
 
@@ -64,7 +64,7 @@
 
                 <br/>
                 <br/>
-                <h:panelGroup rendered="#{datagrid.resourceAction}">
+                <h:panelGroup rendered="#{datagrid.resource!=null}">
                     <div class="newsfeed_left">
                         <h:form>
                             <p:commandLink styleClass="newsfeed_query_link" update=":right_pane_wrapper" oncomplete="update_header();">
@@ -84,7 +84,7 @@
                 </h:panelGroup>
 
                 <br class="clear"/>
-                <h:panelGroup rendered="#{datagrid.resourceAction}">
+                <h:panelGroup rendered="#{datagrid.resource!=null}">
                     <br/>
                     <h:outputText value="#{msg.tags}: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
                     <h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" escape="false" styleClass="newsfeed_tags"/>

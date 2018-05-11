@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:dataTable var="datagrid"
+		value="#{groupDetailBean.groupSummaryBean.updatedResourceActivities}"
+		styleClass="not-selectable">
+		<h:column>
+			<div class="newsfeed_user_image_div">
+				<img id="userpic" src="#{datagrid.userImage}" alt="profile image"
+					width="30" height="30" class="newsfeed_user_image" />
+			</div>
+			<div class="newsfeed_text">
+				<h:outputText value="#{datagrid.description}" escape="false" />
+				
+			</div>
+
+			<h:outputText value="${userBean.getPrettyDate(datagrid.date)}"
+				title="${userBean.formatDate(datagrid.date)}" escape="false"
+				styleClass="newsfeed_date_difference" />
+			<br></br>
+			<br></br>
+			<hr width="485px" class="newsfeed_separator"></hr>
+			<br></br>
+		
+		</h:column>
+	</h:dataTable>
+</ui:composition>

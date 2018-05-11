@@ -17,6 +17,7 @@ import de.l3s.learnweb.ForumManager;
 import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
 
 @ManagedBean
@@ -66,7 +67,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         fm.save(newPost);
 
         newPost = new ForumPost();
-
+        log(Action.forum_reply_message, group.getId(), topicId, topic.getTitle());
         return null;
     }
 

@@ -13,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -21,7 +23,9 @@ import com.google.gson.Gson;
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.User;
 import de.l3s.office.history.model.Change;
 import de.l3s.office.history.model.History;
 import de.l3s.office.history.model.OfficeUser;
@@ -54,6 +58,7 @@ public class SaverServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
     {
+        HttpSession session = request.getSession(true);
         try(PrintWriter writer = response.getWriter())
         {
             String fileId = request.getParameter(FILE_ID);
@@ -61,10 +66,10 @@ public class SaverServlet extends HttpServlet
             try(Scanner scanner = new Scanner(request.getInputStream()))
             {
                 scanner.useDelimiter(DELIMITER);
-                String body = scanner.hasNext() ? scanner.next() : "";
+                String body = scanner.hasNext() ? scanner.next() : StringUtils.EMPTY;
                 Gson gson = new Gson();
                 SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
-                parseResponse(savingInfo, fileId, userId);
+                parseResponse(savingInfo, fileId, userId, session.getId());
             }
             writer.write(ERROR_0);
         }
@@ -74,7 +79,7 @@ public class SaverServlet extends HttpServlet
         }
     }
 
-    private void parseResponse(SavingInfo info, String fileId, String userId)
+    private void parseResponse(SavingInfo info, String fileId, String userId, String sessionId)
     {
         try
         {
@@ -97,6 +102,9 @@ public class SaverServlet extends HttpServlet
                 previousVersionFile.setType(TYPE.HISTORY_FILE);
                 log.info("History is saved resourceId = " + file.getResourceId());
                 createResourceHistory(info, previousVersionFile, file.getResourceId(), Integer.parseInt(userId));
+                User learnwebUser = new User();
+                learnwebUser.setId(Integer.valueOf(userId));
+                learnweb.log(learnwebUser, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis());
             }
         }
         catch(NumberFormatException e)

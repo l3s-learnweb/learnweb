@@ -1,0 +1,185 @@
+#list_of_deleted_resorses {
+	margin-left: 30px;
+	margin-top: 5px;
+}
+
+.added_res_slider {
+	width: 90%;
+	margin: 20px auto;
+}
+
+.updated_res_slider {
+	width: 90%;
+	margin: 20px auto;
+}
+
+.slick-slide {
+	margin: 0px 20px;
+}
+
+.slick-slide img {
+	width: 100%;
+}
+
+.slick-prev:before, .slick-next:before {
+	color: black;
+}
+
+.slick-slide {
+	transition: all ease-in-out .3s;
+	opacity: .2;
+}
+
+.slick-active {
+	opacity: .5;
+}
+
+.slick-current {
+	opacity: 1;
+	background-color: #489a83;
+	color: white;
+}
+
+/* Fixed summary, full height */
+.summary {
+	height: 100%;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	overflow-x: hidden;
+	margin-bottom: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.icons {
+	padding-left: 5px;
+}
+
+.main-text {
+	position: absolute;
+	padding-left: 5px;
+	padding-top: 0.15em;
+}
+
+.dropdown-btn {
+	padding-top: 6px;
+	padding-bottom: 6px;
+	text-decoration: none;
+	font-size: 13px;
+	display: block;
+	border: none;
+	background: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+	outline: none;
+}
+
+#show_activities {
+	color: black;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	text-decoration: none;
+	font-size: 13px;
+	display: block;
+	border: none;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+}
+
+.newsfeed_text {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 12px;
+}
+
+.summary a:hover, .tablink:hover, .dropdown-btn:hover, #show_activities:hover
+	{
+	color: #92948f;
+}
+
+.active {
+	background-color: #ddd;
+	color: black;
+}
+
+.dropdown-container {
+	display: none;
+	padding-left: 28px;
+}
+
+.wrapper {
+	overflow: hidden;
+	transition: height 250ms;
+}
+
+.dropdown-container-added-resources {
+	display: block;
+}
+
+@media screen and (max-height: 450px) {
+	.summary {
+		padding-top: 15px;
+	}
+	.summary a {
+		font-size: 18px;
+	}
+}
+
+.tablink {
+	background-color: white;
+	color: black;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	font-size: 17px;
+	width: 50%;
+	text-align: center;
+}
+
+.tabcontent {
+	color: black;
+	padding: 10px 10px;
+	height: 100%;
+}
+
+.summary_overview_container {
+	display: block;
+}
+
+#new_changes {
+	background-color: #eee;
+}
+
+#last_week_changes {
+	background-color: #eee;
+}
+
+.fa-caret-down {
+	transform: rotate(0deg);
+	transition: transform 0.08s linear;
+}
+
+.fa-caret-down.open {
+	transform: rotate(-90deg);
+	transition: transform 0.08s linear;
+}
+
+.icon_wrapper {
+	float: right;
+	padding-right: 8px;
+	padding-top: 2px;
+}
+
+.hidden {
+	display: none;
+}
+
+.blocked {
+	display: block;
+}

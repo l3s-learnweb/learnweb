@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
-import de.l3s.learnweb.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -32,13 +32,24 @@ import org.primefaces.model.TreeNode;
 
 import com.google.gson.Gson;
 
+import de.l3s.learnweb.AbstractPaginator;
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.GoogleDriveManager;
+import de.l3s.learnweb.Group;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Link;
 import de.l3s.learnweb.Link.LinkType;
+import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Organisation.Option;
+import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager.Order;
+import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.RightPaneBean.RightPaneAction;
 import de.l3s.learnweb.rm.CategoryTree;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.rm.beans.ExtendedMetadataSearch;
@@ -63,7 +74,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private List<User> members;
     private List<LogEntry> logMessages;
-    private ArrayList<NewsEntry> newslist;
 
     // Group edit fields (Required for editing group)
     private String editedGroupDescription;
@@ -139,7 +149,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{addFolderBean}")
     private AddFolderBean addFolderBean;
 
+    @ManagedProperty(value = "#{groupSummaryBean}")
+    private GroupSummaryBean groupSummaryBean;
+
     private final int pageSize;
+
+    private List<LogEntry> newslist;
 
     public GroupDetailBean() throws SQLException
     {
@@ -190,42 +205,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return false;
     }
 
-    /**
-     * die funktion ist totale scheisse. ersetzen sobald es geht
-     *
-     * @throws SQLException
-     */
-    private void convert() throws SQLException
-    {
-        /*
-        HashSet<Integer> deletedResources = new HashSet<Integer>();
-        	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-        	Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
-        	Action.group_removing_resource };
-        	*/
-        List<LogEntry> feed = logMessages;
-
-        if(feed != null)
-        {
-            newslist = new ArrayList<NewsEntry>();
-            for(LogEntry l : feed)
-            {
-                newslist.add(new NewsEntry(l));
-            }
-        }
-    }
-
-    public ArrayList<NewsEntry> getNewslist()
+    public List<LogEntry> getNewslist()
     {
         if(null == newslist || reloadLogs)
         {
             loadLogs(25);
 
-            if(newslist.size() < 25)
+            if(logMessages.size() < 25)
                 allLogs = true;
         }
 
-        return newslist;
+        return logMessages;
 
     }
 
@@ -276,7 +266,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             else
                 logMessages = getLearnweb().getLogsByGroup(groupId, null);
 
-            convert();
         }
         catch(SQLException e)
         {
@@ -319,6 +308,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setGroupId(int groupId)
     {
         this.groupId = groupId;
+        getGroupSummaryBean().setGroupId(groupId);
     }
 
     public int getSelectedFolderId()
@@ -339,7 +329,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         if(null == logMessages)
         {
             logMessages = getLearnweb().getLogsByGroup(groupId, null);
-            convert();
         }
         return logMessages;
     }
@@ -1172,47 +1161,47 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         // Set target group and folder in beans
         switch(type)
         {
-            case "folder":
-                addFolderBean.clearForm();
-                addFolderBean.setTargetGroup(group);
-                addFolderBean.setTargetFolder(selectedFolder);
-                break;
-            default:
-                addResourceBean.clearForm();
-                addResourceBean.setTargetGroup(group);
-                addResourceBean.setTargetFolder(selectedFolder);
-                addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-                break;
+        case "folder":
+            addFolderBean.clearForm();
+            addFolderBean.setTargetGroup(group);
+            addFolderBean.setTargetFolder(selectedFolder);
+            break;
+        default:
+            addResourceBean.clearForm();
+            addResourceBean.setTargetGroup(group);
+            addResourceBean.setTargetFolder(selectedFolder);
+            addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
+            break;
         }
 
         // Set target view and defaults
         switch(type)
         {
-            case "folder":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
-                break;
-            case "file":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                break;
-            case "url":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
-                break;
-            case "glossary":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(ResourceType.glossary);
-                break;
-            case "survey":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(ResourceType.survey);
-                break;
-            case "newFile":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
-                addResourceBean.getResource().setType(getParameter("docType"));
-                break;
-            default:
-                log.warn("Unsupported item type: " + type);
-                break;
+        case "folder":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+            break;
+        case "file":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            break;
+        case "url":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
+            break;
+        case "glossary":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setType(ResourceType.glossary);
+            break;
+        case "survey":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setType(ResourceType.survey);
+            break;
+        case "newFile":
+            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+            addResourceBean.getResource().setType(getParameter("docType"));
+            break;
+        default:
+            log.warn("Unsupported item type: " + type);
+            break;
         }
     }
 
@@ -1227,23 +1216,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
             switch(action)
             {
-                case "copy":
-                    this.actionCopyGroupItems(items);
-                    break;
-                case "move":
-                    JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
-                    this.moveGroupItems(items, dest);
-                    break;
-                case "delete":
-                    this.deleteGroupItems(items);
-                    break;
-                case "add-tag":
-                    String tag = params.get("tag");
-                    this.addTagToGroupItems(items, tag);
-                    break;
-                default:
-                    log.warn("Unsupported action: " + action);
-                    break;
+            case "copy":
+                this.actionCopyGroupItems(items);
+                break;
+            case "move":
+                JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
+                this.moveGroupItems(items, dest);
+                break;
+            case "delete":
+                this.deleteGroupItems(items);
+                break;
+            case "add-tag":
+                String tag = params.get("tag");
+                this.addTagToGroupItems(items, tag);
+                break;
+            default:
+                log.warn("Unsupported action: " + action);
+                break;
             }
         }
         catch(JSONException e)
@@ -1858,6 +1847,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
 
+    public void displayClickedResourceFromSlider() throws SQLException
+    {
+        SimpleEntry<String, Resource> clickedResourceFromSlider = groupSummaryBean.getChoosenResourceFromSlider();
+        if(clickedResourceFromSlider != null)
+        {
+            rightPaneBean.setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
+            rightPaneBean.setClickedAbstractResource(clickedResourceFromSlider.getValue());
+        }
+    }
+
     public String getNewHypothesisLink()
     {
         return newHypothesisLink;
@@ -1876,6 +1875,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setNewHypothesisToken(String newHypothesisToken)
     {
         this.newHypothesisToken = newHypothesisToken;
+    }
+
+    public GroupSummaryBean getGroupSummaryBean()
+    {
+        return groupSummaryBean;
+    }
+
+    public void setGroupSummaryBean(GroupSummaryBean groupSummaryBean)
+    {
+        this.groupSummaryBean = groupSummaryBean;
     }
 
 }
