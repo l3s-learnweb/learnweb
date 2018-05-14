@@ -518,8 +518,6 @@ public class Learnweb
     private int logBatchSize = 0;
 
     /**
-     * Logs a user action. The parameters "targetId" and "params" depend on the
-     * logged action. Look at the code of LogEntry.Action for explanation.
      *
      * @param user
      * @param action
@@ -527,20 +525,36 @@ public class Learnweb
      * @param group the group this action belongs to; null if no group
      * @param params
      * @param sessionId
-     * @param executionTime in milliseconds
-     * @throws SQLException
+     * @param executionTime how long did the action need to execute (in milliseconds)
      */
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
         if(null == action)
             throw new IllegalArgumentException();
 
-        params = StringHelper.shortnString(params, 250);
-
         int userId = (null == user) ? 0 : user.getId();
 
         if(groupId == -1)
             groupId = (null == user) ? 0 : user.getActiveGroupId();
+
+        log(userId, action, groupId, targetId, params, sessionId, executionTime);
+    }
+
+    /**
+     * Logs a user action. The parameters "targetId" and "params" depend on the
+     * logged action. Look at the code of LogEntry.Action for explanation.
+     *
+     * @param userId
+     * @param action
+     * @param targetId optional value; should be 0 if not required
+     * @param group the group this action belongs to; null if no group
+     * @param params
+     * @param sessionId
+     * @param executionTime how long did the action need to execute (in milliseconds)
+     */
+    public void log(int userId, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
+    {
+        params = StringHelper.shortnString(params, 250);
 
         try
         {
