@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -24,7 +25,7 @@ public class GlossaryManager
     }
 
     //Insert 1st Language and 2nd Language terms related to Glossary entry
-    public void InsertTerms(GlossaryEntry e) // TODO java naming conventions
+    public void insertTerms(GlossaryEntry e)
     {
 
         String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -213,7 +214,7 @@ public class GlossaryManager
                 preparedStmnt.executeQuery();
 
                 //Insert terms
-                InsertTerms(e);
+                insertTerms(e);
 
             }
             catch(SQLException e1)
@@ -323,7 +324,7 @@ public class GlossaryManager
                 }
                 e.setSecondLanguageItems(newItItems);
                 e.setFirstLanguageItems(newUkItems);
-                InsertTerms(e);
+                insertTerms(e);
             }
             catch(SQLException e1)
             {
@@ -412,7 +413,66 @@ public class GlossaryManager
         return langPair;
     }
 
-    public List<GlossaryItems> getGlossaryItems(int id)
+    public List<GlossaryItems> getGlossaryItems(int resourceId) throws SQLException
+    {
+
+        List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+        String populateGlossaries = "SELECT t1.glossary_id, t2.topic_1, t2.topic_2, t2.topic_3, t2.description, t3.* FROM `lw_resource_glossary` t1, `lw_glossary_details` t2, `lw_resource_glossary_terms` t3 where t1.resource_id = ? and t1.deleted=0 and t1.glossary_id=t2.glossary_id and t2.glossary_id=t3.glossary_id and t3.deleted=0 order by(t3.glossary_id)";
+        PreparedStatement glossaries = learnweb.getConnection().prepareStatement(populateGlossaries);
+        glossaries.setInt(1, resourceId);
+        ResultSet result = glossaries.executeQuery();
+        int glossaryId = -1;
+        HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<Integer, Timestamp>();
+        HashMap<Integer, String> orderTerm = new HashMap<Integer, String>();
+
+        while(result.next())
+        {
+
+            GlossaryItems glossary = new GlossaryItems();
+            glossary.setGlossId(result.getInt("glossary_id"));
+            glossaryId = result.getInt("glossary_id");
+            glossary.setTopic_1(result.getString("topic_1"));
+            glossary.setTopic_1(result.getString("topic_2"));
+            glossary.setTopic_1(result.getString("topic_3"));
+            glossary.setTopic_1(result.getString("description"));
+            glossary.setAcronym(result.getString("acronym"));
+            glossary.setValue(result.getString("term"));
+            glossary.setPhraseology(result.getString("phraseology"));
+            glossary.setPronounciation(result.getString("pronounciation"));
+            glossary.setReferences(result.getString("references"));
+            glossary.setTermId(result.getInt("glossary_term_id"));
+            glossary.setSelectedUses(result.getString("use"));
+            glossary.setLanguage(result.getString("language"));
+            if(!glossaryEntryTimestamp.containsKey(glossaryId))
+            {
+                glossaryEntryTimestamp.put(glossaryId, result.getTimestamp("timestamp"));
+            }
+            else if(glossaryEntryTimestamp.get(glossaryId).after(result.getTimestamp("timestamp")))
+            {
+                glossaryEntryTimestamp.put(glossaryId, result.getTimestamp("timestamp"));
+            }
+            if(!orderTerm.containsKey(glossaryId))
+            {
+                orderTerm.put(glossaryId, result.getString("term"));
+            }
+            else if(orderTerm.get(glossaryId).compareToIgnoreCase(result.getString("term")) > 0)
+            {
+                orderTerm.replace(glossaryId, result.getString("term"));
+
+            }
+            items.add(glossary);
+        }
+        for(GlossaryItems glossary : items)
+        {
+            glossary.setDate(glossaryEntryTimestamp.get(glossary.getGlossId()));
+            glossary.setPrimaryLanguageTerm(orderTerm.get(glossary.getGlossId()));
+        }
+        return items;
+
+    }
+
+    @Deprecated
+    public List<GlossaryItems> getGlossaryItemsOld(int id)
     {
         List<GlossaryItems> items = new ArrayList<GlossaryItems>();
 

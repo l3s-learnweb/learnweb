@@ -1,5 +1,13 @@
 package de.l3s.learnweb.beans;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -21,11 +30,16 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
+
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
 import de.l3s.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.User;
 
 @ViewScoped
 @ManagedBean
@@ -34,6 +48,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -1811030091337893637L;
     private static final Logger log = Logger.getLogger(GlossaryBean.class);
     private static final String PREFERENCE_TOPIC1 = "GLOSSARY_TOPIC1";
+
     private boolean deleted = false;
     private List<LanguageItem> secondaryLangItems;
     private List<LanguageItem> primaryLangItems;
@@ -61,7 +76,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private int glossaryEntryCount;
 
-    public void onload()
+    public void onload() throws SQLException
     {
         if(resourceId > 0 && !getLearnweb().getGlossariesManager().checkIfExists(resourceId))
         {
@@ -167,6 +182,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         List<LanguageItem> primaryItemsToSet = new ArrayList<LanguageItem>();
         List<LanguageItem> secondaryItemsToSet = new ArrayList<LanguageItem>();
 
+        //TODO:: Re-factor this part once languages are collapsed into one.
         for(LanguageItem languageItem : gloss.getFinalItems())
         {
             if(languageItem.getLanguage().equals(primaryLanguage))
@@ -480,6 +496,52 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     }
 
+    public void postProcessPDF(Object document) throws IOException, DocumentException, SQLException
+    {
+        Document pdf = (Document) document;
+        //Owner or creator of exported resource
+        User fileowner = getLearnweb().getResourceManager().getResource(resourceId).getUser();
+        //create a File Object
+        File file = new File("./" + fileowner.getUsername() + ".jpeg");
+        //create the font you wish to use
+        Font font = new Font("Tahoma", Font.PLAIN, 18);
+
+        //create the FontRenderContext object which helps us to measure the text
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+
+        //get the height and width of the text
+        Rectangle2D bounds = font.getStringBounds(fileowner.getUsername(), frc);
+        int width = (int) bounds.getWidth();
+        int height = (int) bounds.getHeight();
+
+        //create a BufferedImage object
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+        //calling createGraphics() to get the Graphics2D
+        Graphics2D graphic = image.createGraphics();
+
+        //set color and other parameters
+        graphic.setBackground(Color.white);
+        graphic.fillRect(0, 0, width, height);
+        graphic.setColor(Color.LIGHT_GRAY);
+        graphic.setFont(font);
+        graphic.drawString(fileowner.getUsername(), (float) bounds.getX(), (float) -bounds.getY());
+
+        //releasing resources
+        graphic.dispose();
+
+        //creating the file
+        ImageIO.write(image, "jpeg", file);
+
+        String logo = file.getAbsolutePath();
+        Image watermark = Image.getInstance(logo);
+        watermark.scaleToFit(400, 400);
+        watermark.setAbsolutePosition(100, 500);
+
+        pdf.add(watermark);
+
+    }
+
     public void changeTopicTwo(AjaxBehaviorEvent event)
     {
         createAvailableTopicsThree();
@@ -646,9 +708,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.languageItems = languageItems;
     }
 
-    private void getGlossaryItems(int id)
+    private void getGlossaryItems(int id) throws SQLException
     {
-        items = getLearnweb().getGlossariesManager().getGlossaryItems(id);
+        items = getLearnweb().getGlossariesManager().getGlossaryItemsOld(id);
     }
 
     public List<GlossaryItems> getItems()

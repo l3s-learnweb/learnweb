@@ -29,7 +29,7 @@
 					paginator="true" rows="12" paginatorPosition="bottom"
 					filteredValue="#{glossaryBean.filteredItems}"
 					sortBy="#{item.date}" sortOrder="descending"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" >
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} Exporters" >
 					<p:ajax event="filter" oncomplete="groupRow(2)" />
 					<p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
 					<p:ajax event="sort" oncomplete="groupRow(2)"></p:ajax>
@@ -42,16 +42,25 @@
 						</p:outputPanel>
 						
 					</f:facet>
-					<f:facet name="{Exporters}">
+					<f:facet name="Exporters">
 						<h:commandLink styleClass="excel_export_todo_use">
 							<p:graphicImage library="default"
 								value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;"/>
 							<p:dataExporter type="xls" target="my_gloss_table"
 								fileName="glossary"
 								postProcessor="#{glossaryBean.postProcessXls}" />
+							
+						</h:commandLink>
+						<h:commandLink id="glosspdf" styleClass="excel_export_todo_use">
+							<p:graphicImage  library="default"
+								value="/resources/icon/pdf_icon.png" width="26" style="top:7px;left:5px;position:relative;"/>
+							<p:dataExporter type="pdf" target="my_gloss_table"
+								fileName="glossary"
+								 postProcessor="#{glossaryBean.postProcessPDF}"/>
+							
 						</h:commandLink>
 					</f:facet>
-					<p:column headerText="glossary ID" style="display:none">
+					<p:column headerText="glossary ID" style="display:none" exportable="false">
 						<h:outputText value="#{item.glossId}"></h:outputText>
 					</p:column>
 					<p:column style=" width:20px;">
@@ -124,7 +133,7 @@
 						filterBy="#{item.phraseology}" filterStyle="display:none">
 						<h:outputText value="#{item.phraseology}" />
 					</p:column>
-					<p:column headerText="english terms for ordering" style="display:none">
+					<p:column headerText="english terms for ordering" style="display:none" exportable="false">
 					
 						<h:outputText value="#{item.date}"></h:outputText>
 					</p:column>
