@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans;
 
 import de.l3s.learnweb.User;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -15,7 +14,6 @@ import java.sql.SQLException;
 @RequestScoped
 public class ConfirmEmailBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(ConfirmEmailBean.class);
     private static final long serialVersionUID = -6040579499279231182L;
 
     private String email;
@@ -48,8 +46,6 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
 
         if (user.equals(confirmRequiredBean.getLoggedInUser())) {
             LoginBean.loginUser(this, user);
-            // TODO: this message do not shown after redirect
-            addMessage(FacesMessage.SEVERITY_INFO, "email_confirm_successful", user.getUsername());
             UtilBean.redirect("/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true");
         }
     }
@@ -85,11 +81,13 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
         return user;
     }
 
+    @SuppressWarnings("unused")
     public ConfirmRequiredBean getConfirmRequiredBean()
     {
         return confirmRequiredBean;
     }
 
+    @SuppressWarnings("unused")
     public void setConfirmRequiredBean(ConfirmRequiredBean confirmRequiredBean)
     {
         this.confirmRequiredBean = confirmRequiredBean;
