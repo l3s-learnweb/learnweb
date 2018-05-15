@@ -4,18 +4,18 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.User;
 
 @ManagedBean
 @ViewScoped
 public class ActivityResourceBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = -7630987853810267209L;
+
     // the filter defines which log entries are show on this page
     private final static Action[] FILTER = new Action[] {
             Action.adding_resource,
@@ -36,33 +36,22 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
             Action.forum_reply_message
     };
 
-    private static final long serialVersionUID = -7630987853810267209L;
-    private List<LogEntry> newslist;
+    private List<LogEntry> newsList;
 
     private boolean reloadLogs = false;
 
-    public ActivityResourceBean()
-    {
-        // TODO: can be removed later (for demo purpose only)
-        User user = getUser();
-        if(!user.getIsEmailConfirmed())
-        {
-            addMessage(FacesMessage.SEVERITY_WARN, "Email confirmation required!", "Your email is not confirmed, please, check your mailbox.");
-        }
-    }
-
     private void generateNewsList() throws SQLException
     {
-        newslist = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
+        newsList = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
     }
 
-    public List<LogEntry> getNewslist() throws SQLException
+    public List<LogEntry> getNewsList() throws SQLException
     {
-        if(null == newslist || reloadLogs)
+        if(null == newsList || reloadLogs)
         {
             generateNewsList();
         }
-        return newslist;
+        return newsList;
     }
 
     public boolean isReloadLogs()
