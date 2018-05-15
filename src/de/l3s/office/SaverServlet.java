@@ -58,6 +58,7 @@ public class SaverServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
     {
+        long startTime = System.currentTimeMillis();
         HttpSession session = request.getSession(true);
         try(PrintWriter writer = response.getWriter())
         {
@@ -69,7 +70,7 @@ public class SaverServlet extends HttpServlet
                 String body = scanner.hasNext() ? scanner.next() : StringUtils.EMPTY;
                 Gson gson = new Gson();
                 SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
-                parseResponse(savingInfo, fileId, userId, session.getId());
+                parseResponse(savingInfo, fileId, userId, session.getId(), (int) startTime);
             }
             writer.write(ERROR_0);
         }
@@ -77,9 +78,9 @@ public class SaverServlet extends HttpServlet
         {
             log.error(e);
         }
-    }
+   }
 
-    private void parseResponse(SavingInfo info, String fileId, String userId, String sessionId)
+    private void parseResponse(SavingInfo info, String fileId, String userId, String sessionId, int startTime)
     {
         try
         {
@@ -104,7 +105,7 @@ public class SaverServlet extends HttpServlet
                 createResourceHistory(info, previousVersionFile, file.getResourceId(), Integer.parseInt(userId));
                 User learnwebUser = new User();
                 learnwebUser.setId(Integer.valueOf(userId));
-                learnweb.log(learnwebUser, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis());
+                learnweb.log(learnwebUser, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
             }
         }
         catch(NumberFormatException e)

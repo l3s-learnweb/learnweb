@@ -119,14 +119,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void setFullFilesUrl()
     {
-        if(!resource.getFileUrl().contains("http"))
-        {
-            fullFilesUrl = "http://" + FileUtility.LOCAL_IP + ":8089" + resource.getFileUrl();
-        }
-        else
-        {
-            fullFilesUrl = resource.getFileUrl().replace("localhost", FileUtility.LOCAL_IP);
-        }
+        fullFilesUrl = resource.getFileUrl();
     }
 
     public String getFullFilesUrl()
