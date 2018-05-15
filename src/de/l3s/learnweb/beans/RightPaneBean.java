@@ -43,7 +43,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         editFolder,
         viewFolder,
         newFile,
-        viewUpdatedResource
+        viewUpdatedResource // TODO: why do we need it? I think it can be replaced to some flag in Resource
     }
 
     private int resourceId = 0; // url param, force resource view

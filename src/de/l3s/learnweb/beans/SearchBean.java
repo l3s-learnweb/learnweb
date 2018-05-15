@@ -316,12 +316,6 @@ public class SearchBean extends ApplicationBean implements Serializable
             newResource.setFolderId(selectedResourceTargetFolderId);
             user.setActiveGroup(selectedResourceTargetGroupId);
 
-            newResource = user.addResource(newResource);
-
-            // create thumbnails for the resource
-            if(newResource.getThumbnail2() == null || newResource.getThumbnail2().getFileId() == 0)
-                new AddResourceBean.CreateThumbnailThread(newResource).start();
-
             // we need to check whether a Bing result is a PDF, Word or other document
             if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals("Bing"))
             {
@@ -330,6 +324,8 @@ public class SearchBean extends ApplicationBean implements Serializable
                 FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
                 rme.processFileResource(newResource, fileInfo);
             }
+
+            newResource = user.addResource(newResource);
 
             log.debug("Creating thumbnails from given url...");
             Thread createThumbnailThread = new CreateThumbnailThread(newResource);
