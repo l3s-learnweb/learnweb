@@ -266,8 +266,8 @@
 			</div>
 			<h:panelGroup id="past_submissions" layout="block" rendered="#{not empty submitResourcesBean.pastSubmissions}">
 				<div class="submission_header">
-					<div style="margin-top:10px;"><h1>#{msg['Submission.past_submissions']} (${submitResourcesBean.pastSubmissions.size()})</h1><span
-								class="icon_wrapper"><i class="fa fa-caret-right" /></span></div>
+					<div style="margin-top:10px;"><h1>#{msg['Submission.past_submissions']} (${submitResourcesBean.pastSubmissions.size()})<span
+								class="icon_wrapper"><i class="fa fa-caret-right" /></span></h1></div>
 				</div>
 				<div class="submission_cards">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
@@ -278,7 +278,7 @@
 			<h:panelGroup id="current_submissions" layout="block" rendered="#{not empty submitResourcesBean.currentSubmissions}">
 				<div class="submission_header">
 					<div style="margin-top:10px;"><h1>#{msg['Submission.current_submissions']} (${submitResourcesBean.currentSubmissions.size()})<span
-								class="icon_wrapper"><i class="fa fa-caret-right" /></span></h1> </div>
+								class="icon_wrapper"><i class="fa fa-caret-right" /></span></h1></div>
 				</div>
 				<div class="submission_cards">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
