@@ -26,6 +26,7 @@ import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.TimelineData;
 
+// TODO Oleh: rename to ResourcePaneBean
 @ManagedBean
 @ViewScoped
 public class RightPaneBean extends ApplicationBean implements Serializable
@@ -43,7 +44,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         editFolder,
         viewFolder,
         newFile,
-        viewUpdatedResource // TODO: why do we need it? I think it can be replaced to some flag in Resource
+        viewUpdatedResource // TODO Oleh: why do we need it? I think it can be replaced to some flag in Resource
     }
 
     private int resourceId = 0; // url param, force resource view
@@ -117,23 +118,23 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     {
         switch(this.paneAction)
         {
-        case newResource:
-            return UtilBean.getLocaleMessage("upload_resource");
-        case viewResource:
-        case viewUpdatedResource:
-            return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
-        case editResource:
-            return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
-        case newFolder:
-            return UtilBean.getLocaleMessage("create_folder");
-        case editFolder:
-            return UtilBean.getLocaleMessage("edit_folder");
-        case viewFolder:
-            return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
-        case newFile:
-            return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
-        default:
-            return UtilBean.getLocaleMessage("click_to_view_details");
+            case newResource:
+                return UtilBean.getLocaleMessage("upload_resource");
+            case viewResource:
+            case viewUpdatedResource:
+                return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
+            case editResource:
+                return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
+            case newFolder:
+                return UtilBean.getLocaleMessage("create_folder");
+            case editFolder:
+                return UtilBean.getLocaleMessage("edit_folder");
+            case viewFolder:
+                return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
+            case newFile:
+                return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
+            default:
+                return UtilBean.getLocaleMessage("click_to_view_details");
         }
     }
 

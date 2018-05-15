@@ -149,7 +149,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{addFolderBean}")
     private AddFolderBean addFolderBean;
 
-    // TODO: use GroupDetailBean from GroupSummaryBean instead
+    // TODO Oleh: use GroupDetailBean from GroupSummaryBean instead
     @ManagedProperty(value = "#{groupSummaryBean}")
     private GroupSummaryBean groupSummaryBean;
 

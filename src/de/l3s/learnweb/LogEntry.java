@@ -84,20 +84,20 @@ public class LogEntry implements Serializable
 
         public static List<Action> getResourceActions()
         {
-            return Arrays.asList( // TODO use hashset
+            return Arrays.asList( // TODO Oleh: use hashset
                     tagging_resource, rating_resource, commenting_resource, opening_resource, submission_view_resource,
                     deleting_resource, adding_resource, edit_resource, thumb_rating_resource, group_removing_resource,
                     resource_thumbnail_update, adding_resource_metadata, edit_resource_metadata, downloading);
         }
 
         public static List<Action> getSearchActions()
-        {// TODO use hashset
+        {// TODO Oleh: use hashset
             return Arrays.asList(searching, group_resource_search, group_category_search, group_metadata_search);
         }
 
         public static List<Action> getGlossaryActions()
         {
-            return Arrays.asList(// TODO use hashset
+            return Arrays.asList(// TODO Oleh: use hashset
                     glossary_open, glossary_create, glossary_entry_edit, glossary_entry_add, glossary_entry_delete,
                     glossary_term_edit, glossary_term_add, glossary_term_delete);
         }

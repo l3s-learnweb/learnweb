@@ -9,6 +9,7 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.beans.UtilBean;
 
+// TODO Oleh: why it is under wrapper package?
 public class SummaryOverview
 {
     private List<LogEntry> addedResources;

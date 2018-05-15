@@ -514,8 +514,8 @@
 					<c:choose>
 						<c:when test="#{rightPaneBean.paneAction =='viewUpdatedResource'}">
 							<ui:decorate template="/templates/group/summary_right_pane.xhtml">
-								<ui:param name="resourceDetailBean"
-									value="#{resourceDetailBean}" />
+								<ui:param name="resourceDetailBean" value="#{resourceDetailBean}" />
+                                <!-- TODO Oleh: don't use param for beans -->
 								<ui:param name="groupDetailBean" value="#{bean}" />
 								<ui:param name="userBean" value="#{userBean}" />
 							</ui:decorate>

@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
+// TODO Oleh: rename to resourceAnnotationBean or merge with RightPaneBean (ResourcePaneBean)
 @ManagedBean
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
