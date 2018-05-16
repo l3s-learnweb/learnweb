@@ -18,11 +18,11 @@
                 </a>
             </p:panel>
 
-            <p:panel header="#{msg.email_confirm_required}" rendered="#{!confirmRequiredBean.isConfirmed() and confirmRequiredBean.user != null}">
+            <p:panel header="#{msg.email_confirm_required}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
                 <p>Dear #{confirmRequiredBean.user.realUsername},</p>
                 <p>Before start working on Learnweb, you need to confirm your email.</p>
                 <br/>
-                <p>We have sent confirmation link to your email address, which you entered during registration: #{confirmRequiredBean.user.email}.</p>
+                <p>We have sent a confirmation link to the email address, that you entered during registration: #{confirmRequiredBean.user.email}.</p>
                 <p>Is that email incorrect?
                     <a href="#" onclick="$('#emailChangeForm').show();return false;">Click here to change it.</a>
                     Otherwise, please, check your mailbox.
