@@ -1,7 +1,7 @@
-### How to configure Intelij IDEA for Learnweb
+### How to configure IntelliJ IDEA for Learnweb
 
 1) Clone repository
-2) Open Learnweb folder (folder which contains .idea folder) in Intelij IDEA
+2) Open Learnweb folder (folder which contains .idea folder) in IntelliJ IDEA
 3) Go to File -> Project Structure -> Libraries (Project Settings) and do next steps:
 - Add local jars to the project structure:
     - Click "Add" (green plus icon)
