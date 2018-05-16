@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Learnweb:war exploded">
+    <output-path>$PROJECT_DIR$/build/artifacts/Learnweb_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Learnweb/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="tomcat" />
+          <element id="library" level="project" name="lib" />
+        </element>
+        <element id="directory" name="classes">
+          <element id="module-output" name="Learnweb" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
