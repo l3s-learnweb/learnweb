@@ -21,7 +21,6 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.wrapper.SummaryOverview;
 
-// TODO Oleh: is it possible to merge it with activityDetailBean?
 @ManagedBean
 @ViewScoped
 public class GroupSummaryBean extends ApplicationBean

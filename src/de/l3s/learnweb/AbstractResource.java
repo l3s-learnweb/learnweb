@@ -4,6 +4,10 @@ import de.l3s.util.HasId;
 
 import java.sql.SQLException;
 
+/**
+ * The abstract class which is extended by Resource and Folder.
+ * Groups may contains Resources and Folders (AbstractResource is common for them)
+ */
 public abstract class AbstractResource implements HasId
 {
     abstract public int getId();
