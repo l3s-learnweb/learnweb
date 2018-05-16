@@ -43,8 +43,5 @@
       <option name="CLASS_BRACE_STYLE" value="2" />
       <option name="METHOD_BRACE_STYLE" value="2" />
     </codeStyleSettings>
-    <codeStyleSettings language="PHP">
-      <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
-    </codeStyleSettings>
   </code_scheme>
 </component>
