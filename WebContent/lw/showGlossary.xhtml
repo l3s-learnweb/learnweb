@@ -47,18 +47,11 @@
 							<p:graphicImage library="default"
 								value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;"/>
 							<p:dataExporter type="xls" target="my_gloss_table"
-								fileName="glossary"
+								fileName="glossary" 
 								postProcessor="#{glossaryBean.postProcessXls}" />
 							
 						</h:commandLink>
-						<h:commandLink id="glosspdf" styleClass="excel_export_todo_use">
-							<p:graphicImage  library="default"
-								value="/resources/icon/pdf_icon.png" width="26" style="top:7px;left:5px;position:relative;"/>
-							<p:dataExporter type="pdf" target="my_gloss_table"
-								fileName="glossary"
-								 postProcessor="#{glossaryBean.postProcessPDF}"/>
-							
-						</h:commandLink>
+			
 					</f:facet>
 					<p:column headerText="glossary ID" style="display:none" exportable="false">
 						<h:outputText value="#{item.glossId}"></h:outputText>

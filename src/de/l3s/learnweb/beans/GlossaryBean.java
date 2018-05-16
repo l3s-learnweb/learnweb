@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -7,8 +8,11 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +25,20 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
@@ -434,6 +443,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             log.debug("post processing glossary xls");
 
             HSSFWorkbook wb = (HSSFWorkbook) document;
+
             HSSFSheet sheet = wb.getSheetAt(0);
 
             HSSFRow row0 = sheet.getRow(1);
@@ -475,19 +485,32 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
 
             //Set owner details
-            HSSFRow rowN = sheet.createRow(sheet.getLastRowNum() + 2);
-            String owner = "Owner username: " + getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername()
-                    + ((getLearnweb().getResourceManager().getResource(resourceId).getUser().getFullName() == null) ? "" : ", Fullname: " + getLearnweb().getResourceManager().getResource(resourceId).getUser().getFullName());
-            rowN.createCell(0).setCellValue(owner);
+
+            File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
+
+            InputStream is = new FileInputStream(watermark);
+
+            byte[] bytes = IOUtils.toByteArray(is);
+            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+            is.close();
+            CreationHelper helper = wb.getCreationHelper();
+            Drawing drawing = sheet.createDrawingPatriarch();
+            ClientAnchor anchor = helper.createClientAnchor();
+            anchor.setAnchorType(ClientAnchor.DONT_MOVE_AND_RESIZE);
+            //set top-left corner of the picture,
+            //subsequent call of Picture#resize() will operate relative to it
+            int row1 = (sheet.getLastRowNum() / 4);
+            int row2 = ((sheet.getLastRowNum() / 4) * 3);
+            anchor.setCol1(3);
+            anchor.setRow1(row1);
+            anchor.setCol2(10);
+            anchor.setRow2(row2);
+
+            Picture pict = drawing.createPicture(anchor, pictureIdx);
             HSSFCellStyle copyrightStyle = wb.createCellStyle();
-            HSSFFont hSSFFont = wb.createFont();
-            hSSFFont.setFontName(HSSFFont.FONT_ARIAL);
-            hSSFFont.setFontHeightInPoints((short) 16);
-            hSSFFont.setColor(HSSFColor.RED.index);
-            copyrightStyle.setFont(hSSFFont);
             copyrightStyle.setLocked(true);
-            rowN.getCell(0).setCellStyle(copyrightStyle);
             sheet.protectSheet("learnweb");
+
         }
         catch(Exception e)
         {
@@ -496,8 +519,52 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     }
 
+    public File text2Image(String textString) throws BadElementException, MalformedURLException, IOException
+    {
+        //create a File Object
+        File file = new File("./" + textString + ".png");
+        //create the font you wish to use
+        Font font = new Font("Tahoma", Font.PLAIN, 18);
+
+        //create the FontRenderContext object which helps us to measure the text
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+
+        //get the height and width of the text
+        Rectangle2D bounds = font.getStringBounds(textString, frc);
+        int width = (int) bounds.getWidth();
+        int height = (int) bounds.getHeight();
+
+        //create a BufferedImage object
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        //calling createGraphics() to get the Graphics2D
+        Graphics2D graphic = image.createGraphics();
+
+        //set color and other parameters
+        /*Color background = new Color(1f, 1f, 1f, 0.0f);
+        
+        graphic.setColor(background);
+        graphic.setBackground(background);*/
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+        graphic.fillRect(0, 0, width, height);
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        Color textColor = new Color(0, 0, 0, 0.5f);
+        graphic.setColor(textColor);
+        graphic.setFont(font);
+        graphic.drawString(textString, (float) bounds.getX(), (float) -bounds.getY());
+
+        //releasing resources
+        graphic.dispose();
+
+        //creating the file
+        ImageIO.write(image, "png", file);
+
+        return file;
+    }
+
     public void postProcessPDF(Object document) throws IOException, DocumentException, SQLException
     {
+
         Document pdf = (Document) document;
         //Owner or creator of exported resource
         User fileowner = getLearnweb().getResourceManager().getResource(resourceId).getUser();
