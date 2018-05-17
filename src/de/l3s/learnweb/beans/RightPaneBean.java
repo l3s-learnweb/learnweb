@@ -97,10 +97,8 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     {
         if(clickedAbstractResource != null && clickedAbstractResource.canEditResource(getUser()))
         {
-            if(clickedAbstractResource instanceof Folder)
-                log(Action.edit_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
-            else
-                log(Action.edit_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), null);
+            log(clickedAbstractResource instanceof Folder ? Action.edit_folder : Action.edit_resource,
+                    clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
 
             try
             {

@@ -215,46 +215,41 @@ public class ApplicationBean
      * Logs a user action for the currently active user.
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     *
-     * @param action
-     * @param groupId
-     * @param targetId
-     * @param params
      */
     protected void log(LogEntry.Action action, int groupId, int targetId, int params)
     {
-        log(action, groupId, targetId, Integer.toString(params));
+        log(action, groupId, targetId, Integer.toString(params), getUser());
     }
 
     /**
      * Logs a user action for the currently active user.
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     *
-     * @param action
-     * @param groupId
-     * @param targetId
-     * @param params
      */
     protected void log(LogEntry.Action action, int groupId, int targetId, String params)
     {
-        int executionTime = (int) (System.currentTimeMillis() - startTime);
-        getLearnweb().log(getUser(), action, groupId, targetId, params, getSessionId(), executionTime);
+        log(action, groupId, targetId, params, getUser());
     }
 
     /**
      * Logs a user action for the currently active user.
      * The parameters "targetId" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     *
-     * @param action
-     * @param groupId
-     * @param targetId
      */
     protected void log(LogEntry.Action action, int groupId, int targetId)
     {
+        log(action, groupId, targetId, null, getUser());
+    }
+
+    /**
+     * Logs a user action for the currently active user.
+     * The parameters "targetId" and "params" depend on the logged action.
+     * Look at the code of LogEntry.Action for explanation.
+     */
+    protected void log(LogEntry.Action action, int groupId, int targetId, String params, User user)
+    {
         int executionTime = (int) (System.currentTimeMillis() - startTime);
-        getLearnweb().log(getUser(), action, groupId, targetId, null, getSessionId(), executionTime);
+        getLearnweb().log(user, action, groupId, targetId, params, getSessionId(), executionTime);
     }
 
     protected void addFatalMessage(Throwable exception)

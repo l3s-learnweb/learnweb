@@ -44,7 +44,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private String username;
     private String email;
     private String emailConfirmationToken;
-    private boolean isEmailConfirmed;
+    private boolean isEmailConfirmed = true;
     private String password; // md5 hash
 
     private int gender;

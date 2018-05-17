@@ -130,15 +130,13 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         }
         //addMessage(FacesMessage.SEVERITY_INFO, "register_success");
 
-        // log the user in
-        UtilBean.getUserBean().setUser(user);
-
         //logging
-        log(Action.register, 0, 0);
+        log(Action.register, 0, 0, null, user);
         if(null != course && course.getDefaultGroupId() != 0)
-            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
+            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
 
-        if (!user.getIsEmailConfirmed()) {
+        if(!user.getIsEmailConfirmed())
+        {
             confirmRequiredBean.setLoggedInUser(user);
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
