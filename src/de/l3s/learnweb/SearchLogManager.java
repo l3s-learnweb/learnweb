@@ -74,18 +74,15 @@ public class SearchLogManager
 
     protected int logQuery(String query, MODE searchMode, SERVICE searchService, String language, String searchFilters, User user)
     {
-        try
+        int userId = user == null ? 0 : user.getId();
+
+        if(searchFilters == null)
+            searchFilters = "";
+        else if(searchFilters.length() > 1000)
+            searchFilters = searchFilters.substring(0, 1000);
+
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS);)
         {
-            int userId = user == null ? 0 : user.getId();
-
-            if(searchFilters == null)
-                searchFilters = "";
-            else if(searchFilters.length() > 1000)
-                searchFilters = searchFilters.substring(0, 1000);
-
-            //log.debug("log: " + query + " _ " + searchMode + " _ " + searchFilters + " _ " + userId + " _ ");
-
-            PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS);
             insert.setString(1, query);
             insert.setString(2, searchMode.name());
             insert.setString(3, searchService.name());

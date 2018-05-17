@@ -116,7 +116,8 @@ public class LoginBean extends ApplicationBean implements Serializable
             pm.updateSuccessfuldAttempts(ip, username);
             getLearnweb().getRequestManager().recordLogin(ip, username);
 
-            if (!user.getIsEmailConfirmed()) {
+            if(!user.getIsEmailConfirmed())
+            {
                 confirmRequiredBean.setLoggedInUser(user);
                 return "/lw/user/confirm_required.xhtml?faces-redirect=true";
             }
@@ -127,20 +128,22 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public static String loginUser(ApplicationBean bean, User user) throws SQLException
     {
-        return loginUser(bean, user, false);
+        return loginUser(bean, user, -1);
     }
 
     /**
-     * @param disableLog Only useful when a moderator logs into a user account
+     * @param moderatorUserId larger zero if a moderator logs into a user account through the admin interface
      */
-    public static String loginUser(ApplicationBean bean, User user, boolean disableLog) throws SQLException
+    public static String loginUser(ApplicationBean bean, User user, int moderatorUserId) throws SQLException
     {
         UtilBean.getUserBean().setUser(user); // logs the user in
         //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
         user.setCurrentLoginDate(new Date());
 
-        if(!disableLog)
-            bean.log(Action.login, 0, 0);
+        if(moderatorUserId > 0)
+            bean.log(Action.moderator_login, 0, 0);
+        else
+            bean.log(Action.login, 0, 0, BeanHelper.getRequestURI());
 
         // uncommented until interwebJ works correct
         /*
@@ -180,7 +183,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         // if the user logs in from the start or the login page, redirect him to the welcome page
         String viewId = getFacesContext().getViewRoot().getViewId();
-        if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && disableLog)
+        if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0)
         {
             return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
         }

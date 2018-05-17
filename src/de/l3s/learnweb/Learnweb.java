@@ -529,9 +529,6 @@ public class Learnweb
      */
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
-        if(null == action)
-            throw new IllegalArgumentException();
-
         int userId = (null == user) ? 0 : user.getId();
 
         if(groupId == -1)
@@ -554,6 +551,9 @@ public class Learnweb
      */
     public void log(int userId, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
+        if(null == action)
+            throw new IllegalArgumentException();
+
         params = StringHelper.shortnString(params, 250);
 
         try

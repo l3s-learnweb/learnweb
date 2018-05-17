@@ -114,6 +114,30 @@ public class BeanHelper
         return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
     }
 
+    /**
+     * 
+     * @return the request URI + query string
+     */
+    public static String getRequestURI()
+    {
+        String uri = null;
+
+        try
+        {
+            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+            HttpServletRequest request = (HttpServletRequest) ext.getRequest();
+
+            uri = request.getRequestURI();
+            if(request.getQueryString() != null)
+                uri += '?' + request.getQueryString();
+        }
+        catch(Throwable t)
+        {
+            // ignore
+        }
+        return uri;
+    }
+
     private static String printMap(Map<String, String[]> map)
     {
         if(null == map)

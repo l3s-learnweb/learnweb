@@ -199,7 +199,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
              *
             User user = getUser();
             //resource = user.addResource(resource);
-
+            
             // check if the user is logged in at interweb and to which services the file can be uploaded to
             if(user.isLoggedInInterweb())
             {
@@ -298,7 +298,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             else
                 resource.save();
 
-            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
@@ -343,7 +343,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
-            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
@@ -440,7 +440,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 new CreateThumbnailThread(resource).start();
             }
 
-            log(Action.adding_resource, getTargetGroupId(), resource.getId(), "");
+            log(Action.adding_resource, getTargetGroupId(), resource.getId());
 
             //detailed logging of new metadata (author, language, media source, media type
             if(resource.getAuthor() != null)
@@ -554,7 +554,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         Add resources through get parameter.
         Implemented for collaboration with an Italian software.
         Currently not used.
-
+        
         if(null != paramUrl || null != paramTitle || null != paramDescription || null != paramSource || null != paramType)
         {
             if(null == paramUrl || paramUrl.length() == 0)
@@ -567,36 +567,36 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         	addMessage(FacesMessage.SEVERITY_ERROR, "Missing required param: title");
         	return;
             }
-
+        
             resource = new Resource();
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(StringHelper.decodeBase64(paramUrl));
             resource.setTitle(StringHelper.decodeBase64(paramTitle));
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
-
+        
             if(null != paramThumbnail && paramThumbnail.length() != 0)
             {
         	String image = "<img src\"" + StringHelper.decodeBase64(paramThumbnail) + "\" />";
         	resource.setEmbeddedSize1Raw(image);
             }
-
+        
             if(null != paramDescription)
         	resource.setDescription(StringHelper.decodeBase64(paramDescription));
-
+        
             if(null != paramSource)
         	resource.setLocation(StringHelper.decodeBase64(paramSource));
-
+        
             if(null != paramType)
         	resource.setType(StringHelper.decodeBase64(paramType));
-
+        
             try
             {
         	addResource();
-
+        
         	String redirect = UtilBean.getLearnwebBean().getContextUrl() + getTemplateDir() + "/resource.jsf?resource_id=" + resource.getId();
         	getFacesContext().getExternalContext().redirect(redirect);
-
+        
             }
             catch(Exception e)
             {
@@ -691,14 +691,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public int getTargetGroupId() {
-        if (targetGroup != null)
+    public int getTargetGroupId()
+    {
+        if(targetGroup != null)
             return targetGroup.getId();
 
         return targetFolder != null ? targetFolder.getGroupId() : 0;
     }
 
-    public int getTargetFolderId() {
+    public int getTargetFolderId()
+    {
         return targetFolder != null ? targetFolder.getId() : 0;
     }
 

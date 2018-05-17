@@ -1293,7 +1293,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                             getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
                         }
                         numResources++;
-                        log(Action.adding_resource, targetGroupId, resource.getId(), "");
+                        log(Action.adding_resource, targetGroupId, resource.getId());
                     }
                     else
                     {

@@ -21,21 +21,21 @@ public class LogEntry implements Serializable
 
     public enum Action
     { // add new values add the BOTTOM !!!
-        tagging_resource, // param = the tag; target_id = id of the resource
-        rating_resource, // param = rate; target_id = id of the resource
-        commenting_resource, // param = comment id; target_id = id of the resource
-        opening_resource, // target_id = id of the tagged resource
+        tagging_resource, // target_id = resource id, param = the tag
+        rating_resource, // target_id = resource id, param = rate
+        commenting_resource, // target_id = resource id, param = comment id
+        opening_resource, // target_id = resource id
         submission_view_resource, // target_id = submission_id; param = user_id of the submission
         searching, // param = search query
         group_joining, // target_id = group_id
         group_creating, // target_id = group_id
         group_leaving, // target_id = group_id
-        login,
+        login, // param = page the user logged in on
         logout,
-        forum_post_added, // target_id =
+        forum_post_added, // target_id = topic_id, param = topic title
         register,
         changing_profile, // target_id = user_id of the user whose profile was changed
-        deleting_resource, // param = resource title; target_id = resource id
+        deleting_resource, // target_id = resource id, param = resource title;
         adding_resource, // target_id = resource id
         open_link,
         deleting_comment, // target_id = resource id; param = comment_id
@@ -52,23 +52,23 @@ public class LogEntry implements Serializable
         group_adding_document, // target_id = group_id; param = title
         opening_folder, // target_id = id of the tagged resource
         group_removing_resource, // target_id = resource id
-        deleting_folder, // param = folder name; target_id = folder_id
+        deleting_folder, // target_id = folder_id, param = folder name;
         downloading, // target_id = resource_id, param = file_id
         group_deleting_link, // param = title of deleted link; out dated
         group_resource_search, // param = query
         add_folder, // param = folder name; target_id = folder_id
         edit_folder, // param = folder name; target_id = folder_id
-        glossary_open, // target_id = resource id
-        glossary_create, // target_id = resource id
-        glossary_entry_edit, // target_id = resource id, target_id = glossary id
-        glossary_entry_add, // target_id = resource id, target_id = glossary id
-        glossary_entry_delete, // target_id = resource id, target_id = glossary id
-        glossary_term_edit, // target_id = resource id, target_id = glossary term id
-        glossary_term_add, // target_id = resource id, target_id = glossary term id
-        glossary_term_delete, // target_id = resource id, target_id = glossary term id
+        glossary_open, // target_id = resource id, param = glossary id
+        glossary_create, // target_id = resource id, param = glossary id
+        glossary_entry_edit, // target_id = resource id, param = glossary id
+        glossary_entry_add, // target_id = resource id, param = glossary id
+        glossary_entry_delete, // target_id = resource id, param = glossary id
+        glossary_term_edit, // target_id = resource id, param = glossary id
+        glossary_term_add, // target_id = resource id, param = glossary id
+        glossary_term_delete, // target_id = resource id, param = glossary id
         resource_thumbnail_update, // target_id = resource_id
         submission_submitted, //target_id = resource_id
-        extended_metadata_open_dialog,
+        extended_metadata_open_dialog, //target_id = resource_id
 
         //log entries for extended metadata (yell group only)
         adding_yourown_metadata, //target_id = clicked resource id, param = type of metadata added
@@ -80,7 +80,9 @@ public class LogEntry implements Serializable
         group_changing_discussion_link,
 
         changing_resource,
-        forum_reply_message;
+        forum_reply_message,
+        moderator_login // target_id = user_id of the moderator logs into a user account
+        ;
 
         public static List<Action> getResourceActions()
         {

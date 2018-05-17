@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import de.l3s.learnweb.*;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +21,11 @@ import org.json.JSONObject;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.Group;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.Resource;
 import de.l3s.util.StringHelper;
 
 @ManagedBean
@@ -384,7 +387,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                             getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
                         }
                         numResources++;
-                        log(Action.adding_resource, targetGroupId, resource.getId(), "");
+                        log(Action.adding_resource, targetGroupId, resource.getId());
                     }
                     else
                     {

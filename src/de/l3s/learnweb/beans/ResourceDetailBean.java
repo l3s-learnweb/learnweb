@@ -1,19 +1,32 @@
 package de.l3s.learnweb.beans;
 
-import de.l3s.learnweb.*;
-import de.l3s.learnweb.solrClient.FileInspector;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.RateEvent;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.RateEvent;
+
+import de.l3s.learnweb.Comment;
+import de.l3s.learnweb.File;
+import de.l3s.learnweb.FileManager;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceMetadataExtractor;
+import de.l3s.learnweb.ResourcePreviewMaker;
+import de.l3s.learnweb.Tag;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.solrClient.FileInspector;
 
 // TODO Oleh: rename to resourceAnnotationBean or merge with RightPaneBean (ResourcePaneBean)
 @ManagedBean
@@ -87,8 +100,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
-
-        //Limit of no. of spaces in a tag = 3
+        //Limit number of spaces in a tag = 3
 
         if((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50))
         {
@@ -108,9 +120,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         try
         {
-            rightPaneBean.getClickedResource().addTag(tagName, getUser());
+            Resource resource = rightPaneBean.getClickedResource();
+            resource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-            log(LogEntry.Action.tagging_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), tagName);
+            log(LogEntry.Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
             tagName = ""; // clear tag input field
         }
         catch(Exception e)
@@ -248,7 +261,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             rightPaneBean.getClickedResource().deleteComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(LogEntry.Action.deleting_comment, rightPaneBean.getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId() + "");
+            log(LogEntry.Action.deleting_comment, rightPaneBean.getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
         }
         catch(Exception e)
         {
@@ -261,7 +274,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         try
         {
             Comment comment = rightPaneBean.getClickedResource().addComment(newComment, getUser());
-            log(LogEntry.Action.commenting_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), comment.getId() + "");
+            log(LogEntry.Action.commenting_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), comment.getId());
             addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
             newComment = "";
         }
@@ -462,14 +475,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             try
             {
-                rightPaneBean.getClickedResource().addNewLevels(selectedLevels, getUser());
+                Resource resource = rightPaneBean.getClickedResource();
+                resource.addNewLevels(selectedLevels, getUser());
 
                 String sLevels = "";
                 for(int i = 0; i < selectedLevels.length; i++)
                 {
                     sLevels += selectedLevels[i] + ";";
                 }
-                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "language levels: " + sLevels);
+                log(LogEntry.Action.adding_yourown_metadata, resource.getGroupId(), resource.getId(), "language levels: " + sLevels);
                 selectedLevels = null; // clear lang level field
             }
             catch(Exception e)
@@ -631,8 +645,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         //log.debug("onOpenExtendedMetadataDialog");
         int groupId = rightPaneBean.getClickedResource() == null ? 0 : rightPaneBean.getClickedResource().getGroupId();
-        log(LogEntry.Action.extended_metadata_open_dialog, groupId, 0);
+        log(LogEntry.Action.extended_metadata_open_dialog, groupId, rightPaneBean.getClickedResource().getId());
     }
+
     public String getHypothesisLink()
     {
         return hypothesisProxy + rightPaneBean.getClickedResource().getUrl();

@@ -47,9 +47,9 @@ public class AdminUserBean extends ApplicationBean implements Serializable
             addFatalMessage(new IllegalAccessError(getUser() + " tried to highjack account"));
             return "";
         }
-        UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user 
+        UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user
 
-        return LoginBean.loginUser(this, user, true);
+        return LoginBean.loginUser(this, user, getUser().getId());
     }
 
     public List<User> getUsers()
@@ -59,7 +59,7 @@ public class AdminUserBean extends ApplicationBean implements Serializable
 
     /**
      * Make sure that only admins login to moderator accounts
-     * 
+     *
      * @param targetUser
      * @return
      */

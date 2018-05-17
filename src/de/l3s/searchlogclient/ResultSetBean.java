@@ -150,7 +150,7 @@ public class ResultSetBean extends ApplicationBean
     		clickedResources = searchLogClient.getResourcesLogByResultsetIdAndAction(resultSetId, "resource_click");
     	return clickedResources;
     }
-    
+
     public ArrayList<ResourceLog> getSavedResources() {
     	if(savedResources == null)
     		savedResources = searchLogClient.getResourcesLogByResultsetIdAndAction(resultSetId, "resource_saved");
@@ -325,7 +325,7 @@ public class ResultSetBean extends ApplicationBean
 
             }
             else
-                // create a copy 
+                // create a copy
                 newResource = selectedResource.clone();
 
             newResource.setQuery(query);
@@ -346,7 +346,7 @@ public class ResultSetBean extends ApplicationBean
             searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
             searchLogClient.addResourceSavedList(tempresourceId, newResource.getId());
 
-            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
+            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId());
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         }
@@ -416,7 +416,7 @@ public class ResultSetBean extends ApplicationBean
 
     /**
      * This method returns the resource corresponding to a given temporary resource ID.
-     * 
+     *
      * @param tempResourceId
      * @return
      */

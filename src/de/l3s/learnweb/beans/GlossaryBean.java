@@ -281,7 +281,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             getLearnweb().getGlossariesManager().deleteFromDb(item.getGlossId());
             createEntry();
-            log(Action.glossary_entry_delete, groupId, resourceId, Integer.toString(item.getGlossId()));
+            log(Action.glossary_entry_delete, groupId, resourceId, item.getGlossId());
         }
         catch(Exception e)
         {
@@ -364,7 +364,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             primaryLangItems.add(new LanguageItem());
 
-            log(Action.glossary_term_add, groupId, resourceId, "");
+            log(Action.glossary_term_add, groupId, resourceId);
         }
         catch(Exception e)
         {
