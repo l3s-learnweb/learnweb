@@ -100,7 +100,13 @@
 										<h:outputText value="My Dashboard" />
 									</a>
 								</li>
-
+								<li>
+									<h:outputLink value="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf">
+										<f:param name="user_id" value="#{userBean.user.id}" />
+										<h:outputText value="#{msg.search_history}" escape="false"/>
+									</h:outputLink>
+								</li>
+								
 								<li>
 									<a href="#{request.contextPath}/lw/user/login.jsf" id="login">
 										#{msg.loginLabel}
@@ -113,12 +119,6 @@
 									</h:form>
 								</li>
 								<ui:fragment rendered="#{userBean.admin}">
-
-									<li>
-										<a href="#{request.contextPath}/lw/explore.jsf?mode=list_view&amp;page=1">
-											<h:outputText value="#{msg.search_history}" />
-										</a>
-									</li>
 
 									<li>
 										<a href="#{request.contextPath}/lw/myhome/services.jsf">
