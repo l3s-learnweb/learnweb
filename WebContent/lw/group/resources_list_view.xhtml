@@ -50,16 +50,17 @@
                                         <h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
                                     </h:outputLink>
 
-                                    <h:panelGroup class="resource-controls" layout="block" rendered="${res.resource.canEditResource(userBean.user)}">
+                                    <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
                                         <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
                                             <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
                                         </h:outputLink>
-                                    </h:panelGroup>
-                                    <h:panelGroup class="resource-controls" layout="block" rendered="${res.resource.canDeleteResource(userBean.user)}">
+                                    </ui:fragment>
+
+                                    <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
                                         <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
                                             <h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
                                         </h:outputLink>
-                                    </h:panelGroup>
+                                    </ui:fragment>
                                 </h:panelGroup>
                             </div>
                         </div>
