@@ -24,12 +24,12 @@
 	<ui:define name="center_layout">
 
 		<h:form>
-			<p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}" update=":folder_layout_options :breadcrumb :context-menu :datagrid :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();scroller();"/>
+			<p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}" update=":folder_layout_options :breadcrumb :context-menu :resourcesView :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();scroller();"/>
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();resourceDND(); "/>
-			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}" update=":breadcrumb :datagrid :right_pane_wrapper :growl " oncomplete="resourceDND();update_header();"/>
+			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}" update=":breadcrumb :resourcesView :right_pane_wrapper :growl " oncomplete="resourceDND();update_header();"/>
 			<p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
 			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}" update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
-			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane_wrapper :datagrid :growl" oncomplete="update_header();resourceDND();"/>
+			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
 		</h:form>
 
 		<div class="center-header" id="group_header">
@@ -87,10 +87,10 @@
 			
 			</h:form>
 			<h:form styleClass="layout_button" id="folder_layout_options" prependId="false">
-				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
+				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":resourcesView :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
 					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="list"/>
 				</p:commandButton>
-				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":datagrid :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
+				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":resourcesView :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
 					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="grid"/>
 				</p:commandButton>
 			</h:form>
@@ -104,7 +104,7 @@
 
 						<ui:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
 							<li>
-								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :datagrid :right_pane_wrapper" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
+								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :resourcesView :right_pane_wrapper" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
 									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false"/>
 								</p:commandLink>
@@ -232,7 +232,7 @@
 						<ui:repeat var="folder" value="#{myResourcesBean.folders}">
 							<hr/>
 							<h:form>
-								<p:commandLink styleClass="resource_command_link" update=":breadcrumb :datagrid :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
+								<p:commandLink styleClass="resource_command_link" update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
 									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
 								</p:commandLink>
@@ -271,7 +271,7 @@
 							</div>
 							<br/>
 							<h:form>
-								<p:commandLink styleClass="more_resources_link" update=":breadcrumb :datagrid :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
+								<p:commandLink styleClass="more_resources_link" update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
                                     <h:outputText value="#{msg.show_all_my_resources_in_this_group}" />
 								</p:commandLink>

@@ -338,7 +338,7 @@
 			value="#{resourceDetailBean.tagName}" id="tag_name" />
 		<p:commandButton actionListener="#{resourceDetailBean.addTag}"
 			styleClass="greenbutton clearfix" value="#{msg.addTag}"
-			update=" :datagrid :tag_form :growl :tag_input_form:tag_name"
+			update=":resourcesView :tag_form :growl :tag_input_form:tag_name"
 			process="@form" style="margin-right:0;margin-top:4px;float:right"
 			partialSubmit="true">
 
@@ -374,7 +374,7 @@
 			<p:commandButton id="comment_button"
 				styleClass="greenbutton float-right" value="#{msg.addComment}"
 				actionListener="#{resourceDetailBean.addComment()}"
-				update=":datagrid :comment_input_form :comment_form :growl">
+				update=":resourcesView :comment_input_form :comment_form :growl">
 				<f:setPropertyActionListener
 					target="#{activityResourceBean.reloadLogs}" value="true" />
 			</p:commandButton>

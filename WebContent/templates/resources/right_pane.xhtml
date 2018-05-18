@@ -41,7 +41,7 @@
                         * #{msg.mandatory_field}
 
                         <p:commandButton id="create_file_button" widgetVar="create-button" value="#{msg.create}" styleClass="greenbutton float-right"
-                                         update=":growl :right_pane_wrapper :datagrid" actionListener="#{addResourceBean.createFile}" ajax="true"
+                                         update=":growl :right_pane_wrapper :resourcesView" actionListener="#{addResourceBean.createFile}" ajax="true"
                                          onstart="PF('create-button').disable()" oncomplete="update_header();resourceDND(); load_lightbox_editor();load_editor();">
                             <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
                             <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
@@ -221,7 +221,7 @@
 
                     <p:commandButton id="create_glossary_button" value="Create Glossary"
                                      styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :datagrid"
+                                     update=":growl :right_pane_wrapper :resourcesView"
                                      action="#{addResourceBean.addGlossary}" ajax="true"
                                      oncomplete="update_header();resourceDND();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
@@ -230,7 +230,7 @@
                     </p:commandButton>
                     <p:commandButton id="create_survey_button" value="Create survey"
                                      styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :datagrid"
+                                     update=":growl :right_pane_wrapper :resourcesView"
                                      action="#{addResourceBean.addSurvey}" ajax="true"
                                      oncomplete="update_header();resourceDND();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'survey'}">
@@ -265,12 +265,12 @@
                     </p:fieldset>
 
                     <p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :datagrid"
+                                     update=":growl :right_pane_wrapper :resourcesView"
                                      action="#{addResourceBean.addResource}" ajax="true"
                                      oncomplete="update_header();resourceDND(); load_editor();"
                                      rendered="#{addResourceBean.formStep > 1}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
-                        <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>
+                        <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
 
                     <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true"
