@@ -90,7 +90,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             Folder folder = new Folder(0, groupId, group.getTitle());
             breadcrumb.add(0, folder);
             updateBreadcrumb();
-            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(groupId, getSelectedFolderId(), getUser().getId(), 10000);
+            updateResources();
         }
         else if(getParameterInt("group_id") != null && getParameterInt("folder_id") != null)
         {
@@ -99,7 +99,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 rootFolder = false;
                 Folder folder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
                 breadcrumb.add(folder);
-                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
+                updateResources();
             }
         }
 
@@ -114,6 +114,20 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         {
             breadcrumb.add(1, folder);
             folder = folder.getParentFolder();
+        }
+    }
+
+    public void updateResources()
+    {
+        try
+        {
+            int groupId = this.groupId > 0 ? this.groupId : (selectedFolder == null || selectedFolder.getGroupId() <= 0 ? 0 : selectedFolder.getGroupId());
+            int folderId = getSelectedFolderId();
+            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(groupId, folderId, getUser().getId(), 1000);
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
         }
     }
 
@@ -462,7 +476,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             if(numResources > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numResources);
-                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
+                updateResources();
                 rightPaneBean.resetPane();
             }
 
@@ -480,18 +494,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public List<Resource> getResources()
     {
         return resources;
-    }
-
-    public void updateResources()
-    {
-        try
-        {
-            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 1000);
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
     }
 
     public List<Folder> getFolders() throws SQLException
@@ -528,10 +530,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             else
                 breadcrumb.add(folder);
 
-            this.selectedFolder = folder;
+            selectedFolder = folder;
             addResourceBean.setTargetFolderId(getSelectedFolderId());
 
-            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(folder.getGroupId(), folder.getId(), getUser().getId(), 10000);
+            updateResources();
         }
     }
 

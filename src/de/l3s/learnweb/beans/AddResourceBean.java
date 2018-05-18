@@ -461,14 +461,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-            if(resource.getGroupId() == 0)
-            {
-                UtilBean.getMyResourcesBean().updateResources();
-            }
-            else
-            {
+
+            if(resource.getGroupId() != 0)
                 UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-            }
+
+            UtilBean.getMyResourcesBean().updateResources();
         }
         catch(Exception e)
         {
