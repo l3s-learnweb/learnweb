@@ -690,6 +690,16 @@
                             </td>
                         </tr>
                     </ui:fragment>
+                    <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.user}">
+                        <tr>
+                            <td>
+                                #{msg.created_by}:
+                            </td>
+                            <td>
+                                <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.user.username}" escape="false"/>
+                            </td>
+                        </tr>
+                    </ui:fragment>
                 </table>
             </h:panelGroup>
 
