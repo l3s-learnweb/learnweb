@@ -2,8 +2,6 @@ package de.l3s.learnweb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,19 +13,16 @@ import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import de.l3s.util.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
+import de.l3s.util.Cache;
+import de.l3s.util.DummyCache;
+import de.l3s.util.ICache;
+import de.l3s.util.Sql;
 
 /**
  * DAO for the User class.
- * Because there are only a few Users we keep them all in memory
  *
  * @author Philipp
  *
@@ -36,7 +31,7 @@ public class UserManager
 {
     private final static Logger log = Logger.getLogger(UserManager.class);
 
-    // if you change this, you have to change the constructor of User too
+    // if you change this, you have to change createUser() too
     private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, active_course_id, registration_date, password, preferences, credits, fullname, affiliation, accept_terms_and_conditions";
 
     private Learnweb learnweb;
@@ -307,7 +302,8 @@ public class UserManager
 
         User user = new User();
         user.setUsername(username);
-        user.setEmail(email);
+        user.setEmail(""); // set something to make sure that
+        user.setEmail(email); // the mail confirmation token is created now
         user.setInterwebToken(iwToken);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password, false);
@@ -379,7 +375,7 @@ public class UserManager
         replace.setString(2, user.getRealUsername());
         replace.setString(3, user.getEmail());
         replace.setString(4, user.getEmailConfirmationToken());
-        replace.setBoolean(5, user.getIsEmailConfirmed());
+        replace.setBoolean(5, user.isEmailConfirmed());
 
         replace.setInt(6, user.getOrganisationId());
         replace.setString(7, user.getInterwebKey());
@@ -407,50 +403,18 @@ public class UserManager
         replace.setBoolean(27, user.isAcceptTermsAndConditions());
         replace.executeUpdate();
 
-        boolean isNew = false;
         if(user.getId() < 0) // get the assigned id
         {
             ResultSet rs = replace.getGeneratedKeys();
             if(!rs.next())
                 throw new SQLException("database error: no id generated");
             user.setId(rs.getInt(1));
-            isNew = true;
 
             cache.put(user); // add the createUser to the cache
         }
         replace.close();
 
-        sendEmailConfirmation(user, isNew);
         return user;
-    }
-
-    /**
-     * @param isNew Can be used to send different message 'on update' and 'on create' user.
-     */
-    private void sendEmailConfirmation(User user, boolean isNew) {
-        if (user.getEmailConfirmationToken() != null) {
-            try
-            {
-                String confirmEmailUrl = learnweb.getServerUrl() + "/lw/user/confirm_email.jsf?" +
-                        "email=" + URLEncoder.encode(user.getEmail(), "UTF-8") +
-                        "&token=" + user.getEmailConfirmationToken();
-
-                Mail message = new Mail();
-                message.setSubject("Confirmation email request from Learnweb");
-                message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-                message.setText("Hi " + user.getRealUsername() + ",\n\n" +
-                        (isNew ? "Thank you for registration on Learnweb, to continue using our system you need to confirm your email.\n" : "") +
-                        "There is your confirmation link:\n" + confirmEmailUrl + "\n\n" +
-                        "Or just ignore this email, if you haven't requested it.\n\n" +
-                        "Best regards,\nLearnweb Team");
-
-                message.sendMail();
-            }
-            catch(UnsupportedEncodingException | MessagingException e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -468,7 +432,7 @@ public class UserManager
         user.setUsername(rs.getString("username"));
         user.setEmail(rs.getString("email"));
         user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
-        user.setIsEmailConfirmed(rs.getBoolean("is_email_confirmed"));
+        user.setEmailConfirmed(rs.getBoolean("is_email_confirmed"));
         user.setPassword(rs.getString("password"), true);
         user.setOrganisationId(rs.getInt("organisation_id"));
         user.setActiveGroup(rs.getInt("active_group_id"));

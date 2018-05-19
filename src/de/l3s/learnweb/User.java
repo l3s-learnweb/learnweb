@@ -11,6 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,6 +29,8 @@ import de.l3s.learnweb.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
+import de.l3s.util.Mail;
+import de.l3s.util.StringHelper;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
@@ -42,9 +47,9 @@ public class User implements Comparable<User>, Serializable, HasId
     private String fullName; //Full Name
     private String affiliation; //affiliated with which institute
     private String username;
-    private String email;
+    private String email = null; // it is important to set null instead of empty string
     private String emailConfirmationToken;
-    private boolean isEmailConfirmed = true;
+    private boolean emailConfirmed = true;
     private String password; // md5 hash
 
     private int gender;
@@ -167,9 +172,9 @@ public class User implements Comparable<User>, Serializable, HasId
         return emailConfirmationToken;
     }
 
-    public boolean getIsEmailConfirmed()
+    public boolean isEmailConfirmed()
     {
-        return isEmailConfirmed;
+        return emailConfirmed;
     }
 
     @Override
@@ -261,7 +266,7 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * getUsername() may return "Anonymous" for some organizations.
      * This method will always return the real username
-     * 
+     *
      * @return
      */
     public String getRealUsername()
@@ -286,12 +291,15 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setEmail(String email)
     {
-        if (StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email)) {
-            this.isEmailConfirmed = false;
+        // if email was changed (but not by the initial createUser() call)
+        if(this.email != null && StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email))
+        {
+            log.debug("created new emailConfirmationToken");
+            this.emailConfirmed = false;
             this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
         }
 
-        this.email = email;
+        this.email = StringUtils.defaultString(email); // make sure it's not null
     }
 
     public void setEmailConfirmationToken(String emailConfirmationToken)
@@ -299,9 +307,9 @@ public class User implements Comparable<User>, Serializable, HasId
         this.emailConfirmationToken = emailConfirmationToken;
     }
 
-    public void setIsEmailConfirmed(boolean isEmailConfirmed)
+    public void setEmailConfirmed(boolean isEmailConfirmed)
     {
-        this.isEmailConfirmed = isEmailConfirmed;
+        this.emailConfirmed = isEmailConfirmed;
     }
 
     public void setGender(int gender)
@@ -534,6 +542,39 @@ public class User implements Comparable<User>, Serializable, HasId
         imageUrl = file.getUrl();
 
         this.save();
+    }
+
+    /**
+     *
+     * @return FALSE if an error occurred while sending this message
+     */
+    public boolean sendEmailConfirmation()
+    {
+        try
+        {
+            String confirmEmailUrl = Learnweb.getInstance().getServerUrl() + "/lw/user/confirm_email.jsf?" +
+                    "email=" + StringHelper.urlEncode(getEmail()) +
+                    "&token=" + getEmailConfirmationToken();
+
+            Mail message = new Mail();
+            message.setSubject("Confirmation request from Learnweb");
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(getEmail()));
+            message.setText("Hi " + getRealUsername() + ",\n\n" +
+                    "please use this link to confirm your mail address:\n" + confirmEmailUrl + "\n\n" +
+                    "Best regards,\nLearnweb Team");
+
+            // "Or just ignore this email, if you haven't requested it.\n\n" +
+            // TODO add sentence after EUmade4all is over
+
+            message.sendMail();
+
+            return true;
+        }
+        catch(MessagingException e)
+        {
+            log.error("Can't send confirmation mail to " + toString());
+        }
+        return false;
     }
 
     public boolean isAdmin()

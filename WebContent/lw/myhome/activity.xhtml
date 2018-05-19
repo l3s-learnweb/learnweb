@@ -12,17 +12,6 @@
     <ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
 
     <ui:define name="center_layout">
-        <p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
-            <div style="width: 28rem;">
-                <ui:include src="/templates/user/guide.xhtml"/>
-            </div>
-        </p:panel>
-        <p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.domain != 'ARCHIVEWEB'}" header="#{msg.presentation_guide}">
-            <div style="width: 28rem;">
-                <ui:include src="/aw/guide.xhtml"/>
-            </div>
-        </p:panel>
-
         <div class="center-header" id="group_header">
             <h2>
                 #{msg.activity_stream}

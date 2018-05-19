@@ -9,17 +9,20 @@
 
 		<ui:param name="loginRequired" value="true"/>
 		<ui:param name="pageTitle" value="#{msg.welcome}"/>	
-		
-		
-		
+
 		<ui:define name="center_layout">
-			
-			<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
-				<div style="width: 28rem;">
-					<ui:include src="/templates/user/guide.xhtml"/>
-				</div>	
-			</p:panel>			
-			<p:panel rendered="#{welcomeBean.welcomeMessage.length() > 5}">
+
+		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
+			<div style="width: 28rem;">
+				<ui:fragment rendered="#{userBean.domain == 'ARCHIVEWEB'}">
+					<ui:include src="/aw/guide.xhtml" />
+				</ui:fragment>
+				<ui:fragment rendered="#{userBean.domain != 'ARCHIVEWEB'}">
+					<ui:include src="/templates/user/guide.xhtml" />
+				</ui:fragment>
+			</div>
+		</p:panel>
+		<p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
 				<f:facet name="header">
 					#{msg.welcome}
 					<ui:fragment rendered="#{userBean.admin || userBean.moderator}">

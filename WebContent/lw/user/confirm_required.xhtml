@@ -5,39 +5,45 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="pageTitle" value="#{msg.email_confirm_required}"/>
+    <ui:param name="pageTitle" value="#{msg.email_validation}"/>
     <ui:param name="loginRequired" value="false"/>
     <ui:param name="smallPage" value="true"/>
     <ui:param name="disableGrowl" value="true"/>
 
     <ui:define name="center_layout">
         <h:panelGroup id="confirmRequiredContent" layout="block">
-            <p:panel header="#{msg.email_already_confirmed}" rendered="#{confirmRequiredBean.isConfirmed()}">
-                <a href="#{request.contextPath}/lw/myhome/activity.jsf">
+            <p:panel header="#{msg.email_validation}" rendered="#{confirmRequiredBean.confirmed}">
+                <a href="#{userBean.bannerLink}">
                     <h:outputText value="#{msg.return_to_welcome_page}"/>
                 </a>
             </p:panel>
 
-            <p:panel header="#{msg.email_confirm_required}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
-                <p>Dear #{confirmRequiredBean.user.realUsername},</p>
-                <p>Before start working on Learnweb, you need to confirm your email.</p>
-                <br/>
-                <p>We have sent a confirmation link to the email address, that you entered during registration: #{confirmRequiredBean.user.email}.</p>
-                <p>Is that email incorrect?
-                    <a href="#" onclick="$('#emailChangeForm').show();return false;">Click here to change it.</a>
-                    Otherwise, please, check your mailbox.
-                </p>
+            <p:panel header="#{msg.email_validation}" rendered="#{!confirmRequiredBean.confirmed and confirmRequiredBean.user != null}">
+
+				<script>
+				function openEmailChangeForm()
+				{
+					$('#emailChangeForm').show();
+					return false;
+				}
+				</script> 
+				
+				<h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
+					<f:param value="#{confirmRequiredBean.user.realUsername}" />
+					<f:param value="#{confirmRequiredBean.user.email}" />
+				</h:outputFormat>
             </p:panel>
 
-            <p:panel header="#{msg.change_email}" style="display: none;" id="emailChangeForm">
+            <p:panel header="#{msg.email_validation}" style="display: none;" id="emailChangeForm">
                 <h:form id="emailform">
                     <h:panelGrid columns="3">
                         <h:outputLabel for="email">#{msg.email_address}: *</h:outputLabel>
-                        <p:inputText id="email" type="email" value="#{confirmRequiredBean.newEmail}" label="#{msg.email_address}" required="true"/>
+                        <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem" />
                         <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
 
-                        <br/>
-                        <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.update}" update=":confirmRequiredContent" ajax="false"/>
+                        <h:outputText value="" />
+                        <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.send_email}" update=":confirmRequiredContent" ajax="false"/>
+                        <h:outputText value="" />
                     </h:panelGrid>
                 </h:form>
             </p:panel>

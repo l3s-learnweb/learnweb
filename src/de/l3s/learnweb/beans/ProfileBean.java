@@ -16,6 +16,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -177,12 +178,22 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void saveProfile() throws SQLException
+    public void onSaveProfile() throws SQLException
     {
+        // send confirmation mail if mail has been changed
+        if(StringUtils.isNotEmpty(email) && !StringUtils.equals(user.getEmail(), email))
+        {
+            user.setEmail(email);
+
+            if(user.sendEmailConfirmation())
+                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+            else
+                addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
+        }
+
         user.setAdditionalinformation(additionalInformation);
         user.setAddress(address);
         user.setDateofbirth(dateofbirth);
-        user.setEmail(email);
         user.setGender(gender);
         user.setInterest(interest);
         user.setStudentId(studentId);

@@ -116,7 +116,7 @@ public class LoginBean extends ApplicationBean implements Serializable
             pm.updateSuccessfuldAttempts(ip, username);
             getLearnweb().getRequestManager().recordLogin(ip, username);
 
-            if(!user.getIsEmailConfirmed())
+            if(!user.isEmailConfirmed())
             {
                 confirmRequiredBean.setLoggedInUser(user);
                 return "/lw/user/confirm_required.xhtml?faces-redirect=true";

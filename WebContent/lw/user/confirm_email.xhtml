@@ -13,16 +13,15 @@
         </f:metadata>
     </ui:define>
 
-    <ui:param name="pageTitle" value="#{msg.confirm_email}"/>
+    <ui:param name="pageTitle" value="#{msg.email_validation}"/>
     <ui:param name="loginRequired" value="false"/>
     <ui:param name="smallPage" value="true"/>
     <ui:param name="disableGrowl" value="true"/>
-
+ 
     <ui:define name="center_layout">
-        <p:panel header="#{msg.confirm_email}" rendered="#{confirmEmailBean.isConfirmed()}">
-            <p>Thank you,</p>
-            <p>Your email confirmed, you can continue your work.</p>
-            <a href="#{request.contextPath}/lw/myhome/activity.jsf">
+        <p:panel header="#{msg.email_validation}" rendered="#{confirmEmailBean.isConfirmed()}">
+            <p>#{msg.email_confirmed}</p>
+            <a href="#{userBean.bannerLink}">
                 <h:outputText value="#{msg.return_to_welcome_page}"/>
             </a>
         </p:panel>

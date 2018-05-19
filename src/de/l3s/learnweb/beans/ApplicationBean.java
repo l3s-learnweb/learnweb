@@ -55,6 +55,8 @@ public class ApplicationBean
     /**
      * Returns the http get paramater or null if not found
      *
+     * Should not be used in most cases. Use template f:viewParam and f:viewAction
+     *
      * @param param
      * @return
      */
@@ -68,6 +70,8 @@ public class ApplicationBean
     /**
      * Returns the http get parameter as int.
      * Is null if not found or couldn't be parsed
+     *
+     * Should not be used in most cases. Use template f:viewParam and f:viewAction
      *
      * @param param
      * @return

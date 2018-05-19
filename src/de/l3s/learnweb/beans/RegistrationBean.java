@@ -135,9 +135,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         if(null != course && course.getDefaultGroupId() != 0)
             log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
 
-        if(!user.getIsEmailConfirmed())
+        if(!user.isEmailConfirmed())
         {
+            user.sendEmailConfirmation();
+
             confirmRequiredBean.setLoggedInUser(user);
+
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 

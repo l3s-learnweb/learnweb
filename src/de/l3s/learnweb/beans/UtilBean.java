@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 public class UtilBean implements Serializable
 {
     private final static long serialVersionUID = 6252597111468136574L;
-    //    private final static Logger log = Logger.getLogger(UtilBean.class);
+    private final static Logger log = Logger.getLogger(UtilBean.class);
 
     @Deprecated
     public boolean isSearchPage()
@@ -107,7 +107,7 @@ public class UtilBean implements Serializable
         }
         catch(Exception e)
         {
-            Logger.getLogger(UtilBean.class).error("Can't load current locale", e);
+            log.error("Can't load current locale", e);
             locale = Locale.ENGLISH;
         }
 

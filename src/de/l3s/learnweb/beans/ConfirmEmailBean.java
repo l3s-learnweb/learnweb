@@ -1,14 +1,16 @@
 package de.l3s.learnweb.beans;
 
-import de.l3s.learnweb.User;
-import org.apache.commons.lang3.StringUtils;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import java.io.Serializable;
-import java.sql.SQLException;
+
+import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.learnweb.User;
 
 @ManagedBean
 @RequestScoped
@@ -24,12 +26,12 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{confirmRequiredBean}")
     private ConfirmRequiredBean confirmRequiredBean;
 
-    public void onLoad() throws SQLException
+    public String onLoad() throws SQLException
     {
         if(StringUtils.isAnyEmpty(email, token))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-            return;
+            return null;
         }
 
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
@@ -37,17 +39,19 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
         if(user == null)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "confirm_token_invalid");
-            return;
+            return null;
         }
 
-        user.setIsEmailConfirmed(true);
+        user.setEmailConfirmed(true);
         user.setEmailConfirmationToken(null);
         user.save();
 
-        if (user.equals(confirmRequiredBean.getLoggedInUser())) {
+        if(user.equals(confirmRequiredBean.getLoggedInUser()))
+        {
             LoginBean.loginUser(this, user);
-            UtilBean.redirect("/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true");
+            return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
         }
+        return null;
     }
 
     public String getEmail()
@@ -72,7 +76,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
 
     public boolean isConfirmed()
     {
-        return user != null && user.getIsEmailConfirmed();
+        return user != null && user.isEmailConfirmed();
     }
 
     @Override

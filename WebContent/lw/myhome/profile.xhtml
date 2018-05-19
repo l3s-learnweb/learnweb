@@ -74,7 +74,7 @@
 							<h:outputText>
 								#{msg.email_address}<h:outputText value=" *" rendered="#{profileBean.mailRequired}"/>:
 							</h:outputText>
-							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}" label="#{msg.email_address}:">
+							<p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:">
 								<f:ajax render="useremailMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />
@@ -130,7 +130,7 @@
 									id="usercreditsMessage" />			
 												
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" 
+							<p:commandButton actionListener="#{profileBean.onSaveProfile}" value="#{msg.save}" ajax="true" process="@form" 
 									update=":growl @form :profile_news"/>		
 							<h:outputText value="" />	
 						</h:panelGrid>			

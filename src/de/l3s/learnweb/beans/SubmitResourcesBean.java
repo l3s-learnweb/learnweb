@@ -656,6 +656,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     /* -------- Methods below are used for the admin users submissions page ---------*/
 
+    // TODO move to other bean
     /**
      * To display the users for a particular course and the corresponding number of submissions
      * on the admin/users_submissions page
@@ -667,7 +668,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         if(users == null)
         {
-            Integer courseId = getParameterInt("course_id");
+            Integer courseId = getParameterInt("course_id"); // TODO don't use this
 
             if(courseId != null)
             {

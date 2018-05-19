@@ -1,29 +1,34 @@
 package de.l3s.learnweb.beans;
 
-import de.l3s.learnweb.User;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.io.Serializable;
-import java.sql.SQLException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Email;
+
+import de.l3s.learnweb.User;
 
 @ManagedBean
 @SessionScoped
 public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(ConfirmRequiredBean.class);
+    //private static final Logger log = Logger.getLogger(ConfirmRequiredBean.class);
     private static final long serialVersionUID = 934105342636869805L;
 
     private User loggedInUser;
 
-    private String newEmail;
+    @Email
+    private String email;
 
+    @Override
     public User getUser()
     {
-        if (super.getUser() != null) {
+        if(super.getUser() != null)
+        {
             return super.getUser();
         }
 
@@ -32,34 +37,24 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 
     public boolean isConfirmed()
     {
-        return getUser() != null && getUser().getIsEmailConfirmed();
-    }
-
-    public String getNewEmail()
-    {
-        return newEmail;
-    }
-
-    public void setNewEmail(String newEmail)
-    {
-        this.newEmail = newEmail;
+        return getUser() != null && getUser().isEmailConfirmed();
     }
 
     public void onSubmitNewEmail()
     {
-        log.debug("onSubmitNewEmail");
         User user = getUser();
         try
         {
-            if (!StringUtils.equals(user.getEmail(), newEmail)) {
-                user.setEmail(newEmail);
+            if(!StringUtils.equals(user.getEmail(), email))
+            {
+                user.setEmail(email);
                 user.save();
-                addMessage(FacesMessage.SEVERITY_INFO, "email_changed");
-            } else {
-                addMessage(FacesMessage.SEVERITY_INFO, "nothing_to_change");
             }
 
-            newEmail = null;
+            if(user.sendEmailConfirmation())
+                addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+            else
+                addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
         }
         catch(SQLException e)
         {
@@ -75,5 +70,16 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
     public void setLoggedInUser(User loggedInUser)
     {
         this.loggedInUser = loggedInUser;
+        this.email = loggedInUser.getEmail();
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
     }
 }
