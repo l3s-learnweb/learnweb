@@ -295,7 +295,6 @@ public class User implements Comparable<User>, Serializable, HasId
         // if email was changed (but not by the initial createUser() call)
         if(this.email != null && StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email))
         {
-            log.debug("created new emailConfirmationToken");
             this.emailConfirmed = false;
             this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
         }

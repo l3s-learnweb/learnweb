@@ -269,7 +269,7 @@ public class Learnweb
             setServerUrl(guessedServerUrl);
         else
         {
-            setServerUrl("http://learnweb.l3s.uni-hannover.de");
+            setServerUrl("https://learnweb.l3s.uni-hannover.de");
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
         }
 

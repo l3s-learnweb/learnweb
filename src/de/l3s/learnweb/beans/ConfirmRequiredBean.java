@@ -42,6 +42,11 @@ public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 
     public void onSubmitNewEmail()
     {
+        if(email.endsWith("uni.au.dk"))
+        {
+            addMessage(FacesMessage.SEVERITY_FATAL, "This is not a valid mail address. Use for example stundetid@post.au.dk");
+            return;
+        }
         User user = getUser();
         try
         {
