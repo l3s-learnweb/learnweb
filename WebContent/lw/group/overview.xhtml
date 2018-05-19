@@ -55,6 +55,7 @@
 
 		<ui:fragment
 			rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
+			<h:panelGroup id="resourcesView" layout="block">
 			<ui:decorate template="/templates/group/summary_overview.xhtml" >
 				<ui:param name="summary"
 					value="#{groupDetailBean.groupSummaryBean.getSummaryOverview()}" />
@@ -66,6 +67,7 @@
 			</div>
 
 			<div id="all_activities" class="hidden">
+			
 			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable" style="width: 100%;">
 				<h:column >
 					<div class="newsfeed_user_image_div">
@@ -136,6 +138,7 @@
 					</h:panelGroup>
 				</h:form>
 			</div>
+			</h:panelGroup>
 		</ui:fragment>
 		<br></br>
 

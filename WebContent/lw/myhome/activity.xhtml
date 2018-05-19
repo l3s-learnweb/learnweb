@@ -27,6 +27,7 @@
             /* --> */
         </script>
 
+		<h:panelGroup id="resourcesView" layout="block">
         <h:dataTable var="datagrid" value="#{activityResourceBean.newsList}" id="datagrid" style="width:100%" styleClass="not-selectable">
             <h:column>
                 <div class="newsfeed_user_image_div">
@@ -82,6 +83,7 @@
             </h:column>
 
         </h:dataTable>
+    	</h:panelGroup>
     </ui:define>
 
     <ui:define name="right_layout">

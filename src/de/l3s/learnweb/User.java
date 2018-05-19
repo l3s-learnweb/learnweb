@@ -26,6 +26,7 @@ import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Organisation.Option;
+import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
@@ -852,6 +853,17 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions)
     {
         this.acceptTermsAndConditions = acceptTermsAndConditions;
+    }
+
+    /**
+     *
+     * @return peer assessment pairs where the user functions as assessor
+     *
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getPeerAssessmentAsAssessor() throws SQLException
+    {
+        return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessorUserId(getId());
     }
 
 }

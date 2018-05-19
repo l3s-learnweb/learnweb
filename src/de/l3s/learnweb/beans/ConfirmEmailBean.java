@@ -46,6 +46,8 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
         user.setEmailConfirmationToken(null);
         user.save();
 
+        addMessage(FacesMessage.SEVERITY_INFO, "email_confirmed");
+
         if(user.equals(confirmRequiredBean.getLoggedInUser()))
         {
             LoginBean.loginUser(this, user);
