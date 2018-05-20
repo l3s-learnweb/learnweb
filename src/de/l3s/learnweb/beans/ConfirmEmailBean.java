@@ -34,6 +34,12 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
             return null;
         }
 
+        if(token.length() < 32)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "confirm_token_to_short");
+            return null;
+        }
+
         user = getLearnweb().getUserManager().getUserByEmailAndConfirmationToken(email, token);
 
         if(user == null)

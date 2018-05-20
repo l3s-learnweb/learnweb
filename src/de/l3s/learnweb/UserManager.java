@@ -224,20 +224,19 @@ public class UserManager
 
     public User getUserByEmailAndConfirmationToken(String email, String emailConfirmationToken) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ? AND email_confirmation_token = ?");
-        select.setString(1, email);
-        select.setString(2, emailConfirmationToken);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ? AND email_confirmation_token = ?");)
         {
-            return null;
+            select.setString(1, email);
+            select.setString(2, emailConfirmationToken);
+            ResultSet rs = select.executeQuery();
+
+            if(!rs.next())
+            {
+                return null;
+            }
+
+            return createUser(rs);
         }
-
-        User user = createUser(rs);
-        select.close();
-
-        return user;
     }
 
     /**
@@ -249,19 +248,18 @@ public class UserManager
      */
     public int getUserIdByUsername(String username) throws SQLException
     {
-        PreparedStatement pstmtGetUser = learnweb.getConnection().prepareStatement("SELECT user_id FROM `lw_user` WHERE username = ?");
-        pstmtGetUser.setString(1, username);
-        ResultSet rs = pstmtGetUser.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id FROM `lw_user` WHERE username = ?");)
         {
-            //log.warn("invalid user name was requested: " + username);
-            return -1; //throw new IllegalArgumentException("invalid user id");
-        }
-        int userId = rs.getInt("user_id");
-        pstmtGetUser.close();
+            select.setString(1, username);
+            ResultSet rs = select.executeQuery();
 
-        return userId;
+            if(!rs.next())
+            {
+                return -1;
+            }
+
+            return rs.getInt("user_id");
+        }
     }
 
     /**
