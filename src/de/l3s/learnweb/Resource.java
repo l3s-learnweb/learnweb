@@ -62,11 +62,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         @Override
         public String toString()
         {
-            switch(this) {
-                case text:
-                    return "Document";
-                default:
-                    return super.toString();
+            switch(this)
+            {
+            case text:
+                return "Document";
+            default:
+                return super.toString();
             }
         }
     }
@@ -616,7 +617,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -672,6 +673,9 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public void setUrl(String url)
     {
+        if(url != null && url.length() > 4000)
+            throw new IllegalArgumentException("url is too long: " + url.length() + "; " + url);
+
         this.url = url;
     }
 
@@ -1403,7 +1407,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public void setFileUrl(String fileUrl)
     {
-        if(fileUrl != null && fileUrl.length() > 500)
+        if(fileUrl != null && fileUrl.length() > 4000)
             throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
 
         this.fileUrl = fileUrl;

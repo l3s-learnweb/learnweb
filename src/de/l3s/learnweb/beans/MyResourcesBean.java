@@ -66,9 +66,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(getUser() == null) // not logged in
             return;
 
-        if(getParameter("save_url") != null)
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-
         breadcrumb = new ArrayList<>();
     }
 

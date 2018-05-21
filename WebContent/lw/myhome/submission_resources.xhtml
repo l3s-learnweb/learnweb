@@ -39,7 +39,11 @@
 		<h:outputStylesheet library="lightbox" name="lightbox.css" />
 		<h:outputStylesheet library="resource-submission" name="submit.css" />
 		<h:outputScript library="resource-submission" name="submit.js" />
-		
+
+		<h:panelGroup id="resourcesView" layout="block">
+			<!-- dummy for right pane -->
+		</h:panelGroup>
+
 		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
 		<h:panelGroup id="resourceGrid2" styleClass="resource-grid" layout="block">
 				<ui:repeat var="res" value="#{submitResourcesBean.selectedResources}" >
