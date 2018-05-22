@@ -56,88 +56,111 @@
 		<ui:fragment
 			rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
 			<h:panelGroup id="resourcesView" layout="block">
-			<ui:decorate template="/templates/group/summary_overview.xhtml" >
-				<ui:param name="summary"
-					value="#{groupDetailBean.groupSummaryBean.getSummaryOverview()}" />
-				<ui:param name="groupDetailBean" value="#{groupDetailBean}" />
-			</ui:decorate>
-			<div id="show_activities" class="closed_activities">
-				<span><h:outputText value="#{msg.show_activities}" /></span> <i
-					class="fa fa-angle-double-up" />
-			</div>
+				<ui:decorate template="/templates/group/summary_overview.xhtml">
+					<ui:param name="summary"
+						value="#{groupSummaryBean.getSummaryOverview()}" />
+				</ui:decorate>
+				<div id="show_activities" class="closed_activities">
+					<span><h:outputText value="#{msg.show_activities}" /></span> <i
+						class="fa fa-angle-double-up" />
+				</div>
 
-			<div id="all_activities" class="hidden">
-			
-			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable" style="width: 100%;">
-				<h:column >
-					<div class="newsfeed_user_image_div">
-				    	<img id="userpic" src="#{datagrid.userImage}" alt="profile image" width="30" height="30" class="newsfeed_user_image"/>
-				    </div>
-					<div class="newsfeed_text">
-						<h:outputText value="#{datagrid.description}" escape="false"  />
-						<h:panelGroup rendered="#{datagrid.queryNeeded}">
-							<h:outputText value=" #{msg.with_query} " escape="false" />
+				<div id="all_activities" class="hidden">
 
-							<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
-							<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-									<f:param name="query" value="#{datagrid.resource.query}"/>
-							        <f:param name="action" value="web"/>
-							</h:outputLink>
+					<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}"
+						id="datagrid" styleClass="not-selectable" style="width: 100%;">
+						<h:column>
+							<div class="newsfeed_user_image_div">
+								<img id="userpic" src="#{datagrid.userImage}"
+									alt="profile image" width="30" height="30"
+									class="newsfeed_user_image" />
+							</div>
+							<div class="newsfeed_text">
+								<h:outputText value="#{datagrid.description}" escape="false" />
+								<h:panelGroup rendered="#{datagrid.queryNeeded}">
+									<h:outputText value=" #{msg.with_query} " escape="false" />
 
-							<h:outputText value=" #{msg.from_source} #{datagrid.resource.source} " escape="false" />
+									<h:outputLink styleClass="newsfeed_query_link"
+										value="search.jsf">
+										<h:outputText value=" #{datagrid.resource.query}"
+											escape="false" styleClass="newsfeed_query_link_text" />
+										<f:param name="query" value="#{datagrid.resource.query}" />
+										<f:param name="action" value="web" />
+									</h:outputLink>
+
+									<h:outputText
+										value=" #{msg.from_source} #{datagrid.resource.source} "
+										escape="false" />
+								</h:panelGroup>
+							</div>
+
+							<h:outputText value="${userBean.getPrettyDate(datagrid.date)}"
+								title="${userBean.formatDate(datagrid.date)}" escape="false"
+								styleClass="newsfeed_date_difference" />
+
+							<br></br>
+							<br></br>
+							<h:panelGroup rendered="#{datagrid.resource!=null}">
+								<div class="newsfeed_left">
+
+									<h:form>
+										<p:commandLink styleClass="newsfeed_query_link"
+											update=":right_pane_wrapper" oncomplete="update_header()">
+											<f:setPropertyActionListener
+												target="#{rightPaneBean.viewResource}"
+												value="#{datagrid.resource}" />
+											<ui:fragment
+												rendered="#{not empty datagrid.resource.thumbnail1}">
+												<img src="#{datagrid.resource.thumbnail1.url}"
+													alt="#{datagrid.resource.title}"
+													height="#{datagrid.resource.thumbnail1.height}"
+													width="#{datagrid.resource.thumbnail1.width}" />
+											</ui:fragment>
+										</p:commandLink>
+									</h:form>
+
+								</div>
+
+								<div class="newsfeed_right">
+									<h:outputText value="#{datagrid.resource.shortDescription} "
+										escape="false" styleClass="newsfeed_description" />
+
+
+									<br />
+									<h:outputText
+										value="#{msg.author}: #{datagrid.resource.author} "
+										rendered="#{not empty datagrid.resource.author}"
+										escape="false" styleClass="newsfeed_author" />
+
+								</div>
+							</h:panelGroup>
+
+							<br class="clear"></br>
+							<h:panelGroup rendered="#{datagrid.resource!=null}">
+								<br></br>
+								<h:outputText value="tags: " escape="false"
+									styleClass="newsfeed_tag"
+									rendered="#{not empty datagrid.resource.tagsAsString}" />
+
+								<h:outputText value=" #{datagrid.resource.tagsAsString} "
+									rendered="#{not empty datagrid.resource.tagsAsString}"
+									escape="false" styleClass="newsfeed_tags" />
+
+							</h:panelGroup>
+							<hr width="auto" class="newsfeed_separator"></hr>
+						</h:column>
+					</h:dataTable>
+					<br></br>
+					<h:form>
+						<h:panelGroup id="history" class="newsfeed_history">
+							<p:commandButton value="#{msg.full_history}"
+								styleClass="blackbutton"
+								rendered="${not groupDetailBean.isAllLogs()}"
+								update=":datagrid history"
+								actionListener="#{groupDetailBean.fetchAllLogs()}" />
 						</h:panelGroup>
-					</div>
-
-					<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>
-
-					<br></br>
-					<br></br>
-					<h:panelGroup rendered="#{datagrid.resource!=null}">
-						<div class="newsfeed_left">
-
-							<h:form>
-								<p:commandLink styleClass="newsfeed_query_link" update=":right_pane_wrapper" oncomplete="update_header()">
-				        			<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{datagrid.resource}"/>
-									<ui:fragment rendered="#{not empty datagrid.resource.thumbnail1}"><img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/></ui:fragment>
-								</p:commandLink>
-							</h:form>
-
-	                    </div>
-
-						<div class="newsfeed_right">
-							<h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
-
-
-							<br />
-							<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}"
-								escape="false" styleClass="newsfeed_author"/>
-
-						</div>
-					</h:panelGroup>
-
-					<br class="clear"></br>
-					<h:panelGroup rendered="#{datagrid.resource!=null}">
-						<br></br>
-						<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
-
-						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}"
-							escape="false" styleClass="newsfeed_tags"/>
-
-					</h:panelGroup>
-					<hr width="auto" class="newsfeed_separator"></hr>
-				</h:column>
-			</h:dataTable>
-				<br></br>
-				<h:form>
-					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="#{msg.full_history}"
-							styleClass="blackbutton"
-							rendered="${not groupDetailBean.isAllLogs()}"
-							update=":datagrid history"
-							actionListener="#{groupDetailBean.fetchAllLogs()}" />
-					</h:panelGroup>
-				</h:form>
-			</div>
+					</h:form>
+				</div>
 			</h:panelGroup>
 		</ui:fragment>
 		<br></br>
@@ -151,7 +174,6 @@
 
 	<ui:define name="right_layout">
 		<ui:decorate template="/templates/resources/right_pane.xhtml">
-			<ui:param name="bean" value="#{groupDetailBean}" />
 		</ui:decorate>
 	</ui:define>
 </ui:composition>

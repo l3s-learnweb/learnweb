@@ -25,7 +25,6 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.user.User;
 import de.l3s.office.history.model.Change;
 import de.l3s.office.history.model.History;
 import de.l3s.office.history.model.OfficeUser;
@@ -63,7 +62,7 @@ public class SaverServlet extends HttpServlet
         try(PrintWriter writer = response.getWriter())
         {
             String fileId = request.getParameter(FILE_ID);
-            String userId = request.getParameter(USER_ID);
+            Integer userId = Integer.parseInt(request.getParameter(USER_ID));
             try(Scanner scanner = new Scanner(request.getInputStream()))
             {
                 scanner.useDelimiter(DELIMITER);
@@ -78,9 +77,9 @@ public class SaverServlet extends HttpServlet
         {
             log.error(e);
         }
-   }
+    }
 
-    private void parseResponse(SavingInfo info, String fileId, String userId, String sessionId, int startTime)
+    private void parseResponse(SavingInfo info, String fileId, Integer userId, String sessionId, int startTime)
     {
         try
         {
@@ -102,10 +101,8 @@ public class SaverServlet extends HttpServlet
                 log.info("Started history saving for resourceId = " + file.getResourceId());
                 previousVersionFile.setType(TYPE.HISTORY_FILE);
                 log.info("History is saved resourceId = " + file.getResourceId());
-                createResourceHistory(info, previousVersionFile, file.getResourceId(), Integer.parseInt(userId));
-                User learnwebUser = new User();
-                learnwebUser.setId(Integer.valueOf(userId));
-                learnweb.log(learnwebUser, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
+                createResourceHistory(info, previousVersionFile, file.getResourceId(), userId);
+                learnweb.log(userId, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
             }
         }
         catch(NumberFormatException e)
@@ -153,5 +150,4 @@ public class SaverServlet extends HttpServlet
             history.addChange(fileChange);
         }
     }
-
 }

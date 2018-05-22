@@ -20,7 +20,7 @@
 	<h:outputScript library="slick" name="slick.js" target="head" />
 	<h:form>
 		<p:remoteCommand name="onAfterChange"
-			actionListener="#{groupDetailBean.displayClickedResourceFromSlider()}"
+			actionListener="#{groupSummaryBean.displayClickedResourceFromSlider()}"
 				update=":right_pane_wrapper " oncomplete="update_header()"/>
 	</h:form>
 

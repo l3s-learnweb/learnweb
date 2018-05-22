@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -20,14 +22,16 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 
 @ManagedBean
 @ViewScoped
 public class GroupSummaryBean extends ApplicationBean
 {
-    private SummaryOverview groupSummary;
+    @ManagedProperty(value = "#{groupDetailBean}")
+    private GroupDetailBean groupDetailBean;
 
-    private int groupId;
+    private SummaryOverview groupSummary;
 
     private Resource clickedResource;
 
@@ -39,14 +43,13 @@ public class GroupSummaryBean extends ApplicationBean
         }
         final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
                 LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
-        groupSummary = getLearnweb().getLogsByGroup(getGroupId(), actions, getRightDateFrom(), LocalDateTime.now());
+        groupSummary = getLearnweb().getLogsByGroup(getGroupDetailBean().getGroupId(), actions, getRightDateFrom(), LocalDateTime.now());
         groupSummary.setDescriptions();
         return groupSummary;
     }
 
     private LocalDateTime getRightDateFrom() throws SQLException, Exception
     {
-
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(Math.max(Math.min((this.getUser().getGroups().get(0).getLastVisit(this.getUser()) * 1000l),
                 ZonedDateTime.now().minusWeeks(1).toInstant().toEpochMilli()), ZonedDateTime.now().minusMonths(6).toInstant().toEpochMilli())), ZoneId.systemDefault());
     }
@@ -97,19 +100,29 @@ public class GroupSummaryBean extends ApplicationBean
         this.clickedResource = clickedResource;
     }
 
-    public int getGroupId()
-    {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId)
-    {
-        this.groupId = groupId;
-    }
-
     public List<LogEntry> getUpdatedResourceActivities()
     {
         return groupSummary.getUpdatedResources().get(clickedResource);
+    }
+
+    public void displayClickedResourceFromSlider() throws SQLException
+    {
+        SimpleEntry<String, Resource> clickedResourceFromSlider = getChoosenResourceFromSlider();
+        if(clickedResourceFromSlider != null)
+        {
+            getGroupDetailBean().getRightPaneBean().setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
+            getGroupDetailBean().getRightPaneBean().setClickedAbstractResource(clickedResourceFromSlider.getValue());
+        }
+    }
+
+    public GroupDetailBean getGroupDetailBean()
+    {
+        return groupDetailBean;
+    }
+
+    public void setGroupDetailBean(GroupDetailBean groupDetailBean)
+    {
+        this.groupDetailBean = groupDetailBean;
     }
 
 }

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
 import de.l3s.learnweb.resource.RightPaneBean;
-import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -149,10 +147,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     @ManagedProperty(value = "#{addFolderBean}")
     private AddFolderBean addFolderBean;
-
-    // TODO Mariia: use GroupDetailBean from GroupSummaryBean instead
-    @ManagedProperty(value = "#{groupSummaryBean}")
-    private GroupSummaryBean groupSummaryBean;
 
     private final int pageSize;
 
@@ -310,7 +304,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setGroupId(int groupId)
     {
         this.groupId = groupId;
-        getGroupSummaryBean().setGroupId(groupId);
     }
 
     public int getSelectedFolderId()
@@ -1849,16 +1842,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
 
-    public void displayClickedResourceFromSlider() throws SQLException
-    {
-        SimpleEntry<String, Resource> clickedResourceFromSlider = groupSummaryBean.getChoosenResourceFromSlider();
-        if(clickedResourceFromSlider != null)
-        {
-            rightPaneBean.setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
-            rightPaneBean.setClickedAbstractResource(clickedResourceFromSlider.getValue());
-        }
-    }
-
     public String getNewHypothesisLink()
     {
         return newHypothesisLink;
@@ -1877,16 +1860,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setNewHypothesisToken(String newHypothesisToken)
     {
         this.newHypothesisToken = newHypothesisToken;
-    }
-
-    public GroupSummaryBean getGroupSummaryBean()
-    {
-        return groupSummaryBean;
-    }
-
-    public void setGroupSummaryBean(GroupSummaryBean groupSummaryBean)
-    {
-        this.groupSummaryBean = groupSummaryBean;
     }
 
 }
