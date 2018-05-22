@@ -395,7 +395,7 @@
                           pt:data-canAddResources="#{groupDetailBean.group.canAddResources(userBean.user)}"
                           pt:data-canMoveResources="#{groupDetailBean.group.canMoveResources(userBean.user)}">
 
-                <c:if test="${userBean.user.organisation.id ne 480}">
+                <c:if test="${userBean.user.organisation.id eq 480}">
                     <ui:fragment rendered="#{not empty groupDetailBean.selectedCatNode}">
                         <h:outputText value="Selected category is: #{groupDetailBean.selectedCatNode}"/>
                     </ui:fragment>
@@ -409,7 +409,7 @@
                     </ui:fragment>
                 </c:if>
 
-                <c:if test="${userBean.user.organisation.id eq 480}">
+                <c:if test="${userBean.user.organisation.id ne 480}">
                     <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
                 </c:if>
             </h:panelGroup>
