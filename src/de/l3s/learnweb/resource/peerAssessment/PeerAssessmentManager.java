@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.peerAssessment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +14,8 @@ import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.jboss.logging.Logger;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;

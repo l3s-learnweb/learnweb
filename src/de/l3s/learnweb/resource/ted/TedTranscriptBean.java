@@ -27,10 +27,10 @@ import org.jsoup.select.Elements;
 import org.primefaces.context.RequestContext;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.TedManager.SummaryType;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import rita.wordnet.RiWordnet;

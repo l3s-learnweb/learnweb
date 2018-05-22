@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.ted;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -31,6 +31,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.SearchQuery;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
@@ -39,10 +40,6 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
-import de.l3s.learnweb.resource.ted.SimpleTranscriptLog;
-import de.l3s.learnweb.resource.ted.Transcript;
-import de.l3s.learnweb.resource.ted.TranscriptLog;
-import de.l3s.learnweb.resource.ted.TranscriptSummary;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;

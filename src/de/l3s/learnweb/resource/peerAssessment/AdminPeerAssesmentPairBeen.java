@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans.admin;
+package de.l3s.learnweb.resource.peerAssessment;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -8,7 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.user.User;
 
 @ManagedBean
