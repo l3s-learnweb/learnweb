@@ -22,8 +22,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.util.StringHelper;
 
 public class OpenSearchClient

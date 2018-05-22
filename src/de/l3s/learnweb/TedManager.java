@@ -33,8 +33,14 @@ import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Transcript.Paragraph;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.solrClient.FileInspector;
-import de.l3s.learnweb.solrClient.SolrClient;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
+import de.l3s.learnweb.resource.search.solrClient.SolrClient;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 public class TedManager

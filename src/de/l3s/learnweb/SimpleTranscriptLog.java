@@ -3,6 +3,9 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
+
 public class SimpleTranscriptLog implements Serializable
 {
     private static final long serialVersionUID = -5957511920632610709L;

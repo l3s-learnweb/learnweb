@@ -22,8 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Edge;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Query;
 import de.l3s.searchHistoryTest.SearchHistoryManager.SearchResult;

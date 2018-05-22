@@ -17,10 +17,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
-import de.l3s.learnweb.Message;
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.UserManager;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Message;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
 

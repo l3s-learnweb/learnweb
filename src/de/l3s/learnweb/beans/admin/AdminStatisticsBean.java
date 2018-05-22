@@ -17,12 +17,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.Group;
-import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.resource.Comment;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.StringHelper;
 
 @ManagedBean

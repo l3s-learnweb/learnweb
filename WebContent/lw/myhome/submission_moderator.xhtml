@@ -20,7 +20,7 @@
 	<ui:define name="center_layout">
 		<h:form>
 			<p:remoteCommand name="selectGroupItemCommand"
-				actionListener="#{submitResourcesBean.actionSelectGroupItem}"
+				actionListener="#{submissionBean.actionSelectGroupItem}"
 				update=":right_pane_wrapper :growl"
 				oncomplete="update_header();load_editor(); " />
 		</h:form>
@@ -118,7 +118,7 @@
 	</ui:define>
 	<ui:define name="right_layout">
 		<ui:decorate template="/templates/resources/right_pane.xhtml">
-			<ui:param name="bean" value="#{submitResourcesBean}" />
+			<ui:param name="bean" value="#{submissionBean}" />
 		</ui:decorate>
 	</ui:define>
 </ui:composition>

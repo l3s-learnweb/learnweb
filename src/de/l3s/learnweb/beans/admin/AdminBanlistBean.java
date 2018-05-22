@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.loginprotection.AccessData;
+import de.l3s.learnweb.user.loginProtection.AccessData;
 
 @ManagedBean
 @RequestScoped

@@ -8,11 +8,11 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import de.l3s.learnweb.File;
-import de.l3s.learnweb.File.TYPE;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.Resource.OnlineStatus;
 
 @ManagedBean
 @ViewScoped

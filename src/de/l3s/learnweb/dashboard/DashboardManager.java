@@ -11,7 +11,7 @@ import java.util.*;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.User;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 /**

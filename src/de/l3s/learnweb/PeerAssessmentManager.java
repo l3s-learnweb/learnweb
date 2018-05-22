@@ -15,7 +15,12 @@ import javax.mail.internet.MimeMessage.RecipientType;
 
 import org.jboss.logging.Logger;
 
-import de.l3s.learnweb.SubmissionManager.SubmittedResources;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.submission.SubmissionManager;
+import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
+import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
 

@@ -26,14 +26,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.primefaces.context.RequestContext;
 
-import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TedManager.SummaryType;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.TranscriptLog;
 import de.l3s.learnweb.TranscriptSummary;
-import de.l3s.learnweb.User;
 import rita.wordnet.RiWordnet;
 
 @ManagedBean

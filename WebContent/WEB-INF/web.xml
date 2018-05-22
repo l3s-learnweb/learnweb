@@ -177,7 +177,7 @@
 		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
 		<display-name>Simple DownloadServlet</display-name>
 		<servlet-name>downloadServlet</servlet-name>
-		<servlet-class>de.l3s.learnweb.beans.DownloadServlet</servlet-class>
+		<servlet-class>de.l3s.learnweb.resource.DownloadServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>

@@ -34,7 +34,14 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.archiveSearch.CDXClient;
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.Resource.OnlineStatus;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.Resource.OnlineStatus;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.Tag;
+import de.l3s.learnweb.user.User;
 
 public class ArchiveUrlManager
 {

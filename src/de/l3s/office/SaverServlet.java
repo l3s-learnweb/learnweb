@@ -20,12 +20,12 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.File;
-import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.User;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
 import de.l3s.office.history.model.Change;
 import de.l3s.office.history.model.History;
 import de.l3s.office.history.model.OfficeUser;

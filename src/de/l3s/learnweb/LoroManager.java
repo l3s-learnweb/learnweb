@@ -16,8 +16,13 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import de.l3s.learnweb.solrClient.FileInspector;
-import de.l3s.learnweb.solrClient.SolrClient;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
+import de.l3s.learnweb.resource.search.solrClient.SolrClient;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 public class LoroManager

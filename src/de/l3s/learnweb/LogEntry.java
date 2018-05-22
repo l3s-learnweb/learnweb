@@ -13,6 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Sets;
 
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.resource.Comment;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
 public class LogEntry implements Serializable

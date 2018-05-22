@@ -17,6 +17,11 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.group.GroupDetailBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.MyResourcesBean;
+import de.l3s.learnweb.user.UserBean;
+
 @ApplicationScoped
 @ManagedBean
 public class UtilBean implements Serializable

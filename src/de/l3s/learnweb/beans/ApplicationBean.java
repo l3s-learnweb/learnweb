@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.User;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
 public class ApplicationBean
@@ -60,7 +60,7 @@ public class ApplicationBean
      * @param param
      * @return
      */
-    protected static String getParameter(String param)
+    public static String getParameter(String param)
     {
         String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
@@ -76,7 +76,7 @@ public class ApplicationBean
      * @param param
      * @return
      */
-    protected static Integer getParameterInt(String param)
+    public static Integer getParameterInt(String param)
     {
         String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
@@ -230,7 +230,7 @@ public class ApplicationBean
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    protected void log(LogEntry.Action action, int groupId, int targetId, String params)
+    public void log(LogEntry.Action action, int groupId, int targetId, String params)
     {
         log(action, groupId, targetId, params, getUser());
     }
@@ -240,7 +240,7 @@ public class ApplicationBean
      * The parameters "targetId" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    protected void log(LogEntry.Action action, int groupId, int targetId)
+    public void log(LogEntry.Action action, int groupId, int targetId)
     {
         log(action, groupId, targetId, null, getUser());
     }

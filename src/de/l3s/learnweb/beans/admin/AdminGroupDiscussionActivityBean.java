@@ -27,8 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.l3s.learnweb.Group;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
 
 @ManagedBean
 @RequestScoped

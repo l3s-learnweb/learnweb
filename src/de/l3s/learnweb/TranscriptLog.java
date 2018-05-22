@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
+
 public class TranscriptLog implements Serializable
 {
     private static final long serialVersionUID = 6321296603254649454L;

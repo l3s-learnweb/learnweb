@@ -2,7 +2,7 @@ package de.l3s.searchlogclient.jaxb;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import de.l3s.learnweb.User;
+import de.l3s.learnweb.user.User;
 
 public class ResultsetFeed
 {

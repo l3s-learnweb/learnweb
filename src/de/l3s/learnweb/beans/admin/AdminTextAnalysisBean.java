@@ -11,8 +11,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.Comment;
 
 @ManagedBean
 @SessionScoped

@@ -12,12 +12,11 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Group;
-import de.l3s.learnweb.GroupManager;
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.UserManager;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UserAssessmentBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Sql;
 
 @ManagedBean

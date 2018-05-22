@@ -11,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.archiveSearch.OpenSearchClient;
-import de.l3s.learnweb.ResourceDecorator;
-import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 
 @ManagedBean
 @ViewScoped

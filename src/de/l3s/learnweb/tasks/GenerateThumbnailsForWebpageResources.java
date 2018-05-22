@@ -8,12 +8,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Resource.OnlineStatus;
-import de.l3s.learnweb.Resource.ResourceType;
-import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.ResourcePreviewMaker;
-import de.l3s.learnweb.beans.AddResourceBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.Resource.OnlineStatus;
+import de.l3s.learnweb.resource.Resource.ResourceType;
 
 /**
  * Find webpage resources that have no thumbnail and create it

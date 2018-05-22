@@ -17,7 +17,7 @@
 		</div>
 	
 		<h:form style="margin:5px;">
-			<p:dataTable var="user" value="#{submitResourcesBean.getUsers()}" rows="50" paginator="true" rowsPerPageTemplate="50,100,500"
+			<p:dataTable var="user" value="#{submissionBean.getUsers()}" rows="50" paginator="true" rowsPerPageTemplate="50,100,500"
                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
                
 				<p:column filterBy="#{user.username}" headerText="#{msg.username}" sortBy="#{user.username}">					
@@ -48,11 +48,11 @@
 				</p:column>
 				
 				
-				<p:column style="width: 8%;" sortBy="${submitResourcesBean.getNumberOfSubmissions(user.id)}"  sortable="true">
+				<p:column style="width: 8%;" sortBy="${submissionBean.getNumberOfSubmissions(user.id)}"  sortable="true">
 					<f:facet name="header">
 						#{msg['Submission.no_of_submissions']}
 					</f:facet>
-					<h:outputText value="${submitResourcesBean.getNumberOfSubmissions(user.id)}"/>
+					<h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
 				</p:column>
 				
 				<p:column style="width: 10%;">

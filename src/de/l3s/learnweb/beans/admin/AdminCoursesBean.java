@@ -12,11 +12,11 @@ import javax.faces.bean.RequestScoped;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import de.l3s.learnweb.Course;
-import de.l3s.learnweb.Organisation;
-import de.l3s.learnweb.OrganisationManager;
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.OrganisationManager;
+import de.l3s.learnweb.user.User;
 
 @ManagedBean
 @RequestScoped

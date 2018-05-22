@@ -19,7 +19,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 
 @ManagedBean(name = "advancedSearchBean")
 @SessionScoped

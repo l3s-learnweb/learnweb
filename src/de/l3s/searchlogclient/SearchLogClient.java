@@ -19,8 +19,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.ResourceDecorator;
-import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.jaxb.CommentonSearch;
 import de.l3s.searchlogclient.jaxb.HistoryByDate;
@@ -1040,7 +1040,7 @@ public class SearchLogClient
         {
             for(Resource resource : resourcesList.getResources())
             {
-                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                de.l3s.learnweb.resource.Resource tempResource = new de.l3s.learnweb.resource.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
                         resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
                 ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
                 decoratedResource.setTempId(resource.getResource_rank());
@@ -1074,7 +1074,7 @@ public class SearchLogClient
             for(Resource resource : resourcesList.getResources())
             {
                 resourcesResultset.put(resource.getUrl(), resource);
-                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                de.l3s.learnweb.resource.Resource tempResource = new de.l3s.learnweb.resource.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
                         resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
                 tempResource.setLocation(tempResource.getSource());
                 ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
@@ -1120,7 +1120,7 @@ public class SearchLogClient
         {
             for(Resource resource : resourcesList.getResources())
             {
-                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                de.l3s.learnweb.resource.Resource tempResource = new de.l3s.learnweb.resource.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
                         resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
                 ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
                 decoratedResource.setTempId(resource.getResource_rank());
@@ -1154,7 +1154,7 @@ public class SearchLogClient
         {
             for(Resource resource : resourcesList.getResources())
             {
-                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                de.l3s.learnweb.resource.Resource tempResource = new de.l3s.learnweb.resource.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
                         resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
                 ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
                 decoratedResource.setTempId(resource.getResource_rank());

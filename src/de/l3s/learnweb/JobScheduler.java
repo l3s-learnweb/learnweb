@@ -2,7 +2,7 @@ package de.l3s.learnweb;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.loginprotection.ExpiredBansCleaner;
+import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
 import de.l3s.ted.crawler.TedCrawlerSimple;
 import it.sauronsoftware.cron4j.Scheduler;

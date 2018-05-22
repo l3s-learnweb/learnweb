@@ -18,9 +18,9 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.interwebj.jaxb.SearchResponse;
 import de.l3s.interwebj.jaxb.SearchResultEntity;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
-import de.l3s.learnweb.ResourceManager;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourceManager;
 
 public class SearchQuery implements Serializable
 {

@@ -29,9 +29,9 @@ import com.sun.jersey.oauth.signature.OAuthParameters;
 import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
-import de.l3s.learnweb.File.TYPE;
-import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.Resource;
 
 public class InterWeb implements Serializable
 {

@@ -17,15 +17,15 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import de.l3s.learnweb.Course;
-import de.l3s.learnweb.Course.Option;
-import de.l3s.learnweb.File;
-import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.solrClient.FileInspector;
-import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.Course.Option;
 
 @ManagedBean
 @SessionScoped

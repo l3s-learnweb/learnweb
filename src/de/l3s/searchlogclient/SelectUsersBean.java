@@ -15,8 +15,8 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
 import de.l3s.searchlogclient.jaxb.QueryLog;
 import de.l3s.searchlogclient.jaxb.ResourceLog;
 import de.l3s.searchlogclient.jaxb.ViewingTime;

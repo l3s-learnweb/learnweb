@@ -33,9 +33,9 @@ import com.github.tomtung.jsimhash.SimHashBuilder;
 import com.github.tomtung.jsimhash.Util;
 
 import de.l3s.learnweb.ArchiveUrl;
-import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.Resource;
 
 public class ArchiveItShingle
 {

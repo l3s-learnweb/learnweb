@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.l3s.learnweb.HistoryManager;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.office.HistoryManager;
 
 public class History
 {

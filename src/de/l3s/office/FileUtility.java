@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.File;
-import de.l3s.learnweb.Resource.ResourceType;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.Resource.ResourceType;
 
 public class FileUtility
 {

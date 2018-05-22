@@ -12,11 +12,11 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.SurveyManager;
-import de.l3s.learnweb.SurveyMetaDataFields;
-import de.l3s.learnweb.SurveyResource;
-import de.l3s.learnweb.SurveyUserAnswers;
-import de.l3s.learnweb.User;
+import de.l3s.learnweb.resource.survey.SurveyManager;
+import de.l3s.learnweb.resource.survey.SurveyMetaDataFields;
+import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
+import de.l3s.learnweb.user.User;
 
 // TODO the whole class can be removed. use surveybean instead
 @Deprecated

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import de.l3s.archiveSearch.CDXClient;
+import de.l3s.learnweb.resource.Resource;
 
 public class WaybackCapturesLogger
 {

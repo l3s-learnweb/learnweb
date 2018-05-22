@@ -15,8 +15,8 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import de.l3s.learnweb.File;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.File;
 import de.l3s.office.converter.model.ConverterRequest;
 import de.l3s.office.converter.model.ConverterResponse;
 import de.l3s.office.converter.model.OfficeThumbnailParams;

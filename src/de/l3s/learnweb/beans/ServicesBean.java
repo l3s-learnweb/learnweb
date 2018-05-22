@@ -15,9 +15,10 @@ import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserBean;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.User;
 
 @ManagedBean
 @ViewScoped

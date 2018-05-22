@@ -9,11 +9,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import de.l3s.learnweb.Group;
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.LoginBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.user.LoginBean;
+import de.l3s.learnweb.user.User;
 
 @ManagedBean
 @ViewScoped

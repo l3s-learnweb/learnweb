@@ -18,9 +18,9 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
 
 @ManagedBean
