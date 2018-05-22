@@ -1,8 +1,9 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 

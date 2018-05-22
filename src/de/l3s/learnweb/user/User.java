@@ -25,7 +25,6 @@ import org.jsoup.safety.Whitelist;
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
@@ -33,6 +32,7 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
@@ -568,10 +568,8 @@ public class User implements Comparable<User>, Serializable, HasId
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(getEmail()));
             message.setText("Hi " + getRealUsername() + ",\n\n" +
                     "please use this link to confirm your mail address:\n" + confirmEmailUrl + "\n\n" +
+                    "Or just ignore this email, if you haven't requested it.\n\n" +
                     "Best regards,\nLearnweb Team");
-
-            // "Or just ignore this email, if you haven't requested it.\n\n" +
-            // TODO add sentence after EUmade4all is over
 
             message.sendMail();
 

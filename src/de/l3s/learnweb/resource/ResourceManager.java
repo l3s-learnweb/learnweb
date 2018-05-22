@@ -585,15 +585,17 @@ public class ResourceManager
         UserManager um = learnweb.getUserManager();
         OwnerList<Tag, User> tags = new OwnerList<Tag, User>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name, user_id, timestamp FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `resource_id` = ?");
-        select.setInt(1, resourceId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name, user_id, timestamp FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `resource_id` = ?");)
         {
-            tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")), um.getUser(rs.getInt("user_id")), new Date(rs.getTimestamp("timestamp").getTime()));
+            select.setInt(1, resourceId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")), um.getUser(rs.getInt("user_id")), new Date(rs.getTimestamp("timestamp").getTime()));
+            }
         }
-        select.close();
         return tags;
+
     }
 
     public Tag addTag(String tagName) throws SQLException
@@ -1398,11 +1400,14 @@ public class ResourceManager
     protected void savePurposeResource(Resource resource, String[] purposes, User user) throws SQLException
     {
         PurposeManager pm = Learnweb.getInstance().getPurposeManager();
-        for(int i = 0; i < purposes.length; i++)
+        for(String purpose : purposes)
         {
             //find id of the lang level first
-            int purposeId = pm.getPurposeIdByPurposename(purposes[i].toLowerCase());
-            log.debug(purposes[i].toLowerCase() + " " + purposeId + " " + resource.getId());
+            int purposeId = pm.getPurposeIdByPurposename(purpose);
+            if(purposeId <= 0)
+                purposeId = pm.addPurpose(purpose).getId();
+
+            log.debug(purpose + " " + purposeId + " " + resource.getId());
             if(purposeId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_purpose` (`resource_id`, `user_id`, `purpose_id`) VALUES (?, ?, ?)");

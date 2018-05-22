@@ -45,7 +45,7 @@ public class StatusBean extends ApplicationBean
         }
         services.add(new Service("Learnweb Database", status, learnweb.getProperties().getProperty("mysql_url"), comment));
 
-        // test fedora 
+        // very simple database integrity test
         status = "ok";
         comment = "";
 
@@ -54,7 +54,7 @@ public class StatusBean extends ApplicationBean
             if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
             {
                 status = "warning";
-                comment = "unexpected result from fedora";
+                comment = "unexpected result from database";
             }
         }
         catch(Exception e)
@@ -62,7 +62,7 @@ public class StatusBean extends ApplicationBean
             status = "error";
             comment = e.getMessage();
         }
-        services.add(new Service("Fedora", status, learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), comment));
+        services.add(new Service("Learnweb Database integrity", status, learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), comment));
 
     }
 

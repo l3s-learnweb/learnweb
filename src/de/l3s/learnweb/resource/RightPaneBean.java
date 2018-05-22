@@ -1,18 +1,5 @@
 package de.l3s.learnweb.resource;
 
-import de.l3s.learnweb.*;
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.office.FileEditorBean;
-import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -21,6 +8,23 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+
+import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import de.l3s.learnweb.ArchiveUrl;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.TimelineData;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.office.FileEditorBean;
 
 // TODO Oleh: rename to ResourcePaneBean
 @ManagedBean
@@ -112,23 +116,23 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     {
         switch(this.paneAction)
         {
-            case newResource:
-                return UtilBean.getLocaleMessage("upload_resource");
-            case viewResource:
-            case viewUpdatedResource:
-                return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
-            case editResource:
-                return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
-            case newFolder:
-                return UtilBean.getLocaleMessage("create_folder");
-            case editFolder:
-                return UtilBean.getLocaleMessage("edit_folder");
-            case viewFolder:
-                return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
-            case newFile:
-                return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
-            default:
-                return UtilBean.getLocaleMessage("click_to_view_details");
+        case newResource:
+            return UtilBean.getLocaleMessage("upload_resource");
+        case viewResource:
+        case viewUpdatedResource:
+            return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
+        case editResource:
+            return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
+        case newFolder:
+            return UtilBean.getLocaleMessage("create_folder");
+        case editFolder:
+            return UtilBean.getLocaleMessage("edit_folder");
+        case viewFolder:
+            return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
+        case newFile:
+            return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
+        default:
+            return UtilBean.getLocaleMessage("click_to_view_details");
         }
     }
 
@@ -225,7 +229,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     /**
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({ "unchecked" })
     public String getArchiveTimelineJsonData()
     {
         Resource resource = getClickedResource();
@@ -253,7 +257,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     /**
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({ "unchecked" })
     public String getArchiveCalendarJsonData()
     {
         Resource resource = getClickedResource();
@@ -303,7 +307,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
      * Function to localized month names for the calendar
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({ "unchecked" })
     public String getMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -321,7 +325,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
      * Function to get localized short month names for the timeline
      * The method is used from JS in archive_timeline_template.xhtml
      */
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({ "unchecked" })
     public String getShortMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());

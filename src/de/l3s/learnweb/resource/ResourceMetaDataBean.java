@@ -15,8 +15,8 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.TedTranscriptBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.resource.ted.TedTranscriptBean;
 import de.l3s.learnweb.user.User;
 
 /*

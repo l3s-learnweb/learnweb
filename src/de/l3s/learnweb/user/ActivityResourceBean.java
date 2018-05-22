@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
 @ViewScoped

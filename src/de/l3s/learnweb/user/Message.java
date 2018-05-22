@@ -40,7 +40,7 @@ public class Message implements Comparable<Message>
         return count;
     }
 
-    public ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
+    public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
     {
         ArrayList<Message> messageList = new ArrayList<Message>();
         if(user == null)

@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.ted;
 
 import java.util.LinkedList;
 import java.util.List;

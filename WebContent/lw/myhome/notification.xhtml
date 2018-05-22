@@ -26,10 +26,10 @@
 				</a>
 			</h:panelGroup>
 			
-			<h:outputText value="#{msg.no_notifications}" rendered="#{empty notificationReaderBean.receivedMessages}" styleClass="page_header" 
+			<h:outputText value="#{msg.no_notifications}" rendered="#{empty messageBean.receivedMessages}" styleClass="page_header" 
 				style="display:block; margin:4px;"/>
 			
-			<ui:repeat var="message" value="#{notificationReaderBean.receivedMessages}">
+			<ui:repeat var="message" value="#{messageBean.receivedMessages}">
 			
 				<div class="#{message.read ? 'read' : 'notRead'}" style="padding:4px;">
 				

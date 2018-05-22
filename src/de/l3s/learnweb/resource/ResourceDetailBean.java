@@ -2,6 +2,8 @@ package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -503,7 +505,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                // TODO Auto-generated catch block
                 addFatalMessage(e);
             }
 
@@ -526,7 +527,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                // TODO Auto-generated catch block
                 addFatalMessage(e);
             }
         }
@@ -615,14 +615,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         this.selectedTargets = selectedTargets;
     }
 
-    public String[] getSelectedPurposes()
+    public ArrayList<String> getSelectedPurposes()
     {
-        return selectedPurposes;
+        if(selectedPurposes == null)
+            return null;
+        return (ArrayList<String>) Arrays.asList(selectedPurposes);
     }
 
-    public void setSelectedPurposes(String[] selectedPurposes)
+    public void setSelectedPurposes(ArrayList<String> selectedPurposes)
     {
-        this.selectedPurposes = selectedPurposes;
+        this.selectedPurposes = selectedPurposes.toArray(new String[selectedPurposes.size()]);
     }
 
     public String getNewBotcat()

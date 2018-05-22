@@ -263,7 +263,7 @@
 				rendered="#{not empty helpText}" id="informationonscreen" />
 
 			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
-				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}"
+				<h:outputText value="#{messageBean.howManyNewMessages}" rendered="#{messageBean.howManyNewMessages gt 0}"
 					id="message_count"/>
 
 				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button"

@@ -1,6 +1,5 @@
 package de.l3s.learnweb;
 
-import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,10 +15,10 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import org.jboss.logging.Logger;
 
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;
-import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
@@ -31,7 +30,7 @@ public class PeerAssessmentManager
 
     private final Learnweb learnweb;
 
-    protected PeerAssessmentManager(Learnweb learnweb) throws SQLException
+    public PeerAssessmentManager(Learnweb learnweb) throws SQLException
     {
         this.learnweb = learnweb;
     }
@@ -166,116 +165,6 @@ public class PeerAssessmentManager
         return pairs;
     }
 
-    public class PeerAssesmentPair implements Serializable
-    {
-        private static final long serialVersionUID = -4241273453267455330L;
-        private final int id;
-        private final int assessorUserId;
-        private final int assessedUserId;
-        private final int peerAssessmentSurveyResourceId;
-        private int assessmentSurveyResourceId;
-        private final int submissionId;
-        private transient User assessorUser;
-        private transient User assessedUser;
-        private transient SurveyUserAnswers peerAssessmentUserAnswers;
-        private SurveyUserAnswers assessmentUserAnswers;
-
-        /**
-         *
-         * @param id
-         * @param assessorUserId
-         * @param assessedUserId
-         * @param peerAssessmentSurveyResourceId
-         * @param assessmentSurveyResourceId
-         * @param submissionId
-         */
-        public PeerAssesmentPair(int id, int assessorUserId, int assessedUserId, int peerAssessmentSurveyResourceId, int assessmentSurveyResourceId, int submissionId)
-        {
-            super();
-            this.id = id;
-            this.assessorUserId = assessorUserId;
-            this.assessedUserId = assessedUserId;
-            this.peerAssessmentSurveyResourceId = peerAssessmentSurveyResourceId;
-            this.assessmentSurveyResourceId = assessmentSurveyResourceId;
-            this.submissionId = submissionId;
-        }
-
-        public int getPeerAssessmentSurveyResourceId()
-        {
-            return peerAssessmentSurveyResourceId;
-        }
-
-        public int getAssessmentSurveyResourceId()
-        {
-            return assessmentSurveyResourceId;
-        }
-
-        public SurveyUserAnswers getPeerAssessmentUserAnswers() throws SQLException
-        {
-            if(null == peerAssessmentUserAnswers) // load survey details
-                peerAssessmentUserAnswers = getPeerAssessment().getAnswersOfUser(assessorUserId);
-            return peerAssessmentUserAnswers;
-        }
-
-        public SurveyUserAnswers getAssessmentUserAnswers() throws SQLException
-        {
-            if(null == assessmentUserAnswers) // load survey details
-                assessmentUserAnswers = getAssessment().getAnswersOfUser(assessorUserId);
-            return assessmentUserAnswers;
-        }
-
-        public User getAssessorUser() throws SQLException
-        {
-            if(assessorUser == null)
-                assessorUser = Learnweb.getInstance().getUserManager().getUser(assessorUserId);
-            return assessorUser;
-        }
-
-        public User getAssessedUser() throws SQLException
-        {
-            if(assessedUser == null)
-                assessedUser = Learnweb.getInstance().getUserManager().getUser(assessedUserId);
-            return assessedUser;
-        }
-
-        public SurveyResource getPeerAssessment() throws SQLException
-        {
-            return (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(peerAssessmentSurveyResourceId);
-        }
-
-        public SurveyResource getAssessment() throws SQLException
-        {
-            return (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(assessmentSurveyResourceId);
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public int getAssessorUserId()
-        {
-            return assessorUserId;
-        }
-
-        public int getAssessedUserId()
-        {
-            return assessedUserId;
-        }
-
-        public int getSubmissionId()
-        {
-            return submissionId;
-        }
-
-        @Override
-        public String toString()
-        {
-            return "PeerAssesmentPair [id=" + id + ", assessorUserId=" + assessorUserId + ", assessedUserId=" + assessedUserId + ", surveyResourceId=" + peerAssessmentSurveyResourceId + ", submissionId=" + submissionId + "]";
-        }
-
-    }
-
     /********************************************************
      * ******** helper methods to setup courses ***********
      *****************************************************/
@@ -288,7 +177,7 @@ public class PeerAssessmentManager
         //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
         //learnweb.getPeerAssessmentManager().sendInvitationMail(1);
 
-        pam.sendResultMail(1);
+        //pam.sendResultMail(1);
 
         learnweb.onDestroy();
     }
@@ -343,7 +232,7 @@ public class PeerAssessmentManager
             assessmentSurvey.setSaveable(true);
             assessmentSurvey.save();
 
-            pair.assessmentSurveyResourceId = assessmentSurvey.getId();
+            pair.setAssessmentSurveyResourceId(assessmentSurvey.getId());
             peerAssessmentManager.savePeerAssesmentPair(pair);
         }
 

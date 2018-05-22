@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.user;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,11 +15,17 @@ import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
-import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserBean;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
 
+/**
+ * Allows to connect to accounts of various services like Youtube and Flickr trough Interweb
+ * 
+ * @author Kemkes
+ *
+ */
 @ManagedBean
 @ViewScoped
 public class ServicesBean extends ApplicationBean implements Serializable
@@ -35,7 +41,6 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public ServicesBean() throws SQLException, IllegalResponseException, IOException
     {
-        log.debug("ServicesBean()");
         user = getUser();
     }
 
@@ -101,7 +106,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
         else if(user.isLoggedInInterweb())
         {
         	String referer = getFacesContext().getExternalContext().getRequestHeaderMap().get("referer");
-        
+
         	if(referer != null && !referer.startsWith(Util.getLearnwebBean().getBaseUrl()))
         	{
         		log.debug("reload getAuthorizationInformation");

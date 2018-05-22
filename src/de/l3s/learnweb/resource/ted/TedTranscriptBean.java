@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -27,13 +27,12 @@ import org.jsoup.select.Elements;
 import org.primefaces.context.RequestContext;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TedManager.SummaryType;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.TranscriptLog;
-import de.l3s.learnweb.TranscriptSummary;
 import rita.wordnet.RiWordnet;
 
 @ManagedBean
@@ -261,9 +260,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     /*public double wordSimilarity(String word1, String word2, String pos)
     {
     WS4JConfiguration.getInstance().setMFS(true);
-
+    
     double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-
+    
     return s;
     }
     */
@@ -542,7 +541,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         return selectedCourseId;
     }
-    
+
     public void setSelectedCourseId(int selectedCourseId)
     {
         this.selectedCourseId = selectedCourseId;

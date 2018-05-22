@@ -7,8 +7,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.user.User;
 
 @ManagedBean
