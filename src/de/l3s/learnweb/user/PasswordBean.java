@@ -1,8 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +11,8 @@ import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
+
+import com.google.common.collect.Sets;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -25,9 +25,10 @@ public class PasswordBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 2237249691336567548L;
     private static final Logger log = Logger.getLogger(PasswordBean.class);
-    // this list contains addresses that did not except the password recovery mail
-    private static Set<String> invalidMailAdresses = new HashSet<>(Arrays.asList("au593184@uni.au.dk", "au576393@uni.au.dk", "au576393@au.dk", "josefine.mai.kraemer@au.dk", "au586648@uni.au.dk", "au587963@uni.au.dk", "139420@aulecsit.uniud.it", "au580386@uni.au.dk",
-            "au567200@uni.au.dk", "139272@aulecsit.uniud.it", "au566300@uni.au.dk", "au568597@uni.au.dk"));
+
+    // this set contains addresses that did not except the password recovery mail
+    private static Set<String> invalidMailAdresses = Sets.newHashSet("au523522@uni.au.dk", "au593184@uni.au.dk", "au576393@uni.au.dk", "au576393@au.dk", "josefine.mai.kraemer@au.dk", "au586648@uni.au.dk", "au587963@uni.au.dk", "139420@aulecsit.uniud.it", "au580386@uni.au.dk",
+            "au567200@uni.au.dk", "139272@aulecsit.uniud.it", "au566300@uni.au.dk", "au568597@uni.au.dk");
 
     private String email;
 

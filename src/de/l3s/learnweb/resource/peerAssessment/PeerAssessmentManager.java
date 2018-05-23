@@ -171,15 +171,46 @@ public class PeerAssessmentManager
 
     public static void main(String[] args) throws Exception
     {
+        //System.exit(-1);
 
         Learnweb learnweb = Learnweb.createInstance(null);
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
-        //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
-        //learnweb.getPeerAssessmentManager().sendInvitationMail(1);
+
+        //pam.taskSetupPeerAssesmentAarhusFlorenceMessina();
+        pam.sendInvitationMail(2);
 
         //pam.sendResultMail(1);
 
         learnweb.onDestroy();
+    }
+
+    @SuppressWarnings("unused")
+    private void taskSetupPeerAssesmentAarhusFlorenceMessina() throws SQLException
+    {
+        // setup for EU-AarhusFlorenceMessina
+        int[] courseIds = { 1338, 1349, 1348 }; // AarhusFlorenceMessina
+        int peerAssesmentId = 2; // manually created for now
+        int assessmentFolderId = 463; // the folder inside the assessment group to store all assessment surveys
+
+        // these surveys are used directly. One for each submission topic
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskPeerAssessmentSurveyMapping.put("About Us page", 217538);
+        taskPeerAssessmentSurveyMapping.put("Corporate Video", 217539);
+        taskPeerAssessmentSurveyMapping.put("Fanvid", 217537);
+        taskPeerAssessmentSurveyMapping.put("Video-Mediated Interaction", 217536);
+        taskPeerAssessmentSurveyMapping.put("Weblog", 217535);
+
+        //taskSetupPeerAssesment(peerAssesmentId, courseIds, taskPeerAssessmentSurveyMapping);
+
+        // these surveys are copied once for each assessment pair
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskAssessmentSurveyMapping.put("About Us page", 204316);
+        taskAssessmentSurveyMapping.put("Corporate Video", 204315);
+        taskAssessmentSurveyMapping.put("Fanvid", 204490);
+        taskAssessmentSurveyMapping.put("Video-Mediated Interaction", 204491);
+        taskAssessmentSurveyMapping.put("Weblog", 204492);
+
+        taskSetupAssesment(peerAssesmentId, taskAssessmentSurveyMapping, assessmentFolderId);
     }
 
     @SuppressWarnings("unused")
@@ -188,7 +219,7 @@ public class PeerAssessmentManager
         // setup for EU-Leeds and Rome
         int[] courseIds = { 1301, 1297 }; // EU-Leeds and Rome
         int peerAssesmentId = 1; // manually created for now
-        int assessmentFolderId = 443; // the fodler inside the assessmentgroup to store all assessment surveys
+        int assessmentFolderId = 443; // the folder inside the assessment group to store all assessment surveys
 
         // these surveys are used directly. One for each submission topic
         HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
@@ -261,7 +292,7 @@ public class PeerAssessmentManager
 
             mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
 
-            mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
+            // mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
 
             log.debug("Send to: " + pair.getAssessorUser().getEmail());
             mail.sendMail();
@@ -308,9 +339,11 @@ public class PeerAssessmentManager
                 "Read and analyse them carefully then fill in the peer-assessment grid and submit it. Click here for the grid\r\n" +
                 surveyUrl + "\r\n" +
                 "\r\n" +
-                "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
+                "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by May 31st at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
                 "\r\n" +
                 "Thank you very much for your work!\r\n";
+
+        // TODO change text
     }
 
     private String getEUMADe4ALLResultMailText(String username, String peerAssessmentUrl, String assessmentUrl)
