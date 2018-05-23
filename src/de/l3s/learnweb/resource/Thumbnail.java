@@ -13,6 +13,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
     private int height = 0;
     private final String url;
     private final int fileId;
+    // TODO Oleh: add flag which indicates when the Thumbnail is a placeholder
 
     public Thumbnail(String url, int width, int height, int fileId)
     {
