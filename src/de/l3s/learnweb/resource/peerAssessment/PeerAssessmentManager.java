@@ -169,15 +169,16 @@ public class PeerAssessmentManager
      * ******** helper methods to setup courses ***********
      *****************************************************/
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception
     {
-        //System.exit(-1);
+        System.exit(-1);
 
         Learnweb learnweb = Learnweb.createInstance(null);
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
 
         //pam.taskSetupPeerAssesmentAarhusFlorenceMessina();
-        pam.sendInvitationMail(2);
+        //pam.sendInvitationMail(2);
 
         //pam.sendResultMail(1);
 
@@ -292,7 +293,7 @@ public class PeerAssessmentManager
 
             mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
 
-            // mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
+            mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
 
             log.debug("Send to: " + pair.getAssessorUser().getEmail());
             mail.sendMail();
