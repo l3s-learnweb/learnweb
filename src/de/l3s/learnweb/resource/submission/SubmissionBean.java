@@ -61,8 +61,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     private List<Submission> pastSubmissions;
     private List<Submission> currentSubmissions;
     private List<Submission> futureSubmissions;
-    private List<SelectItem> surveyResourcesList;
-    private List<SelectItem> editSurveyResourcesList;
+    private List<SelectItem> surveyResourcesList = new ArrayList<>();
+    private List<SelectItem> editSurveyResourcesList = new ArrayList<>();
     private boolean submissionOverviewReadOnly = false;
 
     private List<User> users; //To fetch list of users for a given course
@@ -70,29 +70,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
     @ManagedProperty(value = "#{rightPaneBean}")
     private RightPaneBean rightPaneBean;
-
-    public SubmissionBean()
-    {
-        if(getUser() == null) // not logged in
-            return;
-
-        surveyResourcesList = new ArrayList<>();
-        editSurveyResourcesList = new ArrayList<>();
-    }
-
-    public List<PeerAssesmentPair> getPeerAssessmentPairs()
-    {
-        try
-        {
-            return getLearnweb().getPeerAssessmentManager().getPairsByAssessorUserId(getUserId());
-
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
-        return null;
-    }
 
     public void onLoad() throws SQLException
     {
@@ -107,13 +84,13 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         {
             submissionOverviewReadOnly = true;
 
+            // check if moderator or submission assessor
             if(!getUser().isModerator() && !getLearnweb().getPeerAssessmentManager().canAssessSubmission(getUser().getId(), userId, submissionId))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view this submission");
                 log.error("Unprivileged access: " + BeanHelper.getRequestSummary());
                 return;
             }
-            // TODO check privileges moderator or submission assessor
         }
 
         //When accessing the submission_resources page both these parameters are set
@@ -131,8 +108,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
             log(Action.submission_view_resource, 0, submissionId, userId);
         }
 
-        //log.info("submission id:" + submissionId + " max no. of resources: " + selectedSubmission.getNoOfResources());
-
         getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
         // stop caching (back button problem)
         HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
@@ -140,7 +115,20 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0); // Proxies.
+    }
 
+    public List<PeerAssesmentPair> getPeerAssessmentPairs()
+    {
+        try
+        {
+            return getLearnweb().getPeerAssessmentManager().getPairsByAssessorUserId(getUserId());
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+        return null;
     }
 
     /**

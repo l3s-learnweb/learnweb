@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -21,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -115,23 +114,24 @@ public class DownloadServlet extends HttpServlet
         String requestString = request.getRequestURI();
 
         int index = requestString.indexOf(urlPattern);
-        String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/");
+        requestString = requestString.substring(index + urlPattern.length());
+        index = requestString.indexOf("/");
+        String requestFileId = requestString.substring(0, index);
+        String requestFileName = requestString.substring(index + 1);
 
-        if(requestFileData.length != 2) // download url is incomplete
+        int fileId = NumberUtils.toInt(requestFileId);
+
+        if(fileId <= 0) // download url is incomplete
         {
-            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-            request = (HttpServletRequest) ext.getRequest();
             String referrer = request.getHeader("referer");
 
             // only log the error if the referrer is uni-hannover.de where we have a chance to fix the link
-            Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.WARN : Level.ERROR;
+            Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
             log.log(logLevel, "Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
 
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
-        int fileId = Integer.parseInt(requestFileData[0]);
 
         // Prepare streams.
         RandomAccessFile input = null;
@@ -141,7 +141,7 @@ public class DownloadServlet extends HttpServlet
         {
             // Check if file actually exists in filesystem.
             File file = fileManager.getFileById(fileId);
-            if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileData[1])
+            if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileName)
             {
                 log.warn("Requested file " + fileId + " does not exist or was deleted");
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

@@ -948,14 +948,17 @@ public class ResourceManager
             else if(!isReindexMode())
             {
                 List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
+
                 for(File file : files)
                 {
                     resource.addFile(file);
                     if(file.getType().equals(TYPE.FILE_MAIN))
                     {
+                        resource.setFileUrl(file.getUrl());
+                        resource.setFileName(file.getName());
+
                         if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE)
                             resource.setUrl(file.getUrl());
-                        resource.setFileUrl(file.getUrl());
                     }
                 }
             }
