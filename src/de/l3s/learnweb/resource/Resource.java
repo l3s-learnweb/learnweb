@@ -904,27 +904,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * html code, only image or text<br/>
-     * max width and max height 100px
-     */
-    @Deprecated
-    public String getEmbeddedSize1()
-    {
-        /*
-        if(embeddedSize1 != null)
-            return embeddedSize1;
-        */
-        if(getThumbnail1() != null)
-            return getThumbnail1().getHtml();
-        if(getThumbnail2() != null)
-            return getThumbnail2().resize(150, 150).getHtml();
-        if(getThumbnail3() != null)
-            return getThumbnail3().resize(150, 150).getHtml();
-
-        return "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-    }
-
-    /**
      * Url to the best (high resolution) available preview image.<br/>
      * Only available for interweb search results + ResourceMetadataExtractor save thumbnail url to the field
      */
@@ -1666,7 +1645,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * A map wrapper to support multi valued input fields
+     * A map wrapper to add the hard coded metadata fields (title, author, desc and language) to the metadata map
      *
      * @author Kemkes
      *

@@ -11,7 +11,7 @@
 			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
 			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submissionBean.preRenderView}"/>
+			<f:viewAction action="#{submissionBean.onLoad}"/> 
 		</f:metadata>
 	</ui:define>
 	
@@ -30,10 +30,10 @@
 		</h:form>
 		
 		<!-- only for eumade4ll -->
-		<p:panel rendered="#{not submissionBean.submitted}"><h1 class="red">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h1></p:panel>
-		
-		<h:panelGroup rendered="#{not submissionBean.submitted}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></h:panelGroup>
-		<h:panelGroup rendered="#{submissionBean.submitted}"><h3 class="title-header">The submitted resources</h3></h:panelGroup>
+		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h1 class="red">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h1></p:panel>
+
+		<ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></ui:fragment>
+		<ui:fragment rendered="#{submissionBean.submitted}"><h3 class="title-header">The submitted resources</h3></ui:fragment>
 		<hr class="title-divider"/>
 		
 		<h:outputStylesheet library="lightbox" name="lightbox.css" />

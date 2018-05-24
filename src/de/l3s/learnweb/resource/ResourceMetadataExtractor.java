@@ -82,7 +82,7 @@ public class ResourceMetadataExtractor
     {
         File mainFile = resource.getFile(TYPE.FILE_MAIN);
         log.debug("Get the mime type and extract text if possible");
-        FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), resource.getFileName());
+        FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), mainFile.getName());
         processFileResource(resource, fileInfo);
     }
 

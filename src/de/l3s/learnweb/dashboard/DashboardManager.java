@@ -6,7 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -358,7 +363,8 @@ public class DashboardManager
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
             ResultSet rs = select.executeQuery();
 
-            while(rs.next()) {
+            while(rs.next())
+            {
                 DescFieldData descFieldData = new DescFieldData();
                 descFieldData.setDescription(rs.getString("description"));
                 descFieldData.setEntryId(rs.getInt("glossary_id"));
@@ -388,7 +394,15 @@ public class DashboardManager
             ResultSet rs = select.executeQuery();
 
             while(rs.next())
-                countPerSource.put(rs.getString("domain"), rs.getInt("count"));
+            {
+                String domain = rs.getString("domain");
+                if(domain == null)
+                {
+                    log.warn("skip null domain");
+                    continue;
+                }
+                countPerSource.put(domain, rs.getInt("count"));
+            }
         }
 
         return countPerSource;

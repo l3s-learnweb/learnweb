@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
@@ -34,7 +35,7 @@ public class FileInspector
     public FileInfo inspect(InputStream inputStream, String fileName)
     {
         FileInfo info = new FileInfo();
-        info.fileName = fileName;
+        info.fileName = StringUtils.defaultString(fileName).replaceAll("[\\\\/:*?\"<>|]", "_"); // replace invalid characters;
 
         int i = fileName.lastIndexOf('.');
         if(i > 0)
@@ -128,11 +129,11 @@ public class FileInspector
         /*
         Learnweb learnweb = Learnweb.getInstance();
         List<Resource> resources = learnweb.getResourceManager().getResources("SELECT * FROM `lw_resource` WHERE `source` LIKE 'flickr' AND `max_image_url` LIKE '%z.jpg' ORDER BY `resource_id` ASC ", null); // loads all resources (very slow)
-        
+
         for(Resource resource : resources)
         {
             getBestImage(resource);
-        
+
         }
         */
     }

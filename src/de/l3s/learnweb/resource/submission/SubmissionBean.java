@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
@@ -95,18 +94,12 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         return null;
     }
 
-    public void preRenderView(ComponentSystemEvent e) throws SQLException
+    public void onLoad() throws SQLException
     {
         if(getUser() == null) // not logged in
             return;
 
-        if(isAjaxRequest())
-        {
-            //log.debug("Skip ajax request");
-            return;
-        }
-
-        if(this.userId == 0)
+        if(this.userId == 0) // don't want to view the submission of a specific user then use the current user (usual case)
             this.userId = getUser().getId();
 
         //When moderator or other assessor accesses a student's overview page to not display edit option for a submission

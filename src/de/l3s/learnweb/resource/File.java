@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.l3s.util.HasId;
 
 public class File implements Serializable, HasId
@@ -53,7 +55,7 @@ public class File implements Serializable, HasId
 
     public void setName(String name)
     {
-        this.name = name;
+        this.name = StringUtils.defaultString(name).replaceAll("[\\\\/:*?\"<>|]", "_"); // replace invalid characters
     }
 
     public String getMimeType()
