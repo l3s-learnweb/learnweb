@@ -338,7 +338,7 @@
 			value="#{resourceDetailBean.tagName}" id="tag_name" />
 		<p:commandButton actionListener="#{resourceDetailBean.addTag}"
 			styleClass="greenbutton clearfix" value="#{msg.addTag}"
-			update=":resourcesView :tag_form :growl :tag_input_form:tag_name"
+			update=":tag_form :growl :tag_input_form:tag_name"
 			process="@form" style="margin-right:0;margin-top:4px;float:right"
 			partialSubmit="true">
 
