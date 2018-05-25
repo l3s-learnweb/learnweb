@@ -31,6 +31,13 @@ public class SurveyResource extends Resource implements Serializable
     {
     }
 
+    @Override
+    public void clearCaches()
+    {
+        super.clearCaches();
+        answerCache = null;
+    }
+
     /**
      * Copy constructor
      *
