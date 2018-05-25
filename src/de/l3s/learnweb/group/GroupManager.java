@@ -707,7 +707,7 @@ public class GroupManager
     /**
      * @param user
      * @param group
-     * @return timestamp when the user has visited the group the last time
+     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group
      * @throws SQLException
      */
     public int getLastVisit(User user, Group group) throws SQLException

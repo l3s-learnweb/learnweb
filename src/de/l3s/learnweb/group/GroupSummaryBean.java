@@ -43,14 +43,15 @@ public class GroupSummaryBean extends ApplicationBean
         }
         final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
                 LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
+
         groupSummary = getLearnweb().getLogsByGroup(getGroupDetailBean().getGroupId(), actions, getRightDateFrom(), LocalDateTime.now());
-        groupSummary.setDescriptions();
+
         return groupSummary;
     }
 
     private LocalDateTime getRightDateFrom() throws SQLException, Exception
     {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(Math.max(Math.min((this.getUser().getGroups().get(0).getLastVisit(this.getUser()) * 1000l),
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(Math.max(Math.min((groupDetailBean.getGroup().getLastVisit(this.getUser()) * 1000l),
                 ZonedDateTime.now().minusWeeks(1).toInstant().toEpochMilli()), ZonedDateTime.now().minusMonths(6).toInstant().toEpochMilli())), ZoneId.systemDefault());
     }
 
@@ -78,16 +79,6 @@ public class GroupSummaryBean extends ApplicationBean
         clickedResource = updatedResourcces.get(index);
         return updatedResourcces.get(index);
 
-    }
-
-    public SummaryOverview getGroupSummary()
-    {
-        return groupSummary;
-    }
-
-    public void setGroupSummary(SummaryOverview groupSummary)
-    {
-        this.groupSummary = groupSummary;
     }
 
     public Resource getClickedResource()

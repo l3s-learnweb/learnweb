@@ -707,6 +707,7 @@ public class Learnweb
                 .collect(Collectors.joining(","));
         String fromDate = Timestamp.valueOf(from).toString();
         String toDate = Timestamp.valueOf(to).toString();
+
         try(PreparedStatement select = getConnection().prepareStatement(
                 LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
         {
@@ -724,7 +725,7 @@ public class Learnweb
                     break;
                 case adding_resource:
                     Resource resource = logEntry.getResource();
-                    if(resource != null && logEntry.getResourceId() != 0)
+                    if(resource != null)
                     {
                         summary.getAddedResources().add(logEntry);
                     }
@@ -739,7 +740,7 @@ public class Learnweb
                     break;
                 case changing_resource:
                     Resource logEntryResource = logEntry.getResource();
-                    if(logEntryResource != null && logEntry.getResourceId() != 0)
+                    if(logEntryResource != null)
                     {
                         if(summary.getUpdatedResources().keySet().contains(logEntryResource))
                         {
@@ -747,7 +748,7 @@ public class Learnweb
                         }
                         else
                         {
-                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Arrays.asList(logEntry)));
+                            summary.getUpdatedResources().put(logEntryResource, Arrays.asList(logEntry));
                         }
                     }
                     break;
@@ -756,6 +757,7 @@ public class Learnweb
                 }
             }
         }
+        summary.generateDescriptions();
         return summary;
     }
 

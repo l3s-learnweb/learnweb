@@ -430,6 +430,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
         lastVisitCache.put(user.getId(), time);
     }
 
+    /**
+     *
+     * @param user
+     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group
+     * @throws Exception
+     */
     public int getLastVisit(User user) throws Exception
     {
         Integer time = lastVisitCache.get(user.getId());
