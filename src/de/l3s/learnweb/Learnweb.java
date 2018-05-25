@@ -705,15 +705,12 @@ public class Learnweb
         String actionsString = actions.stream()
                 .map(a -> String.valueOf(a.ordinal()))
                 .collect(Collectors.joining(","));
-        String fromDate = Timestamp.valueOf(from).toString();
-        String toDate = Timestamp.valueOf(to).toString();
-
         try(PreparedStatement select = getConnection().prepareStatement(
                 LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
         {
             select.setInt(1, groupId);
-            select.setString(2, fromDate);
-            select.setString(3, toDate);
+            select.setTimestamp(2, Timestamp.valueOf(from));
+            select.setTimestamp(3, Timestamp.valueOf(to));
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {

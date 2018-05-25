@@ -61,8 +61,8 @@ public class SaverServlet extends HttpServlet
         HttpSession session = request.getSession(true);
         try(PrintWriter writer = response.getWriter())
         {
-            String fileId = request.getParameter(FILE_ID);
-            Integer userId = Integer.parseInt(request.getParameter(USER_ID));
+            int fileId = Integer.parseInt(request.getParameter(FILE_ID));
+            int userId = Integer.parseInt(request.getParameter(USER_ID));
             try(Scanner scanner = new Scanner(request.getInputStream()))
             {
                 scanner.useDelimiter(DELIMITER);
@@ -79,7 +79,7 @@ public class SaverServlet extends HttpServlet
         }
     }
 
-    private void parseResponse(SavingInfo info, String fileId, Integer userId, String sessionId, int startTime)
+    private void parseResponse(SavingInfo info, int fileId, int userId, String sessionId, int startTime)
     {
         try
         {
@@ -87,7 +87,7 @@ public class SaverServlet extends HttpServlet
             if(info.getStatus() == DocumentStatus.READY_FOR_SAVING.getStatus())
             {
                 learnweb = Learnweb.getInstance();
-                File file = learnweb.getFileManager().getFileById(Integer.parseInt(fileId));
+                File file = learnweb.getFileManager().getFileById(fileId);
                 File previousVersionFile = learnweb.getFileManager().copy(file);
                 file.setLastModified(new Date());
                 Resource resource = learnweb.getResourceManager().getResource(file.getResourceId());
