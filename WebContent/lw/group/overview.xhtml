@@ -7,7 +7,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:viewAction action="#{groupDetailBean.onLoad}" />
+			<f:viewAction action="#{groupDetailBean.onLoad}" />			
 		</f:metadata>
 	</ui:define>
 
@@ -58,7 +58,7 @@
 			<h:panelGroup id="resourcesView" layout="block">
 				<ui:decorate template="/templates/group/summary_overview.xhtml">
 					<ui:param name="summary"
-						value="#{groupSummaryBean.getSummaryOverview()}" />
+						value="#{groupOverviewBean.getSummaryOverview()}" />
 				</ui:decorate>
 				<div id="show_activities" class="closed_activities">
 					<span><h:outputText value="#{msg.show_activities}" /></span> <i
@@ -67,7 +67,7 @@
 
 				<div id="all_activities" class="hidden">
 
-					<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}"
+					<h:dataTable var="datagrid" value="#{groupOverviewBean.logMessages}"
 						id="datagrid" styleClass="not-selectable" style="width: 100%;">
 						<h:column>
 							<div class="newsfeed_user_image_div">
@@ -155,9 +155,9 @@
 						<h:panelGroup id="history" class="newsfeed_history">
 							<p:commandButton value="#{msg.full_history}"
 								styleClass="blackbutton"
-								rendered="${not groupDetailBean.isAllLogs()}"
+								rendered="${not groupOverviewBean.isAllLogs()}"
 								update=":datagrid history"
-								actionListener="#{groupDetailBean.fetchAllLogs()}" />
+								actionListener="#{groupOverviewBean.fetchAllLogs()}" />
 						</h:panelGroup>
 					</h:form>
 				</div>

@@ -701,7 +701,7 @@ public class Learnweb
 
     public SummaryOverview getLogsByGroup(int groupId, List<Action> actions, LocalDateTime from, LocalDateTime to) throws SQLException
     {
-        SummaryOverview summary = new SummaryOverview();
+        SummaryOverview summary = null;
         String actionsString = actions.stream()
                 .map(a -> String.valueOf(a.ordinal()))
                 .collect(Collectors.joining(","));
@@ -712,6 +712,10 @@ public class Learnweb
             select.setTimestamp(2, Timestamp.valueOf(from));
             select.setTimestamp(3, Timestamp.valueOf(to));
             ResultSet rs = select.executeQuery();
+            if(rs.next())
+            {
+                summary = new SummaryOverview();
+            }
             while(rs.next())
             {
                 LogEntry logEntry = new LogEntry(rs);
@@ -754,7 +758,6 @@ public class Learnweb
                 }
             }
         }
-        summary.generateDescriptions();
         return summary;
     }
 

@@ -1,16 +1,14 @@
 package de.l3s.learnweb.group;
 
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -22,18 +20,73 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 
 @ManagedBean
 @ViewScoped
-public class GroupSummaryBean extends ApplicationBean
+public class GroupOverviewBean extends ApplicationBean
 {
-    @ManagedProperty(value = "#{groupDetailBean}")
-    private GroupDetailBean groupDetailBean;
+    @ManagedProperty(value = "#{rightPaneBean}")
+    private RightPaneBean rightPaneBean;
 
     private SummaryOverview groupSummary;
 
     private Resource clickedResource;
+
+    private boolean allLogs = false;
+
+    private List<LogEntry> logMessages;
+
+    private int groupId;
+
+    @PostConstruct
+    public void init()
+    {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        this.groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("group_id"));
+    }
+
+    public List<LogEntry> getLogMessages() throws SQLException
+    {
+        if(null == logMessages)
+        {
+            loadLogs(25);
+        }
+        return logMessages;
+    }
+
+    public void setLogMessages(List<LogEntry> logMessages)
+    {
+        this.logMessages = logMessages;
+    }
+
+    public void fetchAllLogs()
+    {
+        allLogs = true;
+        loadLogs(null);
+    }
+
+    private void loadLogs(Integer limit)
+    {
+        try
+        {
+            if(limit != null)
+                logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
+            else
+                logMessages = getLearnweb().getLogsByGroup(groupId, null);
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public boolean isAllLogs()
+    {
+        return allLogs;
+    }
 
     public SummaryOverview getSummaryOverview() throws Exception
     {
@@ -43,16 +96,19 @@ public class GroupSummaryBean extends ApplicationBean
         }
         final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
                 LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
-
-        groupSummary = getLearnweb().getLogsByGroup(getGroupDetailBean().getGroupId(), actions, getRightDateFrom(), LocalDateTime.now());
-
+        if(groupSummary == null)
+        {
+            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+        }
+        if(groupSummary == null)
+        {
+            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+        }
+        if(groupSummary == null)
+        {
+            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+        }
         return groupSummary;
-    }
-
-    private LocalDateTime getRightDateFrom() throws SQLException, Exception
-    {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(Math.max(Math.min((groupDetailBean.getGroup().getLastVisit(this.getUser()) * 1000l),
-                ZonedDateTime.now().minusWeeks(1).toInstant().toEpochMilli()), ZonedDateTime.now().minusMonths(6).toInstant().toEpochMilli())), ZoneId.systemDefault());
     }
 
     public AbstractMap.SimpleEntry<String, Resource> getChoosenResourceFromSlider() throws SQLException
@@ -101,19 +157,14 @@ public class GroupSummaryBean extends ApplicationBean
         SimpleEntry<String, Resource> clickedResourceFromSlider = getChoosenResourceFromSlider();
         if(clickedResourceFromSlider != null)
         {
-            getGroupDetailBean().getRightPaneBean().setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
-            getGroupDetailBean().getRightPaneBean().setClickedAbstractResource(clickedResourceFromSlider.getValue());
+            rightPaneBean.setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
+            rightPaneBean.setClickedAbstractResource(clickedResourceFromSlider.getValue());
         }
     }
 
-    public GroupDetailBean getGroupDetailBean()
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
-        return groupDetailBean;
-    }
-
-    public void setGroupDetailBean(GroupDetailBean groupDetailBean)
-    {
-        this.groupDetailBean = groupDetailBean;
+        this.rightPaneBean = rightPaneBean;
     }
 
 }

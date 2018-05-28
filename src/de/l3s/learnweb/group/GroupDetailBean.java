@@ -32,7 +32,6 @@ import org.primefaces.model.TreeNode;
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Link.LinkType;
@@ -72,7 +71,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private List<Folder> breadcrumbs;
 
     private List<User> members;
-    private List<LogEntry> logMessages;
 
     // Group edit fields (Required for editing group)
     private String editedGroupDescription;
@@ -83,8 +81,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private User clickedUser;
 
-    private boolean allLogs = false;
-    private boolean reloadLogs = false;
     private boolean isNewestResourceHidden = false;
 
     // New link form
@@ -150,8 +146,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private final int pageSize;
 
-    private List<LogEntry> newslist;
-
     public GroupDetailBean() throws SQLException
     {
         pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
@@ -181,7 +175,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             try
             {
                 user.setActiveGroup(group);
-
                 group.setLastVisit(user);
             }
             catch(Exception e1)
@@ -199,20 +192,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Misc_Anonymize_usernames))
             return true;
         return false;
-    }
-
-    public List<LogEntry> getNewslist()
-    {
-        if(null == newslist || reloadLogs)
-        {
-            loadLogs(25);
-
-            if(logMessages.size() < 25)
-                allLogs = true;
-        }
-
-        return logMessages;
-
     }
 
     private void loadGroup() throws SQLException
@@ -250,22 +229,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     buildBreadcrumbsForFolder(selectedFolder);
                 }
             }
-        }
-    }
-
-    private void loadLogs(Integer limit)
-    {
-        try
-        {
-            if(limit != null)
-                logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
-            else
-                logMessages = getLearnweb().getLogsByGroup(groupId, null);
-
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
         }
     }
 
@@ -317,21 +280,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
         }
-    }
-
-    public List<LogEntry> getLogMessages() throws SQLException
-    {
-        if(null == logMessages)
-        {
-            logMessages = getLearnweb().getLogsByGroup(groupId, null);
-        }
-        return logMessages;
-    }
-
-    public void fetchAllLogs()
-    {
-        setAllLogs(true);
-        loadLogs(null);
     }
 
     public String getNewLinkUrl()
@@ -593,26 +541,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.clickedUser = clickedUser;
     }
 
-    public boolean isAllLogs()
-    {
-        return allLogs;
-    }
-
-    public void setAllLogs(boolean allLogs)
-    {
-        this.allLogs = allLogs;
-    }
-
-    public boolean isReloadLogs()
-    {
-        return reloadLogs;
-    }
-
-    public void setReloadLogs(boolean reloadLogs)
-    {
-        this.reloadLogs = reloadLogs;
-    }
-
     public AbstractPaginator getPaginator()
     {
         if(null == paginator)
@@ -856,11 +784,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setMembers(List<User> members)
     {
         this.members = members;
-    }
-
-    public void setLogMessages(List<LogEntry> logMessages)
-    {
-        this.logMessages = logMessages;
     }
 
     public void setNewestResourceHidden(boolean newestResourceHidden)

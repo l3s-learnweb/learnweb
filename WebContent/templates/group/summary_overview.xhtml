@@ -20,21 +20,23 @@
 	<h:outputScript library="slick" name="slick.js" target="head" />
 	<h:form>
 		<p:remoteCommand name="onAfterChange"
-			actionListener="#{groupSummaryBean.displayClickedResourceFromSlider()}"
-				update=":right_pane_wrapper " oncomplete="update_header()"/>
+			actionListener="#{groupOverviewBean.displayClickedResourceFromSlider()}"
+			update=":right_pane_wrapper " oncomplete="update_header()" />
 	</h:form>
 
-	<h:form >
+	<h:form>
 		<ui:fragment rendered="#{summary!=null and !summary.isEmpty()}">
 			<h:form class="summary_overview_container">
-
+				
 				<div id="new_changes" class="summary tabcontent">
 					<ui:fragment rendered="#{not empty summary.addedResources}">
 						<div id="added_res_tab_new_changes" class="dropdown-btn">
 							<h:graphicImage class="icons" value="/resources/icon/Add.png"
 								alt="" />
-							<span class="main-text"><h:outputText
-									value="#{summary.addedResourcesDescription}" /></span> <span
+							<span class="main-text"><h:outputFormat
+									value="#{msg['added_resources']}">
+									<f:param value="#{summary.addedResources.size()}" />
+								</h:outputFormat></span> <span
 								class="icon_wrapper"><i class="fa fa-caret-down open" /></span>
 						</div>
 						<div
@@ -74,8 +76,10 @@
 						<div class="dropdown-btn">
 							<h:graphicImage class="icons" value="/resources/icon/Remove.png"
 								alt="" />
-							<span class="main-text"> <h:outputText
-									value="#{summary.deletedResourcesDescription}" /></span><span
+							<span class="main-text"> <h:outputFormat
+									value="#{msg['deleted_resources']}">
+									<f:param value="#{summary.deletedResources.size()}" />
+								</h:outputFormat></span><span
 								class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
 						</div>
 						<div
@@ -94,9 +98,10 @@
 						<div id="added_res_tab" class="dropdown-btn ">
 							<h:graphicImage class="icons" value="/resources/icon/updated.png"
 								alt="" />
-							<span class="main-text"><h:outputText
-									value="#{summary.updatedResourcesDescription}" /></span><span
-								class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
+							<span class="main-text"> <h:outputFormat
+									value="#{msg['updated_resources']}">
+									<f:param value="#{summary.updatedResources.size()}" />
+								</h:outputFormat></span><span class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
 						</div>
 						<div
 							class="dropdown-container dropdown-container-added-resources wrapper open">
@@ -135,7 +140,7 @@
 							<h:graphicImage class="icons"
 								value="/resources/icon/new_topic.png" alt="" />
 							<span class="main-text"><h:outputText
-									value="#{summary.forumInfoDescription}" /></span> <span
+							value="#{msg['forum_activity']}"/></span> <span
 								class="icon_wrapper"><i class="fa fa-caret-down" /></span>
 						</div>
 						<div
@@ -154,7 +159,7 @@
 							<h:graphicImage class="icons" value="/resources/icon/members.png"
 								alt="" />
 							<span class="main-text"> <h:outputText
-									value="#{summary.membersInfoDescription}" /></span><span
+									value="#{msg['members_info']}"/></span><span
 								class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
 						</div>
 						<div
