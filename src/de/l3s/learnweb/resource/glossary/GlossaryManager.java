@@ -242,7 +242,7 @@ public class GlossaryManager
 
                 List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getSecondLanguageItems());
                 pstmnt = null;
-                pstmnt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden));
+                pstmnt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden)); // TODO use prepared statement parameter
                 ResultSet rs = pstmnt.executeQuery();
                 while(rs.next())
                 {

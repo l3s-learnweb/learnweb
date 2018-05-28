@@ -622,7 +622,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -1009,18 +1009,18 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return source;
     }
 
-    public void setSource(String source)
+    public void setSource(String source) // TODO use  enum instead of string
     {
-        /*
+        if(null == source || source.length() == 0)
+        {
+            log.warn("Resource: " + id + "; source set to null");
+            return;
+        }
+
         SERVICE service = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
         if(service == null)
             log.warn("Invalid source: " + source + " resource " + this);
-        // TODO use  enum instead of string
-        */
-        /*
-        if(null == source || source.length() == 0)
-            log.info("Resource: " + id + "; source set to null");
-        */
+
         this.source = source;
     }
 
@@ -1355,7 +1355,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public void addArchiveUrl(ArchiveUrl archiveUrl)
     {
-        // TODO really add archive url; until then clean cache:
         archiveUrls = null;
     }
 
@@ -1552,9 +1551,22 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         if(user == null) // not logged in
             return false;
 
-        // TODO check whether the resource belongs to a group that this moderator is allowed to control ... propably very inefficient
+        if(user.isModerator())
+        {
+            if(getGroupId() == 0)
+                return true; // TODO check whether the user belongs to a course that this moderator is allowed to control
 
-        return user.isModerator();
+            // check group access permissions
+            try
+            {
+                return getGroup().getCourse().isModerator(user);
+            }
+            catch(SQLException e)
+            {
+                log.error("user " + user + " can not moderate resource " + this);
+            }
+        }
+        return false;
     }
 
     public boolean canAnnotateResource(User user) throws SQLException

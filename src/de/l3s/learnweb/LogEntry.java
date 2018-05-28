@@ -68,7 +68,7 @@ public class LogEntry implements Serializable
         glossary_entry_delete, // target_id = resource id, param = glossary id
         glossary_term_edit, // target_id = resource id, param = glossary id
         glossary_term_add, // target_id = resource id, param = glossary id
-        glossary_term_delete, // target_id = resource id, param = glossary id
+        glossary_term_delete, // target_id = resource id, param = glossary_term_id
         resource_thumbnail_update, // target_id = resource_id
         submission_submitted, //target_id = resource_id
         extended_metadata_open_dialog, //target_id = resource_id
@@ -110,7 +110,7 @@ public class LogEntry implements Serializable
 
     public static void main(String[] arg)
     {
-        Action[] actions = { Action.group_metadata_search, Action.survey_save };
+        Action[] actions = { Action.glossary_term_delete };
 
         for(Action action : actions)
         {

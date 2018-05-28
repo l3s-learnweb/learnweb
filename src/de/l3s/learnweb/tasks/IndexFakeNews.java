@@ -18,8 +18,8 @@ import org.json.simple.parser.JSONParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
 @SuppressWarnings("unused")
@@ -31,8 +31,12 @@ public class IndexFakeNews
 
     private ResourceManager resourceManager;
 
+    private Resource logoResource;
+
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException
     {
+        System.exit(-1);
+
         new IndexFakeNews();
     }
 
@@ -43,7 +47,7 @@ public class IndexFakeNews
             learnweb = Learnweb.createInstance(null);
             resourceManager = learnweb.getResourceManager();
 
-            indexFullfactFile("d:\\full_fact.csv");
+            //indexFullfactFile("d:\\full_fact.csv");
             //reindexAllFakeNewsResources();
             //indexSnopes();
 
@@ -62,6 +66,8 @@ public class IndexFakeNews
     {
         CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
 
+        logoResource = learnweb.getResourceManager().getResource(217749);
+
         for(CSVRecord csvRecord : parser)
         {
             String title = csvRecord.get("title").trim();
@@ -76,6 +82,12 @@ public class IndexFakeNews
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
+            resource.setThumbnail0(logoResource.getThumbnail0());
+            resource.setThumbnail1(logoResource.getThumbnail1());
+            resource.setThumbnail2(logoResource.getThumbnail2());
+            resource.setThumbnail3(logoResource.getThumbnail3());
+            resource.setThumbnail4(logoResource.getThumbnail4());
+
             resource.setTitle(title);
             resource.setDescription(description);
             resource.setUrl(url);
@@ -88,12 +100,13 @@ public class IndexFakeNews
 
     public void reindexAllFakeNewsResources() throws SQLException
     {
-        List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE source = ?", "FactCheck");
+        int counter = 0;
+        List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE deleted = 0 AND group_id = 1346 AND source = ? and url like 'http://fullfa%'", "FactCheck");
         resourceManager.setReindexMode(true);
         SolrClient solrClient = learnweb.getSolrClient();
         for(Resource resource : resources)
         {
-            log.debug("Process: " + resource);
+            log.debug("Process: " + counter++ + " - " + resource);
             solrClient.reIndexResource(resource);
             //resourceManager.deleteResource(resource.getId());
         }

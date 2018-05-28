@@ -14,9 +14,8 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceMetadataField;
+import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.learnweb.resource.ResourceMetadataField.MetadataType;
-import de.l3s.learnweb.resource.search.SearchFilters;
-import de.l3s.learnweb.resource.search.SearchFilters.SERVICE;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -41,9 +40,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String logo;
     private String welcomeMessage;
     private String welcomePage;
-    private SearchFilters.SERVICE defaultSearchServiceText = SERVICE.bing;
-    private SearchFilters.SERVICE defaultSearchServiceImage = SERVICE.flickr;
-    private SearchFilters.SERVICE defaultSearchServiceVideo = SERVICE.youtube;
+    private SERVICE defaultSearchServiceText = SERVICE.bing;
+    private SERVICE defaultSearchServiceImage = SERVICE.flickr;
+    private SERVICE defaultSearchServiceVideo = SERVICE.youtube;
     private String defaultLanguage = null; // the language which is used after the user logged in
     private long[] options = new long[1];
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
@@ -392,11 +391,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
         return options;
     }
 
-    private static SearchFilters.SERVICE getServiceFromString(String name)
+    private static SERVICE getServiceFromString(String name)
     {
         try
         {
-            return SearchFilters.SERVICE.valueOf(name);
+            return SERVICE.valueOf(name);
         }
         catch(Exception e)
         {
@@ -420,32 +419,32 @@ public class Organisation implements Serializable, Comparable<Organisation>
         this.defaultSearchServiceVideo = getServiceFromString(defaultSearchServiceVideo);
     }
 
-    public SearchFilters.SERVICE getDefaultSearchServiceText()
+    public SERVICE getDefaultSearchServiceText()
     {
         return defaultSearchServiceText;
     }
 
-    public void setDefaultSearchServiceText(SearchFilters.SERVICE defaultSearchServiceText)
+    public void setDefaultSearchServiceText(SERVICE defaultSearchServiceText)
     {
         this.defaultSearchServiceText = defaultSearchServiceText;
     }
 
-    public SearchFilters.SERVICE getDefaultSearchServiceImage()
+    public SERVICE getDefaultSearchServiceImage()
     {
         return defaultSearchServiceImage;
     }
 
-    public void setDefaultSearchServiceImage(SearchFilters.SERVICE defaultSearchServiceImage)
+    public void setDefaultSearchServiceImage(SERVICE defaultSearchServiceImage)
     {
         this.defaultSearchServiceImage = defaultSearchServiceImage;
     }
 
-    public SearchFilters.SERVICE getDefaultSearchServiceVideo()
+    public SERVICE getDefaultSearchServiceVideo()
     {
         return defaultSearchServiceVideo;
     }
 
-    public void setDefaultSearchServiceVideo(SearchFilters.SERVICE defaultSearchServiceVideo)
+    public void setDefaultSearchServiceVideo(SERVICE defaultSearchServiceVideo)
     {
         this.defaultSearchServiceVideo = defaultSearchServiceVideo;
     }

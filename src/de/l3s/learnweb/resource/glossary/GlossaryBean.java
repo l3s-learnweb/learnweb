@@ -69,7 +69,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
-    private String valueHeaderIt; // TODO does It refer to italian? then change it
+    private String valueHeaderIt; // TODO does It refer to Italian? then change it
     private int count;
     private int userId;
     private LANGUAGE primaryLanguage;
@@ -215,6 +215,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         boolean upload = false;
 
+        // TODO what are these loops doing? Do they only check if there exist at least one entry of each language? If yes than the implementation is to complicated
         for(LanguageItem one : getPrimaryLangItems())
         {
             if(!one.getValue().isEmpty() && !upload)
@@ -311,7 +312,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 secondaryLangItems.remove(item);
 
-                log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
+                log(Action.glossary_term_delete, groupId, resourceId, item.getTermId()); // TODO log is stored before the change is persisted in the DB, even if a user decides to cancel
             }
             else
             {
@@ -327,7 +328,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void removeFirstLanguageItem(LanguageItem item)
+    public void removeFirstLanguageItem(LanguageItem item) // TODO duplicated code see removeSecondLanguageItem
     {
         try
         {
@@ -341,7 +342,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 primaryLangItems.remove(item);
 
-                log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
+                log(Action.glossary_term_delete, groupId, resourceId, item.getTermId());
             }
             else
             {
@@ -362,7 +363,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             primaryLangItems.add(new LanguageItem());
 
-            log(Action.glossary_term_add, groupId, resourceId);
+            log(Action.glossary_term_add, groupId, resourceId); // should store resourceId + term_id
         }
         catch(Exception e)
         {

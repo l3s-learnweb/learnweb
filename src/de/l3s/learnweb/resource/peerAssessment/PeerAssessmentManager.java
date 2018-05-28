@@ -177,12 +177,66 @@ public class PeerAssessmentManager
         Learnweb learnweb = Learnweb.createInstance(null);
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
 
-        //pam.taskSetupPeerAssesmentAarhusFlorenceMessina();
-        //pam.sendInvitationMail(2);
+        //pam.taskSetupPeerAssesmentAarhusLateSubmission();
+        //pam.sendInvitationMail(3);
 
-        //pam.sendResultMail(1);
+        //pam.sendResultMail(xx);
 
         learnweb.onDestroy();
+    }
+
+    @SuppressWarnings("unused")
+    private void taskSetupPeerAssesmentAarhusLateSubmission() throws SQLException
+    {
+        // setup for EU-AarhusFlorenceMessina
+        int peerAssesmentId = 3; // manually created for now
+        int assessmentFolderId = 466; // the folder inside the assessment group to store all assessment surveys
+
+        // these surveys are used directly. One for each submission topic
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskPeerAssessmentSurveyMapping.put("About Us page", 217735);
+        taskPeerAssessmentSurveyMapping.put("Corporate Videos", 217734);
+        taskPeerAssessmentSurveyMapping.put("Weblogs", 217733);
+
+        // generate base entries manually
+
+        // these surveys are copied once for each assessment pair
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<>();
+        taskAssessmentSurveyMapping.put("About Us page", 204316);
+        taskAssessmentSurveyMapping.put("Corporate Videos", 204315);
+        taskAssessmentSurveyMapping.put("Weblogs", 204492);
+
+        HashMap<Integer, String> userTaskyMapping = new HashMap<>();
+        userTaskyMapping.put(11423, "About Us page");
+        userTaskyMapping.put(11952, "Corporate Videos");
+        userTaskyMapping.put(11394, "Weblogs");
+        userTaskyMapping.put(11429, "Weblogs");
+        userTaskyMapping.put(11448, "Weblogs");
+        userTaskyMapping.put(11514, "Weblogs");
+
+        List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssesmentId);
+        PeerAssessmentManager peerAssessmentManager = learnweb.getPeerAssessmentManager();
+
+        for(PeerAssesmentPair pair : pairs)
+        {
+            String task = userTaskyMapping.get(pair.getAssessedUserId());
+            Integer baseResourceId = taskAssessmentSurveyMapping.get(task);
+
+            // copy base survey
+            SurveyResource assessmentSurvey = (SurveyResource) learnweb.getResourceManager().getResource(baseResourceId);
+            assessmentSurvey = assessmentSurvey.clone();
+
+            log.debug(pair.getAssessedUserId() + " - " + assessmentSurvey);
+            assessmentSurvey.setUserId(10921);
+            assessmentSurvey.setGroupId(1373);
+            assessmentSurvey.setFolderId(assessmentFolderId);
+            assessmentSurvey.setSaveable(true);
+            assessmentSurvey.save();
+
+            pair.setAssessmentSurveyResourceId(assessmentSurvey.getId());
+            peerAssessmentManager.savePeerAssesmentPair(pair);
+        }
+
     }
 
     @SuppressWarnings("unused")

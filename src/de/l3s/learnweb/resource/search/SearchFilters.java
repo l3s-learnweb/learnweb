@@ -21,6 +21,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.util.StringHelper;
 
 public class SearchFilters implements Serializable
@@ -60,75 +61,6 @@ public class SearchFilters implements Serializable
         public String toString()
         {
             return UtilBean.getLocaleMessage(this.name());
-        }
-    };
-
-    public enum SERVICE // when adding more services remember to update the service column of learnweb_large.sl_query
-    {
-        bing, // Does not support filtering by date
-        flickr,
-        youtube,
-        vimeo, // Does not support filtering by date
-        ipernity,
-        ted, // stored in SOLR
-        tedx, // stored in SOLR
-        loro, // stored in SOLR
-        yovisto, //  stored in SOLR
-        learnweb, // stored in SOLR
-        archiveit, // stored in SOLR
-        teded, // stored in SOLR
-        factcheck // stored in SOLR
-        ;
-
-        public boolean isLearnwebSource()
-        {
-            switch(this)
-            {
-            case bing:
-            case flickr:
-            case youtube:
-            case vimeo:
-            case ipernity:
-                return false;
-            default:
-                return true;
-            }
-        }
-
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case bing:
-                return "Bing";
-            case flickr:
-                return "Flickr";
-            case youtube:
-                return "YouTube";
-            case vimeo:
-                return "Vimeo";
-            case ipernity:
-                return "Ipernity";
-            case ted:
-                return "TED";
-            case tedx:
-                return "TEDx";
-            case loro:
-                return "LORO";
-            case yovisto:
-                return "Yovisto";
-            case learnweb:
-                return "LearnWeb";
-            case archiveit:
-                return "Archive-It";
-            case teded:
-                return "TED-Ed";
-            case factcheck:
-                return "Fact Check";
-            default:
-                return this.name();
-            }
         }
     };
 

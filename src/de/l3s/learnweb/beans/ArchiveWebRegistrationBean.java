@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.resource.search.SearchFilters;
+import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.util.Mail;
 
 @ManagedBean
@@ -45,7 +45,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     public ArchiveWebRegistrationBean()
     {
         // set default search options for anonymous archiv it users
-        setPreference("SEARCH_SERVICE_TEXT", SearchFilters.SERVICE.archiveit.name());
+        setPreference("SEARCH_SERVICE_TEXT", SERVICE.archiveit.name());
         //setPreference("search_action", MODE.image.name());
     }
 

@@ -36,12 +36,12 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
+import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.FilterItem;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
-import de.l3s.learnweb.resource.search.SearchFilters.SERVICE;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
 

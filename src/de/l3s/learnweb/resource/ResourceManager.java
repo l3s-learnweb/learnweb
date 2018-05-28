@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +23,6 @@ import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
@@ -37,7 +35,6 @@ import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
-import de.l3s.util.Image;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
@@ -405,7 +402,7 @@ public class ResourceManager
             if(!rs.next())
                 throw new SQLException("database error: no id generated");
             resource.setId(rs.getInt(1));
-            resource.setLocation("Learnweb");
+            resource.setLocation(getLocation(resource));
             cache.put(resource);
 
             // persist the relation between the resource and its files
@@ -1153,128 +1150,6 @@ public class ResourceManager
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?", null, groupId, folderId, userId, limit);
     }
-    /*
-     *  All methods beyond should be deleted soon
-     */
-
-    public static void fixThumbnailsForWebResources() throws SQLException, IOException
-    {
-
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = new ResourceManager(lw);
-        FileManager fm = lw.getFileManager();
-
-        // ResourcePreviewMaker pm = lw.getResourcePrevewMaker();
-
-        List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r  WHERE `deleted` = 0 AND `type` LIKE 'text' AND `thumbnail4_file_id` = thumbnail3_file_id", null);
-
-        for(Resource resource : resources)
-        {
-            Thumbnail thumbnail = resource.getThumbnail0();
-
-            if(thumbnail == null)
-            {
-                continue;
-            }
-
-            File file = fm.getFileById(thumbnail.getFileId() - 1);
-
-            if(file != null && file.getName().equals("website.png"))
-            {
-                if(!file.exists())
-                {
-                    log.error(resource.getId() + " - " + resource.getUser().getUsername());
-
-                    continue;
-                }
-
-                if(resource.getSource() == null)
-                    resource.setSource("Internet");
-
-                Image image = new Image(file.getInputStream());
-
-                Thumbnail thumbnail4 = new Thumbnail(null, image.getWidth(), image.getHeight(), file.getId());
-
-                resource.setThumbnail4(thumbnail4);
-                resource.save();
-            }
-
-        }
-
-    }
-
-    public static void createThumbnailsForWebResources() throws SQLException
-    {
-
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = new ResourceManager(lw);
-        ResourceMetadataExtractor rme = lw.getResourceMetadataExtractor();
-        ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
-
-        /*
-        List<Resource> resources = rm
-        	.getResources(
-        		"SELECT "
-        			+ RESOURCE_COLUMNS
-        			+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
-        		null);
-        */
-        List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS
-                + " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`group_id` = 420 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
-                null);
-        for(Resource resource : resources)
-        {
-            String url = AddResourceBean.checkUrl(resource.getUrl());
-
-            if(null == url)
-            {
-                log.error("invalid url");
-
-                resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
-                resource.save();
-                continue;
-            }
-
-            if(url.contains("ted.com") || url.contains("youtube") || url.contains("vimeo") || url.contains("slideshare") || url.contains("flickr") || resource.getId() == 71989 || resource.getId() == 71536 || resource.getId() == 71100)
-            {
-                log.error("skipeed: " + url);
-                continue;
-            }
-
-            if(url.contains("loro") && resource.getMaxImageUrl() != null)
-            {
-                log.debug("skipped LORO");
-                continue;
-            }
-
-            try
-            {
-                rme.processResource(resource); // extract metadata
-
-                if(resource.getThumbnail4() == null)
-                    rpm.processResource(resource); // create thumbnails
-            }
-            catch(Exception e)
-            {
-                log.error(e);
-
-                resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
-                resource.save();
-            }
-            //
-
-            //lw.getFileManager().delete(null);
-        }
-    }
-
-    /*
-     * See solrclient for a faster implementation
-     *
-    public static void reindexAllResources() throws SQLException, ClassNotFoundException
-    {
-
-    }
-    */
 
     /*
      * New resource sql queries for extended metadata (Chloe)
