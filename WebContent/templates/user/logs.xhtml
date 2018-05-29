@@ -11,10 +11,10 @@
 							
 		<h:column>
 			<div class="float-left">
-				<img id="userpic" src="#{logEntry.logEntry.userImage}" width="30" height="30" style="padding-right: 10px;" alt="Profile picture"/>
+				<img id="userpic" src="#{logEntry.userImage}" width="30" height="30" style="padding-right: 10px;" alt="Profile picture"/>
 			</div>
 			<div style="width: auto;">
-				<h:outputText value="#{logEntry.text}" escape="false"  />
+				<h:outputText value="#{logEntry.description}" escape="false"  />
 				<h:panelGroup rendered="#{logEntry.queryNeeded}">
 					<h:outputText value=" #{msg.with_query} " escape="false"  />	
 						<h:outputLink value="search.jsf" style="text-decoration:none">
