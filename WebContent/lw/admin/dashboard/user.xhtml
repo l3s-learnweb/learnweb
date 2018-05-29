@@ -153,7 +153,7 @@
                                 </h:form>
                             </div>
                             <div class="ui-g-8">
-                                <p:panel id="table_descriptions" rendered="false"
+                                <p:panel id="table_descriptions"
                                          header="Descriptions of entries from class-mates" stickyHeader="true"
                                          style="height:361px; overflow-y: scroll;">
                                     <p:dataTable value="#{dashboardUserBean.usersGlossaryDescriptions}" var="descr"
@@ -184,7 +184,6 @@
                                 </p:panel>
                             </div>
                             <div class="ui-g-6">
-                            <ui:fragment rendered="false" >
                                 <p:panel id="table_sources_list" header="User Proxy sources list" widgetVar="panel"
                                          stickyHeader="true"
                                          style="margin-bottom:20px; height:362px; overflow-y: scroll;">
@@ -203,7 +202,7 @@
                                             </p:column>
                                         </p:dataTable>
                                     </h:form>
-                                </p:panel></ui:fragment>
+                                </p:panel>
                             </div>
                             <div class="ui-g-2" style="padding: 0">
                                 <div class="ui-g">

@@ -149,6 +149,7 @@ class DashboardChartsFactory
         model.addSeries(concepts);
         model.addSeries(terms);
         model.setLegendPosition("ne");
+        model.setStacked(true);
 
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setTickAngle(-60);

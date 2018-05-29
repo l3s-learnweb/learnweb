@@ -137,7 +137,18 @@
                                          style="margin-bottom:20px">
                                     <f:facet name="actions">
                                         <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                        <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
+                                        <p:tooltip for="userActivityTypes">
+                                            <h:outputText value="Total number of interactions grouped by categories:" escape="false" />
+                                            <br />
+                                            <h:outputText value="Glossary - actions in the glossary (create, add, delete, edit)" escape="false" />
+                                            <br />
+                                            <h:outputText value="Search - searching in a group resources or categories" escape="false" />
+                                            <br />
+                                            <h:outputText value="System - log in and log out" escape="false" />
+                                            <br />
+                                            <h:outputText value="Resource - interactions with resources (download, delete, add, tagging, rating, commenting)" escape="false" />
+                                            <br />
+                                        </p:tooltip>
                                     </f:facet>
                                     <p:chart type="bar" model="#{dashboardBean.usersActivityTypesChart}"
                                              xaxisAngle="60" style="height:300px" responsive="true"/>

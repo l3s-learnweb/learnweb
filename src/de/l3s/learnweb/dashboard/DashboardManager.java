@@ -278,8 +278,9 @@ public class DashboardManager
     public ArrayList<String> getGlossaryDescriptions(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
         ArrayList<String> descriptions = new ArrayList<>();
+        return descriptions;
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+        /*try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT rg.description as description " +
                         "FROM lw_resource r " +
                         "JOIN lw_resource_glossary rg USING(resource_id) " +
@@ -295,7 +296,7 @@ public class DashboardManager
                 descriptions.add(rs.getString("description"));
         }
 
-        return descriptions;
+        return descriptions;*/
     }
 
     public Map<Integer, GlossaryStatistic> getGlossaryStatisticPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
@@ -350,8 +351,9 @@ public class DashboardManager
     public ArrayList<DescFieldData> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
         ArrayList<DescFieldData> langDataList = new ArrayList<>();
+        return langDataList;
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+        /*try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT rg.description as description, rg.glossary_id as glossary_id, r.language as language, r.owner_user_id as user_id " +
                         "FROM lw_resource r " +
                         "JOIN lw_resource_glossary rg USING(resource_id) " +
@@ -374,7 +376,7 @@ public class DashboardManager
             }
         }
 
-        return langDataList;
+        return langDataList;*/
     }
 
     public Map<String, Integer> getProxySourcesWithCounters(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException

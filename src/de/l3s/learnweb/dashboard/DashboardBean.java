@@ -105,7 +105,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
         totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
         totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
 
-//        descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
+        //TODO Tetiana: redo descFieldsStatistic when description field will be restored
+        descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
         glossaryFieldsSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUsersIds, startDate, endDate);
         glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(selectedUsersIds, startDate, endDate);
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
