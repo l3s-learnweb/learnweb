@@ -101,7 +101,7 @@
 						<a href="#" onclick="$(this).next().toggle(); return false;"><h:outputText value="#{pair.assessedUser.studentId}" /></a>
 
 						<span class="display-none">
-							<ui:repeat var="subpair" value="#{pair.assessedUser.peerAssessmentAsAssessor}">
+							<ui:repeat var="subpair" value="#{pair.assessedUser.assessorPeerAssessment}">
 								<p>
 									has assessed <h:outputText value="#{subpair.assessedUser.courses[0].title} " /> <h:outputText value="#{subpair.assessedUser.studentId} " />
 									

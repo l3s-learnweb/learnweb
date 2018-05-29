@@ -624,7 +624,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void setSelectedPurposes(ArrayList<String> selectedPurposes)
     {
-        this.selectedPurposes = selectedPurposes.toArray(new String[selectedPurposes.size()]);
+        if(selectedPurposes == null)
+            this.selectedPurposes = new String[0];
+        else
+            this.selectedPurposes = selectedPurposes.toArray(new String[selectedPurposes.size()]);
     }
 
     public String getNewBotcat()

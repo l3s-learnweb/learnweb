@@ -865,7 +865,18 @@ public class User implements Comparable<User>, Serializable, HasId
      *
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getPeerAssessmentAsAssessor() throws SQLException
+    public List<PeerAssesmentPair> getAssessorPeerAssessment() throws SQLException
+    {
+        return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessorUserId(getId());
+    }
+
+    /**
+     *
+     * @return peer assessment pairs that assess this user
+     *
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getAssessedPeerAssessments() throws SQLException
     {
         return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessorUserId(getId());
     }

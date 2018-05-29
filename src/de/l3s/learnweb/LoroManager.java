@@ -21,7 +21,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
-import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -106,7 +105,8 @@ public class LoroManager
             {
                 if(l.getDisplayName().toLowerCase().trim().contains(language.toLowerCase().trim()))
                 {
-                    if (l.getLanguage() != null) {
+                    if(l.getLanguage() != null)
+                    {
                         resource.setLanguage(l.getLanguage().trim());
                     }
                     break;
@@ -178,7 +178,6 @@ public class LoroManager
     {
 
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
-        SolrClient solr = learnweb.getSolrClient();
         Group loroGroup = learnweb.getGroupManager().getGroupById(883);
         ResourceManager resourceManager = learnweb.getResourceManager();
 
@@ -366,7 +365,6 @@ public class LoroManager
                     }
                     loroResource.save();
 
-                    solr.indexResource(loroResource);
                     // textTest = true;
                 }
                 else

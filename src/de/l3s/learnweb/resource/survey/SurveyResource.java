@@ -79,6 +79,17 @@ public class SurveyResource extends Resource implements Serializable
         return answerCache;
     }
 
+    /**
+     *
+     * @param userId
+     * @return true if this user has submitted this survey
+     * @throws SQLException
+     */
+    public boolean isSubmitted(int userId) throws SQLException
+    {
+        return Learnweb.getInstance().getSurveyManager().getSurveyResourceSubmitStatus(this.getId(), userId);
+    }
+
     public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException
     {
         SurveyUserAnswers answers = getAnswerCache().get(userId);

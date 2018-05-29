@@ -1,0 +1,64 @@
+package de.l3s.learnweb.resource.peerAssessment;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.survey.SurveyResource;
+
+@RequestScoped
+@ManagedBean
+public class AssessmentResultBean extends ApplicationBean implements Serializable
+{
+    private static final long serialVersionUID = 6159753194487272716L;
+    private List<PeerAssesmentPair> peerAssessmentPairs;
+    private SurveyResource mandatorySurvey; //  this survey must be answered before results can be viewed
+    private boolean mandatorySurveySubmitted = true;
+
+    public AssessmentResultBean()
+    {
+        if(getUser() == null)
+            return;
+
+        try
+        {
+            peerAssessmentPairs = getUser().getAssessedPeerAssessments();
+
+            // hardcoded until other courses need it too
+            mandatorySurvey = (SurveyResource) getLearnweb().getResourceManager().getResource(216012); // eu made4 all Evaluation Form
+            mandatorySurveySubmitted = mandatorySurvey.isSubmitted(getUser().getId());
+            //peerAssessmentPairs.get(0).
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public static long getSerialversionuid()
+    {
+        return serialVersionUID;
+    }
+
+    public List<PeerAssesmentPair> getPeerAssessmentPairs()
+    {
+        return peerAssessmentPairs;
+    }
+
+    public Resource getMandatorySurvey()
+    {
+        return mandatorySurvey;
+    }
+
+    public boolean isMandatorySurveySubmitted()
+    {
+        return mandatorySurveySubmitted;
+    }
+
+}

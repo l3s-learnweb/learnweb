@@ -23,8 +23,9 @@ public class JobScheduler
         //description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
 
         //Schedules the task at 1:00 on 14th and 28th of every month
-        UpdateLoroResources loroTask = new UpdateLoroResources();
-        scheduler.schedule("0 1 14,28 * *", loroTask);
+        // the loro crawler is not running at the moment
+        //UpdateLoroResources loroTask = new UpdateLoroResources();
+        //scheduler.schedule("0 1 14,28 * *", loroTask);
 
         //Schedules the task at 1:00 on 13th and 27th of every month
         //UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
@@ -58,6 +59,7 @@ public class JobScheduler
             scheduler.stop();
     }
 
+    @SuppressWarnings("unused")
     private class UpdateLoroResources extends Task
     {
 
