@@ -96,15 +96,15 @@ public class GroupOverviewBean extends ApplicationBean
         }
         final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
                 LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
-        if(groupSummary == null)
+        if(groupSummary == null || groupSummary.isEmpty())
         {
             groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
         }
-        if(groupSummary == null)
+        if(groupSummary == null || groupSummary.isEmpty())
         {
             groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
         }
-        if(groupSummary == null)
+        if(groupSummary == null || groupSummary.isEmpty())
         {
             groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
         }

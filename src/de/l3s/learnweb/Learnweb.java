@@ -749,7 +749,7 @@ public class Learnweb
                         }
                         else
                         {
-                            summary.getUpdatedResources().put(logEntryResource, Arrays.asList(logEntry));
+                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Arrays.asList(logEntry)));
                         }
                     }
                     break;
