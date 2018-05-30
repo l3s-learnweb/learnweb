@@ -64,17 +64,18 @@ public class GroupOverviewBean extends ApplicationBean
     public void fetchAllLogs()
     {
         allLogs = true;
-        loadLogs(null);
+        loadLogs(-1);
     }
 
-    private void loadLogs(Integer limit)
+    /**
+     *
+     * @param limit if limit is -1 all log entrys are returned
+     */
+    private void loadLogs(int limit)
     {
         try
         {
-            if(limit != null)
-                logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
-            else
-                logMessages = getLearnweb().getLogsByGroup(groupId, null);
+            logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
 
         }
         catch(SQLException e)

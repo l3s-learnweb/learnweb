@@ -50,7 +50,7 @@
 								<p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
 									title="#{question.info}" style="width:70%;'">
 
-									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
+									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />									
 								</p:inputText>
 								<p:tooltip for="input_#{question.id}" showEvent="focus"
 									hideEvent="blur" position="left"
@@ -58,8 +58,7 @@
 							</c:if>
 
 							<c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
-								<p:outputLabel for="input_area_#{question.id}"
-									value="#{question.label}"></p:outputLabel>
+								<p:outputLabel for="input_area_#{question.id}" value="#{question.label}"></p:outputLabel>
 								<p:inputTextarea id="input_area_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
 									title="#{question.info}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100">									
 									
@@ -102,7 +101,7 @@
 									value="#{surveyBean.userAnswers.multipleAnswers[question.id]}"
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
-									filter="#{question.optionsList.size() gt 8}"
+									filter="#{question.answers.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option.label}" itemValue="#{option.value}" />
@@ -117,7 +116,7 @@
 									value="#{surveyBean.userAnswers.answers[question.id]}"
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
-									filter="#{question.optionsList.size() gt 8}"
+									filter="#{question.answers.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
@@ -131,7 +130,7 @@
 									value="#{surveyBean.userAnswers.multipleAnswers[question.id]}"
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
-									filter="#{question.optionsList.size() gt 8}"
+									filter="#{question.answers.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px"
 									layout="grid" columns="1">
 									<f:selectItems value="#{question.answers}" var="option"
