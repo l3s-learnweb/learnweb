@@ -448,6 +448,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             HSSFRow row0 = sheet.getRow(1);
             HSSFCell cell0;
 
+            File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
+
+            InputStream is = new FileInputStream(watermark);
+
+            byte[] bytes = IOUtils.toByteArray(is);
+            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+            is.close();
+            CreationHelper helper = wb.getCreationHelper();
+            Drawing drawing = sheet.createDrawingPatriarch();
+            ClientAnchor anchor = helper.createClientAnchor();
+            anchor.setAnchorType(ClientAnchor.DONT_MOVE_AND_RESIZE);
+
             if(row0 != null)
             {
                 cell0 = row0.getCell(0);
@@ -485,17 +497,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             //Set owner details
 
-            File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
-
-            InputStream is = new FileInputStream(watermark);
-
-            byte[] bytes = IOUtils.toByteArray(is);
-            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-            is.close();
-            CreationHelper helper = wb.getCreationHelper();
-            Drawing drawing = sheet.createDrawingPatriarch();
-            ClientAnchor anchor = helper.createClientAnchor();
-            anchor.setAnchorType(ClientAnchor.DONT_MOVE_AND_RESIZE);
             //set top-left corner of the picture,
             //subsequent call of Picture#resize() will operate relative to it
             int row1 = (sheet.getLastRowNum() / 4);
@@ -509,6 +510,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             HSSFCellStyle copyrightStyle = wb.createCellStyle();
             copyrightStyle.setLocked(true);
             sheet.protectSheet("learnweb");
+            watermark.delete();
 
         }
         catch(Exception e)
@@ -521,7 +523,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public File text2Image(String textString) throws BadElementException, MalformedURLException, IOException
     {
         //create a File Object
-        File file = new File("./" + textString + ".png");
+
+        File file = File.createTempFile(textString, ".png");
+        //File file = new File("./uploaded_files/tmp/" + textString + ".png");
         //create the font you wish to use
         Font font = new Font("Tahoma", Font.PLAIN, 18);
 
