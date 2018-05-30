@@ -30,114 +30,114 @@
 				
 				<h:panelGroup rendered="#{surveyBean.formEnabled}">
 					<h:panelGrid columns="1" cellpadding="5">
-						<c:forEach var="field" items="#{surveyBean.resource.questions}">
+						<c:forEach var="question" items="#{surveyBean.resource.questions}">
 
-							<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
-								<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
+								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
 									<h:panelGroup>
 										<h3>
-											<h:outputText value="${field.label}" style="font-style: italic; font-weight: bold;" />
+											<h:outputText value="${question.label}" style="font-style: italic; font-weight: bold;" />
 										</h3>
 									</h:panelGroup>
 								</c:if>
-								<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-									<h:outputText value="${field.label}" />
+								<c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
+									<h:outputText value="${question.label}" />
 								</c:if>
 							</c:if>
 							
-							<c:if test="#{field.type eq 'INPUT_TEXT'}">
-								<p:outputLabel for="input_#{field.id}" value="#{field.label}"></p:outputLabel>
-								<p:inputText id="input_#{field.id}"
-									required="#{field.required and empty param[save.clientId]}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									title="#{field.info}" style="width:70%;'" />
-								<p:tooltip for="input_#{field.id}" showEvent="focus"
+							<c:if test="#{question.type eq 'INPUT_TEXT'}">
+								<p:outputLabel for="input_#{question.id}" value="#{question.label}"></p:outputLabel>
+								<p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
+									title="#{question.info}" style="width:70%;'">
+
+									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
+								</p:inputText>
+								<p:tooltip for="input_#{question.id}" showEvent="focus"
 									hideEvent="blur" position="left"
-									rendered="#{not empty field.info}" />
+									rendered="#{not empty question.info}" />
 							</c:if>
 
-							<c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
-								<p:outputLabel for="input_area_#{field.id}"
-									value="#{field.label}"></p:outputLabel>
-								<p:inputTextarea id="input_area_#{field.id}"
-									required="#{field.required and empty param[save.clientId]}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									title="#{field.info}" rows="4"
-									style="overflow-y: scroll; width:100%; box-sizing: border-box;"
-									class="border-box-100" />
-								<p:tooltip for="input_area_#{field.id}" showEvent="focus"
+							<c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
+								<p:outputLabel for="input_area_#{question.id}"
+									value="#{question.label}"></p:outputLabel>
+								<p:inputTextarea id="input_area_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
+									title="#{question.info}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100">									
+									
+									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />									
+								</p:inputTextarea>
+								<p:tooltip for="input_area_#{question.id}" showEvent="focus"
 									hideEvent="blur" position="left"
-									rendered="#{not empty field.info}" />
+									rendered="#{not empty question.info}" />
 							</c:if>
 
-							<c:if test="#{field.type eq 'AUTOCOMPLETE'}">
-								<p:outputLabel for="input_complete_#{field.id}"
-									value="#{field.label}"></p:outputLabel>
-								<p:autoComplete id="input_complete_#{field.id}"
-									required="#{field.required and empty param[save.clientId]}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									completeMethod="#{field.completeText}" class="border-box-100" />
-								<p:tooltip for="input_complete_#{field.id}" showEvent="hover"
+							<c:if test="#{question.type eq 'AUTOCOMPLETE'}">
+								<p:outputLabel for="input_complete_#{question.id}"
+									value="#{question.label}"></p:outputLabel>
+								<p:autoComplete id="input_complete_#{question.id}"
+									required="#{question.required and empty param[save.clientId]}"
+									value="#{surveyBean.userAnswers.answers[question.id]}"
+									completeMethod="#{question.completeText}" class="border-box-100" />
+								<p:tooltip for="input_complete_#{question.id}" showEvent="hover"
 									position="left" rendered="#{true}"
-									value="#{field.info}" />
+									value="#{question.info}" />
 							</c:if>
 
 							<c:if
-								test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-								<p:outputLabel for="input_selectone_#{field.id}" value="#{field.label}"></p:outputLabel>
-								<p:selectOneMenu id="input_selectone_#{field.id}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
-									required="#{field.required and empty param[save.clientId]}"
-									class="border-box-100" title="#{field.info}">
-									<f:selectItems value="#{field.answers}" var="option"
+								test="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}">
+								<p:outputLabel for="input_selectone_#{question.id}" value="#{question.label}"></p:outputLabel>
+								<p:selectOneMenu id="input_selectone_#{question.id}"
+									value="#{surveyBean.userAnswers.answers[question.id]}"
+									editable="#{question.type eq 'ONE_MENU_EDITABLE'}"
+									required="#{question.required and empty param[save.clientId]}"
+									class="border-box-100" title="#{question.info}">
+									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
 								</p:selectOneMenu>
-								<p:tooltip for="input_selectone_#{field.id}" position="left" rendered="#{not empty field.info}" />
+								<p:tooltip for="input_selectone_#{question.id}" position="left" rendered="#{not empty question.info}" />
 							</c:if>
 
-							<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-								<p:outputLabel for="input_selectmultiple_#{field.id}" value="#{field.label}"></p:outputLabel>
-								<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
-									value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-									label="" multiple="true" title="#{field.info}"
-									required="#{field.required and empty param[save.clientId]}"
-									filter="#{field.optionsList.size() gt 8}"
+							<c:if test="#{question.type eq 'MULTIPLE_MENU'}">
+								<p:outputLabel for="input_selectmultiple_#{question.id}" value="#{question.label}"></p:outputLabel>
+								<p:selectCheckboxMenu id="input_selectmultiple_#{question.id}"
+									value="#{surveyBean.userAnswers.multipleAnswers[question.id]}"
+									label="" multiple="true" title="#{question.info}"
+									required="#{question.required and empty param[save.clientId]}"
+									filter="#{question.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px">
-									<f:selectItems value="#{field.answers}" var="option"
+									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option.label}" itemValue="#{option.value}" />
 								</p:selectCheckboxMenu>
-								<p:tooltip for="input_selectmultiple_#{field.id}" position="left" rendered="#{not empty field.info}" />
+								<p:tooltip for="input_selectmultiple_#{question.id}" position="left" rendered="#{not empty question.info}" />
 							</c:if>
 							
-							<c:if test="#{field.type eq 'ONE_RADIO'}">
-								<p:outputLabel for="input_oneradio_#{field.id}"
-									value="#{field.label}"></p:outputLabel>
-								<p:selectOneRadio id="input_oneradio_#{field.id}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									label="" multiple="true" title="#{field.info}"
-									required="#{field.required and empty param[save.clientId]}"
-									filter="#{field.optionsList.size() gt 8}"
+							<c:if test="#{question.type eq 'ONE_RADIO'}">
+								<p:outputLabel for="input_oneradio_#{question.id}"
+									value="#{question.label}"></p:outputLabel>
+								<p:selectOneRadio id="input_oneradio_#{question.id}"
+									value="#{surveyBean.userAnswers.answers[question.id]}"
+									label="" multiple="true" title="#{question.info}"
+									required="#{question.required and empty param[save.clientId]}"
+									filter="#{question.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px">
-									<f:selectItems value="#{field.answers}" var="option"
+									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
 								</p:selectOneRadio>
-								<p:tooltip for="input_oneradio_#{field.id}" position="left" rendered="#{not empty field.info}" />
+								<p:tooltip for="input_oneradio_#{question.id}" position="left" rendered="#{not empty question.info}" />
 							</c:if>
 							
-							<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
-								<p:outputLabel for="input_manycheckbox_#{field.id}" value="#{field.label}"></p:outputLabel>
-								<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
-									value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-									label="" multiple="true" title="#{field.info}"
-									required="#{field.required and empty param[save.clientId]}"
-									filter="#{field.optionsList.size() gt 8}"
+							<c:if test="#{question.type eq 'MANY_CHECKBOX'}">
+								<p:outputLabel for="input_manycheckbox_#{question.id}" value="#{question.label}"></p:outputLabel>
+								<p:selectManyCheckbox id="input_manycheckbox_#{question.id}"
+									value="#{surveyBean.userAnswers.multipleAnswers[question.id]}"
+									label="" multiple="true" title="#{question.info}"
+									required="#{question.required and empty param[save.clientId]}"
+									filter="#{question.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px"
 									layout="grid" columns="1">
-									<f:selectItems value="#{field.answers}" var="option"
+									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
 								</p:selectManyCheckbox>
-								<p:tooltip for="input_manycheckbox_#{field.id}" position="left" rendered="#{not empty field.info}" />
+								<p:tooltip for="input_manycheckbox_#{question.id}" position="left" rendered="#{not empty question.info}" />
 							</c:if>
 							
 						</c:forEach>

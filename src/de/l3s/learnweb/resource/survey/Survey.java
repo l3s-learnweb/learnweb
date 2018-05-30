@@ -21,7 +21,7 @@ public class Survey implements Serializable, HasId
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
 
-    private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
+    private ArrayList<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
 
     @Override
     public int getId()
@@ -64,7 +64,7 @@ public class Survey implements Serializable, HasId
         this.organizationId = organizationId;
     }
 
-    public ArrayList<SurveyMetaDataFields> getQuestions()
+    public ArrayList<SurveyQuestion> getQuestions()
     {
         return questions;
     }

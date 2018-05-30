@@ -67,7 +67,7 @@ public class SurveyResource extends Resource implements Serializable
         return survey;
     }
 
-    public ArrayList<SurveyMetaDataFields> getQuestions() throws SQLException
+    public ArrayList<SurveyQuestion> getQuestions() throws SQLException
     {
         return getSurvey().getQuestions();
     }

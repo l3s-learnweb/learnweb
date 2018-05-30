@@ -7,11 +7,13 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Rishita
  *
  */
-public class SurveyMetaDataFields implements Serializable
+public class SurveyQuestion implements Serializable
 {
     private static final long serialVersionUID = -7698089608547415349L;
 
@@ -29,7 +31,6 @@ public class SurveyMetaDataFields implements Serializable
         MANY_CHECKBOX
     }
 
-    // private String name; // the name of this field, will be used as SOLR column name
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private MetadataType type;
@@ -38,36 +39,21 @@ public class SurveyMetaDataFields implements Serializable
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
     private List<SelectItem> optionsList;
-    private String extra; // if the options are rating or othherwise
-    private List<String> answers; //answers for question with options
+    private String extra; // if the options are rating or otherwise
+    private List<String> answers; // predefined answers for question with options
 
-    public SurveyMetaDataFields(String label, MetadataType type)
+    public SurveyQuestion(MetadataType type)
     {
-        super();
-        //  this.name = name;
-        this.label = label;
         this.type = type;
+
+        // set default length limits for text input fields
+        if(type == MetadataType.INPUT_TEXT || type == MetadataType.INPUT_TEXTAREA)
+        {
+            options.add("0");
+            options.add("6000");
+        }
     }
 
-    public SurveyMetaDataFields(String name, MetadataType type, boolean moderatorOnly)
-    {
-        super();
-        //   this.name = name;
-        this.label = name;
-        this.type = type;
-        this.moderatorOnly = moderatorOnly;
-    }
-
-    /* public String getName()
-    {
-        return name;
-    }
-    
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-    */
     public MetadataType getType()
     {
         return type;
@@ -99,7 +85,7 @@ public class SurveyMetaDataFields implements Serializable
 
     public List<String> completeText(String query)
     {
-        return null;
+        return null; // until now never used in a survey. But let's see
     }
 
     public void setOptions(List<String> options)
@@ -134,7 +120,7 @@ public class SurveyMetaDataFields implements Serializable
 
     public void setInfo(String info)
     {
-        this.info = info;
+        this.info = StringUtils.defaultString(info);
     }
 
     public boolean isRequired()
@@ -176,4 +162,5 @@ public class SurveyMetaDataFields implements Serializable
     {
         this.id = id;
     }
+
 }

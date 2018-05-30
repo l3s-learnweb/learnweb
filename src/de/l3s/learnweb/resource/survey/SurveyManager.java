@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.survey.SurveyMetaDataFields.MetadataType;
+import de.l3s.learnweb.resource.survey.SurveyQuestion.MetadataType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Sql;
@@ -49,8 +49,8 @@ public class SurveyManager
         SurveyUserAnswers surveyAnswer = new SurveyUserAnswers(userId, surveyResourceId);
 
         // TODO move map to survey class
-        HashMap<Integer, SurveyMetaDataFields> formquestions = new HashMap<>();
-        for(SurveyMetaDataFields question : survey.getQuestions())
+        HashMap<Integer, SurveyQuestion> formquestions = new HashMap<>();
+        for(SurveyQuestion question : survey.getQuestions())
         {
             formquestions.put(question.getId(), question);
         }
@@ -133,18 +133,18 @@ public class SurveyManager
         surveyResources.add(resourceId);
         Resource surveyResource;
         int groupId;
-
+    
         int surveyId = 0;
-
+    
         surveyResource = learnweb.getResourceManager().getResource(resourceId);
-
+    
         groupId = surveyResource.getGroupId();
         //Fetching course id for given resource
         //Fetching other resource Ids with same survey id in the current course.
         if(groupId > 0)
         {
             int courseId = learnweb.getGroupManager().getGroupById(groupId).getCourseId();
-
+    
             String getOtherResources = "SELECT r.resource_id FROM `lw_resource` r, lw_group t2, lw_survey_resource t3 WHERE r.group_id =t2.group_id and r.`type`='survey' and r.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
             String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getSurveyId);
@@ -163,7 +163,7 @@ public class SurveyManager
                 }
             }
         }
-
+    
         return surveyResources;
     }*/
 
@@ -287,33 +287,26 @@ public class SurveyManager
             ResultSet rs = preparedStmnt.executeQuery();
             while(rs.next())
             {
-                SurveyMetaDataFields formQuestion = new SurveyMetaDataFields(rs.getString("question"), MetadataType.valueOf(rs.getString("question_type")));
+                SurveyQuestion question = new SurveyQuestion(MetadataType.valueOf(rs.getString("question_type")));
+                question.setId(rs.getInt("question_id"));
+                question.setLabel(rs.getString("question"));
+                question.setInfo(rs.getString("info"));
+                question.setExtra(rs.getString("extra"));
+                question.setRequired(rs.getBoolean("required"));
+
                 if(rs.getString("answers") != null)
                 {
                     String str = rs.getString("answers").trim();
-                    formQuestion.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
+                    question.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
+                }
 
-                }
-                if(rs.getString("extra") != null)
-                {
-                    formQuestion.setExtra(rs.getString("extra"));
-                }
                 if(rs.getString("option") != null)
                 {
                     String str = rs.getString("option").trim();
-                    formQuestion.setOptions(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
+                    question.setOptions(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
                 }
-                if(rs.getString("info") != null)
-                {
-                    formQuestion.setInfo(rs.getString("info"));
-                }
-                else
-                {
-                    formQuestion.setInfo("");
-                }
-                formQuestion.setRequired(rs.getBoolean("required"));
-                formQuestion.setId(rs.getInt("question_id"));
-                survey.getQuestions().add(formQuestion);
+
+                survey.getQuestions().add(question);
             }
         }
         return survey;
@@ -444,11 +437,11 @@ public class SurveyManager
         return learnweb.getResourceManager().getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
         /*
         ArrayList<Resource> resources = new ArrayList<Resource>();
-        
+
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT r.resource_id FROM lw_resource r JOIN lw_group t2 USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND t2.course_id=? ORDER BY r.title");)
         {
             ps.setInt(1, courseId);
-        
+
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
