@@ -12,6 +12,7 @@
 		<f:metadata>
 			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
 			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}" />
+			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}" />
 			<f:viewAction action="#{surveyBean.onLoad}" />
 			<f:viewAction action="#{surveyBean.onLoadEdit}" />
 		</f:metadata>

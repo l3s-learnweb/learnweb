@@ -17,23 +17,40 @@ public class SurveyQuestion implements Serializable
 {
     private static final long serialVersionUID = -7698089608547415349L;
 
-    public enum MetadataType
-    { // represents primeface input types
+    public enum QuestionType // represents primeface input types
+    {
         INPUT_TEXT,
         INPUT_TEXTAREA,
         AUTOCOMPLETE,
         ONE_MENU,
         ONE_MENU_EDITABLE,
         MULTIPLE_MENU,
-        FULLWIDTH_HEADER,
-        FULLWIDTH_DESCRIPTION,
+        FULLWIDTH_HEADER(true),
+        FULLWIDTH_DESCRIPTION(true),
         ONE_RADIO,
-        MANY_CHECKBOX
+        MANY_CHECKBOX;
+
+        private final boolean readonly;
+
+        QuestionType()
+        {
+            this.readonly = false;
+        }
+
+        QuestionType(boolean readonly)
+        {
+            this.readonly = readonly;
+        }
+
+        public boolean isReadonly()
+        {
+            return readonly;
+        }
     }
 
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
-    private MetadataType type;
+    private QuestionType type;
     private int id; //question id
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
@@ -42,24 +59,24 @@ public class SurveyQuestion implements Serializable
     private String extra; // if the options are rating or otherwise
     private List<String> answers; // predefined answers for question with options
 
-    public SurveyQuestion(MetadataType type)
+    public SurveyQuestion(QuestionType type)
     {
         this.type = type;
 
         // set default length limits for text input fields
-        if(type == MetadataType.INPUT_TEXT || type == MetadataType.INPUT_TEXTAREA)
+        if(type == QuestionType.INPUT_TEXT || type == QuestionType.INPUT_TEXTAREA)
         {
             options.add("0");
             options.add("6000");
         }
     }
 
-    public MetadataType getType()
+    public QuestionType getType()
     {
         return type;
     }
 
-    public void setType(MetadataType type)
+    public void setType(QuestionType type)
     {
         this.type = type;
     }

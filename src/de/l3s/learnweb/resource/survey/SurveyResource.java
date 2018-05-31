@@ -2,8 +2,9 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.l3s.learnweb.Learnweb;
@@ -36,6 +37,7 @@ public class SurveyResource extends Resource implements Serializable
     {
         super.clearCaches();
         answerCache = null;
+        survey = null;
     }
 
     /**
@@ -67,7 +69,7 @@ public class SurveyResource extends Resource implements Serializable
         return survey;
     }
 
-    public ArrayList<SurveyQuestion> getQuestions() throws SQLException
+    public Collection<SurveyQuestion> getQuestions() throws SQLException
     {
         return getSurvey().getQuestions();
     }
@@ -75,7 +77,7 @@ public class SurveyResource extends Resource implements Serializable
     private Cache<SurveyUserAnswers> getAnswerCache()
     {
         if(null == answerCache)
-            answerCache = new Cache<SurveyUserAnswers>(50);
+            answerCache = new Cache<SurveyUserAnswers>(1000);
         return answerCache;
     }
 
@@ -90,12 +92,27 @@ public class SurveyResource extends Resource implements Serializable
         return Learnweb.getInstance().getSurveyManager().getSurveyResourceSubmitStatus(this.getId(), userId);
     }
 
+    public List<SurveyUserAnswers> getAnswersOfAllUsers() throws SQLException
+    {
+        List<SurveyUserAnswers> answers = new LinkedList<>();
+
+        SurveyManager surveyManager = Learnweb.getInstance().getSurveyManager();
+
+        for(User user : surveyManager.getUsersWhoSavedSurveyResource(getId()))
+        {
+            answers.add(getAnswersOfUser(user.getId()));
+        }
+
+        return answers;
+    }
+
     public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException
     {
         SurveyUserAnswers answers = getAnswerCache().get(userId);
         if(null == answers)
         {
-            answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(getSurvey(), getId(), userId);
+            System.out.println("get answers of " + userId);
+            answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(this, userId);
             getAnswerCache().put(answers);
         }
         return answers;

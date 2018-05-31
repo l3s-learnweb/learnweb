@@ -2,11 +2,8 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedList;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -20,124 +17,60 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 706177879900332816L;
     private static final Logger log = Logger.getLogger(SurveyResultBean.class);
-    private int resourceId;
-    private String title;
-    private List<SurveyUserAnswers> answers;
-    private List<ColumnModel> columns;
 
-    @PostConstruct
-    public void init()
+    private int surveyResourceId;
+    private transient SurveyResource resource;
+    private LinkedList<SurveyQuestion> questionColumns = new LinkedList<SurveyQuestion>(); // lists the questions that are shown in the table
+
+    public void onLoad() throws SQLException
     {
-        try
-        {
-            resourceId = getParameterInt("resource_id");
+        if(getUser() == null)
+            return;
 
-        }
-        catch(NullPointerException e)
+        if(!getUser().isModerator())
         {
-            resourceId = 0;
-        }
-
-        if(resourceId > 0)
-        {
-
-            try
-            {
-                setTitle(getLearnweb().getResourceManager().getResource(resourceId).getTitle());
-            }
-            catch(SQLException e)
-            {
-                log.warn("Couldn't fetch survey result title for resource id: " + resourceId);
-            }
-            getSurveyResult();
+            addAccessDeniedMessage();
+            return;
         }
 
-    }
-
-    private void getSurveyResult()
-    {
-        columns = new ArrayList<ColumnModel>();
-        try
+        if(getResource() == null)
         {
-
-            LinkedHashMap<Integer, String> questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
-            answers = getLearnweb().getSurveyManager().getAnswerOfAllUserForSurveyResource(getResourceId(), questions);
-            int questionIndex = 1;
-            for(Integer qid : questions.keySet())
-            {
-                ColumnModel col = new ColumnModel(questions.get(qid), qid, questionIndex);
-                columns.add(col);
-                questionIndex++;
-            }
+            addInvalidParameterMessage("resource_id");
+            return;
         }
-        catch(Exception e)
+
+        // output only questions that are not readonly
+        for(SurveyQuestion question : resource.getQuestions())
         {
-            log.error("Error in fetching result for survey: " + resourceId, e);
+            if(question.getType().isReadonly())
+                continue;
+
+            questionColumns.add(question);
         }
     }
 
-    public int getResourceId()
+    public LinkedList<SurveyQuestion> getQuestionColumns()
     {
-        return resourceId;
+        return questionColumns;
     }
 
-    public void setResourceId(int resourceId)
+    public int getSurveyResourceId()
     {
-        this.resourceId = resourceId;
+        return surveyResourceId;
     }
 
-    public String getTitle()
+    public void setSurveyResourceId(int surveyResourceId)
     {
-        return title;
+        this.surveyResourceId = surveyResourceId;
     }
 
-    public void setTitle(String title)
+    public SurveyResource getResource() throws SQLException
     {
-        this.title = title;
-    }
-
-    public List<SurveyUserAnswers> getAnswers()
-    {
-        return answers;
-    }
-
-    public List<ColumnModel> getColumns()
-    {
-        return columns;
-    }
-
-    static public class ColumnModel implements Serializable
-    {
-        private static final long serialVersionUID = -8787608049574883366L;
-        private String header;
-        private int id;
-        private int index;
-
-        public ColumnModel(String header, int id, int index)
+        if(resource == null)
         {
-            this.header = header;
-            this.id = id;
-            this.index = index;
+            log.debug("load survey resource " + surveyResourceId);
+            resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
         }
-
-        public String getHeader()
-        {
-            return header;
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public int getIndex()
-        {
-            return index;
-        }
-
-        public void setIndex(int index)
-        {
-            this.index = index;
-        }
+        return resource;
     }
 }

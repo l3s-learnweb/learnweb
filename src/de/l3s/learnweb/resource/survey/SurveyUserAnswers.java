@@ -21,8 +21,8 @@ public class SurveyUserAnswers implements Serializable, HasId
 
     private final int userId;
     private final int surveyResourceId;
-    private final HashMap<Integer, String> answers = new LinkedHashMap<>();
-    private final HashMap<Integer, String[]> multipleAnswers = new LinkedHashMap<>();
+    private final HashMap<Integer, String> answers = new LinkedHashMap<>(); // simple answers
+    private final HashMap<Integer, String[]> multipleAnswers = new LinkedHashMap<>(); // used for questions that allow multiple answers
     private boolean saved; // has the user saved the survey at least once
     private boolean submitted; // has the user submitted the survey finally
 
@@ -44,8 +44,11 @@ public class SurveyUserAnswers implements Serializable, HasId
     {
         if(answers.containsKey(id))
             return answers.get(id);
-        else
-            return "Unanswered";
+
+        if(multipleAnswers.containsKey(id))
+            return String.join(", ", multipleAnswers.get(id));
+
+        return "Unanswered";
     }
 
     public int getUserId()
@@ -92,7 +95,7 @@ public class SurveyUserAnswers implements Serializable, HasId
 
     /**
      * This class should only be cached inside an Resource object hence it returns the userId as its id
-     * 
+     *
      * @return
      */
     @Override

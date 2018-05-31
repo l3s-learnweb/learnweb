@@ -264,7 +264,6 @@ public class ApplicationBean
     protected void addFatalMessage(String desc, Throwable exception)
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-        //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
         Logger.getLogger(ApplicationBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
@@ -276,8 +275,15 @@ public class ApplicationBean
     protected void addInvalidParameterMessage(String parameter)
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "Invalid Parameter given. Check the URL you used.");
-        //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-        Logger.getLogger(ApplicationBean.class).error("Invalid parameter for " + parameter + "; " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
+        Logger.getLogger(ApplicationBean.class).warn("Invalid parameter for " + parameter + "; " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
     }
+
+    protected void addAccessDeniedMessage()
+    {
+        addMessage(FacesMessage.SEVERITY_FATAL, "access_denied");
+
+        Logger.getLogger(ApplicationBean.class).warn("access denied " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
+    }
+
 }

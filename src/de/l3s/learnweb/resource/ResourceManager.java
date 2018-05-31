@@ -220,6 +220,8 @@ public class ResourceManager
         if(null != resource && useCache)
             return resource;
 
+        //log.debug("Load resource from DB: " + resourceId);
+
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ?"); //  and deleted = 0
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();

@@ -178,7 +178,7 @@ public class PeerAssessmentManager
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
 
         //pam.taskSetupPeerAssesmentAarhusLateSubmission();
-        //pam.sendInvitationMail(3);
+        //pam.sendInvitationReminderMail(2);
 
         //pam.sendResultMail(xx);
 
@@ -322,6 +322,36 @@ public class PeerAssessmentManager
             peerAssessmentManager.savePeerAssesmentPair(pair);
         }
 
+    }
+
+    private void sendInvitationReminderMail(int peerAssementId) throws SQLException, MessagingException
+    {
+        List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssementId);
+
+        for(PeerAssesmentPair pair : pairs)
+        {
+            if(pair.getPeerAssessmentUserAnswers().isSubmitted())
+                continue;
+
+            String submissionUrl = "https://learnweb.l3s.uni-hannover.de/lw/myhome/submission_resources.jsf?user_id=" + pair.getAssessedUserId() + "&submission_id=" + pair.getSubmissionId();
+            String surveyUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/survey.jsf?resource_id=" + pair.getPeerAssessmentSurveyResourceId();
+
+            Mail mail = new Mail();
+            mail.setSubject("EUMADE4LL peer assessment");
+            mail.setText("You haven't submitted yet.\nThe deadline has been extended until midnight.\n\nOriginal message:\n--------\n\n" + getEUMADe4ALLInvitationMailText(pair.getAssessorUser().getRealUsername(), submissionUrl, surveyUrl));
+
+            mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+
+            mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
+
+            String otherMailAdress = pair.getAssessorUser().getStudentId() + "@post.au.dk";
+            if(!otherMailAdress.equals(pair.getAssessorUser().getEmail()))
+                mail.setRecipient(RecipientType.CC, new InternetAddress(otherMailAdress));
+
+            log.debug("Send to: " + pair.getAssessorUser().getEmail());
+            mail.sendMail();
+
+        }
     }
 
     /**

@@ -1,27 +1,45 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/templates/main/main.xhtml">
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="Assessments" />
-	
+	<ui:param name="pageTitle" value="Assessment results" />
+
 	<ui:define name="center_layout">
-	
-		<div class="page_header">
-			<span>
-				Assessments
-			</span>
-		</div>
-		
-		<p:panel header="Assessments">
+
+		<p:panel header="Assessment results" style="margin:8px;">
+
+			<h:outputText rendered="#{assessmentResultBean.mandatorySurveySubmitted}" />
+
+			<h:outputText rendered="#{empty assessmentResultBean.peerAssessmentPairs}" value="You did not participate in any assessment." />
+
+			<ui:repeat var="pair" value="#{assessmentResultBean.peerAssessmentPairs}">
+
+				<ui:fragment rendered="#{not assessmentResultBean.mandatorySurveySubmitted}">
+				Please answer the
+				<h:outputLink value="survey/survey.jsf">
+						<f:param name="resource_id" value="#{assessmentResultBean.mandatorySurvey.id}" />
+						<f:param name="go_back" value="dfgdf" />
+						<h:outputText value="#{assessmentResultBean.mandatorySurvey.title}" />
+					</h:outputLink>
+				to view the assessment results.			
+			</ui:fragment>
 			
-			<h:outputText rendered="#{assessmentResultBean.}"/>
+				Peer assessment: 
+				<h:outputLink value="survey/answer.jsf">
+					<f:param name="resource_id" value="#{pair.peerAssessmentSurveyResourceId}" />
+					<f:param name="user_id" value="#{pair.assessorUserId}" />
+					<h:outputText value="#{pair.peerAssessment.title}" />
+				</h:outputLink>
+
+				<h:outputText value=" Saved" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"
+					styleClass="red bold" />
+				<h:outputText value=" Submitted" rendered="#{pair.peerAssessmentUserAnswers.submitted}" styleClass="green bold" />
+
+			</ui:repeat>
 		</p:panel>
-	
+
 	</ui:define>
 </ui:composition>
 </html>

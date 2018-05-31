@@ -29,55 +29,46 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private SurveyResource resource;
     private SurveyUserAnswers userAnswers;
 
-    public void onLoad()
-    {
-        //log.debug("survey onLoad resource_id: " + surveyResourceId + "; user_id: " + surveyUserId);
+    private String goBackPage; // contains a link the user should go to after filling in a survey
 
+    public void onLoad() throws SQLException
+    {
         User user = getUser();
         if(user == null)
             return;
 
-        try
+        resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
+
+        if(resource == null)
         {
-            resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
-
-            if(resource == null)
-            {
-                addInvalidParameterMessage("resource_id");
-                return;
-            }
-
-            if(!resource.canViewResource(user))
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
-                resource = null;
-                return;
-            }
-
-            // whose answers shall be viewed
-            if(surveyUserId <= 0 || surveyUserId == getUser().getId()) // by default view the answers of the current user
-            {
-                surveyUserId = getUser().getId();
-            }
-            // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
-            else if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
-                log.error("Illegal access: " + BeanHelper.getRequestSummary());
-                resource = null;
-                return;
-            }
-
-            userAnswers = resource.getAnswersOfUser(surveyUserId);
-
-            formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
-        }
-        catch(Exception e)
-        {
-            surveyResourceId = -1;
-            addFatalMessage("Couldn't load survey; resource: ", e);
+            addInvalidParameterMessage("resource_id");
+            return;
         }
 
+        if(!resource.canViewResource(user))
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
+            resource = null;
+            return;
+        }
+
+        // whose answers shall be viewed
+        if(surveyUserId <= 0 || surveyUserId == getUser().getId()) // by default view the answers of the current user
+        {
+            surveyUserId = getUser().getId();
+        }
+        // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
+        else if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
+            log.error("Illegal access: " + BeanHelper.getRequestSummary());
+            resource = null;
+            return;
+        }
+
+        userAnswers = resource.getAnswersOfUser(surveyUserId);
+
+        formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
     }
 
     private boolean canViewPeerAssessmentResult() throws SQLException
@@ -214,4 +205,15 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         return formEnabled;
     }
+
+    public String getGoBackPage()
+    {
+        return goBackPage;
+    }
+
+    public void setGoBackPage(String goBackPage)
+    {
+        this.goBackPage = goBackPage;
+    }
+
 }

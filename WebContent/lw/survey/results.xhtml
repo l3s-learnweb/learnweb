@@ -1,0 +1,61 @@
+<ui:composition template="/templates/main/main_old.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" lang="#{userBean.localeCode}">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="resource_id" value="#{surveyResultBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
+			<f:viewAction action="#{surveyResultBean.onLoad}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="pageTitle" value="Survey Result" />
+	<ui:param name="loginRequired" value="true" />
+
+	<ui:define name="center_layout">
+		<h:outputStylesheet library="survey" name="survey.css" />
+
+		<h:form rendered="#{surveyResultBean.resource ne null}">
+		
+			<div class="page_header">
+				<span> #{surveyResultBean.resource.title}</span>
+			</div>
+
+			<p:dataTable id="survey_result" var="result" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				style="margin-bottom: 1rem;">
+				<f:facet name="{Exporters}">
+					<h:commandLink styleClass="excel_export_todo_use">
+						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
+						<p:dataExporter type="xls" target="survey_result" fileName="survey" />
+					</h:commandLink>
+				</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="User"></h:outputText>
+					</f:facet>
+
+					<h:outputLink id="print_user" value="survey/answer.jsf">
+						<h:outputText value="#{result.user.username} " />
+						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}" />
+						<f:param name="user_id" value="#{result.userId}" />
+					</h:outputLink>
+							Student id: <h:outputText value="#{result.user.studentId}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Submitted"></h:outputText>
+					</f:facet>
+					<h:outputText value="#{result.submitted}" />
+				</p:column>
+				<p:columns var="column" value="#{surveyResultBean.questionColumns}">
+					<f:facet name="header">
+						<h:outputText value="#{column.label}" />
+					</f:facet>
+					<h:outputText value="#{result.getAnswer(column.id)}" />
+				</p:columns>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

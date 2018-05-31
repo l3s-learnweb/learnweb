@@ -32,18 +32,14 @@ public class AssessmentResultBean extends ApplicationBean implements Serializabl
             // hardcoded until other courses need it too
             mandatorySurvey = (SurveyResource) getLearnweb().getResourceManager().getResource(216012); // eu made4 all Evaluation Form
             mandatorySurveySubmitted = mandatorySurvey.isSubmitted(getUser().getId());
-            //peerAssessmentPairs.get(0).
+
+            //speerAssessmentPairs.get(0).getAssessmentUserAnswers()
 
         }
         catch(SQLException e)
         {
             addFatalMessage(e);
         }
-    }
-
-    public static long getSerialversionuid()
-    {
-        return serialVersionUID;
     }
 
     public List<PeerAssesmentPair> getPeerAssessmentPairs()

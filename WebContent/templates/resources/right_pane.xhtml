@@ -331,12 +331,12 @@
                                 Open survey
                             </h:outputLink>
 
-                            <h:outputLink id="survey_esult" value="../lw/survey/surveyResult.jsf"
+                            <h:outputLink id="survey_esult" value="../lw/survey/results.jsf"
                                           style="margin-left:5px"
                                           styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
                                           rendered="#{rightPaneBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }">
                                 <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-                                Result
+                                Results
                             </h:outputLink>
                         </div>
                     </ui:fragment>
