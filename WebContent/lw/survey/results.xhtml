@@ -29,11 +29,7 @@
 						<p:dataExporter type="xls" target="survey_result" fileName="survey" />
 					</h:commandLink>
 				</f:facet>
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="User"></h:outputText>
-					</f:facet>
-
+				<p:column headerText="#{msg.username}">
 					<h:outputLink id="print_user" value="survey/answer.jsf">
 						<h:outputText value="#{result.user.username} " />
 						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}" />
@@ -43,16 +39,10 @@
 					<h:outputText value="Student id: #{result.user.studentId}" rendered="false" />
 				</p:column>
 
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="Submitted"></h:outputText>
-					</f:facet>
+				<p:column headerText="#{msg.submit}?">
 					<h:outputText value="#{result.submitted}" />
 				</p:column>
-				<p:columns var="column" value="#{surveyResultBean.questionColumns}">
-					<f:facet name="header">
-						<h:outputText value="#{column.label}" />
-					</f:facet>
+				<p:columns var="column" value="#{surveyResultBean.questionColumns}" headerText="#{column.label}">
 					<h:outputText value="#{result.getAnswer(column.id)}" />
 				</p:columns>
 			</p:dataTable>

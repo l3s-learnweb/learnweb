@@ -92,6 +92,11 @@ public class ResourceManager
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0", null, userId);
     }
 
+    public List<Resource> getGlossaryResourcesByUserId(int userId) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0 AND type = 'glossary'", null, userId);
+    }
+
     public List<Resource> getResourcesByTagId(int tagId) throws SQLException
     {
         return getResourcesByTagId(tagId, 1000);

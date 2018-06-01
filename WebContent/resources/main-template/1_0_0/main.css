@@ -106,7 +106,7 @@ iframe { border:none }
 
 #main_menu_bar {
 	position:relative;
-	background:#489a83 url("img/learnweb_hq.png") left no-repeat;
+	background:#489a83 url("#{resource['main-template/img/learnweb_hq.png']}") left no-repeat;
 	background-size:contain;
 	font-family:"Lato", sans-serif;
 	width:100%;
@@ -145,7 +145,7 @@ iframe { border:none }
 }
 #searchbutton {
 	cursor:pointer;
-	background:url(img/search.png) no-repeat scroll center center #9C9C9C;
+	background:url("#{resource['main-template/img/search.png']}") no-repeat scroll center center #9C9C9C;
 	float:left;
 	border-top-right-radius:5px !important;
 	border-bottom-right-radius:5px !important;
@@ -240,11 +240,11 @@ iframe { border:none }
 #language_selector a:hover {
 	background-color:#4ea68d;
 }
-.language_de { background-image:url(img/flag_de.png); }
-.language_en { background-image:url(img/flag_en.png); }
-.language_pt { background-image:url(img/flag_pt.png); }
-.language_it { background-image:url(img/flag_it.png); }
-.language_us { background-image:url(img/flag_us.png); }
+.language_de { background-image:url("#{resource['main-template/img/flag_de.png']}"); }
+.language_en { background-image:url("#{resource['main-template/img/flag_en.png']}"); }
+.language_pt { background-image:url("#{resource['main-template/img/flag_pt.png']}"); }
+.language_it { background-image:url("#{resource['main-template/img/flag_it.png']}"); }
+.language_us { background-image:url("#{resource['main-template/img/flag_us.png']}"); }
 
 .hover-white:focus,
 .hover-white:hover	{
@@ -458,7 +458,7 @@ iframe { border:none }
 	top:3px;
 	width:26px;
 	height:26px;
-	background:url("../search/icon/cancel-inv.png") center no-repeat;
+	background:url("#{resource['search/icon/cancel-inv.png']}") center no-repeat;
 }
 #footer {
 	color:#ffffff;
@@ -547,7 +547,7 @@ iframe { border:none }
 	margin-top:5px;
 	left:0.5em;
 	right:auto;
-	background-image:url("img/ui-icons.png");
+	background-image:url("#{resource['main-template/img/ui-icons.png']}");
 	background-position:-32px -16px;
 	background-repeat:no-repeat;
 	cursor:pointer;
@@ -595,6 +595,7 @@ iframe { border:none }
     display:block;
     clear: both;
 }
+.ui-datatable .ui-datatable-header,
 .ui-panel-title,
 .center-header > h2,
 .page_header span{
@@ -603,15 +604,35 @@ iframe { border:none }
 	color: #489a83;
 	display:inline;
 	margin: 0;
+	text-align:left !important;
 }
 
+.ui-datatable .ui-datatable-header,
 .ui-panel-titlebar,
 .page_header{
 	border:1px solid #ccc;
-	background-color:#eee;
+	background-color:#eee !important;
 	margin-bottom:5px;
-	padding:10px !important;
+	padding:1rem !important;
+	display:block;	
+	position: relative;
 }
+.ui-datatable .ui-datatable-header { border:1px solid #ccc !important; }
+
+.ui-panel .ui-panel-titlebar-icon,
+.ui-panel .ui-panel-titlebar-icon:hover,
+.ui-panel .ui-panel-titlebar-icon:focus,
+.ui-datatable .ui-datatable-header .ui-panel-titlebar-icon,
+.ui-datatable .ui-datatable-header .ui-panel-titlebar-icon:hover,
+.ui-datatable .ui-datatable-header .ui-panel-titlebar-icon:focus {
+	width: 2rem;
+	height: 2rem;
+	position: absolute !important;
+	top: 50% !important;
+	right: 1rem !important;
+	margin-top: -1rem !important;
+}
+
 .ui-panel { margin-bottom: 1rem; }
 .ui-panel-content,
 .page_content {
@@ -835,7 +856,7 @@ h3 {
 }
 
 .ui-icon {
-    background-image:url(img/ui-icons.png) !important;
+    background-image:url("#{resource['main-template/img/ui-icons.png']}") !important;
 }
 
 .greenbutton > button,
@@ -861,7 +882,7 @@ a.graybutton {
 
 .greenbutton .ui-button-text,
 .graybutton .ui-button-text {
-	padding:0;
+	padding:0 !important;
 }
 
 /* TODO clean up these rules */
@@ -904,7 +925,7 @@ a.graybutton:focus {
 
 #group_resource_searchbutton{
 	cursor:pointer;
-	background:url(img/search.png) no-repeat scroll center center !important;
+	background:url("#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
 	background-size:16px 16px !important;
 	height:19px;
 	border:none !important;
@@ -991,7 +1012,7 @@ a.graybutton:focus {
 .ui-button.ui-widget.ui-button-text-only.pagebutton > span { font-weight:bold; }
 .ui-button.ui-widget.ui-button-text-only.pagebutton:hover > span { color:#489a83 !important; }
 .next_button, .previous_button{
-	background-image:url(img/ui-icons.png) !important;
+	background-image:url("#{resource['main-template/img/ui-icons.png']}") !important;
 	background-repeat:no-repeat !important;
 	display:inline-block;
 	height:16px;
@@ -1012,14 +1033,17 @@ a.graybutton:focus {
 	margin-bottom:20px;
 }
 
+/*
 .ui-datatable,
 .ui-panel,
 .page_header,
 .center-header,
 .grey_border,
+*/
 #message {
 	box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
+
 #group_header {
 	margin-bottom: 0px;
 	margin-right: 6px;
@@ -1168,7 +1192,7 @@ hr {
 .member_star {
 	height: 40px;
 	width: 28px;
-	background: transparent url("../group/member_badge.gif") repeat scroll 0% 0% / cover;
+	background: transparent url("#{resource['group/member_badge.gif']}") repeat scroll 0% 0% / cover;
 }
 /*taken from new_main2.css*/
 
@@ -1493,7 +1517,7 @@ div.title {
 	left: 0;
 	top: 0;
 
-	background: url(./img/folder.png) no-repeat left center !important;
+	background: url("#{resource['main-template/img/folder.png']}") no-repeat left center !important;
 	display: block;
 	margin: 8px 10px;
 	height: 24px;
@@ -1590,7 +1614,7 @@ div.title {
 }
 
 .resource_panel.resource_folder .resource_short_title {
-	background: url("img/folder.png") no-repeat left center;
+	background: url("#{resource['main-template/img/folder.png']}") no-repeat left center;
 	padding: 0 0 0 24px;
     height: 100%;
     display: flex;
@@ -1752,11 +1776,11 @@ div.title {
 .klapper_zu {
 	float:left;
 	width:11px;
-	background:url('../icon/icon-minus.gif') bottom no-repeat;
+	background:url("#{resource['icon/icon-minus.gif']}") bottom no-repeat;
 	margin-right:3px;
 	cursor:pointer;
 }
-.klapper_auf { background-image:url('../icon/icon-plus.gif') !important; }
+.klapper_auf { background-image:url("#{resource['icon/icon-plus.gif']}") !important; }
 
 .zindex10000 {z-index: 10000;}
 
@@ -1778,7 +1802,7 @@ div.title {
 	padding-left:25px;
 	padding-right:15px;
 	font-weight:bold;
-	background:url(../image/test.gif) no-repeat bottom left;
+	background:url("#{resource['image/test.gif']}") no-repeat bottom left;
 }
 
 .northunit{border:none;}

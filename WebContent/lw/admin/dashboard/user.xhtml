@@ -168,6 +168,39 @@
                                 </p:panel>
                             </div>
                         </div>
+                        
+                        <div class="ui-g">
+							<div class="ui-g-6">
+								<h:form>
+
+
+									<p:dataTable var="glossary" value="#{dashboardUserBean.glossaryResources}">
+										<f:facet name="header">
+        									Glossaries
+        									<p:button id="glossariesTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help"
+												onclick="return false;" />
+											<p:tooltip for="glossariesTable" value="All glossary resources that this user has created" />
+										</f:facet>
+										<p:column headerText="#{msg.title}" sortBy="#{glossary.title}">
+											<h:outputLink value="#{glossary.url}">
+												<h:outputText value="#{glossary.title}" />
+											</h:outputLink>
+										</p:column>
+
+										<p:column headerText="#{msg.location}">
+											<h:outputText value="#{msg.myPrivateResources}" rendered="#{glossary.group eq null}" />
+
+											<h:outputLink value="group/resources.jsf" rendered="#{glossary.group ne null}">
+												<f:param name="group_id" value="#{glossary.group.id}" />
+												<f:param name="folder_id" value="#{glossary.folder.id}" />
+												<f:param name="resource_id" value="#{glossary.id}" />
+												<h:outputText value="#{glossary.group.title}" />
+											</h:outputLink>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>                        
                     </p:panel>
                     <div class="page_header" style="margin:5px; margin-top: 1.5em;">
                         <span>Tracker</span>
@@ -277,13 +310,6 @@
             </div>
 
         </div>
-            <footer>
-                <div class="pull-left">
-                    Davide Taibi
-                    <a href="http://www.itd.cnr.it">CNR-ITD</a>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
 
     </ui:define>
 </ui:composition>

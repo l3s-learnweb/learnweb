@@ -13,13 +13,13 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
 
@@ -28,23 +28,23 @@ import de.l3s.util.MapHelper;
 public class DashboardUserBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    private static final Logger log = Logger.getLogger(DashboardUserBean.class);
+    //private static final Logger log = Logger.getLogger(DashboardUserBean.class);
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
     private static final String TRACKER_CLIENT_ID = "1";
 
-    private Integer paramUserId = null;
+    private Integer paramUserId;
 
-    private Date startDate = null;
-    private Date endDate = null;
-    private User selectedUser = null;
-    private List<Integer> selectedUsersIds = null;
-    private DashboardManager dashboardManager = null;
+    private Date startDate;
+    private Date endDate;
+    private User selectedUser;
+    private List<Integer> selectedUsersIds;
+    private DashboardManager dashboardManager;
 
-    private Integer totalConcepts = null;
-    private Integer totalTerms = null;
-    private Integer totalSources = null;
+    private Integer totalConcepts;
+    private Integer totalTerms;
+    private Integer totalSources;
     private ArrayList<GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<Integer, Integer> actionsWithCounters;
@@ -59,47 +59,38 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
     private PieChartModel usersSourcesChart;
     private BarChartModel userFieldsChart;
     private BarChartModel proxySourcesChart;
+    private List<Resource> glossaryResources;
 
     public DashboardUserBean()
     {
     }
 
-    public void onLoad()
+    public void onLoad() throws SQLException
     {
-        log.debug("onLoad");
-        User user = getUser(); // the current user
-        if(user == null || (!user.isModerator() && paramUserId != null && paramUserId != user.getId())) // not logged in or no privileges
+        User user = getUser();
+        if(user == null)
             return;
 
-        try
+        if(!user.isModerator() && paramUserId != null && paramUserId != user.getId())
         {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, -1);
-
-            String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
-            String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
-            startDate = new Date(Long.parseLong(savedStartDate));
-            endDate = new Date(Long.parseLong(savedEndDate));
-
-            if(paramUserId != null)
-            {
-                selectedUser = getLearnweb().getUserManager().getUser(paramUserId);
-                selectedUsersIds = Collections.singletonList(paramUserId);
-            }
-            else
-            {
-                selectedUser = user;
-                selectedUsersIds = Collections.singletonList(user.getId());
-            }
-
-            dashboardManager = getLearnweb().getDashboardManager();
-
-            fetchDataFromManager();
+            addAccessDeniedMessage();
+            return;
         }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+
+        String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
+        String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
+        startDate = new Date(Long.parseLong(savedStartDate));
+        endDate = new Date(Long.parseLong(savedEndDate));
+
+        selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
+        selectedUsersIds = Collections.singletonList(selectedUser.getId());
+
+        dashboardManager = getLearnweb().getDashboardManager();
+
+        fetchDataFromManager();
     }
 
     public void cleanAndUpdateStoredData() throws SQLException
@@ -130,6 +121,7 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
         descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
 
+        glossaryResources = getLearnweb().getResourceManager().getGlossaryResourcesByUserId(selectedUser.getId());
     }
 
     public Date getStartDate()
@@ -250,4 +242,10 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
             res = (float) totalTerms / totalConcepts;
         return String.format("%.2f", res);
     }
+
+    public List<Resource> getGlossaryResources()
+    {
+        return glossaryResources;
+    }
+
 }
