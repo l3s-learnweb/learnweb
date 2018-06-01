@@ -119,7 +119,7 @@ public class PeerAssessmentManager
      */
     public List<PeerAssesmentPair> getPairsByAssessedUserId(int userId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessed_user_id = ?", userId);
     }
 
     /**
@@ -324,6 +324,7 @@ public class PeerAssessmentManager
 
     }
 
+    @SuppressWarnings("unused")
     private void sendInvitationReminderMail(int peerAssementId) throws SQLException, MessagingException
     {
         List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssementId);

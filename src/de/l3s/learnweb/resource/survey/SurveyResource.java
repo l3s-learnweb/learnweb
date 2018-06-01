@@ -92,13 +92,36 @@ public class SurveyResource extends Resource implements Serializable
         return Learnweb.getInstance().getSurveyManager().getSurveyResourceSubmitStatus(this.getId(), userId);
     }
 
+    /**
+     * Returns all answers of user even when they are incomplete or not final
+     *
+     * @return
+     * @throws SQLException
+     */
     public List<SurveyUserAnswers> getAnswersOfAllUsers() throws SQLException
+    {
+        return getAnswers(false);
+    }
+
+    /**
+     * Returns only answers that were finally submitted
+     *
+     * @return
+     * @throws SQLException
+     */
+    public List<SurveyUserAnswers> getSubmittedAnswersOfAllUsers() throws SQLException
+    {
+        return getAnswers(true);
+    }
+
+    private List<SurveyUserAnswers> getAnswers(boolean returnOnlySubmittedAnswers) throws SQLException
     {
         List<SurveyUserAnswers> answers = new LinkedList<>();
 
         SurveyManager surveyManager = Learnweb.getInstance().getSurveyManager();
 
-        for(User user : surveyManager.getUsersWhoSavedSurveyResource(getId()))
+        List<User> users = returnOnlySubmittedAnswers ? surveyManager.getUsersWhoSubmittedSurveyResource(getId()) : surveyManager.getUsersWhoSavedSurveyResource(getId());
+        for(User user : users)
         {
             answers.add(getAnswersOfUser(user.getId()));
         }
@@ -111,7 +134,6 @@ public class SurveyResource extends Resource implements Serializable
         SurveyUserAnswers answers = getAnswerCache().get(userId);
         if(null == answers)
         {
-            System.out.println("get answers of " + userId);
             answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(this, userId);
             getAnswerCache().put(answers);
         }
@@ -129,7 +151,7 @@ public class SurveyResource extends Resource implements Serializable
         // save normal resource fields
         super.save();
 
-        // save SurveyResourceFields
+        // save SurveyResource fields
         Learnweb.getInstance().getSurveyManager().saveSurveyResource(this);
 
         return this;

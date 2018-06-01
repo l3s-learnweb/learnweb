@@ -8,7 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 
 @RequestScoped
@@ -20,26 +19,16 @@ public class AssessmentResultBean extends ApplicationBean implements Serializabl
     private SurveyResource mandatorySurvey; //  this survey must be answered before results can be viewed
     private boolean mandatorySurveySubmitted = true;
 
-    public AssessmentResultBean()
+    public AssessmentResultBean() throws SQLException
     {
         if(getUser() == null)
             return;
 
-        try
-        {
-            peerAssessmentPairs = getUser().getAssessedPeerAssessments();
+        peerAssessmentPairs = getUser().getAssessedPeerAssessments();
 
-            // hardcoded until other courses need it too
-            mandatorySurvey = (SurveyResource) getLearnweb().getResourceManager().getResource(216012); // eu made4 all Evaluation Form
-            mandatorySurveySubmitted = mandatorySurvey.isSubmitted(getUser().getId());
-
-            //speerAssessmentPairs.get(0).getAssessmentUserAnswers()
-
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
+        // hardcoded until other courses need it too
+        mandatorySurvey = (SurveyResource) getLearnweb().getResourceManager().getResource(216012); // eu made4 all Evaluation Form
+        mandatorySurveySubmitted = mandatorySurvey.isSubmitted(getUser().getId());
     }
 
     public List<PeerAssesmentPair> getPeerAssessmentPairs()
@@ -47,7 +36,7 @@ public class AssessmentResultBean extends ApplicationBean implements Serializabl
         return peerAssessmentPairs;
     }
 
-    public Resource getMandatorySurvey()
+    public SurveyResource getMandatorySurvey()
     {
         return mandatorySurvey;
     }

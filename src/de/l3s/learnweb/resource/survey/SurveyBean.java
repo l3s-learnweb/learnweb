@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
@@ -30,6 +31,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private SurveyUserAnswers userAnswers;
 
     private String goBackPage; // contains a link the user should go to after filling in a survey
+    private String goBackPageLink; // link to the go back page derived from goBackPage name
+    private String goBackPageTitle; //  title of the go back link
 
     public void onLoad() throws SQLException
     {
@@ -58,7 +61,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             surveyUserId = getUser().getId();
         }
         // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
-        else if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
+        else if(!resource.canModerateResource(getUser()) && !canViewAssessmentResult())
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
             log.error("Illegal access: " + BeanHelper.getRequestSummary());
@@ -71,14 +74,25 @@ public class SurveyBean extends ApplicationBean implements Serializable
         formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
     }
 
-    private boolean canViewPeerAssessmentResult() throws SQLException
+    private boolean canViewAssessmentResult() throws SQLException
     {
-        int userId = getUser().getId();
-        de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
+        for(PeerAssesmentPair pair : getUser().getAssessedPeerAssessments())
+        {
+            // a teacher has assessed the current user
+            if(pair.getAssessmentSurveyResourceId() == surveyResourceId)
+                return true;
 
+            // the given user  (surveyUserId) has peer assessed the current user
+            if(pair.getPeerAssessmentSurveyResourceId() == surveyResourceId && pair.getAssessorUserId() == surveyUserId)
+                return true;
+        }
+        /*
+        int userId = getUser().getId();
+        PeerAssesmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
+        
         if(pair != null)
             return true;
-
+        */
         log.debug("canViewPeerAssessmentResult is false");
 
         return false;
@@ -214,6 +228,24 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public void setGoBackPage(String goBackPage)
     {
         this.goBackPage = goBackPage;
+
+        switch(goBackPage)
+        {
+        case "assessmentResults":
+            goBackPageLink = "myhome/assessmentResults.jsf";
+            goBackPageTitle = "Go back to the assessment results";
+            break;
+        }
+    }
+
+    public String getGoBackPageTitle()
+    {
+        return goBackPageTitle;
+    }
+
+    public String getGoBackPageLink()
+    {
+        return goBackPageLink;
     }
 
 }

@@ -29,7 +29,7 @@
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=":right_pane_wrapper :resourceGrid2" oncomplete="update_header(); selectresourceDND(); updateMaxResources();"/>
 		</h:form>
 		
-		<!-- only for eumade4ll -->
+		<!-- only for eumade4all -->
 		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h1 class="red">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h1></p:panel>
 
 		<ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></ui:fragment>

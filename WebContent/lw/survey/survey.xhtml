@@ -145,7 +145,7 @@
 					
 					<div style="margin:2rem 0 1.5rem;">
 						<p:commandButton value="#{msg.submit}"
-							style="float:left;" styleClass="greenbutton resource_button" 
+							styleClass="float-left greenbutton resource_button" 
 							action="#{surveyBean.onSubmit()}" update=":message @form"
 							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
 							ajax="true">
@@ -170,13 +170,19 @@
 					<br />
 					<br />
 					
-					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="greenbutton">
+					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="float-left greenbutton">
 						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
 						<h:outputText value="View answers" />
-					</h:outputLink>	
+					</h:outputLink>
+
+					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}"  
+							style="margin-left:5px" styleClass="float-left greenbutton">
+						<h:outputText value="#{surveyBean.goBackPageTitle}" />
+					</h:outputLink>
 					<br class="clear" />
 				</ui:fragment>	
+					
 			</p:panel>
 
 		

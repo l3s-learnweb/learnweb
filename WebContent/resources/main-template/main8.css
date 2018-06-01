@@ -8,8 +8,6 @@ html{
 	height:100%;
 }
 body {
-	/*min-width:320px;*/
-	min-width:1000px;
 	font-family:Arial, Verdana;
 	height:100%;
 	width:100%;
@@ -17,15 +15,13 @@ body {
 }
 iframe { border:none }
 
-/* correct primefaces omega theme */
-
-
+/* fix primefaces omega theme */
 .ui-datatable .ui-datatable-header,
 .ui-datatable .ui-paginator-top,
 .ui-datatable th.ui-state-default { background-color: rgb(196, 196, 196); }
 
 .ui-button,.ui-button span,button.ui-button.ui-state-default span,.ui-button.ui-state-default span {
-	font-weight:400; /*  !important   */
+	font-weight:400; 
 }
 
 .ui-widget,
@@ -651,8 +647,6 @@ h3.group_link {
 	padding-left:1rem;
 }
 
-
-
 /* Resource filters bar */
 .resources-filters {
     margin: 10px -10px -10px;
@@ -921,10 +915,6 @@ a.graybutton:focus {
 	background-color:#eee !important;
 }
 
-.clear {clear:both;}
-
-.display-none {display:none;}
-
 .error {
 	color:red;
 	font-weight:bold;
@@ -936,8 +926,15 @@ a.graybutton:focus {
 
 .float-left {float:left;}
 .float-right {float:right;}
+.clear {clear:both;}
+.display-none {display:none;}
+
+.green {color: #489a83;}
+.yellow {color: #ffff00;}
+.red {color: #d2571e;}
 
 .nowrap {white-space:nowrap;}
+.bold {font-weight:bold;}
 
 .grey_border{
 	border: 1px solid #ccc;
@@ -1849,7 +1846,7 @@ div.title {
 	text-decoration: none;
 }
 
-/* --------- loading animation --------------*/
+/* --------- loading animation used in rightpane on p:blockUI --------------*/
 @keyframes loading-animation_1 {
   0% {
     top: -28px;
@@ -1974,16 +1971,4 @@ transform: translate(-22.5px, -14.5px) scale(0.225, 0.15) translate(22.5px, 22.5
   height: 45px !important;
   -webkit-transform: translate(-22.5px, -22.5px) scale(0.225) translate(22.5px, 22.5px);
   transform: translate(-22.5px, -22.5px) scale(0.225) translate(22.5px, 22.5px);
-}
-
-.green {
-	color: #489a83;
-}
-
-.yellow {
-	color: #ffff00;
-}
-
-.red {
-	color: #d2571e;
 }

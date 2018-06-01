@@ -16,14 +16,13 @@
 		<h:outputStylesheet library="survey" name="survey.css" />
 
 		<h:form rendered="#{surveyResultBean.resource ne null}">
-		
+
 			<div class="page_header">
 				<span> #{surveyResultBean.resource.title}</span>
 			</div>
 
 			<p:dataTable id="survey_result" var="result" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
-				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-				style="margin-bottom: 1rem;">
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" style="margin-bottom: 1rem;">
 				<f:facet name="{Exporters}">
 					<h:commandLink styleClass="excel_export_todo_use">
 						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
@@ -40,7 +39,8 @@
 						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{result.userId}" />
 					</h:outputLink>
-							Student id: <h:outputText value="#{result.user.studentId}" />
+
+					<h:outputText value="Student id: #{result.user.studentId}" rendered="false" />
 				</p:column>
 
 				<p:column>

@@ -429,12 +429,22 @@ public class SurveyManager
      */
     protected List<User> getUsersWhoSavedSurveyResource(int surveyResourceId) throws SQLException
     {
+        return getUsers("SELECT DISTINCT user_id FROM `lw_survey_answer` WHERE `resource_id` = ?", surveyResourceId);
+    }
+
+    protected List<User> getUsersWhoSubmittedSurveyResource(int surveyResourceId) throws SQLException
+    {
+        return getUsers("SELECT user_id FROM `lw_survey_resource_user` WHERE `resource_id` = ? AND `submitted` =1", surveyResourceId);
+    }
+
+    private List<User> getUsers(String query, int parameter) throws SQLException
+    {
         UserManager userManager = learnweb.getUserManager();
         List<User> users = new LinkedList<>();
 
-        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT DISTINCT user_id FROM `lw_survey_answer` WHERE `resource_id` = ?");)
+        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement(query);)
         {
-            preparedStmnt.setInt(1, surveyResourceId);
+            preparedStmnt.setInt(1, parameter);
             ResultSet rs = preparedStmnt.executeQuery();
             while(rs.next())
             {

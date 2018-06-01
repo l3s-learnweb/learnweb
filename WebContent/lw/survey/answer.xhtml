@@ -52,10 +52,13 @@
 
 							</c:if>
 							<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
+							<!-- eumade4all special rule remove later -->
+							<c:if test="#{field.label ne 'NAME OF MARKER(S)' or userBean.moderator}">
+							
 								<h:outputText value="#{field.label}" />
 								<h:outputText
 									value="#{surveyBean.userAnswers.answers[field.id]}"
-									style="font-style:italic;" />
+									style="font-style:italic;" /></c:if>
 							</c:if>
 
 							<c:if
