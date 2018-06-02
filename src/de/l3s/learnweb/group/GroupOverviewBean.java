@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -22,6 +21,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
+import de.l3s.learnweb.user.User;
 
 @ManagedBean
 @ViewScoped
@@ -36,15 +36,38 @@ public class GroupOverviewBean extends ApplicationBean
 
     private boolean allLogs = false;
 
+    private Group group;
+
     private List<LogEntry> logMessages;
 
     private int groupId;
 
-    @PostConstruct
-    public void init()
+    public GroupOverviewBean()
     {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        this.groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("group_id"));
+        Integer id = getParameterInt("group_id");
+        if(null == id)
+            return;
+        groupId = id.intValue();
+    }
+
+    public void onLoad() throws SQLException
+    {
+        User user = getUser();
+        if(null != user)
+        {
+            try
+            {
+                if(null == group)
+                {
+
+                    group = getLearnweb().getGroupManager().getGroupById(groupId);
+                }
+            }
+            catch(SQLException e)
+            {
+                addFatalMessage(e);
+            }
+        }
     }
 
     public List<LogEntry> getLogMessages() throws SQLException
@@ -56,11 +79,6 @@ public class GroupOverviewBean extends ApplicationBean
         return logMessages;
     }
 
-    public void setLogMessages(List<LogEntry> logMessages)
-    {
-        this.logMessages = logMessages;
-    }
-
     public void fetchAllLogs()
     {
         allLogs = true;
@@ -69,7 +87,7 @@ public class GroupOverviewBean extends ApplicationBean
 
     /**
      *
-     * @param limit if limit is -1 all log entrys are returned
+     * @param limit if limit is -1 all log entries are returned
      */
     private void loadLogs(int limit)
     {
@@ -166,6 +184,21 @@ public class GroupOverviewBean extends ApplicationBean
     public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
         this.rightPaneBean = rightPaneBean;
+    }
+
+    public Group getGroup()
+    {
+        return group;
+    }
+
+    public int getGroupId()
+    {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId)
+    {
+        this.groupId = groupId;
     }
 
 }

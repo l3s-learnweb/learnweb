@@ -6,32 +6,32 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:viewAction action="#{groupDetailBean.onLoad}" />			
+			<f:viewParam name="group_id" value="#{groupOverviewBean.groupId}" />
+			<f:viewAction action="#{groupOverviewBean.onLoad}" />			
 		</f:metadata>
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
+	<ui:param name="pageTitle" value="#{groupOverviewBean.group.title}" />
 	<ui:param name="helpText" value="#{msg.groupOverviewHelp}" />
 
 	<ui:define name="center_layout">
 		<ui:decorate template="/templates/group/menu.xhtml">
-			<ui:param name="group" value="#{groupDetailBean.group}" />
+			<ui:param name="group" value="#{groupOverviewBean.group}" />
 			<ui:param name="active" value="overview" />
 			<ui:define name="title">
-				<h2>#{groupDetailBean.group.title}</h2> 
-				 #{msg.created_by} #{groupDetailBean.group.leader.username} (#{groupDetailBean.group.resourcesCount} #{msg.resources})
+				<h2>#{groupOverviewBean.group.title}</h2> 
+				 #{msg.created_by} #{groupOverviewBean.group.leader.username} (#{groupOverviewBean.group.resourcesCount} #{msg.resources})
 				
 				<h:form id="center_header_form">
 					<p:commandLink
-						rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}"
+						rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}"
 						action="#{groupsBean.joinGroup}"
 						styleClass="resource_button greenbutton"
 						update=":growl :group_menu @form :datagrid" partialSubmit="true"
 						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
-							value="#{groupDetailBean.group}" />
+							value="#{groupOverviewBean.group}" />
 					</p:commandLink>
 				</h:form>
 			</ui:define>
@@ -44,17 +44,17 @@
 		</script>
 
 		<ui:fragment
-			rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
+			rendered="${not groupOverviewBean.group.canViewResources(userBean.user)}">
 			<h3 class="error">
 				#{msg.group_resources_access_denied}
 				<h:outputText
-					rendered="${groupDetailBean.group.policyView != 'GROUP_LEADER' and groupDetailBean.group.canJoinGroup(userBean.user)}"
+					rendered="${groupOverviewBean.group.policyView != 'GROUP_LEADER' and groupOverviewBean.group.canJoinGroup(userBean.user)}"
 					value="#{msg.group_resources_access_denied_join_first}" />
 			</h3>
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
+			rendered="#{groupOverviewBean.group.canViewResources(userBean.user)}">
 			<h:panelGroup id="resourcesView" layout="block">
 				<ui:decorate template="/templates/group/summary_overview.xhtml">
 					<ui:param name="summary"
