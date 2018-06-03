@@ -27,8 +27,12 @@
 	<h:form>
 		<ui:fragment rendered="#{summary!=null and !summary.isEmpty()}">
 			<h:form class="summary_overview_container">
-				
+
 				<div id="new_changes" class="summary tabcontent">
+					<div class="summary_title">
+						<h:outputText value="#{groupOverviewBean.summaryTitle}"
+							escape="false"  />
+					</div>
 					<ui:fragment rendered="#{not empty summary.addedResources}">
 						<div id="added_res_tab_new_changes" class="dropdown-btn">
 							<h:graphicImage class="icons" value="/resources/icon/Add.png"
@@ -36,8 +40,8 @@
 							<span class="main-text"><h:outputFormat
 									value="#{msg['added_resources']}">
 									<f:param value="#{summary.addedResources.size()}" />
-								</h:outputFormat></span> <span
-								class="icon_wrapper"><i class="fa fa-caret-down open" /></span>
+								</h:outputFormat></span> <span class="icon_wrapper"><i
+								class="fa fa-caret-down open" /></span>
 						</div>
 						<div
 							class="dropdown-container dropdown-container-added-resources wrapper  ">
@@ -79,8 +83,7 @@
 							<span class="main-text"> <h:outputFormat
 									value="#{msg['deleted_resources']}">
 									<f:param value="#{summary.deletedResources.size()}" />
-								</h:outputFormat></span><span
-								class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
+								</h:outputFormat></span><span class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
 						</div>
 						<div
 							class="dropdown-container dropdown-container-added-resources wrapper open">
@@ -140,8 +143,8 @@
 							<h:graphicImage class="icons"
 								value="/resources/icon/new_topic.png" alt="" />
 							<span class="main-text"><h:outputText
-							value="#{msg['forum_activity']}"/></span> <span
-								class="icon_wrapper"><i class="fa fa-caret-down" /></span>
+									value="#{msg['forum_activity']}" /></span> <span class="icon_wrapper"><i
+								class="fa fa-caret-down" /></span>
 						</div>
 						<div
 							class="dropdown-container dropdown-container-added-resources wrapper open">
@@ -159,8 +162,9 @@
 							<h:graphicImage class="icons" value="/resources/icon/members.png"
 								alt="" />
 							<span class="main-text"> <h:outputText
-									value="#{msg['members_info']}"/></span><span
-								class="icon_wrapper"> <i class="fa fa-caret-down" /></span>
+									value="#{msg['members_info']}" /></span><span class="icon_wrapper">
+								<i class="fa fa-caret-down" />
+							</span>
 						</div>
 						<div
 							class="dropdown-container dropdown-container-added-resources wrapper open">

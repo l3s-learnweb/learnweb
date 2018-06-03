@@ -183,3 +183,10 @@
 .blocked {
 	display: block;
 }
+
+.summary_title {
+	font-size: 15px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	color: #489a83;
+}
