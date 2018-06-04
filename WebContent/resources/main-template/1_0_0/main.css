@@ -318,7 +318,9 @@ iframe { border:none }
     visibility:hidden;
 }
 .userbar ul li:hover > ul {
-    visibility:visible;
+    visibility: visible;
+	overflow: auto;
+	max-height: calc(100vh - 4.6rem);
 }
 .userbar a{
 	text-decoration:none;

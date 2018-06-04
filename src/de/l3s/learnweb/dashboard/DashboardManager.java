@@ -215,20 +215,21 @@ public class DashboardManager
         Map<String, Integer> countPerSource = new TreeMap<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT r.owner_user_id, COUNT(distinct rgt.glossary_term_id) as count " +
+                "SELECT u.username, COUNT(distinct rgt.glossary_term_id) as count " +
                         "FROM lw_resource r " +
+                        "JOIN lw_user u ON u.user_id = r.owner_user_id " +
                         "JOIN lw_resource_glossary rg USING(resource_id) " +
                         "JOIN lw_resource_glossary_terms rgt USING(glossary_id) " +
                         "WHERE rg.deleted != 1 AND r.deleted != 1 AND rgt.deleted != 1 " +
                         "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
-                        "AND rg.timestamp BETWEEN ? AND ? group by owner_user_id order by owner_user_id"))
+                        "AND rg.timestamp BETWEEN ? AND ? group by username order by username"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
             ResultSet rs = select.executeQuery();
 
             while(rs.next())
-                countPerSource.put(rs.getString("owner_user_id"), rs.getInt("count"));
+                countPerSource.put(rs.getString("username"), rs.getInt("count"));
         }
 
         return countPerSource;
