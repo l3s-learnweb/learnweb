@@ -286,17 +286,20 @@
 
 		<ui:insert name="sub_menu_bar"></ui:insert>
 
-		<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
-		<script type="text/javascript">
-            if (!window.tracker)
-            {
-                window.tracker = new L3STracker({
-                    apiHost: '//learnweb.l3s.uni-hannover.de/tracker',
-                    externalClientId: 1,
-                    externalUserId: '#{userBean.getUser().getId()}'
-                });
-            }
-		</script>
+		<!-- For everyone except EU-MADE4ALL users -->
+		<ui:fragment rendered="#{userBean.user.organisationId != 1249}">
+			<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
+			<script type="text/javascript">
+                if (!window.tracker)
+                {
+                    window.tracker = new L3STracker({
+                        apiHost: '//learnweb.l3s.uni-hannover.de/tracker',
+                        externalClientId: 1,
+                        externalUserId: '#{userBean.getUser().getId()}'
+                    });
+                }
+			</script>
+		</ui:fragment>
 
 	</header>
 
