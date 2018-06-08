@@ -89,6 +89,8 @@ public class UserBean implements Serializable
     private boolean optionContentAnnotationFieldEnabled;
     private boolean optionStarRatingEnabled;
     private boolean optionThumbRatingEnabled;
+    private boolean optionLoggingEnabled;
+    private boolean optionTrackingEnabled;
 
     public UserBean()
     {
@@ -211,6 +213,8 @@ public class UserBean implements Serializable
             optionContentAnnotationFieldEnabled = org.getOption(Organisation.Option.Resource_Show_Content_Annotation_Field);
             optionThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
             optionStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
+            optionLoggingEnabled = !org.getOption(Option.Misc_Logging_disabled);
+            optionTrackingEnabled = !org.getOption(Option.Misc_Tracker_disabled);
 
         }
         else
@@ -733,6 +737,16 @@ public class UserBean implements Serializable
     public boolean isThumbRatingEnabled()
     {
         return optionThumbRatingEnabled;
+    }
+
+    public boolean isLoggingEnabled()
+    {
+        return optionLoggingEnabled;
+    }
+
+    public boolean isTrackingEnabled()
+    {
+        return optionTrackingEnabled;
     }
 
     public DOMAIN getDomain()

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
+import de.l3s.learnweb.user.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -48,10 +49,6 @@ import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
 import de.l3s.learnweb.resource.yellMetadata.LanglevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
-import de.l3s.learnweb.user.CourseManager;
-import de.l3s.learnweb.user.OrganisationManager;
-import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.FrequencyProtectionManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
@@ -539,18 +536,26 @@ public class Learnweb
     private int logBatchSize = 0;
 
     /**
-     *
      * @param user
      * @param action
+     * @param groupId the group this action belongs to; null if no group
      * @param targetId optional value; should be 0 if not required
-     * @param group the group this action belongs to; null if no group
      * @param params
      * @param sessionId
      * @param executionTime how long did the action need to execute (in milliseconds)
      */
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
-        int userId = (null == user) ? 0 : user.getId();
+        int userId = 0;
+        if (user != null) {
+            userId = user.getId();
+
+            if (user.getOrganisation().getOption(Organisation.Option.Misc_Logging_disabled)) {
+                // TODO Oleh: Should we disable it completely or anonymize it?
+                log.warn("Log ignored.");
+                return;
+            }
+        }
 
         if(groupId == -1)
             groupId = (null == user) ? 0 : user.getActiveGroupId();
@@ -564,13 +569,13 @@ public class Learnweb
      *
      * @param userId
      * @param action
+     * @param groupId the group this action belongs to; null if no group
      * @param targetId optional value; should be 0 if not required
-     * @param group the group this action belongs to; null if no group
      * @param params
      * @param sessionId
      * @param executionTime how long did the action need to execute (in milliseconds)
      */
-    public void log(int userId, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
+    private void log(int userId, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
         if(null == action)
             throw new IllegalArgumentException();

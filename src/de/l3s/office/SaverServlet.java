@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import de.l3s.learnweb.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -102,7 +103,9 @@ public class SaverServlet extends HttpServlet
                 previousVersionFile.setType(TYPE.HISTORY_FILE);
                 log.info("History is saved resourceId = " + file.getResourceId());
                 createResourceHistory(info, previousVersionFile, file.getResourceId(), userId);
-                learnweb.log(userId, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
+
+                User user = learnweb.getUserManager().getUser(userId);
+                learnweb.log(user, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
             }
         }
         catch(NumberFormatException e)

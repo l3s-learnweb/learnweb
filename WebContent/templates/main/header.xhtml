@@ -286,8 +286,7 @@
 
 		<ui:insert name="sub_menu_bar"></ui:insert>
 
-		<!-- For everyone except EU-MADE4ALL users -->
-		<ui:fragment rendered="#{userBean.user.organisationId != 1249}">
+		<ui:fragment rendered="#{userBean.trackingEnabled}">
 			<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
 			<script type="text/javascript">
                 if (!window.tracker)
