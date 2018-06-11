@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.beans.ApplicationBean;
 
 @ViewScoped
@@ -16,7 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class SurveyResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 706177879900332816L;
-    private static final Logger log = Logger.getLogger(SurveyResultBean.class);
+    //private static final Logger log = Logger.getLogger(SurveyResultBean.class);
 
     private int surveyResourceId;
     private transient SurveyResource resource;
@@ -68,8 +66,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     {
         if(resource == null)
         {
-            log.debug("load survey resource " + surveyResourceId);
-            resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
+            resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
         }
         return resource;
     }

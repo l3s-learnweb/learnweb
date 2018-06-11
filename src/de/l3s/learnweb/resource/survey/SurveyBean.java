@@ -40,7 +40,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         if(user == null)
             return;
 
-        resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
+        resource = getLearnweb().getSurveyManager().getSurveyResource(surveyResourceId);
 
         if(resource == null)
         {
@@ -89,7 +89,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         /*
         int userId = getUser().getId();
         PeerAssesmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
-        
+
         if(pair != null)
             return true;
         */

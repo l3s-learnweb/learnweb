@@ -95,7 +95,7 @@ public class PeerAssessmentManager
      */
     public List<PeerAssesmentPair> getPairsByPeerAssessmentId(int peerAssesmentId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE peerassessment_id = ? ORDER BY survey_resource_id", peerAssesmentId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE peerassessment_id = ? and deleted = 0 ORDER BY survey_resource_id", peerAssesmentId);
     }
 
     /**
@@ -107,7 +107,7 @@ public class PeerAssessmentManager
      */
     public List<PeerAssesmentPair> getPairsByAssessorUserId(int userId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ? and deleted = 0", userId);
     }
 
     /**
@@ -119,7 +119,7 @@ public class PeerAssessmentManager
      */
     public List<PeerAssesmentPair> getPairsByAssessedUserId(int userId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessed_user_id = ?", userId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessed_user_id = ? and deleted = 0", userId);
     }
 
     /**
