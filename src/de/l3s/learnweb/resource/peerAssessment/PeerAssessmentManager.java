@@ -107,7 +107,7 @@ public class PeerAssessmentManager
      */
     public List<PeerAssesmentPair> getPairsByAssessorUserId(int userId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ? and deleted = 0", userId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
     }
 
     /**
