@@ -160,6 +160,19 @@ public class SurveyQuestion implements Serializable
         this.extra = extra;
     }
 
+    /**
+     * Temp method for euMade4all delete after the project
+     * 
+     * @return
+     */
+    public List<String> getEUmadeAnswersWithout()
+    {
+        LinkedList<String> copy = new LinkedList<>(answers);
+        copy.remove("Don't show");
+
+        return copy;
+    }
+
     public List<String> getAnswers()
     {
         return answers;

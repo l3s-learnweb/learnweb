@@ -619,7 +619,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         if(selectedPurposes == null)
             return null;
-        return (ArrayList<String>) Arrays.asList(selectedPurposes);
+        return new ArrayList<String>(Arrays.asList(selectedPurposes));
     }
 
     public void setSelectedPurposes(ArrayList<String> selectedPurposes)

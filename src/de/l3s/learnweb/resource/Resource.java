@@ -183,6 +183,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      * This constructor is used to create resources when returned from the learnweb resources table in order
      * to re-visit a previous result set of a query posted in the past.
      */
+    @Deprecated
     public Resource(int id, String description, String title, String source, int thumbnail_height, int thumbnail_width, String thumbnail_url, int thumbnail4_height, int thumbnail4_width, String thumbnail4_url, String url, String type)
     {
         this.id = id;
@@ -622,7 +623,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }

@@ -23,7 +23,8 @@
 		<h:outputStylesheet library="survey" name="survey.css" />
 		<style>
 			#survey .ui-widget,
-			#survey label  { pointer-events: none; }				
+			#survey label  { pointer-events: none; }	
+			.radio-buttons td { padding-right: 0.8rem; }			
 		</style>
 		
 		<h:form id="form" prependId="false">
@@ -52,8 +53,8 @@
 
 							</c:if>
 							<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
-							<!-- eumade4all special rule remove later -->
-							<c:if test="#{field.label ne 'NAME OF MARKER(S)' or userBean.moderator}">
+							<!-- eumade4all special rule remove later   field.label.startsWith('QUALITATIVE FEEDBACK ON ') and  -->
+							<c:if test="#{not (field.label.startsWith('QUALITATIVE FEEDBACK ON ') and empty surveyBean.userAnswers.answers[field.id].trim())}">
 							
 								<h:outputText value="#{field.label}" />
 								<h:outputText
@@ -87,6 +88,9 @@
 								</p:selectCheckboxMenu>
 							</c:if>
 							<c:if test="#{field.type eq 'ONE_RADIO'}">
+							<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
+							<!-- eumade4all special rule remove later  -->
+							
 								<h:outputText value="#{field.label}" />
 								<h:selectOneRadio id="input_oneradio_#{field.id}"
 									value="#{surveyBean.userAnswers.answers[field.id]}" label=""
@@ -94,10 +98,19 @@
 									required="#{field.required}" 
 									filter="#{field.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px"
-									styleClass="my-radio-button">
-									<f:selectItems value="#{field.answers}" var="option"
-										itemLabel="#{option}" itemValue="#{option}" />
+									styleClass="radio-buttons">
+									<!--  
+									
+									<f:selectItems value="#{field.answers}" var="option" 
+										itemLabel="#{option}" itemValue="#{option}"  />
+										
+										special rule for eumade4all remove after the project:
+										-->
+									<f:selectItems value="#{field.getEUmadeAnswersWithout()}" var="option" 
+										itemLabel="#{option}" itemValue="#{option}"  />
+								
 								</h:selectOneRadio>
+							</c:if>
 							</c:if>
 							<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
 								<h:outputText value="#{field.label}" />

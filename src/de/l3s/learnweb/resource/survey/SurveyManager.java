@@ -16,10 +16,12 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
+import de.l3s.util.BeanHelper;
 import de.l3s.util.Sql;
 
 /**
@@ -40,23 +42,23 @@ public class SurveyManager
      *
      Philipp: Old methods that might be useful in context of the eu made4all project.
      Can be deleted after the project.
-
-
+    
+    
     public LinkedHashMap<Integer, String> getAnsweredQuestions(int resourceId) throws SQLException
     {
         LinkedHashMap<Integer, String> questions = new LinkedHashMap<>();
         int surveyId;
-    
+
         String getQuestionByOrder = "SELECT distinct(r.question_id), r.question, r.survey_id FROM `lw_survey_question` r, lw_survey_answer t2 where (t2.question_id = r.question_id or (r.deleted=? and r.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and r.survey_id=? and t2.resource_id=? order by r.`order`";
         //Check if all questions are fetched.
-    
+
         PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement("SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id` = ?");
         pSttmnt.setInt(1, resourceId);
         ResultSet idResult = pSttmnt.executeQuery();
         if(idResult.next())
         {
             surveyId = idResult.getInt("survey_id");
-    
+
             pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
             pSttmnt.setBoolean(1, false);
             pSttmnt.setInt(2, surveyId);
@@ -67,30 +69,30 @@ public class SurveyManager
                 questions.put(result.getInt("question_id"), result.getString("question"));
             }
         }
-    
+
         return questions;
     }
-    
+
     //Same surevy resources in a course to merge answers
-    
+
     public HashSet<Integer> getSameSurveyResources(int resourceId) throws SQLException
     {
         HashSet<Integer> surveyResources = new HashSet<Integer>();
         surveyResources.add(resourceId);
         Resource surveyResource;
         int groupId;
-    
+
         int surveyId = 0;
-    
+
         surveyResource = learnweb.getResourceManager().getResource(resourceId);
-    
+
         groupId = surveyResource.getGroupId();
         //Fetching course id for given resource
         //Fetching other resource Ids with same survey id in the current course.
         if(groupId > 0)
         {
             int courseId = learnweb.getGroupManager().getGroupById(groupId).getCourseId();
-    
+
             String getOtherResources = "SELECT r.resource_id FROM `lw_resource` r, lw_group t2, lw_survey_resource t3 WHERE r.group_id =t2.group_id and r.`type`='survey' and r.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
             String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getSurveyId);
@@ -109,17 +111,17 @@ public class SurveyManager
                 }
             }
         }
-    
+
         return surveyResources;
     }
-    
+
     // TODO this method is extremely inefficient
     public List<SurveyUserAnswers> getAnswerOfAllUserForSurveyResource(int surveyResourceId, HashMap<Integer, String> question) throws SQLException
     {
         List<SurveyUserAnswers> answers = new ArrayList<SurveyUserAnswers>();
-    
+
         PreparedStatement answerSelect = learnweb.getConnection().prepareStatement("SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?");
-    
+
         PreparedStatement userSelect = learnweb.getConnection().prepareStatement("SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?");
         userSelect.setInt(1, surveyResourceId);
         ResultSet ids = userSelect.executeQuery();
@@ -127,7 +129,7 @@ public class SurveyManager
         {
             SurveyUserAnswers userServeyAnswers = new SurveyUserAnswers(ids.getInt("user_id"), surveyResourceId);
             HashMap<Integer, String> ans = userServeyAnswers.getAnswers();
-    
+
             // TODO this is extremely inefficient
             for(Integer qid : question.keySet())
             {
@@ -138,11 +140,11 @@ public class SurveyManager
                 if(result.next())
                 {
                     String answerOfUser = result.getString("answer");
-    
+
                     answerOfUser = answerOfUser == null ? "" : answerOfUser.replaceAll("\\|\\|\\|", ",");
-    
+
                     ans.put(qid, answerOfUser);
-    
+
                     userServeyAnswers.setSaved(true);
                 }
                 else
@@ -151,10 +153,10 @@ public class SurveyManager
                         ans.put(qid, "Unanswered");
                 }
             }
-    
+
             if(userServeyAnswers.isSaved())
                 userServeyAnswers.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, ids.getInt("user_id")));
-    
+
             answers.add(userServeyAnswers);
         }
         return answers;
@@ -227,6 +229,22 @@ public class SurveyManager
             else
                 log.error("Can't load metadata of survey resource: " + resource.getId());
         }
+    }
+
+    public SurveyResource getSurveyResource(int surveyResourceId) throws SQLException
+    {
+        Resource resource = learnweb.getResourceManager().getResource(surveyResourceId);
+
+        if(resource == null)
+            return null;
+
+        if(resource.getType() != ResourceType.survey)
+        {
+            log.error("Survey resource requested but found a " + resource.getType() + "; " + BeanHelper.getRequestSummary());
+            return null;
+        }
+
+        return (SurveyResource) resource;
     }
 
     public Survey getSurvey(int surveyId) throws SQLException

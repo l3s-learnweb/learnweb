@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
-import de.l3s.learnweb.user.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -49,6 +48,11 @@ import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
 import de.l3s.learnweb.resource.yellMetadata.LanglevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
+import de.l3s.learnweb.user.CourseManager;
+import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.OrganisationManager;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.FrequencyProtectionManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
@@ -547,12 +551,14 @@ public class Learnweb
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
         int userId = 0;
-        if (user != null) {
+        if(user != null)
+        {
             userId = user.getId();
 
-            if (user.getOrganisation().getOption(Organisation.Option.Misc_Logging_disabled)) {
+            if(user.getOrganisation().getOption(Organisation.Option.Misc_Logging_disabled))
+            {
                 // TODO Oleh: Should we disable it completely or anonymize it?
-                log.warn("Log ignored.");
+                //log.warn("Log ignored.");
                 return;
             }
         }
