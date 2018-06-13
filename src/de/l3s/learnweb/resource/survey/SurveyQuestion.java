@@ -19,8 +19,8 @@ public class SurveyQuestion implements Serializable
 
     public enum QuestionType // represents primeface input types
     {
-        INPUT_TEXT,
-        INPUT_TEXTAREA,
+        INPUT_TEXT, // options define the valid length (first entry = min length, second entry = max length)
+        INPUT_TEXTAREA, // options define the valid length (first entry = min length, second entry = max length)
         AUTOCOMPLETE,
         ONE_MENU,
         ONE_MENU_EDITABLE,

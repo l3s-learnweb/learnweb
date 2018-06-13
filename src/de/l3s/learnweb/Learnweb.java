@@ -60,7 +60,6 @@ import de.l3s.office.ConverterService;
 import de.l3s.office.HistoryManager;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
-import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.StringHelper;
 
@@ -98,7 +97,6 @@ public class Learnweb
     private final TedManager tedManager; //For logging transcript actions by users
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
     private final TimelineManager timelineManager; //DAO for resource archive versions
-    private final SearchLogClient searchlogClient; //For Search History Tools
     private final MementoClient mementoClient;
     private final SolrClient solrClient;
     private final LoroManager loroManager;
@@ -316,7 +314,6 @@ public class Learnweb
         resourcePreviewMaker = new ResourcePreviewMaker(this);
         resourceMetadataExtractor = new ResourceMetadataExtractor(this);
         serviceConverter = new ConverterService(this);
-        searchlogClient = new SearchLogClient(this);
         tedManager = new TedManager(this);
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
         timelineManager = new TimelineManager(this);
@@ -841,11 +838,6 @@ public class Learnweb
             fileManager.setServerUrl(secureServerUrl);
 
         log.debug("Server base url updated: " + serverUrl);
-    }
-
-    public SearchLogClient getSearchlogClient()
-    {
-        return searchlogClient;
     }
 
     public SolrClient getSolrClient()

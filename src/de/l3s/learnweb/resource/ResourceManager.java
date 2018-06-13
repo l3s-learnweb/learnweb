@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.jaxb.SearchResultEntity;
@@ -346,7 +345,7 @@ public class ResourceManager
         replace.setString(4, resource.getUrl());
         replace.setInt(5, resource.getStorageType());
         replace.setInt(6, resource.getRights());
-        replace.setString(7, resource.getSource());
+        replace.setString(7, resource.getSource().name());
         replace.setString(8, resource.getType().name());
         replace.setString(9, resource.getFormat());
         replace.setInt(10, resource.getUserId());
@@ -749,23 +748,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-    
+
         return new GroupPaginator(results, groupId, order);
     }
-    
+
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-    
+
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-    
+
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -797,7 +796,7 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-    
+
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -807,12 +806,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-    
+
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-    
+
     return resources;
     }
     */
@@ -851,23 +850,23 @@ public class ResourceManager
      */
     private static String getLocation(Resource resource)
     {
-        String source = resource.getSource();
+        SERVICE source = resource.getSource();
 
-        if(StringUtils.isEmpty(source))
+        if(null == source)
         {
-            //log.warn("Empty source for resource: " + resource, new IllegalArgumentException());
+            log.warn("Empty source for resource: " + resource, new IllegalArgumentException());
             return "Learnweb";
         }
 
         switch(source)
         {
-        case "TED-Ed":
-        case "TED":
-        case "TEDx":
-        case "Yovisto":
-        case "Archive-It":
-        case "FactCheck":
-            return source;
+        case teded:
+        case ted:
+        case tedx:
+        case yovisto:
+        case archiveit:
+        case factcheck:
+            return source.toString();
         default:
             return "Learnweb";
         }
@@ -880,11 +879,11 @@ public class ResourceManager
      * @param type
      * @return
      */
-    private static Resource newResource(String type)
+    private static Resource newResource(ResourceType type)
     {
         switch(type)
         {
-        case "survey":
+        case survey:
             return new SurveyResource();
         default:
             return new Resource();
@@ -898,7 +897,7 @@ public class ResourceManager
 
         if(null == resource)
         {
-            String type = rs.getString("type");
+            ResourceType type = ResourceType.valueOf(rs.getString("type"));
 
             resource = newResource(type);
             resource.setId(id);
@@ -1063,7 +1062,7 @@ public class ResourceManager
     public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult)
     {
         Resource resource = new Resource();
-        resource.setType(searchResult.getType());
+        resource.setType(ResourceType.valueOf(searchResult.getType()));
         resource.setTitle(searchResult.getTitle());
         resource.setLocation(searchResult.getService());
         resource.setSource(searchResult.getService());

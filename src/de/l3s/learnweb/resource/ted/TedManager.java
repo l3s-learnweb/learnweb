@@ -624,10 +624,10 @@ public class TedManager
     }
 
     //Remove duplicate TED Resources from group 862 starting from the resourceId
-    public void removeDuplicateTEDResources(int resourceId) throws SQLException
+    public void removeDuplicateTEDResources(int startFromResourceId) throws SQLException
     {
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource` WHERE group_id = 862 AND owner_user_id = 7727 AND deleted = 0 AND resource_id > ?");
-        pStmt.setInt(1, resourceId);
+        pStmt.setInt(1, startFromResourceId);
         ResultSet rs = pStmt.executeQuery();
         while(rs.next())
         {
@@ -644,9 +644,10 @@ public class TedManager
 
             if(!existsInTedVideo)
             {
-                Resource r = learnweb.getResourceManager().getResource(resId);
-                r.setDeleted(true);
-                r.save();
+                //log.debug(learnweb.getResourceManager().getResource(resId));
+
+                learnweb.getResourceManager().deleteResource(resId);
+
                 PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("DELETE FROM ted_transcripts_paragraphs WHERE resource_id = ?");
                 pStmt3.setInt(1, resId);
                 int deleted = pStmt3.executeUpdate();
@@ -695,8 +696,9 @@ public class TedManager
 
     public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
     {
-        TedManager tm = Learnweb.createInstance("").getTedManager();
-        tm.fetchTedX(); //saveTedResource();
-        System.exit(0);
+        Learnweb lw = Learnweb.createInstance(null);
+        TedManager tm = lw.getTedManager();
+        tm.removeDuplicateTEDResources(215353);
+        lw.onDestroy();
     }
 }

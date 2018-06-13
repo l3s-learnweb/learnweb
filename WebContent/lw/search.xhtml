@@ -236,31 +236,6 @@
 			</ui:fragment>		
 		</h:panelGroup>
 
-		<!--<h:panelGroup layout="block" id="search_right_bar" class="right_bar" rendered="#{userBean.searchHistoryEnabled}">
-		 	<p:outputPanel autoUpdate="true">
-				<p:tabView scrollable="true" id="tabView" widgetVar="tabViewer" activeIndex="#{searchHistoryBean.selectedTab}" cache="false">
-					<p:tab id="tab1" title="Fact Sheet"	rendered="${searchBean.graphLoaded}" >
-						<ui:fragment>
-							<ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>
-						</ui:fragment>
-					</p:tab>
-
-					<p:tab id="tab2" title="#{msg.current_search_title}">
-						<ui:decorate template="/lw/templates/current_search.xhtml">
-							<ui:param name="currentSearchBean" value="#{searchHistoryBean}"/>
-							<ui:param name="searchType" value="#{searchBean.view}"/>
-						</ui:decorate>
-					</p:tab>
-					
-					<p:tab id="tab3" title="#{msg.similar_queries}">
-						<ui:decorate template="/lw/templates/query_history.xhtml">
-							<ui:param name="queryHistorybydate" value="#{searchHistoryBean.queryHistory}" />
-						</ui:decorate>
-					</p:tab>
-				</p:tabView>
-			</p:outputPanel>
-		</h:panelGroup> -->
-
 		<div id="search_loading_more_results">
 			#{msg.loading_more_results} <span class="loading-icon" />
 		</div>

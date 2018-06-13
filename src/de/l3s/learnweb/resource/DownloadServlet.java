@@ -117,7 +117,7 @@ public class DownloadServlet extends HttpServlet
         requestString = requestString.substring(index + urlPattern.length());
         index = requestString.indexOf("/");
         String requestFileId = requestString.substring(0, index);
-        String requestFileName = requestString.substring(index + 1);
+        //String requestFileName = requestString.substring(index + 1);
 
         int fileId = NumberUtils.toInt(requestFileId);
 
@@ -125,7 +125,7 @@ public class DownloadServlet extends HttpServlet
         {
             String referrer = request.getHeader("referer");
 
-            // only log the error if the referrer is uni-hannover.de where we have a chance to fix the link
+            // only log the error if the referrer is uni-hannover.de. Otherwise we have no chance to fix the link
             Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.ERROR : Level.WARN;
             log.log(logLevel, "Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
 

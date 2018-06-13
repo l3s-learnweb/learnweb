@@ -202,7 +202,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             historyResources.clear();
             try
             {
-    
+
                 //historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
             }
             catch(Exception e)
@@ -214,7 +214,7 @@ public class SearchBean extends ApplicationBean implements Serializable
                 historyResourcesRetrieved = true;
             resultsetId = 0;
         }
-    
+
         int historyResourcesSize = historyResources.size();
         int resourceCount = 0;
         for(ResourceDecorator resource : search.getResources())
@@ -222,7 +222,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             resource.setNewResource(false);
             ++resourceCount;
         }
-    
+
         // TODO does this really make sense?
         // shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
         while(resourceCount < historyResourcesSize)
@@ -233,12 +233,12 @@ public class SearchBean extends ApplicationBean implements Serializable
             {
                 if(resourceCount > historyResourcesSize)
                     break;
-    
+
                 resource.setNewResource(false);
                 ++resourceCount;
             }
         }
-    
+
         if(historyResourcesRetrieved)
         {
             for(ResourceDecorator newResource : search.getResources())
@@ -252,13 +252,13 @@ public class SearchBean extends ApplicationBean implements Serializable
                 {
                     if(!searched.contains(newResource.getUrl()))
                         searched.add(newResource.getUrl());
-    
+
                     if(!historyResources.contains(newResource.getUrl()))
                     {
                         newResource.setNewResource(true);
                     }
                 }
-    
+
             }
         }
         return getTemplateDir() + "/search.xhtml?faces-redirect=true";
@@ -295,7 +295,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(selectedResource.getId() == -1) // resource is not yet stored at the database
             {
                 newResource = selectedResource;
-                if(newResource.getSource().equalsIgnoreCase("Bing")) //resource which is already saved in database already has wayback captures stored
+                if(newResource.getSource().equals(SERVICE.bing)) //resource which is already saved in database already has wayback captures stored
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
             }
             else
@@ -639,18 +639,18 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         return historyResources;
     }
-    
+
     public int getResultsetId()
     {
         return resultsetId;
     }
-    
+
     public void setResultsetId(int resultsetId)
     {
         this.resultsetViewId = resultsetId;
         this.resultsetId = resultsetId;
     }
-    
+
     public int getResultsetViewId()
     {
         return resultsetViewId;
@@ -687,17 +687,17 @@ public class SearchBean extends ApplicationBean implements Serializable
                 return;
             }
             String label = graph.getEntities().get(0).getLabel();
-
+            
             SearchFilters filter = new SearchFilters();
             images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
             images.setMode(MODE.image);
             filter.setFilter(FILTERS.service, SERVICE.bing);
-
+            
             //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
             images.setResultsPerService(10);
             images.getResourcesByPage(1);
-
-
+            
+            
             graphLoaded = true;
             */
         }

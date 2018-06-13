@@ -26,8 +26,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
-import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -63,8 +61,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private Date surveyOpenDate; // TODO if a survey is created then this.resource should become a SurveyResource instance
     @Deprecated
     private Date surveyCloseDate; // TODO if a survey is created then this.resource should become a SurveyResource instance
-    private List<ServiceInformation> uploadServices;
-    private List<String> selectedUploadServices;
 
     private int formStep = 1;
 
@@ -271,7 +267,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             resource.setDeleted(false);
             resource.setSource("Learnweb");
-            resource.setType(Resource.ResourceType.glossary);
+            resource.setType(ResourceType.glossary);
             resource.setUrl(getLearnweb().getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
             Resource iconResource = getLearnweb().getResourceManager().getResource(200233);
@@ -398,23 +394,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                     resource.setUrl("http://" + resource.getUrl());
             }
 
-            if(null != selectedUploadServices && selectedUploadServices.size() > 0) // the resource has to be uploaded to interweb
-            {
-                try
-                {
-                    Resource interwebResource = getUser().getInterweb().upload(resource, selectedUploadServices);
-                    if(interwebResource.getLocation().equalsIgnoreCase("YouTube")) // originalSource or source?
-                    {
-                        getUser().deleteResource(resource);
-                        resource = getUser().addResource(interwebResource);
-                    }
-                }
-                catch(IllegalResponseException e)
-                {
-                    addFatalMessage(e);
-                }
-            }
-
             resource.setDeleted(false);
             resource.setUser(getUser());
             if(resource.isOfficeResource())
@@ -486,21 +465,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         this.newUrl = newUrl;
 
-    }
-
-    public List<ServiceInformation> getUploadServices()
-    {
-        return uploadServices;
-    }
-
-    public List<String> getSelectedUploadServices()
-    {
-        return selectedUploadServices;
-    }
-
-    public void setSelectedUploadServices(List<String> selectedUploadServices)
-    {
-        this.selectedUploadServices = selectedUploadServices;
     }
 
     public String getCurrentPath() throws SQLException

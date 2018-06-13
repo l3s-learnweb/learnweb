@@ -21,6 +21,7 @@ import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.SERVICE;
 
 public class SearchQuery implements Serializable
 {
@@ -40,7 +41,7 @@ public class SearchQuery implements Serializable
 
     /**
      * replaces all fields of this object with the values from the xml @param inputStream
-     * 
+     *
      * @param inputStream stream of an interweb search query
      * @throws IllegalResponseException
      */
@@ -94,7 +95,7 @@ public class SearchQuery implements Serializable
                 decoratedResource.setTitle(searchResult.getTitle());
 
                 // bing description contains snippet with term highlighting
-                if(currentResource.getSource().equalsIgnoreCase("bing") && decoratedResource.getSnippet() == null)
+                if(currentResource.getSource().equals(SERVICE.bing) && decoratedResource.getSnippet() == null)
                 {
                     // add snippet
                     decoratedResource.setSnippet(currentResource.getDescription());

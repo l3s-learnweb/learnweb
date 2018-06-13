@@ -1,23 +1,23 @@
 package de.l3s.learnweb.resource;
 
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Group;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import java.io.Serializable;
-import java.sql.SQLException;
+
+import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
 
 @ViewScoped
 @ManagedBean
 public class AddFolderBean extends ApplicationBean implements Serializable
 {
-    private final static Logger log = Logger.getLogger(AddFolderBean.class);
+    //private final static Logger log = Logger.getLogger(AddFolderBean.class);
     private static final long serialVersionUID = 3716630972434428811L;
 
     private Folder folder;
@@ -52,11 +52,13 @@ public class AddFolderBean extends ApplicationBean implements Serializable
         clearForm();
     }
 
-    private int getTargetGroupId() {
+    private int getTargetGroupId()
+    {
         return targetGroup != null ? targetGroup.getId() : 0;
     }
 
-    private int getTargetFolderId() {
+    private int getTargetFolderId()
+    {
         return targetFolder != null ? targetFolder.getId() : 0;
     }
 

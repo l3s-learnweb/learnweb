@@ -20,9 +20,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.MultiPart;
-import com.sun.jersey.multipart.file.FileDataBodyPart;
 import com.sun.jersey.oauth.client.OAuthClientFilter;
 import com.sun.jersey.oauth.signature.HMAC_SHA1;
 import com.sun.jersey.oauth.signature.OAuthParameters;
@@ -30,8 +27,6 @@ import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.Resource;
 
 public class InterWeb implements Serializable
 {
@@ -393,43 +388,6 @@ public class InterWeb implements Serializable
 
         SearchQuery interwebResponse = iw.search("london", params);
         interwebResponse.getResults();
-
-    }
-
-    /**
-     *
-     * @param resource
-     * @param selectedUploadServices the services to which the resource should be uploaded
-     * @return
-     * @throws IllegalResponseException
-     */
-    public Resource upload(Resource resource, List<String> selectedUploadServices) throws IllegalResponseException
-    {
-
-        @SuppressWarnings("resource")
-        MultiPart multiPart = new MultiPart();
-        multiPart = multiPart.bodyPart(new FormDataBodyPart("title", resource.getTitle()));
-        multiPart = multiPart.bodyPart(new FormDataBodyPart("description", resource.getDescription()));
-        multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().name()));
-        multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(TYPE.FILE_MAIN).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
-        //multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
-
-        WebResource webResource = createWebResource("users/default/uploads", getIWToken());
-        WebResource.Builder builder = webResource.type(MediaType.MULTIPART_FORM_DATA);
-        builder = builder.accept(MediaType.APPLICATION_XML);
-
-        ClientResponse response = builder.post(ClientResponse.class, multiPart);
-
-        try
-        {
-            multiPart.close();
-        }
-        catch(IOException e)
-        {
-        }
-
-        UploadResponse uploadResponse = new UploadResponse(response.getEntityInputStream());
-        return uploadResponse.getResult();
 
     }
 }

@@ -7,28 +7,25 @@
 
 	<table id="resources_informations_table" class="full-width">
 
-		<ui:fragment
-			rendered="${not empty rightPaneBean.clickedResource.fileName and not rightPaneBean.clickedResource.source.equals('LORO')}">
+		<ui:fragment rendered="${not empty rightPaneBean.clickedResource.fileName and rightPaneBean.clickedResource.source ne 'loro'}">
 			<tr>
 				<td><span class="resource_field">#{msg.file}:</span></td>
-				<td><a href="#{rightPaneBean.clickedResource.fileUrl}"> <span
-						style="text-decoration: underline;" class="float-left">#{rightPaneBean.clickedResource.fileName}</span>
+				<td><a href="#{rightPaneBean.clickedResource.fileUrl}">
+						<span style="text-decoration: underline;" class="float-left">#{rightPaneBean.clickedResource.fileName}</span>
 						<span class="ui-icon ui-icon-arrowthickstop-1-s float-left "></span>
-				</a> <ui:fragment
-						rendered="${not empty rightPaneBean.clickedResource.originalFile}">
+					</a> 
+					<ui:fragment rendered="${not empty rightPaneBean.clickedResource.originalFile}">
 						<div style="clear: both;"></div>
-						<a href="#{rightPaneBean.clickedResource.originalFile.url}"> <span
-							style="float: left; text-decoration: underline;">#{rightPaneBean.clickedResource.originalFile.name}</span>
-							<span class="ui-icon ui-icon-arrowthickstop-1-s"
-							style="float: left;"></span>
+						<a href="#{rightPaneBean.clickedResource.originalFile.url}">
+							<span style="float: left; text-decoration: underline;">#{rightPaneBean.clickedResource.originalFile.name}</span>
+							<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
 						</a>
-                                        (Backup
-                                        <h:outputText
-							value="#{rightPaneBean.clickedResource.originalFile.lastModified}">
-							<f:convertDateTime type="date" timeStyle="short" dateStyle="long"
-								timeZone="#{userBean.timeZone}" />
+                        (Backup 
+                        <h:outputText value="#{rightPaneBean.clickedResource.originalFile.lastModified}">
+							<f:convertDateTime type="date" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}" />
 						</h:outputText>)
-                                    </ui:fragment></td>
+					</ui:fragment>
+				</td>
 			</tr>
 		</ui:fragment>
 
@@ -176,7 +173,7 @@
 			<td><span class="resource_field"> #{msg.source}: </span></td>
 			<td style="overflow: hidden;"><a
 				href="#{rightPaneBean.clickedResource.urlProxied}"><h:outputText
-						value="#{rightPaneBean.clickedResource.source}" /></a> <span
+						value="#{rightPaneBean.clickedResource.source.label}" /></a> <span
 				style="display: inline-block; width: 300px;"> </span></td>
 		</tr>
 
@@ -218,7 +215,7 @@
 			</tr>
 		</ui:fragment>
 		<ui:fragment
-			rendered="${rightPaneBean.clickedResource.source == 'TED' or rightPaneBean.clickedResource.source == 'TEDx'}">
+			rendered="${rightPaneBean.clickedResource.source == 'ted' or rightPaneBean.clickedResource.source == 'tedx'}">
 			<tr>
 				<td><span class="resource_field"> #{msg.transcript}: </span></td>
 				<td><h:outputLink value="ted_transcript.jsf"

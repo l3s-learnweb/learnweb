@@ -151,7 +151,7 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) && !resource.getSource().equalsIgnoreCase("Slideshare") || resource.getType().equals(Resource.ResourceType.spreadsheet))
+        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) && !resource.getSource().equals(SERVICE.slideshare) || resource.getType().equals(Resource.ResourceType.spreadsheet))
         {
             processOfficeDocument(resource);
         }

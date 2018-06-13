@@ -150,6 +150,14 @@ public class ResourceMetadataExtractor
                 return;
             }
 
+            if(resource.getUrl().startsWith("https://webgate.ec.europa.eu/"))
+            {
+                resource.setType(Resource.ResourceType.video);
+                resource.setSource(SERVICE.speechrepository);
+                resource.setIdAtService(ipernityMatcher.group(1));
+                processSpeechRepositoryResource(resource);
+                return;
+            }
             resource.setType(Resource.ResourceType.website);
             FileInfo fileInfo = getFileInfo(resource.getUrl());
 
@@ -178,6 +186,12 @@ public class ResourceMetadataExtractor
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
             log.error("Can't get more details about resource (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
         }
+    }
+
+    private void processSpeechRepositoryResource(Resource resource) throws IOException, JSONException
+    {
+
+        //https://webgate.ec.europa.eu/sr-files/vod/47dd74c3eeffe3ee49f5a49d8a82dbd8/node/sr-speech_27815_482.mp4
     }
 
     private void processYoutubeResource(Resource resource) throws IOException, JSONException

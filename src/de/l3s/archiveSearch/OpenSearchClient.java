@@ -26,6 +26,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.util.StringHelper;
 
+@Deprecated
 public class OpenSearchClient
 {
     private static final Logger log = Logger.getLogger(OpenSearchClient.class);

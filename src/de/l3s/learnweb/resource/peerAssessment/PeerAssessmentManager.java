@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -19,6 +21,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;
+import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
@@ -172,7 +175,7 @@ public class PeerAssessmentManager
     @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception
     {
-        System.exit(-1);
+        // System.exit(-1);
 
         Learnweb learnweb = Learnweb.createInstance(null);
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
@@ -180,7 +183,7 @@ public class PeerAssessmentManager
         //pam.taskSetupPeerAssesmentAarhusLateSubmission();
         //pam.sendInvitationReminderMail(2);
 
-        //pam.sendResultMail(xx);
+        pam.sendConsentMail();
 
         learnweb.onDestroy();
     }
@@ -416,6 +419,41 @@ public class PeerAssessmentManager
         }
     }
 
+    /**
+     * Sends an email to all eumade4all students who submitted successfully
+     *
+     * @param peerAssementId
+     * @throws SQLException
+     * @throws MessagingException
+     */
+    @SuppressWarnings("unused")
+    private void sendConsentMail() throws SQLException, MessagingException
+    {
+        for(int peerAssementId = 1; peerAssementId <= 3; peerAssementId++)
+        {
+            List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssementId);
+
+            for(PeerAssesmentPair pair : pairs)
+            {
+                // check if user is part of aarhus course
+                Stream<Course> courses = pair.getAssessedUser().getCourses().stream();
+                boolean aarhusUser = 1 == courses.filter(course -> course.getTitle().equals("EU-Aarhus")).collect(Collectors.counting());
+
+                log.debug(aarhusUser + " - " + pair.getAssessedUser().getEmail());
+                Mail mail = new Mail();
+                mail.setSubject("EUMADE4LL assessment");
+                mail.setText(getEUMADe4ALLConsentMailText(pair.getAssessedUser().getRealUsername()));
+
+                mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+
+                //mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessedUser().getEmail()));
+
+                //log.debug("Send to: " + pair.getAssessedUser().getEmail());
+                // mail.sendMail();
+            }
+        }
+    }
+
     private String getEUMADe4ALLInvitationMailText(String username, String submissionUrl, String surveyUrl)
     {
         return "Dear " + username + ",\r\n\r\n" +
@@ -440,6 +478,20 @@ public class PeerAssessmentManager
                 "\r\n" +
                 "student assessment\r\n" +
                 peerAssessmentUrl + "\r\n" +
+                "\r\n" +
+                "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
+                "\r\n" +
+                "Thank you very much for your work!\r\n";
+    }
+
+    private String getEUMADe4ALLConsentMailText(String username)
+    {
+        return "Dear " + username + ",\r\n\r\n" +
+                "teacher assessment: \r\n" +
+                "\r\n" +
+                "\r\n" +
+                "student assessment\r\n" +
+                "\r\n" +
                 "\r\n" +
                 "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
                 "\r\n" +

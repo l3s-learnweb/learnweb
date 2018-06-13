@@ -555,14 +555,8 @@
                             <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
                                             width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
                                             rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}"/>
-                        </a>
-                        <h:outputLink value="showGlossary.jsf"
-                                      styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
-                                      rendered="#{rightPaneBean.clickedResource.source eq 'Glossary'}">
-                            <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-                            #{msg["Glossary.open"]}
-                        </h:outputLink>
-                    </div>
+                        </a>						
+					</div>
                 </ui:fragment>
 
                 <table id="edit_table" class="full-width">

@@ -46,7 +46,7 @@ public class SolrResourceBean
     /*
     @Field("thumbnailWidth")
     private int thumbnailWidth;
-    
+
     @Field("thumbnailHeight")
     private int thumbnailHeight;
     */
@@ -91,7 +91,7 @@ public class SolrResourceBean
         this.machineDescription = resource.getMachineDescription();
         this.url = resource.getUrl();
         this.language = resource.getLanguage().toLowerCase();
-        this.source = resource.getSource().toLowerCase();
+        this.source = resource.getSource().toString().toLowerCase();
         this.type = resource.getType().name();
         this.format = resource.getFormat().toLowerCase();
         this.author = resource.getAuthor();
@@ -225,17 +225,17 @@ public class SolrResourceBean
     {
         return thumbnailWidth;
     }
-    
+
     public void setThumbnailWidth(int thumbnailWidth)
     {
         this.thumbnailWidth = thumbnailWidth;
     }
-    
+
     public int getThumbnailHeight()
     {
         return thumbnailHeight;
     }
-    
+
     public void setThumbnailHeight(int thumbnailHeight)
     {
         this.thumbnailHeight = thumbnailHeight;

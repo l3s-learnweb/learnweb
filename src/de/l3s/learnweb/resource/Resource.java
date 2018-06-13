@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.Validate;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.ArchiveUrl;
@@ -96,7 +97,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private String url;
     private int storageType = WEB_RESOURCE;
     private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
-    private String source = ""; // The place where the resource was found
+    private SERVICE source; // The place where the resource was found
     private String location = ""; // The location where the resource content (e.g. video) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author = "";
@@ -177,23 +178,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     protected void postConstruct() throws SQLException
     {
         setDefaultThumbnailIfNull();
-    }
-
-    /**
-     * This constructor is used to create resources when returned from the learnweb resources table in order
-     * to re-visit a previous result set of a query posted in the past.
-     */
-    @Deprecated
-    public Resource(int id, String description, String title, String source, int thumbnail_height, int thumbnail_width, String thumbnail_url, int thumbnail4_height, int thumbnail4_width, String thumbnail4_url, String url, String type)
-    {
-        this.id = id;
-        this.description = description;
-        this.title = title;
-        this.source = source;
-        this.url = url;
-        this.setType(type);
-        setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
-        setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
     }
 
     /**
@@ -394,9 +378,10 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public boolean isOfficeResource()
     {
-        if(source.equals("SlideShare"))
+        if(getSource().equals(SERVICE.slideshare))
             return false;
-        return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) || Resource.ResourceType.presentation.equals(type);
+
+        return ResourceType.document.equals(type) || ResourceType.spreadsheet.equals(type) || ResourceType.presentation.equals(type);
     }
 
     public boolean isOnline()
@@ -700,6 +685,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.type = type;
     }
 
+    /**
+     * Use setType(ResourceType type) instead
+     *
+     * @param type
+     */
+    @Deprecated
     public void setType(String type)
     {
         try
@@ -708,6 +699,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         }
         catch(IllegalArgumentException e)
         {
+            log.warn("Have to guess type of resource: " + this);
             this.setTypeFromFormat(format);
         }
     }
@@ -1005,24 +997,30 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      *
      * @return
      */
-    public String getSource()
+    public SERVICE getSource()
     {
         return source;
     }
 
-    public void setSource(String source) // TODO use  enum instead of string
+    public void setSource(SERVICE source)
     {
-        if(null == source || source.length() == 0)
-        {
-            log.warn("Resource: " + id + "; source set to null");
-            return;
-        }
-
-        SERVICE service = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
-        if(service == null)
-            log.warn("Invalid source: " + source + " resource " + this);
-
+        Validate.notNull(source);
         this.source = source;
+    }
+
+    /**
+     * better use setSource(SERVICE source)
+     * 
+     * @param source
+     */
+    public void setSource(String source)
+    {
+        Validate.notEmpty(source);
+
+        this.source = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
+
+        if(this.source == null)
+            throw new IllegalArgumentException("Invalid source: " + source + " resource " + this);
     }
 
     public LinkedHashMap<Integer, File> getFiles()
@@ -1222,13 +1220,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             }
             else if(getType().equals(ResourceType.video))
             {
-                if(getSource().equalsIgnoreCase("loro") || getSource().equals("Yovisto") || getSource().equalsIgnoreCase("desktop"))
+                if(getSource().equals(SERVICE.loro) || getSource().equals("Yovisto") || getSource().equals(SERVICE.desktop))
                     embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
-                else if(getSource().equalsIgnoreCase("ted"))
+                else if(getSource().equals(SERVICE.ted))
                     embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed").replace("https://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
-                else if(getSource().equalsIgnoreCase("youtube"))
+                else if(getSource().equals(SERVICE.youtube))
                     embeddedCode = "<iframe src=\"https://youtube.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
-                else if(getSource().equalsIgnoreCase("vimeo"))
+                else if(getSource().equals(SERVICE.vimeo))
                     embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
                 if(isProcessing())

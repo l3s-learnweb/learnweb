@@ -30,6 +30,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
@@ -110,9 +111,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
         try
         {
-            if(tedResource.getSource().equalsIgnoreCase("ted"))
+            if(tedResource.getSource().equals(SERVICE.ted))
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
-            else if(tedResource.getSource().equalsIgnoreCase("tedx"))
+            else if(tedResource.getSource().equals(SERVICE.tedx))
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
         }
         catch(SQLException e)
@@ -121,7 +122,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             log.error("Error while retrieving TED video id", e);
         }
 
-        if(tedResource.getSource().equalsIgnoreCase("TEDx"))
+        if(tedResource.getSource().equals(SERVICE.tedx))
             //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>");
             this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
         String transcript = tedResource.getTranscript();
@@ -260,9 +261,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     /*public double wordSimilarity(String word1, String word2, String pos)
     {
     WS4JConfiguration.getInstance().setMFS(true);
-    
+
     double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-    
+
     return s;
     }
     */
@@ -541,7 +542,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         return selectedCourseId;
     }
-
+    
     public void setSelectedCourseId(int selectedCourseId)
     {
         this.selectedCourseId = selectedCourseId;

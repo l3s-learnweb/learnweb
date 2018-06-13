@@ -151,7 +151,7 @@ public class ResourceDecorator implements Serializable
         return resource.getLocation();
     }
 
-    public String getSource()
+    public SERVICE getSource()
     {
         return resource.getSource();
     }
