@@ -1,4 +1,4 @@
-package de.l3s.ted.crawler;
+package de.l3s.learnweb.resource.ted;
 
 import java.io.IOException;
 import java.io.InputStream;
