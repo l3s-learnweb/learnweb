@@ -1167,6 +1167,9 @@ hr {
 .ui-datatable-odd{
 	background-color:#eee;
 }
+.ui-datatable-even{
+	background-color:white;
+}
 .ui-editor-toolbar{
 	background-color:#eee;
 	background-image:none;

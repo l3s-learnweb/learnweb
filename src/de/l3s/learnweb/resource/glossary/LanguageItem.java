@@ -20,6 +20,7 @@ public class LanguageItem implements Serializable
             {
                 return "English-EN";
             }
+
         },
         IT
         {
@@ -54,6 +55,17 @@ public class LanguageItem implements Serializable
             {
                 return "German-DE";
             }
+        };
+
+        /**
+         * temporary method: reformat strange language format for output
+         *
+         * @return
+         */
+        public String getLabel()
+        {
+            String str = toString();
+            return str.substring(0, str.indexOf("-"));
         }
     }
 

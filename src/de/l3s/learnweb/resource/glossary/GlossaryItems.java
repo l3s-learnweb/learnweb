@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO this is only a helper class to generate the table the data should be stored in classes that reflect the table structure
 public class GlossaryItems implements Serializable
 {
     private static final long serialVersionUID = -5692141840144862371L;
@@ -14,30 +15,28 @@ public class GlossaryItems implements Serializable
     private String topic3;
     private String description;
 
-    private int glossId;
+    private int glossId; // TODO rename to glossaryId
 
     private List<LanguageItem> finalItems;
-    private String primaryLanguageTerm = ""; //for ordering of terms
-    private de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE primaryLanguage;
-    private de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE secondaryLanguage;
 
-    private String value;
+    private String value; // TODO rename to term
 
     private String pronounciation;
     private String acronym;
-    private String references;
+    private String references; // TODO in the frontend it is called source
     private String phraseology;
-    private String selectedUses;
+    private String selectedUses; // TODO uses
     private String language;
     private int termId;
-    private Timestamp date;
+    private String fulltext; // contains all text fields from all entries of this glossary to facilitate search
+    private Timestamp date; // TODO use java.util.date
 
     public String getTopic1()
     {
         return topic1;
     }
 
-    public void setTopic_1(String topic_1)
+    public void setTopic1(String topic_1)
     {
         this.topic1 = topic_1;
     }
@@ -47,7 +46,7 @@ public class GlossaryItems implements Serializable
         return topic2;
     }
 
-    public void setTopic_2(String topic2)
+    public void setTopic2(String topic2)
     {
         this.topic2 = topic2;
     }
@@ -57,7 +56,7 @@ public class GlossaryItems implements Serializable
         return topic3;
     }
 
-    public void setTopic_3(String topic_3)
+    public void setTopic3(String topic_3)
     {
         this.topic3 = topic_3;
     }
@@ -79,7 +78,7 @@ public class GlossaryItems implements Serializable
 
     public void setFinalItems(List<LanguageItem> finalItems)
     {
-        this.finalItems = new ArrayList<LanguageItem>();
+        this.finalItems = new ArrayList<LanguageItem>(); // nonsense
         this.finalItems = finalItems;
     }
 
@@ -98,7 +97,7 @@ public class GlossaryItems implements Serializable
         return value;
     }
 
-    public void setValue(String value)
+    public void setValue(String value) // TODO rename
     {
         this.value = value;
     }
@@ -158,6 +157,11 @@ public class GlossaryItems implements Serializable
         return language;
     }
 
+    public String getLanguageNice() // quick fix for strange language format
+    {
+        return language.substring(0, language.indexOf("-"));
+    }
+
     public void setLanguage(String language)
     {
         this.language = language;
@@ -183,34 +187,13 @@ public class GlossaryItems implements Serializable
         this.date = date;
     }
 
-    public String getPrimaryLanguageTerm()
+    public String getFulltext()
     {
-        return primaryLanguageTerm;
+        return fulltext;
     }
 
-    public void setPrimaryLanguageTerm(String englishTerm)
+    public void setFulltext(String fulltext)
     {
-        this.primaryLanguageTerm = englishTerm;
+        this.fulltext = fulltext;
     }
-
-    public de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE getPrimaryLanguage()
-    {
-        return primaryLanguage;
-    }
-
-    public void setPrimaryLanguage(de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE primaryLanguage)
-    {
-        this.primaryLanguage = primaryLanguage;
-    }
-
-    public de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE getSecondaryLanguage()
-    {
-        return secondaryLanguage;
-    }
-
-    public void setSecondaryLanguage(de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE secondaryLanguage)
-    {
-        this.secondaryLanguage = secondaryLanguage;
-    }
-
 }

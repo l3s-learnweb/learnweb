@@ -19,7 +19,7 @@ public class GlossaryEntry implements Serializable
     private List<LanguageItem> secondLanguageItems;
     private List<LanguageItem> firstLanguageItems;
     private String fileName;
-    private String selectedTopicOne;
+    private String selectedTopicOne; // TODO remove "selected"
     private String selectedTopicTwo;
     private String selectedTopicThree;
     public String description; // TODO why is this public?

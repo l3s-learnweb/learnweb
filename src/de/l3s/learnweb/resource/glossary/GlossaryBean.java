@@ -545,7 +545,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -780,7 +780,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private void getGlossaryItems(int id) throws SQLException
     {
-        items = getLearnweb().getGlossariesManager().getGlossaryItemsOld(id);
+        items = getLearnweb().getGlossariesManager().getGlossaryItems(id);
     }
 
     public List<GlossaryItems> getItems()

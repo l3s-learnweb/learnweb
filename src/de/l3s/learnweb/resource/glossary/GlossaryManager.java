@@ -50,7 +50,7 @@ public class GlossaryManager
                 preparedStmnt.executeQuery();
 
             }
-            // TODO :: Combine both?? YES!!! use languaeitem as parameter of this method and call it once for the first and once for the second langauge
+            // TODO :: Combine both?? YES!!! use languaeitem as parameter of this method and call it once for the first and once for the second language
             for(LanguageItem t : e.getSecondLanguageItems())
             {
                 preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
@@ -412,6 +412,8 @@ public class GlossaryManager
         return langPair;
     }
 
+    //private static String addFulltext
+
     public List<GlossaryItems> getGlossaryItems(int resourceId) throws SQLException
     {
 
@@ -419,52 +421,75 @@ public class GlossaryManager
         String populateGlossaries = "SELECT t1.glossary_id, t2.topic_1, t2.topic_2, t2.topic_3, t2.description, t3.* FROM `lw_resource_glossary` t1, `lw_glossary_details` t2, `lw_resource_glossary_terms` t3 where t1.resource_id = ? and t1.deleted=0 and t1.glossary_id=t2.glossary_id and t2.glossary_id=t3.glossary_id and t3.deleted=0 order by(t3.glossary_id)";
         PreparedStatement glossaries = learnweb.getConnection().prepareStatement(populateGlossaries);
         glossaries.setInt(1, resourceId);
-        ResultSet result = glossaries.executeQuery();
-        int glossaryId = -1;
-        HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<Integer, Timestamp>();
-        HashMap<Integer, String> orderTerm = new HashMap<Integer, String>();
+        ResultSet rs = glossaries.executeQuery();
 
-        while(result.next())
+        HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<Integer, Timestamp>();
+        HashMap<Integer, String> fulltexts = new HashMap<Integer, String>();
+
+        StringBuilder fulltext = new StringBuilder(); // contains all words from a glossary
+        int lastGlossaryId = -1;
+
+        while(rs.next())
         {
+            int glossaryId = rs.getInt("glossary_id");
+
+            if(lastGlossaryId != glossaryId)
+            {
+                fulltexts.put(lastGlossaryId, fulltext.toString());
+                fulltext.setLength(0); // clear buffer
+                lastGlossaryId = glossaryId;
+            }
 
             GlossaryItems glossary = new GlossaryItems();
-            glossary.setGlossId(result.getInt("glossary_id"));
-            glossaryId = result.getInt("glossary_id");
-            glossary.setTopic_1(result.getString("topic_1"));
-            glossary.setTopic_1(result.getString("topic_2"));
-            glossary.setTopic_1(result.getString("topic_3"));
-            glossary.setTopic_1(result.getString("description"));
-            glossary.setAcronym(result.getString("acronym"));
-            glossary.setValue(result.getString("term"));
-            glossary.setPhraseology(result.getString("phraseology"));
-            glossary.setPronounciation(result.getString("pronounciation"));
-            glossary.setReferences(result.getString("references"));
-            glossary.setTermId(result.getInt("glossary_term_id"));
-            glossary.setSelectedUses(result.getString("use"));
-            glossary.setLanguage(result.getString("language"));
+            glossary.setGlossId(glossaryId);
+            glossary.setTopic1(rs.getString("topic_1"));
+            glossary.setTopic2(rs.getString("topic_2"));
+            glossary.setTopic3(rs.getString("topic_3"));
+            glossary.setDescription(rs.getString("description"));
+            glossary.setAcronym(rs.getString("acronym"));
+            glossary.setValue(rs.getString("term"));
+            glossary.setPhraseology(rs.getString("phraseology"));
+            glossary.setPronounciation(rs.getString("pronounciation"));
+            glossary.setReferences(rs.getString("references"));
+            glossary.setTermId(rs.getInt("glossary_term_id"));
+            glossary.setSelectedUses(rs.getString("use"));
+            glossary.setLanguage(rs.getString("language"));
+
+            fulltext.append(glossary.getValue());
+            fulltext.append(' ');
+            fulltext.append(glossary.getAcronym());
+            fulltext.append(' ');
+            fulltext.append(glossary.getPhraseology());
+            fulltext.append(' ');
+            fulltext.append(glossary.getPronounciation());
+            fulltext.append(' ');
+            fulltext.append(glossary.getReferences());
+            fulltext.append(' ');
+            fulltext.append(glossary.getLanguage());
+            fulltext.append(' ');
+            fulltext.append(glossary.getSelectedUses());
+            fulltext.append(' ');
+
             if(!glossaryEntryTimestamp.containsKey(glossaryId))
             {
-                glossaryEntryTimestamp.put(glossaryId, result.getTimestamp("timestamp"));
+                glossaryEntryTimestamp.put(glossaryId, rs.getTimestamp("timestamp"));
             }
-            else if(glossaryEntryTimestamp.get(glossaryId).after(result.getTimestamp("timestamp")))
+            else if(glossaryEntryTimestamp.get(glossaryId).after(rs.getTimestamp("timestamp")))
             {
-                glossaryEntryTimestamp.put(glossaryId, result.getTimestamp("timestamp"));
-            }
-            if(!orderTerm.containsKey(glossaryId))
-            {
-                orderTerm.put(glossaryId, result.getString("term"));
-            }
-            else if(orderTerm.get(glossaryId).compareToIgnoreCase(result.getString("term")) > 0)
-            {
-                orderTerm.replace(glossaryId, result.getString("term"));
-
+                glossaryEntryTimestamp.put(glossaryId, rs.getTimestamp("timestamp"));
             }
             items.add(glossary);
         }
+
+        if(lastGlossaryId != -1)
+        {
+            fulltexts.put(lastGlossaryId, fulltext.toString());
+        }
+
         for(GlossaryItems glossary : items)
         {
             glossary.setDate(glossaryEntryTimestamp.get(glossary.getGlossId()));
-            glossary.setPrimaryLanguageTerm(orderTerm.get(glossary.getGlossId()));
+            glossary.setFulltext(fulltexts.get(glossary.getGlossId()));
         }
         return items;
 
@@ -518,9 +543,9 @@ public class GlossaryManager
 
                     gloss.setGlossId(glossaryId);
 
-                    gloss.setTopic_1(result.getString("topic_1"));
-                    gloss.setTopic_2(result.getString("topic_2"));
-                    gloss.setTopic_3(result.getString("topic_3"));
+                    gloss.setTopic1(result.getString("topic_1"));
+                    gloss.setTopic2(result.getString("topic_2"));
+                    gloss.setTopic3(result.getString("topic_3"));
                     gloss.setDescription(result.getString("description"));
                     gloss.setAcronym(termResults.getString("acronym"));
                     gloss.setValue(termResults.getString("term"));
@@ -539,11 +564,11 @@ public class GlossaryManager
                     }
                     else
                         gloss.setLanguage(secondaryLanguage);
-                    gloss.setPrimaryLanguageTerm(primaryLangTerm);
+                    //gloss.setPrimaryLanguageTerm(primaryLangTerm);
 
                     LanguageItem it = new LanguageItem(); // TODO "it" name
-                    gloss.setPrimaryLanguage(it.getEnum(primaryLanguage));
-                    gloss.setSecondaryLanguage(it.getEnum(secondaryLanguage));
+                    //gloss.setPrimaryLanguage(it.getEnum(primaryLanguage));
+                    //gloss.setSecondaryLanguage(it.getEnum(secondaryLanguage));
                     it.setAcronym(termResults.getString("acronym"));
                     it.setValue(termResults.getString("term"));
                     it.setPhraseology(termResults.getString("phraseology"));
