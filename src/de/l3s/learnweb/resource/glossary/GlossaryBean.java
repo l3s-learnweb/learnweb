@@ -247,9 +247,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             boolean result = getLearnweb().getGlossariesManager().addToDatabase(entry);
             if(result)
             {
+                addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+                /*
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage("Successful entry"));
                 context.getExternalContext().getFlash().setKeepMessages(true);
+                */
             }
 
             if(getGlossaryId() == 0)
@@ -545,7 +548,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

@@ -429,6 +429,8 @@ public class GlossaryManager
         StringBuilder fulltext = new StringBuilder(); // contains all words from a glossary
         int lastGlossaryId = -1;
 
+        List<LanguageItem> finalList = null; // super stupid thing
+
         while(rs.next())
         {
             int glossaryId = rs.getInt("glossary_id");
@@ -438,6 +440,7 @@ public class GlossaryManager
                 fulltexts.put(lastGlossaryId, fulltext.toString());
                 fulltext.setLength(0); // clear buffer
                 lastGlossaryId = glossaryId;
+                finalList = new ArrayList<>();
             }
 
             GlossaryItems glossary = new GlossaryItems();
@@ -478,6 +481,24 @@ public class GlossaryManager
             {
                 glossaryEntryTimestamp.put(glossaryId, rs.getTimestamp("timestamp"));
             }
+
+            // super shitty
+            LanguageItem it = new LanguageItem();
+            it.setAcronym(rs.getString("acronym"));
+            it.setValue(rs.getString("term"));
+            it.setPhraseology(rs.getString("phraseology"));
+            it.setPronounciation(rs.getString("pronounciation"));
+            it.setReferences(rs.getString("references"));
+            it.setTermId(rs.getInt("glossary_term_id"));
+            List<String> setUse = new ArrayList<String>(); // TODO improve
+
+            setUse = new ArrayList<>(Arrays.asList(rs.getString("use").split(", ")));
+
+            it.setSelectedUses(setUse);
+            it.setLanguage(it.getEnum(rs.getString("language")));
+            finalList.add(it);
+            glossary.setFinalItems(finalList);
+
             items.add(glossary);
         }
 
@@ -532,11 +553,11 @@ public class GlossaryManager
                 PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)"); // TODO define outside loop
                 ps.setInt(1, glossaryId);
                 ps.setInt(2, 0);
-                ResultSet termResults = ps.executeQuery();
+                ResultSet rs = ps.executeQuery();
                 ResultSet termTime = ps.executeQuery(); //for timestamp
                 Timestamp latestTimestamp = getLatestTimestamp(glossaryId, resultID.getTimestamp("timestamp"), termTime);
                 String primaryLangTerm = null;
-                while(termResults.next())
+                while(rs.next())
                 {
 
                     GlossaryItems gloss = new GlossaryItems();
@@ -547,20 +568,20 @@ public class GlossaryManager
                     gloss.setTopic2(result.getString("topic_2"));
                     gloss.setTopic3(result.getString("topic_3"));
                     gloss.setDescription(result.getString("description"));
-                    gloss.setAcronym(termResults.getString("acronym"));
-                    gloss.setValue(termResults.getString("term"));
-                    gloss.setPhraseology(termResults.getString("phraseology"));
-                    gloss.setPronounciation(termResults.getString("pronounciation"));
-                    gloss.setReferences(termResults.getString("references"));
-                    gloss.setTermId(termResults.getInt("glossary_term_id"));
-                    gloss.setSelectedUses(termResults.getString("use"));
+                    gloss.setAcronym(rs.getString("acronym"));
+                    gloss.setValue(rs.getString("term"));
+                    gloss.setPhraseology(rs.getString("phraseology"));
+                    gloss.setPronounciation(rs.getString("pronounciation"));
+                    gloss.setReferences(rs.getString("references"));
+                    gloss.setTermId(rs.getInt("glossary_term_id"));
+                    gloss.setSelectedUses(rs.getString("use"));
 
                     gloss.setDate(latestTimestamp);
 
-                    if(termResults.getString("language").equals(primaryLanguage))
+                    if(rs.getString("language").equals(primaryLanguage))
                     {
                         gloss.setLanguage(primaryLanguage);
-                        primaryLangTerm = termResults.getString("term"); // for ordering terms
+                        primaryLangTerm = rs.getString("term"); // for ordering terms
                     }
                     else
                         gloss.setLanguage(secondaryLanguage);
@@ -569,19 +590,19 @@ public class GlossaryManager
                     LanguageItem it = new LanguageItem(); // TODO "it" name
                     //gloss.setPrimaryLanguage(it.getEnum(primaryLanguage));
                     //gloss.setSecondaryLanguage(it.getEnum(secondaryLanguage));
-                    it.setAcronym(termResults.getString("acronym"));
-                    it.setValue(termResults.getString("term"));
-                    it.setPhraseology(termResults.getString("phraseology"));
-                    it.setPronounciation(termResults.getString("pronounciation"));
-                    it.setReferences(termResults.getString("references"));
-                    it.setTermId(termResults.getInt("glossary_term_id"));
+                    it.setAcronym(rs.getString("acronym"));
+                    it.setValue(rs.getString("term"));
+                    it.setPhraseology(rs.getString("phraseology"));
+                    it.setPronounciation(rs.getString("pronounciation"));
+                    it.setReferences(rs.getString("references"));
+                    it.setTermId(rs.getInt("glossary_term_id"));
                     List<String> setUse = new ArrayList<String>(); // TODO improve
-                    if(termResults.getString("use").contains(","))
-                        setUse = Arrays.asList(termResults.getString("use").split(", "));
+                    if(rs.getString("use").contains(","))
+                        setUse = Arrays.asList(rs.getString("use").split(", "));
                     else
-                        setUse.add(termResults.getString("use").trim());
+                        setUse.add(rs.getString("use").trim());
                     it.setSelectedUses(setUse);
-                    if(termResults.getString("language").equals(primaryLanguage)) // TODO improve
+                    if(rs.getString("language").equals(primaryLanguage)) // TODO improve
                         it.setLanguage(it.getEnum(primaryLanguage));
                     else
                         it.setLanguage(it.getEnum(secondaryLanguage));

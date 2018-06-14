@@ -175,7 +175,6 @@ public class PeerAssessmentManager
     @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception
     {
-        // System.exit(-1);
 
         Learnweb learnweb = Learnweb.createInstance(null);
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
@@ -183,7 +182,7 @@ public class PeerAssessmentManager
         //pam.taskSetupPeerAssesmentAarhusLateSubmission();
         //pam.sendInvitationReminderMail(2);
 
-        pam.sendConsentMail();
+        //pam.sendConsentMail();
 
         learnweb.onDestroy();
     }
@@ -439,12 +438,18 @@ public class PeerAssessmentManager
                 Stream<Course> courses = pair.getAssessedUser().getCourses().stream();
                 boolean aarhusUser = 1 == courses.filter(course -> course.getTitle().equals("EU-Aarhus")).collect(Collectors.counting());
 
-                log.debug(aarhusUser + " - " + pair.getAssessedUser().getEmail());
+                if(!aarhusUser)
+                {
+                    System.out.println(pair.getAssessedUser().getRealUsername() + " <" + pair.getAssessedUser().getEmail() + ">");
+                    //System.out.println(pair.getAssessedUser().getEmail());
+                }
+                /*
                 Mail mail = new Mail();
                 mail.setSubject("EUMADE4LL assessment");
                 mail.setText(getEUMADe4ALLConsentMailText(pair.getAssessedUser().getRealUsername()));
 
                 mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+                */
 
                 //mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessedUser().getEmail()));
 
@@ -484,6 +489,7 @@ public class PeerAssessmentManager
                 "Thank you very much for your work!\r\n";
     }
 
+    @SuppressWarnings("unused")
     private String getEUMADe4ALLConsentMailText(String username)
     {
         return "Dear " + username + ",\r\n\r\n" +

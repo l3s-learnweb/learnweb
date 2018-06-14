@@ -79,7 +79,7 @@ public class LanguageItem implements Serializable
     private int termId;
     private String useLabel = "Use";
 
-    // TODO remove this. you can use LANGUAGE.valueOf(arg0) instead. But this enum should be replaced by Locale anyway
+    // TODO remove this. you can use LANGUAGE.valueOf(arg0) instead (if you use proper names). But this enum should be replaced by Locale anyway
     public LANGUAGE getEnum(String langValue)
     {
         switch(langValue)
