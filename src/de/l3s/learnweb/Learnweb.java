@@ -220,7 +220,7 @@ public class Learnweb
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
             propteriesFileName = "lw_local_chloe";
         else if((new File("C:\\programmieren\\philipp.txt")).exists())
-            propteriesFileName = "lw_local_philipp_ama"; // lw_local_philipp_ama";
+            propteriesFileName = "lw_local_philipp"; // lw_local_philipp_ama";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
             propteriesFileName = "lw_local_philipp_uni";
         else if((new File("/home/fernando/trevor.txt").exists()))
@@ -298,7 +298,7 @@ public class Learnweb
 
         service = SERVICE.valueOf(properties.getProperty("SERVICE"));
         if(service == null)
-            throw new IllegalArgumentException("invalid propertie: SERVICE=" + properties.getProperty("SERVICE"));
+            throw new IllegalArgumentException("invalid property: SERVICE=" + properties.getProperty("SERVICE"));
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 

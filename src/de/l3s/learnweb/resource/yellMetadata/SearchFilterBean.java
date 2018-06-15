@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -39,7 +41,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     private List<String> mtypes;
     private List<String> sources;
     private List<String> targets;
-    private List<String> purposes = new ArrayList<String>();
+    private List<String> purposes;
     private List<String> langs;
     private List<String> levels;
     private List<CategoryTop> catTops;
@@ -125,13 +127,12 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         targets.add("Young learners (Elementary)");
         targets.add("Very young learners (Pre-school)");
 
-        //purposes values (fixed values)
+        //purposes values
         try
         {
-            for(Purpose purpose : getLearnweb().getPurposeManager().getPurposes())
-            {
-                purposes.add(purpose.getName());
-            }
+            // convert purpose list to string list of purpose names
+            Stream<Purpose> purposesStream = getLearnweb().getPurposeManager().getPurposes(getUser()).stream();
+            purposes = purposesStream.map(p -> p.getName()).collect(Collectors.toList());
         }
         catch(SQLException e)
         {

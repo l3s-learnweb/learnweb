@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
@@ -26,54 +27,36 @@ import de.l3s.learnweb.user.User;
 
 @ManagedBean
 @ViewScoped
-public class GroupOverviewBean extends ApplicationBean
+public class GroupOverviewBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = -6297485484480890425L;
+
     @ManagedProperty(value = "#{rightPaneBean}")
     private RightPaneBean rightPaneBean;
 
-    private SummaryOverview groupSummary;
-
-    private Resource clickedResource;
-
-    private boolean allLogs = false;
-
+    private int groupId;
     private Group group;
 
+    private SummaryOverview groupSummary;
+    private Resource clickedResource;
+    private boolean allLogs = false;
     private List<LogEntry> logMessages;
 
-    private int groupId;
-
     private String summaryTitle;
-
-    public GroupOverviewBean()
-    {
-        Integer id = getParameterInt("group_id");
-        if(null == id)
-            return;
-        groupId = id.intValue();
-    }
 
     public void onLoad() throws SQLException
     {
         User user = getUser();
-        if(null != user)
-        {
-            try
-            {
-                if(null == group)
-                {
+        if(null == user) // not logged in
+            return;
 
-                    group = getLearnweb().getGroupManager().getGroupById(groupId);
-                }
-            }
-            catch(SQLException e)
-            {
-                addFatalMessage(e);
-            }
-        }
+        group = getLearnweb().getGroupManager().getGroupById(groupId);
+
+        if(null == group)
+            addInvalidParameterMessage("group_id");
     }
 
-    public List<LogEntry> getLogMessages() throws SQLException
+    public List<LogEntry> getLogMessages()
     {
         if(null == logMessages)
         {
@@ -110,26 +93,34 @@ public class GroupOverviewBean extends ApplicationBean
         return allLogs;
     }
 
-    public SummaryOverview getSummaryOverview() throws Exception
+    public SummaryOverview getSummaryOverview()
     {
-        final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
-                LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
-        if(groupSummary == null || groupSummary.isEmpty())
+        try
         {
-            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
-            summaryTitle = UtilBean.getLocaleMessage("last_week_changes");
+            final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
+                    LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
+            if(groupSummary == null || groupSummary.isEmpty())
+            {
+                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+                summaryTitle = UtilBean.getLocaleMessage("last_week_changes");
+            }
+            if(groupSummary == null || groupSummary.isEmpty())
+            {
+                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+                summaryTitle = UtilBean.getLocaleMessage("last_month_overview_changes");
+            }
+            if(groupSummary == null || groupSummary.isEmpty())
+            {
+                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+                summaryTitle = UtilBean.getLocaleMessage("last_six_month_changes");
+            }
+            return groupSummary;
         }
-        if(groupSummary == null || groupSummary.isEmpty())
+        catch(Exception e)
         {
-            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
-            summaryTitle = UtilBean.getLocaleMessage("last_month_overview_changes");
+            addFatalMessage(e);
+            return null;
         }
-        if(groupSummary == null || groupSummary.isEmpty())
-        {
-            groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
-            summaryTitle = UtilBean.getLocaleMessage("last_six_month_changes");
-        }
-        return groupSummary;
     }
 
     public AbstractMap.SimpleEntry<String, Resource> getChoosenResourceFromSlider() throws SQLException

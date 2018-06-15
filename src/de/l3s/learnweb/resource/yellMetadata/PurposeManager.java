@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.user.User;
 
 public class PurposeManager
 {
@@ -63,22 +64,29 @@ public class PurposeManager
     /**
      * returns a list of all langlevels
      *
+     * @param user
+     *
      * @return
      * @throws SQLException
      */
 
-    public List<Purpose> getPurposes() throws SQLException
+    public List<Purpose> getPurposes(User user) throws SQLException
     {
         List<Purpose> purposes = new LinkedList<Purpose>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` ORDER BY purpose_id");
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT p.* FROM `lw_rm_purpose` p " +
+                "LEFT JOIN lw_resource_purpose rp ON p.purpose_id=rp.purpose_id AND rp.user_id = ? " +
+                "WHERE must_show = 1 OR  rp.purpose_id IS NOT NULL " +
+                "GROUP BY p.purpose_id ORDER BY purpose_name");)
         {
-            purposes.add(createPurpose(rs));
-        }
-        select.close();
+            select.setInt(1, user.getId());
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                purposes.add(createPurpose(rs));
+            }
 
-        return purposes;
+            return purposes;
+        }
     }
 
     public Purpose getPurpose(int purposeId) throws SQLException
@@ -95,7 +103,7 @@ public class PurposeManager
 
         if(!rs.next())
         {
-            new IllegalArgumentException("invalid purpose id was requested: " + purposeId).printStackTrace();
+            log.warn("invalid purpose id was requested: " + purposeId);
             return null;
         }
         purpose = createPurpose(rs);

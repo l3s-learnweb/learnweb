@@ -41,7 +41,7 @@ public class ExtendedMetadataManager
             while(rs.next())
             { //if the author does not exist already
                 String exist = "false";
-                for(String a : authors)
+                for(String a : authors) // super stupid containers() implementation
                 {
                     if(a == rs.getString("author"))
                     {
