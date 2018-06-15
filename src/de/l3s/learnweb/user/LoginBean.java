@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.google.common.net.InetAddresses;
 
+import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
@@ -209,10 +210,10 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         //userBean.setUser(null);
 
+        if(getLearnweb().getService() == SERVICE.AMA)
+            return "/ama/index.xhtml?faces-redirect=true";
         if(organisationId == 848) // is archive web course
-        {
             return "/aw/index.xhtml?faces-redirect=true";
-        }
         else
             return "/lw/index.xhtml?faces-redirect=true";
     }

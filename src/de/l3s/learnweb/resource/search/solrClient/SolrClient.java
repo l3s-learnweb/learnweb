@@ -227,29 +227,6 @@ public class SolrClient
         return suggestions;
     }
 
-    public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
-    {
-
-        Learnweb learnweb = Learnweb.createInstance(null);
-        SolrClient solr = learnweb.getSolrClient();
-        //log.debug(solr.getAutoCompletion("author_s", "phi C"));
-
-        //SolrClient.indexOneResource(67069);
-        //SolrClient.indexOneResource(72364);
-        //solr.deleteFromIndex(202667);
-        //deleteOneResource(67069);
-
-        solr.deleteAllResource();
-        solr.indexAllResources();
-        //SolrClient.indexOneResource(192248);
-        //SolrClient.indexOneResource(67571);
-
-        log.debug("All tasks completed.");
-        learnweb.onDestroy();
-        //SolrClient.deleteInvalidEntries();
-
-    }
-
     /**
      * Drop index
      *
@@ -270,7 +247,7 @@ public class SolrClient
      * @throws SolrServerException
      * @throws IOException
      */
-    protected void indexAllResources() throws SQLException, IOException, SolrServerException
+    public void indexAllResources() throws SQLException, IOException, SolrServerException
     {
         final int batchSize = 1000;
         ResourceManager resourceManager = learnweb.getResourceManager();
@@ -313,24 +290,6 @@ public class SolrClient
                 throw new RuntimeException(sendResources + " - " + indexedResources);
             */
         }
-    }
-
-    /**
-     * Index one resource
-     *
-     * @throws SQLException
-     * @throws SolrServerException
-     * @throws IOException
-     */
-    public static void indexOneResource(int resourceId) throws SQLException, IOException, SolrServerException
-    {
-        Learnweb learnweb = Learnweb.getInstance();
-        SolrClient indexer = learnweb.getSolrClient();
-
-        Resource resource = learnweb.getResourceManager().getResource(resourceId);
-
-        log.debug("Process resource: " + resource.getId());
-        indexer.reIndexResource(resource);
     }
 
 }
