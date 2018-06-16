@@ -37,7 +37,7 @@
 					<h:outputText rendered="#{not pair.peerAssessmentUserAnswers.saved}" value="Your partner didn't submit the peer assessment :(" />
 
 					<h:outputText value="Assessment:" class="bold" />
-					<h:panelGroup rendered="#{not empty pair.assessment.submittedAnswersOfAllUsers}">
+					<h:panelGroup rendered="#{not empty pair.assessment.submittedAnswersOfAllUsers and pair.assessment.submittedAnswersOfAllUsers.size() == 1}">
 						<ui:repeat var="answer" value="#{pair.assessment.submittedAnswersOfAllUsers}">
 							<h:outputLink value="survey/answer.jsf">
 								<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />

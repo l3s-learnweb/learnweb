@@ -18,7 +18,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 
     private int surveyResourceId;
     private transient SurveyResource resource;
-    private LinkedList<SurveyQuestion> questionColumns = new LinkedList<SurveyQuestion>(); // lists the questions that are shown in the table
+    private LinkedList<SurveyQuestion> questionColumns; // lists the questions that are shown in the table
 
     public void onLoad() throws SQLException
     {
@@ -38,6 +38,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
         }
 
         // output only questions that are not readonly
+        questionColumns = new LinkedList<SurveyQuestion>();
         for(SurveyQuestion question : resource.getQuestions())
         {
             if(question.getType().isReadonly())

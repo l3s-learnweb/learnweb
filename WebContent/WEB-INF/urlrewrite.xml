@@ -19,6 +19,10 @@
 		<from>/lw/wizard=(.*)</from>
 		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
 	</rule>
+	<rule>
+		<from>/wizard=(.*)</from>
+		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
+	</rule>
 
 	<rule>
 		<from>/archive/(.*)</from>
@@ -28,6 +32,10 @@
 	<rule>
 		<from>/templates/resources/survey.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
+	</rule>
+	<rule>
+		<from>/lw/survey/surveyResult.jsf(.*)</from>
+		<to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
 	</rule>
 <!--         
     

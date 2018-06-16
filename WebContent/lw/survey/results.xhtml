@@ -11,11 +11,12 @@
 
 	<ui:param name="pageTitle" value="Survey Result" />
 	<ui:param name="loginRequired" value="true" />
+	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="survey" name="survey.css" />
 
-		<h:form rendered="#{surveyResultBean.resource ne null}">
+		<h:form rendered="#{surveyResultBean.questionColumns ne null}">
 
 			<div class="page_header">
 				<span> #{surveyResultBean.resource.title}</span>
@@ -35,10 +36,14 @@
 						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{result.userId}" />
 					</h:outputLink>
-
-					<h:outputText value="Student id: #{result.user.studentId}" rendered="false" />
 				</p:column>
 
+				<p:column headerText="Student id">
+					<h:outputText value="#{result.user.studentId}" />
+				</p:column>
+				<p:column headerText="#{msg.courses}" sortBy="#{result.user.courses}">					
+					<h:outputText value="#{result.user.courses}" />
+				</p:column>
 				<p:column headerText="#{msg.submit}?">
 					<h:outputText value="#{result.submitted}" />
 				</p:column>

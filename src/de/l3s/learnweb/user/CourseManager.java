@@ -116,7 +116,7 @@ public class CourseManager
      */
     public List<Course> getCoursesByOrganisationId(int organisationId)
     {
-        List<Course> courses = new LinkedList<Course>();
+        List<Course> courses = new CoursesList();
 
         for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
         {
@@ -135,16 +135,17 @@ public class CourseManager
      */
     public List<Course> getCoursesByUserId(int userId) throws SQLException
     {
-        List<Course> courses = new LinkedList<Course>();
+        List<Course> courses = new CoursesList();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");
-        select.setInt(1, userId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-            courses.add(getCourseById(rs.getInt(1)));
-        select.close();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");)
+        {
+            select.setInt(1, userId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+                courses.add(getCourseById(rs.getInt(1)));
 
-        return courses;
+            return courses;
+        }
     }
 
     /**
@@ -245,17 +246,29 @@ public class CourseManager
         insert.close();
     }
 
-    /*
-    public static void main(String[] args) throws SQLException // tests
+    /**
+     * overrides toString method to simplify output in templates
+     *
+     *
+     */
+    private class CoursesList extends LinkedList<Course>
     {
-    Learnweb lw = Learnweb.getInstance();
-    CourseManager cm = lw.getCourseManager();
+        private static final long serialVersionUID = 8924683355506959050L;
 
-    for(Course o : cm.getCoursesAll())
-    {
+        @Override
+        public String toString()
+        {
+            StringBuilder sb = new StringBuilder();
+            for(Course course : this)
+            {
+                sb.append(course.getTitle());
+                sb.append(", ");
+            }
+            if(sb.length() > 0) // remove last comma
+                sb.setLength(sb.length() - 2);
 
+            return sb.toString();
+        }
     }
-    }
-    */
 
 }
