@@ -251,7 +251,7 @@ public class CourseManager
      *
      *
      */
-    private class CoursesList extends LinkedList<Course>
+    private class CoursesList extends LinkedList<Course> implements Comparable<CoursesList>
     {
         private static final long serialVersionUID = 8924683355506959050L;
 
@@ -268,6 +268,12 @@ public class CourseManager
                 sb.setLength(sb.length() - 2);
 
             return sb.toString();
+        }
+
+        @Override
+        public int compareTo(CoursesList other)
+        {
+            return toString().compareTo(other.toString());
         }
     }
 

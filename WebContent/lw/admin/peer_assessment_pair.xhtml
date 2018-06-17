@@ -154,7 +154,7 @@
 						<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}" styleClass="green bold" />
 						
 						<ui:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
-							<ui:fragment rendered="#{user.id != userBean.user.id}">
+							<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
 								<h:outputText value=", " />
 								<h:outputLink value="survey/answer.jsf">
 									<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />							
