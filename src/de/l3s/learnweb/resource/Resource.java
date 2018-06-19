@@ -1089,6 +1089,17 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
+     * Get combined thumbnail
+     */
+    public Thumbnail getSmallThumbnail()
+    {
+        if (thumbnail1 != null)
+            return thumbnail1;
+
+        return thumbnail0;
+    }
+
+    /**
      * maximum width/height : 150 / 120
      */
     public Thumbnail getThumbnail0()
@@ -1224,7 +1235,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             }
             else if(getType().equals(ResourceType.video))
             {
-                if(getSource().equals(SERVICE.loro) || getSource().equals("Yovisto") || getSource().equals(SERVICE.desktop))
+                if(getSource().equals(SERVICE.loro) || getSource().equals(SERVICE.yovisto) || getSource().equals(SERVICE.speechrepository) || getSource().equals(SERVICE.desktop))
                     embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
                 else if(getSource().equals(SERVICE.ted))
                     embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed").replace("https://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";

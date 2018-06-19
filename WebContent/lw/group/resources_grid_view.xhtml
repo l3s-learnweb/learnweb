@@ -42,6 +42,7 @@
 
         <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
             <ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+                <!--@elvariable id="res" type="de.l3s.learnweb.ResourceDecorator"-->
                 <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
                               pt:data-itemType="resource"
                               pt:data-itemId="#{res.resource.id}"
@@ -55,7 +56,7 @@
                             <div class="resource-preview-wrapper">
                                 <div class="resource-preview-wrapper2">
                                     <div class="resource-preview-block"></div>
-                                    <img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}"
+                                    <img class="resource-preview-image" src="#{res.resource.smallThumbnail.url}" alt="#{res.title}"
                                          title="#{res.title}"></img>
                                 </div>
                             </div>
