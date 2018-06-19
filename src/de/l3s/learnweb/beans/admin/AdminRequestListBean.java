@@ -18,7 +18,6 @@ import javax.faces.bean.RequestScoped;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.learnweb.web.RequestData;
-import de.l3s.learnweb.web.RequestManager;
 
 @ManagedBean
 @RequestScoped
@@ -47,7 +46,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
             {
                 requests = getLearnweb().getRequestManager().getRequests();
                 logins = new ArrayList<Map.Entry<String, Set<String>>>(getLearnweb().getRequestManager().getLogins().entrySet());
-                aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
+                aggregatedRequests = getLearnweb().getRequestManager().getAggregatedRequests();
                 onUpdateAggregatedRequests();
             }
         }
@@ -55,15 +54,6 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         {
             addFatalMessage(e);
         }
-    }
-
-    public void onClearRequestsDB()
-    {
-        RequestManager requestManager = getLearnweb().getRequestManager();
-        requestManager.clearRequestsDB();
-        requestManager.updateAggregatedRequests();
-        aggregatedRequests = requestManager.getAggrRequests();
-
     }
 
     public boolean filterByDate(Object value, Object filter, Locale locale)

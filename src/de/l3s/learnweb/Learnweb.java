@@ -53,7 +53,6 @@ import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.learnweb.user.loginProtection.FrequencyProtectionManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.office.ConverterService;
@@ -115,8 +114,8 @@ public class Learnweb
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
     private final SearchSessionEdgeComputator searchSessionEdgeComputator;
-    private final ProtectionManager protectionManager;
     private final RequestManager requestManager;
+    private final ProtectionManager protectionManager;
     private final DashboardManager dashboardManager;
 
     //added by Chloe
@@ -345,8 +344,8 @@ public class Learnweb
         purposeManager = new PurposeManager(this);
 
         //Managers added by Kate
-        protectionManager = new FrequencyProtectionManager(this);
         requestManager = RequestManager.getInstance(this);
+        protectionManager = new ProtectionManager(this);
     }
 
     /**

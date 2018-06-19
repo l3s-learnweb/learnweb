@@ -39,7 +39,21 @@ public class Mail
     {
         message.saveChanges();
         Transport.send(message);
+
     }
+
+    //    //TODO: This is a work in progress. Variables will be set properly later
+    //    public void SendMailWithResponse(){
+    //        Transport transport = session.getTransport();
+    //        try {
+    //           System.out.println("Sending ....");
+    //           transport.connect("mail.kbs.uni-hannover.de", 465, "learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
+    //           transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
+    //           System.out.println("Sending done ...");
+    //        } catch (Exception e) {
+    //           System.err.println("Error Sending: ");
+    //           e.printStackTrace();
+    //    }
 
     private static class PasswordAuthenticator extends Authenticator
     {

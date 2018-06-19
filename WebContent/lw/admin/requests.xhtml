@@ -88,7 +88,6 @@
 						    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 													</h:outputText>
 					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" immediate="true"/>
-					<h:commandButton action="${adminRequestListBean.onClearRequestsDB}" value="Clear table (Dev)" style="margin:10px;" immediate="true"/>
 				</span>
 
 				<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"

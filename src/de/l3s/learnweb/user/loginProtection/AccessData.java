@@ -63,14 +63,17 @@ public class AccessData
     /**
      * Bans the user for a given amount of minutes starting from now.
      */
-    public void setBan(int minutes)
+    public void setBan(int days, int hours, int minutes)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
 
         bannedOn = cal.getTime();
 
+        cal.add(Calendar.DAY_OF_MONTH, days);
+        cal.add(Calendar.HOUR, hours);
         cal.add(Calendar.MINUTE, minutes);
+
         banDate = cal.getTime();
     }
 
@@ -82,7 +85,10 @@ public class AccessData
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.YEAR, 400);
-        setBanDate(cal.getTime());
+
+        banDate = cal.getTime();
+        bannedOn = cal.getTime();
+
     }
 
     public int getAttempts()

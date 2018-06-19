@@ -4,20 +4,26 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.loginProtection.AccessData;
+import de.l3s.learnweb.web.AggregatedRequestData;
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
     private List<AccessData> banlist;
+    private List<AggregatedRequestData> suspiciousActivityList;
 
     private String name;
-    private int bantime;
+    private int banDays;
+    private int banHours;
+    private int banMinutes;
+    private boolean permaban;
+
     private String type;
 
     public AdminBanlistBean()
@@ -32,6 +38,9 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
             if(getUser().isAdmin() || getUser().isModerator())
             {
                 banlist = getLearnweb().getProtectionManager().getBanlist();
+
+                getLearnweb().getRequestManager().updateAggregatedRequests();
+                suspiciousActivityList = getLearnweb().getProtectionManager().getSuspiciousActivityList();
             }
         }
         catch(Exception e)
@@ -56,7 +65,14 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
             return;
         }
 
-        getLearnweb().getProtectionManager().ban(name, bantime, isIP);
+        if(permaban)
+        {
+            getLearnweb().getProtectionManager().permaban(name, isIP);
+        }
+        else
+        {
+            getLearnweb().getProtectionManager().ban(name, banDays, banHours, banMinutes, isIP);
+        }
 
         load();
     }
@@ -79,6 +95,12 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         load();
     }
 
+    public void onRemoveSuspicious(String name)
+    {
+        getLearnweb().getProtectionManager().removeSuspicious(name);
+        load();
+    }
+
     public List<AccessData> getBanlist()
     {
         return banlist;
@@ -87,11 +109,6 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
     public String getName()
     {
         return name;
-    }
-
-    public int getBantime()
-    {
-        return bantime;
     }
 
     public String getType()
@@ -104,14 +121,59 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         this.name = name;
     }
 
-    public void setBantime(int bantime)
-    {
-        this.bantime = bantime;
-    }
-
     public void setType(String type)
     {
         this.type = type;
+    }
+
+    public List<AggregatedRequestData> getSuspiciousActivityList()
+    {
+        return suspiciousActivityList;
+    }
+
+    public void setSuspiciousActivityList(List<AggregatedRequestData> suspiciousActivityList)
+    {
+        this.suspiciousActivityList = suspiciousActivityList;
+    }
+
+    public int getBanDays()
+    {
+        return banDays;
+    }
+
+    public void setBanDays(int banDays)
+    {
+        this.banDays = banDays;
+    }
+
+    public int getBanHours()
+    {
+        return banHours;
+    }
+
+    public void setBanHours(int banHours)
+    {
+        this.banHours = banHours;
+    }
+
+    public int getBanMinutes()
+    {
+        return banMinutes;
+    }
+
+    public void setBanMinutes(int banMinutes)
+    {
+        this.banMinutes = banMinutes;
+    }
+
+    public boolean isPermaban()
+    {
+        return permaban;
+    }
+
+    public void setPermaban(boolean permaban)
+    {
+        this.permaban = permaban;
     }
 
 }

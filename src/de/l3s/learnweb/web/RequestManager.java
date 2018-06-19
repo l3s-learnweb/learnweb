@@ -86,6 +86,45 @@ public class RequestManager
     }
 
     /**
+     * Gets the aggregated and fresh data on the given IP. Used for warning generation.
+     *
+     * @return All of the request info on cerain IP.
+     */
+    public List<AggregatedRequestData> getRequestsByIP(String IP)
+    {
+        List<AggregatedRequestData> reqs = new ArrayList<>();
+
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE IP = "))
+        {
+            select.setString(1, IP);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                reqs.add(new AggregatedRequestData(rs.getString("IP"), rs.getInt("requests"), rs.getInt("logins"), rs.getString("usernames"), rs.getTimestamp("time")));
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Failed to fetch aggregated results by IP. SQLException: ", e);
+        }
+
+        long recentRequests = requests.stream().filter(c -> IP.equals(c.getIP())).count();
+        Set<String> log = logins.get(IP);
+        int loginCount = 0;
+        String usernames = "";
+
+        if(log != null)
+        {
+            loginCount = log.size();
+            usernames = log.toString();
+        }
+
+        reqs.add(new AggregatedRequestData(IP, (int) recentRequests, loginCount, usernames, new Date()));
+
+        return reqs;
+    }
+
+    /**
      * Removes requests that are older than 1 hours from memory
      */
     public void cleanOldRequests()
@@ -197,11 +236,6 @@ public class RequestManager
         {
             log.error("Failed to load banlists. SQLException: ", e);
         }
-    }
-
-    public List<AggregatedRequestData> getAggrRequests()
-    {
-        return aggregatedRequests;
     }
 
     public Date getAggrRequestsUpdateTime()
