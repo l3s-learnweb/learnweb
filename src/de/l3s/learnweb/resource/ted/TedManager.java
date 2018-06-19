@@ -14,6 +14,7 @@ import java.util.TreeSet;
 
 import javax.ws.rs.core.MediaType;
 
+import de.l3s.learnweb.resource.*;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONArray;
@@ -34,10 +35,6 @@ import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;
@@ -406,7 +403,7 @@ public class TedManager
         resource.setTitle(rs.getString("title"));
         resource.setDescription(rs.getString("description"));
         resource.setUrl("https://www.ted.com/talks/" + rs.getString("slug"));
-        resource.setSource("TED");
+        resource.setSource(SERVICE.ted);
         resource.setLocation("TED");
         resource.setType(Resource.ResourceType.video);
         resource.setDuration(rs.getInt("duration"));
@@ -453,7 +450,7 @@ public class TedManager
             {
                 Resource resource = decoratedResource.getResource();
 
-                resource.setSource("TED-Ed");
+                resource.setSource(SERVICE.teded);
                 resource.setLocation("teded");
 
                 //Regex for setting the title and author for TEDx videos
@@ -672,7 +669,7 @@ public class TedManager
             {
                 Resource r2 = learnweb.getResourceManager().getResource(tedVideoResourceId);
 
-                r.setSource("TED");
+                r.setSource(SERVICE.ted);
                 r.setMaxImageUrl(r2.getMaxImageUrl());
                 List<File> files = learnweb.getFileManager().getFilesByResource(r.getId());
                 for(File f : files)

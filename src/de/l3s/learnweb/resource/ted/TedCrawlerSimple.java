@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
+import de.l3s.learnweb.resource.SERVICE;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -364,7 +365,7 @@ public class TedCrawlerSimple implements Runnable
                 tedResource.setTitle(title);
                 tedResource.setDescription(description);
                 tedResource.setUrl("http://www.ted.com/talks/" + slug);
-                tedResource.setSource("TED");
+                tedResource.setSource(SERVICE.ted);
                 tedResource.setType(Resource.ResourceType.video);
                 tedResource.setDuration(duration);
                 tedResource.setMaxImageUrl(maxImageUrl);

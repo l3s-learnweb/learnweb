@@ -70,7 +70,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public AddResourceBean()
     {
         resource = new Resource();
-        resource.setSource("Internet");
+        resource.setSource(SERVICE.internet);
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
@@ -81,7 +81,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             log.debug("Creating new file..");
-            resource.setSource("Learnweb");
+            resource.setSource(SERVICE.learnweb);
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setUser(getUser());
@@ -141,7 +141,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void clearForm()
     {
         resource = new Resource();
-        resource.setSource("Internet");
+        resource.setSource(SERVICE.internet);
         resource.setLocation("Learnweb");
         formStep = 1;
     }
@@ -152,7 +152,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             log.debug("Handle File upload");
 
-            resource.setSource("Desktop");
+            resource.setSource(SERVICE.desktop);
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
@@ -242,7 +242,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(checkUrl(resource.getUrl()));
             resource.setUser(getUser());
-            resource.setSource("Internet");
+            resource.setSource(SERVICE.internet);
 
             log.debug("Extracting info from given url...");
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -266,7 +266,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             resource.setDeleted(false);
-            resource.setSource("Learnweb");
+            resource.setSource(SERVICE.learnweb);
             resource.setType(ResourceType.glossary);
             resource.setUrl(getLearnweb().getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
@@ -308,7 +308,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             resource.setDeleted(false);
-            resource.setSource("Survey");
+            resource.setSource(SERVICE.learnweb);
             resource.setType(Resource.ResourceType.survey);
             resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + Integer.toString(resource.getId()));
 
@@ -451,7 +451,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void cancelUpload()
     {
         resource = new Resource();
-        resource.setSource("Internet");
+        resource.setSource(SERVICE.internet);
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
     }

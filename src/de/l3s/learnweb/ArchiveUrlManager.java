@@ -26,6 +26,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import de.l3s.learnweb.resource.*;
 import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
@@ -35,12 +36,7 @@ import com.sun.jersey.api.client.WebResource;
 import de.l3s.archiveSearch.CDXClient;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
-import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
-import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.user.User;
 
 public class ArchiveUrlManager
@@ -521,7 +517,7 @@ public class ArchiveUrlManager
         }
 
         resource.setLanguage(lwLang);
-        resource.setSource("Archive-It");
+        resource.setSource(SERVICE.archiveit);
         resource.setType(Resource.ResourceType.text);
         resource.setMetadataValue("collector", rs.getString("collector").trim());
         resource.setMetadataValue("coverage", rs.getString("coverage").trim());

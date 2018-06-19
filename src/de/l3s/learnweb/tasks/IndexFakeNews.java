@@ -133,7 +133,7 @@ public class IndexFakeNews
         {
             Resource resource = new Resource();
             resource.setType(ResourceType.website);
-            resource.setSource("FactCheck");
+            resource.setSource(SERVICE.factcheck);
             resource.setLocation("FactCheck");
             resource.setMetadataValue("publisher", "snopes.com");
             resource.setUserId(7727); // Admin

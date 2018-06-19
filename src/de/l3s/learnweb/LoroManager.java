@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import de.l3s.learnweb.resource.SERVICE;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -121,7 +122,7 @@ public class LoroManager
 
         resource.setDescription(description);
         resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-        resource.setSource("LORO");
+        resource.setSource(SERVICE.loro);
         resource.setLocation("LORO");
 
         resource.setCreationDate(rs.getTimestamp("added_on"));

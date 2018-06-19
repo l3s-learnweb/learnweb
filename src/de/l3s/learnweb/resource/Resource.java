@@ -1010,17 +1010,21 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     /**
      * better use setSource(SERVICE source)
-     * 
+     *
      * @param source
      */
     public void setSource(String source)
     {
         Validate.notEmpty(source);
 
-        this.source = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
-
-        if(this.source == null)
+        try
+        {
+            this.source = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
+        }
+        catch(IllegalArgumentException e)
+        {
             throw new IllegalArgumentException("Invalid source: " + source + " resource " + this);
+        }
     }
 
     public LinkedHashMap<Integer, File> getFiles()
