@@ -216,6 +216,7 @@ public class ResourceMetadataExtractor
             description.append("Notes: ").append(notes).append('\n');
 
         description.append("Speech details:").append('\n');
+        // TODO Tetiana: store duration in field of resource
         Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
         for(Element element : speechDetailsElement.select(".field"))
         {
@@ -243,6 +244,7 @@ public class ResourceMetadataExtractor
                     resource.setMaxImageUrl(mediaPlayer.getString("image"));
                 }
 
+                // TODO Tetiana: remove entity_id from description. Line below can be replaced for extracting it from Speech details
                 if (mediaPlayer.has("entity_id")) {
                     resource.setIdAtService(mediaPlayer.getString("entity_id"));
                 }
