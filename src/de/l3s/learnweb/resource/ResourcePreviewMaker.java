@@ -92,7 +92,7 @@ public class ResourcePreviewMaker
         try
         {
             // if a web resource is not a simple website then download it
-            if(resource.getStorageType() == Resource.WEB_RESOURCE && !resource.getType().equals(Resource.ResourceType.website) && (resource.getSource().equals("Bing") || resource.getSource().equals("Internet")))
+            if(resource.getStorageType() == Resource.WEB_RESOURCE && !resource.getType().equals(Resource.ResourceType.website) && (resource.getSource().equals(SERVICE.bing) || resource.getSource().equals(SERVICE.internet)))
             {
                 File file = new File();
                 file.setType(TYPE.FILE_MAIN);

@@ -317,7 +317,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             user.setActiveGroup(selectedResourceTargetGroupId);
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals("Bing"))
+            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals(SERVICE.bing))
             {
                 log.debug("Extracting info from given url...");
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
