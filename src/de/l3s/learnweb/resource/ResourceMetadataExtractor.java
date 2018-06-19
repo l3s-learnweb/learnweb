@@ -6,7 +6,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.xml.sax.SAXException;
 
@@ -100,7 +103,7 @@ public class ResourceMetadataExtractor
             if(youTubeMatcher.find())
             {
                 resource.setType(Resource.ResourceType.video);
-                resource.setSource("Youtube");
+                resource.setSource(SERVICE.youtube);
                 resource.setIdAtService(youTubeMatcher.group(1));
                 processYoutubeResource(resource);
                 return;
@@ -111,7 +114,7 @@ public class ResourceMetadataExtractor
             if(vimeoMatcher.find())
             {
                 resource.setType(Resource.ResourceType.video);
-                resource.setSource("Vimeo");
+                resource.setSource(SERVICE.vimeo);
                 resource.setIdAtService(vimeoMatcher.group(1));
                 processVimeoResource(resource);
                 return;
@@ -122,7 +125,7 @@ public class ResourceMetadataExtractor
             if(flickrMatcher.find())
             {
                 resource.setType(Resource.ResourceType.image);
-                resource.setSource("Flickr");
+                resource.setSource(SERVICE.flickr);
                 resource.setIdAtService(flickrMatcher.group(1));
                 processFlickrResource(resource);
                 return;
@@ -133,7 +136,7 @@ public class ResourceMetadataExtractor
             if(flickrShortMatcher.find())
             {
                 resource.setType(Resource.ResourceType.image);
-                resource.setSource("Flickr");
+                resource.setSource(SERVICE.flickr);
                 resource.setIdAtService(base58_decode(flickrShortMatcher.group(1)));
                 processFlickrResource(resource);
                 return;
@@ -144,7 +147,7 @@ public class ResourceMetadataExtractor
             if(ipernityMatcher.find())
             {
                 resource.setType(Resource.ResourceType.image);
-                resource.setSource("Ipernity");
+                resource.setSource(SERVICE.ipernity);
                 resource.setIdAtService(ipernityMatcher.group(1));
                 processIpernityResource(resource);
                 return;
@@ -154,10 +157,10 @@ public class ResourceMetadataExtractor
             {
                 resource.setType(Resource.ResourceType.video);
                 resource.setSource(SERVICE.speechrepository);
-                resource.setIdAtService(ipernityMatcher.group(1));
                 processSpeechRepositoryResource(resource);
                 return;
             }
+
             resource.setType(Resource.ResourceType.website);
             FileInfo fileInfo = getFileInfo(resource.getUrl());
 
@@ -190,8 +193,72 @@ public class ResourceMetadataExtractor
 
     private void processSpeechRepositoryResource(Resource resource) throws IOException, JSONException
     {
+        Document document = Jsoup.connect(resource.getUrl()).get();
+        Element content = document.select("#content > .content-inner").first();
 
-        //https://webgate.ec.europa.eu/sr-files/vod/47dd74c3eeffe3ee49f5a49d8a82dbd8/node/sr-speech_27815_482.mp4
+        String title = content.select("#content-header h1").text();
+        Element speechElement = content.select("#content-area .node-speech").first();
+        String rights = speechElement.select(".field-name-field-rights").text();
+        String date = speechElement.select(".field-name-field-date").text();
+        String body = speechElement.select(".field-name-body .field-items").text();
+        String notes = speechElement.select(".field-name-field-notes .field-items").text();
+
+        if(StringUtils.isEmpty(resource.getTitle()))
+            resource.setTitle(title);
+        if(StringUtils.isEmpty(resource.getAuthor()))
+            resource.setAuthor(rights);
+
+        StringBuilder description = new StringBuilder();
+        description.append(rights).append('\n');
+        description.append(date).append('\n');
+        description.append("Description: ").append(body).append('\n');
+        if (!StringUtils.isEmpty(notes))
+            description.append("Notes: ").append(notes).append('\n');
+
+        description.append("Speech details:").append('\n');
+        Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
+        for(Element element : speechDetailsElement.select(".field"))
+        {
+            String key = element.select(".field-label").text()
+                    .replace(":", "").replace("\u00a0", " ").trim();
+            String value = element.select(".field-items").text();
+            description.append('\t').append(key).append(": ").append(value).append('\n');
+        }
+
+        if(StringUtils.isEmpty(resource.getDescription()))
+            resource.setDescription(description.toString());
+
+        // extracting video url
+        for(Element element : document.select("script").not("[src]"))
+        {
+            String scriptData = element.data();
+            if(scriptData != null && !scriptData.isEmpty() && scriptData.contains("jQuery.extend(Drupal.settings"))
+            {
+                scriptData = scriptData.substring(scriptData.indexOf('{'), scriptData.lastIndexOf('}') + 1);
+
+                JSONObject jsonObject = new JSONObject(scriptData);
+                JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
+
+                if (mediaPlayer.has("image")) {
+                    resource.setMaxImageUrl(mediaPlayer.getString("image"));
+                }
+
+                if (mediaPlayer.has("entity_id")) {
+                    resource.setIdAtService(mediaPlayer.getString("entity_id"));
+                }
+
+                JSONArray sourcesJsonArray = mediaPlayer.getJSONArray("sources");
+                for (int i = 0, l = sourcesJsonArray.length(); i < l; ++i)
+                {
+                    JSONObject objectSource = sourcesJsonArray.getJSONObject(i);
+                    if(!objectSource.getString("label").equals("auto"))
+                    {
+                        resource.setFileUrl(objectSource.getString("file"));
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void processYoutubeResource(Resource resource) throws IOException, JSONException
