@@ -1,9 +1,16 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossaryNew;
 
-public class GlossaryHelper
+public class GlossaryTableView
 {
-    GlossaryEntry_NEW entry;
-    GlossaryTerm term;
+    private final GlossaryEntry entry;
+    private final GlossaryTerm term;
+
+    public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term)
+    {
+        super();
+        this.entry = entry;
+        this.term = term;
+    }
 
     public String getTopicOne()
     {

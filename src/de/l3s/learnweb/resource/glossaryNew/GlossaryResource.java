@@ -1,16 +1,17 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossaryNew;
 
 import java.util.List;
 import java.util.Locale;
 
 public class GlossaryResource
 {
-
-    private int resourceId;
     private List<Locale> allowedLanguages;
 
-    /*private List<GlossaryEntry_NEW> entries = new ArrayList<GlossaryEntry_NEW>();
+    private List<GlossaryEntry> entries;
 
+    /*
+     * I don't undestand this method. When will it be called and why?
+     *
     public void getGlossaryEntries(int id)
     {
         //TODO:: get glossary entries
@@ -26,19 +27,9 @@ public class GlossaryResource
         this.allowedLanguages = allowedLanguages;
     }
 
-    /*public List<GlossaryEntry_NEW> getEntries()
+    public List<GlossaryEntry> getEntries()
     {
         return entries;
-    }*/
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
     }
 
 }

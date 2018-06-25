@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.Sql;
 
 public class SearchHistoryManager
@@ -33,9 +34,9 @@ public class SearchHistoryManager
      * @param sessionId
      * @return
      */
-    public List<Query> getQueriesForSessionId(String sessionId)
+    public LinkedList<Query> getQueriesForSessionId(String sessionId)
     {
-        List<Query> queries = new ArrayList<Query>();
+        LinkedList<Query> queries = new LinkedList<Query>();
 
         try
         {
@@ -183,11 +184,8 @@ public class SearchHistoryManager
         while(rs.next())
         {
             String sessionId = rs.getString("session_id");
-            LinkedList<Query> queries = new LinkedList<Query>();
-            queries.addAll(getQueriesForSessionId(sessionId));
-            Session session = new Session(sessionId);
-            session.setUserId(userId);
-            session.setQueries(queries);
+            Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
+
             sessions.add(session);
         }
 
@@ -288,13 +286,7 @@ public class SearchHistoryManager
                 String params = rs.getString("params");
                 if(params.matches("\\d+ - \\d+"))
                 {
-                    LinkedList<Query> queries = new LinkedList<Query>();
-                    queries.addAll(getQueriesForSessionId(sessionId));
-                    Session session = new Session(sessionId);
-                    session.setQueries(queries);
-                    String userName = learnweb.getUserManager().getUser(userId).getUsername();//getUserNameForSessionId(sessionId);
-                    session.setUserId(userId);
-                    session.setUserName(userName);
+                    Session session = new Session(sessionId, userId, getQueriesForSessionId(sessionId));
                     sessions.add(session);
                 }
                 sessionIds.add(sessionId);
@@ -330,41 +322,18 @@ public class SearchHistoryManager
         return groupIds;
     }
 
-    @SuppressWarnings("unused")
-    public static void main(String[] args) throws Exception
+    public static class Session
     {
-        SearchHistoryManager searchHistoryManager = Learnweb.createInstance("").getSearchHistoryManager();
-        long start = System.currentTimeMillis();
+        private final int userId;
+        private final String sessionId;
+        private final LinkedList<Query> queries;
 
-        /*
-        List<Session> sessions = searchHistoryManager.getSessionsForGroupId(464);
-        for(Session session : sessions)
+        public Session(String sessionId, int userId, LinkedList<Query> queries)
         {
-            System.out.println(session.getSessionId());
-        }
-        long end = System.currentTimeMillis();
-        //System.out.println(end - start);
-        
-        
-        Set<Integer> groupIds = searchHistoryManager.getGroupIds();
-        for(int groupId : groupIds)
-        {
-            log.info(groupId);
-        }*/
-
-        System.exit(0);
-    }
-
-    public class Session
-    {
-        private int userId;
-        private String userName;
-        private String sessionId;
-        private LinkedList<Query> queries;
-
-        public Session(String sessionId)
-        {
+            super();
             this.sessionId = sessionId;
+            this.userId = userId;
+            this.queries = queries;
         }
 
         public String getSessionId()
@@ -372,19 +341,17 @@ public class SearchHistoryManager
             return this.sessionId;
         }
 
-        public void setQueries(LinkedList<Query> queries)
-        {
-            this.queries = queries;
-        }
-
         public String getUserName()
         {
-            return userName;
-        }
-
-        public void setUserName(String userName)
-        {
-            this.userName = userName;
+            try
+            {
+                return getUser().getUsername();
+            }
+            catch(Exception e)
+            {
+                log.error(e);
+                return "unknown";
+            }
         }
 
         public List<Query> getQueries()
@@ -407,9 +374,9 @@ public class SearchHistoryManager
             return userId;
         }
 
-        public void setUserId(int userId)
+        public User getUser() throws SQLException
         {
-            this.userId = userId;
+            return Learnweb.getInstance().getUserManager().getUser(userId);
         }
     }
 

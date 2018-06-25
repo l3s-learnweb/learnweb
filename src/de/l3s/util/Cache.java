@@ -7,24 +7,27 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.google.common.cache.CacheBuilder;
+
 /**
  * A synchronized cache that caches the defined number of most used objects.
- * 
+ *
  * @author Philipp
  *
  * @param <E>
  */
-public class Cache<E> implements ICache<E>
+public class Cache<E extends HasId> implements ICache<E>
 {
-    private Map<Integer, E> values;
     private int capacity;
+    private com.google.common.cache.Cache<Integer, E> weakValues; // cached values which are remove when they are not referenced else where
+    private Map<Integer, E> values; // makes sure to keep a reference to the X most used values, as defined by capacity
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
 
     /**
-     * 
+     *
      * @param capacity Number of objects this cache will store
      */
     public Cache(int capacity2)
@@ -41,6 +44,10 @@ public class Cache<E> implements ICache<E>
                 return size() > capacity;
             }
         };
+
+        weakValues = CacheBuilder.newBuilder()
+                .weakValues()
+                .build();
     }
 
     /* (non-Javadoc)
@@ -52,7 +59,8 @@ public class Cache<E> implements ICache<E>
         readLock.lock();
         try
         {
-            return values.get(id);
+            //return values.get(id);
+            return weakValues.getIfPresent(id);
         }
         finally
         {
@@ -65,11 +73,20 @@ public class Cache<E> implements ICache<E>
         writeLock.lock();
         try
         {
+            /*
             E old = values.get(id);
             if(null != old)
                 return old;
 
             values.put(id, resource);
+            */
+            E old = weakValues.getIfPresent(id);
+            if(null != old)
+                return old;
+
+            values.put(id, resource);
+            weakValues.put(id, resource);
+
             return resource;
         }
         finally
@@ -84,7 +101,7 @@ public class Cache<E> implements ICache<E>
     @Override
     public E put(E resource)
     {
-        int id = ((HasId) resource).getId();
+        int id = resource.getId();
         return put(id, resource);
     }
 
@@ -126,6 +143,11 @@ public class Cache<E> implements ICache<E>
     public int size()
     {
         return values.size();
+    }
+
+    public long sizeSecondaryCache()
+    {
+        return weakValues.size();
     }
 
     @Override

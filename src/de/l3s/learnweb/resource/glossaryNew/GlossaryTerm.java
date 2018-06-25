@@ -1,11 +1,16 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossaryNew;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
-public class GlossaryTerm
+public class GlossaryTerm implements Serializable
 {
-    private int termId;
+    private static final long serialVersionUID = -8309235925484416943L;
+
+    private int id;
+    private int userId;
+
     private String term;
     private List<String> uses;
     private String pronounciation;
@@ -13,10 +18,10 @@ public class GlossaryTerm
     private String source;
     private String phraseology;
     private Locale language;
-    private boolean onPasteTerm = false;
-    private boolean onPastePronounciation = false;
-    private boolean onPasteAcronym = false;
-    private boolean onPastePhraseology = false;
+    private boolean termPasted;
+    private boolean pronounciationPasted;
+    private boolean acronymPasted;
+    private boolean phraseologyPasted;
 
     public String getTerm()
     {
@@ -88,53 +93,64 @@ public class GlossaryTerm
         this.language = language;
     }
 
-    public int getTermId()
+    public int getId()
     {
-        return termId;
+        return id;
     }
 
-    public void setTermId(int termId)
+    public void setId(int id)
     {
-        this.termId = termId;
+        this.id = id;
     }
 
-    public boolean isOnPasteTerm()
+    public boolean isTermPasted()
     {
-        return onPasteTerm;
+        return termPasted;
     }
 
-    public void setOnPasteTerm(boolean onPasteTerm)
+    public void setTermPasted(boolean termPasted)
     {
-        this.onPasteTerm = onPasteTerm;
+        this.termPasted = termPasted;
     }
 
-    public boolean isOnPastePronounciation()
+    public boolean isPronounciationPasted()
     {
-        return onPastePronounciation;
+        return pronounciationPasted;
     }
 
-    public void setOnPastePronounciation(boolean onPastePronounciation)
+    public void setPronounciationPasted(boolean pronounciationPasted)
     {
-        this.onPastePronounciation = onPastePronounciation;
+        this.pronounciationPasted = pronounciationPasted;
     }
 
-    public boolean isOnPasteAcronym()
+    public boolean isAcronymPasted()
     {
-        return onPasteAcronym;
+        return acronymPasted;
     }
 
-    public void setOnPasteAcronym(boolean onPasteAcronym)
+    public void setAcronymPasted(boolean acronymPasted)
     {
-        this.onPasteAcronym = onPasteAcronym;
+        this.acronymPasted = acronymPasted;
     }
 
-    public boolean isOnPastePhraseology()
+    public boolean isPhraseologyPasted()
     {
-        return onPastePhraseology;
+        return phraseologyPasted;
     }
 
-    public void setOnPastePhraseology(boolean onPastePhraseology)
+    public void setPhraseologyPasted(boolean phraseologyPasted)
     {
-        this.onPastePhraseology = onPastePhraseology;
+        this.phraseologyPasted = phraseologyPasted;
     }
+
+    public int getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
+    }
+
 }

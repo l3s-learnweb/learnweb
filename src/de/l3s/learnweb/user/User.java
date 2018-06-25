@@ -880,5 +880,4 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessedUserId(getId());
     }
-
 }

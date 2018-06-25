@@ -820,5 +820,4 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         this.hypothesisToken = hypothesisToken;
     }
-
 }

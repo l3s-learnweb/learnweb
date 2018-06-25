@@ -1,9 +1,16 @@
-package de.l3s.learnweb.resource.glossary;
+package de.l3s.learnweb.resource.glossaryNew;
 
-public class GlossaryEntry_NEW
+import java.io.Serializable;
+
+import javax.validation.constraints.Size;
+
+public class GlossaryEntry implements Serializable
 {
-    private int entryId;
+    private static final long serialVersionUID = 1251808024273639912L;
+
+    private int id;
     private String description;
+    @Size(max = 100)
     private String topicOne;
     private String topicTwo;
     private String topicThree;
@@ -49,16 +56,6 @@ public class GlossaryEntry_NEW
         this.topicThree = topicThree;
     }
 
-    public int getEntryId()
-    {
-        return entryId;
-    }
-
-    public void setEntryId(int entryId)
-    {
-        this.entryId = entryId;
-    }
-
     public boolean isOnPasteDescription()
     {
         return onPasteDescription;
@@ -67,6 +64,16 @@ public class GlossaryEntry_NEW
     public void setOnPasteDescription(boolean onPasteDescription)
     {
         this.onPasteDescription = onPasteDescription;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
 
 }
