@@ -1,11 +1,10 @@
-package de.l3s.util;
+package de.l3s.util.email;
 
 import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -39,39 +38,6 @@ public class Mail
     {
         message.saveChanges();
         Transport.send(message);
-
-    }
-
-    //    //TODO: This is a work in progress. Variables will be set properly later
-    //    public void SendMailWithResponse(){
-    //        Transport transport = session.getTransport();
-    //        try {
-    //           System.out.println("Sending ....");
-    //           transport.connect("mail.kbs.uni-hannover.de", 465, "learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
-    //           transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
-    //           System.out.println("Sending done ...");
-    //        } catch (Exception e) {
-    //           System.err.println("Error Sending: ");
-    //           e.printStackTrace();
-    //    }
-
-    private static class PasswordAuthenticator extends Authenticator
-    {
-        String user;
-        String pw;
-
-        public PasswordAuthenticator(String username, String password)
-        {
-            super();
-            this.user = username;
-            this.pw = password;
-        }
-
-        @Override
-        public PasswordAuthentication getPasswordAuthentication()
-        {
-            return new PasswordAuthentication(user, pw);
-        }
     }
 
     public void setReplyTo(InternetAddress internetAddress) throws MessagingException

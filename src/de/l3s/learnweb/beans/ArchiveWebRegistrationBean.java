@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.resource.SERVICE;
-import de.l3s.util.Mail;
+import de.l3s.util.email.Mail;
 
 @ManagedBean
 @RequestScoped

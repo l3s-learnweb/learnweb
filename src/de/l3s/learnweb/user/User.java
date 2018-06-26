@@ -37,8 +37,8 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
-import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
+import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Serializable, HasId
 {

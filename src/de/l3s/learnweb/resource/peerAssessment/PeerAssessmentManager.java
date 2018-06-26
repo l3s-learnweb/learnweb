@@ -23,8 +23,8 @@ import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
+import de.l3s.util.email.Mail;
 
 public class PeerAssessmentManager
 {

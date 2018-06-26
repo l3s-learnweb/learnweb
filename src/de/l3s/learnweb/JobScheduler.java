@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
+import de.l3s.util.email.BounceFetcher;
 import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
@@ -45,6 +46,9 @@ public class JobScheduler
 
         //Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
+
+        //Checks bounced mail every day at 3:00AM
+        scheduler.schedule("0 3 * * *", new BounceFetcher());
     }
 
     public void startAllJobs()

@@ -21,8 +21,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
+import de.l3s.util.email.Mail;
 
 @ManagedBean
 @RequestScoped

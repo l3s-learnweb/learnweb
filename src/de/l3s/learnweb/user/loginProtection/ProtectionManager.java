@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.learnweb.web.RequestManager;
-import de.l3s.util.Mail;
+import de.l3s.util.email.Mail;
 
 /**
  * A fancier ProtectionManager that, rather than autoban based on pure attempts, analyzes frequency of access on every nth failed attempt.
@@ -108,7 +108,7 @@ public class ProtectionManager
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
-                accessMap.put(rs.getString("name"), new AccessData(rs.getString("name"), rs.getInt("attempts"), rs.getTimestamp("bandate"), rs.getDate("bannedon")));
+                accessMap.put(rs.getString("name"), new AccessData(rs.getString("name"), rs.getInt("attempts"), rs.getTimestamp("bandate"), rs.getTimestamp("bannedon")));
             }
 
         }
@@ -457,7 +457,7 @@ public class ProtectionManager
 
             insert.execute();
 
-            log.debug("banned " + accData.getName() + " permamently. They have been very naughty.");
+            log.debug("Banned " + accData.getName() + " permamently. They have been very naughty.");
 
         }
         catch(SQLException e)

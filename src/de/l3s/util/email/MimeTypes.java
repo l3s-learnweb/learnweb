@@ -1,4 +1,4 @@
-package de.l3s.util;
+package de.l3s.util.email;
 
 //Copyright (c) 2003-2009, Jodd Team (jodd.org). All Rights Reserved.
 

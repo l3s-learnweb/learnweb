@@ -17,7 +17,7 @@ import com.google.common.collect.Sets;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.MD5;
-import de.l3s.util.Mail;
+import de.l3s.util.email.Mail;
 
 @ManagedBean
 @RequestScoped

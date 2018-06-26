@@ -61,6 +61,7 @@ import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.StringHelper;
+import de.l3s.util.email.BounceManager;
 
 public class Learnweb
 {
@@ -116,6 +117,7 @@ public class Learnweb
     private final SearchSessionEdgeComputator searchSessionEdgeComputator;
     private final RequestManager requestManager;
     private final ProtectionManager protectionManager;
+    private final BounceManager bounceManager;
     private final DashboardManager dashboardManager;
 
     //added by Chloe
@@ -346,6 +348,7 @@ public class Learnweb
         //Managers added by Kate
         requestManager = RequestManager.getInstance(this);
         protectionManager = new ProtectionManager(this);
+        bounceManager = new BounceManager(this);
     }
 
     /**
@@ -970,6 +973,11 @@ public class Learnweb
     public RequestManager getRequestManager()
     {
         return requestManager;
+    }
+
+    public BounceManager getBounceManager()
+    {
+        return bounceManager;
     }
 
     /**

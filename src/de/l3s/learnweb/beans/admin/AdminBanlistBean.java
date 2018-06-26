@@ -1,14 +1,18 @@
 package de.l3s.learnweb.beans.admin;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.mail.MessagingException;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.loginProtection.AccessData;
 import de.l3s.learnweb.web.AggregatedRequestData;
+import de.l3s.util.email.BounceManager;
 
 @ManagedBean
 @SessionScoped
@@ -128,7 +132,24 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
 
     public List<AggregatedRequestData> getSuspiciousActivityList()
     {
+
+        //TODO: AAAAAAAAA
+        try
+        {
+            new BounceManager(Learnweb.getInstance()).parseInbox();
+        }
+        catch(MessagingException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return suspiciousActivityList;
+
     }
 
     public void setSuspiciousActivityList(List<AggregatedRequestData> suspiciousActivityList)

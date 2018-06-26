@@ -1,4 +1,4 @@
-package de.l3s.util;
+package de.l3s.util.email;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
