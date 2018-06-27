@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,15 +35,15 @@ import de.l3s.learnweb.Learnweb;
  * @author Kate
  *
  */
-public class BounceManager
+public class BounceManager extends Observable
 {
     private final static Logger log = Logger.getLogger(BounceManager.class);
     private final Learnweb learnweb;
 
-    private static String login = "learnweb";
-    private static String pass = "5-FN!@QENtrXh6V][C}*h8-S=yju";
-    private static String host = "imap.kbs.uni-hannover.de";
-    private static String provider = "imap";
+    private static final String login = "learnweb";
+    private static final String pass = "5-FN!@QENtrXh6V][C}*h8-S=yju";
+    private static final String host = "imap.kbs.uni-hannover.de";
+    private static final String provider = "imap";
 
     private static Authenticator authenticator = new PasswordAuthenticator(login, pass);
 
@@ -49,10 +51,12 @@ public class BounceManager
     private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.{1,}\\;)(.{1,})\\s");
 
     private Date lastBounceCheck = null;
+    private List<Observer> observers;
 
     public BounceManager(Learnweb lw)
     {
         learnweb = lw;
+        observers = new ArrayList<>();
     }
 
     public void parseInbox() throws MessagingException, IOException
@@ -165,6 +169,7 @@ public class BounceManager
 
         //Adds message to database
         addToDB(originalRecipient, msg.getReceivedDate(), code, descr);
+        checkAndNotify(msg);
         return true;
     }
 
@@ -453,6 +458,40 @@ public class BounceManager
         }
 
         store.close();
+    }
+
+    //Observable/observer methods
+    @Override
+    public void addObserver(Observer o)
+    {
+        observers.add(o);
+    }
+
+    @Override
+    public void deleteObserver(Observer o)
+    {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(Object arg)
+    {
+        for(Observer o : observers)
+        {
+            o.update(this, arg);
+        }
+    }
+
+    /**
+     * Checks whether a certain bounced message fits some filter and then notifies the observer.
+     */
+    private void checkAndNotify(Message msg)
+    {
+        //        //Insert your conditions here
+        //        if(true)
+        //        {
+        //            notifyObservers(msg);
+        //        }
     }
 
 }
