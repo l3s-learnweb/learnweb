@@ -81,26 +81,28 @@
 							value="#{rightPaneBean.clickedResource.id}" />
                                         #{msg.link_to_content}
                                     </h:outputLink></td>
+			</tr>		
+		</ui:fragment>
+
+		<ui:fragment
+			rendered="#{not empty rightPaneBean.clickedResource.group and rightPaneBean.clickedResource.type eq 'website' and not empty rightPaneBean.clickedResource.group.hypothesisLink}">
+			<tr>
+				<td><span class="resource_field"> #{msg.discuss}: </span></td>
+				<td>
+					<h:outputLink value="#{resourceDetailBean.hypothesisLink}">
+                    	#{msg.link_to_discuss}
+                    </h:outputLink> 
+                    
+					<h:outputLink value="#{rightPaneBean.clickedResource.group.hypothesisLink}" style="text-decoration:underline;">
+					    (#{msg.discuss_group_invite})
+					</h:outputLink>
+					
+					<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;">
+						<f:param name="type" value="user" />
+                        [?]
+                    </h:outputLink>                    
+                </td>
 			</tr>
-			<ui:fragment
-				rendered="#{not empty rightPaneBean.clickedResource.group and not empty rightPaneBean.clickedResource.group.hypothesisLink}">
-				<tr>
-					<td><span class="resource_field"> #{msg.discuss}: </span></td>
-					<td><h:outputLink value="#{resourceDetailBean.hypothesisLink}"
-							style="text-decoration:underline;">
-                                            #{msg.link_to_discuss}
-                                        </h:outputLink> <h:outputLink
-							value="#{rightPaneBean.clickedResource.group.hypothesisLink}"
-							style="text-decoration:underline;">
-                                            (#{msg.discuss_group_invite})
-                                        </h:outputLink> <h:outputLink
-							value="discussion_help.jsf" target="_blank"
-							style="text-decoration:underline;">
-							<f:param name="type" value="user" />
-                                            [?]
-                                        </h:outputLink></td>
-				</tr>
-			</ui:fragment>
 		</ui:fragment>
 
 		<ui:fragment rendered="#{userBean.thumbRatingEnabled}">

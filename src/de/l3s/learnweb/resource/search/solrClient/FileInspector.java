@@ -17,9 +17,9 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.util.MimeTypes;
 import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
-import de.l3s.util.email.MimeTypes;
 
 public class FileInspector
 {
