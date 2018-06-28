@@ -26,7 +26,7 @@
         <param name="BufferSize" value="1024" />
         <param name="SMTPHost" value="l3s.de" />
         <param name="From" value="no-reply@l3s.de" />
-        <param name="To" value="kemkes@l3s.de,astappev@l3s.de,kalyani@l3s.de,karakulina@L3S.de,tolmachova@l3s.de" />
+        <param name="To" value="kemkes@l3s.de,astappev@l3s.de,kalyani@l3s.de,tolmachova@l3s.de" />
         <param name="Subject" value="[log4J] Error detected on LearnWeb" />
         <param name="evaluatorClass" value="de.l3s.util.CustomEvaluator" />
         <layout class="org.apache.log4j.PatternLayout">
