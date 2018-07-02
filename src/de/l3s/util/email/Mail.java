@@ -26,6 +26,7 @@ public class Mail
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
+
         //props.put("mail.debug", "true");
 
         session = Session.getDefaultInstance(props, authenticator);
@@ -56,6 +57,11 @@ public class Mail
         message.setRecipient(type, adress);
     }
 
+    public void setRecipient(RecipientType type, String adress) throws MessagingException
+    {
+        setRecipient(type, new InternetAddress(adress));
+    }
+
     public void setRecipients(RecipientType type, InternetAddress[] adresses) throws MessagingException
     {
         message.setRecipients(type, adresses);
@@ -80,5 +86,14 @@ public class Mail
     public String toString()
     {
         return message.toString();
+    }
+
+    public static void main(String[] args) throws AddressException, MessagingException
+    {
+        Mail mail = new Mail();
+        mail.setRecipient(javax.mail.Message.RecipientType.BCC, "kemkes@l3s.de");
+        mail.setHTML("bla bla");
+        mail.setSubject("Learnweb: ");
+        mail.sendMail();
     }
 }

@@ -3,7 +3,6 @@ package de.l3s.util.email;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 
 /**
  * Every scheduled amount of time gets all emails from the inbox that were sent after last scan.
@@ -23,7 +22,7 @@ public class BounceFetcher implements Runnable
         }
         catch(Throwable e)
         {
-            Logger.getLogger(ExpiredBansCleaner.class).error("err", e);
+            Logger.getLogger(BounceFetcher.class).error("err", e);
         }
     }
 
