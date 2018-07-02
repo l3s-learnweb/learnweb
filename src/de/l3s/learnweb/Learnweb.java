@@ -103,7 +103,7 @@ public class Learnweb
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
     private final JobScheduler jobScheduler;
-    private final GlossaryManager glossariesManager;
+    private final GlossaryManager glossariesManager; //old Manager
     private final SuggestionLogger suggestionLogger;
     private final SurveyManager surveyManager;
     private final SubmissionManager submissionManager;
@@ -111,6 +111,7 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
+    private final de.l3s.learnweb.resource.glossaryNew.GlossaryManager glossaryManager; //new Glossary Manager
 
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
@@ -323,7 +324,7 @@ public class Learnweb
         jobScheduler = new JobScheduler(this);
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
-        glossariesManager = new GlossaryManager(this);
+        glossariesManager = new GlossaryManager(this); //old Manager
         searchLogManager = new SearchLogManager(this);
         surveyManager = new SurveyManager(this);
         submissionManager = new SubmissionManager(this);
@@ -331,6 +332,7 @@ public class Learnweb
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         dashboardManager = DashboardManager.getInstance(this);
         peerAssessmentManager = new PeerAssessmentManager(this);
+        glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
 
         learnwebIsLoading = false;
 
@@ -1003,6 +1005,11 @@ public class Learnweb
     public void setPeerAssessmentManager(PeerAssessmentManager peerAssessmentManager)
     {
         this.peerAssessmentManager = peerAssessmentManager;
+    }
+
+    public de.l3s.learnweb.resource.glossaryNew.GlossaryManager getGlossaryManager()
+    {
+        return glossaryManager;
     }
 
 }

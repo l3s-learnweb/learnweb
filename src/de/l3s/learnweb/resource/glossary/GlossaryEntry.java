@@ -19,10 +19,10 @@ public class GlossaryEntry implements Serializable
     private List<LanguageItem> secondLanguageItems;
     private List<LanguageItem> firstLanguageItems;
     private String fileName;
-    private String selectedTopicOne; // TODO remove "selected"
-    private String selectedTopicTwo;
-    private String selectedTopicThree;
-    public String description; // TODO why is this public?
+    private String topicOne;
+    private String topicTwo;
+    private String topicThree;
+    private String description;
     private UploadedFile multimediaFile;
     private int resourceId;
     private int userId;
@@ -71,43 +71,43 @@ public class GlossaryEntry implements Serializable
         this.firstLanguageItems = firstLanguageItems;
     }
 
-    public String getSelectedTopicTwo()
+    public String getTopicTwo()
     {
-        return selectedTopicTwo;
+        return topicTwo;
     }
 
-    public void setSelectedTopicTwo(String selectedTopicTwo)
+    public void setTopicTwo(String selectedTopicTwo)
     {
         if(selectedTopicTwo != null)
-            this.selectedTopicTwo = selectedTopicTwo;
+            this.topicTwo = selectedTopicTwo;
         else
-            this.selectedTopicTwo = "";
+            this.topicTwo = "";
     }
 
-    public String getSelectedTopicOne()
+    public String getTopicOne()
     {
-        return selectedTopicOne;
+        return topicOne;
     }
 
-    public void setSelectedTopicOne(String selectedTopicOne)
+    public void setTopicOne(String selectedTopicOne)
     {
         if(selectedTopicOne != null)
-            this.selectedTopicOne = selectedTopicOne;
+            this.topicOne = selectedTopicOne;
         else
-            this.selectedTopicOne = "";
+            this.topicOne = "";
     }
 
-    public String getSelectedTopicThree()
+    public String getTopicThree()
     {
-        return selectedTopicThree;
+        return topicThree;
     }
 
-    public void setSelectedTopicThree(String selectedTopicThree)
+    public void setTopicThree(String selectedTopicThree)
     {
         if(selectedTopicThree != null)
-            this.selectedTopicThree = selectedTopicThree;
+            this.topicThree = selectedTopicThree;
         else
-            this.selectedTopicThree = "";
+            this.topicThree = "";
     }
 
     public String getFileName()

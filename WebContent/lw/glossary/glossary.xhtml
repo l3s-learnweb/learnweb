@@ -1,0 +1,31 @@
+<ui:composition template="/templates/main/main_old.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"	
+	lang="#{userBean.localeCode}">
+
+	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
+	<ui:param name="loginRequired" value="true" />
+	
+	<ui:define name="metadata">
+		<f:metadata>
+
+			<f:viewParam name="resource_id" value="#{glossaryBean.resourceId}"></f:viewParam>
+			<f:viewAction action="#{glossaryBean.onload()}" />
+		</f:metadata>
+	</ui:define>
+	
+	<ui:define name="center_layout">
+		<h:outputStylesheet library="glossary" name="glossary.css" />
+		<h:outputScript library="glossary" name="glossary.js" />
+		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 and glossaryBean.deleted eq false}">
+			<h:panelGroup id="main_component" layout="block">
+				
+				<h:form id= "form" prependId="false">
+				</h:form>
+			</h:panelGroup>
+		</ui:fragment>
+	</ui:define>
+</ui:composition>

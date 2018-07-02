@@ -14,7 +14,7 @@ public class GlossaryEntry implements Serializable
     private String topicOne;
     private String topicTwo;
     private String topicThree;
-    private boolean onPasteDescription = false;
+    private boolean descriptionPasted = false;
 
     public String getDescription()
     {
@@ -56,14 +56,14 @@ public class GlossaryEntry implements Serializable
         this.topicThree = topicThree;
     }
 
-    public boolean isOnPasteDescription()
+    public boolean isDescriptionPasted()
     {
-        return onPasteDescription;
+        return descriptionPasted;
     }
 
-    public void setOnPasteDescription(boolean onPasteDescription)
+    public void setDescriptionPasted(boolean onPasteDescription)
     {
-        this.onPasteDescription = onPasteDescription;
+        this.descriptionPasted = onPasteDescription;
     }
 
     public int getId()

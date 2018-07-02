@@ -197,9 +197,9 @@ public class GlossaryManager
 
                 //Add glossary details and generate glossary ID
                 preparedStmnt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`(`topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-                preparedStmnt.setString(1, e.getSelectedTopicOne());
-                preparedStmnt.setString(2, e.getSelectedTopicTwo());
-                preparedStmnt.setString(3, e.getSelectedTopicThree());
+                preparedStmnt.setString(1, e.getTopicOne());
+                preparedStmnt.setString(2, e.getTopicTwo());
+                preparedStmnt.setString(3, e.getTopicThree());
                 preparedStmnt.setString(4, e.getDescription());
                 preparedStmnt.executeUpdate();
                 ResultSet glossEntry = preparedStmnt.getGeneratedKeys();
@@ -232,9 +232,9 @@ public class GlossaryManager
             try
             {
                 PreparedStatement pstmnt = learnweb.getConnection().prepareStatement(updateStmnt);
-                pstmnt.setString(1, e.getSelectedTopicOne());
-                pstmnt.setString(2, e.getSelectedTopicTwo());
-                pstmnt.setString(3, e.getSelectedTopicThree());
+                pstmnt.setString(1, e.getTopicOne());
+                pstmnt.setString(2, e.getTopicTwo());
+                pstmnt.setString(3, e.getTopicThree());
                 pstmnt.setString(4, e.getDescription());
                 pstmnt.executeQuery();
 

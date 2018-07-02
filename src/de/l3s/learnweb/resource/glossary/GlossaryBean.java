@@ -80,6 +80,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
     private GlossaryItems selectedGlossaryItem;
+    private boolean paginatorActive = true;
 
     private int glossaryEntryCount;
 
@@ -103,6 +104,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
 
         }
+    }
+
+    public void activatePaginator()
+    {
+        setPaginatorActive(true);
+    }
+
+    public void deactivatePaginator()
+    {
+        setPaginatorActive(false);
     }
 
     public void loadGlossary()
@@ -235,9 +246,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             entry.setDescription(getDescription());
             //entry.setMultimediaFile(getMultimediaFile());
             // gl.setFileName(getFileName());
-            entry.setSelectedTopicOne(getSelectedTopicOne());
-            entry.setSelectedTopicTwo(getSelectedTopicTwo());
-            entry.setSelectedTopicThree(getSelectedTopicThree());
+            entry.setTopicOne(getSelectedTopicOne());
+            entry.setTopicTwo(getSelectedTopicTwo());
+            entry.setTopicThree(getSelectedTopicThree());
             entry.setFirstLanguageItems(getPrimaryLangItems());
             entry.setUser(getUser());
             entry.setSecondLanguageItems(getSecondaryLangItems());
@@ -548,7 +559,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -839,6 +850,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public int getGlossaryEntryCount()
     {
         return glossaryEntryCount;
+    }
+
+    public boolean isPaginatorActive()
+    {
+        return paginatorActive;
+    }
+
+    public void setPaginatorActive(boolean paginatorActive)
+    {
+        this.paginatorActive = paginatorActive;
     }
 
 }
