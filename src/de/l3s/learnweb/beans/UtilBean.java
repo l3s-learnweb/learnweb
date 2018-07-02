@@ -18,7 +18,6 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.group.GroupDetailBean;
-import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
 
@@ -28,28 +27,6 @@ public class UtilBean implements Serializable
 {
     private final static long serialVersionUID = 6252597111468136574L;
     private final static Logger log = Logger.getLogger(UtilBean.class);
-
-    @Deprecated
-    public boolean isSearchPage()
-    {
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        if(viewId.contains("search.xhtml"))
-            return true;
-        else
-            return false;
-    }
-
-    @Deprecated
-    public boolean isViewResultSetPage()
-    {
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        if(viewId.contains("view_resultset.xhtml"))
-            return true;
-        else
-            return false;
-    }
-
-    // ------------------------
 
     public static ExternalContext getExternalContext()
     {
@@ -81,11 +58,6 @@ public class UtilBean implements Serializable
     public static MyResourcesBean getMyResourcesBean()
     {
         return (MyResourcesBean) getManagedBean("myResourcesBean");
-    }
-
-    public static AddResourceBean getAddResourceBean()
-    {
-        return (AddResourceBean) getManagedBean("addResourceBean");
     }
 
     public static void redirect(String redirectPath)

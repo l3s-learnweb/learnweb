@@ -31,49 +31,33 @@
 				</ui:fragment>
 			</div>				
 			<h:outputText value="#{res.snippet}" styleClass="description" escape="false"></h:outputText>
-			
-			<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
-				<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link">					
-					<b><h:outputText value="#{msg.options}: " /></b>
-					
-					<h:outputLink value="#" 
-						onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
-						rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}">
-						<h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}" style="vertical-align: middle; margin-right:4px;" />#{msg.addToMyResources}
-					</h:outputLink>	
-				</h:panelGroup>
-				<h:panelGroup rendered="#{not empty res.group}" style="margin-right:10px;display:inline-block;">
-					<b><h:outputText value="#{msg.group}: " /></b>	
-			
-					<h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
-						<f:param name="group_id" value="#{res.group.id}" />
-						<h:outputText value="#{res.group.title}" />
+
+			<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link">
+				<b><h:outputText value="#{msg.options}: " /></b>
+
+				<h:outputLink value="#" onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
+					rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}">
+					<h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}" style="vertical-align: middle; margin-right:4px;" />#{msg.addToMyResources}
 					</h:outputLink>
-				</h:panelGroup>
-				<h:panelGroup styleClass="metadata-field" rendered="#{not empty res.getMetadataValue('collector')}">
-					<b><h:outputText value=" #{msg.collector}: " /></b>	
-					<h:outputText value="#{res.getMetadataValue('collector')}" />
-				</h:panelGroup>
-				<h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
-					<b><h:outputText value=" #{msg.collector}: " /></b>	
-					<h:outputText value="#{res.resource.ownerUser.fullName}" />
-				</h:panelGroup>
 			</h:panelGroup>
-			
-			<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
-				<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">
-					<p:commandLink update=":resource_form"
-						oncomplete="PF('resource_dialog').show();"
-						title="#{msg.addToMyResources}"
-						style="display:block; margin-top:4px;">
-						<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-							height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
-						<f:setPropertyActionListener value="#{res.resource}"
-								target="#{resultSetBean.selectedResource}" />
-					</p:commandLink>
-				</h:form>
-			</h:panelGroup>			
-				
+			<h:panelGroup rendered="#{not empty res.group}" style="margin-right:10px;display:inline-block;">
+				<b><h:outputText value="#{msg.group}: " /></b>
+
+				<h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
+					<f:param name="group_id" value="#{res.group.id}" />
+					<h:outputText value="#{res.group.title}" />
+				</h:outputLink>
+			</h:panelGroup>
+			<h:panelGroup styleClass="metadata-field" rendered="#{not empty res.getMetadataValue('collector')}">
+				<b><h:outputText value=" #{msg.collector}: " /></b>
+				<h:outputText value="#{res.getMetadataValue('collector')}" />
+			</h:panelGroup>
+			<h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
+				<b><h:outputText value=" #{msg.collector}: " /></b>
+				<h:outputText value="#{res.resource.ownerUser.fullName}" />
+			</h:panelGroup>
+
+
 		</div>		
 	</ui:repeat>
 </ui:composition>

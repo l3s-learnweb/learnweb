@@ -286,8 +286,10 @@ public class UserBean implements Serializable
 
     public String setLocaleCode(String localeCode)
     {
+        log.debug("set locale " + localeCode);
+
         if(localeCode.equals("de"))
-            locale = Locale.GERMANY;
+            locale = new Locale("de", "", "AMA");
         else if(localeCode.equals("en"))
             locale = new Locale("en", "GB");
         else if(localeCode.equals("it"))
@@ -295,7 +297,7 @@ public class UserBean implements Serializable
         else if(localeCode.equals("pt"))
             locale = new Locale("pt", "BR");
         else if(localeCode.equals("xx")) // only for translation editors
-            locale = new Locale("xx", "xx");
+            locale = new Locale("", "", "KEYS");
         else
         {
             locale = Locale.ENGLISH;

@@ -9,13 +9,14 @@
 		<locale-config>
 			<default-locale>en</default-locale>
 			<supported-locale>de</supported-locale>
+			<supported-locale>de_DE_AMA</supported-locale>
 			<supported-locale>en</supported-locale>
 			<supported-locale>it</supported-locale>
 			<supported-locale>pt</supported-locale>
 		</locale-config>
 		
 		<resource-bundle>		
-			<base-name>de.l3s.learnweb.lang.messages</base-name>
+			<base-name>de.l3s.learnweb.LanguageBundle</base-name>
 			<var>msg</var>
 		</resource-bundle>
 			
@@ -24,6 +25,9 @@
 	    </el-resolver>
 	</application>
 	<!--
+	
+	de.l3s.learnweb.lang.messages
+	
 	<factory>
 		<exception-handler-factory>
 			org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory

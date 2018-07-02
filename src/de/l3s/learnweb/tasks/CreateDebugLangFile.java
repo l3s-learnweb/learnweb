@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 
 /**
+ * creates a language file which values are equal to the keys. this simplifies the work of translators
  *
  * @author Philipp
  *
@@ -36,4 +37,3 @@ public class CreateDebugLangFile
         out.close();
     }
 }
-
