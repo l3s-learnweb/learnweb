@@ -214,14 +214,24 @@ public class ResourceMetadataExtractor
             description.append("Notes: ").append(notes).append('\n');
 
         description.append("Speech details:").append('\n');
-        // TODO Tetiana: store duration in field of resource
         Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
         for(Element element : speechDetailsElement.select(".field"))
         {
             String key = element.select(".field-label").text()
                     .replace(":", "").replace("\u00a0", " ").trim();
             String value = element.select(".field-items").text();
-            description.append('\t').append(key).append(": ").append(value).append('\n');
+            if (key.equals("Duration")) {
+                String[] tokens = value.split(":");
+                int duration = 0, multiply = 0;
+                for (int i = tokens.length - 1; i >= 0; --i) {
+                    duration += Integer.parseInt(tokens[i]) * Math.pow(60, multiply++);
+                }
+                resource.setDuration(duration);
+            } else if (key.equals("Speech number")) {
+                // ignore
+            } else {
+                description.append('\t').append(key).append(": ").append(value).append('\n');
+            }
         }
 
         if(StringUtils.isEmpty(resource.getDescription()))

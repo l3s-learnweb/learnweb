@@ -1277,6 +1277,9 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return StringHelper.getDurationInMinutes(duration);
     }
 
+    /**
+     * @param duration The duration in seconds
+     */
     public void setDuration(int duration)
     {
         this.duration = duration;
