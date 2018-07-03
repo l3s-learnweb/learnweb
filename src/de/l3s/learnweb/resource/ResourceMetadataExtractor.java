@@ -6,9 +6,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -212,7 +210,7 @@ public class ResourceMetadataExtractor
         description.append(rights).append('\n');
         description.append(date).append('\n');
         description.append("Description: ").append(body).append('\n');
-        if (!StringUtils.isEmpty(notes))
+        if(!StringUtils.isEmpty(notes))
             description.append("Notes: ").append(notes).append('\n');
 
         description.append("Speech details:").append('\n');
@@ -240,17 +238,19 @@ public class ResourceMetadataExtractor
                 JSONObject jsonObject = new JSONObject(scriptData);
                 JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
 
-                if (mediaPlayer.has("image")) {
+                if(mediaPlayer.has("image"))
+                {
                     resource.setMaxImageUrl(mediaPlayer.getString("image"));
                 }
 
                 // TODO Tetiana: remove entity_id from description. Line below can be replaced for extracting it from Speech details
-                if (mediaPlayer.has("entity_id")) {
+                if(mediaPlayer.has("entity_id"))
+                {
                     resource.setIdAtService(mediaPlayer.getString("entity_id"));
                 }
 
                 JSONArray sourcesJsonArray = mediaPlayer.getJSONArray("sources");
-                for (int i = 0, l = sourcesJsonArray.length(); i < l; ++i)
+                for(int i = 0, l = sourcesJsonArray.length(); i < l; ++i)
                 {
                     JSONObject objectSource = sourcesJsonArray.getJSONObject(i);
                     if(!objectSource.getString("label").equals("auto"))

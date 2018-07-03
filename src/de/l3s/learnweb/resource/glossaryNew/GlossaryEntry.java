@@ -9,12 +9,16 @@ public class GlossaryEntry implements Serializable
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id;
+    private int resourceId;
+    private boolean deleted;
+    private int userId; // the user who created this entry
+
     private String description;
+    private boolean descriptionPasted = false;
     @Size(max = 100)
     private String topicOne;
     private String topicTwo;
     private String topicThree;
-    private boolean descriptionPasted = false;
 
     public String getDescription()
     {
@@ -74,6 +78,36 @@ public class GlossaryEntry implements Serializable
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    public int getResourceId()
+    {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId)
+    {
+        this.resourceId = resourceId;
+    }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
+    public int getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
     }
 
 }

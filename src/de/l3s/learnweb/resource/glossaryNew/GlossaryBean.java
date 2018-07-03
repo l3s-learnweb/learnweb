@@ -5,21 +5,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 
 public class GlossaryBean extends ApplicationBean implements Serializable
 {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 7104637880221636543L;
+    private static final Logger log = Logger.getLogger(GlossaryBean.class);
+
     private int resourceId;
-    private int userId; // user who is manipulating glossary entries
     private GlossaryResource glossaryResource;
     private int count;
-    private ArrayList<GlossaryTableView> tableItems = new ArrayList<GlossaryTableView>();
+    private List<GlossaryTableView> tableItems = new ArrayList<GlossaryTableView>(); // TODO not necessary
 
     public void onLoad()
     {
@@ -28,7 +27,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return;
 
         glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
-        loadGlossaryTable(glossaryResource);
+        loadGlossaryTable(glossaryResource); // TODO does is make sense here?
         if(glossaryResource == null)
         {
             addInvalidParameterMessage("resource_id");
@@ -41,7 +40,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         // TODO Auto-generated method stub
         //set tableItems
-        tableItems = getLearnweb().getGlossaryManager().getGlossaryItems(glossaryResource2);
+        tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource2);
 
     }
 
@@ -53,7 +52,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void onSave(GlossaryEntry entry)
     {
-        getLearnweb().getGlossaryManager().uploadEntry(entry, resourceId);
+        getLearnweb().getGlossaryManager().saveEntry(entry, resourceId);
     }
 
     public void deleteEntry(GlossaryEntry entry)
@@ -61,7 +60,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         //TODO:: delete entry+terms with delete button from table view
     }
 
-    public void deleteTerm(GlossaryEntry Term)
+    public void deleteTerm(GlossaryEntry term)
     {
         //TODO:: delete terms from form.
         //if termid<0, ignore else delete from db
@@ -88,29 +87,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.resourceId = resourceId;
     }
 
-    public int getUserId()
-    {
-        return userId;
-    }
-
-    public void setUserId(int userId)
-    {
-        this.userId = userId;
-    }
-
     public GlossaryResource getGlossaryResource()
     {
         return glossaryResource;
     }
 
-    public ArrayList<GlossaryTableView> getTableItems()
+    public List<GlossaryTableView> getTableItems()
     {
         return tableItems;
     }
 
     public int getCount()
     {
-        count = glossaryResource.getEntries().size();
+        count = glossaryResource.getEntries().size(); // TODO doesn't make sense
         return count;
     }
 

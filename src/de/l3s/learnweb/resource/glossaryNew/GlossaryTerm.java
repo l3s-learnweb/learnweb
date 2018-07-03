@@ -9,9 +9,10 @@ public class GlossaryTerm implements Serializable
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id;
-    private int userId;
+    private int entryId;
+    private int userId; // the user who created this term
 
-    private String term;
+    private String term; // TODO  add validation e.g.:  @Size(max = 100)
     private List<String> uses;
     private String pronounciation;
     private String acronym;
@@ -151,6 +152,16 @@ public class GlossaryTerm implements Serializable
     public void setUserId(int userId)
     {
         this.userId = userId;
+    }
+
+    public int getEntryId()
+    {
+        return entryId;
+    }
+
+    public void setEntryId(int entryId)
+    {
+        this.entryId = entryId;
     }
 
 }
