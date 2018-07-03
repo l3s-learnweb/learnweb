@@ -59,8 +59,21 @@ var onRequestHistory = function() {
         });   
     };
 
+    /*
+    jQuery.loadScript = function (url, callback) {
+        jQuery.ajax({
+            url: url,
+            dataType: 'script',
+            success: callback,
+            async: true
+        });
+    }
 
-
+    if (typeof someObject == 'undefined') $.loadScript('https://haydn.kbs.uni-hannover.de/web-apps/apps/api/documents/api.js', function(){
+        //Stuff to do after someScript has loaded
+    });
+    
+*/
 var сonnectEditor = function(id_div, type) {
 	var mode = type=="edit"?"edit":"view"; 
 	var canBeEdited = type=="edit"?true:false; 
