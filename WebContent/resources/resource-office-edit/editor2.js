@@ -100,7 +100,7 @@ var сonnectEditor = function(id_div, type) {
 
 		},
 		events : {
-			"onReady" : onReady,
+			"onAppReady" : onReady,
 			"onDocumentStateChange" : onDocumentStateChange,
 			'onRequestEditRights' : onRequestEditRights,
 			"onError" : onError,
