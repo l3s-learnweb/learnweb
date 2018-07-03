@@ -9,6 +9,7 @@ public class GlossaryTerm implements Serializable
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id;
+    private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
 
@@ -162,6 +163,16 @@ public class GlossaryTerm implements Serializable
     public void setEntryId(int entryId)
     {
         this.entryId = entryId;
+    }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
 }

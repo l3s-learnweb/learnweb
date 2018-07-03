@@ -20,6 +20,7 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
+		
 		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 and glossaryBean.deleted eq false}">
 			<h:panelGroup id="main_component" layout="block">
 				<h:form prependId="false">

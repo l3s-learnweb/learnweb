@@ -17,7 +17,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private int resourceId;
     private GlossaryResource glossaryResource;
-    private int count;
     private List<GlossaryTableView> tableItems = new ArrayList<GlossaryTableView>(); // TODO not necessary
 
     public void onLoad()
@@ -52,7 +51,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void onSave(GlossaryEntry entry)
     {
-        getLearnweb().getGlossaryManager().saveEntry(entry, resourceId);
+        getLearnweb().getGlossaryManager().saveEntry(entry);
     }
 
     public void deleteEntry(GlossaryEntry entry)
@@ -99,8 +98,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public int getCount()
     {
-        count = glossaryResource.getEntries().size(); // TODO doesn't make sense
-        return count;
+        return glossaryResource.getEntries().size();
     }
 
 }

@@ -49,7 +49,7 @@ public class LanguageBundle extends ResourceBundle
     public LanguageBundle(String baseName, Locale locale)
     {
 
-        log.debug("bundle: " + locale + " - " + locale.getVariant());
+        //log.debug("bundle: " + locale + " - " + locale.getVariant());
 
         LanguageBundle bundle = cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
 
@@ -81,7 +81,6 @@ public class LanguageBundle extends ResourceBundle
                 String newValue = substituteValue(entry.getValue());
                 if(!entry.getValue().equals(newValue))
                 {
-                    System.out.println("replace " + entry.getValue() + " with " + newValue);
                     replacedAtLeastOneConstant = true;
                     entry.setValue(newValue);
                 }
@@ -99,7 +98,7 @@ public class LanguageBundle extends ResourceBundle
             return null;
 
         int beginIndex = 0;
-        int startName; //  index of the  constant, if any
+        int startName; // index of the  constant, if any
 
         StringBuilder sb = new StringBuilder(value); // build the new value
 

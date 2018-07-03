@@ -6,7 +6,7 @@
 
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>#{msg.error} - Learnweb</title>
+		<title>#{msg.error}</title>
 		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
 		<h:outputStylesheet library="main-template" name="main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
@@ -25,7 +25,7 @@
 		<div id="main_menu_bar"></div>		
 	</header>
 	<section id="content" class="small_page">
-		<div class="error" style="font-size:1.4rem">Your access to Learnweb has been blocked due to unauthorized activity. Please contact our support team: learnweb-support@l3s.de</div>	        
+		<div class="error" style="font-size:1.4rem">Your access to #{msg['application.name']} has been blocked due to unauthorized activity. Please contact our support team: - #{msg['application.serverAdmin']}</div>	        
         <br/><br/>
 	</section>
 

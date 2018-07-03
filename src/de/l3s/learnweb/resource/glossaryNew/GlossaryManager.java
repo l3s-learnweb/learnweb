@@ -17,7 +17,7 @@ public class GlossaryManager
         this.learnweb = learnweb;
     }
 
-    public void saveEntry(GlossaryEntry entry, int resourceId)
+    public void saveEntry(GlossaryEntry entry)
     {
         //TODO:: insert entry
     }
@@ -30,12 +30,6 @@ public class GlossaryManager
     public void copyGlossary(int oldResourceId, int newResourceId)
     {
         //TODO:: copy glossary
-    }
-
-    public void getEntryCount(GlossaryResource resource)
-    {
-        //TODO:: return resource.getEntries.size()
-
     }
 
     public GlossaryResource getGlossaryResource(int resourceId)
