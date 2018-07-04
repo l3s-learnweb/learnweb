@@ -43,7 +43,7 @@ public class DownloadServlet extends HttpServlet
 
     private final static int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
     private final static long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
-    private final static int BUFFER_SIZE = 10240; // ..bytes = 10KB.
+    private final static int BUFFER_SIZE = 10240; // = 10KB.
     private final static String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
     private Learnweb learnweb;

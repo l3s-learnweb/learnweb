@@ -8,7 +8,6 @@ import de.l3s.learnweb.Learnweb;
 
 public class Tag implements Comparable<Tag>, Serializable
 {
-
     private static final long serialVersionUID = 7542445827379987188L;
     private int id;
     private String name;
@@ -44,5 +43,4 @@ public class Tag implements Comparable<Tag>, Serializable
     {
         this.id = id;
     }
-
 }

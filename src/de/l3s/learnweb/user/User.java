@@ -22,8 +22,6 @@ import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.interwebj.AuthCredentials;
-import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
@@ -49,7 +47,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public static final int GENDER_FEMALE = 2;
 
     private int id = -1;
-    private InterWeb interweb;
     private int imageFileId; // profile image
     private int organisationId;
     private String fullName; //Full Name
@@ -79,9 +76,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private boolean admin;
     private boolean moderator;
-
-    private String iwKey;
-    private String iwSecret;
 
     private HashMap<String, String> preferences;
     private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
@@ -128,11 +122,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public void save() throws SQLException
     {
         Learnweb.getInstance().getUserManager().save(this);
-    }
-
-    public boolean isLoggedInInterweb()
-    {
-        return !(getInterweb().getIWToken() == null);
     }
 
     public List<Course> getCourses() throws SQLException
@@ -204,20 +193,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public String getInterest()
     {
         return interest;
-    }
-
-    public InterWeb getInterweb()
-    {
-        if(null == interweb)
-        {
-            interweb = Learnweb.getInstance().getInterweb().clone();
-
-            if(iwKey != null && iwSecret != null)
-            {
-                this.interweb.setIWToken(new AuthCredentials(iwKey, iwSecret));
-            }
-        }
-        return interweb;
     }
 
     public String getStudentId()
@@ -638,65 +613,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setId(int id)
     {
         this.id = id;
-    }
-
-    /**
-     * key of the interweb token
-     *
-     * @return
-     */
-    public String getInterwebKey()
-    {
-        return iwKey;
-    }
-
-    /**
-     * key of the interweb token
-     *
-     * @param iwKey
-     */
-    public void setInterwebKey(String iwKey)
-    {
-        this.iwKey = iwKey;
-        this.interweb = null; // force reload
-    }
-
-    /**
-     * secret of the interweb token
-     *
-     * @return
-     */
-    public String getInterwebSecret()
-    {
-        return iwSecret;
-    }
-
-    /**
-     * secret of the interweb token
-     *
-     * @param iwSecret
-     */
-    public void setInterwebSecret(String iwSecret)
-    {
-        this.iwSecret = iwSecret;
-        this.interweb = null; // force reload
-    }
-
-    public void setInterwebToken(AuthCredentials auth)
-    {
-        getInterweb(); // make sure interweb is loaded
-
-        this.interweb.setIWToken(auth);
-        if(null == auth)
-        {
-            this.iwKey = null;
-            this.iwSecret = null;
-        }
-        else
-        {
-            this.iwKey = auth.getKey();
-            this.iwSecret = auth.getSecret();
-        }
     }
 
     public int getImageFileId()

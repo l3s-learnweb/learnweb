@@ -15,7 +15,6 @@ commons-lang3-3.4.jar				Interweb, primefaces-extensions, Others, ArchiveSearch
 commons-logging-1.2.jar			JSF Base, Dependency of Google API
 core.jar							Added by Trevor; for TEDWordNet
 cron4j-2.2.5.jar					Job Scheduler, added by Siyu
-dom4j-2.0.0-ALPHA-2.jar				Interweb
 Filters.jar							image scaling (Thumbnails)
 geronimo-atinject_1.0_spec-1.0		required by my-faces-bundle
 google-api-client-1.20.0.jar						Google API Client
@@ -72,6 +71,6 @@ urlrewritefilter-4.0.3.jar			needed to redirect /new to /
 validation-api-1.0.0.GA.jar			required by Hibernate validator added by Philipp
 woodstox-core-asl-4.4.1.jar         Dependency of SolrClient
 wstx-asl-3.2.7.jar					SolrClient,added by Siyu
-#xercesImpl-2.6.2-jaxb-1.0.6.jar		could be required by dom4j
+#xercesImpl-2.6.2-jaxb-1.0.6.jar	Wikidata Client (Facts)
 xercesImpl-2.11.0.jar				Wikidata Client (Facts)
 zookeeper-3.4.6.jar					Dependency of SolrClient

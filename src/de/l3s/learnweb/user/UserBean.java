@@ -50,10 +50,7 @@ public class UserBean implements Serializable
     private transient PrettyTime localePrettyTime;
 
     private int activeCourseId = 0;
-    /*
-    private transient Course activeCourseCache = null;
-    private transient long activeCourseCacheTime = 0L;
-    */
+
     private transient List<Group> newGroups = null;
 
     private boolean cacheShowMessageJoinGroup = true;
@@ -133,14 +130,6 @@ public class UserBean implements Serializable
         return userId != 0;
     }
 
-    public boolean isLoggedInInterweb()
-    {
-        if(!isLoggedIn())
-            return false;
-
-        return getUser().isLoggedInInterweb();
-    }
-
     /**
      * The currently logged in user
      *
@@ -197,7 +186,6 @@ public class UserBean implements Serializable
                 activeCourseId = 1250;
             else
             {
-
                 try
                 {
                     activeCourseId = user.getCourses().get(0).getId();

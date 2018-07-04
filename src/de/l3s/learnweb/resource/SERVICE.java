@@ -52,41 +52,5 @@ public enum SERVICE // when adding more services remember to update the service 
     public String toString()
     {
         return label;
-
-        /*
-        switch(this)
-        {
-        case bing:
-            return "Bing";
-        case flickr:
-            return "Flickr";
-        case youtube:
-            return "YouTube";
-        case vimeo:
-            return "Vimeo";
-        case ipernity:
-            return "Ipernity";
-        case ted:
-            return "TED";
-        case tedx:
-            return "TEDx";
-        case loro:
-            return "LORO";
-        case yovisto:
-            return "Yovisto";
-        case learnweb:
-            return "LearnWeb";
-        case archiveit:
-            return "Archive-It";
-        case teded:
-            return "TED-Ed";
-        case factcheck:
-            return "Fact-Check";
-        case speechrepository:
-            return "Speech-Repository";
-        default:
-            return this.name();
-        }
-        */
     }
 }

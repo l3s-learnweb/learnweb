@@ -112,16 +112,14 @@ public class LoginBean extends ApplicationBean implements Serializable
             pm.updateFailedAttempts(ip, username);
             return null;
         }
-        else
-        {
-            pm.updateSuccessfuldAttempts(ip, username);
-            getLearnweb().getRequestManager().recordLogin(ip, username);
 
-            if(!user.isEmailConfirmed())
-            {
-                confirmRequiredBean.setLoggedInUser(user);
-                return "/lw/user/confirm_required.xhtml?faces-redirect=true";
-            }
+        pm.updateSuccessfuldAttempts(ip, username);
+        getLearnweb().getRequestManager().recordLogin(ip, username);
+
+        if(!user.isEmailConfirmed())
+        {
+            confirmRequiredBean.setLoggedInUser(user);
+            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
         }
 
         return loginUser(this, user);
@@ -145,27 +143,6 @@ public class LoginBean extends ApplicationBean implements Serializable
             bean.log(Action.moderator_login, 0, 0);
         else
             bean.log(Action.login, 0, 0, BeanHelper.getRequestURI());
-
-        // uncommented until interwebJ works correct
-        /*
-        Runnable preFetch = new Runnable()
-        {
-            @Override
-            public void run()
-            {
-        	InterWeb interweb = user.getInterweb();
-        	try
-        	{
-        	    interweb.getAuthorizationInformation(false);
-        	}
-        	catch(Exception e)
-        	{
-        	    log.error("Interweb error", e);
-        	}
-            }
-        };
-        new Thread(preFetch).start();
-        */
 
         Organisation userOrganisation = user.getOrganisation();
 

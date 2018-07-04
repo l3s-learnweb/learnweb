@@ -15,7 +15,6 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.interwebj.AuthCredentials;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.util.Cache;
@@ -282,29 +281,10 @@ public class UserManager
         if(null == course)
             throw new IllegalArgumentException("Invalid registration wizard parameter");
 
-        AuthCredentials iwToken = null;
-
-        try
-        {
-            // register a User at interweb
-            iwToken = learnweb.getInterweb().registerUser(username, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
-
-            int counter = 2;
-            while(null == iwToken) // username already taken
-            {
-                iwToken = learnweb.getInterweb().registerUser(username + "_" + counter++, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
-            }
-        }
-        catch(Exception e)
-        {
-            log.warn("Could not create interweb account for user: " + username);
-        }
-
         User user = new User();
         user.setUsername(username);
         user.setEmail(""); // set something to make sure that
         user.setEmail(email); // the mail confirmation token is created now
-        user.setInterwebToken(iwToken);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password, false);
         user.setPreferences(new HashMap<String, String>());
@@ -378,8 +358,8 @@ public class UserManager
         replace.setBoolean(5, user.isEmailConfirmed());
 
         replace.setInt(6, user.getOrganisationId());
-        replace.setString(7, user.getInterwebKey());
-        replace.setString(8, user.getInterwebSecret());
+        replace.setString(7, "");
+        replace.setString(8, "");
         replace.setInt(9, user.getActiveGroupId());
         replace.setInt(10, user.getImageFileId());
         replace.setInt(11, user.getGender());
@@ -454,8 +434,6 @@ public class UserManager
         user.setAdmin(rs.getInt("is_admin") == 1);
         user.setModerator(rs.getInt("is_moderator") == 1);
 
-        user.setInterwebKey(rs.getString("iw_token"));
-        user.setInterwebSecret(rs.getString("iw_secret"));
         user.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
 
         // deserialize preferences
