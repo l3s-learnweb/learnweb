@@ -32,7 +32,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
     private List<GlossaryTerm> formTerms = new ArrayList<GlossaryTerm>();
-    private final List<String> uses = Arrays.asList("technical", "popular", "informal");
     private final List<SelectItem> availableTopicOne = Arrays.asList(new SelectItem("Environment"), new SelectItem("European Politics"), new SelectItem("Medicine"), new SelectItem("Tourism"));
     private List<SelectItem> availableTopicTwo = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThree = new ArrayList<SelectItem>();
@@ -261,11 +260,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void setAvailableTopicThree(List<SelectItem> availableTopicThree)
     {
         this.availableTopicThree = availableTopicThree;
-    }
-
-    public List<String> getUses()
-    {
-        return uses;
     }
 
 }

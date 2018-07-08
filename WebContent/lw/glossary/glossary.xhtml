@@ -171,7 +171,9 @@
 
 							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center">
 								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="#{term.getUsesDisplayLabel()}"><!-- Test this -->
-									<f:selectItems value="#{glossaryBeanNEW.uses}" />
+									<f:selectItem value="technical" itemLabel="#{msg[Glossary.use_technical]}" />
+									<f:selectItem value="popular" itemLabel="#{msg[Glossary.use_popular]}" />
+									<f:selectItem value="informal" itemLabel="#{msg[Glossary.use_informal]}" />
 									<p:ajax event="change" update="use"></p:ajax>
 									<p:ajax event="toggleSelect"  update="use" />
 								</p:selectCheckboxMenu>
