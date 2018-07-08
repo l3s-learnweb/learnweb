@@ -104,7 +104,7 @@
 						
 						<f:facet name="footer">
 							<p:outputPanel>
-								<h:outputText value="Total concepts = #{glossaryBeanNEW.getCount()}"></h:outputText>
+								<h:outputText value="{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}"></h:outputText>
 							</p:outputPanel>
 						</f:facet>
 						</p:dataTable>
@@ -187,16 +187,16 @@
 							<p:column headerText="#{msg.source}">
 
 								<p:selectOneMenu id="ref" value="#{term.source}" style="width: 80% !important" autoWidth="false">
-									<f:selectItem itemValue="#{null}" itemLabel="--select--" />
-									<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
-									<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
-									<f:selectItem itemValue="monolingual dictionary" itemLabel="monolingual dictionary"></f:selectItem>
-									<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
-									<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
-									<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
-									<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
+									<f:selectItem itemValue="#{null}" itemLabel="--#{msg[Glossary.select]}--" />
+									<f:selectItem itemValue="Wikipedia" itemLabel="#{msg[Glossary.wikipedia]}"></f:selectItem>
+									<f:selectItem itemValue="encyclopaedia" itemLabel="#{msg[Glossary.encyclopaedia]}"></f:selectItem>
+									<f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg[Glossary.mono_dictionary]}"></f:selectItem>
+									<f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg[Glossary.bi_dictionary]}"></f:selectItem>
+									<f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg[Glossary.publication]}"></f:selectItem>
+									<f:selectItem itemValue="institutional website" itemLabel="#{msg[Glossary.website]}"></f:selectItem>
+									<f:selectItem itemValue="glossary" itemLabel="#{msg[Glossary.glossary]}"></f:selectItem>
 									<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
-									<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
+									<f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg[Glossary.web_blog]}"></f:selectItem>
 									<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 								</p:selectOneMenu>
 							</p:column>
