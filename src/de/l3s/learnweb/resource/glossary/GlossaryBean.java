@@ -42,6 +42,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -114,6 +115,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void deactivatePaginator()
     {
         setPaginatorActive(false);
+    }
+
+    public void rotatePDF(Object document)
+    {
+        Document doc = (Document) document;
+        doc.setPageSize(PageSize.A4.rotate());
     }
 
     public void loadGlossary()
@@ -559,7 +566,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

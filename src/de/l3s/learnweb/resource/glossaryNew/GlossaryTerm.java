@@ -1,25 +1,35 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
+
+import javax.validation.constraints.Size;
+
+import de.l3s.util.StringHelper;
 
 public class GlossaryTerm implements Serializable
 {
     private static final long serialVersionUID = -8309235925484416943L;
 
-    private int id;
+    private int id = -1;
     private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
 
-    private String term; // TODO  add validation e.g.:  @Size(max = 100)
+    @Size(max = 100)
+    private String term;
     private List<String> uses;
+    @Size(max = 200)
     private String pronounciation;
+    @Size(max = 100)
     private String acronym;
     private String source;
+    @Size(max = 500)
     private String phraseology;
     private Locale language;
+    private Timestamp timestamp;
     private boolean termPasted;
     private boolean pronounciationPasted;
     private boolean acronymPasted;
@@ -173,6 +183,24 @@ public class GlossaryTerm implements Serializable
     public void setDeleted(boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public Timestamp getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp)
+    {
+        this.timestamp = timestamp;
+    }
+
+    public String getUsesDisplayLabel()
+    {
+        if(getUses().isEmpty())
+            return "Use";
+        else
+            return StringHelper.implode(getUses(), ",");
     }
 
 }

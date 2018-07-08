@@ -23,8 +23,10 @@
 		
 		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 and glossaryBean.deleted eq false}">
 			<h:panelGroup id="main_component" layout="block">
-				<h:form prependId="false">
-					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12"
+				
+				<h:form id= "form" prependId="false">
+					
+					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBean.paginatorActive}" rows="#{glossaryBean.paginatorActive ? 12 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBean.filteredItems}" sortBy="#{item.date}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} Exporters">
 
@@ -43,6 +45,10 @@
 							<h:commandLink styleClass="excel_export_todo_use">
 								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
 								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
+								</h:commandLink>
+								<h:commandLink>
+								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="top:7px;left:3px;position:relative;" />
+								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 
 							</h:commandLink>
 						</f:facet>
@@ -138,7 +144,7 @@
 									<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
 									<f:ajax listener="#{glossaryBean.changeTopicTwo}" render="topic_3" />
 								</p:selectOneMenu>
-								<p:inputText rendered="#{empty glossaryBean.availableTopicTwos}" value="#{glossaryBean.selectedTopicThree}" />
+								<p:inputText rendered="#{empty glossaryBean.availableTopicTwos}" value="#{glossaryBean.selectedTopicTwo}" />
 							</h:panelGroup>
 							<p:message for="topic_2" />
 

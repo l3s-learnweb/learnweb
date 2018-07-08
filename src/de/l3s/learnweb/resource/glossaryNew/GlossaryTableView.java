@@ -1,5 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
+import java.sql.Timestamp;
+
 public class GlossaryTableView
 {
     private final GlossaryEntry entry;
@@ -10,6 +12,11 @@ public class GlossaryTableView
         super();
         this.entry = entry;
         this.term = term;
+    }
+
+    public int getEntryId()
+    {
+        return entry.getId();
     }
 
     public String getTopicOne()
@@ -65,5 +72,10 @@ public class GlossaryTableView
     public String getPhraseology()
     {
         return term.getPhraseology();
+    }
+
+    public Timestamp getTimestamp()
+    {
+        return term.getTimestamp();
     }
 }
