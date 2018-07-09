@@ -50,11 +50,11 @@
 							
 							<ui:fragment rendered="false">
 								<!-- needs to be checked if it is ever used again			
-								<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.user.activeCourse.groupCategories}" />
+								<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.user.active Course.groupCategories}" />
 								<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.user.activeCourse.groupCategories}">
 									<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
 									<f:selectItem itemValue="-1" itemLabel="- -" itemDisabled="true" />	
-									<f:selectItems value="#{userBean.user.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
+									<f:selectItems value="#{userBean.user.active Course.groupCategories}" var="cat" itemValue="#{cat.id}" 
 										itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 								</h:selectOneMenu>
 								<h:outputText value="" rendered="#{not empty userBean.user.activeCourse.groupCategories}" />	

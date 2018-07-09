@@ -85,4 +85,29 @@ public class Sql
         return new java.sql.Timestamp(date.getTime());
     }
 
+    /**
+     * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement
+     *
+     * @param tableName
+     * @param columns
+     * @return
+     */
+    public static String getCreateStatement(final String tableName, final String[] columns)
+    {
+        StringBuilder sb = new StringBuilder("INSERT INTO ");
+        sb.append(tableName).append(" (");
+
+        for(String column : columns)
+            sb.append(column).append(',');
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        sb.append(") ON DUPLICATE KEY UPDATE ");
+
+        for(String column : columns)
+            sb.append(column).append("=VALUES(").append(column).append("),");
+        sb.setLength(sb.length() - 1); // remove last comma
+
+        return sb.toString();
+    }
+
 }

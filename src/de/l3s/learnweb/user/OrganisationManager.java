@@ -9,10 +9,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.util.Sql;
+import de.l3s.util.StringHelper;
 
 /**
  * DAO for the Organisation class.
@@ -23,9 +23,12 @@ import de.l3s.learnweb.group.Group;
  */
 public class OrganisationManager
 {
-    public final static Logger log = Logger.getLogger(OrganisationManager.class);
-    // if you change this, you have to change the constructor of Organisation too
-    private final static String COLUMNS = "organisation_id, title, logo, welcome_page, welcome_message, default_search_text, default_search_image, default_search_video, default_language, options_field1";
+    //private final static Logger log = Logger.getLogger(OrganisationManager.class);
+    private static final int FIELDS = 1;
+    private final static String[] COLUMNS = { "organisation_id", "title", "logout_page", "welcome_page", "welcome_message", "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language", "language_variant",
+            "banner_image_file_id", "glossary_languages", "css_file" };
+    private final static String SELECT = String.join(", ", COLUMNS);
+    private final static String SAVE = Sql.getCreateStatement("lw_organisation", COLUMNS);
 
     private Learnweb learnweb;
     private Map<Integer, Organisation> cache;
@@ -46,10 +49,10 @@ public class OrganisationManager
         // load all organizations into cache
         try(Statement select = learnweb.getConnection().createStatement())
         {
-            ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_organisation ORDER BY title");
+            ResultSet rs = select.executeQuery("SELECT " + SELECT + " FROM lw_organisation ORDER BY title");
             while(rs.next())
             {
-                Organisation organisation = new Organisation(rs);
+                Organisation organisation = createOrganisation(rs);
                 cache.put(rs.getInt("organisation_id"), organisation);
             }
         }
@@ -113,44 +116,68 @@ public class OrganisationManager
     public Organisation save(Organisation organisation) throws SQLException
     {
         if(organisation.getId() < 0) // the organisation is not yet stored at the database
-        { // we have to get a new id from the groupmanager
+        { // we have to get a new id from the groupManager
             Group group = new Group();
             group.setTitle(organisation.getTitle());
             group.setDescription("Organisation");
             learnweb.getGroupManager().save(group);
-            learnweb.getGroupManager().deleteGroup(group);
             organisation.setId(group.getId());
+            learnweb.getGroupManager().deleteGroup(group);
 
             cache.put(organisation.getId(), organisation);
         }
 
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_organisation` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(organisation.getId() < 0) // the organisation is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, organisation.getId());
-        replace.setString(2, organisation.getTitle());
-        replace.setString(3, organisation.getLogo());
-        replace.setString(4, organisation.getWelcomePage());
-        replace.setString(5, organisation.getWelcomeMessage());
-        replace.setString(6, organisation.getDefaultSearchServiceText().name());
-        replace.setString(7, organisation.getDefaultSearchServiceImage().name());
-        replace.setString(8, organisation.getDefaultSearchServiceVideo().name());
-        replace.setString(9, organisation.getDefaultLanguage());
-        replace.setLong(10, organisation.getOptions()[0]);
-        replace.executeUpdate();
-
-        if(organisation.getId() < 0) // get the assigned id
+        try(PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            organisation.setId(rs.getInt(1));
-            organisation = cache.put(organisation.getId(), organisation); // add the new organisation to the cache
+            save.setInt(1, organisation.getId());
+            save.setString(2, organisation.getTitle());
+            save.setString(3, organisation.getLogoutPage());
+            save.setString(4, organisation.getWelcomePage());
+            save.setString(5, organisation.getWelcomeMessage());
+            save.setLong(6, organisation.getOptions()[0]);
+            save.setString(7, organisation.getDefaultSearchServiceText().name());
+            save.setString(8, organisation.getDefaultSearchServiceImage().name());
+            save.setString(9, organisation.getDefaultSearchServiceVideo().name());
+            save.setString(10, organisation.getDefaultLanguage());
+            save.setString(11, organisation.getLanguageVariant());
+            save.setInt(12, organisation.getBannerImageFileId());
+            save.setString(13, StringHelper.join(organisation.getGlossaryLanguages()));
+            save.executeUpdate();
         }
-        replace.close();
 
         return organisation;
+    }
+
+    private Organisation createOrganisation(ResultSet rs) throws SQLException
+    {
+        Organisation organisation = new Organisation(rs.getInt("organisation_id"));
+        organisation.setTitle(rs.getString("title"));
+        organisation.setLogoutPage(rs.getString("logout_page"));
+        organisation.setWelcomePage(rs.getString("welcome_page"));
+        organisation.setWelcomeMessage(rs.getString("welcome_message"));
+        organisation.setDefaultSearchServiceText(rs.getString("default_search_text"));
+        organisation.setDefaultSearchServiceImage(rs.getString("default_search_image"));
+        organisation.setDefaultSearchServiceVideo(rs.getString("default_search_video"));
+        organisation.setDefaultLanguage(rs.getString("default_language"));
+        organisation.setLanguageVariant(rs.getString("language_variant"));
+        organisation.setBannerImageFileId(rs.getInt("banner_image_file_id"));
+        organisation.setGlossaryLanguages(StringHelper.splitLocales(rs.getString("glossary_languages")));
+
+        long[] options = new long[FIELDS];
+        for(int i = 0; i < FIELDS;)
+            options[i] = rs.getLong("options_field" + ++i);
+        organisation.setOptions(options);
+
+        return organisation;
+    }
+
+    /**
+     * If a user does not register for a specific course or isn't logged in then he belongs to this organisation
+     *
+     * @return
+     */
+    public Organisation getDefaultOrganisation()
+    {
+        return getOrganisationById(478);
     }
 }

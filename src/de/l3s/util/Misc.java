@@ -16,7 +16,7 @@ public class Misc
     }
 
     /**
-     * 
+     *
      * @return Username and Ip/Hostname of the current system
      */
     public static String getSystemDescription()
@@ -26,7 +26,7 @@ public class Misc
         String systemHostAddress = null;
         try
         {
-            systemUser = System.getProperty("user.name"); //platform independent 
+            systemUser = System.getProperty("user.name"); //platform independent
 
             java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
             systemHostname = localMachine.getHostName();
@@ -49,4 +49,5 @@ public class Misc
 
         return sb.toString();
     }
+
 }

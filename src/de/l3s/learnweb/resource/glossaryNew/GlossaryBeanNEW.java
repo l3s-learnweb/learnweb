@@ -54,7 +54,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         availableTopicOne.add(new SelectItem("European Politics"));
         availableTopicOne.add(new SelectItem("Medicine"));
         availableTopicOne.add(new SelectItem("Tourism"));
-        groupId = getLearnweb().getResourceManager().getResource(resourceId).getGroupId();
+        groupId = glossaryResource.getGroupId();
         log(Action.glossary_open, groupId, resourceId);
         loadGlossaryTable(glossaryResource);
         setFilteredTableItems(tableItems);
@@ -255,7 +255,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return availableTopicTwo;
     }
 
-    public void setAvailableTopicTwo(List<SelectItem> availableTopicTwo)
+    public void setAvailableTopicTwo(List<SelectItem> availableTopicTwo) // TODO necessary?
     {
         this.availableTopicTwo = availableTopicTwo;
     }
@@ -265,7 +265,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return availableTopicThree;
     }
 
-    public void setAvailableTopicThree(List<SelectItem> availableTopicThree)
+    public void setAvailableTopicThree(List<SelectItem> availableTopicThree) // TODO necessary?
     {
         this.availableTopicThree = availableTopicThree;
     }

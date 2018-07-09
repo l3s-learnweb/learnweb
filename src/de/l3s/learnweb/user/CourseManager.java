@@ -3,17 +3,17 @@ package de.l3s.learnweb.user;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.user.Course.Option;
+import de.l3s.util.Sql;
 
 /**
  * DAO for the Course class.
@@ -24,21 +24,10 @@ import de.l3s.learnweb.user.Course.Option;
  */
 public class CourseManager
 {
-    /*
-     * The options are stored bitwise in long variables.
-     * How many long vars are necessary to store the options?
-     */
-    protected final static int FIELDS = (int) Math.ceil(Option.values().length / 64.0);
-    private final static String COLUMNS;
-
-    static
-    {
-        StringBuilder qry = new StringBuilder(
-                "course_id, title, forum_id, forum_category_id, organisation_id, default_group_id, wizard_param, wizard_enabled, next_x_users_become_moderator, default_interweb_username, default_interweb_password, welcome_message, banner_color, banner_image_file_id, options_field1");
-        for(int i = 2; i <= FIELDS; i++)
-            qry.append(", options_field").append(i);
-        COLUMNS = qry.toString();
-    }
+    protected final static int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
+    private final static String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "wizard_enabled", "next_x_users_become_moderator", "welcome_message", "options_field1" };
+    private final static String SELECT = String.join(", ", COLUMNS);
+    private final static String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
 
     private Learnweb learnweb;
     private Map<Integer, Course> cache;
@@ -47,7 +36,7 @@ public class CourseManager
     {
         super();
         this.learnweb = learnweb;
-        this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(70));
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(80));
         this.resetCache();
     }
 
@@ -56,11 +45,33 @@ public class CourseManager
         cache.clear();
 
         // load all courses into cache
-        Statement select = learnweb.getConnection().createStatement();
-        ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_course LEFT JOIN lw_user_course USING(course_id) ORDER BY title");
-        while(rs.next())
-            cache.put(rs.getInt("course_id"), new Course(rs));
-        select.close();
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_course ORDER BY title");)
+        {
+            while(rs.next())
+            {
+                Course course = createCourse(rs);
+                cache.put(course.getId(), course);
+            }
+        }
+    }
+
+    private Course createCourse(ResultSet rs) throws SQLException
+    {
+        Course course = new Course();
+        course.setId(rs.getInt("course_id"));
+        course.setOrganisationId(rs.getInt("organisation_id"));
+        course.setTitle(rs.getString("title"));
+        course.setDefaultGroupId(rs.getInt("default_group_id"));
+        course.setWizardParam(rs.getString("wizard_param"));
+        course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
+        course.setWelcomeMessage(rs.getString("welcome_message"));
+
+        long[] options = new long[FIELDS];
+        for(int i = 0; i < FIELDS;)
+            options[i] = rs.getLong("options_field" + ++i);
+        course.setOptions(options);
+
+        return course;
     }
 
     /**
@@ -116,7 +127,11 @@ public class CourseManager
      */
     public List<Course> getCoursesByOrganisationId(int organisationId)
     {
+        return cache.values().stream().filter(c -> c.getOrganisationId() == organisationId).collect(Collectors.toList());
+
+        /*
         List<Course> courses = new CoursesList();
+
 
         for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
         {
@@ -125,6 +140,7 @@ public class CourseManager
         }
 
         return courses;
+        */
     }
 
     /**
@@ -137,7 +153,7 @@ public class CourseManager
     {
         List<Course> courses = new CoursesList();
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?"))
         {
             select.setInt(1, userId);
             ResultSet rs = select.executeQuery();
@@ -165,67 +181,55 @@ public class CourseManager
             group.setDescription("Course");
 
             learnweb.getGroupManager().save(group);
-            learnweb.getGroupManager().deleteGroup(group);
             course.setId(group.getId());
+            learnweb.getGroupManager().deleteGroup(group);
 
             cache.put(course.getId(), course);
         }
 
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_course` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(course.getId() < 0) // the course is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, course.getId());
-        replace.setString(2, course.getTitle());
-        replace.setInt(3, 0); // not used any more
-        replace.setInt(4, 0); // not used any more
-        replace.setInt(5, course.getOrganisationId());
-        replace.setInt(6, course.getDefaultGroupId());
-        replace.setString(7, course.getWizardParam());
-        replace.setInt(8, course.isWizardEnabled() ? 1 : 0);
-        replace.setInt(9, course.getNextXUsersBecomeModerator());
-        replace.setString(10, course.getDefaultInterwebUsername());
-        replace.setString(11, course.getDefaultInterwebPassword());
-        replace.setString(12, course.getWelcomeMessage());
-        replace.setString(13, course.getBannerColor());
-        replace.setInt(14, course.getBannerImageFileId());
-        replace.setLong(15, course.getOptions()[0]);
-        replace.executeUpdate();
-
-        if(course.getId() < 0) // it's a new course -> get the assigned id
+        try(PreparedStatement save = learnweb.getConnection().prepareStatement(SAVE))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            course.setId(rs.getInt(1));
-
-            cache.put(course.getId(), course); // add the new organisation to the cache
+            save.setInt(1, course.getId());
+            save.setString(2, course.getTitle());
+            save.setInt(3, course.getOrganisationId());
+            save.setInt(4, course.getDefaultGroupId());
+            save.setString(5, course.getWizardParam());
+            save.setInt(6, course.getNextXUsersBecomeModerator());
+            save.setString(7, course.getWelcomeMessage());
+            save.setLong(8, course.getOptions()[0]);
+            save.executeUpdate();
         }
-        replace.close();
 
         return course;
     }
 
-    public void delete(int courseId) throws SQLException
-    {
-        delete(getCourseById(courseId));
-    }
-
     public void delete(Course course) throws SQLException
     {
-        if(course.getMemberCount() > 0)
+        delete(course, false);
+    }
+
+    /**
+     *
+     * @param course
+     * @param force If true the course is deleted even if it still contains users
+     * @throws SQLException
+     */
+    protected void delete(Course course, boolean force) throws SQLException
+    {
+        if(!force && course.getMemberCount() > 0)
             throw new IllegalArgumentException("course can't be deleted, remove all members first");
 
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?");
-        delete.setInt(1, course.getId());
-        delete.executeUpdate();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
 
-        delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?");
-        delete.setInt(1, course.getId());
-        delete.executeUpdate();
-        delete.close();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
 
         cache.remove(course.getId());
     }
@@ -239,11 +243,12 @@ public class CourseManager
      */
     public void addUser(Course course, User user) throws SQLException
     {
-        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)");
-        insert.setInt(1, user.getId());
-        insert.setInt(2, course.getId());
-        insert.executeUpdate();
-        insert.close();
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)"))
+        {
+            insert.setInt(1, user.getId());
+            insert.setInt(2, course.getId());
+            insert.executeUpdate();
+        }
     }
 
     /**

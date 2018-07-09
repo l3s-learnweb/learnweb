@@ -30,6 +30,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
+import de.l3s.util.HasId;
 import de.l3s.util.ICache;
 import de.l3s.util.Sql;
 
@@ -42,7 +43,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
@@ -119,10 +120,10 @@ public class GroupManager
     /**
      * Returns a list of Groups which belong to the defined course and were created after the specified date
      */
-    public List<Group> getGroupsByCourseId(int courseId, Date newerThan) throws SQLException
+    public List<Group> getGroupsByCourseId(List<Course> list, Date newerThan) throws SQLException
     {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
-        return getGroups(query, courseId, (int) (newerThan.getTime() / 1000));
+        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
+        return getGroups(query, (int) (newerThan.getTime() / 1000));
     }
 
     /**
@@ -172,6 +173,8 @@ public class GroupManager
             group.setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
             group.setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
             group.setMaxMemberCount(rs.getInt("max_member_count"));
+            group.setHypothesisLink(rs.getString("hypothesis_link"));
+            group.setHypothesisToken(rs.getString("hypothesis_token"));
 
             group.setPolicyAdd(POLICY_ADD.valueOf(rs.getString("policy_add")));
             group.setPolicyAnnotate(POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate")));
@@ -264,7 +267,7 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement(
-                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view, max_member_count) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view, max_member_count, hypothesis_link, hypothesis_token) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         if(group.getId() < 0) // the Group is not yet stored at the database
@@ -296,6 +299,8 @@ public class GroupManager
         replace.setString(14, group.getPolicyJoin().name());
         replace.setString(15, group.getPolicyView().name());
         replace.setInt(16, group.getMaxMemberCount());
+        replace.setString(17, group.getHypothesisLink());
+        replace.setString(18, group.getHypothesisToken());
         replace.executeUpdate();
 
         if(group.getId() < 0) // get the assigned id

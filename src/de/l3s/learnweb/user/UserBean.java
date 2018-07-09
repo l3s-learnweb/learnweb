@@ -13,6 +13,7 @@ import java.util.TimeZone;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -49,8 +50,6 @@ public class UserBean implements Serializable
     private Locale locale;
     private transient PrettyTime localePrettyTime;
 
-    private int activeCourseId = 0;
-
     private transient List<Group> newGroups = null;
 
     private boolean cacheShowMessageJoinGroup = true;
@@ -60,55 +59,33 @@ public class UserBean implements Serializable
     private DefaultTreeNode groupsTree;
     private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
 
-    public enum DOMAIN // Used to distinguish learnweb.l3s.uni-hannover.de/ and archiveweb.l3s.uni-hannover.de/
-    {
-        LEARNWEB,
-        ARCHIVEWEB;
-
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case LEARNWEB:
-                return "LearnWeb";
-            case ARCHIVEWEB:
-                return "ArchiveWeb";
-            default:
-                return this.name();
-            }
-        }
-    };
-
-    private DOMAIN domain = DOMAIN.LEARNWEB; // variable is used to change the logo
-
-    // organization specific settings
-    private boolean optionContentAnnotationFieldEnabled;
-    private boolean optionStarRatingEnabled;
-    private boolean optionThumbRatingEnabled;
-    private boolean optionLoggingEnabled;
-    private boolean optionTrackingEnabled;
+    private Organisation activeOrganisation;
 
     public UserBean()
     {
-        locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        // get preferred language
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
+        locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
 
-        storeMetadataInSession(null);
-
-        HttpServletRequest httpRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest httpRequest = (HttpServletRequest) externalContext.getRequest();
 
         if(FrontpageServlet.isArchiveWebRequest(httpRequest))
-        {
-            domain = DOMAIN.ARCHIVEWEB;
-        }
+            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(848); // load archiveweb
+        else
+            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getDefaultOrganisation();
+
+        refreshLocale();
+        storeMetadataInSession();
     }
 
     /**
-     * This methods sets values which are required by the Download Servlet
+     * This method sets values which are required by the Download Servlet
      * and provides data which is shown on the Tomcat mananger session page
      */
-    private void storeMetadataInSession(User user)
+    private void storeMetadataInSession()
     {
+        User user = getUser();
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
 
@@ -122,7 +99,7 @@ public class UserBean implements Serializable
         HttpSession session = (HttpSession) context.getSession(true);
         session.setAttribute("userName", info); // set only to display it in Tomcat manager app
         session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
-        session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId())); // required by DownloadServlet
+        session.setAttribute("learnweb_user_id", new Integer(userId)); // required by DownloadServlet
     }
 
     public boolean isLoggedIn()
@@ -162,54 +139,17 @@ public class UserBean implements Serializable
      */
     public void setUser(User user)
     {
+        userId = user.getId();
+        activeOrganisation = user.getOrganisation();
+
         //clear caches
         newGroups = null;
-        userId = 0;
-        userCache = null;
-        activeCourseId = 0;
         cacheShowMessageJoinGroup = true;
         cacheShowMessageAddResource = true;
+        userCache = null;
 
-        if(user != null)
-        {
-            userId = user.getId();
-
-            storeMetadataInSession(user);
-
-            if(user.getId() == 2969) // paviamod set to dentists2015 // TODO this is only a quick fix
-                activeCourseId = 884; // activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
-            else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
-                activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
-            else if(user.getId() == 8963) // LAbInt set active course to LabInt 2016
-                activeCourseId = 1225; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
-            else if(user.getOrganisationId() == 1249) // eu made 4 all
-                activeCourseId = 1250;
-            else
-            {
-                try
-                {
-                    activeCourseId = user.getCourses().get(0).getId();
-                }
-                catch(SQLException e)
-                {
-                    log.error(e);
-                }
-            }
-
-            // get options
-            Organisation org = user.getOrganisation();
-            optionContentAnnotationFieldEnabled = org.getOption(Organisation.Option.Resource_Show_Content_Annotation_Field);
-            optionThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
-            optionStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
-            optionLoggingEnabled = !org.getOption(Option.Misc_Logging_disabled);
-            optionTrackingEnabled = !org.getOption(Option.Misc_Tracker_disabled);
-
-        }
-        else
-        {
-            // user logged out
-            onDestroy();
-        }
+        refreshLocale();
+        storeMetadataInSession();
     }
 
     @PreDestroy
@@ -221,8 +161,6 @@ public class UserBean implements Serializable
         {
             user.onDestroy();
         }
-
-        //log.debug("Session Destroyed;");
     }
 
     public String getPreference(String key)
@@ -254,15 +192,6 @@ public class UserBean implements Serializable
     }
 
     /**
-     *
-     * @return example "de_DE"
-     */
-    public String getLocaleAsString()
-    {
-        return locale.toString();
-    }
-
-    /**
      * example "de"
      *
      * @return
@@ -272,33 +201,46 @@ public class UserBean implements Serializable
         return locale.getLanguage();
     }
 
+    /**
+     * After construction and login/logout we need to check if a default language has to be set
+     */
+    private void refreshLocale()
+    {
+        String localeCode = activeOrganisation.getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
+        setLocaleCode(localeCode);
+    }
+
     public String setLocaleCode(String localeCode)
     {
+        String languageVariant = activeOrganisation.getLanguageVariant();
         log.debug("set locale " + localeCode);
 
         if(localeCode.equals("de"))
-            locale = new Locale("de", "", "AMA");
+            locale = new Locale("de", "DE", languageVariant);
         else if(localeCode.equals("en"))
-            locale = new Locale("en", "GB");
+            locale = new Locale("en", "UK", languageVariant);
         else if(localeCode.equals("it"))
-            locale = Locale.ITALY;
+            locale = new Locale("it", "IT", languageVariant);
         else if(localeCode.equals("pt"))
-            locale = new Locale("pt", "BR");
+            locale = new Locale("pt", "BR", languageVariant);
         else if(localeCode.equals("xx")) // only for translation editors
             locale = new Locale("", "", "KEYS");
         else
         {
-            locale = Locale.ENGLISH;
+            locale = new Locale("en", "UK");
             log.error("Unsupported language: " + localeCode);
         }
+        log.debug("Locale set: " + locale + ";");
 
         localePrettyTime = null; // reset date formatter
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.getViewRoot().setLocale(locale);
+        // facesContext.getViewRoot().setLocale(locale);
 
-        String viewId = facesContext.getViewRoot().getViewId();
-        return viewId + "?faces-redirect=true&includeViewParams=true";
+        UIViewRoot viewRoot = facesContext.getViewRoot();
+        if(viewRoot == null)
+            return null;
+        return viewRoot.getViewId() + "?faces-redirect=true&includeViewParams=true";
     }
 
     public boolean isAdmin()
@@ -396,20 +338,6 @@ public class UserBean implements Serializable
         return user.getTimeZone();
     }
 
-    /**
-     * Helper method to catch exceptions
-     *
-     * @return
-     */
-    @Deprecated
-    private Course getActiveCourse()
-    {
-        // in case of errors load public course
-        int courseId = isLoggedIn() ? activeCourseId : 485;
-
-        return Learnweb.getInstance().getCourseManager().getCourseById(courseId);
-    }
-
     @Override
     public String toString()
     {
@@ -443,46 +371,19 @@ public class UserBean implements Serializable
     }
 
     /**
-     * Returns the css code for the banner image of the active course or an empty string if no image is defined
+     * Returns the css code for the banner image of the active organization or an empty string if no image is defined
      *
      * @return
      * @throws SQLException
      */
     public String getBannerImage() throws SQLException
     {
-        Course selectCourse = getActiveCourse();
-
-        if(domain.equals(DOMAIN.ARCHIVEWEB))
-            selectCourse = Learnweb.getInstance().getCourseManager().getCourseById(891);
-
-        if(selectCourse != null && selectCourse.getBannerImage() != null)
-            return "background-image: url(" + selectCourse.getBannerImage() + ");";
-
-        return "";
-    }
-
-    /**
-     * Returns the css banner color of the active course or an empty string if no color is defined
-     *
-     * @return
-     */
-    public String getBannerColor()
-    {
-        String bannerColor = "#489a83";
-        Course selectCourse = getActiveCourse();
-
-        if(selectCourse != null && selectCourse.getBannerColor() != null && selectCourse.getBannerColor().length() > 3)
-            bannerColor = "#" + selectCourse.getBannerColor();
-
-        return bannerColor;
+        return activeOrganisation.getBannerImage();
     }
 
     public String getBannerLink() throws SQLException
     {
-        if(getUser() == null)
-            return "";
-
-        return getUser().getOrganisation().getWelcomePage();
+        return activeOrganisation.getWelcomePage();
     }
 
     /**
@@ -493,9 +394,9 @@ public class UserBean implements Serializable
      */
     public List<Group> getNewGroups() throws SQLException
     {
-        if(null == newGroups)
+        if(null == newGroups && getUser() != null)
         {
-            newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(activeCourseId, getUser().getLastLoginDate());
+            newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(getUser().getCourses(), getUser().getLastLoginDate());
         }
 
         return newGroups;
@@ -513,21 +414,6 @@ public class UserBean implements Serializable
         }
 
         return 0;
-    }
-
-    public boolean isSearchHistoryEnabled()
-    {
-        return getActiveCourse().getOption(Course.Option.Search_History_log_enabled);
-    }
-
-    public boolean isGoogleDocsSignInEnabled()
-    {
-        return getActiveCourse().getOption(Course.Option.Course_Google_Docs_Sign_In_enabled);
-    }
-
-    public boolean isLanguageSwitchEnabled()
-    {
-        return !getActiveCourse().getOption(Course.Option.Users_Hide_language_switch);
     }
 
     /**
@@ -716,32 +602,32 @@ public class UserBean implements Serializable
 
     public boolean isOptionContentAnnotationFieldEnabled()
     {
-        return optionContentAnnotationFieldEnabled;
+        return activeOrganisation.getOption(Option.Resource_Show_Content_Annotation_Field);
     }
 
     public boolean isStarRatingEnabled()
     {
-        return optionStarRatingEnabled;
+        return !activeOrganisation.getOption(Option.Resource_Hide_Star_rating);
     }
 
     public boolean isThumbRatingEnabled()
     {
-        return optionThumbRatingEnabled;
+        return !activeOrganisation.getOption(Option.Resource_Hide_Thumb_rating);
     }
 
     public boolean isLoggingEnabled()
     {
-        return optionLoggingEnabled;
+        return !activeOrganisation.getOption(Option.Misc_Logging_disabled);
     }
 
     public boolean isTrackingEnabled()
     {
-        return optionTrackingEnabled;
+        return !activeOrganisation.getOption(Option.Misc_Tracker_disabled);
     }
 
-    public DOMAIN getDomain()
+    public boolean isLanguageSwitchEnabled()
     {
-        return domain;
+        return !activeOrganisation.getOption(Option.Users_Hide_language_switch);
     }
 
 }

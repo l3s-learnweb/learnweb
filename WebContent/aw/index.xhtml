@@ -112,26 +112,6 @@
 					</div>
 					<br/>
 				</ui:fragment>
-				
-				<h2 class="page_header">
-					#{msg['Changelog.title']}
-				</h2>
-				
-				<div class="grey_border">
-					<h4>
-						<h:outputText value="${utilBean.StringToDate('16.10.2015')}">
-	           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-	       				</h:outputText>	
-	       			</h4>
-					<h:panelGrid columns="2" columnClasses="first_column,description">
-						<h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
-						<h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
-	
-						<h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
-						<h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
-					</h:panelGrid>
-
-				</div>
 			</div>
 
 			<br class="clear" />
@@ -140,9 +120,6 @@
 
 		<div id="index_footer">
 			<h:outputText value="#{msg['ArchiveWeb.index_footer_text']} "/>
-			<!-- <a href="mailto:learnweb-support@l3s.de" >
-				<h:outputText value="learnweb-support@l3s.de"/>
-			</a> -->
 		</div>
 	</ui:define>
 

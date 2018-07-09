@@ -26,7 +26,7 @@ import de.l3s.learnweb.user.User;
 /**
  * This class provides auto completion for selected resource metadata fields of the yell course.
  * It is not a real bean
- * 
+ *
  * @author Kemkes
  *
  */
@@ -41,9 +41,14 @@ public class ResourceMetaDataBean
     private static final HashMap<Integer, List<String>> authorLists = new HashMap<>(); // quick and very dirt implementation
     private static final HashMap<Integer, Long> authorListsCacheTime = new HashMap<>(); // quick and very dirt implementation
 
+    /**
+     * Creates a translated list of all available languages
+     * 
+     * @return
+     */
     public static List<SelectItem> getLanguageList()
     {
-        String locale = UtilBean.getUserBean().getLocaleAsString();
+        String locale = UtilBean.getUserBean().getLocaleCode();
         List<SelectItem> languageList;
 
         languageList = languageLists.get(locale);

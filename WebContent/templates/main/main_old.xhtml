@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui" 
 	lang="#{userBean.localeCode}">
 
-<f:view locale="#{userBean.localeCode}" contentType="text/html">
+<f:view locale="#{userBean.locale}" contentType="text/html">
 	<ui:insert name="metadata" />
 
 	<h:head>	
@@ -90,13 +90,6 @@
 			</p:layoutUnit>
 
 		</p:layout>
-		<!-- 
-		<p:dialog header="Shared Resultsets" widgetVar="shared_resultsets_dialog" modal="false" minWidth="600" resizable="false" rendered="#{userBean.searchHistoryEnabled}">			
-			<h:form id="shared_resultsets_form">
-				<ui:decorate template="/lw/user/shared_resultsets.xhtml"></ui:decorate>
-			</h:form> 			
-		</p:dialog>	
-		 -->
 		 
 		<ui:insert name="bottom_panel"></ui:insert>
 	

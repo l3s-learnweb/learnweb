@@ -7,8 +7,6 @@
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />
 	<ui:param name="disableGrowl" value="true" />
 
-	<pre><code class="js">baguetteBox.run('.baguetteBoxOne');</code></pre>
-
 	<ui:define name="center_layout">
 		<h:outputStylesheet name="frontpage/index.css" />
 
@@ -149,8 +147,8 @@
 
 		<div id="index_footer">
 			<h:outputText value="#{msg.index_footer_text} "/>
-			<a href="mailto:learnweb-support@l3s.de" >
-				<h:outputText value="learnweb-support@l3s.de"/>
+			<a href="mailto:#{msg['application.serverAdmin']}" >
+				<h:outputText value="#{msg['application.serverAdmin']}"/>
 			</a>
 		</div>
 	</ui:define>

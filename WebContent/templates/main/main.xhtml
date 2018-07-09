@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui" 
 	lang="#{userBean.localeCode}">
 
-<f:view locale="#{userBean.localeCode}" contentType="text/html">
+<f:view locale="#{userBean.locale}" contentType="text/html">
 	<ui:insert name="metadata" />
 
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>#{pageTitle}</title>
+		<title>#{pageTitle} #{Locale}</title>
 		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
 		<h:outputStylesheet library="main-template" name="main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />

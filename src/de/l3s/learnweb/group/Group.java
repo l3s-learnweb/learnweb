@@ -820,4 +820,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         this.hypothesisToken = hypothesisToken;
     }
+
+    public boolean isGoogleDocsSignInEnabled() throws SQLException
+    {
+        return getCourse().getOption(Course.Option.Groups_Google_Docs_Sign_In_enabled);
+    }
 }

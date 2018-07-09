@@ -541,35 +541,9 @@ $(document).ready(function()
 		resizeGridResources();
 	else if(view == 'list')
 	{
-		/*if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true")			
-		{	$('#search_right_bar').css('width','0%');
-			$('#search_right_bar').css('display','none');
-		}
-		else
-		{
-			$('#search_right_bar').removeClass('right_bar').addClass('web_right_bar');
-			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%'); für search history aktivieren
-		}*/
 		ajaxLoadFactsheet();
 	}
 	
-	/*if(view=='grid' || view=='float')
-	{	
-		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true" || !searchHistoryEnabled)
-		{
-			//$('.grid_view').css('width','100%'); für search history aktivieren
-			//$('.float_view').css('width','100%'); für search history aktivieren
-			$('#search_right_bar').css('width','0%');
-		    $('#search_right_bar').css('display','none');
-		}
-		else
-		{
-			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','75%');	 für search history aktivieren
-		}
-	}*/
-	
-	//if(searchHistoryEnabled)
-	//	ajaxLoadSearchHistory();
 	
 	// register cursor left/right and esc key
 	$(document).keydown(function(event) {

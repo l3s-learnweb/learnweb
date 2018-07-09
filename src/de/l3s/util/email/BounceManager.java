@@ -425,6 +425,7 @@ public class BounceManager extends Observable
     /**
      * Debug/analysis function that checks contents of bounce folder.
      */
+    @SuppressWarnings("unused")
     private void checkBounceFolder() throws MessagingException
     {
         Properties props = new Properties();

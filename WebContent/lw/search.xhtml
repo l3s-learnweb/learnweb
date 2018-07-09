@@ -48,30 +48,7 @@
 					<f:param name="action" value="video" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
-			</h:form>		
-	
-			<!-- <h:panelGroup rendered="#{userBean.searchHistoryEnabled}">		
-
-				<h:form styleClass="resourcestype">
-				<span class="float-right" style="padding-right:5px; margin-top:-2.1rem;">
-					<h:panelGroup styleClass="search_history">
-						<p:commandButton id="search_history_tools" value="#{msg.search_history_tools}" type="button" icon="ui-icon-triangle-1-s"/>
-					</h:panelGroup>
-				</span>
-				<p:menu overlay="true" trigger="search_history_tools" my="left top" at="left bottom">
-					<p:submenu label="#{msg.search_history}">
-						<p:menuitem value="#{msg.show}" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();"/>
-						<p:menuitem value="#{msg.hide}" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
-					</p:submenu>
-					<p:submenu label="#{msg.explore_history}">
-						<p:menuitem value="#{msg.list_view}" icon="ui-icon-search" outcome="explore">
-							<f:param name="mode" value="list_view" />
-							<f:param name="page" value="1" />
-						</p:menuitem>
-					</p:submenu>
-				</p:menu>
-				</h:form>
-			</h:panelGroup>	 -->		
+			</h:form>	
 		</div>
 	</ui:define>
 				
@@ -215,7 +192,6 @@
 		<script type="text/javascript">
 			var view = '#{searchBean.view}';
 			var userId = '#{userBean.user.id}';
-			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
 		</script>			
 		 
 		<ui:decorate template="/templates/search/resource_lightbox.xhtml" /> 	

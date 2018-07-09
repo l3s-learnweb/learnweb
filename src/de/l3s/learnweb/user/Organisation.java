@@ -1,21 +1,24 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceMetadataField;
-import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.learnweb.resource.ResourceMetadataField.MetadataType;
+import de.l3s.learnweb.resource.SERVICE;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -33,54 +36,31 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Misc_Anonymize_usernames,
         Resource_Show_Content_Annotation_Field,
         Misc_Logging_disabled,
-        Misc_Tracker_disabled
+        Misc_Tracker_disabled,
+        Users_Hide_language_switch
     }
 
     private int id;
     @Size(min = 1, max = 60)
     private String title;
-    private String logo;
     private String welcomeMessage;
-    private String welcomePage;
+    private String welcomePage; // page to show after login
+    private String logoutPage; // page to show after logout
     private SERVICE defaultSearchServiceText = SERVICE.bing;
     private SERVICE defaultSearchServiceImage = SERVICE.flickr;
     private SERVICE defaultSearchServiceVideo = SERVICE.youtube;
-    private String defaultLanguage = null; // the language which is used after the user logged in
-    private long[] options = new long[1];
+    private String defaultLanguage; // the language which is used after the user logged in
+    private String languageVariant; // optional variant that is added to the selected language
+    private BitSet options = new BitSet();
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
+    private transient String bannerImage;
+    private int bannerImageFileId;
+    private String cssFile; // optional CSS file to load
+    private List<Locale> glossaryLanguages; // languages that can be used to construct a glossary
 
-    /**
-     * Constructs a temporary object. Can be persisted by OrganisationManager.save()
-     *
-     */
-    public Organisation()
+    public Organisation(int id)
     {
-        this.id = -1;
-
-        createMetadataFields();
-    }
-
-    /**
-     * This constructor should only be called by OrganisationManager
-     *
-     * @param rs
-     * @throws SQLException
-     */
-    protected Organisation(ResultSet rs) throws SQLException
-    {
-        this.id = rs.getInt("organisation_id");
-        this.title = rs.getString("title");
-        this.logo = rs.getString("logo");
-        this.welcomePage = rs.getString("welcome_page");
-        this.welcomeMessage = rs.getString("welcome_message");
-        this.defaultLanguage = rs.getString("default_language");
-
-        setDefaultSearchServiceText(rs.getString("default_search_text"));
-        setDefaultSearchServiceImage(rs.getString("default_search_image"));
-        setDefaultSearchServiceVideo(rs.getString("default_search_video"));
-
-        for(int i = 0; i < 1;)
-            options[i] = rs.getInt("options_field" + (++i));
+        this.id = id;
 
         createMetadataFields();
     }
@@ -107,6 +87,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
         return userIds;
     }
 
+    /**
+     *
+     * @return 2 letter language code or NULL
+     */
     public String getDefaultLanguage()
     {
         return defaultLanguage;
@@ -119,7 +103,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
     public void setDefaultLanguage(String defaultLanguage)
     {
         if(defaultLanguage != null && defaultLanguage.length() != 2)
-            throw new IllegalArgumentException("Expect NULL or two letter language code");
+            throw new IllegalArgumentException("Expect null or two letter language code");
 
         this.defaultLanguage = defaultLanguage;
     }
@@ -137,7 +121,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
     @Override
     public String toString()
     {
-        return "Organisation [id=" + id + ", title=" + title + ", logo=" + logo + "]";
+        return "Organisation [id=" + id + ", title=" + title + "]";
     }
 
     @Override
@@ -178,25 +162,25 @@ public class Organisation implements Serializable, Comparable<Organisation>
         {
             metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
-
+        
             metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
             metadata.setRequired(true);
             metadataFields.add(metadata);
-
+        
             metadata = new ResourceMetadataField("category", "category", MetadataType.INPUT_TEXT);
             metadata.setRequired(false);
             metadataFields.add(metadata);
-
+        
             metadataFields.add(new ResourceMetadataField("noname", "Attributes", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
-
+        
             metadata = new ResourceMetadataField("Source", "Source", MetadataType.INPUT_TEXT);
             metadataFields.add(metadata);
-
+        
             metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
             {
                 private static final long serialVersionUID = -2914974737900412242L;
-
+        
                 @Override
                 public List<String> completeText(String query)
                 {
@@ -216,7 +200,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             };
             metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc");
             metadataFields.add(metadata);
-
+        
             metadata = new ResourceMetadataField("yell_media_type", "Media Type", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Text");
@@ -225,11 +209,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("Game");
             metadata.getOptions().add("App");
             metadataFields.add(metadata);
-
+        
             metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU)
             {
                 private static final long serialVersionUID = 1934886927426174254L;
-
+        
                 @Override
                 public List<SelectItem> getOptionsList()
                 {
@@ -238,10 +222,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
             };
             metadata.setInfo("Select the language of the resource content");
             metadataFields.add(metadata);
-
+        
             metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
-
+        
             metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("speaking skills");
@@ -258,7 +242,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("teacher education resources");
             metadata.getOptions().add("other");
             metadataFields.add(metadata);
-
+        
             metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("C2");
@@ -269,9 +253,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("A1");
             metadata.setInfo("");
             metadataFields.add(metadata);
-
+        
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
-
+        
         }*/
         else if(id == 848) // Demo (archive course)
         {
@@ -308,16 +292,6 @@ public class Organisation implements Serializable, Comparable<Organisation>
     public String getTitle()
     {
         return title;
-    }
-
-    public String getLogo()
-    {
-        return logo;
-    }
-
-    public void setLogo(String logo)
-    {
-        this.logo = logo;
     }
 
     /**
@@ -363,34 +337,24 @@ public class Organisation implements Serializable, Comparable<Organisation>
         this.welcomePage = welcomePage;
     }
 
+    protected void setOptions(long[] optionValues)
+    {
+        this.options = BitSet.valueOf(optionValues);
+    }
+
     public boolean getOption(Option option)
     {
-        int bit = option.ordinal();
-        int field = bit >> 6;
-        long bitMask = 1L << (bit % 64);
-
-        return (options[field] & bitMask) == bitMask;
+        return options.get(option.ordinal());
     }
 
     public void setOption(Option option, boolean value)
     {
-        int bit = option.ordinal();
-        int field = bit >> 6;
-        long bitMask = 1L << (bit % 64);
-
-        if(value) // is true set Bit to 1
-        {
-            options[field] |= bitMask;
-        }
-        else
-        {
-            options[field] &= ~bitMask;
-        }
+        options.set(option.ordinal(), value);
     }
 
     public long[] getOptions()
     {
-        return options;
+        return options.toLongArray();
     }
 
     private static SERVICE getServiceFromString(String name)
@@ -450,4 +414,83 @@ public class Organisation implements Serializable, Comparable<Organisation>
     {
         this.defaultSearchServiceVideo = defaultSearchServiceVideo;
     }
+
+    public String getBannerImage() throws SQLException
+    {
+        if(null == bannerImage)
+        {
+            if(bannerImageFileId < 1)
+                return null;
+
+            File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
+
+            if(file != null)
+                bannerImage = "background-image: url(" + file.getUrl() + ");";
+            else
+                bannerImage = "";
+        }
+        return bannerImage;
+    }
+
+    public int getBannerImageFileId()
+    {
+        return bannerImageFileId;
+    }
+
+    public void setBannerImageFileId(int bannerImageFileId)
+    {
+        this.bannerImageFileId = bannerImageFileId;
+        this.bannerImage = null; // clear cache
+    }
+
+    public String getCssFile()
+    {
+        return cssFile;
+    }
+
+    public void setCssFile(String cssFile)
+    {
+        this.cssFile = cssFile;
+    }
+
+    public String getLogoutPage()
+    {
+        return logoutPage;
+    }
+
+    public void setLogoutPage(String logoutPage)
+    {
+        this.logoutPage = logoutPage;
+    }
+
+    public String getLanguageVariant()
+    {
+        return languageVariant;
+    }
+
+    public void setLanguageVariant(String languageVariant)
+    {
+        this.languageVariant = StringUtils.defaultString(languageVariant);
+    }
+
+    public List<Locale> getGlossaryLanguages()
+    {
+        return glossaryLanguages;
+    }
+
+    public void setGlossaryLanguages(List<Locale> glossaryLanguages)
+    {
+        this.glossaryLanguages = glossaryLanguages;
+    }
+
+    public void setOptions(BitSet options)
+    {
+        this.options = options;
+    }
+
+    public void setMetadataFields(List<ResourceMetadataField> metadataFields)
+    {
+        this.metadataFields = metadataFields;
+    }
+
 }

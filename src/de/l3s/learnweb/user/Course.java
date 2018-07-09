@@ -1,10 +1,8 @@
 package de.l3s.learnweb.user;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.BitSet;
 import java.util.List;
 
 import javax.validation.constraints.Size;
@@ -14,9 +12,9 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupCategory;
-import de.l3s.learnweb.resource.File;
+import de.l3s.util.HasId;
 
-public class Course implements Serializable, Comparable<Course>
+public class Course implements Serializable, Comparable<Course>, HasId
 {
     private static final long serialVersionUID = -1101352995500154406L;
     private static final Logger log = Logger.getLogger(Course.class);
@@ -27,92 +25,49 @@ public class Course implements Serializable, Comparable<Course>
     {
         Unused_1,
         Unused_2,
-        Users_Hide_language_switch,
-        Services_Allow_user_to_logout_from_interweb,
+        Unused_5,
+        Unused_3,
         Users_Require_mail_address,
-        Search_History_log_enabled, // this should be a organization option
-        Course_Google_Docs_Sign_In_enabled, // this should be a organization option
+        Unused_4, // this should be a organization option
+        Groups_Google_Docs_Sign_In_enabled, // this should be a organization option
         Users_Require_Affiliation,
         Users_Require_Student_Id
     }
 
-    private int id;
-    @Size(min = 1, max = 50)
+    private int id = -1;
+    @Size(min = 1, max = 40)
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 90)
     private String wizardParam;
-    private boolean wizardEnabled;
     private int nextXUsersBecomeModerator;
-    @Size(max = 255)
-    private String defaultInterwebUsername;
-    @Size(max = 255)
-    private String defaultInterwebPassword;
+    @Size(min = 0, max = 65000)
     private String welcomeMessage;
-    private String bannerImage;
-    private int bannerImageFileId;
-    private String bannerColor;
 
-    private long[] options = new long[CourseManager.FIELDS];
+    private BitSet options = new BitSet();
 
-    // derived values:
+    // derived/cached values:
     private int memberCount;
     private List<GroupCategory> groupCategories;
 
-    /**
-     * Constructs a temporary object. Can be persisted by CourseManager.save()
-     */
     public Course()
     {
-        this.id = -1;
-        this.options[0] = 1L; // forum enabled
-        this.wizardEnabled = true;
     }
 
-    protected Course(ResultSet rs) throws SQLException
+    protected void setOptions(long[] optionValues)
     {
-        this.id = rs.getInt("course_id");
-        this.title = rs.getString("title");
-        this.organisationId = rs.getInt("organisation_id");
-        this.defaultGroupId = rs.getInt("default_group_id");
-        this.wizardParam = rs.getString("wizard_param");
-        this.wizardEnabled = rs.getInt("wizard_enabled") == 1;
-        this.nextXUsersBecomeModerator = rs.getInt("next_x_users_become_moderator");
-        this.defaultInterwebUsername = rs.getString("default_interweb_username");
-        this.defaultInterwebPassword = rs.getString("default_interweb_password");
-        this.welcomeMessage = rs.getString("welcome_message");
-        this.bannerColor = rs.getString("banner_color");
-        this.bannerImageFileId = rs.getInt("banner_image_file_id");
-        this.memberCount = -1;
-
-        for(int i = 0; i < CourseManager.FIELDS;)
-            options[i] = rs.getInt("options_field" + (++i));
+        this.options = BitSet.valueOf(optionValues);
     }
 
     public boolean getOption(Option option)
     {
-        int bit = option.ordinal();
-        int field = bit >> 6;
-        long bitMask = 1L << (bit % 64);
-
-        return (options[field] & bitMask) == bitMask;
+        return options.get(option.ordinal());
     }
 
     public void setOption(Option option, boolean value)
     {
-        int bit = option.ordinal();
-        int field = bit >> 6;
-        long bitMask = 1L << (bit % 64);
-
-        if(value) // is true set Bit to 1
-        {
-            options[field] |= bitMask;
-        }
-        else
-        {
-            options[field] &= ~bitMask;
-        }
+        options.set(option.ordinal(), value);
     }
 
     public List<Group> getGroups() throws SQLException
@@ -130,6 +85,7 @@ public class Course implements Serializable, Comparable<Course>
      *
      * @return
      */
+    @Override
     public int getId()
     {
         return id;
@@ -155,9 +111,9 @@ public class Course implements Serializable, Comparable<Course>
         this.title = title;
     }
 
-    public long[] getOptions()
+    protected long[] getOptions()
     {
-        return options;
+        return options.toLongArray();
     }
 
     public int getOrganisationId()
@@ -198,16 +154,6 @@ public class Course implements Serializable, Comparable<Course>
         this.wizardParam = wizardParam;
     }
 
-    public boolean isWizardEnabled()
-    {
-        return wizardEnabled;
-    }
-
-    public void setWizardEnabled(boolean wizardEnabled)
-    {
-        this.wizardEnabled = wizardEnabled;
-    }
-
     public int getNextXUsersBecomeModerator()
     {
         return nextXUsersBecomeModerator;
@@ -234,19 +180,12 @@ public class Course implements Serializable, Comparable<Course>
 
     /**
      *
-     * @return The userIds fo all course members
+     * @return The userIds of all course members
      * @throws SQLException
      */
     public List<Integer> getUserIds() throws SQLException
     {
-        List<User> users = getMembers();
-        List<Integer> userIds = new ArrayList<>(users.size());
-
-        for(User user : users)
-        {
-            userIds.add(user.getId());
-        }
-        return userIds;
+        return HasId.collectIds(getMembers());
     }
 
     public void addUser(User user) throws SQLException
@@ -280,26 +219,6 @@ public class Course implements Serializable, Comparable<Course>
         return user.getCourses().contains(this); // moderators can only moderator her own courses
     }
 
-    public String getDefaultInterwebUsername()
-    {
-        return defaultInterwebUsername;
-    }
-
-    public void setDefaultInterwebUsername(String defaultInterwebUsername)
-    {
-        this.defaultInterwebUsername = defaultInterwebUsername;
-    }
-
-    public String getDefaultInterwebPassword()
-    {
-        return defaultInterwebPassword;
-    }
-
-    public void setDefaultInterwebPassword(String defaultInterwebPassword)
-    {
-        this.defaultInterwebPassword = defaultInterwebPassword;
-    }
-
     public String getWelcomeMessage()
     {
         return welcomeMessage;
@@ -308,47 +227,6 @@ public class Course implements Serializable, Comparable<Course>
     public void setWelcomeMessage(String welcomeMessage)
     {
         this.welcomeMessage = welcomeMessage;
-    }
-
-    public String getBannerImage() throws SQLException
-    {
-        if(null == bannerImage)
-        {
-            if(bannerImageFileId < 1)
-                return null;
-
-            File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
-            bannerImage = file.getUrl();
-        }
-        return bannerImage;
-    }
-
-    public int getBannerImageFileId()
-    {
-        return bannerImageFileId;
-    }
-
-    public void setBannerImageFileId(int bannerImageFileId)
-    {
-        this.bannerImageFileId = bannerImageFileId;
-        this.bannerImage = null; // clear cache
-    }
-
-    public String getBannerColor()
-    {
-        return bannerColor;
-    }
-
-    public void setBannerColor(String bannerColor)
-    {
-        this.bannerColor = bannerColor;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Course [id=" + id + ", title=" + title + ", options=" + Arrays.toString(options) + ", organisationId=" + organisationId + ", defaultGroupId=" + defaultGroupId + ", wizardParam=" + wizardParam + ", wizardEnabled=" + wizardEnabled + ", nextXUsersBecomeModerator="
-                + nextXUsersBecomeModerator + ", defaultInterwebUsername=" + defaultInterwebUsername + ", defaultInterwebPassword=" + defaultInterwebPassword + ", memberCount=" + memberCount + "]";
     }
 
     @Override

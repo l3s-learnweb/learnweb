@@ -12,8 +12,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector;
+import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
 
@@ -32,6 +39,38 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
         log.debug("init AdminOrganisationsBean");
         organisations = new ArrayList<Organisation>(getLearnweb().getOrganisationManager().getOrganisationsAll());
         setSelectedOrganisation(getUser().getOrganisation()); // by default edit the users organization
+    }
+
+    public void handleFileUpload(FileUploadEvent event)
+    {
+        UploadedFile uploadedFile = event.getFile();
+
+        FileInspector fileInspector = new FileInspector(getLearnweb());
+
+        try
+        {
+            FileInfo fileInfo = fileInspector.inspect(uploadedFile.getInputstream(), uploadedFile.getFileName());
+
+            File file = new File();
+            file.setType(TYPE.SYSTEM_FILE);
+            file.setName(fileInfo.getFileName());
+            file.setMimeType(fileInfo.getMimeType());
+
+            file = getLearnweb().getFileManager().save(file, uploadedFile.getInputstream());
+
+            if(selectedOrganisation.getBannerImageFileId() > 0) // delete old image first
+            {
+                Learnweb.getInstance().getFileManager().delete(selectedOrganisation.getBannerImageFileId());
+            }
+
+            selectedOrganisation.setBannerImageFileId(file.getId());
+
+        }
+        catch(Exception e)
+        {
+            log.error("Could not handle uploaded banner image", e);
+            addGrowl(FacesMessage.SEVERITY_FATAL, "Could not store file");
+        }
     }
 
     public void onSave()

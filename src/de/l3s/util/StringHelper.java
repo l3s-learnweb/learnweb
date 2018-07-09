@@ -9,9 +9,14 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -127,7 +132,7 @@ public class StringHelper
     }
 
     public static String implodeInt(int[] list, String delim)
-    {
+    {//Stream.of(list).forEach(action);;
         StringBuilder out = new StringBuilder();
         for(int item : list)
         {
@@ -136,6 +141,42 @@ public class StringHelper
             out.append(Integer.toString(item));
         }
         return out.toString();
+    }
+
+    public static String join(Collection<Locale> collection)
+    {
+        return collection.stream()
+                .map(Locale::toLanguageTag)
+                .collect(Collectors.joining(","));
+    }
+
+    public static List<Locale> splitLocales(String input)
+    {
+        ArrayList<Locale> locales = new ArrayList<Locale>();
+
+        if(StringUtils.isEmpty(input))
+        {
+            locales.add(Locale.GERMANY);
+            locales.add(Locale.ENGLISH);
+            locales.add(Locale.ITALIAN);
+            return locales;
+        }
+
+        String[] entries = input.split(",");
+
+        for(String entry : entries)
+        {
+            locales.add(Locale.forLanguageTag(entry));
+        }
+
+        return locales;
+    }
+
+    public static void main(String[] args)
+    {
+        List<Locale> locales = splitLocales(null);
+        log.debug(join(locales));
+
     }
 
     /**

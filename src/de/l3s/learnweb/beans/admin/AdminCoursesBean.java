@@ -74,7 +74,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getLearnweb().getCourseManager().delete(course.getId());
+            getLearnweb().getCourseManager().delete(course);
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted.");
             load(); // update course list
         }
@@ -95,7 +95,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
                 return;
             }
-            Organisation org = new Organisation();
+            Organisation org = new Organisation(-1);
             org.setTitle(newOrganisationTitle);
             om.save(org);
             addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");

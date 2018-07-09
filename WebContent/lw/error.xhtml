@@ -2,145 +2,125 @@
 <html xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
 
-	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>#{msg.error} - Learnweb</title>
-		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
-		<h:outputStylesheet library="main-template" name="main.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-
-		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		<h:outputScript library="main-template" name="default2.js" />
+	<f:view locale="#{userBean.locale}" contentType="text/html">
+		<h:head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>#{msg.error}</title>
+			<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+			<h:outputStylesheet library="main-template" name="main.css" />
+			<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
 	
-		<base href="#{request.contextPath}/lw/" />
-	
-	</h:head>
-	
-	<h:body>
-		<h:outputScript name="main-template/jquery-ui.min.js" />
-		<header id="header">
-			<div id="main_menu_bar">			
+			<h:outputScript library="primefaces" name="jquery/jquery.js" />
+			<h:outputScript library="main-template" name="default2.js" />
 		
-			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
-			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
-		 
-			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
-				<a href="./" id="learnweb_logo">Logo</a>
-				<input type="search" name="query" value="" size="50" maxlength="100" id="searchfield" />
-				<input type="hidden" name="action" value="web" />
-				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
-			</form>
-			<div class="userbar">
-				<ul>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources">
-							<h:outputText value="#{msg.myResourcesTitle}" />
-						</a>
-					</li>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups">
-							<h:outputText value="#{msg.groupOverview}" />
-						</a>
-					</li>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
-							<h:outputText value="#{msg.activity_stream}" />
-						</a>
-					</li>	
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
-							<h:outputText value="#{msg.myProfileTitle}" />
-						</a>
-					</li>				
-					<li>
-						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" class="menu" tabindex="0" />
-
-						<ul>
+			<base href="#{request.contextPath}/lw/" />		
+		</h:head>
+		
+		<h:body>
+			<h:outputScript name="main-template/jquery-ui.min.js" />
+			<header id="header">
+				<div id="main_menu_bar">			
+			
+				<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
+				<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
+			 
+				<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
+					<a href="./" id="learnweb_logo">Logo</a>
+					<input type="search" name="query" value="" size="50" maxlength="100" id="searchfield" />
+					<input type="hidden" name="action" value="web" />
+					<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
+				</form>
+				<div class="userbar">
+					<ul>
+						<li>
+							<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources">
+								<h:outputText value="#{msg.myResourcesTitle}" />
+							</a>
+						</li>
+						<li>
+							<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups">
+								<h:outputText value="#{msg.groupOverview}" />
+							</a>
+						</li>
+						<li>
+							<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
+								<h:outputText value="#{msg.activity_stream}" />
+							</a>
+						</li>	
+						<li>
+							<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
+								<h:outputText value="#{msg.myProfileTitle}" />
+							</a>
+						</li>				
+						<li>
+							<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" class="menu" tabindex="0" />
+	
+							<ul>
+								
+								<li class="menupoint">
+									<h:outputText value="#{msg.my_stuff}" />
+								</li>
+								
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="moremyresources">
+										<h:outputText value="#{msg.myResourcesTitle}" />
+									</a>
+								</li>
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="moremygroups">
+										<h:outputText value="#{msg.groupOverview}" />
+									</a>
+								</li>
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
+										<h:outputText value="#{msg.activity_stream}" />
+									</a>
+								</li>							
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
+										<h:outputText value="#{msg.myProfileTitle}" />
+									</a>
+								</li>
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/comments.jsf">
+										<h:outputText value="#{msg.myCommentsTitle}" />
+									</a>
+								</li>
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/tags.jsf">
+										<h:outputText value="#{msg.myTags}" />
+									</a>
+								</li>
+								<li>
+									<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
+								</li>
 							
-							<li class="menupoint">
-								<h:outputText value="#{msg.my_stuff}" />
-							</li>
-							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="moremyresources">
-									<h:outputText value="#{msg.myResourcesTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="moremygroups">
-									<h:outputText value="#{msg.groupOverview}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
-									<h:outputText value="#{msg.activity_stream}" />
-								</a>
-							</li>							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
-									<h:outputText value="#{msg.myProfileTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/comments.jsf">
-									<h:outputText value="#{msg.myCommentsTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/tags.jsf">
-									<h:outputText value="#{msg.myTags}" />
-								</a>
-							</li>
-							<!--  
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
-									<h:outputText value="#{msg.myProfileTitle}" />
-								</a>
-							</li>
-							-->
-							<!-- 							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/services.jsf">
-									<h:outputText value="#{msg.web2_0services}" />
-								</a>
-							</li>
-							 -->
-							
-							<li>
-								<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
-							</li>
-						
-							
-						</ul>
-					</li>
-				</ul>
+								
+							</ul>
+						</li>
+					</ul>
+				</div>		
+	
+				<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
 			</div>
+			</header>		
 	
-
-			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
-
-
-
-
-		</div>
-		</header>		
-
-		<section id="content" class="small_page">
-
-			<p:panel header="#{msg.error}">
-		
-				<p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
-				
-				<div id="stacktrace" class="display-none">
-					<h:outputText value="Message:#{pfExceptionHandler.message}" />
-					<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
-				</div>
-			</p:panel>
-		</section>
-		
-
-
-	</h:body>
+			<section id="content" class="small_page">
+	
+				<p:panel header="#{msg.error}">
+			
+					<p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
+					
+					<div id="stacktrace" class="display-none">
+						<h:outputText value="Message:#{pfExceptionHandler.message}" />
+						<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+					</div>
+				</p:panel>
+			</section>
+	
+		</h:body>
+	</f:view>
 </html>

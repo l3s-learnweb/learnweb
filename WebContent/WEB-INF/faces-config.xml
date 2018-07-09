@@ -7,12 +7,14 @@
 
 	<application>
 		<locale-config>
-			<default-locale>en</default-locale>
-			<supported-locale>de</supported-locale>
+			<default-locale>en_UK</default-locale>
+			<supported-locale>de_DE</supported-locale>
 			<supported-locale>de_DE_AMA</supported-locale>
-			<supported-locale>en</supported-locale>
-			<supported-locale>it</supported-locale>
-			<supported-locale>pt</supported-locale>
+			<supported-locale>de_DE_Archive</supported-locale>
+			<supported-locale>en_UK</supported-locale>
+			<supported-locale>en_UK_Archive</supported-locale>
+			<supported-locale>it_IT</supported-locale>
+			<supported-locale>pt_BR</supported-locale>
 		</locale-config>
 		
 		<resource-bundle>		

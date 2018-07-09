@@ -7,7 +7,7 @@
 	<h:outputScript name="main-template/jquery-ui.min.js" />
 
 	<header id="header" class="header">
-		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">
+		<div id="main_menu_bar" style="#{userBean.bannerImage}">
 
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';"

@@ -4,29 +4,31 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
-	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>#{msg.error} - Learnweb</title>
-		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
-		<h:outputStylesheet library="main-template" name="main.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-
-		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		<h:outputScript library="main-template" name="default2.js" />
+	<f:view locale="#{userBean.locale}" contentType="text/html">
+		<h:head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>#{msg.error}</title>
+			<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+			<h:outputStylesheet library="main-template" name="main.css" />
+			<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
 	
-		<base href="#{request.contextPath}/lw/" />
+			<h:outputScript library="primefaces" name="jquery/jquery.js" />
+			<h:outputScript library="main-template" name="default2.js" />
+		
+			<base href="#{request.contextPath}/lw/" />
+		
+		</h:head>
+		
+		<h:body>
 	
-	</h:head>
+		<header id="header">
+			<div id="main_menu_bar"></div>		
+		</header>
+		<section id="content" class="small_page">
+			<div class="error" style="font-size:1.4rem">#{msg.service_unavailable}</div>	        
+	        <br/><br/>
+		</section>
 	
-	<h:body>
-
-	<header id="header">
-		<div id="main_menu_bar"></div>		
-	</header>
-	<section id="content" class="small_page">
-		<div class="error" style="font-size:1.4rem">#{msg.service_unavailable}</div>	        
-        <br/><br/>
-	</section>
-
-	</h:body>
+		</h:body>
+	</f:view>
 </html>

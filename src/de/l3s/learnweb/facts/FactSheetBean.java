@@ -43,7 +43,7 @@ public class FactSheetBean extends ApplicationBean implements Serializable
     {
         // todo translate query to id
 
-        String language = UtilBean.getUserBean().getLocaleAsString().substring(0, 2);
+        String language = UtilBean.getUserBean().getLocaleCode();
 
         Logger.getLogger(FactSheetBean.class).debug(language + " query " + search);
 

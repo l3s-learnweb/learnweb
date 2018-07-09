@@ -36,6 +36,8 @@ public class LanguageBundle extends ResourceBundle
 
     private Map<String, String> values;
 
+    private Locale locale;
+
     public LanguageBundle()
     {
         this(BASE_NAME, FacesContext.getCurrentInstance().getViewRoot().getLocale());
@@ -48,18 +50,23 @@ public class LanguageBundle extends ResourceBundle
 
     public LanguageBundle(String baseName, Locale locale)
     {
-
-        //log.debug("bundle: " + locale + " - " + locale.getVariant());
-
         LanguageBundle bundle = cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
 
         setParent(bundle);
 
+        //log.debug("requested: " + locale + "; got " + bundle.getLocale());
+    }
+
+    @Override
+    public Locale getLocale()
+    {
+        return locale;
     }
 
     public LanguageBundle(ResourceBundle sourceBundle)
     {
-        log.debug("copy bundle: ");
+        locale = sourceBundle.getLocale();
+        log.debug("Init language bundle: " + locale);
 
         ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
 
@@ -156,6 +163,9 @@ public class LanguageBundle extends ResourceBundle
     public static void main(String[] args)
     {
         Locale locale = new Locale("de", "", "ama");
+
+        log.debug(locale + "; " + locale.toLanguageTag());
+
         ResourceBundle bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("homepageTitle"));
         //bundle = new LanguageBundle(locale);

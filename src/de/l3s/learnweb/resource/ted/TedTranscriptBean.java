@@ -91,7 +91,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         //rcs.put("v", new LeacockChodorow(db));
         //rcs.put("a", new Lesk(db));
         //rcs.put("r", new Lesk(db));
-        locale = UtilBean.getUserBean().getLocaleAsString();
+        locale = UtilBean.getUserBean().getLocaleCode();
 
         //String logPreference = getPreference("transcript_show_del_res");
         //if(logPreference != null)
@@ -261,9 +261,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     /*public double wordSimilarity(String word1, String word2, String pos)
     {
     WS4JConfiguration.getInstance().setMFS(true);
-
+    
     double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-
+    
     return s;
     }
     */
@@ -405,10 +405,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if(!locale.equals(UtilBean.getUserBean().getLocaleAsString()))
+            if(!locale.equals(UtilBean.getUserBean().getLocaleCode()))
             {
                 languageList = null;
-                locale = UtilBean.getUserBean().getLocaleAsString();
+                locale = UtilBean.getUserBean().getLocaleCode();
             }
 
             if(languageList == null)
@@ -542,7 +542,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         return selectedCourseId;
     }
-    
+
     public void setSelectedCourseId(int selectedCourseId)
     {
         this.selectedCourseId = selectedCourseId;

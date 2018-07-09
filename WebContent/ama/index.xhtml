@@ -81,10 +81,10 @@
 		</div>
 
 		<div id="index_footer">
-			<h:outputText value="#{msg['ArchiveWeb.index_footer_text']} "/>
-			<!-- <a href="mailto:learnweb-support@l3s.de" >
-				<h:outputText value="learnweb-support@l3s.de"/>
-			</a> -->
+			<h:outputText value="#{msg.index_footer_text} "/>
+			<a href="mailto:#{msg['application.serverAdmin']}" >
+				<h:outputText value="#{msg['application.serverAdmin']}"/>
+			</a>
 		</div>
 	</ui:define>
 

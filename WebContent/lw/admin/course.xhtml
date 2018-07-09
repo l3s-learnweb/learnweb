@@ -49,10 +49,6 @@
 						<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 					</p:selectOneMenu>
 					<p:message for="c_group" showSummary="true" showDetail="false" />
-						
-					<h:outputText value="Banner color:" />
-					<p:colorPicker id="popupCP" value="#{adminCourseBean.course.bannerColor}" widgetVar="picker"/>
-					<p:message for="popupCP" showSummary="true" showDetail="false" />
 					
 					<h:outputText value="Banner image:" />
 					  <p:fileUpload fileUploadListener="#{adminCourseBean.handleFileUpload}" id="imageupload" mode="advanced"  

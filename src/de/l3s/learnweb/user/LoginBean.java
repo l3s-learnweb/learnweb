@@ -146,11 +146,6 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         Organisation userOrganisation = user.getOrganisation();
 
-        if(userOrganisation.getDefaultLanguage() != null)
-        {
-            UtilBean.getUserBean().setLocaleCode(userOrganisation.getDefaultLanguage());
-        }
-
         // set default search service if not already selected
         if(bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null)
         {
@@ -173,19 +168,23 @@ public class LoginBean extends ApplicationBean implements Serializable
     public String logout()
     {
         UserBean userBean = UtilBean.getUserBean();
-        int organisationId = userBean.getUser().getOrganisationId();
+        User user = userBean.getUser();
+        int organisationId = user.getOrganisationId();
+        String logoutPage = user.getOrganisation().getLogoutPage();
 
-        if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
+        if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator logs out from a user account
         {
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             return "/lw/admin/users.xhtml?faces-redirect=true";
         }
         else
+        {
+            log(Action.logout, 0, 0);
+            user.onDestroy();
             getFacesContext().getExternalContext().invalidateSession(); // end session
+        }
 
-        log(Action.logout, 0, 0);
-
-        //userBean.setUser(null);
+        // TODO implement logoutPage
 
         if(getLearnweb().getService() == SERVICE.AMA)
             return "/ama/index.xhtml?faces-redirect=true";

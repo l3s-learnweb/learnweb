@@ -24,7 +24,7 @@
 			<h:outputLink class="resourceWebLink" target="_blank" value="#{res.urlProxied}"><h:outputText value="#{res.title}" escape="false" /></h:outputLink>
 			
 			<div style="margin:0.2rem 0 0.2rem 0;">
-				<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{userBean.domain.toString()} <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+				<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{msg['application.name']} <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
 				<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id == -1}" target="_blank">#{res.url}</h:outputLink>
 				<ui:fragment rendered="${res.archived}">
 					<div>#{msg['Archive.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['Archive.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
