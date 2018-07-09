@@ -197,7 +197,7 @@ public class GlossaryTerm implements Serializable
 
     public String getUsesDisplayLabel()
     {
-        if(getUses().isEmpty())
+        if(getUses() == null || getUses().isEmpty())
             return "Use";
         else
             return StringHelper.implode(getUses(), ",");

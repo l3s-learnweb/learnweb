@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -31,28 +30,35 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
-    private List<GlossaryTerm> formTerms = new ArrayList<GlossaryTerm>();
-    private final List<SelectItem> availableTopicOne = Arrays.asList(new SelectItem("Environment"), new SelectItem("European Politics"), new SelectItem("Medicine"), new SelectItem("Tourism"));
+    private List<GlossaryTerm> formTerms;
+    private final List<SelectItem> availableTopicOne = new ArrayList<SelectItem>();
+
     private List<SelectItem> availableTopicTwo = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThree = new ArrayList<SelectItem>();
 
     public void onLoad() throws SQLException
     {
+
         User user = getUser();
         if(user == null)
             return;
 
         glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
 
-        if(glossaryResource == null)
+        /*if(glossaryResource == null)
         {
             addInvalidParameterMessage("resource_id");
             return;
-        }
+        }*/
+        availableTopicOne.add(new SelectItem("Environment"));
+        availableTopicOne.add(new SelectItem("European Politics"));
+        availableTopicOne.add(new SelectItem("Medicine"));
+        availableTopicOne.add(new SelectItem("Tourism"));
         groupId = getLearnweb().getResourceManager().getResource(resourceId).getGroupId();
         log(Action.glossary_open, groupId, resourceId);
         loadGlossaryTable(glossaryResource);
         setFilteredTableItems(tableItems);
+        setNewFormEntry();
 
     }
 
@@ -75,10 +81,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         getLearnweb().getGlossaryManager().saveEntry(entry);
     }
 
-    public void onCancel()
+    public void setNewFormEntry()
     {
         setFormEntry(new GlossaryEntry());
         setFormTerms(new ArrayList<GlossaryTerm>());
+        formTerms.add(new GlossaryTerm());
     }
 
     public void deleteEntry(GlossaryEntry entry)
@@ -214,7 +221,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public int getCount()
     {
-        return glossaryResource.getEntries().size();
+        // return glossaryResource.getEntries().size();
+        return 0;
     }
 
     public GlossaryEntry getFormEntry()

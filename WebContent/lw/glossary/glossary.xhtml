@@ -13,18 +13,18 @@
 		<f:metadata>
 
 			<f:viewParam name="resource_id" value="#{glossaryBeanNEW.resourceId}"></f:viewParam>
-			<f:viewAction action="#{glossaryBeanNEW.onLoad())}" />
+			<f:viewAction action="#{glossaryBeanNEW.onLoad()}" />
 		</f:metadata>
 	</ui:define>
 	
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
-		<ui:fragment rendered="#{glossaryBeanNEW.resourceId gt 0 and glossaryBeanNEW.deleted eq false}">
+		<ui:fragment rendered="#{glossaryBeanNEW.resourceId gt 0 }">
 			<h:panelGroup id="main_component" layout="block">
 				
 				<h:form id= "form" prependId="false">
-				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginatorActive}" rows="#{glossaryBeanNEW.paginatorActive ? 12 : 0}"
+				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12"
 						paginatorPosition="bottom" filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} Exporters">
 
@@ -104,7 +104,7 @@
 						
 						<f:facet name="footer">
 							<p:outputPanel>
-								<h:outputText value="{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}"></h:outputText>
+								<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}"></h:outputText>
 							</p:outputPanel>
 						</f:facet>
 						</p:dataTable>
@@ -168,12 +168,18 @@
 								<p:message for="term" />
 								
 							</p:column>
+							
+							<p:column headerText="#{msg.language}">
+
+								<p:inputText id="language" value='#{term.language}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" />
+								<p:message for="term" />
+								</p:column>
 
 							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center">
 								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="#{term.getUsesDisplayLabel()}"><!-- Test this -->
-									<f:selectItem value="technical" itemLabel="#{msg[Glossary.use_technical]}" />
-									<f:selectItem value="popular" itemLabel="#{msg[Glossary.use_popular]}" />
-									<f:selectItem value="informal" itemLabel="#{msg[Glossary.use_informal]}" />
+									<f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}" />
+									<f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}" />
+									<f:selectItem itemValue="informal" itemLabel="#{msg['Glossary.use_informal']}" />
 									<p:ajax event="change" update="use"></p:ajax>
 									<p:ajax event="toggleSelect"  update="use" />
 								</p:selectCheckboxMenu>
@@ -189,22 +195,22 @@
 							<p:column headerText="#{msg.source}">
 
 								<p:selectOneMenu id="ref" value="#{term.source}" style="width: 80% !important" autoWidth="false">
-									<f:selectItem itemValue="#{null}" itemLabel="--#{msg[Glossary.select]}--" />
-									<f:selectItem itemValue="Wikipedia" itemLabel="#{msg[Glossary.wikipedia]}"></f:selectItem>
-									<f:selectItem itemValue="encyclopaedia" itemLabel="#{msg[Glossary.encyclopaedia]}"></f:selectItem>
-									<f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg[Glossary.mono_dictionary]}"></f:selectItem>
-									<f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg[Glossary.bi_dictionary]}"></f:selectItem>
-									<f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg[Glossary.publication]}"></f:selectItem>
-									<f:selectItem itemValue="institutional website" itemLabel="#{msg[Glossary.website]}"></f:selectItem>
-									<f:selectItem itemValue="glossary" itemLabel="#{msg[Glossary.glossary]}"></f:selectItem>
+									<f:selectItem itemValue="#{null}" itemLabel="--#{msg['Glossary.select']}--" />
+									<f:selectItem itemValue="Wikipedia" itemLabel="#{msg['Glossary.wikipedia']}"></f:selectItem>
+									<f:selectItem itemValue="encyclopaedia" itemLabel="#{msg['Glossary.encyclopaedia']}"></f:selectItem>
+									<f:selectItem itemValue="monolingual dictionary" itemLabel="#{msg['Glossary.mono_dictionary']}"></f:selectItem>
+									<f:selectItem itemValue="bilingual dictionary" itemLabel="#{msg['Glossary.bi_dictionary']}"></f:selectItem>
+									<f:selectItem itemValue="scientific/academic publication" itemLabel="#{msg['Glossary.publication']}"></f:selectItem>
+									<f:selectItem itemValue="institutional website" itemLabel="#{msg['Glossary.website']}"></f:selectItem>
+									<f:selectItem itemValue="glossary" itemLabel="#{msg['Glossary.glossary']}"></f:selectItem>
 									<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
-									<f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg[Glossary.web_blog]}"></f:selectItem>
+									<f:selectItem itemValue="patients' websites and blogs" itemLabel="#{msg['Glossary.web_blog']}"></f:selectItem>
 									<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 								</p:selectOneMenu>
 							</p:column>
 							<p:column headerText="#{msg['Glossary.phraseology']}">
 
-								<p:inputTextarea id="phras" value="#{term.phraseology}" autoResize="false" />
+								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" />
 							</p:column>
 							<p:column width="10">
 								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms">
@@ -227,7 +233,7 @@
 
 
 						</p:commandButton>
-						<p:commandButton value="#{msg.cancel}" actionListener="#{glossaryBean.onCancel()}" styleClass="greenbutton resource_button" update="@form :glossary_add"
+						<p:commandButton value="#{msg.cancel}" actionListener="#{glossaryBeanNEW.setNewFormEntry()}" styleClass="greenbutton resource_button" update="@form :glossary_add"
 							onclick="$('#glossform').css('display', 'none')" process="@this" resetValues="true">
 
 						</p:commandButton>
