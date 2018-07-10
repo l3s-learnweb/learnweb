@@ -582,7 +582,7 @@ public class UserBean implements Serializable
     public String getUrlProxied(String url)
     {
         User user = getUser();
-        if(user == null || !user.getOrganisation().getOption(Option.Misc_Proxy_enabled))
+        if(user == null || !user.getOrganisation().getOption(Option.Privacy_Proxy_enabled))
             return url;
 
         if(user.getOrganisationId() == 1369) // fakenews project
@@ -617,12 +617,12 @@ public class UserBean implements Serializable
 
     public boolean isLoggingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Misc_Logging_disabled);
+        return !activeOrganisation.getOption(Option.Privacy_Logging_disabled);
     }
 
     public boolean isTrackingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Misc_Tracker_disabled);
+        return !activeOrganisation.getOption(Option.Privacy_Tracker_disabled);
     }
 
     public boolean isLanguageSwitchEnabled()

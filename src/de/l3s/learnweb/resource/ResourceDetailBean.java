@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -167,15 +166,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     private void showTagWarningMessage()
     {
-        ResourceBundle bundle = getFacesContext().getApplication().getResourceBundle(getFacesContext(), "msg");
-        String title = bundle.getString("incorrect_tags");
+        String title = getLocaleMessage("incorrect_tags");
+        //String text ;
         //getLocaleMessage(msgKey, args)
         if(tagName.contains("#"))
         {
             String newTags = tagName.replaceAll("#", " ");
             int countTags = tagName.trim().length() - tagName.trim().replaceAll("#", "").length();
             FacesMessage message = null;
-            String text = bundle.getString("tags_hashtag");
+            String text = getLocaleMessage("tags_hashtag");
             if(countTags > 1)
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
             else
@@ -184,19 +183,19 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         else if(tagName.contains(","))
         {
-            String text = bundle.getString("tags_specialCharacter");
+            String text = getLocaleMessage("tags_specialCharacter");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
         else if((StringUtils.countMatches(tagName, " ") > 3))
         {
-            String text = bundle.getString("tags_spaces");
+            String text = getLocaleMessage("tags_spaces");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
         else
         {
-            String text = bundle.getString("tags_tooLong");
+            String text = getLocaleMessage("tags_tooLong");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }

@@ -17,6 +17,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.group.GroupDetailBean;
 import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
@@ -94,7 +95,8 @@ public class UtilBean implements Serializable
     public static String getLocaleMessage(Locale locale, String msgKey, Object... args)
     {
         // get bundle by locale. The bundles are cached in the ResourceBundle class.
-        ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", locale);
+        //ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", locale);
+        ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", locale);
 
         String msg;
         try

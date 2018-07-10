@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
@@ -87,6 +88,7 @@ public class Sql
 
     /**
      * Creates INSERT INTO tableName ON DUPLICATE KEY UPDATE statement
+     * Assumes that the first column is the primary key of this table
      *
      * @param tableName
      * @param columns
@@ -101,10 +103,14 @@ public class Sql
             sb.append(column).append(',');
         sb.setLength(sb.length() - 1); // remove last comma
 
-        sb.append(") ON DUPLICATE KEY UPDATE ");
+        String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
+        sb.append(") VALUES (" + questionMarks + ") ON DUPLICATE KEY UPDATE ");
 
-        for(String column : columns)
+        for(int i = 1; i < columns.length; i++) // skip first column
+        {
+            String column = columns[i];
             sb.append(column).append("=VALUES(").append(column).append("),");
+        }
         sb.setLength(sb.length() - 1); // remove last comma
 
         return sb.toString();

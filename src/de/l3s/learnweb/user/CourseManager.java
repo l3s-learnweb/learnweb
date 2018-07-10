@@ -25,7 +25,7 @@ import de.l3s.util.Sql;
 public class CourseManager
 {
     protected final static int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
-    private final static String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "wizard_enabled", "next_x_users_become_moderator", "welcome_message", "options_field1" };
+    private final static String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "options_field1" };
     private final static String SELECT = String.join(", ", COLUMNS);
     private final static String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
 
@@ -131,14 +131,14 @@ public class CourseManager
 
         /*
         List<Course> courses = new CoursesList();
-
-
+        
+        
         for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
         {
             if(course.getOrganisationId() == organisationId)
                 courses.add(course);
         }
-
+        
         return courses;
         */
     }

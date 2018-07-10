@@ -63,7 +63,7 @@ public class UserDetailBean extends ApplicationBean
         if(null == user)
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid user id");
 
-        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             pageHidden = true;
     }
 

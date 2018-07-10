@@ -79,6 +79,9 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
             // example: this gets "Services" from "Services_Allow_logout_from_Interweb"
             String newOptionGroupName = option.name().substring(0, option.name().indexOf("_"));
 
+            if(newOptionGroupName.equals("Unused"))
+                continue;
+
             if(oldOptionGroupName != null && !oldOptionGroupName.equalsIgnoreCase(newOptionGroupName))
             {
                 optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));

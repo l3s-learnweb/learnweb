@@ -48,7 +48,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
     private BitSet options = new BitSet();
 
     // derived/cached values:
-    private int memberCount;
+    private int memberCount = -1;
     private List<GroupCategory> groupCategories;
 
     public Course()

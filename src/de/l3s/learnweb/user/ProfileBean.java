@@ -145,7 +145,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
                 studentIdRequired = true;
         }
 
-        anonymizeUsername = user.getOrganisation().getOption(Organisation.Option.Misc_Anonymize_usernames);
+        anonymizeUsername = user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
     }
 
     public String getUrlBase()

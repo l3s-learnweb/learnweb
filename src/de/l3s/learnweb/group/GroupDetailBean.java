@@ -189,7 +189,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return false;
-        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             return true;
         return false;
     }

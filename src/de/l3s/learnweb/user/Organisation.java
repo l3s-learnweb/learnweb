@@ -32,11 +32,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Resource_Hide_Star_rating,
         Resource_Hide_Thumb_rating,
         Groups_Hide_public_groups,
-        Misc_Proxy_enabled,
-        Misc_Anonymize_usernames,
+        Privacy_Proxy_enabled,
+        Privacy_Anonymize_usernames,
         Resource_Show_Content_Annotation_Field,
-        Misc_Logging_disabled,
-        Misc_Tracker_disabled,
+        Privacy_Logging_disabled,
+        Privacy_Tracker_disabled,
         Users_Hide_language_switch
     }
 
@@ -102,8 +102,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
      */
     public void setDefaultLanguage(String defaultLanguage)
     {
+        if(StringUtils.isEmpty(defaultLanguage))
+            defaultLanguage = null;
+
         if(defaultLanguage != null && defaultLanguage.length() != 2)
-            throw new IllegalArgumentException("Expect null or two letter language code");
+            throw new IllegalArgumentException("Expect null or two letter language code; Given: " + defaultLanguage);
 
         this.defaultLanguage = defaultLanguage;
     }
@@ -460,7 +463,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     public void setLogoutPage(String logoutPage)
     {
-        this.logoutPage = logoutPage;
+        if(StringUtils.isEmpty(logoutPage))
+            this.logoutPage = "/lw/index.jsf";
+        else
+            this.logoutPage = logoutPage;
     }
 
     public String getLanguageVariant()

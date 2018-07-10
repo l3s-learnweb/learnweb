@@ -240,7 +240,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public String getUsername()
     {
-        if(getOrganisation().getId() == 1249 && getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+        if(getOrganisation().getId() == 1249 && getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             return "Anonymous";
         //return "user " + id;
         return username;

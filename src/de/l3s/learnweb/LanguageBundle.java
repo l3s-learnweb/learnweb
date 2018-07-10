@@ -32,7 +32,7 @@ public class LanguageBundle extends ResourceBundle
 
     protected static final String BASE_NAME = "de.l3s.learnweb.lang.messages";
 
-    protected static final ConcurrentHashMap<Locale, LanguageBundle> cache = new ConcurrentHashMap<>(5);
+    protected static final ConcurrentHashMap<Locale, LanguageBundle> cache = new ConcurrentHashMap<>(7);
 
     private Map<String, String> values;
 
@@ -50,11 +50,14 @@ public class LanguageBundle extends ResourceBundle
 
     public LanguageBundle(String baseName, Locale locale)
     {
-        LanguageBundle bundle = cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
-
-        setParent(bundle);
+        setParent(getBundle(baseName, locale));
 
         //log.debug("requested: " + locale + "; got " + bundle.getLocale());
+    }
+
+    public static LanguageBundle getLanguageBundle(String baseName, Locale locale)
+    {
+        return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
     }
 
     @Override

@@ -142,6 +142,7 @@ public class OrganisationManager
             save.setString(11, organisation.getLanguageVariant());
             save.setInt(12, organisation.getBannerImageFileId());
             save.setString(13, StringHelper.join(organisation.getGlossaryLanguages()));
+            save.setString(14, organisation.getCssFile());
             save.executeUpdate();
         }
 

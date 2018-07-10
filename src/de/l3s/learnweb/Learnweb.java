@@ -556,7 +556,7 @@ public class Learnweb
         {
             userId = user.getId();
 
-            if(user.getOrganisation().getOption(Organisation.Option.Misc_Logging_disabled))
+            if(user.getOrganisation().getOption(Organisation.Option.Privacy_Logging_disabled))
             {
                 // TODO Oleh: Should we disable it completely or anonymize it?
                 //log.warn("Log ignored.");
