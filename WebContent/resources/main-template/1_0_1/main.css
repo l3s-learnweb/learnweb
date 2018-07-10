@@ -792,6 +792,12 @@ h3.group_link {
 	display:inline;
 }
 
+.search-results-header {
+	text-align: center;
+	font-size: 1.7rem;
+	padding: 1rem 0;
+}
+
 .vCarousel-expand {
 	display: none !important;
 }
