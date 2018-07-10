@@ -193,83 +193,10 @@ public class SearchBean extends ApplicationBean implements Serializable
         return "/lw/search.xhtml?faces-redirect=true";
     }
 
-    //For comparing the resources in the current result set with another result set from a similar query in the past
-    /*public String compareHistoryResources()
-    {
-        HashSet<String> searched = new HashSet<String>();
-        if(resultsetId > 0)
-        {
-            historyResources.clear();
-            try
-            {
-
-                //historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
-            }
-            catch(Exception e)
-            {
-                addMessage(FacesMessage.SEVERITY_INFO, e.getMessage());
-                return null;
-            }
-            if(historyResources.size() > 0)
-                historyResourcesRetrieved = true;
-            resultsetId = 0;
-        }
-
-        int historyResourcesSize = historyResources.size();
-        int resourceCount = 0;
-        for(ResourceDecorator resource : search.getResources())
-        {
-            resource.setNewResource(false);
-            ++resourceCount;
-        }
-
-        // TODO does this really make sense?
-        // shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
-        while(resourceCount < historyResourcesSize)
-        {
-            ++page;
-            LinkedList<ResourceDecorator> newResources = search.getResourcesByPage(page);
-            for(ResourceDecorator resource : newResources)
-            {
-                if(resourceCount > historyResourcesSize)
-                    break;
-
-                resource.setNewResource(false);
-                ++resourceCount;
-            }
-        }
-
-        if(historyResourcesRetrieved)
-        {
-            for(ResourceDecorator newResource : search.getResources())
-            {
-                if(searched.size() == historyResources.size())
-                {
-                    historyResourcesRetrieved = false;
-                    break;
-                }
-                else
-                {
-                    if(!searched.contains(newResource.getUrl()))
-                        searched.add(newResource.getUrl());
-
-                    if(!historyResources.contains(newResource.getUrl()))
-                    {
-                        newResource.setNewResource(true);
-                    }
-                }
-
-            }
-        }
-        return getTemplateDir() + "/search.xhtml?faces-redirect=true";
-    }*/
-
     public LinkedList<ResourceDecorator> getNextPage()
     {
         if(!isSearched())
             return null;
-
-        //log.debug("getNextPage");
 
         // don't log anything here.
         // this method will be called multiple times for each page
@@ -639,18 +566,18 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         return historyResources;
     }
-
+    
     public int getResultsetId()
     {
         return resultsetId;
     }
-
+    
     public void setResultsetId(int resultsetId)
     {
         this.resultsetViewId = resultsetId;
         this.resultsetId = resultsetId;
     }
-
+    
     public int getResultsetViewId()
     {
         return resultsetViewId;
@@ -687,17 +614,17 @@ public class SearchBean extends ApplicationBean implements Serializable
                 return;
             }
             String label = graph.getEntities().get(0).getLabel();
-            
+
             SearchFilters filter = new SearchFilters();
             images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
             images.setMode(MODE.image);
             filter.setFilter(FILTERS.service, SERVICE.bing);
-            
+
             //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
             images.setResultsPerService(10);
             images.getResourcesByPage(1);
-            
-            
+
+
             graphLoaded = true;
             */
         }

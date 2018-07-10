@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import de.l3s.archiveSearch.CDXClient;
+import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.resource.Resource;
 
 public class WaybackCapturesLogger
@@ -51,6 +52,9 @@ public class WaybackCapturesLogger
 
     public void logWaybackCaptures(Resource resource)
     {
+        if(learnweb.getService().equals(SERVICE.AMA))
+            return;
+
         if(resource == null)
             throw new NullPointerException();
 

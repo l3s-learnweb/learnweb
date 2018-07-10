@@ -50,7 +50,7 @@ public class LanguageBundle extends ResourceBundle
 
     public LanguageBundle(String baseName, Locale locale)
     {
-        setParent(getBundle(baseName, locale));
+        setParent(getLanguageBundle(baseName, locale));
 
         //log.debug("requested: " + locale + "; got " + bundle.getLocale());
     }
@@ -99,8 +99,8 @@ public class LanguageBundle extends ResourceBundle
         while(replacedAtLeastOneConstant);
     }
 
-    private final static String START_CONST = "${";
-    private final static String END_CONST = "}";
+    private final static String START_CONST = "#[";
+    private final static String END_CONST = "]";
 
     private String substituteValue(String value)
     {
@@ -165,14 +165,15 @@ public class LanguageBundle extends ResourceBundle
 
     public static void main(String[] args)
     {
-        Locale locale = new Locale("de", "", "ama");
+        Locale locale = new Locale("de", "DE", "");
 
         log.debug(locale + "; " + locale.toLanguageTag());
 
         ResourceBundle bundle = new LanguageBundle(locale);
         log.debug(bundle.getString("homepageTitle"));
         //bundle = new LanguageBundle(locale);
-        log.debug(bundle.getString("username"));
+        log.debug(bundle.getString("register_account_already_wizard"));
+        log.debug(bundle.getString("register_lw_account_wizard"));
 
         locale = new Locale("de");
         bundle = new LanguageBundle(locale);
