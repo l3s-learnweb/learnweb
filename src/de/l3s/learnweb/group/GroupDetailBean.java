@@ -556,6 +556,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return queryFilters;
     }
 
+    public void clearFilters()
+    {
+        setQuery(null);
+        changeFilters(null);
+    }
+
     public void onQueryFiltersChange() throws SQLException
     {
         updateResourcesFromSolr();
@@ -568,7 +574,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setQuery(String query)
     {
-        this.query = query;
+        if (StringUtils.isEmpty(query)) {
+            this.query = null;
+        } else {
+            this.query = query;
+        }
     }
 
     public void onQueryChange() throws SQLException

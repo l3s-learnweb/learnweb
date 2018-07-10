@@ -41,15 +41,15 @@
             <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}"
                              update=":right_pane_wrapper :growl :resourcesView" oncomplete="update_header();"/>
             <p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}"
-                             update=":group_menu_tree :breadcrumbs :resourcesView :paginator :right_pane_wrapper :growl" oncomplete="update_header();resourceDND();scroller();"/>
+                             update=":group_menu_tree :breadcrumbs :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl" oncomplete="update_header();resourceDND();scroller();"/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}"
-                             update=":group_menu_tree :resourcesView :paginator :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();"/>
+                             update=":group_menu_tree :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();"/>
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
                              update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
             <p:remoteCommand name="filterByCategoryCommand" actionListener="#{groupDetailBean.onCategoryFilterClick}"
-                             update=":resourcesView :paginator" oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"/>
+                             update=":resourcesView :paginator :resourcesFilters" oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"/>
         </h:form>
 
         <div class="center-header" id="group_header">
@@ -152,41 +152,7 @@
                         </a>
                     </li>
                 </ui:fragment>
-                <c:if test="${userBean.user.organisation.id ne 480}">
-                    <li>
-                        <img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16"
-                             width="16" id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
-
-                        <h:form id="header_query_form" prependId="false">
-                            <h:inputText value="#{groupDetailBean.query}" id="input_query_form"/>
-
-                            <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true"
-                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
-                                             process="@form" update=":resourcesView :paginator" value=""
-                                             id="group_resource_searchbutton"/>
-                        </h:form>
-                    </li>
-                </c:if>
             </ul>
-
-            <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
-                <ui:fragment rendered="#{not empty groupDetailBean.breadcrumbs}">
-                    <ul>
-                        <li data-folderId="0">
-                            <h:outputLink value="#"
-                                          onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
-                        </li>
-
-                        <ui:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
-                            <li data-folderId="#{folder.id}">
-                                <h:outputLink rendered="#{not status.last}" value="#" nclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>                                
-                                
-								<h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
-                            </li>
-                        </ui:repeat>
-                    </ul>
-                </ui:fragment>
-            </h:panelGroup>
 
             <c:if test="${userBean.user.organisation.id ne 480}">
                 <h:panelGroup id="resourcesFilters" layout="block">
@@ -203,7 +169,7 @@
                                             <li class="#{!filter.active ? 'active' : null}">
                                                 <p:commandButton value="#{filter.anyText}"
                                                                  action="#{groupDetailBean.changeFilters(filter.anyUrl)}"
-                                                                 update=":resourcesView :paginator"
+                                                                 update=":resourcesView :paginator :resourcesFilters"
                                                                  oncomplete="updateCarousel();resourceDND();"/>
                                             </li>
 
@@ -212,7 +178,7 @@
                                                     <p:commandButton
                                                             value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
                                                             action="#{groupDetailBean.changeFilters(item.url)}"
-                                                            update=":resourcesView :paginator"
+                                                            update=":resourcesView :paginator :resourcesFilters"
                                                             oncomplete="updateCarousel();resourceDND();"/>
                                                 </li>
                                             </ui:repeat>
@@ -224,11 +190,24 @@
                                     </ul>
                                 </li>
                             </ui:repeat>
-                            <h:panelGroup rendered="#{groupDetailBean.searchFilters != null}">
+
+                            <li class="search-box #{groupDetailBean.query != null ? 'active' : null}">
+                                <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
+
+                                <div id="search_filter_form">
+                                    <h:inputText value="#{groupDetailBean.query}"/>
+
+                                    <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true"
+                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
+                                                     process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
+                                </div>
+                            </li>
+
+                            <h:panelGroup rendered="#{groupDetailBean.searchFilters != null or groupDetailBean.query != null}">
                                 <li class="filter clear-filters">
                                     <p:commandButton value="#{msg.clear_filters}"
-                                                     action="#{groupDetailBean.changeFilters(null)}"
-                                                     update=":resourcesView :paginator"
+                                                     action="#{groupDetailBean.clearFilters()}"
+                                                     update=":resourcesView :paginator :resourcesFilters"
                                                      oncomplete="updateCarousel();resourceDND();"/>
                                 </li>
                             </h:panelGroup>
@@ -236,6 +215,23 @@
                     </h:form>
                 </h:panelGroup>
             </c:if>
+
+            <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
+                <ui:fragment rendered="#{not empty groupDetailBean.breadcrumbs}">
+                    <ul>
+                        <li data-folderId="0">
+                            <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
+                        </li>
+
+                        <ui:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
+                            <li data-folderId="#{folder.id}">
+                                <h:outputLink rendered="#{not status.last}" value="#" nclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
+                                <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </ui:fragment>
+            </h:panelGroup>
         </div>
 
         <ui:fragment rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
@@ -262,7 +258,7 @@
 
                                 <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="false"
                                                  oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
-                                                 process="@form" update=":resourcesView :paginator"
+                                                 process="@form" update=":resourcesView :paginator :resourcesFilters"
                                                  value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
                             </h:form>
                             <br/>
@@ -530,13 +526,11 @@
         </p:dialog>
 
         <script type="text/javascript">
-            $("#header_query_form").css("display", "none");
-
-            $("#search_group_resource").click(function ()
+            $(document).on("click", "#search_filter_icon", function ()
             {
-                $("#header_query_form").animate({width: "toggle"}, 500, 'swing');
-                $("#input_query_form").focus();
-                $("#search_group_resource").hide();
+                $("#search_filter_form").animate({width: "toggle"}, 500, 'swing');
+                $("#search_filter_form input").focus();
+                $("#search_filter_icon").hide();
             });
 
             updateCarousel();
