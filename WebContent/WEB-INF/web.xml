@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	id="WebApp_ID" version="3.0">
+<web-app version="3.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 	<display-name>Learnweb 2.10.10</display-name>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
@@ -20,6 +20,10 @@
 	<context-param>
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>omega</param-value>
     </context-param>
 	<context-param>
 		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
@@ -98,16 +102,6 @@
 		<filter-name>RequestFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-	<context-param>
-		<param-name>primefaces.THEME</param-name>
-		<param-value>omega</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.FONT_AWESOME</param-name>
-		<param-value>true</param-value>
-	</context-param>
-
 
 	<context-param>
 		<param-name>com.sun.faces.numberOfViewsInSession</param-name>
