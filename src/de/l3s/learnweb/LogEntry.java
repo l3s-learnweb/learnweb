@@ -3,10 +3,8 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,48 +85,27 @@ public class LogEntry implements Serializable
         moderator_login // target_id = user_id of the moderator logs into a user account
         ;
 
-        public static List<Action> getResourceActions()
-        {
-            return Arrays.asList( // TODO Oleh: use hashset
-                    tagging_resource, rating_resource, commenting_resource, opening_resource, submission_view_resource,
-                    deleting_resource, adding_resource, edit_resource, thumb_rating_resource, group_removing_resource,
-                    resource_thumbnail_update, adding_resource_metadata, edit_resource_metadata, downloading);
-        }
+        // This actions are showed in the activity stream
+        private final static HashSet<Action> RESOURCE_INTERESTED_ACTIONS = Sets.newHashSet(tagging_resource,
+                rating_resource, commenting_resource, opening_resource, adding_resource, deleting_comment,
+                changing_resource, edit_resource, thumb_rating_resource);
 
-        public static List<Action> getSearchActions()
-        {// TODO Oleh: use hashset
-            return Arrays.asList(searching, group_resource_search, group_category_search, group_metadata_search);
-        }
+        private final static HashSet<Action> FOLDER_INTERESTED_ACTIONS = Sets.newHashSet(deleting_folder, add_folder,
+                edit_folder);
 
-        public static List<Action> getGlossaryActions()
-        {
-            return Arrays.asList(// TODO Oleh: use hashset
-                    glossary_open, glossary_create, glossary_entry_edit, glossary_entry_add, glossary_entry_delete,
-                    glossary_term_edit, glossary_term_add, glossary_term_delete);
-        }
+        public static final HashSet<Action> RESOURCE_RELATED_ACTIONS = Sets.newHashSet(tagging_resource, rating_resource,
+                commenting_resource, opening_resource, deleting_resource, adding_resource, edit_resource,
+                thumb_rating_resource, group_removing_resource, resource_thumbnail_update, adding_resource_metadata,
+                edit_resource_metadata, downloading);
+
+        public static final HashSet<Action> SEARCH_RELATED_ACTIONS = Sets.newHashSet(searching, group_resource_search,
+                group_category_search, group_metadata_search);
+
+        public static final HashSet<Action> GLOSSARY_RELATED_ACTIONS = Sets.newHashSet(glossary_open, glossary_create,
+                glossary_entry_edit, glossary_entry_add, glossary_entry_delete, glossary_term_edit, glossary_term_add,
+                glossary_term_delete);
     }
 
-    public static void main(String[] arg)
-    {
-        Action[] actions = { Action.glossary_term_delete };
-
-        for(Action action : actions)
-        {
-            System.out.print(action.ordinal() + ",");
-        }
-
-        System.out.print("\nCASE action");
-
-        for(Action action : actions)
-        {
-            System.out.print(" WHEN " + action.ordinal() + " THEN '" + action.name() + "'");
-        }
-        System.out.println(" END CASE");
-    }
-
-    private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.changing_resource, Action.edit_resource,
-            Action.thumb_rating_resource);
-    //private final static HashSet<Action> folderActions = Sets.newHashSet(Action.deleting_folder, Action.add_folder, Action.edit_folder);
     private int userId;
     private Action action;
     private int groupId;
@@ -159,10 +136,10 @@ public class LogEntry implements Serializable
 
         int targetId = rs.getInt(4);
 
-        if(resourceActions.contains(action))
+        if(Action.RESOURCE_INTERESTED_ACTIONS.contains(action))
             resourceId = targetId;
         /* currently not used
-        else if(folderActions.contains(action))
+        else if(Action.FOLDER_INTERESTED_ACTIONS.contains(action))
             fileId = targetId;
         */
         String url = "";//Learnweb.getInstance().getServerUrl() + "/lw/";
@@ -369,4 +346,21 @@ public class LogEntry implements Serializable
 
     }
 
+    public static void main(String[] arg)
+    {
+        Action[] actions = { Action.glossary_term_delete };
+
+        for(Action action : actions)
+        {
+            System.out.print(action.ordinal() + ",");
+        }
+
+        System.out.print("\nCASE action");
+
+        for(Action action : actions)
+        {
+            System.out.print(" WHEN " + action.ordinal() + " THEN '" + action.name() + "'");
+        }
+        System.out.println(" END CASE");
+    }
 }

@@ -30,11 +30,11 @@ class DashboardChartsFactory
         {
             if (actionId < actionTypes.length) {
                 Action action = actionTypes[actionId];
-                if(Action.getSearchActions().contains(action))
+                if(Action.SEARCH_RELATED_ACTIONS.contains(action))
                     search += actionsMap.get(actionId);
-                else if(Action.getGlossaryActions().contains(action))
+                else if(Action.GLOSSARY_RELATED_ACTIONS.contains(action))
                     glossary += actionsMap.get(actionId);
-                else if(Action.getResourceActions().contains(action))
+                else if(Action.RESOURCE_RELATED_ACTIONS.contains(action))
                     resource += actionsMap.get(actionId);
                 else
                     system += actionsMap.get(actionId);
