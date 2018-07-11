@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  *
  * Example:
  * prop1=Lorem
- * prop2=${prop1} ipsum
+ * prop2=#[prop1] ipsum
  *
  * Inspired by: http://www2.sys-con.com/ITSG/virtualcd/Java/archives/0612/mair/index.html
  *
@@ -28,14 +28,11 @@ import org.apache.log4j.Logger;
  */
 public class LanguageBundle extends ResourceBundle
 {
-    private final static Logger log = Logger.getLogger(LanguageBundle.class);
-
+    protected static final Logger log = Logger.getLogger(LanguageBundle.class);
     protected static final String BASE_NAME = "de.l3s.learnweb.lang.messages";
-
     protected static final ConcurrentHashMap<Locale, LanguageBundle> cache = new ConcurrentHashMap<>(7);
 
     private Map<String, String> values;
-
     private Locale locale;
 
     public LanguageBundle()
