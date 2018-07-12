@@ -4,8 +4,8 @@ CREATE TABLE lw_bounces (
   timereceived datetime DEFAULT NULL,
   code varchar(10) NOT NULL,
   description varchar(64),
-  PRIMARY KEY ('id')
-) 
+  PRIMARY KEY (id)
+) ;
 
 ALTER TABLE `lw_group` ADD `hypothesis_link` VARCHAR( 255 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ,
 ADD `hypothesis_token` VARCHAR( 255 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ;

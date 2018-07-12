@@ -95,18 +95,18 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
+        if(null == getUser())
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+            return null;
+        }
+
         //Limit number of spaces in a tag = 3
 
         if((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50))
         {
             showTagWarningMessage();
 
-            return null;
-        }
-
-        if(null == getUser())
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
             return null;
         }
 
@@ -164,40 +164,39 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void showTagWarningMessage()
+    private void showTagWarningMessage() // TODO rishita refactor
     {
         String title = getLocaleMessage("incorrect_tags");
-        //String text ;
-        //getLocaleMessage(msgKey, args)
+
         if(tagName.contains("#"))
         {
             String newTags = tagName.replaceAll("#", " ");
             int countTags = tagName.trim().length() - tagName.trim().replaceAll("#", "").length();
             FacesMessage message = null;
             String text = getLocaleMessage("tags_hashtag");
-            if(countTags > 1)
+            if(countTags > 1) //??????
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
             else
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
         }
         else if(tagName.contains(","))
         {
             String text = getLocaleMessage("tags_specialCharacter");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
+            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
         }
         else if((StringUtils.countMatches(tagName, " ") > 3))
         {
             String text = getLocaleMessage("tags_spaces");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
+            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
         }
         else
         {
             String text = getLocaleMessage("tags_tooLong");
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
+            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
         }
     }
 
