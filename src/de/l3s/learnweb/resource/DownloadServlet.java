@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.connector.ClientAbortException;
+//import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Level;
@@ -405,11 +405,11 @@ public class DownloadServlet extends HttpServlet
                     sos.println("--" + MULTIPART_BOUNDARY + "--");
                 }
             }
-        }
-        catch(ClientAbortException e)
-        {
-            //log.debug("Download interrupted. File: " + fileId);
-        }
+        } /*
+          catch(ClientAbortException e)
+          {
+             //log.debug("Download interrupted. File: " + fileId);
+          }*/
         catch(Exception e)
         {
             log.error("Error while downloading file: " + fileId, e);

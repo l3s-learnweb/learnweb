@@ -170,7 +170,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
     context.update("contentFlow");
     context.scrollTo("contentFlow");
     }
-    
+
     public void onSelect(TimelineSelectEvent e)
     {
     TimelineEvent timelineEvent = e.getTimelineEvent();
@@ -191,7 +191,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
     public void init()
     {
-        if(getFacesContext().isPostback())
+        if(isAjaxRequest())
             return;
 
         //model = new TimelineModel();

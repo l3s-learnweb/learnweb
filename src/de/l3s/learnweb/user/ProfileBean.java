@@ -148,11 +148,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
         anonymizeUsername = user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames);
     }
 
-    public String getUrlBase()
-    {
-        return FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/avatars");
-    }
-
     public void handleFileUpload(FileUploadEvent event)
     {
         try

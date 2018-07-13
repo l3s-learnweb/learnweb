@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,6 @@ import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 
 import com.mortennobel.imagescaling.AdvancedResizeOp;
 import com.mortennobel.imagescaling.MultiStepRescaleOp;
@@ -23,7 +23,7 @@ import com.mortennobel.imagescaling.MultiStepRescaleOp;
 /**
  * This is a utility class for performing basic functions on an image,
  * such as retrieving, resizing, cropping, and saving.
- * 
+ *
  * @version 1.0
  * @author James H.
  */
@@ -35,7 +35,7 @@ public class Image
 
     /**
      * Load image from InputStream
-     * 
+     *
      * @param input
      * @throws IOException
      */
@@ -50,7 +50,7 @@ public class Image
 
     /**
      * Constructor for taking a BufferedImage
-     * 
+     *
      * @param img
      */
     public Image(BufferedImage img)
@@ -92,7 +92,7 @@ public class Image
     /**
      * Generate a new Image object resized to a specific width, maintaining
      * the same aspect ratio of the original
-     * 
+     *
      * @param width
      * @return Image scaled to new width
      */
@@ -114,7 +114,7 @@ public class Image
 
     /**
      * First crops the image to the aspect ratio given by the parameters height and width and then resizes it
-     * 
+     *
      * @param maxWidth
      * @param maxHeight
      * @return
@@ -210,7 +210,7 @@ public class Image
 
     /**
      * Generate a new Image object cropped to a new size
-     * 
+     *
      * @param x1 Starting x-axis position for crop area
      * @param y1 Starting y-axis position for crop area
      * @param x2 Ending x-axis position for crop area
@@ -240,7 +240,7 @@ public class Image
     /**
      * Useful function to crop and resize an image to a square.
      * This is handy for thumbnail generation.
-     * 
+     *
      * @param width Width of the resulting square
      * @param cropEdgesPct Specifies how much of an edge all around the square to crop,
      *            which creates a zoom-in effect on the center of the resulting square. This may
@@ -296,7 +296,7 @@ public class Image
     /**
      * error tolerant version
      * returns the same image if image is smaller than width parameter
-     * 
+     *
      * @param width
      * @param cropEdgesPct
      * @return
@@ -347,7 +347,7 @@ public class Image
 
     /**
      * Soften the image to reduce pixelation. Helps JPGs look better after resizing.
-     * 
+     *
      * @param softenFactor Strength of softening. 0.08 is a good value
      * @return New Image object post-softening, unless softenFactor == 0, in which
      *         case the same object is returned
@@ -368,7 +368,7 @@ public class Image
     /**
      * Write image to a file, specify image type
      * This method will overwrite a file that exists with the same name
-     * 
+     *
      * @see #getWriterFormatNames()
      * @param file File to write image to
      * @param type jpg, gif, etc.
@@ -383,7 +383,7 @@ public class Image
 
     /**
      * Write image to a stream, specify image type
-     * 
+     *
      * @param file File to write image to
      * @param type jpg, gif, etc.
      * @throws IOException

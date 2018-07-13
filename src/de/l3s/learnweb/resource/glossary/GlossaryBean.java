@@ -286,10 +286,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         else
         {
-            FacesContext context = FacesContext.getCurrentInstance();
-
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter atleast one valid entry for both language terms", ""));
-            context.getExternalContext().getFlash().setKeepMessages(true);
+            addMessage(FacesMessage.SEVERITY_ERROR, "Please enter atleast one valid entry for both language terms"); // TODO use translate
+            setKeepMessages(); // is it really necessary?
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
         }
 
@@ -566,7 +564,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
