@@ -43,9 +43,8 @@ public class UserBean implements Serializable
     private final static Logger log = Logger.getLogger(UserBean.class);
 
     private int userId = 0;
-    private transient User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
-    private transient long userCacheTime = 0L; // stores when the userCache was refreshed the last time
-    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in in an other account
+    private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
+    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
 
     private Locale locale;
     private transient PrettyTime localePrettyTime;
@@ -59,7 +58,8 @@ public class UserBean implements Serializable
     private DefaultTreeNode groupsTree;
     private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
 
-    private Organisation activeOrganisation;
+    private int activeOrganisationId = 0;
+    private transient Organisation activeOrganisation;
 
     public UserBean()
     {
@@ -71,9 +71,9 @@ public class UserBean implements Serializable
         HttpServletRequest httpRequest = (HttpServletRequest) externalContext.getRequest();
 
         if(FrontpageServlet.isArchiveWebRequest(httpRequest))
-            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(848); // load archiveweb
+            activeOrganisationId = 848; // archiveweb
         else
-            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getDefaultOrganisation();
+            activeOrganisationId = 478; // public
 
         refreshLocale();
         storeMetadataInSession();
@@ -117,19 +117,18 @@ public class UserBean implements Serializable
         if(userId == 0)
             return null;
 
-        if(userCache == null || userCacheTime + 60000L < System.currentTimeMillis())
+        if(user == null)
         {
             try
             {
-                userCache = Learnweb.getInstance().getUserManager().getUser(userId);
-                userCacheTime = System.currentTimeMillis();
+                user = Learnweb.getInstance().getUserManager().getUser(userId);
             }
             catch(SQLException e)
             {
                 log.fatal("Can't retrieve user " + userId, e);
             }
         }
-        return userCache;
+        return user;
     }
 
     /**
@@ -139,14 +138,14 @@ public class UserBean implements Serializable
      */
     public void setUser(User user)
     {
-        userId = user.getId();
-        activeOrganisation = user.getOrganisation();
+        this.userId = user.getId();
+        this.user = user;
+        this.activeOrganisation = user.getOrganisation();
 
         //clear caches
-        newGroups = null;
-        cacheShowMessageJoinGroup = true;
-        cacheShowMessageAddResource = true;
-        userCache = null;
+        this.newGroups = null;
+        this.cacheShowMessageJoinGroup = true;
+        this.cacheShowMessageAddResource = true;
 
         refreshLocale();
         storeMetadataInSession();
@@ -206,13 +205,13 @@ public class UserBean implements Serializable
      */
     private void refreshLocale()
     {
-        String localeCode = activeOrganisation.getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
+        String localeCode = getActiveOrganisation().getDefaultLanguage() != null ? activeOrganisation.getDefaultLanguage() : locale.getLanguage();
         setLocaleCode(localeCode);
     }
 
     public String setLocaleCode(String localeCode)
     {
-        String languageVariant = activeOrganisation.getLanguageVariant();
+        String languageVariant = getActiveOrganisation().getLanguageVariant();
         log.debug("set locale " + localeCode);
 
         if(localeCode.equals("de"))
@@ -378,12 +377,12 @@ public class UserBean implements Serializable
      */
     public String getBannerImage() throws SQLException
     {
-        return activeOrganisation.getBannerImage();
+        return getActiveOrganisation().getBannerImage();
     }
 
     public String getBannerLink() throws SQLException
     {
-        return activeOrganisation.getWelcomePage();
+        return getActiveOrganisation().getWelcomePage();
     }
 
     /**
@@ -602,32 +601,40 @@ public class UserBean implements Serializable
 
     public boolean isOptionContentAnnotationFieldEnabled()
     {
-        return activeOrganisation.getOption(Option.Resource_Show_Content_Annotation_Field);
+        return getActiveOrganisation().getOption(Option.Resource_Show_Content_Annotation_Field);
     }
 
     public boolean isStarRatingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Resource_Hide_Star_rating);
+        return !getActiveOrganisation().getOption(Option.Resource_Hide_Star_rating);
     }
 
     public boolean isThumbRatingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Resource_Hide_Thumb_rating);
+        return !getActiveOrganisation().getOption(Option.Resource_Hide_Thumb_rating);
     }
 
     public boolean isLoggingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Privacy_Logging_disabled);
+        return !getActiveOrganisation().getOption(Option.Privacy_Logging_disabled);
     }
 
     public boolean isTrackingEnabled()
     {
-        return !activeOrganisation.getOption(Option.Privacy_Tracker_disabled);
+        return !getActiveOrganisation().getOption(Option.Privacy_Tracker_disabled);
     }
 
     public boolean isLanguageSwitchEnabled()
     {
-        return !activeOrganisation.getOption(Option.Users_Hide_language_switch);
+        return !getActiveOrganisation().getOption(Option.Users_Hide_language_switch);
     }
 
+    private Organisation getActiveOrganisation()
+    {
+        if(null == activeOrganisation)
+        {
+            activeOrganisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(activeOrganisationId);
+        }
+        return activeOrganisation;
+    }
 }

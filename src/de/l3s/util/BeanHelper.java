@@ -115,7 +115,7 @@ public class BeanHelper
     }
 
     /**
-     * 
+     *
      * @return the request URI + query string
      */
     public static String getRequestURI()
@@ -148,7 +148,10 @@ public class BeanHelper
         {
             sb.append(entry.getKey());
             sb.append("=[");
-            sb.append(StringHelper.implode(Arrays.asList(entry.getValue()), "; "));
+            if(entry.getKey().contains("password"))
+                sb.append("XXX replaced XXX");
+            else
+                sb.append(StringHelper.implode(Arrays.asList(entry.getValue()), "; "));
             sb.append("], ");
         }
         if(map.size() > 1) // remove last comma and whitespace

@@ -120,6 +120,7 @@ public class Learnweb
     private final ProtectionManager protectionManager;
     private final BounceManager bounceManager;
     private final DashboardManager dashboardManager;
+    private final ConverterService serviceConverter;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -127,7 +128,6 @@ public class Learnweb
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LanglevelManager langlevelManager;
     private final PurposeManager purposeManager;
-    private final ConverterService serviceConverter;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -221,8 +221,10 @@ public class Learnweb
         }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
             propteriesFileName = "lw_local_chloe";
-        else if((new File("C:\\programmieren\\philipp.txt")).exists())
-            propteriesFileName = "lw_local_philipp"; // lw_local_philipp_ama";
+        else if((new File("C:\\programmieren\\philipp.ama")).exists())
+            propteriesFileName = "ama_local_philipp";
+        else if((new File("C:\\programmieren\\philipp.lw")).exists())
+            propteriesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
             propteriesFileName = "lw_local_philipp_uni";
         else if((new File("/home/fernando/trevor.txt").exists()))

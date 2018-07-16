@@ -171,14 +171,4 @@ public class OrganisationManager
 
         return organisation;
     }
-
-    /**
-     * If a user does not register for a specific course or isn't logged in then he belongs to this organisation
-     *
-     * @return
-     */
-    public Organisation getDefaultOrganisation()
-    {
-        return getOrganisationById(478);
-    }
 }
