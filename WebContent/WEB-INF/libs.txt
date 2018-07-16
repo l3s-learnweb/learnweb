@@ -63,8 +63,7 @@ org.json.jar						TEDx transcript, generating JSON from XML String
 pdf-renderer-1.0.5.1.jar			ResourcePreviewMaker
 poi-3.15.jar                        Primefaces table exporter, added by Rishita Kalyani
 prettytime-4.0.0.Final.jar			Date formatting 
-primefaces-6.1.jar					JSF Base
-primefaces-extensions-4.0.0.jar		Archive Thumbnail Timeline
+primefaces-6.2.jar					JSF Base
 ritaWN.jar							TEDWordnet, added by Trevor
 slf4j-api-1.7.22.jar				Dependency of SolrClient
 slf4j-log4j12-1.7.22.jar

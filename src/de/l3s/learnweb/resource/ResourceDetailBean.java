@@ -14,7 +14,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Learnweb;
@@ -178,25 +178,25 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
             else
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
-            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
+            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
         }
         else if(tagName.contains(","))
         {
             String text = getLocaleMessage("tags_specialCharacter");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
+            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
         }
         else if((StringUtils.countMatches(tagName, " ") > 3))
         {
             String text = getLocaleMessage("tags_spaces");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
+            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
         }
         else
         {
             String text = getLocaleMessage("tags_tooLong");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text); // duplicate
-            RequestContext.getCurrentInstance().showMessageInDialog(message); // duplicate
+            PrimeFaces.current().dialog().showMessageDynamic(message); // duplicate
         }
     }
 

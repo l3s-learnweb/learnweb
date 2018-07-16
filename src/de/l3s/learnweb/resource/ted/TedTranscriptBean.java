@@ -24,7 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -275,7 +275,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         String word = getParameter("word");
         String synonymsList = "";
-        RequestContext context = RequestContext.getCurrentInstance();
         int wordCount = word.trim().split("\\s+").length;
         word = word.replaceAll("\\p{P}", "");
 
@@ -339,10 +338,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 synonymsList += "No synonyms";
             else if(synonymsList.isEmpty())
                 synonymsList += "multiple";
-            context.addCallbackParam("synonyms", synonymsList);
+            PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList);
         }
         else
-            context.addCallbackParam("synonyms", "multiple");
+            PrimeFaces.current().ajax().addCallbackParam("synonyms", "multiple");
     }
 
     public void submitShortSummary()

@@ -15,7 +15,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 
 import de.l3s.learnweb.Learnweb;
 
@@ -46,7 +46,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
         }
         //outerArray.add(innerArray);
         log.debug(outerArray.toJSONString());
-        RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
+        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toJSONString());
 
     }
 
@@ -73,7 +73,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
         log.debug(outerArray.toJSONString());
-        RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
+        PrimeFaces.current().ajax().addCallbackParam("timelineData", outerArray.toJSONString());
         return outerArray.toJSONString();
     }
 
@@ -106,7 +106,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
             archiveDates.put(rs.getString("day"), archiveDay);
         }
         log.debug(archiveDates.toJSONString());
-        RequestContext.getCurrentInstance().addCallbackParam("calendarData", archiveDates.toJSONString());
+        PrimeFaces.current().ajax().addCallbackParam("calendarData", archiveDates.toJSONString());
         return archiveDates.toJSONString();
 
     }

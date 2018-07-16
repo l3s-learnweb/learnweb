@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.primefaces.push.EventBus;
 import org.primefaces.push.EventBusFactory;
 
@@ -126,18 +126,16 @@ public class ChatView extends ApplicationBean implements Serializable
 
     public void login()
     {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-
         if(users.contains(username))
         {
             loggedIn = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username taken", "Try with another username."));
-            requestContext.update("growl");
+            PrimeFaces.current().ajax().update("growl");
         }
         else
         {
             users.add(username);
-            requestContext.execute("PF('subscriber').connect('/" + username + "')");
+            PrimeFaces.current().executeScript("PF('subscriber').connect('/" + username + "')");
             loggedIn = true;
         }
     }
@@ -146,7 +144,7 @@ public class ChatView extends ApplicationBean implements Serializable
     {
         //remove user and update ui
         users.remove(username);
-        RequestContext.getCurrentInstance().update("form:users");
+        PrimeFaces.current().ajax().update("form:users");
 
         //push leave information
         eventBus.publish(CHANNEL + "*", username + " left the channel.");

@@ -1,37 +1,37 @@
-<ui:composition template="/templates/main/main_old.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition
+    template="/templates/main/main_old.xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="Create Survey" />
-	<ui:param name="loginRequired" value="true" />
-	
-	<ui:define name="center_layout">
+    <ui:param name="pageTitle" value="Create Survey"/>
+    <ui:param name="loginRequired" value="true"/>
 
-		<h:outputStylesheet library="glossary" name="glossary.css" />
-		<h:outputScript library="glossary" name="glossary.js" />
-		<h:panelGroup id="main_component" layout="block">
-			<h:form id="form" prependId="false">
-			<p:growl id="growlSurvey" autoUpdate="true" redisplay="false"
-						globalOnly="true" showDetail="true"></p:growl>
-			<h:panelGrid columns="1" cellpadding="5">
-			<p:outputLabel for="title" value="Title: " ></p:outputLabel>
-			<p:inputTextarea id="title" styleClass="inputfield" value="#{createSurveyBean.title}" ></p:inputTextarea>
-			<p:outputLabel for="desc" value="Description: " ></p:outputLabel>
-			<p:inputTextarea id="desc" styleClass="inputfield" value="#{createSurveyBean.description}" ></p:inputTextarea>
-			<p:outputLabel for="open" value="Survey Open Date: " ></p:outputLabel>
-			<p:calendar id="open"  value="#{createSurveyBean.open}" showOn="button"></p:calendar>
-			<p:outputLabel for="close" value="Survey Close Date: " ></p:outputLabel>
-			<p:calendar id="close" value="#{createSurveyBean.close}" showOn="button"></p:calendar>
-			</h:panelGrid>
-			<p:commandButton ajax="false" id="submit" value="Submit" styleClass="greenbutton resource_button" action="#{createSurveyBean.submit()}" update=":growlSurvey" >
-			
+    <ui:define name="center_layout">
 
-					</p:commandButton>
-			</h:form>
-			</h:panelGroup>
-			</ui:define>
-			</ui:composition>
-			
+        <h:outputStylesheet library="glossary" name="glossary.css"/>
+        <h:outputScript library="glossary" name="glossary.js"/>
+        <h:panelGroup id="main_component" layout="block">
+            <h:form id="form" prependId="false">
+                <p:growl id="growlSurvey" redisplay="false" globalOnly="true" showDetail="true">
+                    <p:autoUpdate/>
+                </p:growl>
+                <h:panelGrid columns="1" cellpadding="5">
+                    <p:outputLabel for="title" value="Title: "></p:outputLabel>
+                    <p:inputTextarea id="title" styleClass="inputfield" value="#{createSurveyBean.title}"></p:inputTextarea>
+                    <p:outputLabel for="desc" value="Description: "></p:outputLabel>
+                    <p:inputTextarea id="desc" styleClass="inputfield" value="#{createSurveyBean.description}"></p:inputTextarea>
+                    <p:outputLabel for="open" value="Survey Open Date: "></p:outputLabel>
+                    <p:calendar id="open" value="#{createSurveyBean.open}" showOn="button"></p:calendar>
+                    <p:outputLabel for="close" value="Survey Close Date: "></p:outputLabel>
+                    <p:calendar id="close" value="#{createSurveyBean.close}" showOn="button"></p:calendar>
+                </h:panelGrid>
+                <p:commandButton ajax="false" id="submit" value="Submit" styleClass="greenbutton resource_button"
+                                 action="#{createSurveyBean.submit()}" update=":growlSurvey">
+
+
+                </p:commandButton>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

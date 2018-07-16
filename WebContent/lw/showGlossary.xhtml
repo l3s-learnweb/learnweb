@@ -34,7 +34,8 @@
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
 						<f:facet name="header">
-							<p:outputPanel autoUpdate="true">
+							<p:outputPanel>
+								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
 								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
@@ -127,7 +128,9 @@
 
 				<div id="glossform" style="display: none">
 					<h:form id="glossary_add" styleClass="grey_border" prependId="false">
-						<p:growl id="glossgrowl" autoUpdate="true" redisplay="false" globalOnly="true" showDetail="true"></p:growl>
+						<p:growl id="glossgrowl" redisplay="false" globalOnly="true" showDetail="true">
+                            <p:autoUpdate />
+                        </p:growl>
 						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
 
 							<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
