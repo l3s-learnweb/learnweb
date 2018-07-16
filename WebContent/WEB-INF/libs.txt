@@ -2,20 +2,23 @@
 
 atmosphere-2.2.7.jar				Primefaces Push (Chat)
 atmosphere-runtime-2.4.5.jar		Primefaces Push (Chat)
-classmate-1.1.0.jar					required by Hibernate validator added by Philipp
-commons-beanutils-1.9.2.jar			JSF Base (MyFaces)
+boilerpipe-1.1.0.jar
+classmate-1.1.0.jar					required by Hibernate validator, added by Philipp
+commons-beanutils-1.9.3.jar			JSF Base (MyFaces)
 commons-codec-1.3.jar				JSF Base, Dependency of Google API
 commons-collections4-4.1.jar		LRUCache
-commons-collections-3.2.2			JSF Base (MyFaces)
+commons-collections-3.2.2.jar		JSF Base (MyFaces)
+commons-csv-1.5.jar
 commons-digester-1.8.jar			JSF Base (MyFaces)
 commons-fileupload-1.3.jar			primefaces file upload
-commons-io-2.5.jar					FileManager, primefacces file upload, SolrClient
-commons-math3-3.6.1.jar				SolrClient
-commons-lang3-3.4.jar				Interweb, primefaces-extensions, Others, ArchiveSearch
-commons-logging-1.2.jar			JSF Base, Dependency of Google API
-core.jar							Added by Trevor; for TEDWordNet
+commons-io-2.5.jar					required by FileManager, primefacces file upload, SolrClient
+commons-lang3-3.4.jar				Interweb, Others, ArchiveSearch
+commons-logging-1.2.jar			    JSF Base, Dependency of Google API
+commons-math3-3.6.1.jar				required by SolrClient
+core.jar							Added by Trevor; for TEDWordNet // What the source is?
 cron4j-2.2.5.jar					Job Scheduler, added by Siyu
-Filters.jar							image scaling (Thumbnails)
+ffmpeg-0.6.2.jar                    video processing and converting
+Filters-2.0.235.jar					image scaling (Thumbnails)
 geronimo-atinject_1.0_spec-1.0		required by my-faces-bundle
 google-api-client-1.20.0.jar						Google API Client
 google-api-services-drive-v2-rev177-1.20.0.jar		Google Drive API
@@ -25,16 +28,16 @@ google-oauth-client-1.20.0.jar						Google API Client
 gson-2.8.2.jar						Converts Java Objects into JSON and back
 guava-19.0.jar					    Dependency of Google API
 hibernate-validator-5.2.1.Final.jar Bean Validator
-httpclient-4.5.2.jar				Dependency of SolrClient, Google API, crawler4j
-httpcore-4.4.5.jar					Dependency of SolrClient, Google API, crawler4j
-httpmime-4.5.2.jar					Dependency of SolrClient
+httpclient-4.5.3.jar				Dependency of SolrClient, Google API, crawler4j
+httpcore-4.4.6.jar					Dependency of SolrClient, Google API, crawler4j
+httpmime-4.5.3.jar					Dependency of SolrClient
 itext-2.1.7.jar						Dependency for PDF exporter
 jackson-core-2.1.3.jar				Dependency of Google API
 java-image-scaling-0.8.5.jar		Thumbnails
 javax.servlet.jsp.jstl-1.2.1.jar	JSF Base
 javax.servlet.jsp.jstl-api-1.2.1.jar JSF Base
-jbig2.jar							pdfrenderer
-jboss-logging-3.1.0.CR2.jar			Hibernate validator
+jbig2.jar							pdfrenderer // What the source is?
+jboss-logging-3.2.1.Final.jar		Hibernate validator
 jcl-over-slf4j-1.7.21.jar			Dependency of SolrClient
 jena-arq-3.1.0.jar					Wikidata Client (Facts)
 jena-base-3.1.0.jar					Wikidata Client (Facts)
@@ -46,31 +49,33 @@ jersey-multipart-1.14.jar			Interweb
 jsimhash-0.1.jar					Archive, computing simhash signatures for archived versions
 json-simple-1.1.1.jar				Archive, generating json data for timeline and calendar representation
 jsonld-java-0.7.0.jar				Wikidata Client (Facts)
-jsoup-1.7.1.jar						Resource, remove Html from String
+jsoup-1.7.2.jar						Resource, remove Html from String
 jsr305-1.3.9.jar					Dependency of Google API
 log4j-1.2.17.jar					Logging
-log4j-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
 mail-1.4.4.jar						Interweb (Jersey)
-mariadb-java-client-1.2.0.jar		MariaDB
-mysql-connector-java-5.1.39-bin.jar MySQL connector for LORO connection to prometheus DB
+mariadb-java-client-2.2.3.jar		MariaDB
 myfaces-bundle-2.2.10.jar			JSF Base
-noggit-0.6.jar			            Dependency of SolrClient
+nekohtml-1.9.18.jar
+noggit-0.8.jar			            Dependency of SolrClient
 oauth-client-1.5.jar				Interweb
 oauth-signature-1.5.jar				Interweb
 org.json.jar						TEDx transcript, generating JSON from XML String
 pdf-renderer-1.0.5.1.jar			ResourcePreviewMaker
-poi-3.9-20121203.jar                Primefaces table exporter, added by Rishita Kalyani
+poi-3.15.jar                        Primefaces table exporter, added by Rishita Kalyani
 prettytime-4.0.0.Final.jar			Date formatting 
-primefaces-6.0.jar					JSF Base
+primefaces-6.1.jar					JSF Base
 primefaces-extensions-4.0.0.jar		Archive Thumbnail Timeline
 ritaWN.jar							TEDWordnet, added by Trevor
 slf4j-api-1.7.22.jar				Dependency of SolrClient
-solr-solrj-6.4.0.jar                SolrClient, replaced apache-solr-*-4.0.0.jar by astappev
+slf4j-log4j12-1.7.22.jar
+solr-solrj-7.1.0.jar                SolrClient, replaced apache-solr-*-4.0.0.jar by astappev
 stax2-api-3.1.4.jar                 Dependency of SolrClient
+supportWN.jar
 urlrewritefilter-4.0.3.jar			needed to redirect /new to /
-validation-api-1.0.0.GA.jar			required by Hibernate validator added by Philipp
+validation-api-1.1.0.Final.jar		required by Hibernate validator added by Philipp
 woodstox-core-asl-4.4.1.jar         Dependency of SolrClient
 wstx-asl-3.2.7.jar					SolrClient,added by Siyu
-#xercesImpl-2.6.2-jaxb-1.0.6.jar	Wikidata Client (Facts)
+xercesImpl-2.6.2-jaxb-1.0.6.jar	Wikidata Client (Facts)
 xercesImpl-2.11.0.jar				Wikidata Client (Facts)
+xml-apis-1.4.01.jar
 zookeeper-3.4.6.jar					Dependency of SolrClient
