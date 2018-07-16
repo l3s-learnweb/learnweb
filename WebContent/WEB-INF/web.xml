@@ -183,7 +183,7 @@
 		<description>Servlet for saving edited documents</description>
 		<display-name>SaverServlet</display-name>
 		<servlet-name>saverServlet</servlet-name>
-		<servlet-class>de.l3s.office.SaverServlet</servlet-class>
+		<servlet-class>de.l3s.learnweb.resource.office.SaverServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -194,7 +194,7 @@
 		<description>Servlet for getting document history</description>
 		<display-name>HistoryServlet</display-name>
 		<servlet-name>historyServlet</servlet-name>
-		<servlet-class>de.l3s.office.HistoryServlet</servlet-class>
+		<servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
 		<load-on-startup>5</load-on-startup>
 	</servlet>
 	<servlet-mapping>

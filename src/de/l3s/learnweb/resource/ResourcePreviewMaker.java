@@ -20,8 +20,8 @@ import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
-import de.l3s.office.ConverterService;
 import de.l3s.office.converter.model.ConverterRequest;
 import de.l3s.util.Image;
 import de.l3s.util.Misc;

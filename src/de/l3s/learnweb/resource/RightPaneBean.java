@@ -24,7 +24,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.office.FileEditorBean;
+import de.l3s.learnweb.resource.office.FileEditorBean;
 
 // TODO Oleh: rename to ResourcePaneBean
 @ManagedBean

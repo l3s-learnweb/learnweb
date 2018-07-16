@@ -1,4 +1,4 @@
-package de.l3s.office;
+package de.l3s.learnweb.resource.office;
 
 import java.io.IOException;
 import java.io.InputStream;

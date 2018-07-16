@@ -35,10 +35,10 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE;
+import de.l3s.learnweb.resource.office.FileEditorBean;
+import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Course;
-import de.l3s.office.FileEditorBean;
-import de.l3s.office.FileUtility;
 import de.l3s.util.StringHelper;
 
 @ViewScoped

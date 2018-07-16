@@ -30,9 +30,9 @@ import de.l3s.boilerpipe.sax.HTMLHighlighter;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
+import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.office.FileUtility;
 import de.l3s.util.StringHelper;
 
 /**

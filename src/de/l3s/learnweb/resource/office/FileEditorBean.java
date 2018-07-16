@@ -1,7 +1,7 @@
-package de.l3s.office;
+package de.l3s.learnweb.resource.office;
 
-import static de.l3s.office.FileUtility.canBeViewed;
-import static de.l3s.office.FileUtility.getFileExtension;
+import static de.l3s.learnweb.resource.office.FileUtility.canBeViewed;
+import static de.l3s.learnweb.resource.office.FileUtility.getFileExtension;
 
 import java.io.Serializable;
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.office.HistoryManager;
+import de.l3s.learnweb.resource.office.HistoryManager;
 
 public class History
 {
