@@ -200,7 +200,7 @@ public class GlossaryTerm implements Serializable
         if(getUses() == null || getUses().isEmpty())
             return "Use";
         else
-            return StringHelper.implode(getUses(), ",");
+            return StringHelper.implode(getUses(), ", ");
     }
 
 }

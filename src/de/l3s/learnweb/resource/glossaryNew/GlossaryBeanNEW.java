@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -16,6 +18,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.Misc;
 
 @ViewScoped
 @ManagedBean
@@ -30,7 +33,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
-    private List<GlossaryTerm> formTerms;
+    @Deprecated
+    private List<GlossaryTerm> formTerms; // TODO use formEntry.getTerms() instead
     private final List<SelectItem> availableTopicOne = new ArrayList<SelectItem>();
 
     private List<SelectItem> availableTopicTwo = new ArrayList<SelectItem>();
@@ -230,7 +234,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return formEntry;
     }
 
-    public void setFormEntry(GlossaryEntry formEntry)
+    public void setFormEntry(GlossaryEntry formEntry) // TODO necessary?
     {
         this.formEntry = formEntry;
     }
@@ -240,7 +244,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return formTerms;
     }
 
-    public void setFormTerms(List<GlossaryTerm> formTerms)
+    public void setFormTerms(List<GlossaryTerm> formTerms) // TODO necessary?
     {
         this.formTerms = formTerms;
     }
@@ -268,6 +272,24 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void setAvailableTopicThree(List<SelectItem> availableTopicThree) // TODO necessary?
     {
         this.availableTopicThree = availableTopicThree;
+    }
+
+    private transient List<SelectItem> availableLanguages;
+
+    public List<SelectItem> getAvailableLanguages()
+    {
+        if(null == availableLanguages)
+        {
+            availableLanguages = new ArrayList<>();
+
+            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages()) // TODO use glossaryResource.getAllowedLanguages() instead
+            {
+                log.debug("add locales " + locale.getLanguage());
+                availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+            }
+            Collections.sort(availableLanguages, Misc.selectItemLabelComparator);
+        }
+        return availableLanguages;
     }
 
 }

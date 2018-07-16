@@ -30,10 +30,13 @@ public class LanguageBundle extends ResourceBundle
 {
     protected static final Logger log = Logger.getLogger(LanguageBundle.class);
     protected static final String BASE_NAME = "de.l3s.learnweb.lang.messages";
-    protected static final ConcurrentHashMap<Locale, LanguageBundle> cache = new ConcurrentHashMap<>(7);
+    protected static final ConcurrentHashMap<Locale, ResourceBundle> cache = new ConcurrentHashMap<>(7);
+    static
+    {
+        cache.put(new Locale("xx"), new DebugBundle());
+    }
 
     private Map<String, String> values;
-    private Locale locale;
 
     public LanguageBundle()
     {
@@ -48,26 +51,15 @@ public class LanguageBundle extends ResourceBundle
     public LanguageBundle(String baseName, Locale locale)
     {
         setParent(getLanguageBundle(baseName, locale));
-
-        //log.debug("requested: " + locale + "; got " + bundle.getLocale());
     }
 
-    public static LanguageBundle getLanguageBundle(String baseName, Locale locale)
+    public static ResourceBundle getLanguageBundle(String baseName, Locale locale)
     {
         return cache.computeIfAbsent(locale, loc -> new LanguageBundle(ResourceBundle.getBundle(baseName, loc)));
     }
 
-    @Override
-    public Locale getLocale()
-    {
-        return locale;
-    }
-
     public LanguageBundle(ResourceBundle sourceBundle)
     {
-        locale = sourceBundle.getLocale();
-        log.debug("Init language bundle: " + locale);
-
         ArrayList<String> keys = Collections.list(sourceBundle.getKeys());
 
         values = new HashMap<>(keys.size());
@@ -149,8 +141,6 @@ public class LanguageBundle extends ResourceBundle
     @Override
     protected Object handleGetObject(String key)
     {
-        //log.debug("handleGetObject " + ": " + key);
-
         return values != null ? values.get(key) : parent.getObject(key);
     }
 
@@ -162,6 +152,12 @@ public class LanguageBundle extends ResourceBundle
 
     public static void main(String[] args)
     {
+        System.out.println(new Locale("it"));
+        System.out.println(new Locale("nl"));
+        System.out.println(new Locale("en"));
+
+        System.exit(1);
+
         Locale locale = new Locale("de", "DE", "");
 
         log.debug(locale + "; " + locale.toLanguageTag());
@@ -189,6 +185,26 @@ public class LanguageBundle extends ResourceBundle
         locale = new Locale("DE", "", "");
         System.out.println(locale.hashCode());
         */
+    }
+
+    /**
+     *
+     * This bundle returns always the key as it's value. This helps to find the appropriate key in the frontend
+     *
+     */
+    private static class DebugBundle extends ResourceBundle
+    {
+        @Override
+        protected Object handleGetObject(String key)
+        {
+            return "#" + key + "#";
+        }
+
+        @Override
+        public Enumeration<String> getKeys()
+        {
+            return null;
+        }
     }
 
 }

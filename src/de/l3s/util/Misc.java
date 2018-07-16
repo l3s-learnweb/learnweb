@@ -1,5 +1,9 @@
 package de.l3s.util;
 
+import java.util.Comparator;
+
+import javax.faces.model.SelectItem;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class Misc
@@ -49,5 +53,14 @@ public class Misc
 
         return sb.toString();
     }
+
+    public final static Comparator<SelectItem> selectItemLabelComparator = new Comparator<SelectItem>()
+    {
+        @Override
+        public int compare(SelectItem s1, SelectItem s2)
+        {
+            return s1.getLabel().compareTo(s2.getLabel());
+        }
+    };
 
 }

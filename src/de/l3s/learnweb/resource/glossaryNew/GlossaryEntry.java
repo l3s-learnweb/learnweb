@@ -1,6 +1,8 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.validation.constraints.Size;
 
@@ -19,6 +21,8 @@ public class GlossaryEntry implements Serializable
     private String topicOne;
     private String topicTwo;
     private String topicThree;
+
+    private List<GlossaryTerm> terms = new LinkedList<>();
 
     public String getDescription()
     {
@@ -108,6 +112,16 @@ public class GlossaryEntry implements Serializable
     public void setUserId(int userId)
     {
         this.userId = userId;
+    }
+
+    public List<GlossaryTerm> getTerms()
+    {
+        return terms;
+    }
+
+    public void addTerm(GlossaryTerm term)
+    {
+        this.terms.add(term);
     }
 
 }

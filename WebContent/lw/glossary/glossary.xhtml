@@ -162,15 +162,17 @@
 
 							<p:column headerText="#{msg['Glossary.term']}">
 
-								<p:inputText id="term" value='#{term.term}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" />
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" requiredMessage="#{msg.mandatory_field}" />
 								<p:message for="term" />
 								
 							</p:column>
 							
 							<p:column headerText="#{msg.language}">
 
-								<p:inputText id="language" value='#{term.language}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" />
-								<p:message for="term" />
+								<p:selectOneMenu id="language" value="#{term.language}">
+									<f:selectItems value="#{glossaryBeanNEW.availableLanguages}" />
+								</p:selectOneMenu>
+								<p:message for="language" />
 								</p:column>
 
 							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center">

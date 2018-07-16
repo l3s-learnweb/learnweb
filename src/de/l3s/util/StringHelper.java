@@ -156,9 +156,6 @@ public class StringHelper
 
         if(StringUtils.isEmpty(input))
         {
-            locales.add(Locale.GERMANY);
-            locales.add(Locale.ENGLISH);
-            locales.add(Locale.ITALIAN);
             return locales;
         }
 
@@ -170,13 +167,6 @@ public class StringHelper
         }
 
         return locales;
-    }
-
-    public static void main(String[] args)
-    {
-        List<Locale> locales = splitLocales(null);
-        log.debug(join(locales));
-
     }
 
     /**
