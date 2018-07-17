@@ -94,7 +94,7 @@ public class RequestManager
     {
         List<AggregatedRequestData> reqs = new ArrayList<>();
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE IP = "))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE IP = ?"))
         {
             select.setString(1, IP);
             ResultSet rs = select.executeQuery();
