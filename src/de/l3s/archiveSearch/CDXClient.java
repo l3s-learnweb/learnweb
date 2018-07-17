@@ -28,10 +28,6 @@ public class CDXClient
 
     //private ArchiveSearchManager archiveSearchManager;
 
-    /**
-     * 
-     * @param minCrawlTime results which have been crawled before this date must be crawled again
-     */
     public CDXClient()
     {
 
@@ -182,8 +178,6 @@ public class CDXClient
 
     /**
      * Set the request and error counter to 0
-     * 
-     * @param waybackAPIrequests
      */
     public void resetAPICounters()
     {

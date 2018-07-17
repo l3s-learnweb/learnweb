@@ -38,9 +38,6 @@ public class Link implements Comparable<Link>, Serializable
 
     /**
      * Creates a temporary Link-object witch isn't stored in the database
-     * 
-     * @param title
-     * @param url
      */
     public Link()
     {

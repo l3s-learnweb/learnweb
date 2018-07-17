@@ -260,7 +260,7 @@ public class GroupManager
      * Saves the Group to the database.
      * If the Group is not yet stored at the database, a new record will be created and the returned Group contains the new id.
      *
-     * @param Group
+     * @param group
      * @return
      * @throws SQLException
      */

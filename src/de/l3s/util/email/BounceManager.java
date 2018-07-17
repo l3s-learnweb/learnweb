@@ -48,7 +48,7 @@ public class BounceManager extends Observable
     private static Authenticator authenticator = new PasswordAuthenticator(login, pass);
 
     private static Pattern statusCodePattern = Pattern.compile("(?<=Status: )\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
-    private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.{1,}\\;)(.{1,})\\s");
+    private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.+\\;)(.+)\\s");
 
     private Date lastBounceCheck = null;
     private List<Observer> observers;

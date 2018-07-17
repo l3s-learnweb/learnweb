@@ -629,8 +629,6 @@ public class Search implements Serializable
     }
 
     /**
-     *
-     * @param searchId
      * @param rank
      * @param user
      * @param newResourceId Id of the new stored resource

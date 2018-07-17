@@ -421,7 +421,6 @@ public class PeerAssessmentManager
     /**
      * Sends an email to all eumade4all students who submitted successfully
      *
-     * @param peerAssementId
      * @throws SQLException
      * @throws MessagingException
      */

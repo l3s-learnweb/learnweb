@@ -28,7 +28,7 @@ public class Cache<E extends HasId> implements ICache<E>
 
     /**
      *
-     * @param capacity Number of objects this cache will store
+     * @param capacity2 Number of objects this cache will store
      */
     public Cache(int capacity2)
     {

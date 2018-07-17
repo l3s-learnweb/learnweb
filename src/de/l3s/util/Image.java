@@ -369,7 +369,6 @@ public class Image
      * Write image to a file, specify image type
      * This method will overwrite a file that exists with the same name
      *
-     * @see #getWriterFormatNames()
      * @param file File to write image to
      * @param type jpg, gif, etc.
      * @throws IOException
@@ -384,7 +383,7 @@ public class Image
     /**
      * Write image to a stream, specify image type
      *
-     * @param file File to write image to
+     * @param os
      * @param type jpg, gif, etc.
      * @throws IOException
      */

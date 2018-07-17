@@ -858,9 +858,9 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     /**
      * Method constructed to remove admins and moderators users
-     * 
-     * @param Users List
+     *
      * @author Alana
+     * @param list
      * @return list without Admin users
      * @throws SQLException
      */

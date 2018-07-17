@@ -28,7 +28,6 @@ public class ForumManager
      * returns all topic of the define group. Sorted by ORDER
      *
      * @param groupId
-     * @param order
      * @return
      */
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
@@ -109,7 +108,6 @@ public class ForumManager
      * Returns all posts that were created in the users group after the Date "lowerBound"
      *
      * @param userId
-     * @param lowerBound
      * @return
      * @throws SQLException
      *             /

@@ -415,7 +415,6 @@ public class SurveyManager
     /**
      * Returns all survey resources that exists in the groups of the given course
      *
-     * @param userId
      * @param courseId
      * @return
      * @throws SQLException
