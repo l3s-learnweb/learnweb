@@ -79,6 +79,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 return super.toString();
             }
         }
+
+        /**
+         * Same as ResourceType.valueOf(), but case insensitive.
+         */
+        public static ResourceType parse(String value) throws IllegalArgumentException {
+            return valueOf(value.toLowerCase());
+        }
     }
 
     public enum ResourceViewRights
@@ -698,7 +705,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         try
         {
-            this.type = ResourceType.valueOf(type.toLowerCase());
+            this.type = ResourceType.parse(type.toLowerCase());
         }
         catch(IllegalArgumentException e)
         {

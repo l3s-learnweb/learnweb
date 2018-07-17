@@ -897,7 +897,7 @@ public class ResourceManager
 
         if(null == resource)
         {
-            ResourceType type = ResourceType.valueOf(rs.getString("type"));
+            ResourceType type = ResourceType.parse(rs.getString("type"));
 
             resource = newResource(type);
             resource.setId(id);
