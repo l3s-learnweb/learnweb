@@ -14,9 +14,9 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.office.history.model.History;
-import de.l3s.office.history.model.HistoryData;
-import de.l3s.office.history.model.HistoryInfo;
+import de.l3s.learnweb.resource.office.history.model.History;
+import de.l3s.learnweb.resource.office.history.model.HistoryData;
+import de.l3s.learnweb.resource.office.history.model.HistoryInfo;
 
 public class HistoryServlet extends HttpServlet
 {

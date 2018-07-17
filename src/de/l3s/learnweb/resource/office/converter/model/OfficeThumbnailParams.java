@@ -1,4 +1,4 @@
-package de.l3s.office.converter.model;
+package de.l3s.learnweb.resource.office.converter.model;
 
 public class OfficeThumbnailParams
 {

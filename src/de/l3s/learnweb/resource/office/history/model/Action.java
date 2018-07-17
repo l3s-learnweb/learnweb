@@ -1,4 +1,4 @@
-package de.l3s.office.history.model;
+package de.l3s.learnweb.resource.office.history.model;
 
 public class Action
 {
