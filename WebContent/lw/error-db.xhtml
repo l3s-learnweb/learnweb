@@ -9,24 +9,25 @@
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 			<title>#{msg.error}</title>
 			<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+
 			<h:outputStylesheet library="main-template" name="main.css" />
-			<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-	
+			<h:outputStylesheet library="main-template" name="responsive_design.css" />
+
 			<h:outputScript library="primefaces" name="jquery/jquery.js" />
 			<h:outputScript library="main-template" name="default2.js" />
+			<h:outputScript library="main-template" name="jquery-ui.min.js" />
 		
 			<base href="#{request.contextPath}/lw/" />
 		
 		</h:head>
 		
 		<h:body>
-			<h:outputScript name="main-template/jquery-ui.min.js" />
 			<header id="header">
 				<div id="main_menu_bar">			
-			
+
 				<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 				<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
-			 
+
 				<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 					<a href="./" id="learnweb_logo">Logo</a>
 					<input type="search" name="query" value="" size="50" maxlength="100" id="searchfield" />

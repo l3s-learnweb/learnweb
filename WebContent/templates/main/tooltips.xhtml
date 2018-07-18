@@ -3,8 +3,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
       
 <ui:composition>
-<ui:fragment rendered="#{userBean.showMessageAny}">	
-	<h:outputStylesheet name="main-template/tooltipster.min.css"  />		
+<ui:fragment rendered="#{userBean.showMessageAny}">
+	<h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
 	<h:outputScript name="js/jquery.tooltipster.min.js" target="head"/>	
 	
 	<script type="text/javascript">

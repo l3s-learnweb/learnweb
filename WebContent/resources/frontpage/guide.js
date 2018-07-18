@@ -76,7 +76,7 @@ function lightbox_open()
 	box.show();
 };
 
-$(window).load(function()
+$(window).on('load', function()
 {	
 	setTimeout(function(){
 	    $("[data-lazy]").each(function (index, el) {

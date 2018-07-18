@@ -131,7 +131,7 @@
 					cnt			= 0;
 				$imgs.each(function(i) {
 					var $img	= $(this);
-					$('<img/>').load(function() {
+					$('<img/>').on('load', function() {
 						++cnt;
 						if( cnt === totalImgs ) {
 							$imgs.show();

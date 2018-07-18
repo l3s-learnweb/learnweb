@@ -15,14 +15,15 @@
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - #{msg['application.name']}</title>
 		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
         <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/nanoscroller.css" />
+
+		<h:outputStylesheet library="main-template" name="main.css" />
+		<h:outputStylesheet library="main-template" name="responsive_design.css" />
+
 		<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
 		<h:outputScript library="main-template" name="default2.js"/>
 		<h:outputScript library="js" name="jquery.mousewheel.min.js"/>
 		<h:outputScript library="js" name="jquery.nanoscroller.min.js"/>
-		
-		<h:outputStylesheet library="main-template" name="main.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-		
+
 		<base href="#{request.contextPath}/lw/" />
 		<ui:insert name="head-meta" />
 	</h:head>
