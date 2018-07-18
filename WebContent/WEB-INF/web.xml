@@ -157,6 +157,10 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml</param-value>
+	</context-param>
 	<servlet>
 		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
 		<display-name>Simple DownloadServlet</display-name>
