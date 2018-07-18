@@ -17,15 +17,16 @@
 	min-width:100%;
 }
 
-.myTable thead th { 
-    border: none !important; 
-    background: none !important;
+.myTable thead th {
+	border: none !important;
+	background: none !important;
+}
 
 #glossform{
 	margin: 0 auto;
 }
 .glossary td {
-	overflow:show !important;
+	overflow: scroll !important;
 }
 .glossary th{
 	font-size:1.5rem;

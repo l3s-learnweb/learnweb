@@ -60,7 +60,7 @@
     height: 91%;
     width: 250px;
     z-index: 500;
-    overflow-y: none;
+    overflow-y: hidden;
     box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
 }
 

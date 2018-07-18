@@ -206,23 +206,21 @@
 						
 				    	<p:commandButton id="button33" value="#{msg.FormativeAssessment_details}" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
 				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="#{msg.FormativeAssessment_details}" showEffect="clip" maximizable="true">
-						        	   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; align:center"/>
-						        	   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
-						        	   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
-						        	   
-						        	   <br /><br />
-						        	   <center>
-						        	   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px">
-										   <p:column headerText="#{msg.FormativeAssessment_mA}">
-										      <h:outputLabel value="#{infoMean.nameE}" />
-										   </p:column>
-										   <p:column headerText="#{msg.FormativeAssessment_mS}">
-										       <h:outputLabel value="#{infoMean.valueD}" />
-										   </p:column>
-									  </p:dataTable> 
-									  </center>
-									  
-									  <p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg31').show()" update="dia31"/>
+						   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; text-align:center"/>
+						   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
+						   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
+
+						   <br /><br />
+						   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px;text-align:center;">
+							   <p:column headerText="#{msg.FormativeAssessment_mA}">
+								  <h:outputLabel value="#{infoMean.nameE}" />
+							   </p:column>
+							   <p:column headerText="#{msg.FormativeAssessment_mS}">
+								   <h:outputLabel value="#{infoMean.valueD}" />
+							   </p:column>
+						  </p:dataTable>
+
+						  <p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg31').show()" update="dia31"/>
 				    	</p:dialog> 
 				    	
 				    	<p:dialog id="dia31" modal="true" resizable="true" widgetVar="dlg31" header="#{msg.FormativeAssessment_feedback}" showEffect="bounce" hideEffect="bounce">

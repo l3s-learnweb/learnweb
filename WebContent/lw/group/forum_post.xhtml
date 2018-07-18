@@ -7,14 +7,13 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="topic_id" value="#{forumPostBean.topicId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumPostBean.preRenderView}" />
+			<f:viewAction action="#{forumPostBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}"
-		escape="false" />
+	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}" escape="false" />
 
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="forum" name="forum.css" />

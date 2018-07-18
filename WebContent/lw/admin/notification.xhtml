@@ -50,7 +50,7 @@
 				</h:panelGrid>
 				
 				<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
-					<h4>You have to <a href="myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
+					<h4>You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
 				</ui:fragment>
 				
 				<h:panelGrid columns="2" style="margin-top:10px">

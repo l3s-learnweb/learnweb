@@ -9,7 +9,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="wizard" value="#{registrationBean.wizard}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{registrationBean.preRenderView}" />
+			<f:viewAction action="#{registrationBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 

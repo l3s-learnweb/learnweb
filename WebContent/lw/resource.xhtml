@@ -4,10 +4,12 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<f:metadata>
-		<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
-		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceBean.preRenderView}" />
-	</f:metadata>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
+			<f:viewAction action="#{resourceBean.preRenderView}"/>
+		</f:metadata>
+	</ui:define>
 	
 	<ui:param name="pageTitle" value="#{resourceBean.resource.title}"/>
 	<ui:param name="smallPage" value="true"/>

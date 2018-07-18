@@ -328,17 +328,17 @@
 					for (var j = 0; j < 6; j++)
 						columns.push(row.children('td').eq(j));
 
-					var columnData = column.find("span").first().data("itemid");
+					columnData = column.find("span").first().data("itemid");
 
-					if (rowGroupCellData != columnData) {
+					if (rowGroupCellData !== columnData) {
 						groupCounter++;
 						groupStartIndex = i;
 						rowGroupCellData = columnData;
 						rowGroupCount = 1;
 					} 
 					else {
-						for (var j = 0; j < columns.length; j++)
-							columns[j].remove();
+						for (var k = 0; k < columns.length; k++)
+							columns[k].remove();
 
 						//column.remove();
 						rowGroupCount++;
@@ -346,12 +346,12 @@
 
 					if (groupStartIndex != null && rowGroupCount > 1) 
 					{						
-						for (var j = 0; j < columns.length; j++)
+						for (var l = 0; l < columns.length; l++)
 						{
-							var cell = rows.eq(groupStartIndex).children('td').eq(j);
+							var cell = rows.eq(groupStartIndex).children('td').eq(l);
 							cell.attr('rowspan', rowGroupCount);							
 							cell.removeClass(); // remove all classes
-							cell.addClass(groupCounter % 2 == 0? 'ui-datatable-even' : 'ui-datatable-odd');							
+							cell.addClass(groupCounter % 2 === 0? 'ui-datatable-even' : 'ui-datatable-odd');
 						}
 					}					
 				}
