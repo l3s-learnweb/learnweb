@@ -54,7 +54,6 @@ $(".dropdown-btn")
 											nextElement.height(0);
 										} else {
 											if ($(this).attr('id') == 'added_res_tab_new_changes') {
-												debugger;
 												var currentIndex = nextElement
 														.find('.slick-current')
 														.attr(
@@ -64,7 +63,6 @@ $(".dropdown-btn")
 												closeTheOtherSlider($('#added_res_tab'));
 											}
 											if ($(this).attr('id') == 'added_res_tab') {
-												debugger;
 												var currentIndex = nextElement
 														.find('.slick-current')
 														.attr(

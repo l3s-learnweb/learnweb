@@ -50,6 +50,10 @@
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>
 		
+		<h:panelGroup layout="block" id="legal_footer" rendered="#{false and not userBean.loggedIn}">
+			<a href="imprint.jsf">#{msg['imprint.title']}</a>
+		</h:panelGroup>
+		
 		<h:form styleClass="display-none">	
 			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" />
 		</h:form>

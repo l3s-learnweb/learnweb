@@ -493,6 +493,18 @@ iframe { border:none }
 	font-size:1.5rem;
 }
 
+#legal_footer {
+	color:#000000;
+	left:0px;
+	position: fixed;
+	bottom: 0px;
+	text-align: center;
+	z-index:1499;
+	font-size:1.3rem;
+	width:100%;
+	background-color: #c0c0c0;
+}
+
 /*right_pane*/
 #right_pane{border: none;}
 #right_pane_wrapper{
@@ -884,10 +896,14 @@ h3 {
 .small_page {
 	max-width:80rem;
 	padding:1rem;
-	margin-top:4rem;
+	padding-top:4rem;
 	margin-left:auto;
 	margin-right:auto;
 	color:#4f4f4f;
+}
+
+#content.small_page {
+	padding-top:8.6rem;
 }
 
 

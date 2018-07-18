@@ -41,7 +41,7 @@ var history_info = {};
 
 
 var onRequestHistoryData = function(event) {
-	debugger;
+	// TODO use real url
 	var url = "/Learnweb-Tomcat/history";
     $.post(url+"?version=" + event.data+"&resourceId=" + $('#ed_resource_id').val(),JSON.stringify(history_info), function(json) {   
     	docEditor.setHistoryData(json);    
