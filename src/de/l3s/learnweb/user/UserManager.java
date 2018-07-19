@@ -204,9 +204,9 @@ public class UserManager
             return user;
         }
 
-        PreparedStatement pstmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");
-        pstmtGetUser.setInt(1, userId);
-        ResultSet rs = pstmtGetUser.executeQuery();
+        PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");
+        stmtGetUser.setInt(1, userId);
+        ResultSet rs = stmtGetUser.executeQuery();
 
         if(!rs.next())
         {
@@ -214,7 +214,7 @@ public class UserManager
             return null; //throw new IllegalArgumentException("invalid user id");
         }
         user = createUser(rs);
-        pstmtGetUser.close();
+        stmtGetUser.close();
 
         user = cache.put(user);
 
@@ -363,7 +363,7 @@ public class UserManager
         replace.setInt(9, user.getActiveGroupId());
         replace.setInt(10, user.getImageFileId());
         replace.setInt(11, user.getGender());
-        replace.setDate(12, user.getDateofbirth() == null ? null : new java.sql.Date(user.getDateofbirth().getTime()));
+        replace.setDate(12, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
         replace.setString(13, user.getAddress());
         replace.setString(14, user.getProfession());
         replace.setString(15, user.getAdditionalInformation());
@@ -419,12 +419,12 @@ public class UserManager
         user.setImageFileId(rs.getInt("image_file_id"));
 
         user.setGender(rs.getInt("gender"));
-        user.setDateofbirth(rs.getDate("dateofbirth"));
+        user.setDateOfBirth(rs.getDate("dateofbirth"));
         user.setFullName(rs.getString("fullname"));
         user.setAffiliation(rs.getString("affiliation"));
         user.setAddress(rs.getString("address"));
         user.setProfession(rs.getString("profession"));
-        user.setAdditionalinformation(rs.getString("additionalinformation"));
+        user.setAdditionalInformation(rs.getString("additionalinformation"));
         user.setInterest(rs.getString("interest"));
         user.setStudentId(rs.getString("phone"));
         user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));

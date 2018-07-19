@@ -333,7 +333,7 @@ public class SubmissionManager
         }
         catch(SQLException e)
         {
-            log.error("Eror while inserting submit status for submission: " + submissionId + "; user: " + userId, e);
+            log.error("Error while inserting submit status for submission: " + submissionId + "; user: " + userId, e);
         }
     }
 

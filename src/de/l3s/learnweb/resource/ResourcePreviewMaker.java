@@ -318,7 +318,7 @@ public class ResourcePreviewMaker
         }
         catch(Exception e)
         {
-            log.error("An error occured during video conversion " + resource.getId(), e);
+            log.error("An error occurred during video conversion " + resource.getId(), e);
         }
     }
 
@@ -375,7 +375,7 @@ public class ResourcePreviewMaker
             }
             catch(Exception e)
             {
-                log.warn("Couldn't create thumbnail at positon " + seconds, e);
+                log.warn("Couldn't create thumbnail at position " + seconds, e);
             }
         }
 
@@ -419,7 +419,7 @@ public class ResourcePreviewMaker
                 p = pdfFile.getPage(page, true);
             }
             catch(NoClassDefFoundError | Exception e)
-            { // some pdfs with special graphics cause errors
+            { // some PDFs with special graphics cause errors
                 log.debug("Skip PDF page with errors; page: " + page + "; resource: " + resource);
                 return;
             }

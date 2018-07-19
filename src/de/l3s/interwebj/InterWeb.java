@@ -128,7 +128,7 @@ public class InterWeb implements Serializable
         {
             String content = responseToString(response);
 
-            log.fatal("Interweb request failes; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
+            log.fatal("Interweb request failed; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
             throw new RuntimeException("Interweb request failed : HTTP error code : " + response.getStatus());
         }
 

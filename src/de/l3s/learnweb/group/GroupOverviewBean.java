@@ -123,7 +123,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
     }
 
-    public AbstractMap.SimpleEntry<String, Resource> getChoosenResourceFromSlider() throws SQLException
+    public AbstractMap.SimpleEntry<String, Resource> getChosenResourceFromSlider() throws SQLException
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String index = params.get("index");
@@ -142,11 +142,10 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
             clickedResource = groupSummary.getAddedResources().get(index).getResource();
             return groupSummary.getAddedResources().get(index).getResource();
         }
-        List<Resource> updatedResourcces = new LinkedList<>();
-        updatedResourcces.addAll(groupSummary.getUpdatedResources().keySet());
-        clickedResource = updatedResourcces.get(index);
-        return updatedResourcces.get(index);
-
+        List<Resource> updatedResources = new LinkedList<>();
+        updatedResources.addAll(groupSummary.getUpdatedResources().keySet());
+        clickedResource = updatedResources.get(index);
+        return updatedResources.get(index);
     }
 
     public Resource getClickedResource()
@@ -166,7 +165,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 
     public void displayClickedResourceFromSlider() throws SQLException
     {
-        SimpleEntry<String, Resource> clickedResourceFromSlider = getChoosenResourceFromSlider();
+        SimpleEntry<String, Resource> clickedResourceFromSlider = getChosenResourceFromSlider();
         if(clickedResourceFromSlider != null)
         {
             rightPaneBean.setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);

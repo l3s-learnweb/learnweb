@@ -35,7 +35,7 @@ function updateMaxResources(){
 	});
 }
 
-function selectresourceDND() {
+function selectResourceDND() {
     var $dataGrid = $('#resourceGrid');
 
     // disable drag and drop for the activity log
@@ -67,7 +67,7 @@ function selectresourceDND() {
 }
 
 $(document).ready(function(){
-	selectresourceDND();
+	selectResourceDND();
 	select_res_lightbox.load();
 	$(window).resize(select_res_lightbox.resize_container);
 	$('#add_resource_sign').on('click', function(){

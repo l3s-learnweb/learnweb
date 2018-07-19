@@ -113,7 +113,7 @@ public class Image
     }
 
     /**
-     * First crops the image to the aspect ratio given by the parameters height and width and then resizes it
+     * First crops the image to the aspect ratio given by the parameters height and width and then resize it
      *
      * @param maxWidth
      * @param maxHeight

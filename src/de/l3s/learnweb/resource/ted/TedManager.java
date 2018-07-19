@@ -114,7 +114,7 @@ public class TedManager
         pStmt.close();
     }
 
-    public List<Transcript> getTransscripts(int resourceId) throws SQLException
+    public List<Transcript> getTranscripts(int resourceId) throws SQLException
     {
         List<Transcript> transcripts = new LinkedList<Transcript>();
         String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?";
@@ -380,7 +380,7 @@ public class TedManager
     {
         StringBuilder sb = new StringBuilder();
 
-        for(Transcript transcript : getTransscripts(learnwebResourceId))
+        for(Transcript transcript : getTranscripts(learnwebResourceId))
         {
             if(transcript.getLanguageCode().equals("en") || transcript.getLanguageCode().equals("fr") || transcript.getLanguageCode().equals("de") || transcript.getLanguageCode().equals("es") || transcript.getLanguageCode().equals("it"))
                 for(Paragraph paragraph : transcript.getParagraphs())
@@ -433,7 +433,7 @@ public class TedManager
         params.put("timeout", "500");
 
         List<ResourceDecorator> resources;
-        int page = 1; // you have to start at page one due to youtupe api limitations
+        int page = 1; // you have to start at page one due to youtube api limitations
 
         do
         {
@@ -462,7 +462,7 @@ public class TedManager
                 }*/
 
                 //Regex for setting the title and author for TED-Ed videos
-                String[] title = resource.getTitle().split("\\-");
+                String[] title = resource.getTitle().split("-");
                 if(title.length == 2 && !title[1].startsWith("Ed"))
                 {
                     resource.setAuthor(title[1].trim());

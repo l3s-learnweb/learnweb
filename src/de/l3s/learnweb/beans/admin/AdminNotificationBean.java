@@ -78,7 +78,7 @@ public class AdminNotificationBean extends ApplicationBean
         UserManager um = getLearnweb().getUserManager();
         int counter = 0;
 
-        ArrayList<String> reciepients = new ArrayList<>(selectedUsers.size());
+        ArrayList<String> recipients = new ArrayList<>(selectedUsers.size());
         ArrayList<String> usersWithoutMail = new ArrayList<>();
 
         for(int userId : selectedUsers)
@@ -94,7 +94,7 @@ public class AdminNotificationBean extends ApplicationBean
                 if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail(), null))
                     usersWithoutMail.add(user.getUsername());
                 else
-                    reciepients.add(user.getEmail());
+                    recipients.add(user.getEmail());
             }
             counter++;
         }
@@ -108,23 +108,23 @@ public class AdminNotificationBean extends ApplicationBean
             {
                 // copy addresses to array
                 int i = 0;
-                InternetAddress[] reciepientsArr = new InternetAddress[reciepients.size()];
+                InternetAddress[] recipientsArr = new InternetAddress[recipients.size()];
 
-                for(String address : reciepients)
+                for(String address : recipients)
                 {
-                    reciepientsArr[i++] = new InternetAddress(address);
+                    recipientsArr[i++] = new InternetAddress(address);
                     log.debug("send mail to: " + address);
                 }
 
                 mail = new Mail();
-                mail.setRecipients(javax.mail.Message.RecipientType.BCC, reciepientsArr);
+                mail.setRecipients(javax.mail.Message.RecipientType.BCC, recipientsArr);
                 mail.setReplyTo(new InternetAddress(user.getEmail()));
                 mail.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(user.getEmail()));
                 mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
                 mail.setSubject("Learnweb: " + title);
                 mail.sendMail();
 
-                addMessage(FacesMessage.SEVERITY_INFO, reciepientsArr.length + " emails send");
+                addMessage(FacesMessage.SEVERITY_INFO, recipientsArr.length + " emails send");
 
                 if(usersWithoutMail.size() > 0)
                     addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");

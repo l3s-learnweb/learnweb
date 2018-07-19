@@ -81,7 +81,7 @@ public class UserBean implements Serializable
 
     /**
      * This method sets values which are required by the Download Servlet
-     * and provides data which is shown on the Tomcat mananger session page
+     * and provides data which is shown on the Tomcat manager session page
      */
     private void storeMetadataInSession()
     {

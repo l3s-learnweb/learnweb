@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
@@ -76,7 +76,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     private boolean canViewAssessmentResult() throws SQLException
     {
-        for(PeerAssesmentPair pair : getUser().getAssessedPeerAssessments())
+        for(PeerAssessmentPair pair : getUser().getAssessedPeerAssessments())
         {
             // a teacher has assessed the current user
             if(pair.getAssessmentSurveyResourceId() == surveyResourceId)
@@ -88,7 +88,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         }
         /*
         int userId = getUser().getId();
-        PeerAssesmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
+        PeerAssessmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
 
         if(pair != null)
             return true;

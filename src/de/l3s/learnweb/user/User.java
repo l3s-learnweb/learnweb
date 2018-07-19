@@ -30,7 +30,7 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
@@ -58,7 +58,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private String password; // md5 hash
 
     private int gender;
-    private Date dateofbirth;
+    private Date dateOfBirth;
     private String address;
     private String profession;
     private String additionalInformation;
@@ -154,9 +154,9 @@ public class User implements Comparable<User>, Serializable, HasId
         return Learnweb.getInstance().getResourceManager().getCommentsByUserId(this.getId());
     }
 
-    public Date getDateofbirth()
+    public Date getDateOfBirth()
     {
-        return dateofbirth;
+        return dateOfBirth;
     }
 
     public String getEmail()
@@ -257,9 +257,9 @@ public class User implements Comparable<User>, Serializable, HasId
         return username;
     }
 
-    public void setAdditionalinformation(String additionalinformation)
+    public void setAdditionalInformation(String additionalInformation)
     {
-        this.additionalInformation = additionalinformation;
+        this.additionalInformation = additionalInformation;
     }
 
     public void setAddress(String address)
@@ -267,9 +267,9 @@ public class User implements Comparable<User>, Serializable, HasId
         this.address = address;
     }
 
-    public void setDateofbirth(Date dateofbirth)
+    public void setDateOfBirth(Date dateOfBirth)
     {
-        this.dateofbirth = dateofbirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public void setEmail(String email)
@@ -781,7 +781,7 @@ public class User implements Comparable<User>, Serializable, HasId
      *
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getAssessorPeerAssessment() throws SQLException
+    public List<PeerAssessmentPair> getAssessorPeerAssessment() throws SQLException
     {
         return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessorUserId(getId());
     }
@@ -792,7 +792,7 @@ public class User implements Comparable<User>, Serializable, HasId
      *
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getAssessedPeerAssessments() throws SQLException
+    public List<PeerAssessmentPair> getAssessedPeerAssessments() throws SQLException
     {
         return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessedUserId(getId());
     }

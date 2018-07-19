@@ -61,7 +61,7 @@ public class HistoryManager
         history.getUser().setName(rs.getString("username"));
         history.setChanges(new ArrayList<>());
         history.setVersion(rs.getInt("history_version"));
-        try(PreparedStatement selectChange = learnweb.getConnection().prepareStatement("SELECT created_date, u.user_id 'userid', u.username FROM lw_user u inner join lw_history_change h where u.user_id = h.user_id and resource_history_id = ?"))
+        try(PreparedStatement selectChange = learnweb.getConnection().prepareStatement("SELECT created_date, u.user_id, u.username FROM lw_user u inner join lw_history_change h where u.user_id = h.user_id and resource_history_id = ?"))
         {
             selectChange.setInt(1, history.getId());
             ResultSet resultSet = selectChange.executeQuery();
@@ -76,7 +76,7 @@ public class HistoryManager
     {
         Change change = new Change();
         OfficeUser user = new OfficeUser();
-        user.setId(rs.getInt("userid"));
+        user.setId(rs.getInt("user_id"));
         change.setId(null);
         user.setName(rs.getString("username"));
         change.setUser(user);

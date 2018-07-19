@@ -27,7 +27,7 @@ import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
 import de.l3s.learnweb.resource.yellMetadata.Category;
 import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
-import de.l3s.learnweb.resource.yellMetadata.LanglevelManager;
+import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
@@ -1167,12 +1167,12 @@ public class ResourceManager
     }
 
     //queries regarding table: lw_rm_langlevel and lw_resource_langlevel
-    public List<Resource> getResourcesByLanglevelId(int langlevelId) throws SQLException
+    public List<Resource> getResourcesByLangLevelId(int langLevelId) throws SQLException
     {
-        return getResourcesByAudienceId(langlevelId, 1000);
+        return getResourcesByAudienceId(langLevelId, 1000);
     }
 
-    public List<Resource> getResourcesByLanglevelId(int langlevelId, int maxResults) throws SQLException
+    public List<Resource> getResourcesByLangLevelId(int langlevelId, int maxResults) throws SQLException
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_langlevel USING ( resource_id ) WHERE langlevel_id = ? AND deleted = 0 LIMIT ? ", null, langlevelId, maxResults);
     }
@@ -1235,13 +1235,13 @@ public class ResourceManager
     }
 
     //save new resource_langlevel
-    protected void saveLanglevelResource(Resource resource, String[] langlevels, User user) throws SQLException
+    protected void saveLangLevelResource(Resource resource, String[] langlevels, User user) throws SQLException
     {
-        LanglevelManager llm = Learnweb.getInstance().getLanglevelManager();
+        LangLevelManager llm = Learnweb.getInstance().getLangLevelManager();
         for(int i = 0; i < langlevels.length; i++)
         {
             //find id of the lang level first
-            int llevelId = llm.getLanglevelIdByLanglevelname(langlevels[i]);
+            int llevelId = llm.getLangLevelIdByLangLevelName(langlevels[i]);
             if(llevelId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_langlevel` (`resource_id`, `user_id`, `langlevel_id`) VALUES (?, ?, ?)");
@@ -1261,7 +1261,7 @@ public class ResourceManager
         for(int i = 0; i < targets.length; i++)
         {
             //find id of the audience first
-            int targetId = am.getAudienceIdByAudiencename(targets[i].toLowerCase());
+            int targetId = am.getAudienceIdByAudienceName(targets[i].toLowerCase());
             if(targetId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_audience` (`resource_id`, `user_id`, `audience_id`) VALUES (?, ?, ?)");
@@ -1281,7 +1281,7 @@ public class ResourceManager
         for(String purpose : purposes)
         {
             //find id of the lang level first
-            int purposeId = pm.getPurposeIdByPurposename(purpose);
+            int purposeId = pm.getPurposeIdByPurposeName(purpose);
             if(purposeId <= 0)
                 purposeId = pm.addPurpose(purpose).getId();
 

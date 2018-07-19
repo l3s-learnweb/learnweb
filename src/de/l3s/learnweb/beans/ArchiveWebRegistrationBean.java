@@ -44,7 +44,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 
     public ArchiveWebRegistrationBean()
     {
-        // set default search options for anonymous archiv it users
+        // set default search options for anonymous archive it users
         setPreference("SEARCH_SERVICE_TEXT", SERVICE.archiveit.name());
         //setPreference("search_action", MODE.image.name());
     }

@@ -1975,7 +1975,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public void addNewLevels(String[] selectedLevels, User user) throws SQLException
     {
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        rsm.saveLanglevelResource(this, selectedLevels, user);
+        rsm.saveLangLevelResource(this, selectedLevels, user);
         extendedMetadata = null; // invalidate cache
         selectedLevels = null; //invalidate cache
     }

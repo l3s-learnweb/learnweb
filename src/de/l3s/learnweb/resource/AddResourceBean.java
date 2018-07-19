@@ -55,7 +55,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private Group targetGroup;
     private Folder targetFolder;
 
-    private LANGUAGE[] glossaryLaguage = { LANGUAGE.DE, LANGUAGE.EN, LANGUAGE.FR, LANGUAGE.IT, LANGUAGE.NL };
+    private LANGUAGE[] glossaryLanguage = { LANGUAGE.DE, LANGUAGE.EN, LANGUAGE.FR, LANGUAGE.IT, LANGUAGE.NL };
     private String newUrl;
     @Deprecated
     private Date surveyOpenDate; // TODO if a survey is created then this.resource should become a SurveyResource instance
@@ -636,14 +636,14 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.fileEditorBean = fileEditorBean;
     }
 
-    public LANGUAGE[] getGlossaryLaguage()
+    public LANGUAGE[] getGlossaryLanguage()
     {
-        return glossaryLaguage;
+        return glossaryLanguage;
     }
 
-    public void setGlossaryLaguage(LANGUAGE[] glossaryLaguage)
+    public void setGlossaryLanguage(LANGUAGE[] glossaryLanguage)
     {
-        this.glossaryLaguage = glossaryLaguage;
+        this.glossaryLanguage = glossaryLanguage;
     }
 
     public Date getSurveyOpenDate()

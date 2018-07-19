@@ -30,7 +30,7 @@
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
 		<h:panelGroup id="profile_news" rendered="#{not userDetailBean.pageHidden}">		
 			<ui:decorate template="/templates/user/logs.xhtml">
-				<ui:param name="news" value="#{newsFeedBean.newslist}"/>
+				<ui:param name="news" value="#{newsFeedBean.newsList}"/>
 			</ui:decorate >
 		</h:panelGroup>
 	</ui:define>

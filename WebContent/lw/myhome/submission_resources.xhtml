@@ -25,8 +25,8 @@
 			var resources_to_select = max_resources;
 		</script>
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();selectresourceDND(); load_editor(); "/>
-			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=":right_pane_wrapper :resourceGrid2" oncomplete="update_header(); selectresourceDND(); updateMaxResources();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();selectResourceDND(); load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=":right_pane_wrapper :resourceGrid2" oncomplete="update_header(); selectResourceDND(); updateMaxResources();"/>
 		</h:form>
 		
 		<!-- only for eumade4all -->

@@ -149,7 +149,7 @@ public class DownloadServlet extends HttpServlet
             }
 
             /*
-             * Name needs to be urldecoded. Is it really useful?
+             * Name needs to be UrlDecoded. Is it really useful?
             if(!file.getName().equals(requestFileData[1]))
             {
                 log.warn("Requested file name (" + requestFileData[1] + ") does not match stored filename (" + file.getName() + "); fileId=" + fileId);
@@ -180,7 +180,7 @@ public class DownloadServlet extends HttpServlet
             }
             catch(IllegalArgumentException e)
             {
-                log.error("Illagal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
+                log.error("Illegal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
             }
             if(ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified)
             {
@@ -477,7 +477,7 @@ public class DownloadServlet extends HttpServlet
      */
     private static boolean accepts(String acceptHeader, String toAccept)
     {
-        String[] acceptValues = acceptHeader.split("\\s*(,|;)\\s*");
+        String[] acceptValues = acceptHeader.split("\\s*([,;])\\s*");
         Arrays.sort(acceptValues);
         return Arrays.binarySearch(acceptValues, toAccept) > -1 || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1 || Arrays.binarySearch(acceptValues, "*/*") > -1;
     }

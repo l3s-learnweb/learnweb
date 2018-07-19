@@ -9,9 +9,9 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="peer_assessment_id"
-				value="#{adminPeerAssesmentPairBeen.peerAssementId}" required="true"
-				requiredMessage="Missing parameter" />
-			<f:viewAction action="#{adminPeerAssesmentPairBeen.onLoad}" />
+						 value="#{adminPeerAssessmentPairBeen.peerAssessmentId}" required="true"
+						 requiredMessage="Missing parameter" />
+			<f:viewAction action="#{adminPeerAssessmentPairBeen.onLoad}" />
 		</f:metadata>
 	</ui:define>
 
@@ -39,7 +39,7 @@
 		
 			<h:form style="margin:5px;">
 				<p:dataTable id="processTable" var="pair"
-					value="#{adminPeerAssesmentPairBeen.pairs}"
+					value="#{adminPeerAssessmentPairBeen.pairs}"
 					tableStyle="width: 96%; table-layout:auto"
 					emptyMessage="No pairs found">
 

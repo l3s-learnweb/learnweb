@@ -48,7 +48,7 @@ public class BounceManager extends Observable
     private static Authenticator authenticator = new PasswordAuthenticator(login, pass);
 
     private static Pattern statusCodePattern = Pattern.compile("(?<=Status: )\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
-    private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.+\\;)(.+)\\s");
+    private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.+;)(.+)\\s");
 
     private Date lastBounceCheck = null;
     private List<Observer> observers;
@@ -104,7 +104,7 @@ public class BounceManager extends Observable
     }
 
     /**
-     * Reads the message contents into a bytestream and returns it as string.
+     * Reads the message contents into a byte stream and returns it as string.
      */
     private String getText(Message msg) throws MessagingException, IOException
     {
@@ -142,17 +142,17 @@ public class BounceManager extends Observable
         Matcher matcherCode = statusCodePattern.matcher(text);
 
         String code;
-        String descr;
+        String description;
 
         if(matcherCode.find())
         {
             code = matcherCode.group();
-            descr = getErrorDescription(code);
+            description = getErrorDescription(code);
         }
         else
         {
             code = "Not found";
-            descr = "";
+            description = "";
         }
 
         String originalRecipient;
@@ -168,7 +168,7 @@ public class BounceManager extends Observable
         }
 
         //Adds message to database
-        addToDB(originalRecipient, msg.getReceivedDate(), code, descr);
+        addToDB(originalRecipient, msg.getReceivedDate(), code, description);
         checkAndNotify(msg);
         return true;
     }
@@ -184,14 +184,14 @@ public class BounceManager extends Observable
 
         String[] codes = errCode.split("\\.", 2);
 
-        //Transient or permament
+        //Transient or permanent
         if(codes[0].equals("4"))
         {
             description = "Transient Persistent Failure: ";
         }
         else if(codes[0].equals("5"))
         {
-            description = "Permament Failure: ";
+            description = "Permanent Failure: ";
         }
 
         //Actual code explanation. VERY LONG

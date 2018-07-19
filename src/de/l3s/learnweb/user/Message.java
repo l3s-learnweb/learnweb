@@ -46,10 +46,10 @@ public class Message implements Comparable<Message>
         if(user == null)
             return messageList;
 
-        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc");
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc");
 
-        pstmtGetUsers.setInt(1, user.getId());
-        ResultSet rs = pstmtGetUsers.executeQuery();
+        stmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = stmtGetUsers.executeQuery();
         Message message = null;
 
         User toUser = null;
@@ -73,7 +73,7 @@ public class Message implements Comparable<Message>
 
             messageList.add(message);
         }
-        pstmtGetUsers.close();
+        stmtGetUsers.close();
 
         return messageList;
     }
@@ -105,7 +105,7 @@ public class Message implements Comparable<Message>
         stmt.close();
     }
 
-    public void meesageRead() throws SQLException
+    public void messageRead() throws SQLException
     {
         PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
         stmt.setInt(1, this.id);
@@ -210,7 +210,7 @@ public class Message implements Comparable<Message>
     {
         try
         {
-            this.meesageRead();
+            this.messageRead();
         }
         catch(SQLException e)
         {
@@ -235,7 +235,7 @@ public class Message implements Comparable<Message>
         this.time = time;
     }
 
-    public String getFormatedTime()
+    public String getFormattedTime()
     {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String s = format.format(getTime());

@@ -17,7 +17,7 @@ public class SurveyQuestion implements Serializable
 {
     private static final long serialVersionUID = -7698089608547415349L;
 
-    public enum QuestionType // represents primeface input types
+    public enum QuestionType // represents primefaces input types
     {
         INPUT_TEXT, // options define the valid length (first entry = min length, second entry = max length)
         INPUT_TEXTAREA, // options define the valid length (first entry = min length, second entry = max length)
@@ -165,7 +165,7 @@ public class SurveyQuestion implements Serializable
      * 
      * @return
      */
-    public List<String> getEUmadeAnswersWithout()
+    public List<String> getEUMadeAnswersWithout()
     {
         LinkedList<String> copy = new LinkedList<>(answers);
         copy.remove("Don't show");

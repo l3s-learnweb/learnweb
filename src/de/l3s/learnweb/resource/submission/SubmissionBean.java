@@ -30,7 +30,7 @@ import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.RightPaneBean;
-import de.l3s.learnweb.resource.peerAssessment.PeerAssesmentPair;
+import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
@@ -117,7 +117,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         response.setDateHeader("Expires", 0); // Proxies.
     }
 
-    public List<PeerAssesmentPair> getPeerAssessmentPairs()
+    public List<PeerAssessmentPair> getPeerAssessmentPairs()
     {
         try
         {

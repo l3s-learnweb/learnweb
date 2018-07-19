@@ -138,7 +138,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                     sb.append("</div>\n<ul>");
 
                     List<Resource> resources = group.getResources();
-                    Collections.sort(resources, new ResourceComparater());
+                    Collections.sort(resources, new ResourceComparator());
 
                     for(Resource resource : resources)
                     {
@@ -201,7 +201,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     }
 
-    private class ResourceComparater implements Comparator<Resource>
+    private class ResourceComparator implements Comparator<Resource>
     {
         @Override
         public int compare(Resource o1, Resource o2)

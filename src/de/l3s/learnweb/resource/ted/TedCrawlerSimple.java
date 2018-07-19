@@ -71,9 +71,9 @@ public class TedCrawlerSimple implements Runnable
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, lang);
 
-            Element transcriptbody = doc.select(".talk-article__body").first();
+            Element transcriptBody = doc.select(".talk-article__body").first();
             int preRollOffset = 11820;
-            Elements elements = transcriptbody.getElementsByClass("talk-transcript__para");
+            Elements elements = transcriptBody.getElementsByClass("talk-transcript__para");
             for(Element element : elements)
             {
                 Element firstFragment = element.getElementsByClass("talk-transcript__fragment").get(0);
@@ -258,7 +258,7 @@ public class TedCrawlerSimple implements Runnable
     public void visit(String url)
     {
         HashSet<String> languageSet = new HashSet<String>();
-        HashSet<String> languageListfromDatabase = new HashSet<String>();
+        HashSet<String> languageListFromDatabase = new HashSet<String>();
 
         String keywords = "", title = null, description = null;
         //String url = page.getWebURL().getURL();
@@ -280,7 +280,7 @@ public class TedCrawlerSimple implements Runnable
                 resourceId = rs.getInt(1);
                 String languageCode = rs.getString(2);
                 if(languageCode != null)
-                    languageListfromDatabase.add(languageCode);
+                    languageListFromDatabase.add(languageCode);
             }
 
         }
@@ -324,8 +324,8 @@ public class TedCrawlerSimple implements Runnable
                 log.info("Crawling new ted talk: " + slug);
                 log.info("ted id: " + tedId);
 
-                Element totalviewsEl = doc.select("meta[itemprop=interactionCount]").first();
-                String totalViews = totalviewsEl.attr("content");
+                Element totalViewsEl = doc.select("meta[itemprop=interactionCount]").first();
+                String totalViews = totalViewsEl.attr("content");
                 log.info("total views: " + totalViews);
 
                 log.info("title: " + title);
@@ -433,11 +433,11 @@ public class TedCrawlerSimple implements Runnable
                         languageSet.add(hrefLang);
                 }
 
-                if(languageSet.equals(languageListfromDatabase))
+                if(languageSet.equals(languageListFromDatabase))
                     return;
                 else
                 {
-                    languageSet.removeAll(languageListfromDatabase);
+                    languageSet.removeAll(languageListFromDatabase);
                     for(String langCode : languageSet)
                     {
                         log.info("inserting transcript for resource id: " + resourceId + "; language code: " + langCode);

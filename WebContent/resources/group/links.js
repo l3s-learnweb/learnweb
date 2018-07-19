@@ -1,4 +1,4 @@
-function onlinkClick(element) {
+function onLinkClick(element) {
 	if(googleSignInEnabled)
 	{
 		var googleAuthObj = gapi.auth2.getAuthInstance();

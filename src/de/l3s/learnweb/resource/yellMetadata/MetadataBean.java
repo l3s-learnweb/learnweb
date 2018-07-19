@@ -26,7 +26,7 @@ public class MetadataBean extends ApplicationBean implements Serializable
 
     public MetadataBean()
     {
-        // don't delete this contructor. It is required by the Java Bean conventions
+        // don't delete this constructor. It is required by the Java Bean conventions
     }
 
     public void loadMetadata()

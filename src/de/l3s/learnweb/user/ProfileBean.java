@@ -37,7 +37,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @Size(min = 0, max = 250)
     private String address;
 
-    private Date dateofbirth;
+    private Date dateOfBirth;
 
     @Email
     private String email;
@@ -123,7 +123,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         email = user.getEmail();
         studentId = user.getStudentId();
         gender = user.getGender();
-        dateofbirth = user.getDateofbirth();
+        dateOfBirth = user.getDateOfBirth();
         additionalInformation = user.getAdditionalInformation();
         interest = user.getInterest();
         address = user.getAddress();
@@ -184,9 +184,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_FATAL, "We were not able to send a confirmation mail");
         }
 
-        user.setAdditionalinformation(additionalInformation);
+        user.setAdditionalInformation(additionalInformation);
         user.setAddress(address);
-        user.setDateofbirth(dateofbirth);
+        user.setDateOfBirth(dateOfBirth);
         user.setGender(gender);
         user.setInterest(interest);
         user.setStudentId(studentId);
@@ -253,14 +253,14 @@ public class ProfileBean extends ApplicationBean implements Serializable
         this.address = address;
     }
 
-    public Date getDateofbirth()
+    public Date getDateOfBirth()
     {
-        return dateofbirth;
+        return dateOfBirth;
     }
 
-    public void setDateofbirth(Date dateofbirth)
+    public void setDateOfBirth(Date dateOfBirth)
     {
-        this.dateofbirth = dateofbirth;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getEmail()

@@ -670,7 +670,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return sp;
     }
 
-    public List<Folder> getSubfolders() throws SQLException
+    public List<Folder> getSubFolders() throws SQLException
     {
         return getLearnweb().getGroupManager().getFolders(groupId, getSelectedFolderId());
     }
@@ -1612,18 +1612,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             authors = new ArrayList<String>();
-            List<Resource> gresources = this.group.getResources();
+            List<Resource> resources = this.group.getResources();
 
-            for(int i = 0; i < gresources.size(); i++)
+            for(int i = 0; i < resources.size(); i++)
             {
                 String exist = "false";
 
-                if((gresources.get(i).getAuthor() != null) && (gresources.get(i).getAuthor().length() != 0))
+                if((resources.get(i).getAuthor() != null) && (resources.get(i).getAuthor().length() != 0))
                 {
 
                     for(int j = 0; j < authors.size(); j++)
                     {
-                        if(authors.get(j).equalsIgnoreCase(gresources.get(i).getAuthor().trim()))
+                        if(authors.get(j).equalsIgnoreCase(resources.get(i).getAuthor().trim()))
                         {
                             exist = "true";
                         }
@@ -1631,7 +1631,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                     if(exist.equals("false"))
                     {
-                        authors.add(gresources.get(i).getAuthor().trim());
+                        authors.add(resources.get(i).getAuthor().trim());
                     }
                 }
             }
@@ -1656,18 +1656,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             msources = new ArrayList<String>();
-            List<Resource> gresources = this.group.getResources();
+            List<Resource> resources = this.group.getResources();
 
-            for(int i = 0; i < gresources.size(); i++)
+            for(int i = 0; i < resources.size(); i++)
             {
                 String exist = "false";
 
-                if((gresources.get(i).getMsource() != null) && (gresources.get(i).getMsource().length() != 0))
+                if((resources.get(i).getMsource() != null) && (resources.get(i).getMsource().length() != 0))
                 {
 
                     for(int j = 0; j < msources.size(); j++)
                     {
-                        if(msources.get(j).equalsIgnoreCase(gresources.get(i).getMsource().trim()))
+                        if(msources.get(j).equalsIgnoreCase(resources.get(i).getMsource().trim()))
                         {
                             exist = "true";
                         }
@@ -1675,7 +1675,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                     if(exist.equals("false"))
                     {
-                        msources.add(gresources.get(i).getMsource().trim());
+                        msources.add(resources.get(i).getMsource().trim());
                     }
                 }
             }

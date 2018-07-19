@@ -437,16 +437,16 @@ public class ResourceMetadataExtractor
             resource.setTranscript(fileInfo.getTextContent());
     }
 
-    private String base58_decode(String snipcode)
+    private String base58_decode(String snipCode)
     {
         Long result = 0L;
         long multi = 1;
-        while(snipcode.length() > 0)
+        while(snipCode.length() > 0)
         {
-            String digit = snipcode.substring(snipcode.length() - 1);
+            String digit = snipCode.substring(snipCode.length() - 1);
             result = result + multi * base58alphabetString.lastIndexOf(digit);
             multi = multi * base58alphabetString.length();
-            snipcode = snipcode.substring(0, snipcode.length() - 1);
+            snipCode = snipCode.substring(0, snipCode.length() - 1);
         }
         return result.toString();
     }

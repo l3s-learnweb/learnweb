@@ -67,10 +67,10 @@ public class SolrSearch implements Serializable
     public SolrSearch(String query, User user)
     {
         this.query = query;
-        String newquery = removeMyGroupQuery(query);
-        if(!query.equals(newquery))
+        String newQuery = removeMyGroupQuery(query);
+        if(!query.equals(newQuery))
         {
-            this.query = newquery;
+            this.query = newQuery;
             try
             {
                 if(user != null && user.getGroups() != null)
@@ -82,7 +82,7 @@ public class SolrSearch implements Serializable
             }
             catch(SQLException e)
             {
-                log.error("Could not retriev users group", e);
+                log.error("Could not retrieve users group", e);
             }
         }
         this.userId = user == null ? 0 : user.getId();
@@ -548,9 +548,9 @@ public class SolrSearch implements Serializable
                 		resource.setAuthor(solrResource.getAuthor());
                 		resource.setMachineDescription(solrResource.getMachineDescription());
                 		resource.setEmbeddedRaw(solrResource.getEmbeddedCode());
-                		resource.setThumbnail2(new Thumbnail(solrResource.getThumbnailUrl2(), solrResource.getThumnailWidth2(), solrResource.getThumbnailHeight2()));
-                		resource.setThumbnail3(new Thumbnail(solrResource.getThumbnailUrl3(), solrResource.getThumnailWidth3(), solrResource.getThumbnailHeight3()));
-                		resource.setThumbnail4(new Thumbnail(solrResource.getThumbnailUrl4(), solrResource.getThumnailWidth4(), solrResource.getThumbnailHeight4()));
+                		resource.setThumbnail2(new Thumbnail(solrResource.getThumbnailUrl2(), solrResource.getThumbnailWidth2(), solrResource.getThumbnailHeight2()));
+                		resource.setThumbnail3(new Thumbnail(solrResource.getThumbnailUrl3(), solrResource.getThumbnailWidth3(), solrResource.getThumbnailHeight3()));
+                		resource.setThumbnail4(new Thumbnail(solrResource.getThumbnailUrl4(), solrResource.getThumbnailWidth4(), solrResource.getThumbnailHeight4()));
                 */
             }
 
@@ -566,15 +566,15 @@ public class SolrSearch implements Serializable
                 continue;
             }
 
-            ResourceDecorator decoratedResoure = new ResourceDecorator(resource);
-            resources.add(decoratedResoure);
+            ResourceDecorator decoratedResource = new ResourceDecorator(resource);
+            resources.add(decoratedResource);
 
             Map<String, List<String>> resourceSnippets = highlight.get(solrResource.getId());
             snippets.clear();
             StringBuilder snippet = new StringBuilder();
 
             if(null != resourceSnippets.get("title"))
-                decoratedResoure.setTitle(resourceSnippets.get("title").get(0));
+                decoratedResource.setTitle(resourceSnippets.get("title").get(0));
 
             if(null != resourceSnippets.get("description"))
                 snippet.append(resourceSnippets.get("description").get(0));
@@ -605,7 +605,7 @@ public class SolrSearch implements Serializable
             }
 
             if(oneLineSnippets.length() != 0)
-                decoratedResoure.setSnippet(oneLineSnippets);
+                decoratedResource.setSnippet(oneLineSnippets);
         }
 
         if(skippedResources > 0)
@@ -636,7 +636,7 @@ public class SolrSearch implements Serializable
 
     private String removeMyGroupQuery(String query)
     {
-        String newquery = "";
+        String newQuery = "";
         Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
         Matcher matcher = pattern.matcher(query.toLowerCase());
         if(matcher.find())
@@ -644,9 +644,9 @@ public class SolrSearch implements Serializable
             int start = matcher.start();
             int end = matcher.end();
             if(start != 0)
-                newquery = query.substring(0, start);
-            newquery = newquery.concat(query.substring(end, query.length()));
-            return newquery;
+                newQuery = query.substring(0, start);
+            newQuery = newQuery.concat(query.substring(end, query.length()));
+            return newQuery;
         }
         else
             return query;

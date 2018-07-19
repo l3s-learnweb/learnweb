@@ -27,7 +27,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(PasswordBean.class);
 
     // this set contains addresses that did not except the password recovery mail
-    private static Set<String> invalidMailAdresses = Sets.newHashSet("125401@aulecsit.uniud.it", "giuilafavaretto11@gmail.com", "139816@aulecsit.uniud.it", "au523522@uni.au.dk", "au593184@uni.au.dk", "au576393@uni.au.dk", "au576393@au.dk", "josefine.mai.kraemer@au.dk",
+    private static Set<String> invalidMailAddresses = Sets.newHashSet("125401@aulecsit.uniud.it", "giuilafavaretto11@gmail.com", "139816@aulecsit.uniud.it", "au523522@uni.au.dk", "au593184@uni.au.dk", "au576393@uni.au.dk", "au576393@au.dk", "josefine.mai.kraemer@au.dk",
             "au586648@uni.au.dk", "au587963@uni.au.dk", "139420@aulecsit.uniud.it", "au580386@uni.au.dk", "au567200@uni.au.dk", "139272@aulecsit.uniud.it", "au566300@uni.au.dk", "au568597@uni.au.dk");
 
     private String email;
@@ -36,7 +36,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if(invalidMailAdresses.contains(email))
+            if(invalidMailAddresses.contains(email))
             {
                 String mailServer = email.substring(email.indexOf("@") + 1);
                 addMessage(FacesMessage.SEVERITY_ERROR, "The mail server at " + mailServer + " responds that the address " + email + " doesn't exist. Contact our support team to solve this issue: learnweb-support@l3s.de");

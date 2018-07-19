@@ -141,7 +141,7 @@
                                     <p:selectOneMenu id="langOne" value="#{addResourceBean.resource.languageOne}" required="true" requiredMessage="#{msg.mandatory_field}">
                                         <f:selectItem itemLabel="-Select-" itemDisabled="true"/>
                                         <!--@elvariable id="lang" type="de.l3s.glossary.LanguageItem.LANGUAGE"-->
-                                        <f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
+                                        <f:selectItems value="#{addResourceBean.glossaryLanguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
                                     </p:selectOneMenu>
                                 </p:column>
                             </p:row>
@@ -152,7 +152,7 @@
                                 <p:column rendered="#{addResourceBean.formStep == 1}">
                                     <p:selectOneMenu id="langTwo" value="#{addResourceBean.resource.languageTwo}" required="true" requiredMessage="#{msg.mandatory_field}">
                                         <f:selectItem itemLabel="-Select-" itemDisabled="true"/>
-                                        <f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
+                                        <f:selectItems value="#{addResourceBean.glossaryLanguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
                                     </p:selectOneMenu>
                                 </p:column>
                             </p:row>

@@ -4,7 +4,7 @@ public class Action
 {
     private int type;
 
-    private int userid;
+    private int userId;
 
     public int getType()
     {
@@ -16,14 +16,14 @@ public class Action
         this.type = type;
     }
 
-    public int getUserid()
+    public int getUserId()
     {
-        return userid;
+        return userId;
     }
 
-    public void setUserid(int userid)
+    public void setUserId(int userId)
     {
-        this.userid = userid;
+        this.userId = userId;
     }
 
 }

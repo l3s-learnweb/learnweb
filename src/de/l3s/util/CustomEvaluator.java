@@ -38,7 +38,7 @@ public class CustomEvaluator implements TriggeringEventEvaluator
             lastCheck = System.currentTimeMillis();
             try
             {
-                isRunningOnLocalhost = (Learnweb.getPropteriesFileName() != "learnweb");
+                isRunningOnLocalhost = (Learnweb.getPropertiesFileName() != "learnweb");
     
                 if(isRunningOnLocalhost)
                     Logger.getLogger(CustomEvaluator.class).info("Learnweb is running on Localhost, email logger disabled");

@@ -27,10 +27,10 @@ public class ApplicationBean
         if(null == sessionId)
         {
             HttpSession session;
-            FacesContext facesContect = getFacesContext();
-            if(facesContect == null)
+            FacesContext facesContext = getFacesContext();
+            if(facesContext == null)
                 sessionId = null;
-            else if((session = (HttpSession) facesContect.getExternalContext().getSession(true)) != null)
+            else if((session = (HttpSession) facesContext.getExternalContext().getSession(true)) != null)
                 sessionId = session.getId();
 
             if(sessionId == null)
@@ -53,7 +53,7 @@ public class ApplicationBean
     }
 
     /**
-     * Returns the http get paramater or null if not found
+     * Returns the http get parameter or null if not found
      *
      * Should not be used in most cases. Use template f:viewParam and f:viewAction
      *

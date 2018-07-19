@@ -32,7 +32,7 @@ public class AccessData
     }
 
     /**
-     * Used when getting data from banlist
+     * Used when getting data from ban list
      */
     public AccessData(String name, int attempts, Date bannedUntil, Date bannedOn)
     {
@@ -52,7 +52,7 @@ public class AccessData
     }
 
     /**
-     * Resets bantime and banned on date
+     * Resets ban time and banned on date
      */
     public void unban()
     {
@@ -149,8 +149,8 @@ public class AccessData
         return allowedAttempts;
     }
 
-    public void setAllowedAttempts(int allowedLogins)
+    public void setAllowedAttempts(int allowedAttempts)
     {
-        this.allowedAttempts = allowedLogins;
+        this.allowedAttempts = allowedAttempts;
     }
 }

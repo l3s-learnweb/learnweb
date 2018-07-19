@@ -4,7 +4,7 @@ var openPreview;
 var resourceCounter = 0;
 var lightboxActiveResource = null;
 var gridItemWidth = 190;
-var tabActiveindex = 0;
+var tabActiveIndex = 0;
 var loadAheadPx = 0;
 
 var step = 200;
@@ -31,7 +31,7 @@ var scrolling = false;
 	};
 })(jQuery);
 
-// for search source carrousel 
+// for search source carousel
 function setContentPadding()
 {		
 	var height = $("#header").height();
@@ -62,7 +62,7 @@ function setContentPadding()
 	});
 }
 
-//for search source carrousel 
+//for search source carousel
 function scrollContent(direction) {
     var amount = (direction === "right" ? "-=1px" : "+=1px");
     $(".group-menu-container").animate({
@@ -113,9 +113,9 @@ function prepareResources(resources)
 					var previewHeight = preview.height() + mindist + 2*padding;
 					
 					if(offset.left < mindist)
-						offset.left = mindist;					
+						offset.left = mindist;
 					else if(offset.left + width + mindist > containerWidth)
-						offset.left = containerWidth - width - mindist;					
+						offset.left = containerWidth - width - mindist;
 					
 					//console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
 					
@@ -198,7 +198,7 @@ function prepareResources(resources)
 			lightbox_resize_content();
 			
 			//if(typeof(tabViewer) !== 'undefined')
-			//	tabActiveindex = tabViewer.getActiveIndex();
+			//	tabActiveIndex = tabViewer.getActiveIndex();
 			
 			logResourceOpened([{name:'resource_id', value:tempResourceId}]);			
 		};
@@ -404,7 +404,7 @@ $(window).resize(function()
     }
 });
 
-function resizeend() 
+function resizeend()
 {	
     if (new Date() - rtime < delta) {
         setTimeout(resizeend, delta);
@@ -440,9 +440,9 @@ function tabselection(current_tab){
 	else if(current_tab == "")
 	{	
 		if(tabViewer.getLength()==2)
-			tabViewer.select(tabActiveindex);
+			tabViewer.select(tabActiveIndex);
 		else if(tabViewer.getLength()==3)
-			tabViewer.select(tabActiveindex);
+			tabViewer.select(tabActiveIndex);
 	}
 	else if(current_tab == "currentsearch"){
 		if(tabViewer.getLength()==2)

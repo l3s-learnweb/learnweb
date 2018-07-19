@@ -28,7 +28,7 @@ public class GlossaryManager
     {
 
         String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement preparedStmnt = null;
+        PreparedStatement preparedStmt = null;
 
         try
         {
@@ -36,35 +36,35 @@ public class GlossaryManager
 
             for(LanguageItem t : e.getFirstLanguageItems())
             {
-                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
-                preparedStmnt.setInt(1, e.getGlossaryId());
-                preparedStmnt.setString(2, t.getValue());
-                preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
-                preparedStmnt.setString(4, t.getPronounciation());
-                preparedStmnt.setString(5, t.getAcronym());
-                preparedStmnt.setString(6, t.getReferences());
-                preparedStmnt.setString(7, t.getPhraseology());
-                preparedStmnt.setString(8, languagePair[0]);
-                preparedStmnt.setInt(9, 0);
-                preparedStmnt.setInt(10, e.getUserId());
-                preparedStmnt.executeQuery();
+                preparedStmt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
+                preparedStmt.setInt(1, e.getGlossaryId());
+                preparedStmt.setString(2, t.getValue());
+                preparedStmt.setString(3, String.join(", ", t.getSelectedUses()));
+                preparedStmt.setString(4, t.getPronounciation());
+                preparedStmt.setString(5, t.getAcronym());
+                preparedStmt.setString(6, t.getReferences());
+                preparedStmt.setString(7, t.getPhraseology());
+                preparedStmt.setString(8, languagePair[0]);
+                preparedStmt.setInt(9, 0);
+                preparedStmt.setInt(10, e.getUserId());
+                preparedStmt.executeQuery();
 
             }
             // TODO :: Combine both?? YES!!! use languaeitem as parameter of this method and call it once for the first and once for the second language
             for(LanguageItem t : e.getSecondLanguageItems())
             {
-                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
-                preparedStmnt.setInt(1, e.getGlossaryId());
-                preparedStmnt.setString(2, t.getValue());
-                preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
-                preparedStmnt.setString(4, t.getPronounciation());
-                preparedStmnt.setString(5, t.getAcronym());
-                preparedStmnt.setString(6, t.getReferences());
-                preparedStmnt.setString(7, t.getPhraseology());
-                preparedStmnt.setString(8, languagePair[1]);
-                preparedStmnt.setInt(9, 0);
-                preparedStmnt.setInt(10, e.getUser().getId());
-                preparedStmnt.executeQuery();
+                preparedStmt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
+                preparedStmt.setInt(1, e.getGlossaryId());
+                preparedStmt.setString(2, t.getValue());
+                preparedStmt.setString(3, String.join(", ", t.getSelectedUses()));
+                preparedStmt.setString(4, t.getPronounciation());
+                preparedStmt.setString(5, t.getAcronym());
+                preparedStmt.setString(6, t.getReferences());
+                preparedStmt.setString(7, t.getPhraseology());
+                preparedStmt.setString(8, languagePair[1]);
+                preparedStmt.setInt(9, 0);
+                preparedStmt.setInt(10, e.getUser().getId());
+                preparedStmt.executeQuery();
 
             }
         }
@@ -157,20 +157,20 @@ public class GlossaryManager
                     ResultSet terms = ps.executeQuery();
                     while(terms.next())
                     {
-                        PreparedStatement preparedStmnt = learnweb.getConnection()
+                        PreparedStatement preparedStmt = learnweb.getConnection()
                                 .prepareStatement("INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-                        preparedStmnt.setInt(1, newGlossId);
-                        preparedStmnt.setString(2, terms.getString("term"));
-                        preparedStmnt.setString(3, terms.getString("use"));
-                        preparedStmnt.setString(4, terms.getString("pronounciation"));
-                        preparedStmnt.setString(5, terms.getString("acronym"));
-                        preparedStmnt.setString(6, terms.getString("references"));
-                        preparedStmnt.setString(7, terms.getString("phraseology"));
-                        preparedStmnt.setString(8, terms.getString("language"));
-                        preparedStmnt.setBoolean(9, terms.getBoolean("deleted"));
-                        preparedStmnt.setInt(10, terms.getInt("user_id"));
-                        preparedStmnt.executeQuery();
+                        preparedStmt.setInt(1, newGlossId);
+                        preparedStmt.setString(2, terms.getString("term"));
+                        preparedStmt.setString(3, terms.getString("use"));
+                        preparedStmt.setString(4, terms.getString("pronounciation"));
+                        preparedStmt.setString(5, terms.getString("acronym"));
+                        preparedStmt.setString(6, terms.getString("references"));
+                        preparedStmt.setString(7, terms.getString("phraseology"));
+                        preparedStmt.setString(8, terms.getString("language"));
+                        preparedStmt.setBoolean(9, terms.getBoolean("deleted"));
+                        preparedStmt.setInt(10, terms.getInt("user_id"));
+                        preparedStmt.executeQuery();
 
                     }
                 }
@@ -190,27 +190,27 @@ public class GlossaryManager
         if(e.getGlossaryId() == 0)
         {
 
-            PreparedStatement preparedStmnt = null;
+            PreparedStatement preparedStmt = null;
 
             try
             {
 
                 //Add glossary details and generate glossary ID
-                preparedStmnt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`(`topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-                preparedStmnt.setString(1, e.getTopicOne());
-                preparedStmnt.setString(2, e.getTopicTwo());
-                preparedStmnt.setString(3, e.getTopicThree());
-                preparedStmnt.setString(4, e.getDescription());
-                preparedStmnt.executeUpdate();
-                ResultSet glossEntry = preparedStmnt.getGeneratedKeys();
+                preparedStmt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`(`topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                preparedStmt.setString(1, e.getTopicOne());
+                preparedStmt.setString(2, e.getTopicTwo());
+                preparedStmt.setString(3, e.getTopicThree());
+                preparedStmt.setString(4, e.getDescription());
+                preparedStmt.executeUpdate();
+                ResultSet glossEntry = preparedStmt.getGeneratedKeys();
                 glossEntry.next();
                 e.setGlossaryId(glossEntry.getInt(1));
 
                 //Add glossary ID and resource ID
-                preparedStmnt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary`( `resource_id`, `glossary_id`) VALUES (?, ?)");
-                preparedStmnt.setInt(1, e.getResourceId());
-                preparedStmnt.setInt(2, e.getGlossaryId());
-                preparedStmnt.executeQuery();
+                preparedStmt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary`( `resource_id`, `glossary_id`) VALUES (?, ?)");
+                preparedStmt.setInt(1, e.getResourceId());
+                preparedStmt.setInt(2, e.getGlossaryId());
+                preparedStmt.executeQuery();
 
                 //Insert terms
                 insertTerms(e);
@@ -227,23 +227,23 @@ public class GlossaryManager
         }
         else if(e.getGlossaryId() > 0)
         {
-            int glossIden = e.getGlossaryId();
-            String updateStmnt = "UPDATE `lw_glossary_details` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden); // TODO set glossary id through pstmt
+            int glossaryId = e.getGlossaryId();
+            String updateStmt = "UPDATE `lw_glossary_details` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossaryId); // TODO set glossary id through pstmt
             try
             {
-                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement(updateStmnt);
-                pstmnt.setString(1, e.getTopicOne());
-                pstmnt.setString(2, e.getTopicTwo());
-                pstmnt.setString(3, e.getTopicThree());
-                pstmnt.setString(4, e.getDescription());
-                pstmnt.executeQuery();
+                PreparedStatement pstmt = learnweb.getConnection().prepareStatement(updateStmt);
+                pstmt.setString(1, e.getTopicOne());
+                pstmt.setString(2, e.getTopicTwo());
+                pstmt.setString(3, e.getTopicThree());
+                pstmt.setString(4, e.getDescription());
+                pstmt.executeQuery();
 
                 List<LanguageItem> newUkItems = new ArrayList<LanguageItem>(e.getFirstLanguageItems());
 
                 List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getSecondLanguageItems());
-                pstmnt = null;
-                pstmnt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden)); // TODO use prepared statement parameter
-                ResultSet rs = pstmnt.executeQuery();
+                pstmt = null;
+                pstmt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossaryId)); // TODO use prepared statement parameter
+                ResultSet rs = pstmt.executeQuery();
                 while(rs.next())
                 {
                     boolean deleteTerm = false;
@@ -279,21 +279,21 @@ public class GlossaryManager
 
                 for(LanguageItem u : e.getFirstLanguageItems())
                 {
-                    PreparedStatement preparedStmnt = null;
+                    PreparedStatement preparedStmt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
+                        preparedStmt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
 
-                        preparedStmnt.setString(1, u.getValue());
+                        preparedStmt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
-                        preparedStmnt.setString(2, use);
-                        preparedStmnt.setString(3, u.getPronounciation());
-                        preparedStmnt.setString(4, u.getAcronym());
-                        preparedStmnt.setString(5, u.getReferences());
-                        preparedStmnt.setString(6, u.getPhraseology());
-                        preparedStmnt.setString(7, u.getLanguage().toString());
-                        preparedStmnt.setInt(8, u.getTermId());
-                        preparedStmnt.executeQuery();
+                        preparedStmt.setString(2, use);
+                        preparedStmt.setString(3, u.getPronounciation());
+                        preparedStmt.setString(4, u.getAcronym());
+                        preparedStmt.setString(5, u.getReferences());
+                        preparedStmt.setString(6, u.getPhraseology());
+                        preparedStmt.setString(7, u.getLanguage().toString());
+                        preparedStmt.setInt(8, u.getTermId());
+                        preparedStmt.executeQuery();
 
                         newUkItems.remove(u);
 
@@ -302,21 +302,21 @@ public class GlossaryManager
                 //TODO:: Combine both?
                 for(LanguageItem u : e.getSecondLanguageItems())
                 {
-                    PreparedStatement preparedStmnt = null;
+                    PreparedStatement preparedStmt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
+                        preparedStmt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
 
-                        preparedStmnt.setString(1, u.getValue());
+                        preparedStmt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
-                        preparedStmnt.setString(2, use);
-                        preparedStmnt.setString(3, u.getPronounciation());
-                        preparedStmnt.setString(4, u.getAcronym());
-                        preparedStmnt.setString(5, u.getReferences());
-                        preparedStmnt.setString(6, u.getPhraseology());
-                        preparedStmnt.setString(7, u.getLanguage().toString());
-                        preparedStmnt.setInt(8, u.getTermId());
-                        preparedStmnt.executeQuery();
+                        preparedStmt.setString(2, use);
+                        preparedStmt.setString(3, u.getPronounciation());
+                        preparedStmt.setString(4, u.getAcronym());
+                        preparedStmt.setString(5, u.getReferences());
+                        preparedStmt.setString(6, u.getPhraseology());
+                        preparedStmt.setString(7, u.getLanguage().toString());
+                        preparedStmt.setInt(8, u.getTermId());
+                        preparedStmt.executeQuery();
                         newItItems.remove(u);
 
                     }
@@ -424,7 +424,7 @@ public class GlossaryManager
         ResultSet rs = glossaries.executeQuery();
 
         HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<Integer, Timestamp>();
-        HashMap<Integer, String> fulltexts = new HashMap<Integer, String>();
+        HashMap<Integer, String> fullTexts = new HashMap<Integer, String>();
 
         StringBuilder fulltext = new StringBuilder(); // contains all words from a glossary
         int lastGlossaryId = -1;
@@ -437,7 +437,7 @@ public class GlossaryManager
 
             if(lastGlossaryId != glossaryId)
             {
-                fulltexts.put(lastGlossaryId, fulltext.toString());
+                fullTexts.put(lastGlossaryId, fulltext.toString());
                 fulltext.setLength(0); // clear buffer
                 lastGlossaryId = glossaryId;
                 finalList = new ArrayList<>();
@@ -504,13 +504,13 @@ public class GlossaryManager
 
         if(lastGlossaryId != -1)
         {
-            fulltexts.put(lastGlossaryId, fulltext.toString());
+            fullTexts.put(lastGlossaryId, fulltext.toString());
         }
 
         for(GlossaryItems glossary : items)
         {
             glossary.setDate(glossaryEntryTimestamp.get(glossary.getGlossId()));
-            glossary.setFulltext(fulltexts.get(glossary.getGlossId()));
+            glossary.setFulltext(fullTexts.get(glossary.getGlossId()));
         }
         return items;
 
@@ -521,7 +521,7 @@ public class GlossaryManager
     {
         List<GlossaryItems> items = new ArrayList<GlossaryItems>();
 
-        PreparedStatement preparedStmnt = null;
+        PreparedStatement preparedStmt = null;
         ResultSet resultID = null;
         String primaryLanguage = "";
         String secondaryLanguage = "";
@@ -533,10 +533,10 @@ public class GlossaryManager
             primaryLanguage = langPair[0];
             secondaryLanguage = langPair[1];
             String mainDetails = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id` = ? AND `deleted`= ?";
-            preparedStmnt = learnweb.getConnection().prepareStatement(mainDetails);
-            preparedStmnt.setInt(1, id);
-            preparedStmnt.setInt(2, 0);
-            resultID = preparedStmnt.executeQuery();
+            preparedStmt = learnweb.getConnection().prepareStatement(mainDetails);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, 0);
+            resultID = preparedStmt.executeQuery();
 
             while(resultID.next())
             {
@@ -545,9 +545,9 @@ public class GlossaryManager
 
                 int glossaryId = resultID.getInt("glossary_id");
                 //get Glossary details
-                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?"); // TODO define outside loop
-                pstmnt.setInt(1, glossaryId);
-                ResultSet result = pstmnt.executeQuery();
+                PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?"); // TODO define outside loop
+                pstmt.setInt(1, glossaryId);
+                ResultSet result = pstmt.executeQuery();
                 result.next();
                 //fetch terms
                 PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)"); // TODO define outside loop

@@ -105,10 +105,10 @@ public class AudienceManager
         return audience;
     }
 
-    public int getAudienceIdByAudiencename(String audiencename) throws SQLException
+    public int getAudienceIdByAudienceName(String audienceName) throws SQLException
     {
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT audience_id FROM `lw_rm_audience` WHERE audience_name = ?");
-        select.setString(1, audiencename);
+        select.setString(1, audienceName);
         ResultSet rs = select.executeQuery();
 
         if(!rs.next())

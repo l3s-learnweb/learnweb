@@ -9,7 +9,7 @@
             #{msg.search_results}
         </h:panelGroup>
         <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block" rendered="#{groupDetailBean.query == null}">
-            <ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
+            <ui:repeat value="#{groupDetailBean.subFolders}" var="folder">
                 <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
                               pt:data-itemType="folder"
                               pt:data-itemId="#{folder.folderId}"

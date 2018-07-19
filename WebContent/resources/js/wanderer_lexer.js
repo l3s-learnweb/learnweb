@@ -52,7 +52,7 @@ LexerNode.prototype.toString = function(){
 
 function Lexer(){
 	// Split by numbers, then whitespace, then punctuation
-    this.regexs = [/[0-9]*\.[0-9]+|[0-9]+/ig, /[ \t\n\r]+/ig, /[\.\,\?\!]/ig];
+    this.regexs = [/[0-9]*\.[0-9]+|[0-9]+/ig, /[ \t\n\r]+/ig, /[.,?!]/ig];
 }
 
 Lexer.prototype.lex = function(string){

@@ -52,19 +52,19 @@ public class Mail
         message.setFrom(internetAddress);
     }
 
-    public void setRecipient(RecipientType type, InternetAddress adress) throws MessagingException
+    public void setRecipient(RecipientType type, InternetAddress address) throws MessagingException
     {
-        message.setRecipient(type, adress);
+        message.setRecipient(type, address);
     }
 
-    public void setRecipient(RecipientType type, String adress) throws MessagingException
+    public void setRecipient(RecipientType type, String address) throws MessagingException
     {
-        setRecipient(type, new InternetAddress(adress));
+        setRecipient(type, new InternetAddress(address));
     }
 
-    public void setRecipients(RecipientType type, InternetAddress[] adresses) throws MessagingException
+    public void setRecipients(RecipientType type, InternetAddress[] addresses) throws MessagingException
     {
-        message.setRecipients(type, adresses);
+        message.setRecipients(type, addresses);
     }
 
     public void setSubject(String subject) throws MessagingException

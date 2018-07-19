@@ -134,10 +134,10 @@ public class PurposeManager
         }
     }
 
-    public int getPurposeIdByPurposename(String purposename) throws SQLException
+    public int getPurposeIdByPurposeName(String purposeName) throws SQLException
     {
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT purpose_id FROM `lw_rm_purpose` WHERE purpose_name = ?");
-        select.setString(1, purposename);
+        select.setString(1, purposeName);
         ResultSet rs = select.executeQuery();
 
         if(!rs.next())

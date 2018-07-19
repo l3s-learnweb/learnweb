@@ -64,7 +64,7 @@ public class ArchiveUrl implements Serializable
         return archiveUrl;
     }
 
-    public int getfileId()
+    public int getFileId()
     {
         return fileId;
     }

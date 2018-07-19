@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 
 /**
- * Cleans up expired bans (>3 days old) from the bans database and forces ProtectionManager and RequestManager to reload their banlists
+ * Cleans up expired bans (>3 days old) from the bans database and forces ProtectionManager and RequestManager to reload their ban lists
  *
  * @author Kate
  *

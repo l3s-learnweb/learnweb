@@ -88,18 +88,18 @@ public class LoginBean extends ApplicationBean implements Serializable
         ProtectionManager pm = getLearnweb().getProtectionManager();
         Date now = new Date();
 
-        Date ipban = pm.getBannedUntil(ip);
-        Date userban = pm.getBannedUntil(username);
+        Date ipBan = pm.getBannedUntil(ip);
+        Date userBan = pm.getBannedUntil(username);
 
-        if(ipban != null && ipban.after(now))
+        if(ipBan != null && ipBan.after(now))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipban.toString());
+            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan.toString());
             return null;
         }
 
-        if(userban != null && userban.after(now))
+        if(userBan != null && userBan.after(now))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userban.toString());
+            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan.toString());
             return null;
         }
 
@@ -113,7 +113,7 @@ public class LoginBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        pm.updateSuccessfuldAttempts(ip, username);
+        pm.updateSuccessfulAttempts(ip, username);
         getLearnweb().getRequestManager().recordLogin(ip, username);
 
         if(!user.isEmailConfirmed())

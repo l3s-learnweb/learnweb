@@ -104,7 +104,7 @@ public class ExtendedMetadataManager
         List<String> langlevels = new LinkedList<String>();
         Map<String, Integer> lcount = new HashMap();
 
-        langlevels = learnweb.getLanglevelManager().getLanglevelNamesByResourceId(resourceId);
+        langlevels = learnweb.getLangLevelManager().getLangLevelNamesByResourceId(resourceId);
         lcount = sortMetadataValueCount(langlevels);
         eMetadata.setLevelCount(lcount);
         eMetadata.setLevels(langlevels);

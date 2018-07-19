@@ -119,7 +119,7 @@ public class SaverServlet extends HttpServlet
 
     }
 
-    private void createResourceHistory(SavingInfo info, File previosVersion, int resourceId, int userId) throws IOException, SQLException
+    private void createResourceHistory(SavingInfo info, File previousVersion, int resourceId, int userId) throws IOException, SQLException
     {
         History history = new History();
         history.setResourceId(resourceId);
@@ -127,7 +127,7 @@ public class SaverServlet extends HttpServlet
         officeUser.setId(userId);
         history.setUser(officeUser);
         history.setCreated(info.getLastSave().replace('T', ' ').substring(0, info.getLastSave().indexOf('.')));
-        history.setPreviousVersionFileId(previosVersion.getId());
+        history.setPreviousVersionFileId(previousVersion.getId());
         history.setServerVersion(info.getHistory().getServerVersion());
         history.setKey(info.getKey());
         File changesFile = new File();
@@ -135,7 +135,7 @@ public class SaverServlet extends HttpServlet
         changesFile.setName("changes.zip");
         changesFile.setMimeType("zip");
         changesFile.setResourceId(resourceId);
-        URL url = new URL(info.getChangesurl());
+        URL url = new URL(info.getChangesUrl());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         InputStream inputStream = connection.getInputStream();
         learnweb.getFileManager().save(changesFile, inputStream);

@@ -566,13 +566,13 @@ public class GroupManager
         }
 
         int parentFolderId = original.getParentFolderId();
-        List<Folder> subfolders = original.getSubfolders();
+        List<Folder> subFolders = original.getSubFolders();
 
         original.setGroupId(newGroupId);
         original.setParentFolderId(newParentFolderId);
         original.save();
 
-        for(Folder subfolder : subfolders)
+        for(Folder subfolder : subFolders)
         {
             this.moveFolder(subfolder, original.getId(), newGroupId);
         }
@@ -661,11 +661,11 @@ public class GroupManager
 
     public void deleteFolder(Folder folder) throws SQLException
     {
-        List<Folder> subfolders = folder.getSubfolders();
+        List<Folder> subFolders = folder.getSubFolders();
 
-        if(!subfolders.isEmpty())
+        if(!subFolders.isEmpty())
         {
-            for(Folder subFolder : subfolders)
+            for(Folder subFolder : subFolders)
             {
                 this.deleteFolder(subFolder);
             }

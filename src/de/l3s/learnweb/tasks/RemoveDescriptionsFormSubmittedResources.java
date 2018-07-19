@@ -16,9 +16,9 @@ import de.l3s.learnweb.user.UserManager;
  * @author Kemkes
  *
  */
-public class RemoveDescriptionsFromsubmittedResources
+public class RemoveDescriptionsFormSubmittedResources
 {
-    private static Logger log = Logger.getLogger(RemoveDescriptionsFromsubmittedResources.class);
+    private static Logger log = Logger.getLogger(RemoveDescriptionsFormSubmittedResources.class);
 
     /**
      * @param args

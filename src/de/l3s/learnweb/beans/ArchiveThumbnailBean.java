@@ -98,7 +98,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
         this.textSim = textSim;
     }
 
-    public List<ArchiveUrl> getlistOfUrls() throws SQLException
+    public List<ArchiveUrl> getListOfUrls() throws SQLException
     {
         List<ArchiveUrl> listOfUrls = new ArrayList<ArchiveUrl>();
         model = new TimelineModel();

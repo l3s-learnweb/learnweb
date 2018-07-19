@@ -4,11 +4,11 @@ import java.util.List;
 
 public class SavingInfo
 {
-    private String lastsave;
+    private String lastSave;
 
-    private Boolean notmodified;
+    private Boolean notModified;
 
-    private String changesurl;
+    private String changesUrl;
 
     private History history;
 
@@ -24,32 +24,32 @@ public class SavingInfo
 
     public String getLastSave()
     {
-        return lastsave;
+        return lastSave;
     }
 
     public void setLastSave(String lastSave)
     {
-        this.lastsave = lastSave;
+        this.lastSave = lastSave;
     }
 
-    public Boolean getNotmodified()
+    public Boolean getNotModified()
     {
-        return notmodified;
+        return notModified;
     }
 
-    public void setNotmodified(Boolean notmodified)
+    public void setNotModified(Boolean notModified)
     {
-        this.notmodified = notmodified;
+        this.notModified = notModified;
     }
 
-    public String getChangesurl()
+    public String getChangesUrl()
     {
-        return changesurl;
+        return changesUrl;
     }
 
-    public void setChangesurl(String changesurl)
+    public void setChangesUrl(String changesUrl)
     {
-        this.changesurl = changesurl;
+        this.changesUrl = changesUrl;
     }
 
     public History getHistory()

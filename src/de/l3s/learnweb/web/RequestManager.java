@@ -88,11 +88,11 @@ public class RequestManager
     /**
      * Gets the aggregated and fresh data on the given IP. Used for warning generation.
      *
-     * @return All of the request info on cerain IP.
+     * @return All of the request info on certain IP.
      */
     public List<AggregatedRequestData> getRequestsByIP(String IP)
     {
-        List<AggregatedRequestData> reqs = new ArrayList<>();
+        List<AggregatedRequestData> reqDataList = new ArrayList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE IP = ?"))
         {
@@ -100,7 +100,7 @@ public class RequestManager
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
-                reqs.add(new AggregatedRequestData(rs.getString("IP"), rs.getInt("requests"), rs.getInt("logins"), rs.getString("usernames"), rs.getTimestamp("time")));
+                reqDataList.add(new AggregatedRequestData(rs.getString("IP"), rs.getInt("requests"), rs.getInt("logins"), rs.getString("usernames"), rs.getTimestamp("time")));
             }
         }
         catch(SQLException e)
@@ -119,9 +119,9 @@ public class RequestManager
             usernames = log.toString();
         }
 
-        reqs.add(new AggregatedRequestData(IP, (int) recentRequests, loginCount, usernames, new Date()));
+        reqDataList.add(new AggregatedRequestData(IP, (int) recentRequests, loginCount, usernames, new Date()));
 
-        return reqs;
+        return reqDataList;
     }
 
     /**
@@ -234,7 +234,7 @@ public class RequestManager
         }
         catch(SQLException e)
         {
-            log.error("Failed to load banlists. SQLException: ", e);
+            log.error("Failed to load ban lists. SQLException: ", e);
         }
     }
 

@@ -450,7 +450,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      *
      * @param actions if actions is null the default filter is used
-     * @param limit if limit is -1 all log entrys are returned
+     * @param limit if limit is -1 all log entries are returned
      * @return
      * @throws SQLException
      */
@@ -460,7 +460,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     }
 
     /**
-     * returns the 5 newest log entrys
+     * returns the 5 newest log entries
      *
      * @return
      * @throws SQLException

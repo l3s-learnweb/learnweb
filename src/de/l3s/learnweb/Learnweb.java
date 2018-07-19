@@ -48,7 +48,7 @@ import de.l3s.learnweb.resource.ted.TedManager;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
 import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
-import de.l3s.learnweb.resource.yellMetadata.LanglevelManager;
+import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.CourseManager;
 import de.l3s.learnweb.user.Organisation;
@@ -126,7 +126,7 @@ public class Learnweb
     private final AudienceManager audienceManager;
     private final CategoryManager categoryManager;
     private final ExtendedMetadataManager extendedMetadataManager;
-    private final LanglevelManager langlevelManager;
+    private final LangLevelManager langLevelManager;
     private final PurposeManager purposeManager;
 
     private static Learnweb learnweb = null;
@@ -201,9 +201,9 @@ public class Learnweb
      *
      * @return
      */
-    private static String getPropteriesFileName()
+    private static String getPropertiesFileName()
     {
-        String propteriesFileName = "lw_local_other";
+        String propertiesFileName = "lw_local_other";
 
         String workingDirectory = new File(".").getAbsolutePath();
         log.debug("workingDirectory: " + workingDirectory);
@@ -211,44 +211,44 @@ public class Learnweb
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
         if(workingDirectory.startsWith("/home/learnweb_user"))
         {
-            propteriesFileName = "learnweb";
+            propertiesFileName = "learnweb";
             developmentMode = false;
         }
         else if(workingDirectory.startsWith("/home/ama_user"))
         {
-            propteriesFileName = "ama";
+            propertiesFileName = "ama";
             developmentMode = false;
         }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
-            propteriesFileName = "lw_local_chloe";
+            propertiesFileName = "lw_local_chloe";
         else if((new File("C:\\programmieren\\philipp.ama")).exists())
-            propteriesFileName = "ama_local_philipp";
+            propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
-            propteriesFileName = "lw_local_philipp";
+            propertiesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
-            propteriesFileName = "lw_local_philipp_uni";
+            propertiesFileName = "lw_local_philipp_uni";
         else if((new File("/home/fernando/trevor.txt").exists()))
-            propteriesFileName = "lw_local_trevor_uni";
+            propertiesFileName = "lw_local_trevor_uni";
         else if((new File("/Users/trevor").exists()))
-            propteriesFileName = "lw_local_trevor";
+            propertiesFileName = "lw_local_trevor";
         else if((new File("/home/kalyani").exists()))
-            propteriesFileName = "lw_local_rishita";
+            propertiesFileName = "lw_local_rishita";
         else if(new File("/Users/Rishita/").exists())
-            propteriesFileName = "lw_local_rishita";
+            propertiesFileName = "lw_local_rishita";
         else if((new File("C:\\Users\\Tetiana").exists()))
-            propteriesFileName = "lw_local_tetiana";
+            propertiesFileName = "lw_local_tetiana";
         else if((new File("C:\\Users\\astappev").exists()))
-            propteriesFileName = "lw_local_oleh";
+            propertiesFileName = "lw_local_oleh";
         else if((new File("/Users/user").exists()))
-            propteriesFileName = "lw_local_luyan";
+            propertiesFileName = "lw_local_luyan";
         else if((new File("F:\\workspace\\lwresources").exists()))
-            propteriesFileName = "lw_local_mariia";
+            propertiesFileName = "lw_local_mariia";
         else if((new File("C:\\Users\\Kate\\Documents\\LEARNWEB").exists()))
-            propteriesFileName = "lw_local_kate";
+            propertiesFileName = "lw_local_kate";
         else
             developmentMode = false;
 
-        return propteriesFileName;
+        return propertiesFileName;
     }
 
     /**
@@ -269,10 +269,10 @@ public class Learnweb
 
             this.properties = new PropertiesBundle(fallbackProperties);
 
-            String propteriesFileName = getPropteriesFileName();
-            log.debug("Load config file: " + propteriesFileName);
+            String propertiesFileName = getPropertiesFileName();
+            log.debug("Load config file: " + propertiesFileName);
 
-            properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
+            properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propertiesFileName + ".properties"));
         }
         catch(IOException e)
         {
@@ -346,7 +346,7 @@ public class Learnweb
         audienceManager = new AudienceManager(this);
         categoryManager = new CategoryManager(this);
         extendedMetadataManager = new ExtendedMetadataManager(this);
-        langlevelManager = new LanglevelManager(this);
+        langLevelManager = new LangLevelManager(this);
         purposeManager = new PurposeManager(this);
 
         //Managers added by Kate
@@ -440,9 +440,9 @@ public class Learnweb
         return extendedMetadataManager;
     }
 
-    public LanglevelManager getLanglevelManager()
+    public LangLevelManager getLangLevelManager()
     {
-        return langlevelManager;
+        return langLevelManager;
     }
 
     public PurposeManager getPurposeManager()
@@ -632,7 +632,7 @@ public class Learnweb
      * @param userId
      * @param actions if actions is null the default filter is used
      * @param limit
-     * @param limit if limit is -1 all log entrys are returned
+     * @param limit if limit is -1 all log entries are returned
      * @return
      * @throws SQLException
      */
@@ -678,7 +678,7 @@ public class Learnweb
      *
      * @param groupId
      * @param actions if actions is null the default filter is used
-     * @param limit if limit is -1 all log entrys are returned
+     * @param limit if limit is -1 all log entries are returned
      * @return
      * @throws SQLException
      */
@@ -917,7 +917,7 @@ public class Learnweb
 
     /**
      *
-     * @return true if it is not run onthe Learnweb server
+     * @return true if it is not run on the Learnweb server
      */
     public static boolean isInDevelopmentMode()
     {

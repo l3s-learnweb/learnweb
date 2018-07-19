@@ -12,15 +12,15 @@ import de.l3s.learnweb.user.User;
 
 @ManagedBean
 @ViewScoped
-public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Serializable
+public class AdminPeerAssessmentPairBeen extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073496345L;
-    //private static final Logger log = Logger.getLogger(AdminPeerAssesmentPairBeen.class);
+    //private static final Logger log = Logger.getLogger(AdminPeerAssessmentPairBeen.class);
 
-    private int peerAssementId = 0;
-    private List<PeerAssesmentPair> pairs;
+    private int peerAssessmentId = 0;
+    private List<PeerAssessmentPair> pairs;
 
-    public AdminPeerAssesmentPairBeen()
+    public AdminPeerAssessmentPairBeen()
     {
     }
 
@@ -32,7 +32,7 @@ public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Seria
 
         try
         {
-            pairs = getLearnweb().getPeerAssessmentManager().getPairsByPeerAssessmentId(peerAssementId);
+            pairs = getLearnweb().getPeerAssessmentManager().getPairsByPeerAssessmentId(peerAssessmentId);
         }
         catch(SQLException e)
         {
@@ -40,19 +40,19 @@ public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Seria
         }
     }
 
-    public List<PeerAssesmentPair> getPairs()
+    public List<PeerAssessmentPair> getPairs()
     {
         return pairs;
     }
 
-    public int getPeerAssementId()
+    public int getPeerAssessmentId()
     {
-        return peerAssementId;
+        return peerAssessmentId;
     }
 
-    public void setPeerAssementId(int peerAssementId)
+    public void setPeerAssessmentId(int peerAssessmentId)
     {
-        this.peerAssementId = peerAssementId;
+        this.peerAssessmentId = peerAssessmentId;
     }
 
 }

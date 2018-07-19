@@ -52,18 +52,18 @@ public class SurveyManager
         String getQuestionByOrder = "SELECT distinct(r.question_id), r.question, r.survey_id FROM `lw_survey_question` r, lw_survey_answer t2 where (t2.question_id = r.question_id or (r.deleted=? and r.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and r.survey_id=? and t2.resource_id=? order by r.`order`";
         //Check if all questions are fetched.
     
-        PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement("SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id` = ?");
-        pSttmnt.setInt(1, resourceId);
-        ResultSet idResult = pSttmnt.executeQuery();
+        PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id` = ?");
+        preparedStatement.setInt(1, resourceId);
+        ResultSet idResult = preparedStatement.executeQuery();
         if(idResult.next())
         {
             surveyId = idResult.getInt("survey_id");
     
-            pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
-            pSttmnt.setBoolean(1, false);
-            pSttmnt.setInt(2, surveyId);
-            pSttmnt.setInt(3, resourceId);
-            ResultSet result = pSttmnt.executeQuery();
+            preparedStatement = learnweb.getConnection().prepareStatement(getQuestionByOrder);
+            preparedStatement.setBoolean(1, false);
+            preparedStatement.setInt(2, surveyId);
+            preparedStatement.setInt(3, resourceId);
+            ResultSet result = preparedStatement.executeQuery();
             while(result.next())
             {
                 questions.put(result.getInt("question_id"), result.getString("question"));
@@ -73,7 +73,7 @@ public class SurveyManager
         return questions;
     }
     
-    //Same surevy resources in a course to merge answers
+    //Same survey resources in a course to merge answers
     
     public HashSet<Integer> getSameSurveyResources(int resourceId) throws SQLException
     {
@@ -127,8 +127,8 @@ public class SurveyManager
         ResultSet ids = userSelect.executeQuery();
         while(ids.next())
         {
-            SurveyUserAnswers userServeyAnswers = new SurveyUserAnswers(ids.getInt("user_id"), surveyResourceId);
-            HashMap<Integer, String> ans = userServeyAnswers.getAnswers();
+            SurveyUserAnswers userSurveyAnswers = new SurveyUserAnswers(ids.getInt("user_id"), surveyResourceId);
+            HashMap<Integer, String> ans = userSurveyAnswers.getAnswers();
     
             // TODO this is extremely inefficient
             for(Integer qid : question.keySet())
@@ -145,7 +145,7 @@ public class SurveyManager
     
                     ans.put(qid, answerOfUser);
     
-                    userServeyAnswers.setSaved(true);
+                    userSurveyAnswers.setSaved(true);
                 }
                 else
                 {
@@ -154,10 +154,10 @@ public class SurveyManager
                 }
             }
     
-            if(userServeyAnswers.isSaved())
-                userServeyAnswers.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, ids.getInt("user_id")));
+            if(userSurveyAnswers.isSaved())
+                userSurveyAnswers.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, ids.getInt("user_id")));
     
-            answers.add(userServeyAnswers);
+            answers.add(userSurveyAnswers);
         }
         return answers;
     }
@@ -173,11 +173,11 @@ public class SurveyManager
         SurveyUserAnswers surveyAnswer = new SurveyUserAnswers(userId, surveyResource.getId());
 
         //Get survey data
-        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");)
         {
-            preparedStmnt.setInt(1, surveyResource.getId());
-            preparedStmnt.setInt(2, userId);
-            ResultSet rs = preparedStmnt.executeQuery();
+            preparedStatement.setInt(1, surveyResource.getId());
+            preparedStatement.setInt(2, userId);
+            ResultSet rs = preparedStatement.executeQuery();
             while(rs.next())
             {
                 surveyAnswer.setSaved(true);
@@ -271,10 +271,10 @@ public class SurveyManager
         }
 
         // load survey questions
-        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`");)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`");)
         {
-            preparedStmnt.setInt(1, surveyId);
-            ResultSet rs = preparedStmnt.executeQuery();
+            preparedStatement.setInt(1, surveyId);
+            ResultSet rs = preparedStatement.executeQuery();
             while(rs.next())
             {
                 SurveyQuestion question = new SurveyQuestion(QuestionType.valueOf(rs.getString("question_type")));
@@ -309,7 +309,7 @@ public class SurveyManager
      * @param submitted true if the given user has finally submitted @param resourceId
      * @throws SQLException
      */
-    private void setSurveyResourceSubmitStauts(int resourceId, int userId, boolean submitted) throws SQLException
+    private void setSurveyResourceSubmitStatus(int resourceId, int userId, boolean submitted) throws SQLException
     {
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_survey_resource_user (`resource_id`, `user_id`, `submitted`) VALUES (?,?,?)");)
         {
@@ -363,7 +363,7 @@ public class SurveyManager
     /**
      *
      * @param surveyAnswer
-     * @param finalSubmit true if thisis the final submit
+     * @param finalSubmit true if this is the final submit
      * @throws SQLException
      */
     protected void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) throws SQLException
@@ -407,7 +407,7 @@ public class SurveyManager
 
         if(finalSubmit)
         {
-            setSurveyResourceSubmitStauts(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), true);
+            setSurveyResourceSubmitStatus(surveyAnswer.getResourceId(), surveyAnswer.getUserId(), true);
             surveyAnswer.setSubmitted(true);
         }
     }
@@ -459,10 +459,10 @@ public class SurveyManager
         UserManager userManager = learnweb.getUserManager();
         List<User> users = new LinkedList<>();
 
-        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement(query);)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement(query);)
         {
-            preparedStmnt.setInt(1, parameter);
-            ResultSet rs = preparedStmnt.executeQuery();
+            preparedStatement.setInt(1, parameter);
+            ResultSet rs = preparedStatement.executeQuery();
             while(rs.next())
             {
                 users.add(userManager.getUser(rs.getInt(1)));

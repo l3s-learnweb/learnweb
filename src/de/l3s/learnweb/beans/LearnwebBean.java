@@ -47,7 +47,7 @@ public class LearnwebBean implements Serializable
 
     /**
      *
-     * @return Returns the contextpath
+     * @return Returns the context path
      */
     public String getContextPath()
     {

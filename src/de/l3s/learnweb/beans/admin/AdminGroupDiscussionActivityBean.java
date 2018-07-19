@@ -37,7 +37,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private static final long serialVersionUID = 6519388228766929819L;
     private static final Pattern datePattern = Pattern.compile("(\\d+\\D\\d+\\D\\d+).(\\d+\\D\\d+\\D\\d+)");
     private static final Pattern usernamePattern = Pattern.compile("acct:(.+)@");
-    private static final Pattern groupIDPattern = Pattern.compile("hypothes.is\\/groups\\/(\\w*)");
+    private static final Pattern groupIDPattern = Pattern.compile("hypothes.is/groups/(\\w*)");
 
     private int groupID;
 

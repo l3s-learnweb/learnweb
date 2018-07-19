@@ -20,7 +20,7 @@ public class StatusBean extends ApplicationBean
 
     public StatusBean()
     {
-        services.add(new Service("Learnweb Tomcat", "ok", "", "offensichtlich ok, sonst wäre diese Seite nicht erreichbar"));
+        services.add(new Service("Learnweb Tomcat", "ok", "", "Obviously OK, otherwise this page would not be reachable"));
 
         Learnweb learnweb = getLearnweb();
 

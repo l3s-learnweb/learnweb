@@ -68,11 +68,11 @@
                         <div class="metadata-block">
                             <label class="rlabel"><b>Title:
                             </b></label> <span class="text-ellipses">#{res.title}</span><br/>
-                            <ui:fragment rendered="#{not empty res.eMetadata.categories[0]}">
+                            <ui:fragment rendered="#{not empty res.extendedMetadata.categories[0]}">
                                 <label class="rlabel"><b>Category:
                                 </b></label>
-                                <h:outputText value="#{res.eMetadata.categories[0]}"
-                                              rendered="#{not empty res.eMetadata.categories[0]}"/>
+                                <h:outputText value="#{res.extendedMetadata.categories[0]}"
+                                              rendered="#{not empty res.extendedMetadata.categories[0]}"/>
                                 <br/>
                             </ui:fragment>
                             <ui:fragment rendered="#{not empty res.mtype}">
@@ -83,14 +83,14 @@
                                 <label class="rlabel"><b>Language: </b></label>
                                 #{res.language}
                             </ui:fragment>
-                            <ui:fragment rendered="#{not empty res.eMetadata.lCount}">
+                            <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
                                 <label class="rlabels"><b>Level (stats):
-                                </b></label>#{res.eMetadata.lCount} <br/>
+                                </b></label>#{res.extendedMetadata.lCount} <br/>
                             </ui:fragment>
-                            <ui:fragment rendered="#{not empty res.eMetadata.targetCount}">
+                            <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
                                 <label class="rlabel"><b>Target
                                     learner (stats): </b></label>
-                                <ui:repeat value="#{res.eMetadata.targetCount.entrySet().toArray()}" var="t">
+                                <ui:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
 
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources-chloe/images/green_circle.png"
@@ -121,9 +121,9 @@
                                 </ui:repeat>
                                 <br/>
                             </ui:fragment>
-                            <ui:fragment rendered="#{not empty res.eMetadata.purposeCount}">
+                            <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
                                 <label class="rlabel"><b>Purpose of use (stats): </b></label>
-                                <ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources-chloe/images/speaking.png" width="3%"
                                                     rendered="#{p.key == 'speaking skills'}" alt="speaking"/>
@@ -146,7 +146,7 @@
                                 </ui:repeat>
                                 <br/>
 
-                                <ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <ui:fragment
                                             rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
                                         <span class="tag tag-grey">#{p.key}</span>

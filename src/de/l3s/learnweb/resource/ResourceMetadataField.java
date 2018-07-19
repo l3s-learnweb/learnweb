@@ -12,7 +12,7 @@ public class ResourceMetadataField implements Serializable
     private static final long serialVersionUID = -7698089608547415349L;
 
     public enum MetadataType
-    { // represents primeface input types
+    { // represents primefaces input types
         INPUT_TEXT,
         INPUT_TEXTAREA,
         AUTOCOMPLETE,
@@ -26,9 +26,9 @@ public class ResourceMetadataField implements Serializable
     private String name; // the name of this field, will be used as SOLR column name
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
-    private MetadataType type; // represents primeface input types
+    private MetadataType type; // represents primefaces input types
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
-    private transient List<SelectItem> optionsList; // options wrapped into select itmes
+    private transient List<SelectItem> optionsList; // options wrapped into select items
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
 

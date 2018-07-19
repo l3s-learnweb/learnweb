@@ -125,11 +125,11 @@ public class SuggestionLogger
             {
                 market = market.substring(0, 2);
             }
-            String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
+            String suggesterUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
             try
             {
                 Client client = Client.create();
-                WebResource webResource = client.resource(suggestorUrl);
+                WebResource webResource = client.resource(suggesterUrl);
                 ClientResponse response = webResource.get(ClientResponse.class);
                 String xml = response.getEntity(String.class);
 

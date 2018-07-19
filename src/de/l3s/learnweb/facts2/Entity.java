@@ -150,7 +150,7 @@ public class Entity implements Serializable
         }
         else
         {
-            log.error("unpexted status: " + response.getClientResponseStatus());
+            log.error("unexpected status: " + response.getClientResponseStatus());
         }
     }
 

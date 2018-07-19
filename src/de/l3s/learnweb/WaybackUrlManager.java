@@ -615,7 +615,7 @@ public class WaybackUrlManager
                 {
                     if(responseCode >= 200 && responseCode < 300)
                     {
-                        //download content if mime type does not start with "application/" (don't download pdfs)
+                        //download content if mime type does not start with "application/" (don't download PDFs)
                         String contentType = connection.getContentType();
                         if(contentType != null && !contentType.startsWith("application/"))
                         {

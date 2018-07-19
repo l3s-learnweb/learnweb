@@ -50,14 +50,14 @@
 				var related = [<c:forEach items="#{getElements.related}" var="entity">#{entity},</c:forEach>];
 				var i;
 				var len=queArray.length;
-				//addnode		
+				//add node
 				for(i=0; i &lt; len; i++){
 					//var nodeA = {toString: function(){return queArray[i]}}
 					//console.log(enArray[i]);
 					//console.log(JSON.parse(enArray[i].entities));
 					G.addNode(queArray[i], {count:20, color: '#489a83', entities: related[i]});
 				}
-				//addedge
+				//add edge
 				for(i=0; i &lt; len-1; i++){
 					G.addEdge(queArray[i], queArray[i+1]);
 				}

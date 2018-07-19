@@ -343,11 +343,11 @@ function setSynonyms(xhr,status,args){
 		saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:''},{ name:'action',value:'display definition'}]);
 	}
 	
-	/*noteid++;
+	/*noteId++;
 	
 	var span = document.createElement("span");
 	span.setAttribute("class", "note");
-	span.setAttribute("id", noteid);
+	span.setAttribute("id", noteId);
 	$(span).on('click',function(){
 		if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 			saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
@@ -441,10 +441,10 @@ function noteSelectedText() {
 	sel_str = sel_str.trim();
 	if(sel_str != "")
 	{
-		noteid++;
+		noteId++;
 		var span = document.createElement("span");
 		span.setAttribute("class", "note");
-		span.setAttribute("id", noteid);
+		span.setAttribute("id", noteId);
 		$(span).on('click',function(){
 			if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 				saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
@@ -586,9 +586,9 @@ function getUserText(buttonClicked){
 	$("#text").val('');
 	
 	/*if(synonyms != "multiple")
-		$('#'+noteid).attr({'data-title':usertext, 'data-content':synonyms});
+		$('#'+noteId).attr({'data-title':usertext, 'data-content':synonyms});
 	else
-		$('#'+noteid).attr({'data-content':usertext});*/
+		$('#'+noteId).attr({'data-content':usertext});*/
 	
 	if(usertext != "")
 	{   selectedNode.attr({'data-title':usertext});
@@ -626,7 +626,7 @@ function getUserText(buttonClicked){
 		{}
 	else
 	{
-		$('#'+noteid).tooltipster({
+		$('#'+noteId).tooltipster({
 			functionInit: function(origin, content) {
 		        if($(this).data('title'))
 		        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');

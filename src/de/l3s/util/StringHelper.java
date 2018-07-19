@@ -27,7 +27,7 @@ public class StringHelper
     private static final Logger log = Logger.getLogger(StringHelper.class);
 
     /**
-     * If the string is longer than maxLength it is split at the nearest blankspace
+     * If the string is longer than maxLength it is split at the nearest blank space
      *
      * @param str
      * @param maxLength
@@ -107,37 +107,37 @@ public class StringHelper
         return false;
     }
 
-    public static String implode(Iterable<String> list, String delim)
+    public static String implode(Iterable<String> list, String delimiter)
     {
         StringBuilder out = new StringBuilder();
         for(String item : list)
         {
             if(out.length() != 0)
-                out.append(delim);
+                out.append(delimiter);
             out.append(item);
         }
         return out.toString();
     }
 
-    public static String implodeInt(Collection<Integer> list, String delim)
+    public static String implodeInt(Collection<Integer> list, String delimiter)
     {
         StringBuilder out = new StringBuilder();
         for(Integer item : list)
         {
             if(out.length() != 0)
-                out.append(delim);
+                out.append(delimiter);
             out.append(item.toString());
         }
         return out.toString();
     }
 
-    public static String implodeInt(int[] list, String delim)
+    public static String implodeInt(int[] list, String delimiter)
     {//Stream.of(list).forEach(action);;
         StringBuilder out = new StringBuilder();
         for(int item : list)
         {
             if(out.length() != 0)
-                out.append(delim);
+                out.append(delimiter);
             out.append(Integer.toString(item));
         }
         return out.toString();
@@ -341,7 +341,7 @@ public class StringHelper
     }
 
     /**
-     * Like Jsoup.clean but it preserves linebreaks and spacing
+     * Like Jsoup.clean but it preserves line breaks and spacing
      *
      * @param html
      * @param whitelist for example: Whitelist.none()
@@ -352,7 +352,7 @@ public class StringHelper
         if(html == null)
             return html;
         Document document = Jsoup.parse(html);
-        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
+        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve line breaks and spacing
         document.select("br").append("\\n");
         document.select("p").prepend("\\n\\n");
         String s = document.html().replaceAll("\\\\n", "\n");

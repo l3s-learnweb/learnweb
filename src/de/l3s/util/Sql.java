@@ -31,14 +31,14 @@ public class Sql
 
     public static void setSerializedObject(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
     {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         try
         {
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            ObjectOutputStream oos = new ObjectOutputStream(outputStream);
             oos.writeObject(obj);
 
-            byte[] employeeAsBytes = baos.toByteArray();
+            byte[] employeeAsBytes = outputStream.toByteArray();
 
             stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
 

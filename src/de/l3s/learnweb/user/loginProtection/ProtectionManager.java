@@ -33,7 +33,7 @@ import de.l3s.learnweb.web.RequestManager;
 import de.l3s.util.email.Mail;
 
 /**
- * A fancier ProtectionManager that, rather than autoban based on pure attempts, analyzes frequency of access on every nth failed attempt.
+ * A fancier ProtectionManager that, rather than auto ban based on pure attempts, analyzes frequency of access on every nth failed attempt.
  *
  * @author Kate
  *
@@ -99,7 +99,7 @@ public class ProtectionManager
     }
 
     /**
-     * Loads banlists from the database. Should be called by every constructor.
+     * Loads ban lists from the database. Should be called by every constructor.
      */
     private void loadBanLists()
     {
@@ -114,7 +114,7 @@ public class ProtectionManager
         }
         catch(SQLException e)
         {
-            log.error("Failed to load banlists. SQLException: ", e);
+            log.error("Failed to load ban lists. SQLException: ", e);
         }
 
         log.debug("Banlist loaded. Entries: " + accessMap.size());
@@ -174,7 +174,7 @@ public class ProtectionManager
     }
 
     /**
-     * Checks whether the currenttly accessing IP either has a high request rate (over 300)
+     * Checks whether the currently accessing IP either has a high request rate (over 300)
      */
     private void analyzeAccess(AccessData ad, boolean isIP)
     {
@@ -289,7 +289,7 @@ public class ProtectionManager
         }
     }
 
-    public void updateSuccessfuldAttempts(String IP, String username)
+    public void updateSuccessfulAttempts(String IP, String username)
     {
         AccessData ipData = accessMap.get(IP);
         AccessData usernameData = accessMap.get(username);
@@ -363,7 +363,7 @@ public class ProtectionManager
         accessMap.clear();
         loadBanLists();
 
-        log.debug("Older entries have been cleaned up from banlists.");
+        log.debug("Older entries have been cleaned up from ban lists.");
 
     }
 
@@ -457,7 +457,7 @@ public class ProtectionManager
 
             insert.execute();
 
-            log.debug("Banned " + accData.getName() + " permamently. They have been very naughty.");
+            log.debug("Banned " + accData.getName() + " permanently. They have been very naughty.");
 
         }
         catch(SQLException e)

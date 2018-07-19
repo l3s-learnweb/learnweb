@@ -62,12 +62,12 @@ public class createSurveyManager
             String insertSurveyDetails = "INSERT INTO `lw_survey`(`title`, `description`, `organization_id`) VALUES (?, ?, ?)";
             String insertNewSurvey = "INSERT INTO `lw_survey_resource`(`resource_id`, `survey_id`, `open_date`, `close_date`) VALUES (?, ?, ?, ?)";
 
-            PreparedStatement newSurv = learnweb.getConnection().prepareStatement(insertSurveyDetails, Statement.RETURN_GENERATED_KEYS);
-            newSurv.setString(1, title);
-            newSurv.setString(2, desc);
-            newSurv.setInt(3, 0); //TODO: set organization id
-            newSurv.executeUpdate();
-            ResultSet rs = newSurv.getGeneratedKeys();
+            PreparedStatement newSurvey = learnweb.getConnection().prepareStatement(insertSurveyDetails, Statement.RETURN_GENERATED_KEYS);
+            newSurvey.setString(1, title);
+            newSurvey.setString(2, desc);
+            newSurvey.setInt(3, 0); //TODO: set organization id
+            newSurvey.executeUpdate();
+            ResultSet rs = newSurvey.getGeneratedKeys();
             rs.next();
             int newSurveyId = rs.getInt(1);
 

@@ -8,7 +8,7 @@ import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
 import de.l3s.learnweb.user.User;
 
-public class PeerAssesmentPair implements Serializable
+public class PeerAssessmentPair implements Serializable
 {
     private static final long serialVersionUID = -4241273453267455330L;
     private final int id;
@@ -30,7 +30,7 @@ public class PeerAssesmentPair implements Serializable
      * @param assessmentSurveyResourceId
      * @param submissionId
      */
-    public PeerAssesmentPair(int id, int assessorUserId, int assessedUserId, int peerAssessmentSurveyResourceId, int assessmentSurveyResourceId, int submissionId)
+    public PeerAssessmentPair(int id, int assessorUserId, int assessedUserId, int peerAssessmentSurveyResourceId, int assessmentSurveyResourceId, int submissionId)
     {
         super();
         this.id = id;
@@ -105,7 +105,7 @@ public class PeerAssesmentPair implements Serializable
     @Override
     public String toString()
     {
-        return "PeerAssesmentPair [id=" + id + ", assessorUserId=" + assessorUserId + ", assessedUserId=" + assessedUserId + ", surveyResourceId=" + peerAssessmentSurveyResourceId + ", submissionId=" + submissionId + "]";
+        return "PeerAssessmentPair [id=" + id + ", assessorUserId=" + assessorUserId + ", assessedUserId=" + assessedUserId + ", surveyResourceId=" + peerAssessmentSurveyResourceId + ", submissionId=" + submissionId + "]";
     }
 
     public void setAssessmentSurveyResourceId(int assessmentSurveyResourceId)

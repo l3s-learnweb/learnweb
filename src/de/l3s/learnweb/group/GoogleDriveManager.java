@@ -116,10 +116,10 @@ public class GoogleDriveManager
         return getDocumentThumbnail(docId, null);
     }
 
-    public String getDocumentThumbnail(String docId, Date modifyedAfter)
+    public String getDocumentThumbnail(String docId, Date modifiedAfter)
     {
         File file = getDocument(docId);
-        if(modifyedAfter != null && (file.getModifiedDate().getValue() > modifyedAfter.getTime()))
+        if(modifiedAfter != null && (file.getModifiedDate().getValue() > modifiedAfter.getTime()))
         {
             return null;
         }

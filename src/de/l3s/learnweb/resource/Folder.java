@@ -25,7 +25,7 @@ public class Folder extends AbstractResource implements Serializable
     // cache
     private transient String path;
     private transient String prettyPath = null;
-    private transient List<Folder> subfolders;
+    private transient List<Folder> subFolders;
 
     public Folder()
     {
@@ -241,14 +241,14 @@ public class Folder extends AbstractResource implements Serializable
         return prettyPath;
     }
 
-    public List<Folder> getSubfolders() throws SQLException
+    public List<Folder> getSubFolders() throws SQLException
     {
-        if(subfolders == null)
+        if(subFolders == null)
         {
-            subfolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
+            subFolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
         }
 
-        return subfolders;
+        return subFolders;
     }
 
     @Override
@@ -273,7 +273,7 @@ public class Folder extends AbstractResource implements Serializable
         return Learnweb.getInstance().getGroupManager().getCountResources(groupId, folderId);
     }
 
-    public int getCountSubfolders() throws SQLException
+    public int getCountSubFolders() throws SQLException
     {
         return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, folderId);
     }
@@ -290,17 +290,17 @@ public class Folder extends AbstractResource implements Serializable
 
         try
         {
-            if(getSubfolders() != null)
+            if(getSubFolders() != null)
             {
                 if(isClearSubRecurs)
                 {
-                    for(Folder folder : getSubfolders())
+                    for(Folder folder : getSubFolders())
                     {
                         folder.clearCaches(false, true);
                     }
                 }
 
-                subfolders = null;
+                subFolders = null;
             }
 
             if(isClearParent && this.getParentFolderId() > 0)

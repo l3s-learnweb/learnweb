@@ -89,27 +89,27 @@ public class ConverterService
 
     public String getConvertedUri(ConverterRequest request) throws Exception
     {
-        ConverterResponse responce = sendRequestToConvertServer(request);
+        ConverterResponse response = sendRequestToConvertServer(request);
 
-        if(responce == null)
+        if(response == null)
             throw new Exception("Invalid answer format");
 
-        if(responce.getError() != null)
-            processConvertServiceResponceError(responce.getError());
+        if(response.getError() != null)
+            processConvertServiceResponseError(response.getError());
 
-        if(responce.isEndConvert() == null || !responce.isEndConvert())
+        if(response.isEndConvert() == null || !response.isEndConvert())
             throw new Exception("Conversion is not finished");
 
-        if(responce.getPercent() == 0)
+        if(response.getPercent() == 0)
             throw new Exception("Percent is null");
 
-        if(responce.getFileUrl() == null || responce.getFileUrl().length() == 0)
+        if(response.getFileUrl() == null || response.getFileUrl().length() == 0)
             throw new Exception("FileUrl is null");
 
-        return responce.getFileUrl();
+        return response.getFileUrl();
     }
 
-    private void processConvertServiceResponceError(int errorCode) throws Exception
+    private void processConvertServiceResponseError(int errorCode) throws Exception
     {
         String errorMessage = "";
         String errorMessageTemplate = "Error occurred in the ConverterService: ";

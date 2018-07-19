@@ -15,7 +15,7 @@ import de.l3s.learnweb.resource.survey.SurveyResource;
 public class AssessmentResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6159753194487272716L;
-    private List<PeerAssesmentPair> peerAssessmentPairs;
+    private List<PeerAssessmentPair> peerAssessmentPairs;
     private SurveyResource mandatorySurvey; //  this survey must be answered before results can be viewed
     private boolean mandatorySurveySubmitted = true;
 
@@ -31,7 +31,7 @@ public class AssessmentResultBean extends ApplicationBean implements Serializabl
         mandatorySurveySubmitted = mandatorySurvey.isSubmitted(getUser().getId());
     }
 
-    public List<PeerAssesmentPair> getPeerAssessmentPairs()
+    public List<PeerAssessmentPair> getPeerAssessmentPairs()
     {
         return peerAssessmentPairs;
     }

@@ -283,7 +283,7 @@ public class ResourceDecorator implements Serializable
         return resource.getLanguage();
     }
 
-    public ExtendedMetadata geteMetadata() throws SQLException
+    public ExtendedMetadata getExtendedMetadata() throws SQLException
     {
         return resource.getExtendedMetadata();
     }

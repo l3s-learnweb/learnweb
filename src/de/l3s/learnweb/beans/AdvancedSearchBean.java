@@ -91,10 +91,10 @@ public class AdvancedSearchBean
         {
             this.noneWords = noneWord;
         }
-        String newquery = removeMyGroupQuery(query);
-        if(!query.equals(newquery))
+        String newQuery = removeMyGroupQuery(query);
+        if(!query.equals(newQuery))
         {
-            this.query = newquery;
+            this.query = newQuery;
         }
     }
 
@@ -210,7 +210,7 @@ public class AdvancedSearchBean
 
     private String removeMyGroupQuery(String query)
     {
-        String newquery = "";
+        String newsQuery = "";
         Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
         Matcher matcher = pattern.matcher(query.toLowerCase());
         if(matcher.find())
@@ -218,9 +218,9 @@ public class AdvancedSearchBean
             int start = matcher.start();
             int end = matcher.end();
             if(start != 0)
-                newquery = query.substring(0, start);
-            newquery = newquery.concat(query.substring(end, query.length()));
-            return newquery;
+                newsQuery = query.substring(0, start);
+            newsQuery = newsQuery.concat(query.substring(end, query.length()));
+            return newsQuery;
         }
         else
             return query;

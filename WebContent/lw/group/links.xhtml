@@ -119,7 +119,7 @@
 					</h4>
 					<p:dataList var="link" value="${groupDetailBean.documentLinks}" styleClass="links_datalist">		
 						<p:column>
-							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output" onclick="return onlinkClick(this);">
+							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output" onclick="return onLinkClick(this);">
 								#{link.title}
 							</h:outputLink>	
 							

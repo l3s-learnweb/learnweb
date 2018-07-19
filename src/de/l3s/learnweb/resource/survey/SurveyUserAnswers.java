@@ -10,7 +10,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
 /**
- * This class represents the answers of a single suer for a survey resources
+ * This class represents the answers of a single user for a survey resources
  *
  * @author Philipp
  *
