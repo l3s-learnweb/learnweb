@@ -172,10 +172,19 @@
 							
 							<p:column headerText="#{msg.language}">
 
-								<p:selectOneMenu id="language" value="#{term.language}">
+
+								<p:selectCheckboxMenu id="language" label="--select--" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" >
+									<f:selectItem itemValue="english" itemLabel="english"></f:selectItem>
+									<f:selectItem itemValue="english" itemLabel="german"></f:selectItem>
+									<f:selectItem itemValue="english" itemLabel="italian"></f:selectItem>
+									<f:selectItem itemValue="english" itemLabel="french"></f:selectItem>
+								</p:selectCheckboxMenu>
+								<p:message for="language" />
+
+								<!--<p:selectOneMenu id="language" value="#{term.language}">
 									<f:selectItems value="#{glossaryBeanNEW.availableLanguages}" />
 								</p:selectOneMenu>
-								<p:message for="language" />
+								<p:message for="language" /> -->
 								</p:column>
 
 							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center">

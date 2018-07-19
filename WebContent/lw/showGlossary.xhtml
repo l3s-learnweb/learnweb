@@ -25,9 +25,9 @@
 				
 				<h:form id= "form" prependId="false">
 					
-					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBean.paginatorActive}" rows="#{glossaryBean.paginatorActive ? 12 : 0}"
+					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBean.paginator}" rows="#{glossaryBean.paginator ? 12 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBean.filteredItems}" sortBy="#{item.date}" sortOrder="descending"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} Exporters">
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
@@ -41,18 +41,7 @@
 							</p:outputPanel>
 						</f:facet>
 
-						<f:facet name="Exporters">
-							<h:commandLink styleClass="excel_export_todo_use">
-								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
-								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
-								</h:commandLink>
-								<h:commandLink>
-								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="top:7px;left:3px;position:relative;" />
-								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
-
-							</h:commandLink>
-						</f:facet>
-
+						
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
 							<h:outputText value="#{item.glossId}"></h:outputText>
 						</p:column>
@@ -106,17 +95,25 @@
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.phraseology}" />
 						</p:column>
-						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" style="display:none" exportable="false">
-							blank
-						</p:column>
 						
-						<f:facet name="footer">
-							<p:outputPanel>
-								<h:outputText value="Total concepts = #{glossaryBean.glossaryEntryCount}"></h:outputText>
-							</p:outputPanel>
-						</f:facet>
+						
 					</p:dataTable>
-
+					<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
+						
+								<h:outputLabel value="Total concepts = #{glossaryBean.glossaryEntryCount}" style="text-align:center;" styleClass="glossary_footer_text"></h:outputLabel>
+								<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
+								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"  width="24" style="position:relative; text-alignt:center; display: block; " />
+								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
+								</p:commandLink>
+								<p:commandLink style="text-align:center;" ajax="false">
+								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
+								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
+								</p:commandLink>
+								<p:commandLink id="show_all" actionListener="#{glossaryBean.togglePaginator()}" oncomplete="groupRow();" update=":my_gloss_table @this">
+       							 <h:outputText value="#{glossaryBean.toggleValue}" />
+    							</p:commandLink>
+							</p:panelGrid>
+				
 					<br />
 					<br />
 					<br />

@@ -67,6 +67,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private String selectedTopicTwo;
     private String selectedTopicThree;
     private String description;
+    private String toggleValue = "Show All";
     private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
@@ -81,7 +82,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
     private GlossaryItems selectedGlossaryItem;
-    private boolean paginatorActive = true;
+    private boolean paginator = true;
 
     private int glossaryEntryCount;
 
@@ -107,14 +108,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void activatePaginator()
+    public void togglePaginator()
     {
-        setPaginatorActive(true);
-    }
-
-    public void deactivatePaginator()
-    {
-        setPaginatorActive(false);
+        paginator = !paginator;
+        toggleValue = toggleValue.equalsIgnoreCase("show all") ? getLocaleMessage("Glossary.collapse") : getLocaleMessage("Glossary.show_all");
     }
 
     public void rotatePDF(Object document)
@@ -564,7 +561,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -857,14 +854,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return glossaryEntryCount;
     }
 
-    public boolean isPaginatorActive()
+    public String getToggleValue()
     {
-        return paginatorActive;
+        return toggleValue;
     }
 
-    public void setPaginatorActive(boolean paginatorActive)
+    public boolean isPaginator()
     {
-        this.paginatorActive = paginatorActive;
+        return paginator;
+    }
+
+    public void setPaginator(boolean paginator)
+    {
+        this.paginator = paginator;
     }
 
 }

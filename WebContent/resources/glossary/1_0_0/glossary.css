@@ -5,6 +5,33 @@
 }
 .ui-datatable-header {bolder:1px solid red !important;}
 
+.glossary_footer_text{
+	font-size: 2rem;
+	font-weight: 100;
+	color: #489a83;
+	display:inline;
+	margin: 0;
+	text-align:justify !important;
+}
+
+.datatable_footer span{
+	font-size: 2rem;
+	font-weight: 100;
+	color: #489a83;
+	display:inline;
+	margin: 0;
+	text-align:justify !important;
+}
+
+.datatable_footer{
+	border:1px solid #ccc;
+	background-color:#eee !important;
+	margin-bottom:5px;
+	padding:1rem !important;
+	display:block;	
+	position: relative;
+}
+
 .glossary{
 	text-align:center;
 	margin-right:1em;

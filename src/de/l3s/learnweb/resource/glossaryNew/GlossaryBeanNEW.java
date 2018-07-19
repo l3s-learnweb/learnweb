@@ -58,7 +58,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         availableTopicOne.add(new SelectItem("European Politics"));
         availableTopicOne.add(new SelectItem("Medicine"));
         availableTopicOne.add(new SelectItem("Tourism"));
-        groupId = glossaryResource.getGroupId();
+        //groupId = glossaryResource.getGroupId();
         log(Action.glossary_open, groupId, resourceId);
         loadGlossaryTable(glossaryResource);
         setFilteredTableItems(tableItems);
