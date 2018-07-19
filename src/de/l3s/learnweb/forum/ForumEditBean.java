@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -27,7 +26,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
     private ForumTopic topic;
     private Group group;
 
-    public void preRenderView(ComponentSystemEvent e) throws SQLException
+    public void preRenderView() throws SQLException
     {
         if(postId == 0)
         {

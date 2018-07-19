@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
@@ -39,7 +38,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
         newPost = new ForumPost();
     }
 
-    public void preRenderView(ComponentSystemEvent e)
+    public void preRenderView()
     {
         try
         {

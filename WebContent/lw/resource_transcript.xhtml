@@ -7,7 +7,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="resource_id" value="#{tedTranscriptBean.resourceId}" />
-			<f:event type="preRenderView" listener="#{tedTranscriptBean.preRenderView}" />
+			<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 

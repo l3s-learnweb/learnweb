@@ -12,7 +12,7 @@
 			<f:viewParam name="filter" value="#{searchBean.queryFilters}" />
 			<!-- <f:viewParam name="resultsetid" value="#{searchBean.resultsetId}" />
 			<f:viewParam name="selectedquerytimestamp" value="#{searchHistoryBean.selectedQueryTimestamp}"/> -->
-			<f:event type="preRenderView" listener="#{searchBean.preRenderView}" />
+			<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 

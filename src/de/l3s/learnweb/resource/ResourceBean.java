@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +17,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8834191417574642115L;
     private final static Logger log = Logger.getLogger(ResourceBean.class);
+
     private int id;
 
     private Resource resource;
@@ -34,7 +34,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
         {
             // safeId is created to avoid NullPointException
             Integer safeId = getParameterInt("resource_id");
-
             if(safeId == null || safeId == 0)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "invalid or no resource_id parameter");
@@ -71,12 +70,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
             log.error("can't load resource: " + id, e);
             addFatalMessage(e);
         }
-    }
-
-    public void preRenderView(ComponentSystemEvent e)
-    {
-        loadResource();
-
     }
 
     public String addTag()

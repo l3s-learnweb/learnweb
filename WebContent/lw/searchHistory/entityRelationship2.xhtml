@@ -9,7 +9,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="user_id" value="#{newSearchHistoryBean.userId}" />
-			<f:event type="preRenderView" listener="#{newSearchHistoryBean.preRenderView}" />
+			<f:viewAction action="#{newSearchHistoryBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 

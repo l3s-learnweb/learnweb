@@ -9,7 +9,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 
@@ -37,7 +36,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         newPost = new ForumPost();
     }
 
-    public void preRenderView(ComponentSystemEvent e) throws SQLException
+    public void preRenderView() throws SQLException
     {
         if(topicId == 0)
         {
