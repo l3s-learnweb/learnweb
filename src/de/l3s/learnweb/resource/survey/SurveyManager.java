@@ -173,7 +173,7 @@ public class SurveyManager
         SurveyUserAnswers surveyAnswer = new SurveyUserAnswers(userId, surveyResource.getId());
 
         //Get survey data
-        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?"))
         {
             preparedStatement.setInt(1, surveyResource.getId());
             preparedStatement.setInt(2, userId);
@@ -215,7 +215,7 @@ public class SurveyManager
      */
     protected void loadSurveyResource(SurveyResource resource) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?"))
         {
             ps.setInt(1, resource.getId());
             ResultSet rs = ps.executeQuery();
@@ -253,7 +253,7 @@ public class SurveyManager
         Survey survey = new Survey();
         survey.setId(surveyId);
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE `survey_id` = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE `survey_id` = ?"))
         {
             select.setInt(1, surveyId);
             ResultSet rs = select.executeQuery();
@@ -271,7 +271,7 @@ public class SurveyManager
         }
 
         // load survey questions
-        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`");)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted` = 0 ORDER BY `order`"))
         {
             preparedStatement.setInt(1, surveyId);
             ResultSet rs = preparedStatement.executeQuery();
@@ -311,7 +311,7 @@ public class SurveyManager
      */
     private void setSurveyResourceSubmitStatus(int resourceId, int userId, boolean submitted) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_survey_resource_user (`resource_id`, `user_id`, `submitted`) VALUES (?,?,?)");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_survey_resource_user (`resource_id`, `user_id`, `submitted`) VALUES (?,?,?)"))
         {
             ps.setInt(1, resourceId);
             ps.setInt(2, userId);
@@ -332,7 +332,7 @@ public class SurveyManager
      */
     protected boolean getSurveyResourceSubmitStatus(int resourceId, int userId) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM `lw_survey_resource_user` WHERE resource_id = ? AND user_id = ?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM `lw_survey_resource_user` WHERE resource_id = ? AND user_id = ?"))
         {
             ps.setInt(1, resourceId);
             ps.setInt(2, userId);
@@ -368,7 +368,7 @@ public class SurveyManager
      */
     protected void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) throws SQLException
     {
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)");)
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)"))
         {
             // send the two answer types to DB
             for(final Entry<Integer, String> pair : surveyAnswer.getAnswers().entrySet())
@@ -420,7 +420,7 @@ public class SurveyManager
 
     protected Resource saveSurveyResource(SurveyResource surveyResource) throws SQLException
     {
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_resource` (`resource_id`, `survey_id`, `open_date`, `close_date`, `editable`) VALUES (?,?,?,?,?)");)
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_resource` (`resource_id`, `survey_id`, `open_date`, `close_date`, `editable`) VALUES (?,?,?,?,?)"))
         {
             replace.setInt(1, surveyResource.getId());
             replace.setInt(2, surveyResource.getSurveyId());
@@ -453,7 +453,7 @@ public class SurveyManager
         UserManager userManager = learnweb.getUserManager();
         List<User> users = new LinkedList<>();
 
-        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement(query);)
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement(query))
         {
             preparedStatement.setInt(1, parameter);
             ResultSet rs = preparedStatement.executeQuery();

@@ -42,7 +42,7 @@ public class PeerAssessmentManager
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `lw_submit_resource` " +
                 "JOIN lw_peerassessment_paring USING(submission_id) " +
-                "WHERE `resource_id` = ? AND assessor_user_id = ?");)
+                "WHERE `resource_id` = ? AND assessor_user_id = ?"))
         {
             select.setInt(1, resource.getId());
             select.setInt(2, user.getId());
@@ -59,7 +59,7 @@ public class PeerAssessmentManager
     public boolean canAssessSubmission(int assessorUserId, int assessedUserId, int submissionId)
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_peerassessment_paring " +
-                "WHERE `submission_id` = ? AND assessor_user_id = ? AND assessed_user_id = ?");)
+                "WHERE `submission_id` = ? AND assessor_user_id = ? AND assessed_user_id = ?"))
         {
             select.setInt(1, submissionId);
             select.setInt(2, assessorUserId);
@@ -77,7 +77,7 @@ public class PeerAssessmentManager
     private void savePeerAssessmentPair(PeerAssessmentPair pair) throws SQLException
     {
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("INSERT INTO `lw_peerassessment_paring` (" + PAIR_COLUMNS + ") VALUES (?,?,?,?,?,?) " +
-                "ON DUPLICATE KEY UPDATE peerassessment_id=VALUES(peerassessment_id), assessor_user_id=VALUES(assessor_user_id), survey_resource_id=VALUES(survey_resource_id), survey_resource_id=VALUES(survey_resource_id), assessment_survey_resource_id=VALUES(assessment_survey_resource_id), submission_id=VALUES(submission_id)");)
+                "ON DUPLICATE KEY UPDATE peerassessment_id=VALUES(peerassessment_id), assessor_user_id=VALUES(assessor_user_id), survey_resource_id=VALUES(survey_resource_id), survey_resource_id=VALUES(survey_resource_id), assessment_survey_resource_id=VALUES(assessment_survey_resource_id), submission_id=VALUES(submission_id)"))
         {
             ps.setInt(1, pair.getId());
             ps.setInt(2, pair.getAssessorUserId());
@@ -153,7 +153,7 @@ public class PeerAssessmentManager
     {
         LinkedList<PeerAssessmentPair> pairs = new LinkedList<>();
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(query);)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(query))
         {
             int i = 1;
             for(int param : parameters)
@@ -517,7 +517,7 @@ public class PeerAssessmentManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT submission_id, COUNT(*) FROM `lw_submit` " +
                 "JOIN lw_submit_status USING(submission_id) " +
                 "WHERE `course_id` IN (" + StringHelper.implodeInt(courses, ",") + ") AND deleted = 0 AND title = ? " +
-                "GROUP BY submission_id ORDER BY COUNT(*) DESC");)
+                "GROUP BY submission_id ORDER BY COUNT(*) DESC"))
         {
             for(String submissionTitle : taskSurveyMapping.keySet())
             {

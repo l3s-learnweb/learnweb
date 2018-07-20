@@ -525,7 +525,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         String tooltip = "<ul style='list-style: none; max-width:50rem; margin: 0px; padding: 0px;'><h2>" + getTitle() + "</h2>";
 
-        if(StringUtils.isEmpty(getDescription()) == false)
+        if(!StringUtils.isEmpty(getDescription()))
         {
             tooltip += "<li style='overflow: auto;max-height: 10rem;'>" + getDescription() + "</li>";
         }

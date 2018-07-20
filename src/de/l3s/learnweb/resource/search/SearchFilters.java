@@ -39,8 +39,8 @@ public class SearchFilters implements Serializable
         text,
         image,
         video,
-        group;
-    };
+        group
+    }
 
     public enum TYPE
     {
@@ -55,7 +55,7 @@ public class SearchFilters implements Serializable
         {
             return UtilBean.getLocaleMessage(this.name());
         }
-    };
+    }
 
     public enum DATE
     {
@@ -328,7 +328,7 @@ public class SearchFilters implements Serializable
                 return false;
             }
         }
-    };
+    }
 
     public String[] getFacetFields()
     {

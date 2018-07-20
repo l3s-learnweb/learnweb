@@ -85,15 +85,15 @@ public class LanguageItem implements Serializable
         switch(langValue)
         {
         case "English-EN":
-            return language.EN;
+            return LANGUAGE.EN;
         case "Italian-IT":
-            return language.IT;
+            return LANGUAGE.IT;
         case "French-FR":
-            return language.FR;
+            return LANGUAGE.FR;
         case "Dutch-NL":
-            return language.NL;
+            return LANGUAGE.NL;
         case "German-DE":
-            return language.DE;
+            return LANGUAGE.DE;
         default:
             return null;
         }

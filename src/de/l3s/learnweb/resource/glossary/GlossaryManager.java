@@ -255,7 +255,7 @@ public class GlossaryManager
                             break;
                         }
                     }
-                    if(deleteTerm == false)
+                    if(!deleteTerm)
                     {
                         for(LanguageItem iItems : e.getSecondLanguageItems())
                         {
@@ -266,7 +266,7 @@ public class GlossaryManager
                             }
                         }
                     }
-                    if(deleteTerm != true)
+                    if(!deleteTerm)
                     {
                         String delete = "UPDATE `lw_resource_glossary_terms` SET `deleted`= ? WHERE glossary_term_id = ? ";
 

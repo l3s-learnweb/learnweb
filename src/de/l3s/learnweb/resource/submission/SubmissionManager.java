@@ -40,7 +40,7 @@ public class SubmissionManager
     public ArrayList<Submission> getSubmissionsByCourse(int courseId) throws SQLException
     {
         ArrayList<Submission> submissions = new ArrayList<>();
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime"))
         {
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
@@ -75,7 +75,7 @@ public class SubmissionManager
 
         String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND deleted=0 ORDER BY close_datetime";
 
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt))
         {
             int index = 1;
             for(Course course : courses)
@@ -150,7 +150,7 @@ public class SubmissionManager
     public Submission getSubmissionById(int submissionId) throws SQLException
     {
         Submission s = new Submission();
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE submission_id=?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE submission_id=?"))
         {
             ps.setInt(1, submissionId);
             ResultSet rs = ps.executeQuery();
@@ -264,7 +264,7 @@ public class SubmissionManager
     {
         ResourceManager resourceManager = learnweb.getResourceManager();
         List<Resource> submittedResources = new ArrayList<>();
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?"))
         {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
@@ -309,7 +309,7 @@ public class SubmissionManager
     public boolean getSubmitStatusForUser(int submissionId, int userId) throws SQLException
     {
         boolean submitted = false;
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?"))
         {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
@@ -324,7 +324,7 @@ public class SubmissionManager
     {
         //  TODO to keep survey_resource_id use:
         // INSERT INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = ?;
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)"))
         {
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
@@ -367,7 +367,7 @@ public class SubmissionManager
         List<SubmittedResources> submittedResourcesPerUser = new ArrayList<>();
         SubmittedResources currentUserSubmission = null;
 
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id FROM lw_submit_resource WHERE submission_id = ? ORDER BY user_id");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id FROM lw_submit_resource WHERE submission_id = ? ORDER BY user_id"))
         {
             ps.setInt(1, submissionId);
             ResultSet rs = ps.executeQuery();

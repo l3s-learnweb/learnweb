@@ -99,7 +99,7 @@ public class Entity
             builder.append(rank).append(";");
             flag = true;
         }
-        return flag == true ? builder.substring(0, builder.length() - 1) : builder.toString();// drop the last ';'
+        return flag ? builder.substring(0, builder.length() - 1) : builder.toString();// drop the last ';'
     }
 
     public static Entity fromString(String str)

@@ -76,7 +76,7 @@ public class PurposeManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT p.* FROM `lw_rm_purpose` p " +
                 "LEFT JOIN lw_resource_purpose rp ON p.purpose_id=rp.purpose_id AND rp.user_id = ? " +
                 "WHERE must_show = 1 OR  rp.purpose_id IS NOT NULL " +
-                "GROUP BY p.purpose_id ORDER BY purpose_name");)
+                "GROUP BY p.purpose_id ORDER BY purpose_name"))
         {
             select.setInt(1, user.getId());
             ResultSet rs = select.executeQuery();
@@ -118,7 +118,7 @@ public class PurposeManager
         Purpose purpose = new Purpose();
         purpose.setName(purposeName);
 
-        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_rm_purpose` (purpose_name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);)
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_rm_purpose` (purpose_name) VALUES (?)", Statement.RETURN_GENERATED_KEYS))
         {
             replace.setString(1, purposeName);
             replace.executeUpdate();

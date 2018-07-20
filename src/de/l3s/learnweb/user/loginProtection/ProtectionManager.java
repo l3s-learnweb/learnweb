@@ -310,7 +310,7 @@ public class ProtectionManager
     {
         accessMap.remove(name);
 
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE name=?");)
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE name=?"))
         {
             delete.setString(1, name);
             delete.execute();
@@ -328,7 +328,7 @@ public class ProtectionManager
     {
         accessMap.clear();
 
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans");)
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans"))
         {
             delete.execute();
         }

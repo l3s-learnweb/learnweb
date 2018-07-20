@@ -363,7 +363,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
 
         for(int i = 0; i < Integer.valueOf(numCluster); i++)
         {
-            if(nullAllPoints(k.getClusters().get(i)) == true)
+            if(nullAllPoints(k.getClusters().get(i)))
                 s.add(0);
             else
                 s.add(k.getClusters().get(i).getPoints().size());

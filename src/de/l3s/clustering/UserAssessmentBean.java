@@ -285,7 +285,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             this.setShowd3(false);
         }
 
-        if((this.selectChart3.compareTo("bar") == 0) && (this.showb3 == true))
+        if((this.selectChart3.compareTo("bar") == 0) && this.showb3)
         {
             this.listAClass = new ArrayList<>();
             HashMap<String, Long> list = new HashMap<>();
@@ -296,7 +296,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
             this.initBarModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
         }
-        if((this.selectChart3.compareTo("line") == 0) && (this.showl3 == true))
+        if((this.selectChart3.compareTo("line") == 0) && this.showl3)
         {
             this.listAClass = new ArrayList<>();
             HashMap<String, Long> list = new HashMap<>();
@@ -307,7 +307,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             this.initLineModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
             this.selectInteractionMeanClass();
         }
-        if((this.selectChart3.compareTo("pie") == 0) && (this.showp3 == true))
+        if((this.selectChart3.compareTo("pie") == 0) && this.showp3)
         {
             this.listAClass = new ArrayList<>();
             HashMap<String, Long> list = new HashMap<>();
@@ -348,7 +348,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             this.setShowb1(false);
         }
 
-        if((this.selectChart1.compareTo("bar") == 0) && (this.showb1 == true))
+        if((this.selectChart1.compareTo("bar") == 0) && this.showb1)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();
@@ -359,7 +359,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
             this.barModel0 = this.initBarComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
         }
-        if((this.selectChart1.compareTo("line") == 0) && (this.showl1 == true))
+        if((this.selectChart1.compareTo("line") == 0) && this.showl1)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();
@@ -370,7 +370,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
             this.lineModel0 = this.initLineComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
         }
-        if((this.selectChart1.compareTo("pie") == 0) && (this.showp1 == true))
+        if((this.selectChart1.compareTo("pie") == 0) && this.showp1)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();
@@ -410,7 +410,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             this.setShowb2(false);
         }
 
-        if((this.selectChart2.compareTo("bar") == 0) && (this.showb2 == true))
+        if((this.selectChart2.compareTo("bar") == 0) && this.showb2)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();
@@ -423,7 +423,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
             this.barModel2 = this.initBarComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
         }
-        if((this.selectChart2.compareTo("line") == 0) && (this.showl2 == true))
+        if((this.selectChart2.compareTo("line") == 0) && this.showl2)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();
@@ -436,7 +436,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
             this.lineModel2 = this.initLineComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
         }
-        if((this.selectChart2.compareTo("pie") == 0) && (this.showp2 == true))
+        if((this.selectChart2.compareTo("pie") == 0) && this.showp2)
         {
             HashMap<String, Long> list = new HashMap<>();
             HashMap<String, Long> list2 = new HashMap<>();

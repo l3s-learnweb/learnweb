@@ -218,7 +218,7 @@ public class UserManager
 
     public User getUserByEmailAndConfirmationToken(String email, String emailConfirmationToken) throws SQLException
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ? AND email_confirmation_token = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ? AND email_confirmation_token = ?"))
         {
             select.setString(1, email);
             select.setString(2, emailConfirmationToken);
@@ -242,7 +242,7 @@ public class UserManager
      */
     public int getUserIdByUsername(String username) throws SQLException
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id FROM `lw_user` WHERE username = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id FROM `lw_user` WHERE username = ?"))
         {
             select.setString(1, username);
             ResultSet rs = select.executeQuery();

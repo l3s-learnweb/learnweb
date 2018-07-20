@@ -582,7 +582,7 @@ public class ResourceManager
         UserManager um = learnweb.getUserManager();
         OwnerList<Tag, User> tags = new OwnerList<>();
 
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name, user_id, timestamp FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `resource_id` = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name, user_id, timestamp FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `resource_id` = ?"))
         {
             select.setInt(1, resourceId);
             ResultSet rs = select.executeQuery();

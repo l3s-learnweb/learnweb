@@ -102,7 +102,7 @@ public class ArchiveUrl implements Serializable
     @Override
     public boolean equals(Object o)
     {
-        if(o == null || !(o instanceof ArchiveUrl))
+        if(!(o instanceof ArchiveUrl))
             return false;
 
         ArchiveUrl other = (ArchiveUrl) o;

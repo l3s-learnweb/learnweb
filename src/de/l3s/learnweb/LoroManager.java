@@ -151,6 +151,7 @@ public class LoroManager
             HttpURLConnection con = (HttpURLConnection) new URL(doc_url).openConnection();
             con.setRequestMethod("HEAD");
 
+            // TODO: this looks like infinite loop
             for(int i = 1; i < 6;)
             {
                 if(con.getResponseCode() == 404)
@@ -229,7 +230,7 @@ public class LoroManager
                 }
 
                 Resource loroResource;
-                if(docFormat.contains("video") || docFormat.contains("image") || textTest == true) //Creating resource
+                if(docFormat.contains("video") || docFormat.contains("image") || textTest) //Creating resource
                     loroResource = createResource(rs, learnwebResourceId);
                 else
                 {

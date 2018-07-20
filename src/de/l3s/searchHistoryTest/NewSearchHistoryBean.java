@@ -265,7 +265,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         selectedGroupId = groupId;
         log.info("selected group id: " + groupId);
 
-        if(SessionCache.Instance().existsGroupId(selectedGroupId) == false)
+        if(!SessionCache.Instance().existsGroupId(selectedGroupId))
         {
             SessionCache.Instance().cacheByGroupId(groupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(groupId));
         }
