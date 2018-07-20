@@ -1,5 +1,5 @@
 /****************************************************************
-This file will be loaded on every page. 
+This file will be loaded on every page.
 Include only methods which are required on every page.
 ****************************************************************/
 
@@ -14,12 +14,12 @@ function removeViewstate(searchForm)
 function footerToggle()
 {
 	var footer = $('#footer');
-	
-	if(footer.css('display') == 'none')
+
+	if(footer.css('display') === 'none')
 		setPreference('helptext_hide', 'false');
 	else
 		setPreference('helptext_hide', 'true');
-	
+
 	footer.slideToggle();
 
 	return false;
@@ -39,12 +39,12 @@ function updateCarousel() {
 		var $wrapper = $(this);
 		var $container = $($wrapper.find('.vCarousel-container'));
 		var height = $(":first-child", $container).outerHeight(true);
-		
+
 		var totalRecords = $container.children().length;
         if (defaultVisible < totalRecords) {
         	$wrapper.addClass('vCarousel-small');
         	$container.css({ "max-height" : (defaultVisible - 1)*height });
-        	
+
             $($wrapper.find('.vCarousel-expand')).on('click', function(e) {
             	e.preventDefault();
             	$wrapper.addClass('vCarousel-expanded');
@@ -64,44 +64,44 @@ function setPreference(prefKey, prefValue)
 var myMarket = "en-US";
 
 $(document).ready(function()
-{	
-	$("#group_menu > .panelmenu").each(function( index ) 
+{
+	$("#group_menu > .panelmenu").each(function()
 	{
 		var group = $(this);
 		var links = group.children('div');
-		
+
 		group.find('h3 .iconarrow').click(function()
 		{
 			links.slideToggle();
 			group.toggleClass('active');
 			return true;
-		});		
+		});
 	});
 
 	// initialize search field auto completion
-	if(typeof market != 'undefined')
+	if(market)
 	{
-		if(market == "de")
+		if(market === "de")
 			myMarket = "de-DE";
-		else if(market == "pt")
+		else if(market === "pt")
 			myMarket = "pt-BR";
-		else if(market == "it")
+		else if(market === "it")
 			myMarket = "it-IT";
 	}
-	
+
 	$("#searchfield").autocomplete({
         source: function (request, response) {
             $.ajax({
                 url: "//api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ myMarket +"&JsonType=callback&JsonCallback=?",
                 dataType: "jsonp",
-    
+
                 success: function (data) {
                     var suggestions = [];
                     $.each(data[1], function (i, val) {
                         suggestions.push(val);
                     });
                     response(suggestions);
-               
+
                     var logQuerySuggestionAsync = function() {
                     	logQuerySuggestion([{name:'query', value:request.term},{name:'suggestions', value:suggestions},{name:'market', value:myMarket}]);
                     };

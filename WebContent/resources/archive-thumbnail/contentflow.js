@@ -22,7 +22,7 @@ var ContentFlowGlobal = {
         this.IE6 = this.IE && typeof(window.XMLHttpRequest) == "undefined" ? true : false;
         this.IE8 = this.IE && typeof(document.querySelectorAll) != "undefined" ? true : false;
         this.IE7 = this.IE && ! this.IE6 && !this.IE8 ? true : false;
-        this.WebKit = /WebKit/i.test(navigator.userAgent) ? true : false, 
+        this.WebKit = /WebKit/i.test(navigator.userAgent) ? true : false;
         this.iPhone = /iPhone|iPod/i.test(navigator.userAgent)? true : false;
         this.Chrome = /Chrome/i.test(navigator.userAgent) ? true : false;
         this.Safari = /Safari/i.test(navigator.userAgent) && !this.Chrome ? true : false;
@@ -386,7 +386,7 @@ var ContentFlowItem  = function (CFobj, element, index) {
         else {
             if (this.conf.onclickInactiveItem(item) != false ) this.moveToIndex(index);
         }
-    }.bind(CFobj),
+    }.bind(CFobj);
 
     this.setIndex = function (index) {
         this.index = index;
@@ -1424,10 +1424,10 @@ ContentFlow.prototype = {
         // get an array of names of all AddOns that should be used
         var loadAddOns = [];
         if (this._userConf.useAddOns) {
-            if (typeof this._userConf.useAddOns == "string") {
+            if (typeof this._userConf.useAddOns === "string") {
                 loadAddOns = this._userConf.useAddOns.split(" ");
             }
-            else if (typeof this._userConf.useAddOns == "array") {
+            else if (Object.prototype.toString.call(typeof this._userConf.useAddOns) === '[object Array]') {
                 loadAddOns = this._userConf.useAddOns;
             }
         }

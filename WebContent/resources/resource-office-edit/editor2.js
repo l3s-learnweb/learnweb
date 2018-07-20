@@ -103,13 +103,13 @@ var connectEditor = function(id_div, type) {
 
 			user : {
 				id : $('#ed_user_id').val(),
-				name : $('#ed_user_name').val(),
+				name : $('#ed_user_name').val()
 			},
 
 			embedded : {
 				saveUrl : $('#ed_file_url').val() ,
-				toolbarDocked : "top",
-			},
+				toolbarDocked : "top"
+			}
 
 		},
 		events : {
@@ -120,7 +120,7 @@ var connectEditor = function(id_div, type) {
 			"onOutdatedVersion" : onOutdatedVersion,
 			"onRequestHistoryData":onRequestHistoryData,
 			"onRequestHistory":onRequestHistory,
-			"onRequestHistoryClose":onRequestHistoryClose,
+			"onRequestHistoryClose":onRequestHistoryClose
 		}
 	});
 	docEditor;

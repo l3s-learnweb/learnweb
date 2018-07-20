@@ -14,7 +14,7 @@ var scrolling = false;
 (function($) {
 	$.fn.uncomment = function() {
 		$(this).contents().each(function() {
-			if ( this.nodeType == 8 ) {
+			if ( this.nodeType === 8 ) {
 				$(this).replaceWith(this.nodeValue);
 				/*
 				// Need to "evaluate" the HTML content,
@@ -42,10 +42,10 @@ function setContentPadding()
 	    $(".group-menu-container").animate({
 	        scrollLeft: "-=" + step + "px"
 	    });
-	}).bind("mouseover", function(event) {
+	}).bind("mouseover", function() {
 	    scrolling = true;
 	    scrollContent("right");
-	}).bind("mouseout", function(event) {
+	}).bind("mouseout", function() {
 	    scrolling = false;
 	});
 
@@ -54,10 +54,10 @@ function setContentPadding()
 	    $(".group-menu-container").animate({
 	        scrollLeft: "+=" + step + "px"
 	    });
-	}).bind("mouseover", function(event) {
+	}).bind("mouseover", function() {
 	    scrolling = true;
 	    scrollContent("down");
-	}).bind("mouseout", function(event) {
+	}).bind("mouseout", function() {
 	    scrolling = false;
 	});
 }
@@ -90,7 +90,7 @@ function prepareResources(resources)
 		var previewImage = resource.find('.preview img').first();		
 		
 		// open preview delayed on mouseover 
-		image.mouseenter(function (event) 
+		image.mouseenter(function ()
 		{
 			image.addClass("hasFocus");			
 			
@@ -150,30 +150,26 @@ function prepareResources(resources)
 		var title = metadata.children('.title').first();
 		var options = metadata.children('.options').first();
 		var snippet = metadata.children('.snippet').first();
-		
+
 		metadata.remove();		
-		
+
 		var lightbox_open = function()
 		{				
 			openPreview.hide();	
 			lightboxActiveResource = resource;
-			
+
 			$('#lightbox').show();
-			$('#lightbox_metadata').empty();
-			$('#lightbox_metadata').append(description);
-			$('#lightbox_metadata').append(options);
-			$('#lightbox_metadata').append(snippet);
+			$('#lightbox_metadata').empty().append(description).append(options).append(snippet);
 			$('#lightbox_content .embedded').remove();
 			$('#lightbox_content').append(embedded);			
-			$('#lightbox_title').empty();
-			$('#lightbox_title').append(title);
+			$('#lightbox_title').empty().append(title);
 
 			embedded.uncomment(); // embedded content is out commented to prevent loading images/videos before opening lightbox
 			var image = embedded.children().first();
-			
+
 			if(image.is('img')) // load image
 			{
-				if(image.attr('src') != image.attr('original-src'))
+				if(image.attr('src') !== image.attr('original-src'))
 			    {
 					image.css("z-index",1104);
 					// clone image and place it behind the small resolution image
@@ -209,7 +205,7 @@ function prepareResources(resources)
 	});	
 	
 	
-	if(view == 'grid')
+	if(view === 'grid')
 		resources.width(gridItemWidth);
 	
 	/*
@@ -218,12 +214,11 @@ function prepareResources(resources)
 }
 
 function resizeGridResources()
-{ 
-	var innerWidth = $('#results').width() - 21;
-	
-	gridItemWidth = 100 / Math.floor($('#results').innerWidth()/220) +'%';
-
-	$('#results .resource').width(gridItemWidth);
+{
+	var results = $('#results');
+	var innerWidth = results.width() - 21;
+	gridItemWidth = 100 / Math.floor(results.innerWidth()/220) +'%';
+	$('.resource', results).width(gridItemWidth);
 }
 
 var loading = false;
@@ -245,9 +240,9 @@ function displayNextPage(xhr, status, args)
 	
 	$('#search_loading_more_results').hide();
 	
-	if(resources.length == 0 || status != "success") 
+	if(resources.length === 0 || status !== "success")
 	{
-		if(status != "success")
+		if(status !== "success")
 			console.log('fehler', status);
 		
 		if($('#results .resource').size() > 0)
@@ -265,7 +260,7 @@ function displayNextPage(xhr, status, args)
 	
 	loading = false;
 	
-	if(view=='list')
+	if(view === 'list')
 		createGroupTooltips();
 	
 	testIfResultsFillPage();
@@ -347,7 +342,7 @@ function lightbox_resize_content()
 	var outer = $('#lightbox_content');
 	var inner = outer.find('.embedded').first().children();	
 	
-	if(inner.first().attr('width') == '100%' || inner.first().attr('type') == 'application/x-shockwave-flash' || inner.first().is('iframe'))
+	if(inner.first().attr('width') === '100%' || inner.first().attr('type') === 'application/x-shockwave-flash' || inner.first().is('iframe'))
 	{
 		inner.css({
 		   position:'absolute',
@@ -360,7 +355,7 @@ function lightbox_resize_content()
 		return;
 	}
 
-	if(typeof inner.first().attr('original_width') == 'undefined')
+	if(typeof inner.first().attr('original_width') === 'undefined')
 	{
 		inner.attr('original_width', inner.width());
 		inner.attr('original_height', inner.height());
@@ -386,13 +381,13 @@ function lightbox_resize_content()
 	   left: (outer.width() - iwidth)/2,
 	   top: (outer.height() - iheight)/2,
 	   width: iwidth+'px',
-	   height: iheight+'px',
+	   height: iheight+'px'
 	});
 }
 
 // call resizeend after the resize
-var rtime = new Date(1, 1, 2000, 12,00,00);
-var lastResize = new Date(1, 1, 2000, 12,00,00);
+var rtime = new Date(1, 1, 2000, 12, 0, 0);
+var lastResize = new Date(1, 1, 2000, 12, 0, 0);
 var timeout = false;
 var delta = 250;
 $(window).resize(function() 
@@ -410,7 +405,7 @@ function resizeend()
         setTimeout(resizeend, delta);
     } 
     else {   	
-    	if(view == 'grid')
+    	if(view === 'grid')
     		resizeGridResources();
     	
     	testIfResultsFillPage();
@@ -509,14 +504,14 @@ function fixPositionOfFiltersMenuBar()
         $window = $(window),
     	carusselHeight = $("#groups_menu_bar").outerHeight();
     
-    $window.scroll(function(e)
+    $window.scroll(function()
     {			    	
     	if ($window.scrollTop() > carusselHeight) 
         	menuBar.css('position', 'fixed');
         else 
         	menuBar.css('position', 'relative');
     });
-};
+}
 
 function createGroupTooltips() {
     $('.tooltip').tooltipster({
@@ -537,9 +532,9 @@ $(document).ready(function()
 	
 	lightbox_resize_container();
 	
-	if(view == 'grid')
+	if(view === 'grid')
 		resizeGridResources();
-	else if(view == 'list')
+	else if(view === 'list')
 	{
 		ajaxLoadFactsheet();
 	}
@@ -547,30 +542,30 @@ $(document).ready(function()
 	
 	// register cursor left/right and esc key
 	$(document).keydown(function(event) {
-		if(event.which == 37) 
+		if(event.which === 37)
 			lightbox_prev();
-		else if (event.which == 39)
+		else if (event.which === 39)
 			lightbox_next();
-		else if (event.which == 27)
+		else if (event.which === 27)
 			lightbox_close();		
 	});
 	
 	//$('#center_pane > div').scroll(testIfResultsFillPage);	
-		
-	$(document).bind("scroll", function(e){
+
+	$(document).bind("scroll", function(){
 		testIfResultsFillPage();
 	});
-	
+
 	//To keep track of resource click in the web search or resources_list view
 	var logResourceClick = function(){
 		var tempResourceId = $(this).closest('div.resource').attr('id').substring(9);
 		logResourceOpened([{name:'resource_id', value:tempResourceId}]);
 		return true;
-	}
-	
+	};
+
 	$('.resourceWebLink').mouseup(logResourceClick);
 	$('.resource > div a').mouseup(logResourceClick);
-	
+
 	loadFilterCounts();
 	updateCarousel();
 	setContentPadding();

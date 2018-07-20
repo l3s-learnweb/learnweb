@@ -14,7 +14,7 @@ var scrolling = false;
 (function($) {
 	$.fn.uncomment = function() {
 		$(this).contents().each(function() {
-			if ( this.nodeType == 8 ) {
+			if ( this.nodeType === 8 ) {
 				$(this).replaceWith(this.nodeValue);
 				/*
 				// Need to "evaluate" the HTML content,
@@ -131,7 +131,7 @@ function prepareResources(resources)
 			
 			if(image.is('img')) // load image
 			{
-				if(image.attr('src') != image.attr('original-src'))
+				if(image.attr('src') !== image.attr('original-src'))
 			    {
 					image.css("z-index",1104);
 					// clone image and place it behind the small resolution image
@@ -167,7 +167,7 @@ function prepareResources(resources)
 	});	
 	
 	
-	if(view == 'grid')
+	if(view === 'grid')
 		resources.width(gridItemWidth);
 	
 	/*
@@ -248,8 +248,8 @@ function lightbox_resize_content()
 	// resize and center lightbox content
 	var outer = $('#lightbox_content');
 	var inner = outer.find('.embedded').first().children();	
-	
-	if(inner.first().attr('width') == '100%' || inner.first().attr('type') == 'application/x-shockwave-flash')
+
+	if(inner.first().attr('width') === '100%' || inner.first().attr('type') === 'application/x-shockwave-flash')
 	{
 		inner.css({
 		   position:'absolute',
@@ -270,31 +270,31 @@ function lightbox_resize_content()
 
 	var iwidth = inner.first().attr('original_width');
 	var iheight = inner.first().attr('original_height');		
-	
+
 	if(iwidth > outer.width()) {
 		var ratio = outer.width() / iwidth;
 		iheight = Math.ceil(iheight * ratio);
 		iwidth = outer.width();
 	}
-	
+
 	if(iheight > outer.height()) {
 		var ratio = outer.height() / iheight;
 		iwidth = Math.ceil(iwidth * ratio);
 		iheight = outer.height();
 	}
-	
+
 	inner.css({
 	   position:'absolute',
 	   left: (outer.width() - iwidth)/2,
 	   top: (outer.height() - iheight)/2,
 	   width: iwidth+'px',
-	   height: iheight+'px',
+	   height: iheight+'px'
 	});
 }
 
 // call resizeend after the resize
-var rtime = new Date(1, 1, 2000, 12,00,00);
-var lastResize = new Date(1, 1, 2000, 12,00,00);
+var rtime = new Date(1, 1, 2000, 12, 0, 0);
+var lastResize = new Date(1, 1, 2000, 12, 0, 0);
 var timeout = false;
 var delta = 250;
 
@@ -314,7 +314,7 @@ function resizeend() {
         setTimeout(resizeend, delta);
     } 
     else {   	
-    	if(view == 'grid')
+    	if(view === 'grid')
     		resizeGridResources();
     	
     	//testIfResultsFillPage();
@@ -339,11 +339,11 @@ function tabselection(current_tab){
 function close_searchbar()
 {	
 	$('#explore_right_bar').animate({width:'0%'},1000);
-	if(view=='list')
+	if(view === 'list')
 	{
 		$('.list_view').animate({width:'100%'},1000);
 	}
-	else if(view=='float')
+	else if(view === 'float')
 	{
 		$('.float_view').animate({width:'100%'},1000);
 	}
@@ -358,14 +358,14 @@ function close_searchbar()
 
 function open_searchbar()
 {	
-	if(view=='list')
+	if(view === 'list')
 	{
 		$('#explore_right_bar').css('width','31%');
 		$('.list_view').css('width','61%');
 		$('#explore_right_bar').addClass('web_right_bar').css('display','inline-block');
 		$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%');	
 	}
-	else if(view=='float')
+	else if(view === 'float')
 	{
 		$('#explore_right_bar').css('width','24%');
 		$('.float_view').css('width','75%');
@@ -391,12 +391,12 @@ $(document).ready(function()
 	
 	//lightbox_resize_container();
 	
-	if(view == 'grid' || view =="float"){
+	if(view === 'grid' || view === "float"){
 		resizeGridResources();
 		$('.grid_view').css('width','75%');
 		$('.float_view').css('width','75%');
 	}
-	else if(view == 'list')
+	else if(view === 'list')
 		{				
 			$('#explore_right_bar').removeClass('right_bar').addClass('web_right_bar');
 			$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%');
@@ -404,11 +404,11 @@ $(document).ready(function()
 	
 	// register cursor left/right and esc key
 	$(document).keydown(function(event) {
-		if(event.which == 37) 
+		if(event.which === 37)
 			lightbox_prev();
-		else if (event.which == 39)
+		else if (event.which === 39)
 			lightbox_next();
-		else if (event.which == 27)
+		else if (event.which === 27)
 			lightbox_close();		
 	});
 	

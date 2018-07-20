@@ -51,7 +51,7 @@ POSTagger.prototype.tag = function(words){
         // 1/22/2002 mod (from Lisp code): if not in hash, try lower case:
         if (!ss) 
             ss = this.lexicon[words[i].toLowerCase()];
-        if (!ss && words[i].length == 1) 
+        if (!ss && words[i].length == 1)
             ret[i] = words[i] + "^";
         if (!ss) 
             ret[i] = "NN";
@@ -89,7 +89,7 @@ POSTagger.prototype.tag = function(words){
             ret[i] = "RB";
         // rule 5: convert a common noun (NN or NNS) to a adjective if it ends with "al"
         if (ret[i].startsWith("NN") && word.endsWith("al")) 
-            ret[i] = i, "JJ";
+            ret[i] = i, "JJ"; // TODO Oleh: probably it is bug // TODO Philipp: can you check?
         // rule 6: convert a noun to a verb if the preceding work is "would"
         if (i > 0 && ret[i].startsWith("NN") && words[i - 1].toLowerCase() == "would") 
             ret[i] = "VB";

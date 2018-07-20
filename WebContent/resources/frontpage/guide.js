@@ -74,7 +74,7 @@ function lightbox_open()
 	box.appendTo(document.body);
 	lightbox_resize_container();
 	box.show();
-};
+}
 
 $(window).on('load', function()
 {	

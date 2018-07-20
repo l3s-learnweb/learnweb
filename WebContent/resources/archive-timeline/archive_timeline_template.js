@@ -111,7 +111,7 @@ function loadTimeline(data_var){
 		series: [{
 			type: 'column',
 			name: timeline_series_name ,
-			data: data_var,
+			data: data_var
 		}]
 	});
 	$('.highcharts-container').css('overflow','');

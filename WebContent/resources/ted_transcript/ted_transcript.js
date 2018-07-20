@@ -33,7 +33,7 @@ function selectTab(divName) {
 }
 
 function openTagsDiv() {
-	if($('.overlay').width() == 0)
+	if($('.overlay').width() === 0)
     {
 		$('.overlay').width("256px");
 	    $('.embedded').width($('.embedded').width() - 256);
@@ -52,7 +52,7 @@ function closeTagsDiv() {
 $(document).ready(function(){
 	//To include embedded TED video
 	$(".embedded").contents().each(function(index, node) {
-		if (node.nodeType == 8) {
+		if (node.nodeType === 8) {
 		// node is a comment
 		$(node).replaceWith(node.nodeValue);
 		}
@@ -75,7 +75,7 @@ $(document).ready(function(){
 		}
 		
 		//Initializing tags list with already existing tags in the transcript
-		if(selected_element.getAttribute("data-title") != undefined)
+		if(selected_element.getAttribute("data-title"))
 			tags[selected_element.id] = selected_element.getAttribute("data-title");
 		
 		//Initializing Tooltipster only on the elements which has a data-title or data-content
@@ -107,7 +107,7 @@ $(document).ready(function(){
  
 	$('#text').keypress(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if(keycode == '13')
+		if(keycode === '13')
 		{
 			$('#userinput_ok').click();
 			return false;
@@ -116,7 +116,7 @@ $(document).ready(function(){
 		
 	$(document).keyup(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if(keycode == '27')
+		if(keycode === '27')
 		{
 			$('#userinput_cancel').click();
 			return false;
@@ -399,7 +399,7 @@ function getNodesInRange(range)
     // walk parent nodes from start to common ancestor
     for (node = start; node; node = node.parentNode)
     {
-    	if(node.nodeType == 1 && node.tagName.toLowerCase() == 'span')
+    	if(node.nodeType === 1 && node.tagName.toLowerCase() === 'span')
     		nodes.push(node);
         if (node == commonAncestor)
             break;
@@ -409,7 +409,7 @@ function getNodesInRange(range)
     // walk children and siblings from start until end is found
     for (node = start; node; node = getNextNode(node))
     {
-    	if(node.nodeType == 1 && node.tagName.toLowerCase() == 'span')
+    	if(node.nodeType === 1 && node.tagName.toLowerCase() === 'span')
     		nodes.push(node);
         if (node == end)
             break;

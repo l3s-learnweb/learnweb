@@ -156,15 +156,15 @@ function update_url(resource_id, folder_id, group_id) {
     var page_schema = location.protocol + "//" + location.host + location.pathname;
     var query_params = location.search;
 
-    if (folder_id != undefined) {
+    if (folder_id !== undefined) {
         query_params = updateUrlParameters(query_params, "folder_id", folder_id);
     }
 
-    if (resource_id != undefined) {
+    if (resource_id !== undefined) {
         query_params = updateUrlParameters(query_params, "resource_id", resource_id);
     }
 
-    if (group_id != undefined) {
+    if (group_id !== undefined) {
         query_params = updateUrlParameters(query_params, "group_id", group_id);
     }
 
@@ -399,10 +399,10 @@ function doAction(action, extraAttr1, extraAttr2) {
             break;
         case 'open-folder':
             var last = selected.getItem(selected.getSize() - 1);
-            if (selected.getSize() > 0 && last.type == "folder") {
+            if (selected.getSize() > 0 && last.type === "folder") {
                 openFolder(last.id);
             }
-            else if(selected.getSize() > 0 && last.type == "group") {
+            else if(selected.getSize() > 0 && last.type === "group") {
             	openGroup(last.id);
             }
             else {
@@ -501,7 +501,7 @@ $(document).ready(function () {
 
     // register esc key
     $(document).keydown(function (e) {
-        if (e.which == 27)
+        if (e.which === 27)
             lightbox_close();
     });
 
@@ -515,7 +515,7 @@ $(document).ready(function () {
                 $('#datagrid').find('.group-resources-item').each(function (i, el) {
                     var elId = el.getAttribute("data-itemId");
                     var elType = el.getAttribute("data-itemType");
-                    if ((elId == previous.id && elType == previous.type) || (elId == current.id && elType == current.type)) {
+                    if ((elId === previous.id && elType === previous.type) || (elId === current.id && elType === current.type)) {
                         isFound = !isFound;
                         if (!isFound) return false;
                     } else if (isFound) {
@@ -544,7 +544,7 @@ $(document).ready(function () {
                 $('#rdetail').find('.group-resources2-item').each(function (i, el) {
                     var elId = el.getAttribute("data-itemId");
                     var elType = el.getAttribute("data-itemType");
-                    if ((elId == previous.id && elType == previous.type) || (elId == current.id && elType == current.type)) {
+                    if ((elId === previous.id && elType === previous.type) || (elId === current.id && elType === current.type)) {
                         isFound = !isFound;
                         if (!isFound) return false;
                     } else if (isFound) {
@@ -587,10 +587,10 @@ $(document).ready(function () {
     $(document).on('dblclick', '.group-resources-item.folder-item', function () {
         var folderId = $(this).attr("data-itemId");
         var folderType = $(this).attr("data-itemType");
-        if(folderId && folderType == "folder") {
+        if(folderId && folderType === "folder") {
             openFolder(folderId);
         }
-        else if(folderId && folderType == "group") {
+        else if(folderId && folderType === "group") {
         	openGroup(folderId);
         }
     });
@@ -712,7 +712,7 @@ function SelectedItems() {
                     type: elementType,
                     element: element
                 });
-            } else if (element.getAttribute("data-nodetype") == "folder") {
+            } else if (element.getAttribute("data-nodetype") === "folder") {
                 this.items.push({
                     id: element.getAttribute("data-datakey"),
                     type: 'folder',
@@ -791,9 +791,9 @@ function SelectedItems() {
             {name: 'itemId', value: id}
         ]);
 
-        if (type == "folder") {
+        if (type === "folder") {
             //update_url(0, id);
-        } else if(type == "resource"){
+        } else if(type === "resource"){
             update_url(id);
         }
     };
@@ -813,7 +813,7 @@ function SelectedItems() {
 
     this.selectIfExists = function (type, id) {
         for (var l = this.items.length, i = 0; i < l; ++i) {
-            if (this.items[i].type == type && this.items[i].id == id) {
+            if (this.items[i].type === type && this.items[i].id === id) {
                 this.selectItemByIndex(i);
                 return true;
             }
@@ -837,13 +837,13 @@ function SelectedItems() {
     this.getSelectedType = function () {
         var isFolders = false, isResources = false;
         for (var l = this.items.length, i = 0; i < l; ++i) {
-            if (this.items[i].type == 'resource') {
+            if (this.items[i].type === 'resource') {
                 if (isFolders) {
                     return 'mixed';
                 } else if (!isResources) {
                     isResources = true;
                 }
-            } else if (this.items[i].type == 'folder') {
+            } else if (this.items[i].type === 'folder') {
                 if (isResources) {
                     return 'mixed';
                 } else if (!isFolders) {

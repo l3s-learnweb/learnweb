@@ -254,7 +254,7 @@
                             <h:form id="header_query_form" prependId="false">
                                 <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupDetailBean.query}"
                                              id="input_query_form"
-                                             onkeyup="if (event.keyCode == 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
+                                             onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
                                 <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="false"
                                                  oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"

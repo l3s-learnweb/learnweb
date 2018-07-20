@@ -86,7 +86,7 @@ function json(data_var){
 		series: [{
 			type: 'column',
 			name: 'Archive Versions',
-			data: data_var,
+			data: data_var
 		}]
 	};
 	

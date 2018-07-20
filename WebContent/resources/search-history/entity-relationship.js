@@ -157,7 +157,7 @@ function draw()
 				//console.log(d.edge + ": " + d.data.score + ": " + d3.interpolateGreys(d.data.score));
 				//return d.data.score == undefined ? d.data.color : d3.interpolateGreys(colorScale(d.data.score));
 				return d.data.score == undefined ? d.data.color : d3.interpolateGreens(colorScale(d.data.score));
-			},
+			}
 			/*stroke: function(d){
 				console.log(d.edge + ": " + d.data.score);
 				return d.data.score ? d.data.color : d3.interpolateGreens(d.data.score);
@@ -196,7 +196,7 @@ function draw()
 //change opacity of those aren't in the map
 var toggle = 0;
 function changeEdgeOpacity(e, selectedNode){
-	return selectedNode == e.source.node| selectedNode == e.target.node ? 1 : 0.1;
+	return selectedNode == e.source.node || selectedNode == e.target.node ? 1 : 0.1;
 }
 
 function connectedNodes(d){
