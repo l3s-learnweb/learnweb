@@ -3,9 +3,9 @@ package de.l3s.learnweb.chat;
 import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.PrimeFaces;
@@ -14,7 +14,7 @@ import org.primefaces.push.EventBusFactory;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class ChatView extends ApplicationBean implements Serializable
 {
@@ -25,8 +25,8 @@ public class ChatView extends ApplicationBean implements Serializable
 
     private final EventBus eventBus;
 
-    @ManagedProperty("#{chatUsers}")
-    private ChatUsers users;
+    @Inject
+    private ChatUsers chatUsers;
 
     private String privateMessage;
 
@@ -50,14 +50,14 @@ public class ChatView extends ApplicationBean implements Serializable
 
     }
 
-    public ChatUsers getUsers()
+    public ChatUsers getChatUsers()
     {
-        return users;
+        return chatUsers;
     }
 
-    public void setUsers(ChatUsers users)
+    public void setChatUsers(ChatUsers chatUsers)
     {
-        this.users = users;
+        this.chatUsers = chatUsers;
     }
 
     public String getPrivateUser()
@@ -126,7 +126,7 @@ public class ChatView extends ApplicationBean implements Serializable
 
     public void login()
     {
-        if(users.contains(username))
+        if(chatUsers.contains(username))
         {
             loggedIn = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username taken", "Try with another username."));
@@ -134,7 +134,7 @@ public class ChatView extends ApplicationBean implements Serializable
         }
         else
         {
-            users.add(username);
+            chatUsers.add(username);
             PrimeFaces.current().executeScript("PF('subscriber').connect('/" + username + "')");
             loggedIn = true;
         }
@@ -143,7 +143,7 @@ public class ChatView extends ApplicationBean implements Serializable
     public void disconnect()
     {
         //remove user and update ui
-        users.remove(username);
+        chatUsers.remove(username);
         PrimeFaces.current().ajax().update("form:users");
 
         //push leave information

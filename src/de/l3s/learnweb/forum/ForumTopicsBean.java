@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
@@ -17,7 +17,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class ForumTopicsBean extends ApplicationBean implements Serializable
 {

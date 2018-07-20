@@ -12,8 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -29,7 +29,7 @@ import de.l3s.searchHistoryTest.SearchHistoryManager.Query;
 import de.l3s.searchHistoryTest.SearchHistoryManager.SearchResult;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class NewSearchHistoryBean extends ApplicationBean implements Serializable
 {

@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminNotificationBean extends ApplicationBean
 {

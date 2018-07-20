@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
@@ -34,7 +34,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Sql;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class UserAssessmentBean extends ApplicationBean implements Serializable
 {

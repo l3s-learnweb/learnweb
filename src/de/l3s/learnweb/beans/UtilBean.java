@@ -10,8 +10,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
@@ -22,8 +22,8 @@ import de.l3s.learnweb.group.GroupDetailBean;
 import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
 
+@Named
 @ApplicationScoped
-@ManagedBean
 public class UtilBean implements Serializable
 {
     private final static long serialVersionUID = 6252597111468136574L;

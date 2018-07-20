@@ -12,14 +12,14 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.learnweb.web.RequestData;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminRequestListBean extends ApplicationBean implements Serializable
 {

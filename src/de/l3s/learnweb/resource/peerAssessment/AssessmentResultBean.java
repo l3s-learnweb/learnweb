@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 
+@Named
 @RequestScoped
-@ManagedBean
 public class AssessmentResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6159753194487272716L;

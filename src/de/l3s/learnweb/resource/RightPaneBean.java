@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -27,7 +27,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 
 // TODO Oleh: rename to ResourcePaneBean
-@ManagedBean
+@Named
 @ViewScoped
 public class RightPaneBean extends ApplicationBean implements Serializable
 {
@@ -52,10 +52,10 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     private RightPaneAction paneAction = RightPaneAction.none;
     private AbstractResource clickedAbstractResource;
 
-    @ManagedProperty(value = "#{fileEditorBean}")
+    @Inject
     private FileEditorBean fileEditorBean;
 
-    @ManagedProperty(value = "#{addResourceBean}")
+    @Inject
     private AddResourceBean addResourceBean;
 
     public void onLoad()

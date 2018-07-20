@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -20,7 +20,7 @@ import org.primefaces.PrimeFaces;
 import de.l3s.learnweb.Learnweb;
 
 @SuppressWarnings("unchecked")
-@ManagedBean
+@Named
 @ViewScoped
 public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 {

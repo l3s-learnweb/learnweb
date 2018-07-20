@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
@@ -20,8 +20,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Misc;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 7104637880221636543L;
@@ -237,11 +237,13 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         this.formEntry = formEntry;
     }
 
+    @Deprecated
     public List<GlossaryTerm> getFormTerms()
     {
         return formTerms;
     }
 
+    @Deprecated
     public void setFormTerms(List<GlossaryTerm> formTerms) // TODO necessary?
     {
         this.formTerms = formTerms;

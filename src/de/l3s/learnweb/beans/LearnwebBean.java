@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
 
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @ApplicationScoped
 public class LearnwebBean implements Serializable
 {

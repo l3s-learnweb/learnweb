@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +25,7 @@ import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.StringHelper;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminStatisticsBean extends ApplicationBean implements Serializable
 {

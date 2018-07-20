@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,20 +22,20 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.BeanHelper;
 
-@ManagedBean
+@Named("loginBean")
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {
     // private static final Logger log = Logger.getLogger(LoginBean.class);
-
     private static final long serialVersionUID = 7980062591522267111L;
+
     @NotEmpty
     private String username;
     @NotEmpty
     private String password;
     private boolean captchaRequired;
 
-    @ManagedProperty(value = "#{confirmRequiredBean}")
+    @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
     public LoginBean()

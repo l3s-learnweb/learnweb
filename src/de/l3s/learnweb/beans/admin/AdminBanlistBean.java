@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.mail.MessagingException;
 
 import de.l3s.learnweb.Learnweb;
@@ -14,7 +14,7 @@ import de.l3s.learnweb.user.loginProtection.AccessData;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.util.email.BounceManager;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable
 {

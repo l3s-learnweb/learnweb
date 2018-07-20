@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
@@ -18,7 +18,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class GroupsBean extends ApplicationBean implements Serializable
 {

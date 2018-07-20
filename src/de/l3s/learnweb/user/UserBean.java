@@ -11,11 +11,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.annotation.PreDestroy;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +35,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class UserBean implements Serializable
 {

@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
@@ -25,13 +25,13 @@ import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class GroupOverviewBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6297485484480890425L;
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
     private int groupId;

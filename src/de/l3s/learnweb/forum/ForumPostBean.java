@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 
@@ -18,7 +18,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class ForumPostBean extends ApplicationBean implements Serializable
 {

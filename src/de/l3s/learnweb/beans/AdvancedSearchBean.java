@@ -1,14 +1,15 @@
 package de.l3s.learnweb.beans;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -21,11 +22,13 @@ import org.apache.solr.common.SolrDocumentList;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 
-@ManagedBean(name = "advancedSearchBean")
+@Named
 @SessionScoped
-public class AdvancedSearchBean
+public class AdvancedSearchBean implements Serializable
 {
+    private static final long serialVersionUID = -4629929033905402007L;
     final static Logger log = Logger.getLogger(SolrSearch.class);
+
     private String query = "";
     private String extractWord = "";
     private String anyWords = "";

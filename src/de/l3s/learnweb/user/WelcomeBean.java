@@ -2,12 +2,12 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class WelcomeBean extends ApplicationBean implements Serializable
 {

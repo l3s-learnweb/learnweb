@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +26,7 @@ import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class DashboardBean extends ApplicationBean implements Serializable
 {

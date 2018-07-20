@@ -3,14 +3,14 @@ package de.l3s.learnweb.resource.survey;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class createSurveyBean extends ApplicationBean implements Serializable // TODO complete refactoring
 {
 

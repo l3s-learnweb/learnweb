@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,8 +13,8 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class AddFolderBean extends ApplicationBean implements Serializable
 {
     //private final static Logger log = Logger.getLogger(AddFolderBean.class);

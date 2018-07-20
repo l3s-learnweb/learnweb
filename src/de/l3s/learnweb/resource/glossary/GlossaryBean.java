@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -49,8 +49,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.user.User;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class GlossaryBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1811030091337893637L;
@@ -474,7 +474,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             CreationHelper helper = wb.getCreationHelper();
             Drawing drawing = sheet.createDrawingPatriarch();
             ClientAnchor anchor = helper.createClientAnchor();
-            anchor.setAnchorType(ClientAnchor.DONT_MOVE_AND_RESIZE);
+            anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
 
             if(row0 != null)
             {

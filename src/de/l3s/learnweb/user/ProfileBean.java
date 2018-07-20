@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
@@ -27,7 +27,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class ProfileBean extends ApplicationBean implements Serializable
 {

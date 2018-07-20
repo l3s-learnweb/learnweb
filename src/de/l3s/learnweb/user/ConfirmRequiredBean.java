@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Email;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class ConfirmRequiredBean extends ApplicationBean implements Serializable
 {

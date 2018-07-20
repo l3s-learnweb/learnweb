@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class SurveyResultBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 706177879900332816L;

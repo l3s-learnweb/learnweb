@@ -8,14 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminSystemBean extends ApplicationBean implements Serializable
 {

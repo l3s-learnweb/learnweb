@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 
@@ -16,8 +16,8 @@ import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;

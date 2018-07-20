@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.timeline.TimelineEvent;
@@ -25,10 +26,11 @@ import de.l3s.archiveSearch.ArchiveItShingle;
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
 
-@ManagedBean
+@Named
 @ViewScoped
-public class ArchiveThumbnailBean extends ApplicationBean
+public class ArchiveThumbnailBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = 6006163305310057743L;
     public final static Logger log = Logger.getLogger(ArchiveThumbnailBean.class);
 
     private float frameSim;

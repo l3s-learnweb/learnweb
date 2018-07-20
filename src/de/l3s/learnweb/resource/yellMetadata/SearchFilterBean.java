@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class SearchFilterBean extends ApplicationBean implements Serializable
 {

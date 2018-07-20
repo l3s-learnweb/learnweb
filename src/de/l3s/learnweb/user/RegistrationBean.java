@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
@@ -20,7 +20,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class RegistrationBean extends ApplicationBean implements Serializable
 {
@@ -50,7 +50,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
 
-    @ManagedProperty(value = "#{confirmRequiredBean}")
+    @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String getUsername()

@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 
@@ -30,7 +30,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationDebuggingBean;
 import de.l3s.learnweb.user.User;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class DashboardSearchHistoryUserBean extends ApplicationDebuggingBean implements Serializable
 {

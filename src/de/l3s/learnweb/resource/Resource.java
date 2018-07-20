@@ -696,16 +696,14 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * Use setType(ResourceType type) instead
-     *
-     * @param type
+     * @deprecated Use {@link #setType(ResourceType)} instead
      */
     @Deprecated
     public void setType(String type)
     {
         try
         {
-            this.type = ResourceType.parse(type.toLowerCase());
+            this.type = ResourceType.parse(type);
         }
         catch(IllegalArgumentException e)
         {
@@ -2019,21 +2017,25 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     }
 
+    @Deprecated
     public String getLanguageOne()
     {
         return languageOne;
     }
 
+    @Deprecated
     public void setLanguageOne(String languageOne)
     {
         this.languageOne = languageOne;
     }
 
+    @Deprecated
     public String getLanguageTwo()
     {
         return languageTwo;
     }
 
+    @Deprecated
     public void setLanguageTwo(String languageTwo)
     {
         this.languageTwo = languageTwo;

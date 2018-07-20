@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -41,7 +41,7 @@ import de.l3s.util.StringHelper;
  * @author Trevor
  *
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class SubmissionBean extends ApplicationBean implements Serializable
 {
@@ -68,7 +68,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     private List<User> users; //To fetch list of users for a given course
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
     public void onLoad() throws SQLException

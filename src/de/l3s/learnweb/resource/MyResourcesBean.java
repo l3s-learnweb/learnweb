@@ -9,9 +9,9 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
@@ -27,7 +27,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.util.StringHelper;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class MyResourcesBean extends ApplicationBean implements Serializable
 {
@@ -54,10 +54,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private int selectedResourceTargetGroupId;
     private int selectedResourceTargetFolderId;
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
-    @ManagedProperty(value = "#{addResourceBean}")
+    @Inject
     private AddResourceBean addResourceBean;
 
     public MyResourcesBean()

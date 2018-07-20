@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +24,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
 // TODO Oleh: rename to resourceAnnotationBean or merge with RightPaneBean (ResourcePaneBean)
-@ManagedBean
+@Named
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
@@ -47,7 +47,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private String[] selectedPurposes;
     private String newBotcat = "";
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
     @SuppressWarnings("unused")

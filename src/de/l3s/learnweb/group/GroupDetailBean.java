@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
@@ -55,7 +55,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
@@ -135,13 +135,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private CategoryTree groupCatTree;
     private String groupCatJson; //JSONified groupCatTree for javascript function
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
-    @ManagedProperty(value = "#{addResourceBean}")
+    @Inject
     private AddResourceBean addResourceBean;
 
-    @ManagedProperty(value = "#{addFolderBean}")
+    @Inject
     private AddFolderBean addFolderBean;
 
     private final int pageSize;
@@ -1124,8 +1124,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             addResourceBean.getResource().setType(ResourceType.survey);
             break;
         case "newFile":
+            ResourceType docType = ResourceType.parse(getParameter("docType"));
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
-            addResourceBean.getResource().setType(getParameter("docType"));
+            addResourceBean.getResource().setType(docType);
             break;
         default:
             log.warn("Unsupported item type: " + type);

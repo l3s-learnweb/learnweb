@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.User;
  * @author Kemkes
  * 
  */
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminEvaluationBean extends ApplicationBean
 {

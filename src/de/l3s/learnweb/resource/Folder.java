@@ -231,11 +231,11 @@ public class Folder extends AbstractResource implements Serializable
             Folder folder = getParentFolder();
             while(folder != null)
             {
-                sb.insert(0, " > " + folder.getName());
+                sb.insert(0, " > " + folder.getTitle());
                 folder = folder.getParentFolder();
             }
 
-            sb.append(" > ").append(this.getName());
+            sb.append(" > ").append(name);
             prettyPath = getGroup().getTitle() + sb.toString();
         }
         return prettyPath;

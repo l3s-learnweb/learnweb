@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -24,7 +24,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class AdminOrganisationsBean extends ApplicationBean implements Serializable
 {

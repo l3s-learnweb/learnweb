@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
@@ -21,7 +21,7 @@ import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.email.Mail;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class ArchiveWebRegistrationBean extends ApplicationBean implements Serializable
 {

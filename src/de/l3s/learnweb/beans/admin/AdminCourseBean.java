@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
@@ -20,7 +20,7 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {

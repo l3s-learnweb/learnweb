@@ -73,6 +73,7 @@ stax2-api-3.1.4.jar                 Dependency of SolrClient
 supportWN.jar
 urlrewritefilter-4.0.3.jar			needed to redirect /new to /
 validation-api-1.1.0.Final.jar		required by Hibernate validator added by Philipp
+weld-servlet-shaded-3.0.4.Final.jar Required by Tomcat to work with Java EE CDI API
 woodstox-core-asl-4.4.1.jar         Dependency of SolrClient
 wstx-asl-3.2.7.jar					SolrClient,added by Siyu
 xercesImpl-2.6.2-jaxb-1.0.6.jar	Wikidata Client (Facts)

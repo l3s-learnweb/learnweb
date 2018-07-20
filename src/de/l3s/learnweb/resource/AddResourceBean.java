@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
@@ -41,8 +41,8 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Course;
 import de.l3s.util.StringHelper;
 
+@Named
 @ViewScoped
-@ManagedBean
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
     private final static Logger log = Logger.getLogger(AddResourceBean.class);
@@ -64,7 +64,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private int formStep = 1;
 
-    @ManagedProperty(value = "#{fileEditorBean}")
+    @Inject
     private FileEditorBean fileEditorBean;
 
     public AddResourceBean()
@@ -646,21 +646,25 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.glossaryLanguage = glossaryLanguage;
     }
 
+    @Deprecated
     public Date getSurveyOpenDate()
     {
         return surveyOpenDate;
     }
 
+    @Deprecated
     public void setSurveyOpenDate(Date surveyOpen)
     {
         this.surveyOpenDate = surveyOpen;
     }
 
+    @Deprecated
     public Date getSurveyCloseDate()
     {
         return surveyCloseDate;
     }
 
+    @Deprecated
     public void setSurveyCloseDate(Date surveyCloseDate)
     {
         this.surveyCloseDate = surveyCloseDate;

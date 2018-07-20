@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.RequestScoped;
 
 import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class ConfirmEmailBean extends ApplicationBean implements Serializable
 {
@@ -23,7 +23,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
 
     private User user = null;
 
-    @ManagedProperty(value = "#{confirmRequiredBean}")
+    @Inject
     private ConfirmRequiredBean confirmRequiredBean;
 
     public String onLoad() throws SQLException

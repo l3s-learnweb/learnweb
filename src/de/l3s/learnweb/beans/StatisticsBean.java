@@ -10,12 +10,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import de.l3s.util.Sql;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class StatisticsBean extends ApplicationBean implements Serializable
 {

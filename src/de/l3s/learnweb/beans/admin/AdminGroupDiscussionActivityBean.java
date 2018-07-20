@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class AdminGroupDiscussionActivityBean extends ApplicationBean implements Serializable
 {

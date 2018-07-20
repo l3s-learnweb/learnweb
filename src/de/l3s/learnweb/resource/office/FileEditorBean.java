@@ -5,8 +5,8 @@ import static de.l3s.learnweb.resource.office.FileUtility.getFileExtension;
 
 import java.io.Serializable;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.File;
@@ -14,7 +14,7 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class FileEditorBean extends ApplicationBean implements Serializable
 {

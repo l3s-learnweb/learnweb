@@ -13,8 +13,8 @@ import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import rita.wordnet.RiWordnet;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class TedTranscriptBean extends ApplicationBean implements Serializable
 {

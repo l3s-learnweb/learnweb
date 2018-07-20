@@ -20,7 +20,7 @@ import de.l3s.learnweb.resource.ted.TedTranscriptBean;
 import de.l3s.learnweb.user.User;
 
 /*
-@ManagedBean
+@Named
 @ApplicationScoped
 */
 /**

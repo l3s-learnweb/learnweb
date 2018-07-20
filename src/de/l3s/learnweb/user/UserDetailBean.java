@@ -3,15 +3,15 @@ package de.l3s.learnweb.user;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Organisation.Option;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class UserDetailBean extends ApplicationBean
 {

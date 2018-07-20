@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
@@ -21,7 +21,7 @@ import de.l3s.util.StringHelper;
 /**
  * @author Philipp
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class SubmissionModeratorBean extends ApplicationBean implements Serializable
 {
@@ -33,7 +33,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
 
-    @ManagedProperty(value = "#{rightPaneBean}")
+    @Inject
     private RightPaneBean rightPaneBean;
 
     public void onLoad()

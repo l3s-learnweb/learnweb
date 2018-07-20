@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.inject.Named;
+import javax.enterprise.context.RequestScoped;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 
@@ -19,7 +19,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.MD5;
 import de.l3s.util.email.Mail;
 
-@ManagedBean
+@Named
 @RequestScoped
 public class PasswordBean extends ApplicationBean implements Serializable
 {

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 
 import org.apache.log4j.Logger;
 
@@ -19,7 +19,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Sql;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class ClusterBean extends ApplicationBean implements Serializable
 {

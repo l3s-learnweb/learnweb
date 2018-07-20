@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
@@ -23,7 +23,7 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class DashboardUserBean extends ApplicationBean implements Serializable
 {
