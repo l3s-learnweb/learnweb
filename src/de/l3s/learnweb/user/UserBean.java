@@ -212,7 +212,7 @@ public class UserBean implements Serializable
     public String setLocaleCode(String localeCode)
     {
         String languageVariant = getActiveOrganisation().getLanguageVariant();
-        log.debug("set locale " + localeCode);
+        //log.debug("set locale " + localeCode);
 
         if(localeCode.equals("de"))
             locale = new Locale("de", "DE", languageVariant);
@@ -229,7 +229,7 @@ public class UserBean implements Serializable
             locale = new Locale("en", "UK");
             log.error("Unsupported language: " + localeCode);
         }
-        log.debug("Locale set: " + locale + ";");
+        //log.debug("Locale set: " + locale + ";");
 
         localePrettyTime = null; // reset date formatter
 

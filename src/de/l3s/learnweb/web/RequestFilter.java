@@ -67,7 +67,7 @@ public class RequestFilter implements Filter
     public void init(FilterConfig filterConfig) throws ServletException
     {
         String context = filterConfig.getServletContext().getContextPath();
-        log.debug("Init RequestFilter; context = '" + context + "'");
+        //log.debug("Init RequestFilter; context = '" + context + "'");
 
         try
         {

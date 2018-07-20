@@ -405,11 +405,21 @@ public class DownloadServlet extends HttpServlet
                     sos.println("--" + MULTIPART_BOUNDARY + "--");
                 }
             }
-        } /*
-          catch(ClientAbortException e)
-          {
-             //log.debug("Download interrupted. File: " + fileId);
-          }*/
+        }
+        catch(IOException e)
+        {
+            // to avoid dependence of Tomcat we don't import org.apache.catalina.connector.ClientAbortException
+            if(e.getClass().getSimpleName().equals("ClientAbortException"))
+            {
+                // we do not care
+                //log.debug("Download interrupted. File: " + fileId);
+            }
+            else
+            {
+                log.error("Error while downloading file: " + fileId, e);
+                response.setStatus(500);
+            }
+        }
         catch(Exception e)
         {
             log.error("Error while downloading file: " + fileId, e);

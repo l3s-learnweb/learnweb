@@ -60,8 +60,61 @@
 
 
 			<div id="div_right">
+			<ui:fragment rendered="#{!userBean.loggedIn}">
 
-				<ui:fragment rendered="#{!userBean.loggedIn}">
+					<h2 class="page_header">
+						#{msg['ArchiveWeb.sign_up']}
+					</h2>
+					
+					<div class="grey_border">
+						<p><h:outputText value="#{msg['ArchiveWeb.sign_up_description']}" /></p>
+						<h:form id="registerform">
+							<h:panelGrid columns="3">
+								<h:outputLabel for="register_username" value="#{msg.username}: *" />
+								<p:inputText id="register_username" value="#{archiveWebRegistrationBean.username}"
+									validator="#{archiveWebRegistrationBean.validateUsername}" label="#{msg.username}" />
+								<p:message showSummary="true" showDetail="false"
+									styleClass="error" for="register_username" id="usernameMessage" />
+
+								<h:outputLabel for="register_password" value="#{msg.password}: *" />
+								<p:password id="register_password" value="#{archiveWebRegistrationBean.password}"
+									autocomplete="false" label="#{msg.password}">
+								</p:password>
+								<p:message id="passwordMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="register_password" />
+
+								<h:outputLabel for="email" value="#{msg.email_address}: *" />
+								<p:inputText id="email" value="#{archiveWebRegistrationBean.email}"
+									label="#{msg.email_address}" />
+								<p:message id="emailMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="email" />
+
+								<h:outputLabel for="affiliation" value="#{msg.affiliation}: *" />
+								<p:inputText id="affiliation" value="#{archiveWebRegistrationBean.affiliation}"
+									label="#{msg.affiliation}" />
+								<p:message id="affiliationMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="affiliation" />
+									
+								<h:outputLabel for="description" value="#{msg.comment}:" />
+								<p:inputTextarea id="description" value="#{archiveWebRegistrationBean.description}"
+									label="#{msg.description}" rows="5" cols="50"/>
+								<p:message id="descriptionMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="description" />
+									
+								<h:outputText value="" />
+								<p:commandButton action="#{archiveWebRegistrationBean.sendMail}"
+									value="#{msg['ArchiveWeb.send_request']}" ajax="false"/>
+								<h:outputText value="" />
+							</h:panelGrid>
+							<br/>
+							<h:outputText value="* #{msg.mandatory_field}" />
+						</h:form>
+					</div>
+					<br/>
+				</ui:fragment>
+				
+
+				<ui:fragment rendered="#{false and !userBean.loggedIn}">
 
 					<h2 class="page_header">
 						#{msg.sign_up_for}:

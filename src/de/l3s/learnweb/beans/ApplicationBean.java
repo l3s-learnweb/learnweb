@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
@@ -16,6 +17,7 @@ public class ApplicationBean
     private transient Learnweb learnweb;
     private transient String sessionId;
     private long startTime;
+    //private transient User user;
 
     public ApplicationBean()
     {
@@ -100,10 +102,15 @@ public class ApplicationBean
      */
     protected User getUser()
     {
-        /*
-         * This value should not be cached. The value would not be updated if the user logs out.
-         */
+        // This value should not be cached. The value would not be updated if the user logs out.
         return UtilBean.getUserBean().getUser();
+
+        // TODO test if caching works. It should because we delete the session on logout. Possibly problematic pages: login, mail validation, admin user login
+        /*
+        if(null == user)
+            user = UtilBean.getUserBean().getUser();
+        return user;
+        */
     }
 
     protected Learnweb getLearnweb()
@@ -254,6 +261,21 @@ public class ApplicationBean
     {
         int executionTime = (int) (System.currentTimeMillis() - startTime);
         getLearnweb().log(user, action, groupId, targetId, params, getSessionId(), executionTime);
+    }
+
+    protected void log(LogEntry.Action action, Resource resource, int params)
+    {
+        log(action, resource.getGroupId(), resource.getId(), Integer.toString(params), getUser());
+    }
+
+    protected void log(LogEntry.Action action, Resource resource, String params)
+    {
+        log(action, resource.getGroupId(), resource.getId(), params, getUser());
+    }
+
+    protected void log(LogEntry.Action action, Resource resource)
+    {
+        log(action, resource.getGroupId(), resource.getId(), null, getUser());
     }
 
     protected void addFatalMessage(Throwable exception)

@@ -28,7 +28,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GlossaryBeanNEW.class);
 
     private int resourceId;
-    private int groupId; // group id of the resource used only for the logger
     private GlossaryResource glossaryResource;
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
@@ -58,8 +57,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         availableTopicOne.add(new SelectItem("European Politics"));
         availableTopicOne.add(new SelectItem("Medicine"));
         availableTopicOne.add(new SelectItem("Tourism"));
-        //groupId = glossaryResource.getGroupId();
-        log(Action.glossary_open, groupId, resourceId);
+        log(Action.glossary_open, glossaryResource);
         loadGlossaryTable(glossaryResource);
         setFilteredTableItems(tableItems);
         setNewFormEntry();
@@ -106,7 +104,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void addTerm()
     {
         formTerms.add(new GlossaryTerm());
-        log(Action.glossary_term_add, groupId, resourceId); // should store resourceId + term_id
+        log(Action.glossary_term_add, glossaryResource); // should store resourceId + term_id
 
     }
 

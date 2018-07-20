@@ -18,6 +18,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.util.BeanHelper;
 import de.l3s.util.email.Mail;
 
 @ManagedBean
@@ -39,7 +40,6 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     @NotEmpty
     private String affiliation;
 
-    @NotEmpty
     private String description;
 
     public ArchiveWebRegistrationBean()
@@ -81,7 +81,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 
     public void sendMail()
     {
-        String to = "fernando@l3s.de";
+        String to = "kemkes@l3s.de";
 
         try
         {
@@ -89,7 +89,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
             //message.setFrom(new InternetAddress("interweb9@googlemail.com"));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject("ArchiveWeb Registration");
-            message.setText("username: " + username + "\npassword: " + password + "\nemail: " + email + "\naffiliation: " + affiliation + "\ndescription: " + description);
+            message.setText("username: " + username + "\npassword: " + password + "\nemail: " + email + "\naffiliation: " + affiliation + "\ndescription: " + description + "\n\n-------\n" + BeanHelper.getRequestSummary());
             message.sendMail();
             //Transport.send(message);
         }
