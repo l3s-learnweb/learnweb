@@ -82,9 +82,9 @@ public class StatusBean extends ApplicationBean
         {
             super();
             this.name = name;
-            this.status = new String(status);
+            this.status = status;
             this.url = url;
-            this.comment = new String(comment);
+            this.comment = comment;
         }
 
         public String getName()

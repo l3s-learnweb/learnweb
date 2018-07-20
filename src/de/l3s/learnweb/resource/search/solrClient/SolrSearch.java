@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.search.solrClient;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -180,11 +181,7 @@ public class SolrSearch implements Serializable
     public void setFilterGroups(Integer... filterGroupIds)
     {
         this.filterGroupIds = new LinkedList<>();
-
-        for(Integer id : filterGroupIds) // get ids of the groups
-        {
-            this.filterGroupIds.add(id);
-        }
+        Collections.addAll(this.filterGroupIds, filterGroupIds);
     }
 
     public void setFilterCollector(String collector)

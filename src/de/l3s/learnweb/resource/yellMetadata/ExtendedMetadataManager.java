@@ -43,7 +43,7 @@ public class ExtendedMetadataManager
                 String exist = "false";
                 for(String a : authors) // super stupid containers() implementation
                 {
-                    if(a == rs.getString("author"))
+                    if(a.equals(rs.getString("author")))
                     {
                         exist = "true";
                     }
@@ -83,29 +83,20 @@ public class ExtendedMetadataManager
         //get language (maybe not necessary) res.language
 
         //get target learners
-        List<String> tlearners = new LinkedList<>();
-        Map<String, Integer> tcount = new HashMap();
-
-        tlearners = learnweb.getAudienceManager().getAudienceNamesByResourceId(resourceId);
-        tcount = sortMetadataValueCount(tlearners);
+        List<String> tlearners = learnweb.getAudienceManager().getAudienceNamesByResourceId(resourceId);
+        Map<String, Integer> tcount = sortMetadataValueCount(tlearners);
         eMetadata.setTargetCount(tcount);
         eMetadata.setTargets(tlearners);
 
         //get purposes
-        List<String> purposes = new LinkedList<>();
-        Map<String, Integer> pcount = new HashMap();
-
-        purposes = learnweb.getPurposeManager().getPurposeNamesByResourceId(resourceId);
-        pcount = sortMetadataValueCount(purposes);
+        List<String> purposes = learnweb.getPurposeManager().getPurposeNamesByResourceId(resourceId);
+        Map<String, Integer> pcount = sortMetadataValueCount(purposes);
         eMetadata.setPurposeCount(pcount);
         eMetadata.setPurposes(purposes);
 
         //lang levels
-        List<String> langlevels = new LinkedList<>();
-        Map<String, Integer> lcount = new HashMap();
-
-        langlevels = learnweb.getLangLevelManager().getLangLevelNamesByResourceId(resourceId);
-        lcount = sortMetadataValueCount(langlevels);
+        List<String> langlevels = learnweb.getLangLevelManager().getLangLevelNamesByResourceId(resourceId);
+        Map<String, Integer> lcount = sortMetadataValueCount(langlevels);
         eMetadata.setLevelCount(lcount);
         eMetadata.setLevels(langlevels);
 
@@ -118,8 +109,7 @@ public class ExtendedMetadataManager
         eMetadata.setlCount(lc);
 
         //get categories
-        List<String> categories = new LinkedList<>();
-        categories = learnweb.getCategoryManager().getCategoryNamesByResourceId(resourceId);
+        List<String> categories = learnweb.getCategoryManager().getCategoryNamesByResourceId(resourceId);
         eMetadata.setCategories(categories);
 
         return eMetadata;

@@ -1,6 +1,9 @@
 package de.l3s.learnweb.resource.yellMetadata;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.util.Objects;
 
 //composite class of CategoryTop, CategoryMid, CategoryBot
 
@@ -22,15 +25,15 @@ public class Category implements Comparable<Category>, Serializable
         this.cattop = cattop;
         this.catmid = catmid;
         this.catbot = catbot;
-        if((catbot.getCatbot_name() != "x") && (catmid.getCatmid_name() != "x"))
+        if(!Objects.equals(catbot.getCatbot_name(), "x") && !Objects.equals(catmid.getCatmid_name(), "x"))
         {
             this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name() + "/" + catbot.getCatbot_name();
         }
-        else if((catmid.getCatmid_name() != "x") && (catbot.getCatbot_name() == "x"))
+        else if(!Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
         {
             this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name();
         }
-        else if((catmid.getCatmid_name() == "x") && (catbot.getCatbot_name() == "x"))
+        else if(Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
         {
             this.cat = cattop.getCattop_name();
         }
@@ -68,15 +71,15 @@ public class Category implements Comparable<Category>, Serializable
 
     public String getCat()
     {
-        if((catbot.getCatbot_name() != "x") && (catmid.getCatmid_name() != "x"))
+        if(!Objects.equals(catbot.getCatbot_name(), "x") && !Objects.equals(catmid.getCatmid_name(), "x"))
         {
             this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name() + "/" + catbot.getCatbot_name();
         }
-        else if((catmid.getCatmid_name() != "x") && (catbot.getCatbot_name() == "x"))
+        else if(!Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
         {
             this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name();
         }
-        else if((catmid.getCatmid_name() == "x") && (catbot.getCatbot_name() == "x"))
+        else if(Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
         {
             this.cat = cattop.getCattop_name();
         }

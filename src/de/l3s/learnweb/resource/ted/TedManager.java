@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import javax.ws.rs.core.MediaType;
 
 import de.l3s.learnweb.resource.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONArray;
@@ -90,7 +91,7 @@ public class TedManager
     public void saveTranscriptSelection(String transcript, int resourceId) throws SQLException
     {
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT into lw_transcript_selections(" + TRANSCRIPT_SELECTION_COLUMNS + ") VALUES (?,?,?,?,?)");
-        if(transcript != null && transcript != "")
+        if(StringUtils.isNotEmpty(transcript))
         {
             Document doc = Jsoup.parse(transcript);
             Elements elements = doc.select("span");
@@ -587,11 +588,10 @@ public class TedManager
             JSONObject xmlJSONObj = XML.toJSONObject(response);
             JSONObject transcriptList = xmlJSONObj.getJSONObject("transcript_list");
             Object track = transcriptList.get("track");
-            JSONArray trackJSONArray = null;
 
             if(track instanceof JSONArray)
             {
-                trackJSONArray = (JSONArray) track;
+                JSONArray trackJSONArray = (JSONArray) track;
                 for(int i = 0; i < trackJSONArray.length(); i++)
                 {
                     insertTedXTranscripts(resourceIdAtService, resourceId, trackJSONArray.getJSONObject(i));

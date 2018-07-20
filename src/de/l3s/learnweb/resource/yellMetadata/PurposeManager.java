@@ -91,7 +91,6 @@ public class PurposeManager
 
     public Purpose getPurpose(int purposeId) throws SQLException
     {
-        Purpose purpose = new Purpose();
         if(purposeId == 0)
             return null;
         else if(purposeId < 1)
@@ -106,7 +105,7 @@ public class PurposeManager
             log.warn("invalid purpose id was requested: " + purposeId);
             return null;
         }
-        purpose = createPurpose(rs);
+        Purpose purpose = createPurpose(rs);
         select.close();
 
         log.debug("Get purpose " + purpose.getName() + " from db");

@@ -285,7 +285,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             if(resource.getId() == -1)
             {
                 resource = getUser().addResource(resource);
-                getLearnweb().getGlossariesManager().setLanguagePairs(resource.getId(), resource.getLanguageOne().toString(), resource.getLanguageTwo().toString());
+                getLearnweb().getGlossariesManager().setLanguagePairs(resource.getId(), resource.getLanguageOne(), resource.getLanguageTwo());
             }
             else
                 resource.save();
@@ -350,8 +350,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public String[] getCourseList()
     {
-        List<Course> courseByOrganization = new ArrayList<>();
-        courseByOrganization = getLearnweb().getCourseManager().getCoursesByOrganisationId(getUser().getOrganisationId());
+        List<Course> courseByOrganization = getLearnweb().getCourseManager().getCoursesByOrganisationId(getUser().getOrganisationId());
         ArrayList<String> courseTitles = new ArrayList<>();
         for(Course c : courseByOrganization)
         {

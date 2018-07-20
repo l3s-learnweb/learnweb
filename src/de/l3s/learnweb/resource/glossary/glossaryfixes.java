@@ -86,7 +86,6 @@ public class glossaryfixes
                 String topicThree = rs.getString("topic_3");
                 String description = rs.getString("description");
                 Timestamp timestamp = rs.getTimestamp("timestamp");
-                int newGlossaryId = 0;
 
                 PreparedStatement ins = lw.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`(`topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
                 ins.setString(1, topicOne);
@@ -96,7 +95,7 @@ public class glossaryfixes
                 ins.executeUpdate();
                 ResultSet gloss = ins.getGeneratedKeys();
                 gloss.next();
-                newGlossaryId = gloss.getInt(1);
+                int newGlossaryId = gloss.getInt(1);
 
                 ins = lw.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary_copy`(`deleted`, `resource_id`, `glossary_id`, `timestamp`) VALUES (?,?,?,?)");
                 ins.setBoolean(1, deleted);

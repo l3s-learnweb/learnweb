@@ -72,7 +72,7 @@ public class ProtectionManager
 
     private void loadWhitelist()
     {
-        if(Files.exists(WHITELIST_PATH, new LinkOption[] {}))
+        if(Files.exists(WHITELIST_PATH))
         {
             try(Stream<String> stream = Files.lines(WHITELIST_PATH))
             {
@@ -192,12 +192,11 @@ public class ProtectionManager
 
         if(isIP)
         {
-            list = attemptedLogins.stream().filter(x -> x.getIP() == ad.getName() && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
-
+            list = attemptedLogins.stream().filter(x -> x.getIP().equals(ad.getName()) && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
         }
         else
         {
-            list = attemptedLogins.stream().filter(x -> x.getUsername() == ad.getName() && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
+            list = attemptedLogins.stream().filter(x -> x.getUsername().equals(ad.getName()) && x.getTimestamp().after(threshold.getTime())).collect(Collectors.toList());
         }
 
         if(list.size() > BAN_THRESHOLD)
@@ -278,7 +277,7 @@ public class ProtectionManager
 
             content.append("</table><br>");
 
-            content.append("Total entries requiring your attention: " + suspiciousActivityList.size());
+            content.append("Total entries requiring your attention: ").append(suspiciousActivityList.size());
 
             message.setHTML(content.toString());
             message.sendMail();
@@ -369,9 +368,7 @@ public class ProtectionManager
 
     public List<AccessData> getBanlist()
     {
-        List<AccessData> l = new ArrayList<>();
-        l.addAll(accessMap.values());
-        return l;
+        return new ArrayList<>(accessMap.values());
     }
 
     public void ban(String name, int banDays, int banHours, int banMinutes, boolean isIP)

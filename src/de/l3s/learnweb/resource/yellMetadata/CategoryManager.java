@@ -204,73 +204,67 @@ public class CategoryManager
     //get bottom category given the id
     public CategoryBottom getCategoryBottomById(int catbotId) throws SQLException
     {
-        CategoryBottom catbot = new CategoryBottom();
         if(catbotId == 0)
             return null;
         else if(catbotId < 1)
             new IllegalArgumentException("invalid bottom category id was requested: " + catbotId).printStackTrace();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_id = ?");
-        select.setInt(1, catbotId);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_id = ?"))
         {
-            new IllegalArgumentException("invalid cat bottom id was requested: " + catbotId).printStackTrace();
-            return null;
-        }
-        catbot = createCategoryBottom(rs);
-        select.close();
+            select.setInt(1, catbotId);
+            ResultSet rs = select.executeQuery();
 
-        return catbot;
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat bottom id was requested: " + catbotId).printStackTrace();
+                return null;
+            }
+            return createCategoryBottom(rs);
+        }
     }
 
     //get middle category given the id
     public CategoryMiddle getCategoryMiddleById(int catmidId) throws SQLException
     {
-        CategoryMiddle catmid = new CategoryMiddle();
         if(catmidId == 0)
             return null;
         else if(catmidId < 1)
             new IllegalArgumentException("invalid middle category id was requested: " + catmidId).printStackTrace();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_id = ?");
-        select.setInt(1, catmidId);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_id = ?"))
         {
-            new IllegalArgumentException("invalid cat middle id was requested: " + catmidId).printStackTrace();
-            return null;
-        }
-        catmid = createCategoryMiddle(rs);
-        select.close();
+            select.setInt(1, catmidId);
+            ResultSet rs = select.executeQuery();
 
-        return catmid;
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat middle id was requested: " + catmidId).printStackTrace();
+                return null;
+            }
+            return createCategoryMiddle(rs);
+        }
     }
 
     //get top category given the id
     public CategoryTop getCategoryTopById(int cattopId) throws SQLException
     {
-        CategoryTop cattop = new CategoryTop();
         if(cattopId == 0)
             return null;
         else if(cattopId < 1)
             new IllegalArgumentException("invalid top category id was requested: " + cattopId).printStackTrace();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_id = ?");
-        select.setInt(1, cattopId);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_id = ?"))
         {
-            new IllegalArgumentException("invalid cat top id was requested: " + cattopId).printStackTrace();
-            return null;
-        }
-        cattop = createCategoryTop(rs);
-        select.close();
+            select.setInt(1, cattopId);
+            ResultSet rs = select.executeQuery();
 
-        return cattop;
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat top id was requested: " + cattopId).printStackTrace();
+                return null;
+            }
+            return createCategoryTop(rs);
+        }
     }
 
     //get bottom category given the name and mid category Id. if it does not exist create one
@@ -304,33 +298,31 @@ public class CategoryManager
     //get middle category given the name and top category Id (if it does not exist, this is an error because middle categories are fixed)
     public int getCategoryMiddleByNameAndTopcatId(String catmidName, int cattopId) throws SQLException
     {
-        CategoryMiddle catmid = new CategoryMiddle();
         // int catmidId;
-
         if(catmidName == null)
         {
             new IllegalArgumentException("invalid middle category name was requested: " + catmidName).printStackTrace();
         }
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ? AND cat_top_id = ?");
-        select.setString(1, catmidName);
-        select.setInt(2, cattopId);
-        ResultSet rs = select.executeQuery();
 
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ? AND cat_top_id = ?"))
         {
-            log.debug("invalid cat middle name was requested: " + catmidName, new IllegalArgumentException());
-            return -1;
-        }
-        catmid = createCategoryMiddle(rs);
-        select.close();
+            select.setString(1, catmidName);
+            select.setInt(2, cattopId);
+            ResultSet rs = select.executeQuery();
 
-        return catmid.getId();
+            if(!rs.next())
+            {
+                log.debug("invalid cat middle name was requested: " + catmidName, new IllegalArgumentException());
+                return -1;
+            }
+            CategoryMiddle catmid = createCategoryMiddle(rs);
+            return catmid.getId();
+        }
     }
 
     //get top category given the name (if it does not exist, this is an error because top categories are fixed)
     public int getCategoryTopByName(String cattopName) throws SQLException
     {
-        CategoryTop cattop = new CategoryTop();
         //int cattopId;
         if(cattopName == null || cattopName.equals("-1"))
         {
@@ -339,49 +331,49 @@ public class CategoryManager
             return -1;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_name = ?");
-        select.setString(1, cattopName);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_name = ?"))
         {
-            new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
-            return -1;
-        }
-        cattop = createCategoryTop(rs);
-        select.close();
+            select.setString(1, cattopName);
+            ResultSet rs = select.executeQuery();
 
-        return cattop.getId();
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
+                return -1;
+            }
+            CategoryTop cattop = createCategoryTop(rs);
+            return cattop.getId();
+        }
     }
 
     //get bottom categoryId given the name
     public int getCategoryBottomByName(String catbotName) throws SQLException
     {
-        CategoryBottom catbot = new CategoryBottom();
         if(catbotName == null)
         {
             new IllegalArgumentException("invalid bottom category name was requested: " + catbotName).printStackTrace();
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_name = ?");
-        select.setString(1, catbotName);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_name = ?"))
         {
-            new IllegalArgumentException("invalid cat bot name was requested: " + catbotName).printStackTrace();
-            return -1;
-        }
-        catbot = createCategoryBottom(rs);
-        select.close();
+            select.setString(1, catbotName);
+            ResultSet rs = select.executeQuery();
 
-        return catbot.getId();
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat bot name was requested: " + catbotName).printStackTrace();
+                return -1;
+            }
+            CategoryBottom catbot = createCategoryBottom(rs);
+            select.close();
+
+            return catbot.getId();
+        }
     }
 
     //get middle categoryId given the name
     public int getCategoryMiddleByName(String catmidName) throws SQLException
     {
-        CategoryMiddle catmid = new CategoryMiddle();
         //int catmidId;
         if(catmidName == null || catmidName.equals("-1"))
         {
@@ -389,64 +381,64 @@ public class CategoryManager
             return -1;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?");
-        select.setString(1, catmidName);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?"))
         {
-            log.warn("invalid cat mid name was requested: " + catmidName);
-            return -1;
-        }
-        catmid = createCategoryMiddle(rs);
-        select.close();
+            select.setString(1, catmidName);
+            ResultSet rs = select.executeQuery();
 
-        return catmid.getId();
+            if(!rs.next())
+            {
+                log.warn("invalid cat mid name was requested: " + catmidName);
+                return -1;
+            }
+            CategoryMiddle catmid = createCategoryMiddle(rs);
+            return catmid.getId();
+        }
     }
 
     //get top category given the name
     public CategoryTop getTopCategoryByName(String cattopName) throws SQLException
     {
-        CategoryTop cattop = new CategoryTop();
         if(cattopName == null)
         {
             new IllegalArgumentException("invalid top category name was requested: " + cattopName).printStackTrace();
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_name = ?");
-        select.setString(1, cattopName);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_name = ?"))
         {
-            new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
+            select.setString(1, cattopName);
+            ResultSet rs = select.executeQuery();
+
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
+            }
+            CategoryTop cattop = createCategoryTop(rs);
+            return cattop;
         }
-        cattop = createCategoryTop(rs);
-        select.close();
-        return cattop;
     }
 
     //get middle category given the name
     public CategoryMiddle getMiddleCategoryByName(String catmidName) throws SQLException
     {
-        CategoryMiddle catmid = new CategoryMiddle();
         if(catmidName == null)
         {
             new IllegalArgumentException("invalid middle category name was requested: " + catmidName).printStackTrace();
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?");
-        select.setString(1, catmidName);
-        ResultSet rs = select.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?"))
         {
-            new IllegalArgumentException("invalid cat mid name was requested: " + catmidName).printStackTrace();
-        }
+            select.setString(1, catmidName);
+            ResultSet rs = select.executeQuery();
 
-        catmid = createCategoryMiddle(rs);
-        select.close();
-        return catmid;
+            if(!rs.next())
+            {
+                new IllegalArgumentException("invalid cat mid name was requested: " + catmidName).printStackTrace();
+            }
+
+            CategoryMiddle catmid = createCategoryMiddle(rs);
+            return catmid;
+        }
     }
 
     //get bottom category given the name

@@ -61,7 +61,7 @@ public class CDXClient
         //int oldwaybackAPIerrors = waybackAPIerrors;
         String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http(s)://
 
-        Date lastCapture = null, firstCapture = getFirstCaptureDate(url);
+        Date lastCapture, firstCapture = getFirstCaptureDate(url);
 
         if(firstCapture != null)
         {

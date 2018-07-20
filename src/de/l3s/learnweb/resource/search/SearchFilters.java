@@ -2,14 +2,7 @@ package de.l3s.learnweb.resource.search;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -414,12 +407,12 @@ public class SearchFilters implements Serializable
             else if(tempNames[0].equals("date"))
             {
                 Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
-                putResourceCounter(FILTERS.date, new ArrayList<>(Arrays.asList(c)), true);
+                putResourceCounter(FILTERS.date, new ArrayList<>(Collections.singletonList(c)), true);
             }
             else if(tempNames[0].equals("type"))
             {
                 Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
-                putResourceCounter(FILTERS.type, new ArrayList<>(Arrays.asList(c)), true);
+                putResourceCounter(FILTERS.type, new ArrayList<>(Collections.singletonList(c)), true);
             }
         }
     }

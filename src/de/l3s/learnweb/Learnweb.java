@@ -9,11 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -763,7 +759,7 @@ public class Learnweb
                         }
                         else
                         {
-                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Arrays.asList(logEntry)));
+                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
                         }
                     }
                     break;

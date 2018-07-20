@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -80,17 +81,17 @@ public class AdvancedSearchBean implements Serializable
     {
         this.query = query;
 
-        if(extractWord != "")
+        if(StringUtils.isNotEmpty(extractWord))
         {
             this.extractWord = extractWord;
 
         }
-        if(anyWord != "")
+        if(StringUtils.isNotEmpty(anyWord))
         {
             this.anyWords = anyWord;
         }
 
-        if(noneWord != "")
+        if(StringUtils.isNotEmpty(noneWord))
         {
             this.noneWords = noneWord;
         }
@@ -231,10 +232,8 @@ public class AdvancedSearchBean implements Serializable
 
     public String advancedSearch()
     {
-
         //int pageOffset;
         // pageSize;
-        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
         //SolrInputDocument doc = new SolrInputDocument();
         solrQuery = new SolrQuery(query);
         solrQuery.setQuery(query);
@@ -271,7 +270,7 @@ public class AdvancedSearchBean implements Serializable
         log.debug("solr query: " + solrQuery);
 
         //get solrServer
-        server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
 
         //solrQuery.setHighlight(true).setHighlightSimplePre("<span class='highlighter'").setHighlightSimplePost("</span>").setStart(pageOffset).setRows(pageSize);
         SolrDocumentList sdl;

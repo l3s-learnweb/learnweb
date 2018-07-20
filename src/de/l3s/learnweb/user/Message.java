@@ -125,11 +125,8 @@ public class Message implements Comparable<Message>
 
     private String convertText(String text)
     {
-        String convertedText = text;
         String replacement = "<a target=\"_blank\" href=\"../lw/link/link.jsf?link=";
-        convertedText = text.replaceAll("<a href=\"", replacement);
-
-        return convertedText;
+        return text.replaceAll("<a href=\"", replacement);
     }
 
     @Override

@@ -83,7 +83,6 @@ public class LangLevelManager
 
     public LangLevel getLangLevel(int langlevelId) throws SQLException
     {
-        LangLevel langLevel = new LangLevel();
         if(langlevelId == 0)
             return null;
         else if(langlevelId < 1)
@@ -98,7 +97,7 @@ public class LangLevelManager
             new IllegalArgumentException("invalid langLevel id was requested: " + langlevelId).printStackTrace();
             return null;
         }
-        langLevel = createLangLevel(rs);
+        LangLevel langLevel = createLangLevel(rs);
         select.close();
 
         log.debug("Get langLevel " + langLevel.getLangLevelName() + " from db");

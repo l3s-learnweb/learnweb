@@ -94,8 +94,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
         String result = "no";
         CategoryManager cm = Learnweb.getInstance().getCategoryManager();
 
-        List<CategoryResource> cr = new ArrayList<>();
-        cr = cm.getCategoryResourcesByResourceId(resourceId);
+        List<CategoryResource> cr = cm.getCategoryResourcesByResourceId(resourceId);
 
         if(cr.size() > 0)
         {
@@ -141,10 +140,8 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     {
         FilterPaginator fPaginator = new FilterPaginator(this);
 
-        List<Resource> filterResults = new ArrayList<>();
-
         //first get resources by groupId
-        filterResults = filterResultsByGroupId(groupId);
+        List<Resource> filterResults = filterResultsByGroupId(groupId);
 
         //filter by author if not null
         if(emFilters.getFilterAuthors().length > 0)
@@ -529,9 +526,9 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<ResourceDecorator> getResourcesByPage(int currentPage)
     {
+        int startIndex;
         List<ResourceDecorator> presources = new LinkedList<>();
         List<ResourceDecorator> resources = this.results;
-        int startIndex = 0;
 
         if(currentPage == 1)
         {

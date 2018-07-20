@@ -486,8 +486,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            int i = 2;
-            for(i = 2; i <= sheet.getLastRowNum(); i++)
+            for(int i = 2; i <= sheet.getLastRowNum(); i++)
             {
                 HSSFRow row = sheet.getRow(i);
                 HSSFCell cell = row.getCell(0);

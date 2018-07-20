@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -124,10 +125,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
         JSONArray monthNames = new JSONArray();
-        for(String month : symbols.getMonths())
-        {
-            monthNames.add(month);
-        }
+        Collections.addAll(monthNames, symbols.getMonths());
         monthNames.remove(""); //To remove empty string from the array
         return monthNames.toJSONString();
     }

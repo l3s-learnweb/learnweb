@@ -82,7 +82,6 @@ public class AudienceManager
 
     public Audience getAudience(int audienceId) throws SQLException
     {
-        Audience audience = new Audience();
         if(audienceId == 0)
             return null;
         else if(audienceId < 1)
@@ -97,7 +96,7 @@ public class AudienceManager
             new IllegalArgumentException("invalid audience id was requested: " + audienceId).printStackTrace();
             return null; //throw new IllegalArgumentException("invalid audience id");
         }
-        audience = createAudience(rs);
+        Audience audience = createAudience(rs);
         select.close();
 
         log.debug("Get audience " + audience.getAudience_name() + " from db");

@@ -10,8 +10,8 @@ public class SessionCache
 {
     private static SessionCache instance = null;
 
-    private Map<Integer, List<Session>> userSessionCache = null;
-    private Map<Integer, List<Session>> groupSessionCache = null;
+    private Map<Integer, List<Session>> userSessionCache;
+    private Map<Integer, List<Session>> groupSessionCache;
 
     public static SessionCache Instance()
     {

@@ -5,10 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -266,21 +263,21 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("generateUserChart");
 
-        if((this.selectChart3 != "") && (this.selectedUser != "") && (this.selectChart3.compareTo("bar") == 0) && (this.phaseLW2 != null))
+        if((!Objects.equals(this.selectChart3, "")) && (!Objects.equals(this.selectedUser, "")) && (this.selectChart3.compareTo("bar") == 0) && (this.phaseLW2 != null))
         {
             this.setShowb3(true);
             this.setShowl3(false);
             this.setShowp3(false);
             this.setShowd3(true);
         }
-        if((this.selectChart3 != "") && (this.selectedUser != "") && (this.selectChart3.compareTo("line") == 0) && (this.phaseLW2 != null))
+        if((!Objects.equals(this.selectChart3, "")) && (!Objects.equals(this.selectedUser, "")) && (this.selectChart3.compareTo("line") == 0) && (this.phaseLW2 != null))
         {
             this.setShowl3(true);
             this.setShowb3(false);
             this.setShowp3(false);
             this.setShowd3(true);
         }
-        if((this.selectChart3 != "") && (this.selectedUser != "") && (this.selectChart3.compareTo("pie") == 0) && (this.phaseLW2 != null))
+        if((!Objects.equals(this.selectChart3, "")) && (!Objects.equals(this.selectedUser, "")) && (this.selectChart3.compareTo("pie") == 0) && (this.phaseLW2 != null))
         {
             this.setShowp3(true);
             this.setShowl3(false);
@@ -332,19 +329,19 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         //log.debug("Group 1:" + this.selectedGroup1);
         //log.debug("Group 2:" + this.selectedGroup2);
 
-        if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("bar") == 0))
+        if((!Objects.equals(this.selectChart1, "")) && (!Objects.equals(this.selectedGroup1, "")) && (!Objects.equals(this.selectedGroup2, "")) && (this.selectChart1.compareTo("bar") == 0))
         {
             this.setShowb1(true);
             this.setShowl1(false);
             this.setShowp1(false);
         }
-        if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("line") == 0))
+        if((!Objects.equals(this.selectChart1, "")) && (!Objects.equals(this.selectedGroup1, "")) && (!Objects.equals(this.selectedGroup2, "")) && (this.selectChart1.compareTo("line") == 0))
         {
             this.setShowl1(true);
             this.setShowb1(false);
             this.setShowp1(false);
         }
-        if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("pie") == 0))
+        if((!Objects.equals(this.selectChart1, "")) && (!Objects.equals(this.selectedGroup1, "")) && (!Objects.equals(this.selectedGroup2, "")) && (this.selectChart1.compareTo("pie") == 0))
         {
             this.setShowp1(true);
             this.setShowl1(false);
@@ -394,19 +391,19 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("generateComparativeGraph");
 
-        if((this.selectChart2 != "") && (this.selectCourse20 != "") && (this.selectCourse21 != "") && (this.selectChart2.compareTo("bar") == 0))
+        if((!Objects.equals(this.selectChart2, "")) && (!Objects.equals(this.selectCourse20, "")) && (!Objects.equals(this.selectCourse21, "")) && (this.selectChart2.compareTo("bar") == 0))
         {
             this.setShowb2(true);
             this.setShowl2(false);
             this.setShowp2(false);
         }
-        if((this.selectChart2 != "") && (this.selectCourse20 != "") && (this.selectCourse21 != "") && (this.selectChart2.compareTo("line") == 0))
+        if((!Objects.equals(this.selectChart2, "")) && (!Objects.equals(this.selectCourse20, "")) && (!Objects.equals(this.selectCourse21, "")) && (this.selectChart2.compareTo("line") == 0))
         {
             this.setShowl2(true);
             this.setShowb2(false);
             this.setShowp2(false);
         }
-        if((this.selectChart2 != "") && (this.selectCourse20 != "") && (this.selectCourse21 != "") && (this.selectChart2.compareTo("pie") == 0))
+        if((!Objects.equals(this.selectChart2, "")) && (!Objects.equals(this.selectCourse20, "")) && (!Objects.equals(this.selectCourse21, "")) && (this.selectChart2.compareTo("pie") == 0))
         {
             this.setShowp2(true);
             this.setShowl2(false);
@@ -893,7 +890,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("initLineModelUser");
         this.lineModel = new LineChartModel();
-        Long maxValue = 0l;
+        Long maxValue = 0L;
 
         ChartSeries class1 = new ChartSeries();
         class1.setLabel(label);
@@ -928,7 +925,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("initBarModelUser");
         this.barModel = new BarChartModel();
-        Long maxValue = 0l;
+        Long maxValue = 0L;
 
         this.barModel.setTitle(text);
         this.barModel.setLegendPosition("e");
@@ -985,7 +982,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("initBarComparative");
         BarChartModel b1 = new BarChartModel();
-        Long maxValue = 0l;
+        Long maxValue = 0L;
 
         b1.setTitle(text);
         b1.setLegendPosition("ne");
@@ -1035,7 +1032,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
         //log.debug("initLineComprative");
         LineChartModel l1 = new LineChartModel();
-        Long maxValue = 0l;
+        Long maxValue = 0L;
 
         ChartSeries class1 = new ChartSeries();
         class1.setLabel(label);

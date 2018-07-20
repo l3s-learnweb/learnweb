@@ -142,7 +142,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
                     for(Resource resource : resources)
                     {
-                        sb.append("\n\t<li><div style=\"color:" + color[resource.getStorageType()] + "\">");
+                        sb.append("\n\t<li><div style=\"color:").append(color[resource.getStorageType()]).append("\">");
                         sb.append(resource.getTitle());
                         sb.append("; ");
                         sb.append(type[resource.getStorageType()]);

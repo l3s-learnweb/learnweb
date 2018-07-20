@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -128,7 +129,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         String transcript = tedResource.getTranscript();
         noteId = 0;
 
-        if(transcript != null && transcript != "")
+        if(StringUtils.isNotEmpty(transcript))
         {
             Document doc = Jsoup.parse(transcript);
             Elements elements = doc.select("span");

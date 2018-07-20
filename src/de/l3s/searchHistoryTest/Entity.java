@@ -6,9 +6,9 @@ import java.util.List;
 public class Entity
 {
     private double score = 0.0;
-    private String entityName = null;
-    private String dbpediaName = null;
-    private List<Integer> ranks = null;
+    private String entityName;
+    private String dbpediaName;
+    private List<Integer> ranks;
 
     public Entity(String dbpediaName)
     {

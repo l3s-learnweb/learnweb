@@ -5,10 +5,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
@@ -891,12 +888,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
-            if(newHypothesisLink != group.getHypothesisLink())
+            if(!Objects.equals(newHypothesisLink, group.getHypothesisLink()))
             {
                 group.setHypothesisLink(newHypothesisLink);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
-            if(newHypothesisToken != group.getHypothesisToken())
+            if(!Objects.equals(newHypothesisToken, group.getHypothesisToken()))
             {
                 group.setHypothesisToken(newHypothesisToken);
             }

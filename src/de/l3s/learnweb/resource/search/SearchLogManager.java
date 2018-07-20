@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -278,7 +279,7 @@ public class SearchLogManager
 
                     url = queue.take();
 
-                    if(url == LAST_ENTRY) // stop method was called
+                    if(Objects.equals(url, LAST_ENTRY)) // stop method was called
                         break;
 
                     try
@@ -345,7 +346,7 @@ public class SearchLogManager
 
                     searchId = searchIdQueue.take();
 
-                    if(searchId == LAST_ENTRY) //stop method was called
+                    if(Objects.equals(searchId, LAST_ENTRY)) //stop method was called
                         break;
 
                     boolean relatedEntitiesExist = checkRelatedEntitiesForSearch(searchId);

@@ -574,8 +574,7 @@ public class SearchHistoryManager
         @Override
         public String toString()
         {
-            StringBuilder builder = new StringBuilder(this.source).append("<-->").append(this.target).append(": (").append(this.score).append(")");
-            return builder.toString();
+            return this.source + "<-->" + this.target + ": (" + this.score + ")";
         }
 
     }

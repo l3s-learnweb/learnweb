@@ -33,6 +33,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
@@ -732,7 +733,7 @@ public class WaybackUrlManager
             responseCode = 604; // too many redirects
 
         // check if a URL was redirected to the base URL. This can usually be handled as some kind of error 404
-        if(originalUrl != urlStr) // got a redirect
+        if(!Objects.equals(originalUrl, urlStr)) // got a redirect
         {
             String pathOld = new java.net.URL(originalUrl).getPath();
             String pathNew = new java.net.URL(urlStr).getPath();

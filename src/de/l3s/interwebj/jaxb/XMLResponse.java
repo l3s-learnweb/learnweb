@@ -58,7 +58,7 @@ public class XMLResponse
         }
         catch(JAXBException | UnsupportedEncodingException e)
         {
-            sb.append("Interweb processing error: " + e.getMessage());
+            sb.append("Interweb processing error: ").append(e.getMessage());
         }
         return sb.toString();
     }

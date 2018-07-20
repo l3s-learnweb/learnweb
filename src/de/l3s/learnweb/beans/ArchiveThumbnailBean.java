@@ -204,9 +204,7 @@ public class ArchiveThumbnailBean extends ApplicationBean implements Serializabl
 
         try
         {
-            String htmlText = null;
-            String htmlTags = null;
-
+            String htmlText, htmlTags;
             PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=? group by `shingle_id` ORDER BY timestamp");
             ps.setInt(1, resourceId);
             ResultSet rs = ps.executeQuery();

@@ -127,8 +127,7 @@ public class ResourceMetaDataBean
             rs.close();
             select.close();
 
-            ArrayList<String> authors = new ArrayList<>();
-            authors.addAll(uniqueAuthors);
+            ArrayList<String> authors = new ArrayList<>(uniqueAuthors);
 
             authorLists.put(organisationId, authors);
 

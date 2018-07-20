@@ -148,8 +148,7 @@ public class CategoryTree implements Serializable
         //using uTops, I get the list of uniqueTopcategories 
         for(int i = 0; i < uTops.size(); i++)
         {
-            CategoryTop cattop = new CategoryTop();
-            cattop = cm.getTopCategoryByName(uTops.get(i));
+            CategoryTop cattop = cm.getTopCategoryByName(uTops.get(i));
             if(cattop != null)
             {
                 uniqueTops.add(cattop);
@@ -163,8 +162,7 @@ public class CategoryTree implements Serializable
         //using uMids, I get the list of uniqueMidcategories 
         for(int i = 0; i < uMids.size(); i++)
         {
-            CategoryMiddle catmid = new CategoryMiddle();
-            catmid = cm.getMiddleCategoryByName(uMids.get(i));
+            CategoryMiddle catmid = cm.getMiddleCategoryByName(uMids.get(i));
             if(catmid != null)
             {
                 uniqueMids.add(catmid);
@@ -174,8 +172,7 @@ public class CategoryTree implements Serializable
         //using uBots, I get the list of uniqueBotcategories
         for(int i = 0; i < uBots.size(); i++)
         {
-            CategoryBottom catbot = new CategoryBottom();
-            catbot = cm.getBottomCategoryByName(uBots.get(i));
+            CategoryBottom catbot = cm.getBottomCategoryByName(uBots.get(i));
             if(catbot != null)
             {
                 uniqueBots.add(catbot);

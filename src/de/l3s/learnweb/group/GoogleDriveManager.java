@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,10 +34,10 @@ public class GoogleDriveManager
     private static JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     /** Global instance of the scopes required by Google Drive. */
-    private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE);
+    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_FILE);
 
     /** Required for web access from LearnWeb account - https://drive.google.com/drive/u/0/folders/0B_Sy7ytn1dadbkxEZGFZTm5kZU0 */
-    private static String defaultParentFolder = "0B_Sy7ytn1dadbkxEZGFZTm5kZU0";
+    private static final String defaultParentFolder = "0B_Sy7ytn1dadbkxEZGFZTm5kZU0";
 
     private Drive drive = null;
 
@@ -76,7 +77,7 @@ public class GoogleDriveManager
 
         if(parent != null && !parent.isEmpty())
         {
-            fileMetadata.setParents(Arrays.asList(new ParentReference().setId(parent)));
+            fileMetadata.setParents(Collections.singletonList(new ParentReference().setId(parent)));
         }
 
         Drive.Files.Insert insert;

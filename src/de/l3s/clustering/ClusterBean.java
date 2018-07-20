@@ -194,8 +194,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
 
         for(User u : l)
         {
-            HashMap<String, Long> listAll = new HashMap<>();
-            listAll = getActivitiesClass(u.getId());
+            HashMap<String, Long> listAll = getActivitiesClass(u.getId());
             listActivities.put(u.getId(), listAll);
             //log.debug("lista:" + u.getId() + "-" + listAll.toString());
         }
@@ -306,7 +305,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
                     break;
                 }
                 listData.add(st);
-                st.toString();
+                st.toString(); // TODO probably this should be assigned to something
             }
             count++;
         }

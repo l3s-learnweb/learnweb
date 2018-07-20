@@ -21,7 +21,7 @@ public class LanguageFileComparison
     public static void main(String[] args) throws Exception
     {
         Properties languageProperties = new Properties();
-        languageProperties.load(new LanguageFileComparison().getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
+        languageProperties.load(LanguageFileComparison.class.getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
 
         String csvFile = "test.csv";
 

@@ -104,7 +104,7 @@ public class Sql
         sb.setLength(sb.length() - 1); // remove last comma
 
         String questionMarks = StringUtils.repeat(",?", columns.length).substring(1);
-        sb.append(") VALUES (" + questionMarks + ") ON DUPLICATE KEY UPDATE ");
+        sb.append(") VALUES (").append(questionMarks).append(") ON DUPLICATE KEY UPDATE ");
 
         for(int i = 1; i < columns.length; i++) // skip first column
         {

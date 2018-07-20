@@ -37,7 +37,7 @@ public class RequestManager
     private final Map<String, Set<String>> logins;
 
     //Aggregated data info
-    private List<AggregatedRequestData> aggregatedRequests = null;
+    private List<AggregatedRequestData> aggregatedRequests;
     private Date aggrRequestsUpdated;
 
     private static RequestManager instance = null;

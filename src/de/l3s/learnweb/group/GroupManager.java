@@ -199,7 +199,7 @@ public class GroupManager
     {
         StringBuilder sb = new StringBuilder();
         for(Course course : user.getCourses())
-            sb.append("," + course.getId());
+            sb.append(",").append(course.getId());
 
         String publicCourseClause = "";
         if(!user.getOrganisation().getOption(Option.Groups_Hide_public_groups))
@@ -212,7 +212,7 @@ public class GroupManager
 
         sb = new StringBuilder(",-1"); // make sure that the string is not empty
         for(Group group : user.getGroups())
-            sb.append("," + group.getId());
+            sb.append(",").append(group.getId());
         String groupsIn = sb.substring(1);
 
         String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause

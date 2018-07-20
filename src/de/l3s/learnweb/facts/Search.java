@@ -377,10 +377,7 @@ public class Search
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             Date date = df.parse(entity.getWikiStats().get("P569").get(0));
             propValueList.add(date);
-            for(String place : entity.getWikiStats().get("P19"))
-            {
-                propValueList.add(place);
-            }
+            propValueList.addAll(entity.getWikiStats().get("P19"));
             entity.getPropList().remove("P19");
             factSheetEntry.setData(propValueList);
             factSheetEntry.setTemplate("birth_place");
@@ -395,10 +392,7 @@ public class Search
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             Date date = df.parse(entity.getWikiStats().get("P570").get(0));
             propValueList.add(date);
-            for(String place : entity.getWikiStats().get("P20"))
-            {
-                propValueList.add(place);
-            }
+            propValueList.addAll(entity.getWikiStats().get("P20"));
             entity.getPropList().remove("P20");
             factSheetEntry.setData(propValueList);
             factSheetEntry.setTemplate("death_place");

@@ -16,7 +16,7 @@ public class KMeans
     private int MAX_COORDINATE;
 
     private List<Point> points;
-    private List<Cluster> clusters = new ArrayList<>();
+    private List<Cluster> clusters;
 
     private HashMap<String, Long> listActivities = new HashMap<>();
 

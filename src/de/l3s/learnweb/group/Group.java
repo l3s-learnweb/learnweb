@@ -280,7 +280,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public String getLongTitle()
     {
-        if(categoryAbbreviation != null && categoryAbbreviation != "")
+        if(StringUtils.isNotEmpty(categoryAbbreviation))
             return "[" + categoryAbbreviation + "] " + title;
 
         return title;

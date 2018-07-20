@@ -56,7 +56,7 @@ public class ArchiveItShingle
     public Set<String> computeShingles(List<String> wordList)
     {
         Set<String> setOfShingles = new HashSet<>();
-        List<String> shingleList = new LinkedList<>();
+        List<String> shingleList;
         for(int i = 0; i < wordList.size() - w; i++)
         {
             shingleList = wordList.subList(i, i + w);
@@ -90,7 +90,7 @@ public class ArchiveItShingle
      */
     public Set<String> computeUniqueArchivesByPair(HashMap<String, Set<String>> archiveUrlBOW)
     {
-        float d = 0;
+        float d;
         Set<String> nearDuplicateUrls = new HashSet<>();
         Set<String> uniqueUrls = new HashSet<>();
         for(Map.Entry<String, Set<String>> entry1 : archiveUrlBOW.entrySet())
@@ -194,9 +194,8 @@ public class ArchiveItShingle
         Set<String> uniqueUrls = new LinkedHashSet<>();
         Connection conn = Learnweb.getInstance().getConnection();
         int j = 0;
-        float textSim = 0, frameSim = 0;
-        String url = null;
-        String key = archiveUrls.get(j).getArchiveUrl();
+        float textSim, frameSim;
+        String url, key = archiveUrls.get(j).getArchiveUrl();
 
         for(int i = 1; i < archiveUrls.size(); i++)
         {
@@ -317,7 +316,7 @@ public class ArchiveItShingle
             }
 
             List<ArchiveUrl> archiveUrls = new LinkedList<>();
-            String htmlTags = null, htmlText = null;
+            String htmlTags, htmlText;
             HashMap<String, Set<String>> hashmapFrame = new LinkedHashMap<>();
             HashMap<String, Set<String>> hashmapText = new LinkedHashMap<>();
             while(rs.next())
@@ -375,7 +374,7 @@ public class ArchiveItShingle
      */
     public long computeVersionFingerprint(String archiveUrl) throws IOException
     {
-        Document document = null;
+        Document document;
         long simhash = 0L;
 
         org.jsoup.Connection urlConnection = Jsoup.connect(archiveUrl).followRedirects(true).ignoreHttpErrors(true).timeout(10000);
@@ -431,7 +430,7 @@ public class ArchiveItShingle
         for(ArchiveUrl version : archiveUrls)
         {
             String archiveUrl = version.getArchiveUrl();
-            Document document = null;
+            Document document;
             StringBuilder htmlString = new StringBuilder();
             try
             {
@@ -556,8 +555,7 @@ public class ArchiveItShingle
             int noAvgs = 0;
             for(Resource r : g.getResources())
             {
-                String htmlText = null;
-                String htmlTags = null;
+                String htmlText, htmlTags;
                 LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
                 HashMap<String, Set<String>> hashmapFrame = new HashMap<>();
                 HashMap<String, Set<String>> hashmapText = new HashMap<>();
@@ -627,14 +625,14 @@ public class ArchiveItShingle
                 public void head(Node node, int depth)
                 {
                     if(node instanceof Element)
-                        htmlString.append(node.nodeName() + " ");
+                        htmlString.append(node.nodeName()).append(" ");
                 }
 
                 @Override
                 public void tail(Node node, int depth)
                 {
                     if(node instanceof Element)
-                        htmlString.append(node.nodeName() + " ");
+                        htmlString.append(node.nodeName()).append(" ");
                 }
             };
             return node;
