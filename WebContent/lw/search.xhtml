@@ -10,14 +10,13 @@
 			<f:viewParam name="action" value="#{searchBean.queryMode}" />
 			<f:viewParam name="service" value="#{searchBean.queryService}" />
 			<f:viewParam name="filter" value="#{searchBean.queryFilters}" />
-			<!-- <f:viewParam name="resultsetid" value="#{searchBean.resultsetId}" />
-			<f:viewParam name="selectedquerytimestamp" value="#{searchHistoryBean.selectedQueryTimestamp}"/> -->
 			<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:param name="pageTitle" value="#{msg.searchTitle}" />	
 	<ui:param name="helpText" value="#{msg.searchHelp}"/>
+	<ui:param name="loginRequired" value="true" />
 	 
 	<ui:define name="sub_menu_bar">
 		<div id="sub_menu_bar">  			

@@ -51,12 +51,23 @@
 					</h:outputLink>	
 							
 					<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
-						update=":courseform :growl" rendered="#{course.memberCount == 0}"
-						onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
-						style="text-decoration:none;" title="#{msg.delete}">
+						update=":courseform :growl" rendered="#{course.memberCount == 0 || userBean.admin}"							
+						 title="#{msg.delete}">
 															
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
+						#{msg.delete}
+						<p:confirm message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses." />
 					</p:commandLink>
+					
+					<p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this" 
+						update=":courseform :growl" rendered="#{userBean.admin}"							
+						>
+															
+						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
+						Anonymise
+						<p:confirm message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected." />
+					</p:commandLink>
+					
 					<span style="margin-left:5px;">
 						<h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
 							 <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />

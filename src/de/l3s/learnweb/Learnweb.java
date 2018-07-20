@@ -9,7 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -349,6 +353,8 @@ public class Learnweb
         requestManager = RequestManager.getInstance(this);
         protectionManager = new ProtectionManager(this);
         bounceManager = new BounceManager(this);
+
+        maxlogBatchSize = isInDevelopmentMode() ? 1 : 10;
     }
 
     /**
@@ -537,6 +543,7 @@ public class Learnweb
     }
 
     private int logBatchSize = 0;
+    private int maxlogBatchSize;
 
     /**
      * @param user
@@ -605,7 +612,7 @@ public class Learnweb
 
                 logBatchSize++;
 
-                if(logBatchSize > 10)
+                if(logBatchSize > maxlogBatchSize)
                 {
                     pstmtLog.executeBatch();
                     logBatchSize = 0;

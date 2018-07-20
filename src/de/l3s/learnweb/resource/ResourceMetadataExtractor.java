@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -177,7 +178,8 @@ public class ResourceMetadataExtractor
             }
             catch(IOException | BoilerpipeProcessingException | SAXException e)
             {
-                log.error("Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
+                Level logLevel = e.getMessage().contains("HTTP response code: 40") ? Level.WARN : Level.ERROR;
+                log.log(logLevel, "Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
             }
 
             processFileResource(resource, fileInfo);
@@ -220,16 +222,22 @@ public class ResourceMetadataExtractor
             String key = element.select(".field-label").text()
                     .replace(":", "").replace("\u00a0", " ").trim();
             String value = element.select(".field-items").text();
-            if (key.equals("Duration")) {
+            if(key.equals("Duration"))
+            {
                 String[] tokens = value.split(":");
                 int duration = 0, multiply = 0;
-                for (int i = tokens.length - 1; i >= 0; --i) {
+                for(int i = tokens.length - 1; i >= 0; --i)
+                {
                     duration += Integer.parseInt(tokens[i]) * Math.pow(60, multiply++);
                 }
                 resource.setDuration(duration);
-            } else if (key.equals("Speech number")) {
+            }
+            else if(key.equals("Speech number"))
+            {
                 // ignore
-            } else {
+            }
+            else
+            {
                 description.append('\t').append(key).append(": ").append(value).append('\n');
             }
         }

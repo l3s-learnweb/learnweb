@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -463,11 +464,85 @@ public class UserManager
 
     public void saveGmailId(String gmailId, int userId) throws SQLException
     {
-        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_user_gmail` (`user_id` , `gmail_id`) VALUES (?, ?)");
-        insert.setInt(1, userId);
-        insert.setString(2, gmailId);
-        insert.executeUpdate();
-        insert.close();
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_user_gmail` (`user_id` , `gmail_id`) VALUES (?, ?)"))
+        {
+            insert.setInt(1, userId);
+            insert.setString(2, gmailId);
+            insert.executeUpdate();
+        }
     }
 
+    public void deleteUser(User user) throws SQLException
+    {
+        log.debug("Deleting user " + user);
+
+        for(Resource resource : user.getResources())
+        {
+            resource.delete();
+        }
+
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_log WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_gmail WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_course WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_comment WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_rating WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_thumb WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_survey_answer WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_survey_resource_user WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_forum_post WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_group_user WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+
+        cache.remove(user.getId());
+
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
+        }
+    }
 }

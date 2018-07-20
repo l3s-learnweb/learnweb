@@ -104,6 +104,12 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
             user = getLearnweb().getUserManager().getUser(userId);
 
+            if(null == user)
+            {
+                addInvalidParameterMessage("user_id");
+                return;
+            }
+
             if(!UtilBean.getUserBean().canModerateCourses(user.getCourses()))
             {
                 user = null;

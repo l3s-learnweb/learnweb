@@ -196,6 +196,14 @@ public class Course implements Serializable, Comparable<Course>, HasId
         user.clearCaches();
     }
 
+    public void removeUser(User user) throws SQLException
+    {
+        if(memberCount != -1)
+            memberCount--;
+        Learnweb.getInstance().getCourseManager().removeUser(this, user);
+        user.clearCaches();
+    }
+
     /**
      * True if the given user is a moderator if this course
      *

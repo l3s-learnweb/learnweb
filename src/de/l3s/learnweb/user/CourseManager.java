@@ -1,5 +1,7 @@
 package de.l3s.learnweb.user;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+
+import com.google.common.hash.Hashing;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -28,6 +34,7 @@ public class CourseManager
     private final static String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "options_field1" };
     private final static String SELECT = String.join(", ", COLUMNS);
     private final static String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
+    private final static Logger log = Logger.getLogger(CourseManager.class);
 
     private Learnweb learnweb;
     private Map<Integer, Course> cache;
@@ -203,26 +210,74 @@ public class CourseManager
         return course;
     }
 
+    /**
+     * The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other
+     * courses are not affected.
+     *
+     * @param course
+     * @throws SQLException
+     */
+    public void anonymize(Course course) throws SQLException
+    {
+        List<User> undeletedUsers = new LinkedList<>(); // users that can't be deleted because they are member of other courses
+        for(User user : course.getMembers())
+        {
+            if(user.getCourses().size() > 1)
+            {
+                log.debug("Can't delete user: " + user);
+                undeletedUsers.add(user);
+            }
+            else
+            {
+                log.debug("Anonymize user: " + user);
+
+                user.setAdditionalInformation("");
+                user.setAddress("");
+                user.setAffiliation("");
+                user.setDateOfBirth(new Date(0));
+                user.setFullName("");
+                user.setImageFileId(-1);
+                user.setInterest("");
+                user.setProfession("");
+                user.setStudentId("");
+                user.setUsername("Anonym " + user.getId());
+
+                user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
+                user.setEmailConfirmed(true); // disable mail validation
+            }
+        }
+    }
+
     public void delete(Course course) throws SQLException
     {
         delete(course, false);
     }
 
     /**
+     * All users and their resources will be deleted. Except for users who are also member of other courses.
      *
      * @param course
      * @param force If true the course is deleted even if it still contains users
+     * @return The users who where not deleted because they are member of other courses.
      * @throws SQLException
      */
-    protected void delete(Course course, boolean force) throws SQLException
+    public List<User> delete(Course course, boolean force) throws SQLException
     {
         if(!force && course.getMemberCount() > 0)
             throw new IllegalArgumentException("course can't be deleted, remove all members first");
 
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?"))
+        UserManager userManager = learnweb.getUserManager();
+
+        List<User> undeletedUsers = new LinkedList<>(); // users that can't be deleted because they are member of other courses
+        for(User user : course.getMembers())
         {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
+            if(user.getCourses().size() > 1)
+            {
+                log.debug("Can't delete user: " + user);
+                undeletedUsers.add(user);
+            }
+            else
+                userManager.deleteUser(user);
         }
 
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?"))
@@ -230,8 +285,35 @@ public class CourseManager
             delete.setInt(1, course.getId());
             delete.executeUpdate();
         }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_category` WHERE category_course_id = ?"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE group_id IN(SELECT group_id FROM lw_group WHERE course_id = ?)"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE group_id IN(SELECT group_id FROM lw_group WHERE course_id = ?)"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group` WHERE course_id = ?"))
+        {
+            delete.setInt(1, course.getId());
+            delete.executeUpdate();
+        }
 
         cache.remove(course.getId());
+
+        return undeletedUsers;
     }
 
     /**
@@ -248,6 +330,16 @@ public class CourseManager
             insert.setInt(1, user.getId());
             insert.setInt(2, course.getId());
             insert.executeUpdate();
+        }
+    }
+
+    public void removeUser(Course course, User user) throws SQLException
+    {
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE `user_id` = ? AND `course_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.setInt(2, course.getId());
+            delete.executeUpdate();
         }
     }
 

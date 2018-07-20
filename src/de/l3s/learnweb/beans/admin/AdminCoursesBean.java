@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation;
@@ -74,8 +75,28 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getLearnweb().getCourseManager().delete(course);
+            getLearnweb().getCourseManager().delete(course, getUser().isAdmin());
+
+            log(Action.course_delete, 0, course.getId());
+
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted.");
+            load(); // update course list
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public void onAnonymiseCourse(Course course)
+    {
+        try
+        {
+            getLearnweb().getCourseManager().anonymize(course);
+
+            log(Action.course_anonymize, 0, course.getId());
+
+            addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
             load(); // update course list
         }
         catch(Exception e)

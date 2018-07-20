@@ -98,7 +98,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
             addFatalMessage(mex);
         }
         clearForm();
-        addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to your shortly.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to you shortly.");
     }
 
     public void clearForm()

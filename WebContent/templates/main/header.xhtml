@@ -284,8 +284,10 @@
 
 		</div>
 
-		<ui:insert name="sub_menu_bar"></ui:insert>
-
+		<ui:fragment rendered="#{userBean.loggedIn}">
+			<ui:insert name="sub_menu_bar"></ui:insert>
+		</ui:fragment>
+		
 		<ui:fragment rendered="#{userBean.trackingEnabled}">
 			<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
 			<script type="text/javascript">

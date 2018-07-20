@@ -82,7 +82,9 @@ public class LogEntry implements Serializable
 
         changing_resource,
         forum_reply_message,
-        moderator_login // target_id = user_id of the moderator logs into a user account
+        moderator_login, // target_id = user_id of the moderator logs into a user account
+        course_delete, // target_id = course_id
+        course_anonymize // target_id = course_id
         ;
 
         // This actions are showed in the activity stream

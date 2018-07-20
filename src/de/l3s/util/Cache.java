@@ -77,7 +77,7 @@ public class Cache<E extends HasId> implements ICache<E>
             E old = values.get(id);
             if(null != old)
                 return old;
-
+            
             values.put(id, resource);
             */
             E old = weakValues.getIfPresent(id);
@@ -115,6 +115,7 @@ public class Cache<E extends HasId> implements ICache<E>
         try
         {
             values.remove(resourceId);
+            weakValues.invalidate(resourceId);
         }
         finally
         {
