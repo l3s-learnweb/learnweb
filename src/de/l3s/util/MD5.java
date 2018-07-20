@@ -19,21 +19,16 @@ public class MD5
             md5.update(hashString.getBytes());
             byte[] result = md5.digest();
 
-            StringBuffer hexString = new StringBuffer();
-
-            for(int i = 0; i < result.length; i++)
+            StringBuilder hexString = new StringBuilder();
+            for(final byte aResult : result)
             {
-                if(result[i] <= 15 && result[i] >= 0)
-                {
+                if(aResult <= 15 && aResult >= 0)
                     hexString.append("0");
-                }
 
-                hexString.append(Integer.toHexString(0xFF & result[i]));
+                hexString.append(Integer.toHexString(0xFF & aResult));
             }
 
-            String hashCodeString = hexString.toString();
-
-            return hashCodeString;
+            return hexString.toString();
         }
         catch(NoSuchAlgorithmException e)
         {

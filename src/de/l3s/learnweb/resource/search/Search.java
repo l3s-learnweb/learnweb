@@ -43,13 +43,13 @@ public class Search implements Serializable
     private Integer configResultsPerGroup = 2;
 
     // all resources
-    private LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+    private LinkedList<ResourceDecorator> resources = new LinkedList<>();
 
     // resources grouped by pages
     private int temporaryId = 1;
-    private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<Integer, LinkedList<ResourceDecorator>>();
-    private HashMap<Integer, Resource> tempIdIndex = new HashMap<Integer, Resource>(); // makes it possible to retrieve resources by its tempId
-    private TreeSet<String> urlHashMap = new TreeSet<String>(); // used to make sure that resources with the same url appear only once in the search results
+    private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<>();
+    private HashMap<Integer, Resource> tempIdIndex = new HashMap<>(); // makes it possible to retrieve resources by its tempId
+    private TreeSet<String> urlHashMap = new TreeSet<>(); // used to make sure that resources with the same url appear only once in the search results
 
     private int userId;
     private InterWeb interweb;
@@ -87,7 +87,7 @@ public class Search implements Serializable
     private LinkedList<ResourceDecorator> doSearch(int page)
     {
 
-        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
         log.debug("Search page " + page + " for: " + query);
 
@@ -221,7 +221,7 @@ public class Search implements Serializable
         int duplicatedUrlCount = 0; // number of resources that already displayed to the user
         int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
-        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
         for(ResourceDecorator decoratedResource : learnwebResources)
         {
@@ -271,7 +271,7 @@ public class Search implements Serializable
         long start = System.currentTimeMillis();
 
         // Setup filters
-        TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", configMode.name());
         params.put("page", Integer.toString(page));
         params.put("timeout", "50");
@@ -326,7 +326,7 @@ public class Search implements Serializable
         int duplicatedUrlCount = 0; // number of resources that already displayed to the user
         int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
-        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<>();
 
         for(ResourceDecorator decoratedResource : interwebResults)
         {
@@ -432,7 +432,7 @@ public class Search implements Serializable
      */
     public List<GroupedResources> getResourcesGroupedBySource(Integer limit)
     {
-        List<GroupedResources> groupedResources = new ArrayList<GroupedResources>();
+        List<GroupedResources> groupedResources = new ArrayList<>();
 
         for(ResourceDecorator res : resources)
         {
@@ -581,7 +581,7 @@ public class Search implements Serializable
         {
             if(this.resources == null)
             {
-                this.resources = new LinkedList<ResourceDecorator>();
+                this.resources = new LinkedList<>();
             }
 
             this.resources.add(resources);

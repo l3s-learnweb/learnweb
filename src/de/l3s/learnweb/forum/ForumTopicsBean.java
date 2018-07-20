@@ -46,7 +46,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
             {
                 Integer id = getParameterInt("group_id");
                 if(id != null)
-                    groupId = id.intValue();
+                    groupId = id;
             }
 
             group = getLearnweb().getGroupManager().getGroupById(groupId);

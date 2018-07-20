@@ -67,7 +67,7 @@ public class Point
 
     public List<Point> createRandomPoints(int min, int max, int number)
     {
-        List<Point> points = new ArrayList<Point>(number);
+        List<Point> points = new ArrayList<>(number);
         for(int i = 0; i < number; i++)
         {
             points.add(createRandomPoint(min, max));

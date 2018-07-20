@@ -37,7 +37,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     public AdminOrganisationsBean() throws SQLException
     {
         log.debug("init AdminOrganisationsBean");
-        organisations = new ArrayList<Organisation>(getLearnweb().getOrganisationManager().getOrganisationsAll());
+        organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
         setSelectedOrganisation(getUser().getOrganisation()); // by default edit the users organization
     }
 
@@ -87,7 +87,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
         {
             getLearnweb().getOrganisationManager().save(selectedOrganisation);
 
-            organisations = new ArrayList<Organisation>(getLearnweb().getOrganisationManager().getOrganisationsAll()); // reload
+            organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll()); // reload
 
             addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
@@ -114,8 +114,8 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
         this.selectedOrganisation = selectedOrganisation;
 
         // many string operations to display the options in a proper way
-        optionGroups = new LinkedList<OptionWrapperGroup>();
-        List<OptionWrapper> options = new LinkedList<OptionWrapper>();
+        optionGroups = new LinkedList<>();
+        List<OptionWrapper> options = new LinkedList<>();
         String oldOptionGroupName = null;
 
         Option[] optionsEnum = Option.values();
@@ -132,7 +132,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
             {
                 optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
 
-                options = new LinkedList<OptionWrapper>();
+                options = new LinkedList<>();
             }
 
             oldOptionGroupName = newOptionGroupName;

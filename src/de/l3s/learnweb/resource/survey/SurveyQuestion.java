@@ -52,7 +52,7 @@ public class SurveyQuestion implements Serializable
     private String info; // an explanation, displayed as tooltip
     private QuestionType type;
     private int id; //question id
-    private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
+    private List<String> options = new LinkedList<>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
     private List<SelectItem> optionsList;
@@ -90,7 +90,7 @@ public class SurveyQuestion implements Serializable
     {
         if(null == optionsList)
         {
-            optionsList = new ArrayList<SelectItem>(options.size());
+            optionsList = new ArrayList<>(options.size());
 
             for(String option : options)
             {

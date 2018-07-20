@@ -31,8 +31,8 @@ public class SearchQuery implements Serializable
     protected List<ResourceDecorator> results;
     protected String elapsedTime;
     protected long totalResults;
-    private List<Count> serviceCount = new ArrayList<Count>(); //service name, number of results at this service
-    private List<String> serviceCountSaver = new ArrayList<String>();
+    private List<Count> serviceCount = new ArrayList<>(); //service name, number of results at this service
+    private List<String> serviceCountSaver = new ArrayList<>();
 
     public SearchQuery(InputStream inputStream) throws IllegalResponseException
     {
@@ -51,7 +51,7 @@ public class SearchQuery implements Serializable
         {
             FacetField ff = new FacetField("location");
             int counter = 0;
-            results = new LinkedList<ResourceDecorator>();
+            results = new LinkedList<>();
             totalResults = 0;
 
             JAXBContext jaxbContext = JAXBContext.newInstance(SearchResponse.class);

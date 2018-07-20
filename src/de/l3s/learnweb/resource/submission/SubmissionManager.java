@@ -39,7 +39,7 @@ public class SubmissionManager
 
     public ArrayList<Submission> getSubmissionsByCourse(int courseId) throws SQLException
     {
-        ArrayList<Submission> submissions = new ArrayList<Submission>();
+        ArrayList<Submission> submissions = new ArrayList<>();
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime");)
         {
             ps.setInt(1, courseId);
@@ -63,7 +63,7 @@ public class SubmissionManager
      */
     public ArrayList<Submission> getSubmissionsByUser(User user) throws SQLException
     {
-        ArrayList<Submission> submissions = new ArrayList<Submission>();
+        ArrayList<Submission> submissions = new ArrayList<>();
 
         List<Course> courses = user.getCourses();
         StringBuilder builder = new StringBuilder();
@@ -105,7 +105,7 @@ public class SubmissionManager
      */
     public ArrayList<Submission> getActiveSubmissionsByUser(User user)
     {
-        ArrayList<Submission> submissions = new ArrayList<Submission>();
+        ArrayList<Submission> submissions = new ArrayList<>();
         try
         {
             List<Course> courses = user.getCourses();
@@ -263,7 +263,7 @@ public class SubmissionManager
     public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId) throws SQLException
     {
         ResourceManager resourceManager = learnweb.getResourceManager();
-        List<Resource> submittedResources = new ArrayList<Resource>();
+        List<Resource> submittedResources = new ArrayList<>();
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?");)
         {
             ps.setInt(1, submissionId);
@@ -288,7 +288,7 @@ public class SubmissionManager
      */
     public HashMap<Integer, Integer> getUsersSubmissionsByCourseId(int courseId)
     {
-        HashMap<Integer, Integer> usersSubmissions = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> usersSubmissions = new HashMap<>();
         try
         {
             PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submit_resource) t1 JOIN lw_submit t2 USING(submission_id) WHERE course_id = ? AND deleted=0 GROUP BY user_id");

@@ -61,16 +61,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<LanguageItem> secondaryLangItems;
     private List<LanguageItem> primaryLangItems;
     private List<LanguageItem> languageItems;
-    private final List<String> uses = new ArrayList<String>();
+    private final List<String> uses = new ArrayList<>();
     private String fileName;
     private String selectedTopicOne;
     private String selectedTopicTwo;
     private String selectedTopicThree;
     private String description;
     private String toggleValue = "Show All";
-    private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
-    private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
-    private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
+    private final List<SelectItem> availableTopicOnes = new ArrayList<>();
+    private List<SelectItem> availableTopicTwos = new ArrayList<>();
+    private List<SelectItem> availableTopicThrees = new ArrayList<>();
     private String valueHeaderIt; // TODO does It refer to Italian? then change it
     private int count;
     private int userId;
@@ -79,8 +79,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int resourceId;
     private int groupId; // group id of the resource used only for the logger
     private int glossaryId;
-    private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
-    private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
+    private List<GlossaryItems> items = new ArrayList<>();
+    private List<GlossaryItems> filteredItems = new ArrayList<>();
     private GlossaryItems selectedGlossaryItem;
     private boolean paginator = true;
 
@@ -182,9 +182,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicThrees.clear();
         createAvailableTopicsTwo();
 
-        secondaryLangItems = new ArrayList<LanguageItem>();
+        secondaryLangItems = new ArrayList<>();
         secondaryLangItems.add(new LanguageItem());
-        primaryLangItems = new ArrayList<LanguageItem>();
+        primaryLangItems = new ArrayList<>();
         primaryLangItems.add(new LanguageItem());
     }
 
@@ -201,8 +201,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         setSelectedTopicThree(gloss.getTopic3());
 
         setDescription(gloss.getDescription());
-        List<LanguageItem> primaryItemsToSet = new ArrayList<LanguageItem>();
-        List<LanguageItem> secondaryItemsToSet = new ArrayList<LanguageItem>();
+        List<LanguageItem> primaryItemsToSet = new ArrayList<>();
+        List<LanguageItem> secondaryItemsToSet = new ArrayList<>();
 
         //TODO:: Re-factor this part once languages are collapsed into one.
         for(LanguageItem languageItem : gloss.getFinalItems())
@@ -318,7 +318,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            List<LanguageItem> iItems = new ArrayList<LanguageItem>(secondaryLangItems);
+            List<LanguageItem> iItems = new ArrayList<>(secondaryLangItems);
             boolean remove = false;
 
             if(iItems.size() > 1)
@@ -348,7 +348,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            List<LanguageItem> primaryItems = new ArrayList<LanguageItem>(primaryLangItems);
+            List<LanguageItem> primaryItems = new ArrayList<>(primaryLangItems);
             boolean remove = false;
 
             if(primaryItems.size() > 1)

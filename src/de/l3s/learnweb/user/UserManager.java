@@ -45,7 +45,7 @@ public class UserManager
         int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
 
         this.learnweb = learnweb;
-        this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);
+        this.cache = userCacheSize == 0 ? new DummyCache<>() : new Cache<>(userCacheSize);
     }
 
     public void resetCache()
@@ -67,7 +67,7 @@ public class UserManager
 
     public List<User> getUsersByCourseId(int courseId) throws SQLException
     {
-        List<User> users = new LinkedList<User>();
+        List<User> users = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username");
         select.setInt(1, courseId);
         ResultSet rs = select.executeQuery();
@@ -89,7 +89,7 @@ public class UserManager
 
     public List<User> getUsers() throws SQLException
     {
-        List<User> users = new LinkedList<User>();
+        List<User> users = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE deleted = 0 ORDER BY username");
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -103,7 +103,7 @@ public class UserManager
 
     public List<User> getUsersByOrganisationId(int organisationId) throws SQLException
     {
-        List<User> users = new LinkedList<User>();
+        List<User> users = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username");
         select.setInt(1, organisationId);
         ResultSet rs = select.executeQuery();
@@ -118,7 +118,7 @@ public class UserManager
 
     public List<User> getUsersByGroupId(int groupId) throws SQLException
     {
-        List<User> users = new LinkedList<User>();
+        List<User> users = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username");
         select.setInt(1, groupId);
         ResultSet rs = select.executeQuery();
@@ -142,9 +142,7 @@ public class UserManager
 
     public User getUser(String username, String password) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ? AND password = MD5(?)");
-
-        try
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ? AND password = MD5(?)"))
         {
             select.setString(1, username);
             select.setString(2, password);
@@ -154,18 +152,13 @@ public class UserManager
                 return null;
 
             User user = createUser(rs);
-
             return user;
-        }
-        finally
-        {
-            select.close();
         }
     }
 
     public List<User> getUser(String email) throws SQLException
     {
-        List<User> users = new LinkedList<User>();
+        List<User> users = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ?");
         select.setString(1, email);
         ResultSet rs = select.executeQuery();
@@ -287,7 +280,7 @@ public class UserManager
         user.setEmail(email); // the mail confirmation token is created now
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password, false);
-        user.setPreferences(new HashMap<String, String>());
+        user.setPreferences(new HashMap<>());
         user = save(user);
 
         course.addUser(user);
@@ -459,7 +452,7 @@ public class UserManager
         }
 
         if(preferences == null)
-            preferences = new HashMap<String, String>();
+            preferences = new HashMap<>();
 
         user.setPreferences(preferences);
 

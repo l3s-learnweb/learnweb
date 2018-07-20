@@ -657,7 +657,7 @@ public class WaybackUrlManager
                             else
                                 br = new BufferedReader(new InputStreamReader(inputStream));
 
-                            StringBuffer content = new StringBuffer();
+                            StringBuilder content = new StringBuilder();
                             String inputLine;
                             while((inputLine = br.readLine()) != null)
                             {
@@ -764,7 +764,7 @@ public class WaybackUrlManager
             HttpResponse response = client.execute(request);
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             String line = "";
             while((line = rd.readLine()) != null)
             {
@@ -844,15 +844,7 @@ public class WaybackUrlManager
         //HttpsURLConnection.setDefaultSSLSocketFactory(new SSLSocketFactoryWrapper((SSLSocketFactory) SSLSocketFactory.getDefault()));
 
         // Create all-trusting host name verifier
-        HostnameVerifier allHostsValid = new HostnameVerifier()
-        {
-
-            @Override
-            public boolean verify(String hostname, SSLSession session)
-            {
-                return true;
-            }
-        };
+        HostnameVerifier allHostsValid = (hostname, session) -> true;
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         /* End of the fix*/

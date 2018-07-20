@@ -55,8 +55,8 @@ public class ArchiveItShingle
      */
     public Set<String> computeShingles(List<String> wordList)
     {
-        Set<String> setOfShingles = new HashSet<String>();
-        List<String> shingleList = new LinkedList<String>();
+        Set<String> setOfShingles = new HashSet<>();
+        List<String> shingleList = new LinkedList<>();
         for(int i = 0; i < wordList.size() - w; i++)
         {
             shingleList = wordList.subList(i, i + w);
@@ -75,9 +75,9 @@ public class ArchiveItShingle
         if(set1 == null || set2 == null)
             return 0f;
 
-        Set<String> intersect = new HashSet<String>(set1);
+        Set<String> intersect = new HashSet<>(set1);
         intersect.retainAll(set2);
-        Set<String> union = new HashSet<String>(set1);
+        Set<String> union = new HashSet<>(set1);
         union.addAll(set2);
         if(union.size() == 0)
             return 0f;
@@ -91,8 +91,8 @@ public class ArchiveItShingle
     public Set<String> computeUniqueArchivesByPair(HashMap<String, Set<String>> archiveUrlBOW)
     {
         float d = 0;
-        Set<String> nearDuplicateUrls = new HashSet<String>();
-        Set<String> uniqueUrls = new HashSet<String>();
+        Set<String> nearDuplicateUrls = new HashSet<>();
+        Set<String> uniqueUrls = new HashSet<>();
         for(Map.Entry<String, Set<String>> entry1 : archiveUrlBOW.entrySet())
         {
             for(Map.Entry<String, Set<String>> entry2 : archiveUrlBOW.entrySet())
@@ -121,7 +121,7 @@ public class ArchiveItShingle
      */
     public void updateDuplicateShingleIds(int resourceId, int size) throws SQLException
     {
-        LinkedList<Integer> duplicateShingleId = new LinkedList<Integer>();
+        LinkedList<Integer> duplicateShingleId = new LinkedList<>();
         PreparedStatement ps = Learnweb.getInstance().getConnection()
                 .prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` t1 join (SELECT * FROM `lw_resource_archiveurl` WHERE resource_id=?) t2 USING(shingle_id) group by `htmltext`, `htmltags` ORDER BY t1.shingle_id ASC");
         ps.setInt(1, resourceId);
@@ -171,8 +171,8 @@ public class ArchiveItShingle
     @Deprecated
     public void computeUniqueArchivesByPair(HashMap<String, String> archiveUrls, int resourceId) throws SQLException
     {
-        Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
-        ArrayList<String> values = new ArrayList<String>(archiveUrls.values());
+        Set<String> setOfNearUniqueArchivesPair = new HashSet<>();
+        ArrayList<String> values = new ArrayList<>(archiveUrls.values());
         int d = values.size();
         int t = 0;
         for(int i = 0; i < d - 1; i++)
@@ -191,7 +191,7 @@ public class ArchiveItShingle
      */
     public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> archiveUrls, int resourceId, float frameThreshold, float textThreshold) throws SQLException
     {
-        Set<String> uniqueUrls = new LinkedHashSet<String>();
+        Set<String> uniqueUrls = new LinkedHashSet<>();
         Connection conn = Learnweb.getInstance().getConnection();
         int j = 0;
         float textSim = 0, frameSim = 0;
@@ -243,7 +243,7 @@ public class ArchiveItShingle
      */
     public LinkedList<ArchiveUrl> computeThresholdGroupingAlgo(LinkedList<ArchiveUrl> archiveUrls)
     {
-        LinkedList<ArchiveUrl> selectedVersions = new LinkedList<ArchiveUrl>();
+        LinkedList<ArchiveUrl> selectedVersions = new LinkedList<>();
 
         for(int i = 1; i < archiveUrls.size(); i = i + 2)
         {
@@ -275,7 +275,7 @@ public class ArchiveItShingle
     public Set<String> computeUniqueArchivesByThresholdGrouping(LinkedList<ArchiveUrl> archiveUrls)
     {
         List<ArchiveUrl> selectedVersions = computeThresholdGroupingAlgo(archiveUrls);
-        Set<String> selectedArchiveUrls = new LinkedHashSet<String>();
+        Set<String> selectedArchiveUrls = new LinkedHashSet<>();
         for(ArchiveUrl version : selectedVersions)
             selectedArchiveUrls.add(version.getArchiveUrl());
 
@@ -316,10 +316,10 @@ public class ArchiveItShingle
                 rs.beforeFirst();
             }
 
-            List<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+            List<ArchiveUrl> archiveUrls = new LinkedList<>();
             String htmlTags = null, htmlText = null;
-            HashMap<String, Set<String>> hashmapFrame = new LinkedHashMap<String, Set<String>>();
-            HashMap<String, Set<String>> hashmapText = new LinkedHashMap<String, Set<String>>();
+            HashMap<String, Set<String>> hashmapFrame = new LinkedHashMap<>();
+            HashMap<String, Set<String>> hashmapText = new LinkedHashMap<>();
             while(rs.next())
             {
                 Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
@@ -558,9 +558,9 @@ public class ArchiveItShingle
             {
                 String htmlText = null;
                 String htmlTags = null;
-                LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
-                HashMap<String, Set<String>> hashmapFrame = new HashMap<String, Set<String>>();
-                HashMap<String, Set<String>> hashmapText = new HashMap<String, Set<String>>();
+                LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
+                HashMap<String, Set<String>> hashmapFrame = new HashMap<>();
+                HashMap<String, Set<String>> hashmapText = new HashMap<>();
 
                 float frameSim = i;
                 float textSim = i;

@@ -67,7 +67,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable
                 "SELECT CONCAT(year(timestamp),'-',month(timestamp)) as month, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13",
                 null);
 
-        HashSet<String> highlightedEntries = new HashSet<String>();
+        HashSet<String> highlightedEntries = new HashSet<>();
         highlightedEntries.add("Archive-It");
         highlightedEntries.add("Yovisto");
         highlightedEntries.add("LORO");

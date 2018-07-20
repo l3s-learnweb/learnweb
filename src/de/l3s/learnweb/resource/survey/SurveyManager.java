@@ -371,11 +371,8 @@ public class SurveyManager
         try(PreparedStatement insert = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)");)
         {
             // send the two answer types to DB
-            Iterator<Entry<Integer, String>> answer1 = surveyAnswer.getAnswers().entrySet().iterator();
-            while(answer1.hasNext())
+            for(final Entry<Integer, String> pair : surveyAnswer.getAnswers().entrySet())
             {
-                Entry<Integer, String> pair = answer1.next();
-
                 try
                 {
                     insert.setInt(1, surveyAnswer.getResourceId());
@@ -390,11 +387,8 @@ public class SurveyManager
                 }
             }
 
-            Iterator<Entry<Integer, String[]>> answer2 = surveyAnswer.getMultipleAnswers().entrySet().iterator();
-            while(answer2.hasNext())
+            for(final Entry<Integer, String[]> pair : surveyAnswer.getMultipleAnswers().entrySet())
             {
-                Entry<Integer, String[]> pair = answer2.next();
-
                 insert.setInt(1, surveyAnswer.getResourceId());
                 insert.setInt(2, surveyAnswer.getUserId());
                 insert.setInt(3, pair.getKey());

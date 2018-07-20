@@ -14,7 +14,7 @@ public class Entity
     {
         this.dbpediaName = dbpediaName;
         this.entityName = dbpediaName.replaceAll("[_()]", " ").trim();
-        this.ranks = new ArrayList<Integer>();
+        this.ranks = new ArrayList<>();
     }
 
     public Double getScore()

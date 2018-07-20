@@ -35,7 +35,7 @@ public class AdvancedSearchBean implements Serializable
     private String noneWords = "";
     private String language;
     private Map<String, String> languages;
-    private Map<String, Map<String, String>> data = new HashMap<String, Map<String, String>>();
+    private Map<String, Map<String, String>> data = new HashMap<>();
     private String country;
     private String city;
     private Map<String, String> countries;
@@ -49,22 +49,22 @@ public class AdvancedSearchBean implements Serializable
     @PostConstruct
     public void init()
     {
-        languages = new HashMap<String, String>();
+        languages = new HashMap<>();
         languages.put("German", "German");
         languages.put("English", "English");
         languages.put("Italian", "Italian");
 
-        countries = new HashMap<String, String>();
+        countries = new HashMap<>();
         countries.put("USA", "USA");
         countries.put("Germany", "Germany");
 
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         map.put("New York", "New York");
         map.put("San Francisco", "San Francisco");
         map.put("Denver", "Denver");
         data.put("USA", map);
 
-        map = new HashMap<String, String>();
+        map = new HashMap<>();
         map.put("Berlin", "Berlin");
         map.put("Munich", "Munich");
         map.put("Frankfurt", "Frankfurt");
@@ -298,6 +298,6 @@ public class AdvancedSearchBean implements Serializable
         if(country != null && !country.equals(""))
             cities = data.get(country);
         else
-            cities = new HashMap<String, String>();
+            cities = new HashMap<>();
     }
 }

@@ -34,7 +34,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public AdminCourseBean()
     {
-        organisations = new ArrayList<Organisation>(getLearnweb().getOrganisationManager().getOrganisationsAll());
+        organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
         Collections.sort(organisations);
     }
 
@@ -65,8 +65,8 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         }
 
         // many string operations to display the options in a proper way
-        optionGroups = new LinkedList<OptionWrapperGroup>();
-        List<OptionWrapper> options = new LinkedList<OptionWrapper>();
+        optionGroups = new LinkedList<>();
+        List<OptionWrapper> options = new LinkedList<>();
         String oldOptionGroupName = null;
 
         Option[] optionsEnum = Option.values();
@@ -86,7 +86,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
             {
                 optionGroups.add(new OptionWrapperGroup(oldOptionGroupName, options));
 
-                options = new LinkedList<OptionWrapper>();
+                options = new LinkedList<>();
             }
 
             oldOptionGroupName = newOptionGroupName;

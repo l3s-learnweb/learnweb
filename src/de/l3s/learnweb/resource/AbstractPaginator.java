@@ -81,7 +81,7 @@ public abstract class AbstractPaginator implements Serializable
 
     public List<Integer> listPages()
     {
-        List<Integer> pages = new LinkedList<Integer>();
+        List<Integer> pages = new LinkedList<>();
         int fromIndex = 0, endIndex = 0;
         if(pageIndex == 0)
         {

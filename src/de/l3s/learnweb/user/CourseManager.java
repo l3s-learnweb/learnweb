@@ -36,7 +36,7 @@ public class CourseManager
     {
         super();
         this.learnweb = learnweb;
-        this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(80));
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<>(80));
         this.resetCache();
     }
 

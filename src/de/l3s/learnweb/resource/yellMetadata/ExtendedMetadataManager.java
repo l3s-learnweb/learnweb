@@ -29,7 +29,7 @@ public class ExtendedMetadataManager
     //get the list of authors for the given list of resources: used for display in author filter
     public List<String> getAuthorsByResourceIds(List<Resource> resources) throws SQLException
     {
-        List<String> authors = new LinkedList<String>();
+        List<String> authors = new LinkedList<>();
         //here iterate resources and do select for each resource
         for(Resource r : resources)
         {
@@ -83,7 +83,7 @@ public class ExtendedMetadataManager
         //get language (maybe not necessary) res.language
 
         //get target learners
-        List<String> tlearners = new LinkedList<String>();
+        List<String> tlearners = new LinkedList<>();
         Map<String, Integer> tcount = new HashMap();
 
         tlearners = learnweb.getAudienceManager().getAudienceNamesByResourceId(resourceId);
@@ -92,7 +92,7 @@ public class ExtendedMetadataManager
         eMetadata.setTargets(tlearners);
 
         //get purposes
-        List<String> purposes = new LinkedList<String>();
+        List<String> purposes = new LinkedList<>();
         Map<String, Integer> pcount = new HashMap();
 
         purposes = learnweb.getPurposeManager().getPurposeNamesByResourceId(resourceId);
@@ -101,7 +101,7 @@ public class ExtendedMetadataManager
         eMetadata.setPurposes(purposes);
 
         //lang levels
-        List<String> langlevels = new LinkedList<String>();
+        List<String> langlevels = new LinkedList<>();
         Map<String, Integer> lcount = new HashMap();
 
         langlevels = learnweb.getLangLevelManager().getLangLevelNamesByResourceId(resourceId);
@@ -118,7 +118,7 @@ public class ExtendedMetadataManager
         eMetadata.setlCount(lc);
 
         //get categories
-        List<String> categories = new LinkedList<String>();
+        List<String> categories = new LinkedList<>();
         categories = learnweb.getCategoryManager().getCategoryNamesByResourceId(resourceId);
         eMetadata.setCategories(categories);
 
@@ -130,18 +130,18 @@ public class ExtendedMetadataManager
     {
 
         Map<String, Integer> sorted = new HashMap();
-        List<String> tempnames = new ArrayList<String>();
-        int initcount = 1;
+        List<String> tempNames = new ArrayList<>();
+        int initCount = 1;
 
         for(String md : metadatas)
         {
 
             String exist = "no";
             //check if the name exists already
-            for(int i = 0; i < tempnames.size(); i++)
+            for(String tempName : tempNames)
             {
 
-                if(md.equalsIgnoreCase(tempnames.get(i)))
+                if(md.equalsIgnoreCase(tempName))
                 {
                     exist = "yes";
                 }
@@ -149,8 +149,8 @@ public class ExtendedMetadataManager
 
             if(exist.equalsIgnoreCase("no"))
             {
-                tempnames.add(md);
-                sorted.put(md, initcount);
+                tempNames.add(md);
+                sorted.put(md, initCount);
             }
 
             if(exist.equalsIgnoreCase("yes")) //if md already exists, only increase the count

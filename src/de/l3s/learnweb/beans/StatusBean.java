@@ -16,7 +16,7 @@ import de.l3s.learnweb.Learnweb;
 public class StatusBean extends ApplicationBean
 {
 
-    private List<Service> services = new LinkedList<StatusBean.Service>();
+    private List<Service> services = new LinkedList<>();
 
     public StatusBean()
     {

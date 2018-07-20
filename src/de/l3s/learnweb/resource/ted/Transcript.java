@@ -8,7 +8,7 @@ import de.l3s.util.StringHelper;
 public class Transcript
 {
     private String languageCode;
-    private List<Paragraph> paragraphs = new LinkedList<Transcript.Paragraph>();
+    private List<Paragraph> paragraphs = new LinkedList<>();
 
     public String getLanguageCode()
     {

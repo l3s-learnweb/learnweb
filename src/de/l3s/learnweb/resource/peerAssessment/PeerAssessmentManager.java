@@ -195,7 +195,7 @@ public class PeerAssessmentManager
         int assessmentFolderId = 466; // the folder inside the assessment group to store all assessment surveys
 
         // these surveys are used directly. One for each submission topic
-        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<>();
         taskPeerAssessmentSurveyMapping.put("About Us page", 217735);
         taskPeerAssessmentSurveyMapping.put("Corporate Videos", 217734);
         taskPeerAssessmentSurveyMapping.put("Weblogs", 217733);
@@ -250,7 +250,7 @@ public class PeerAssessmentManager
         int assessmentFolderId = 463; // the folder inside the assessment group to store all assessment surveys
 
         // these surveys are used directly. One for each submission topic
-        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<>();
         taskPeerAssessmentSurveyMapping.put("About Us page", 217538);
         taskPeerAssessmentSurveyMapping.put("Corporate Video", 217539);
         taskPeerAssessmentSurveyMapping.put("Fanvid", 217537);
@@ -260,7 +260,7 @@ public class PeerAssessmentManager
         //taskSetupPeerAssessment(peerAssessmentId, courseIds, taskPeerAssessmentSurveyMapping);
 
         // these surveys are copied once for each assessment pair
-        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<>();
         taskAssessmentSurveyMapping.put("About Us page", 204316);
         taskAssessmentSurveyMapping.put("Corporate Video", 204315);
         taskAssessmentSurveyMapping.put("Fanvid", 204490);
@@ -279,7 +279,7 @@ public class PeerAssessmentManager
         int assessmentFolderId = 443; // the folder inside the assessment group to store all assessment surveys
 
         // these surveys are used directly. One for each submission topic
-        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<>();
         taskPeerAssessmentSurveyMapping.put("About Us page", 214925);
         taskPeerAssessmentSurveyMapping.put("Corporate Video", 214922);
         taskPeerAssessmentSurveyMapping.put("Fanvid", 214924);
@@ -289,7 +289,7 @@ public class PeerAssessmentManager
         taskSetupPeerAssessment(peerAssessmentId, courseIds, taskPeerAssessmentSurveyMapping);
 
         // these surveys are copied once for each assessment pair
-        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<>();
         taskAssessmentSurveyMapping.put("About Us page", 204316);
         taskAssessmentSurveyMapping.put("Corporate Video", 204315);
         taskAssessmentSurveyMapping.put("Fanvid", 204490);

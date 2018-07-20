@@ -32,7 +32,7 @@ public class LangLevelManager
 
     public List<LangLevel> getLangLevelsByResourceId(int resourceId) throws SQLException
     {
-        List<LangLevel> langLevels = new LinkedList<LangLevel>();
+        List<LangLevel> langLevels = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? ORDER BY langlevel_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -47,7 +47,7 @@ public class LangLevelManager
 
     public List<String> getLangLevelNamesByResourceId(int resourceId) throws SQLException
     {
-        List<String> langlevels = new LinkedList<String>();
+        List<String> langlevels = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? ORDER BY langlevel_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -69,7 +69,7 @@ public class LangLevelManager
 
     public List<LangLevel> getLangLevels() throws SQLException
     {
-        List<LangLevel> langLevels = new LinkedList<LangLevel>();
+        List<LangLevel> langLevels = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` ORDER BY langlevel_name");
         ResultSet rs = select.executeQuery();
         while(rs.next())

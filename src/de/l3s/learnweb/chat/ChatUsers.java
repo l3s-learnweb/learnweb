@@ -18,7 +18,7 @@ public class ChatUsers implements Serializable
     @PostConstruct
     public void init()
     {
-        users = new ArrayList<String>();
+        users = new ArrayList<>();
     }
 
     public List<String> getUsers()

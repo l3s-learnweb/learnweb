@@ -195,165 +195,128 @@ public class BounceManager extends Observable
         }
 
         //Actual code explanation. VERY LONG
-        if(codes[1].equals("1.0"))
+        switch(codes[1])
         {
-            description += "Other address status";
-        }
-        else if(codes[1].equals("1.1"))
-        {
-            description += "Bad destination mailbox address";
-        }
-        else if(codes[1].equals("1.2"))
-        {
-            description += " Bad destination system address";
-        }
-        else if(codes[1].equals("1.3"))
-        {
-            description += "Bad destination mailbox address syntax";
-        }
-        else if(codes[1].equals("1.4"))
-        {
-            description += "Destination mailbox address ambiguous";
-        }
-        else if(codes[1].equals("1.5"))
-        {
-            description += "Destination mailbox address valid";
-        }
-        else if(codes[1].equals("1.6"))
-        {
-            description += "Mailbox has moved";
-        }
-        else if(codes[1].equals("1.7"))
-        {
-            description += "Bad sender's mailbox address syntax";
-        }
-        else if(codes[1].equals("1.8"))
-        {
-            description += "Bad sender's system address";
-        }
-        else if(codes[1].equals("2.0"))
-        {
-            description += "Other or undefined mailbox status";
-        }
-        else if(codes[1].equals("2.1"))
-        {
-            description += "Mailbox disabled, not accepting messages";
-        }
-        else if(codes[1].equals("2.2"))
-        {
-            description += "Mailbox full";
-        }
-        else if(codes[1].equals("2.3"))
-        {
-            description += "Message length exceeds administrative limit";
-        }
-        else if(codes[1].equals("2.4"))
-        {
-            description += "Mailing list expansion problem";
-        }
-        else if(codes[1].equals("3.0"))
-        {
-            description += "Other or undefined mail system status";
-        }
-        else if(codes[1].equals("3.1"))
-        {
-            description += "Mail system full";
-        }
-        else if(codes[1].equals("3.2"))
-        {
-            description += "System not accepting network messages";
-        }
-        else if(codes[1].equals("3.3"))
-        {
-            description += "System not capable of selected features";
-        }
-        else if(codes[1].equals("3.4"))
-        {
-            description += " Message too big for system";
-        }
-        else if(codes[1].equals("4.0"))
-        {
-            description += "Other or undefined network or routing status";
-        }
-        else if(codes[1].equals("4.1"))
-        {
-            description += "No answer from host";
-        }
-        else if(codes[1].equals("4.2"))
-        {
-            description += "Bad connection";
-        }
-        else if(codes[1].equals("4.3"))
-        {
-            description += "Routing server failure";
-        }
-        else if(codes[1].equals("4.4"))
-        {
-            description += "Unable to route";
-        }
-        else if(codes[1].equals("4.5"))
-        {
-            description += "Network congestion";
-        }
-        else if(codes[1].equals("4.6"))
-        {
-            description += "Routing loop detected";
-        }
-        else if(codes[1].equals("4.7"))
-        {
-            description += "Delivery time expired";
-        }
-        else if(codes[1].equals("5.0"))
-        {
-            description += "Other or undefined protocol status";
-        }
-        else if(codes[1].equals("5.1"))
-        {
-            description += "Invalid command";
-        }
-        else if(codes[1].equals("5.2"))
-        {
-            description += "Syntax error";
-        }
-        else if(codes[1].equals("5.3"))
-        {
-            description += "Too many recipients";
-        }
-        else if(codes[1].equals("5.4"))
-        {
-            description += "Invalid command arguments";
-        }
-        else if(codes[1].equals("5.5"))
-        {
-            description += "Wrong protocol version";
-        }
-        else if(codes[1].equals("6.0"))
-        {
-            description += "Other or undefined media error";
-        }
-        else if(codes[1].equals("6.1"))
-        {
-            description += "Media not supported";
-        }
-        else if(codes[1].equals("6.2"))
-        {
-            description += "Conversion required and prohibited";
-        }
-        else if(codes[1].equals("6.3"))
-        {
-            description += "Conversion required but not supported";
-        }
-        else if(codes[1].equals("6.4"))
-        {
-            description += "Conversion with loss performed";
-        }
-        else if(codes[1].equals("6.5"))
-        {
-            description += "Conversion failed";
-        }
-        else
-        {
-            description += "Unspecified mailing error";
+            case "1.0":
+                description += "Other address status";
+                break;
+            case "1.1":
+                description += "Bad destination mailbox address";
+                break;
+            case "1.2":
+                description += "Bad destination system address";
+                break;
+            case "1.3":
+                description += "Bad destination mailbox address syntax";
+                break;
+            case "1.4":
+                description += "Destination mailbox address ambiguous";
+                break;
+            case "1.5":
+                description += "Destination mailbox address valid";
+                break;
+            case "1.6":
+                description += "Mailbox has moved";
+                break;
+            case "1.7":
+                description += "Bad sender's mailbox address syntax";
+                break;
+            case "1.8":
+                description += "Bad sender's system address";
+                break;
+            case "2.0":
+                description += "Other or undefined mailbox status";
+                break;
+            case "2.1":
+                description += "Mailbox disabled, not accepting messages";
+                break;
+            case "2.2":
+                description += "Mailbox full";
+                break;
+            case "2.3":
+                description += "Message length exceeds administrative limit";
+                break;
+            case "2.4":
+                description += "Mailing list expansion problem";
+                break;
+            case "3.0":
+                description += "Other or undefined mail system status";
+                break;
+            case "3.1":
+                description += "Mail system full";
+                break;
+            case "3.2":
+                description += "System not accepting network messages";
+                break;
+            case "3.3":
+                description += "System not capable of selected features";
+                break;
+            case "3.4":
+                description += " Message too big for system";
+                break;
+            case "4.0":
+                description += "Other or undefined network or routing status";
+                break;
+            case "4.1":
+                description += "No answer from host";
+                break;
+            case "4.2":
+                description += "Bad connection";
+                break;
+            case "4.3":
+                description += "Routing server failure";
+                break;
+            case "4.4":
+                description += "Unable to route";
+                break;
+            case "4.5":
+                description += "Network congestion";
+                break;
+            case "4.6":
+                description += "Routing loop detected";
+                break;
+            case "4.7":
+                description += "Delivery time expired";
+                break;
+            case "5.0":
+                description += "Other or undefined protocol status";
+                break;
+            case "5.1":
+                description += "Invalid command";
+                break;
+            case "5.2":
+                description += "Syntax error";
+                break;
+            case "5.3":
+                description += "Too many recipients";
+                break;
+            case "5.4":
+                description += "Invalid command arguments";
+                break;
+            case "5.5":
+                description += "Wrong protocol version";
+                break;
+            case "6.0":
+                description += "Other or undefined media error";
+                break;
+            case "6.1":
+                description += "Media not supported";
+                break;
+            case "6.2":
+                description += "Conversion required and prohibited";
+                break;
+            case "6.3":
+                description += "Conversion required but not supported";
+                break;
+            case "6.4":
+                description += "Conversion with loss performed";
+                break;
+            case "6.5":
+                description += "Conversion failed";
+                break;
+            default:
+                description += "Unspecified mailing error";
+                break;
         }
 
         return description;

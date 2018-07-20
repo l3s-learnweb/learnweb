@@ -130,7 +130,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         String type = params.get("type");
         if(groupSummary != null && index != null && type != null)
         {
-            return new AbstractMap.SimpleEntry<String, Resource>(type, getClickedResourceFromOverview(Integer.valueOf(index), type));
+            return new AbstractMap.SimpleEntry<>(type, getClickedResourceFromOverview(Integer.valueOf(index), type));
         }
         return null;
     }

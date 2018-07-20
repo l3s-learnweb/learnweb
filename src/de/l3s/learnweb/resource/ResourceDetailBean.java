@@ -473,9 +473,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 resource.addNewLevels(selectedLevels, getUser());
 
                 String sLevels = "";
-                for(int i = 0; i < selectedLevels.length; i++)
+                for(final String selectedLevel : selectedLevels)
                 {
-                    sLevels += selectedLevels[i] + ";";
+                    sLevels += selectedLevel + ";";
                 }
                 log(LogEntry.Action.adding_yourown_metadata, resource.getGroupId(), resource.getId(), "language levels: " + sLevels);
                 selectedLevels = null; // clear lang level field
@@ -494,9 +494,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 rightPaneBean.getClickedResource().addNewTargets(selectedTargets, getUser());
 
                 String sTargets = "";
-                for(int i = 0; i < selectedTargets.length; i++)
+                for(final String selectedTarget : selectedTargets)
                 {
-                    sTargets += selectedTargets[i] + ";";
+                    sTargets += selectedTarget + ";";
                 }
                 log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "audiences: " + sTargets);
                 selectedTargets = null;
@@ -516,9 +516,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 rightPaneBean.getClickedResource().addNewPurposes(selectedPurposes, getUser());
 
                 String sPurposes = "";
-                for(int i = 0; i < selectedPurposes.length; i++)
+                for(final String selectedPurpose : selectedPurposes)
                 {
-                    sPurposes += selectedPurposes[i] + ";";
+                    sPurposes += selectedPurpose + ";";
                 }
                 log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "purposes: " + sPurposes);
                 selectedPurposes = null;
@@ -617,7 +617,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         if(selectedPurposes == null)
             return null;
-        return new ArrayList<String>(Arrays.asList(selectedPurposes));
+        return new ArrayList<>(Arrays.asList(selectedPurposes));
     }
 
     public void setSelectedPurposes(ArrayList<String> selectedPurposes)

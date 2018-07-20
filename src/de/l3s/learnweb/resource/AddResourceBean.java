@@ -350,9 +350,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public String[] getCourseList()
     {
-        List<Course> courseByOrganization = new ArrayList<Course>();
+        List<Course> courseByOrganization = new ArrayList<>();
         courseByOrganization = getLearnweb().getCourseManager().getCoursesByOrganisationId(getUser().getOrganisationId());
-        ArrayList<String> courseTitles = new ArrayList<String>();
+        ArrayList<String> courseTitles = new ArrayList<>();
         for(Course c : courseByOrganization)
         {
             courseTitles.add(c.getTitle());

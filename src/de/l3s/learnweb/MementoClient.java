@@ -42,7 +42,7 @@ public class MementoClient
             log.error("The requested resource URI is malformed:", e);
         }
 
-        List<ArchiveUrl> archiveVersions = new LinkedList<ArchiveUrl>();
+        List<ArchiveUrl> archiveVersions = new LinkedList<>();
 
         try
         {
@@ -59,7 +59,7 @@ public class MementoClient
             {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
 
                 while((inputLine = in.readLine()) != null)
                 {

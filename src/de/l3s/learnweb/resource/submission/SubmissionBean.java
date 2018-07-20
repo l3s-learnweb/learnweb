@@ -446,9 +446,9 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
     public void fetchSubmissions()
     {
-        pastSubmissions = new ArrayList<Submission>();
-        currentSubmissions = new ArrayList<Submission>();
-        futureSubmissions = new ArrayList<Submission>();
+        pastSubmissions = new ArrayList<>();
+        currentSubmissions = new ArrayList<>();
+        futureSubmissions = new ArrayList<>();
 
         try
         {

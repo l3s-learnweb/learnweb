@@ -56,7 +56,7 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
-    private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
+    private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
     private transient Organisation activeOrganisation;
@@ -99,7 +99,7 @@ public class UserBean implements Serializable
         HttpSession session = (HttpSession) context.getSession(true);
         session.setAttribute("userName", info); // set only to display it in Tomcat manager app
         session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
-        session.setAttribute("learnweb_user_id", new Integer(userId)); // required by DownloadServlet
+        session.setAttribute("learnweb_user_id", userId); // required by DownloadServlet
     }
 
     public boolean isLoggedIn()
@@ -214,20 +214,28 @@ public class UserBean implements Serializable
         String languageVariant = getActiveOrganisation().getLanguageVariant();
         //log.debug("set locale " + localeCode);
 
-        if(localeCode.equals("de"))
-            locale = new Locale("de", "DE", languageVariant);
-        else if(localeCode.equals("en"))
-            locale = new Locale("en", "UK", languageVariant);
-        else if(localeCode.equals("it"))
-            locale = new Locale("it", "IT", languageVariant);
-        else if(localeCode.equals("pt"))
-            locale = new Locale("pt", "BR", languageVariant);
-        else if(localeCode.equals("xx")) // only for translation editors
-            locale = new Locale("xx");
-        else
+        switch(localeCode)
         {
-            locale = new Locale("en", "UK");
-            log.error("Unsupported language: " + localeCode);
+            case "de":
+                locale = new Locale("de", "DE", languageVariant);
+                break;
+            case "en":
+                locale = new Locale("en", "UK", languageVariant);
+                break;
+            case "it":
+                locale = new Locale("it", "IT", languageVariant);
+                break;
+            case "pt":
+                locale = new Locale("pt", "BR", languageVariant);
+                break;
+            case "xx":
+                // only for translation editors
+                locale = new Locale("xx");
+                break;
+            default:
+                locale = new Locale("en", "UK");
+                log.error("Unsupported language: " + localeCode);
+                break;
         }
         //log.debug("Locale set: " + locale + ";");
 
@@ -292,7 +300,7 @@ public class UserBean implements Serializable
      */
     public boolean canModerateCourse(Course course) throws SQLException
     {
-        LinkedList<Course> courses = new LinkedList<Course>(); // create dummy list with single entry
+        LinkedList<Course> courses = new LinkedList<>(); // create dummy list with single entry
         courses.add(course);
 
         return canModerateCourses(courses);
@@ -422,7 +430,7 @@ public class UserBean implements Serializable
      */
     public LinkedList<DefaultSubMenu> getGroupMenu()
     {
-        LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
+        LinkedList<DefaultSubMenu> menu = new LinkedList<>();
         Integer groupId = ApplicationBean.getParameterInt("group_id");
 
         try

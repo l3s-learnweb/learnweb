@@ -94,7 +94,7 @@ public class SearchSessionEdgeComputator
 
     public void insertEdgesForSessionId(String sessionId)
     {
-        List<String> entities = new ArrayList<String>();
+        List<String> entities = new ArrayList<>();
         try
         {
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
@@ -159,7 +159,7 @@ public class SearchSessionEdgeComputator
 
     public Map<EntityPair, Double> getEntityPairScores(List<String> entityList)
     {
-        Map<EntityPair, Double> entityCooccurrence = new HashMap<EntityPair, Double>();
+        Map<EntityPair, Double> entityCooccurrence = new HashMap<>();
         try
         {
             Map<EntityPair, Double> unsortedEntityCooccur = getEdgeScore(entityList);
@@ -215,7 +215,7 @@ public class SearchSessionEdgeComputator
     //sort entity pairs by score
     public static List<Map.Entry<EntityPair, Double>> sortByScore(Map<EntityPair, Double> m)
     {
-        List<Map.Entry<EntityPair, Double>> sorted = new ArrayList<Map.Entry<EntityPair, Double>>(m.entrySet());
+        List<Map.Entry<EntityPair, Double>> sorted = new ArrayList<>(m.entrySet());
         Comparator<Map.Entry<EntityPair, Double>> valueComparator = new Comparator<Map.Entry<EntityPair, Double>>()
         {
             @Override
@@ -225,7 +225,7 @@ public class SearchSessionEdgeComputator
                 return (int) (o2.getValue() - o1.getValue());
             }
         };
-        Collections.sort(sorted, valueComparator);
+        sorted.sort(valueComparator);
         return sorted;
     }
 

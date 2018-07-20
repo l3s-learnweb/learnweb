@@ -112,10 +112,9 @@ public class TedCrawlerSimple implements Runnable
             JSONObject transcriptJSONObj = (JSONObject) jsonParser.parse(transcriptJSONStr);
             JSONArray paragraphs = (JSONArray) transcriptJSONObj.get("paragraphs");
 
-            for(int i = 0; i < paragraphs.size(); i++)
+            for(Object paragraph1 : paragraphs)
             {
-
-                JSONObject paragraph = (JSONObject) paragraphs.get(i);
+                JSONObject paragraph = (JSONObject) paragraph1;
                 //'cues' is a json array to split the paragraph into text segments to highlight in parallel while watching the video
                 JSONArray cues = (JSONArray) paragraph.get("cues");
                 JSONObject firstCue = (JSONObject) cues.get(0);
@@ -257,8 +256,8 @@ public class TedCrawlerSimple implements Runnable
      */
     public void visit(String url)
     {
-        HashSet<String> languageSet = new HashSet<String>();
-        HashSet<String> languageListFromDatabase = new HashSet<String>();
+        HashSet<String> languageSet = new HashSet<>();
+        HashSet<String> languageListFromDatabase = new HashSet<>();
 
         String keywords = "", title = null, description = null;
         //String url = page.getWebURL().getURL();

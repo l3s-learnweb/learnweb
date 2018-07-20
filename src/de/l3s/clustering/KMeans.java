@@ -16,14 +16,14 @@ public class KMeans
     private int MAX_COORDINATE;
 
     private List<Point> points;
-    private List<Cluster> clusters = new ArrayList<Cluster>();
+    private List<Cluster> clusters = new ArrayList<>();
 
-    private HashMap<String, Long> listActivities = new HashMap<String, Long>();
+    private HashMap<String, Long> listActivities = new HashMap<>();
 
     public KMeans()
     {
-        this.points = new ArrayList<Point>();
-        this.clusters = new ArrayList<Cluster>();
+        this.points = new ArrayList<>();
+        this.clusters = new ArrayList<>();
     }
 
     //Initializes the process
@@ -64,7 +64,7 @@ public class KMeans
     //Add the list of points into a vector
     public List<Point> listOfPoints()
     {
-        List<Point> p = new ArrayList<Point>();
+        List<Point> p = new ArrayList<>();
         log.debug("listOfPoints");
 
         Point pt = new Point(listActivities.get("Searching"), listActivities.get("Open Resource"));
@@ -178,7 +178,7 @@ public class KMeans
 
     private List<Point> getCentroids()
     {
-        List<Point> centroids = new ArrayList<Point>(NUM_CLUSTERS);
+        List<Point> centroids = new ArrayList<>(NUM_CLUSTERS);
         for(Cluster cluster : clusters)
         {
             Point aux = cluster.getCentroid();

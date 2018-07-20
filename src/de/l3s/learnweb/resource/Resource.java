@@ -856,52 +856,22 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public static Comparator<Resource> createIdComparator()
     {
-        return new Comparator<Resource>()
-        {
-            @Override
-            public int compare(Resource o1, Resource o2)
-            {
-                return new Integer(o1.getId()).compareTo(o2.getId());
-            }
-        };
+        return Comparator.comparingInt(Resource::getId);
     }
 
     public static Comparator<Resource> createTitleComparator()
     {
-        return new Comparator<Resource>()
-        {
-            @Override
-            public int compare(Resource o1, Resource o2)
-            {
-                if(null == o1 || null == o2)
-                    return 0;
-                return o1.getTitle().compareTo(o2.getTitle());
-            }
-        };
+        return Comparator.comparing(Resource::getTitle);
     }
 
     public static Comparator<Resource> createSourceComparator()
     {
-        return new Comparator<Resource>()
-        {
-            @Override
-            public int compare(Resource o1, Resource o2)
-            {
-                return o1.getLocation().compareTo(o2.getLocation());
-            }
-        };
+        return Comparator.comparing(Resource::getLocation);
     }
 
     public static Comparator<Resource> createTypeComparator()
     {
-        return new Comparator<Resource>()
-        {
-            @Override
-            public int compare(Resource o1, Resource o2)
-            {
-                return o1.getType().compareTo(o2.getType());
-            }
-        };
+        return Comparator.comparing(Resource::getType);
     }
 
     /**
@@ -1362,7 +1332,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public HashMap<String, List<ArchiveUrl>> getArchiveUrlsAsYears()
     {
-        HashMap<String, List<ArchiveUrl>> versions = new LinkedHashMap<String, List<ArchiveUrl>>();
+        HashMap<String, List<ArchiveUrl>> versions = new LinkedHashMap<>();
         SimpleDateFormat df = new SimpleDateFormat("yyyy");
         for(ArchiveUrl a : archiveUrls)
         {
@@ -1371,7 +1341,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 versions.get(year).add(a);
             else
             {
-                versions.put(year, new ArrayList<ArchiveUrl>());
+                versions.put(year, new ArrayList<>());
                 versions.get(year).add(a);
             }
         }

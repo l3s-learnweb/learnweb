@@ -40,9 +40,9 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     private void load() throws SQLException
     {
         if(getUser().isAdmin())
-            courses = new ArrayList<Course>(getLearnweb().getCourseManager().getCoursesAll());
+            courses = new ArrayList<>(getLearnweb().getCourseManager().getCoursesAll());
         else if(getUser().isModerator())
-            courses = new ArrayList<Course>(getUser().getOrganisation().getCourses());
+            courses = new ArrayList<>(getUser().getOrganisation().getCourses());
         else
             return;
 

@@ -61,10 +61,10 @@ public class ProtectionManager
     public ProtectionManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        accessMap = new ConcurrentHashMap<String, AccessData>();
-        attemptedLogins = new ConcurrentLinkedQueue<LoginAttemptData>();
+        accessMap = new ConcurrentHashMap<>();
+        attemptedLogins = new ConcurrentLinkedQueue<>();
         suspiciousActivityList = new ArrayList<>();
-        whitelist = new HashSet<String>();
+        whitelist = new HashSet<>();
         loadBanLists();
         loadWhitelist();
 
@@ -369,7 +369,7 @@ public class ProtectionManager
 
     public List<AccessData> getBanlist()
     {
-        List<AccessData> l = new ArrayList<AccessData>();
+        List<AccessData> l = new ArrayList<>();
         l.addAll(accessMap.values());
         return l;
     }

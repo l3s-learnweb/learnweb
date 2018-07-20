@@ -145,7 +145,7 @@ public class CDXClient
                 return null;
             }
 
-            List<Long> timestamps = new LinkedList<Long>();
+            List<Long> timestamps = new LinkedList<>();
             for(String s : response)
             {
                 timestamps.add(waybackDateFormat.parse(s).getTime());

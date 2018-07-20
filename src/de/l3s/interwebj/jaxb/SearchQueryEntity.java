@@ -45,7 +45,7 @@ public class SearchQueryEntity
 
     public SearchQueryEntity()
     {
-        results = new ArrayList<SearchResultEntity>();
+        results = new ArrayList<>();
     }
 
     public void addResult(SearchResultEntity result)

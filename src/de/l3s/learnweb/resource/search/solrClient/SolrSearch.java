@@ -75,7 +75,7 @@ public class SolrSearch implements Serializable
             {
                 if(user != null && user.getGroups() != null)
                 {
-                    this.filterGroupIds = new LinkedList<Integer>();
+                    this.filterGroupIds = new LinkedList<>();
                     for(Group group : user.getGroups())
                         this.filterGroupIds.add(group.getId());
                 }
@@ -164,7 +164,7 @@ public class SolrSearch implements Serializable
      */
     public void setFilterGroups(List<Group> filterGroups)
     {
-        this.filterGroupIds = new LinkedList<Integer>();
+        this.filterGroupIds = new LinkedList<>();
 
         for(Group group : filterGroups) // get ids of the groups
         {
@@ -179,7 +179,7 @@ public class SolrSearch implements Serializable
      */
     public void setFilterGroups(Integer... filterGroupIds)
     {
-        this.filterGroupIds = new LinkedList<Integer>();
+        this.filterGroupIds = new LinkedList<>();
 
         for(Integer id : filterGroupIds) // get ids of the groups
         {
@@ -493,7 +493,7 @@ public class SolrSearch implements Serializable
      */
     public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, IOException, SolrServerException
     {
-        List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        List<ResourceDecorator> resources = new LinkedList<>();
 
         ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
         QueryResponse response = getSolrResourcesByPage(page);
@@ -509,16 +509,14 @@ public class SolrSearch implements Serializable
         List<SolrResourceBean> solrResources = response.getBeans(SolrResourceBean.class);
         Map<String, Map<String, List<String>>> highlight = response.getHighlighting();
 
-        List<String> snippets = new LinkedList<String>();
+        List<String> snippets = new LinkedList<>();
 
         int skippedResources = 0;
 
-        for(int i = 0; i < solrResources.size(); i++)
+        for(SolrResourceBean solrResource : solrResources)
         {
             //print solr scores for each returned result from solr
             //log.debug(docs.get(i).getFieldValue("score"));
-            SolrResourceBean solrResource = solrResources.get(i);
-
             Resource resource = null;
 
             if(solrResource.getId().startsWith("r_")) // a "real" Learnweb resource

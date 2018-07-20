@@ -78,11 +78,11 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public NewSearchHistoryBean()
     {
         title = "Search History";
-        queries = new ArrayList<String>();
-        entities = new HashSet<String>();
-        searchIdSnippets = new HashMap<Integer, List<SearchResult>>();
-        selectedSearchIds = new ArrayList<Integer>();
-        searchIdQueryMap = new HashMap<Integer, String>();
+        queries = new ArrayList<>();
+        entities = new HashSet<>();
+        searchIdSnippets = new HashMap<>();
+        selectedSearchIds = new ArrayList<>();
+        searchIdQueryMap = new HashMap<>();
     }
 
     /**
@@ -237,7 +237,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public List<SearchResult> getSearchResults()
     {
-        List<SearchResult> searchResults = new ArrayList<SearchResult>();
+        List<SearchResult> searchResults = new ArrayList<>();
         for(int searchId : selectedSearchIds)
         {
             if(!searchIdSnippets.containsKey(searchId))

@@ -42,7 +42,7 @@ public class FactSheet implements Serializable
 
     private ArrayList<Entity> lookup(String query)
     {
-        ArrayList<Entity> e = new ArrayList<Entity>();
+        ArrayList<Entity> e = new ArrayList<>();
         Client client = Client.create();
         WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:1112/api/search/KeywordSearch?QueryString=" + StringHelper.urlEncode(query));
 
@@ -91,7 +91,7 @@ public class FactSheet implements Serializable
 
     public ArrayList<Entity> parseXML(String response)
     {
-        ArrayList<Entity> e = new ArrayList<Entity>();
+        ArrayList<Entity> e = new ArrayList<>();
         Document doc = Jsoup.parse(response, "", Parser.xmlParser());
         for(Element el : doc.select("Result"))
         {

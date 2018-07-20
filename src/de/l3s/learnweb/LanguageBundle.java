@@ -119,7 +119,7 @@ public class LanguageBundle extends ResourceBundle
             String constName = sb.substring(startName + START_CONST.length(), endName);
             String constValue = values.get(constName);
 
-            if(constValue == null || constValue.indexOf(START_CONST) != -1)
+            if(constValue == null || constValue.contains(START_CONST))
             {
                 // Property name not found or contains variable
                 // Ignore this variable

@@ -42,7 +42,7 @@ public class Message implements Comparable<Message>
 
     public static ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
     {
-        ArrayList<Message> messageList = new ArrayList<Message>();
+        ArrayList<Message> messageList = new ArrayList<>();
         if(user == null)
             return messageList;
 

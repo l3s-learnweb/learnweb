@@ -36,7 +36,7 @@ public class SearchFilters implements Serializable
     private FILTERS lastFilter = null;
     private int prevFilters = 0;
     private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
-    private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
+    private Map<FILTERS, List<Count>> availableResources = new HashMap<>();
     private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
@@ -371,37 +371,32 @@ public class SearchFilters implements Serializable
     {
         for(FacetField ff : ffs)
         {
-            if(ff.getName().equals("location"))
+            switch(ff.getName())
             {
-                putResourceCounter(FILTERS.service, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("type"))
-            {
-                putResourceCounter(FILTERS.type, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("groupId"))
-            {
-                putResourceCounter(FILTERS.group, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("collector_s"))
-            {
-                putResourceCounter(FILTERS.collector, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("author_s"))
-            {
-                putResourceCounter(FILTERS.author, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("coverage_s"))
-            {
-                putResourceCounter(FILTERS.coverage, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("publisher_s"))
-            {
-                putResourceCounter(FILTERS.publisher, ff.getValues(), false);
-            }
-            else if(ff.getName().equals("tags_ss"))
-            {
-                putResourceCounter(FILTERS.tags, ff.getValues(), false);
+                case "location":
+                    putResourceCounter(FILTERS.service, ff.getValues(), false);
+                    break;
+                case "type":
+                    putResourceCounter(FILTERS.type, ff.getValues(), false);
+                    break;
+                case "groupId":
+                    putResourceCounter(FILTERS.group, ff.getValues(), false);
+                    break;
+                case "collector_s":
+                    putResourceCounter(FILTERS.collector, ff.getValues(), false);
+                    break;
+                case "author_s":
+                    putResourceCounter(FILTERS.author, ff.getValues(), false);
+                    break;
+                case "coverage_s":
+                    putResourceCounter(FILTERS.coverage, ff.getValues(), false);
+                    break;
+                case "publisher_s":
+                    putResourceCounter(FILTERS.publisher, ff.getValues(), false);
+                    break;
+                case "tags_ss":
+                    putResourceCounter(FILTERS.tags, ff.getValues(), false);
+                    break;
             }
         }
     }
@@ -563,7 +558,7 @@ public class SearchFilters implements Serializable
 
     public List<FilterItem> getAvailableSources(Object current)
     {
-        List<FilterItem> filters = new ArrayList<FilterItem>();
+        List<FilterItem> filters = new ArrayList<>();
 
         FILTERS fs = FILTERS.service;
         if(availableResources.containsKey(fs))
@@ -587,7 +582,7 @@ public class SearchFilters implements Serializable
 
     public List<Filter> getAvailableFilters(FILTERS[] except)
     {
-        List<Filter> list = new ArrayList<Filter>();
+        List<Filter> list = new ArrayList<>();
         FILTERS[] filters = ArrayUtils.removeElements(FILTERS.getFilterByMode(configMode), except);
 
         for(FILTERS fs : filters)
@@ -969,7 +964,7 @@ public class SearchFilters implements Serializable
             this.anyText = anyText;
             this.anyUrl = anyUrl;
             this.active = active;
-            this.filterItems = new ArrayList<FilterItem>();
+            this.filterItems = new ArrayList<>();
         }
 
         public String getName()

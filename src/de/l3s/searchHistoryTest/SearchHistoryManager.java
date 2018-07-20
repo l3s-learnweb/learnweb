@@ -36,7 +36,7 @@ public class SearchHistoryManager
      */
     public LinkedList<Query> getQueriesForSessionId(String sessionId)
     {
-        LinkedList<Query> queries = new LinkedList<Query>();
+        LinkedList<Query> queries = new LinkedList<>();
 
         try
         {
@@ -61,7 +61,7 @@ public class SearchHistoryManager
 
     public List<SearchResult> getSearchResultsForSearchId(int searchId, int limit)
     {
-        List<SearchResult> searchResults = new ArrayList<SearchResult>();
+        List<SearchResult> searchResults = new ArrayList<>();
         try
         {
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_resource WHERE search_id = ? ORDER BY rank LIMIT ?");
@@ -103,7 +103,7 @@ public class SearchHistoryManager
     @SuppressWarnings("unchecked")
     public List<Entity> getRelatedEntitiesForSearchId(int searchId)
     {
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<>();
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
@@ -133,7 +133,7 @@ public class SearchHistoryManager
 
     public List<Query> getQueriesForSessionFromCache(int userId, String sessionId)
     {
-        List<Query> queries = new ArrayList<Query>();
+        List<Query> queries = new ArrayList<>();
 
         if(SessionCache.Instance().existsUserId(userId))
         {
@@ -154,7 +154,7 @@ public class SearchHistoryManager
 
     public List<Query> getQueriesForSessionFromGroupCache(int groupId, String sessionId)
     {
-        List<Query> queries = new ArrayList<Query>();
+        List<Query> queries = new ArrayList<>();
 
         if(SessionCache.Instance().existsGroupId(groupId))
         {
@@ -175,7 +175,7 @@ public class SearchHistoryManager
 
     public List<Session> getSessionsForUser(int userId) throws SQLException
     {
-        List<Session> sessions = new ArrayList<Session>();
+        List<Session> sessions = new ArrayList<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
                 "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
         pStmt.setInt(1, userId);
@@ -214,7 +214,7 @@ public class SearchHistoryManager
         }
         //log.info("max edge score:" + maxEdgeScore);
 
-        Set<Edge> filteredEdges = new HashSet<Edge>();
+        Set<Edge> filteredEdges = new HashSet<>();
         for(Edge edge : edges)
         {
             //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
@@ -264,8 +264,8 @@ public class SearchHistoryManager
 
     public List<Session> getSessionsForGroupId(int groupId) throws Exception
     {
-        List<Session> sessions = new ArrayList<Session>();
-        Set<String> sessionIds = new HashSet<String>();
+        List<Session> sessions = new ArrayList<>();
+        Set<String> sessionIds = new HashSet<>();
 
         if(SessionCache.Instance().existsGroupId(groupId))
         {
@@ -301,7 +301,7 @@ public class SearchHistoryManager
     //Map<group_id, List<Session>>
     public Set<Integer> getGroupIds() throws SQLException
     {
-        Set<Integer> groupIds = new HashSet<Integer>();
+        Set<Integer> groupIds = new HashSet<>();
         PreparedStatement pstmt1 = learnweb.getConnection().prepareStatement("SELECT search_id, rank FROM learnweb_large.sl_action JOIN learnweb_large.sl_query USING(search_id) WHERE action='resource_saved' AND mode='text'");
         ResultSet rs = pstmt1.executeQuery();
         while(rs.next())

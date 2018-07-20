@@ -33,7 +33,7 @@ public class PurposeManager
 
     public List<Purpose> getPurposesByResourceId(int resourceId) throws SQLException
     {
-        List<Purpose> purposes = new LinkedList<Purpose>();
+        List<Purpose> purposes = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ?  ORDER BY purpose_name");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -48,7 +48,7 @@ public class PurposeManager
 
     public List<String> getPurposeNamesByResourceId(int resourceId) throws SQLException
     {
-        List<String> purposes = new LinkedList<String>();
+        List<String> purposes = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ?  ORDER BY purpose_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -72,7 +72,7 @@ public class PurposeManager
 
     public List<Purpose> getPurposes(User user) throws SQLException
     {
-        List<Purpose> purposes = new LinkedList<Purpose>();
+        List<Purpose> purposes = new LinkedList<>();
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT p.* FROM `lw_rm_purpose` p " +
                 "LEFT JOIN lw_resource_purpose rp ON p.purpose_id=rp.purpose_id AND rp.user_id = ? " +
                 "WHERE must_show = 1 OR  rp.purpose_id IS NOT NULL " +

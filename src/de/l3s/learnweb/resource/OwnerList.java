@@ -16,8 +16,8 @@ public class OwnerList<E, O> extends LinkedList<E>
 {
     private static final long serialVersionUID = -2264077519939704399L;
 
-    private HashMap<E, O> elementOwner = new HashMap<E, O>();
-    private HashMap<E, Date> elementTimestamp = new HashMap<E, Date>();
+    private HashMap<E, O> elementOwner = new HashMap<>();
+    private HashMap<E, Date> elementTimestamp = new HashMap<>();
 
     /**
      * Copy constructor

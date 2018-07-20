@@ -32,7 +32,7 @@ public class ForumManager
      */
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
-        LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
+        LinkedList<ForumTopic> topics = new LinkedList<>();
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC");)
         {
             select.setInt(1, groupId);
@@ -74,7 +74,7 @@ public class ForumManager
      */
     public List<ForumPost> getPostsBy(int topicId) throws SQLException
     {
-        LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
+        LinkedList<ForumPost> posts = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE topic_id = ? ORDER BY post_time");
         select.setInt(1, topicId);
@@ -141,7 +141,7 @@ public class ForumManager
 
     public List<ForumPost> getPostsByUser(int userId) throws SQLException
     {
-        LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
+        LinkedList<ForumPost> posts = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
         select.setInt(1, userId);

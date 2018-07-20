@@ -54,13 +54,6 @@ public class Misc
         return sb.toString();
     }
 
-    public final static Comparator<SelectItem> selectItemLabelComparator = new Comparator<SelectItem>()
-    {
-        @Override
-        public int compare(SelectItem s1, SelectItem s2)
-        {
-            return s1.getLabel().compareTo(s2.getLabel());
-        }
-    };
+    public final static Comparator<SelectItem> selectItemLabelComparator = Comparator.comparing(SelectItem::getLabel);
 
 }

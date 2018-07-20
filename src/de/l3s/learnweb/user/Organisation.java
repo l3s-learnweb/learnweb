@@ -53,7 +53,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String defaultLanguage; // the language which is used after the user logged in
     private String languageVariant; // optional variant that is added to the selected language
     private BitSet options = new BitSet();
-    private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
+    private List<ResourceMetadataField> metadataFields = new LinkedList<>();
     private transient String bannerImage;
     private int bannerImageFileId;
     private String cssFile; // optional CSS file to load

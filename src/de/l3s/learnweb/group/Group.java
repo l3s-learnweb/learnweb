@@ -121,7 +121,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private int resourceCount = -1;
     private int memberCount = -1;
     private int linkCount = -1;
-    private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> lastVisitCache = new HashMap<>();
 
     public void clearCaches()
     {
@@ -440,7 +440,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         Integer time = lastVisitCache.get(user.getId());
         if(null != time)
-            return time.intValue();
+            return time;
 
         time = Learnweb.getInstance().getGroupManager().getLastVisit(user, this);
         lastVisitCache.put(user.getId(), time);

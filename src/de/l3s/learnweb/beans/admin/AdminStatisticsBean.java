@@ -46,7 +46,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        TreeSet<Integer> selectedUsersSet = new TreeSet<Integer>();
+        TreeSet<Integer> selectedUsersSet = new TreeSet<>();
         for(String userId : tempSelectedUsers)
         {
             selectedUsersSet.add(Integer.parseInt(userId));
@@ -68,7 +68,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        TreeSet<Integer> selectedGroupsSet = new TreeSet<Integer>();
+        TreeSet<Integer> selectedGroupsSet = new TreeSet<>();
         for(String groupId : tempSelectedGroups)
         {
             selectedGroupsSet.add(Integer.parseInt(groupId));
@@ -80,7 +80,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
     public void onGroupStatistics() throws Exception
     {
-        groupStatistics = new LinkedList<Map<String, String>>();
+        groupStatistics = new LinkedList<>();
         GroupManager gm = getLearnweb().getGroupManager();
 
         try
@@ -101,7 +101,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
             while(rs.next())
             {
-                Map<String, String> result = new HashMap<String, String>();
+                Map<String, String> result = new HashMap<>();
 
                 result.put("title", rs.getString("title"));
                 result.put("resources", rs.getString("resources"));
@@ -138,7 +138,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                     sb.append("</div>\n<ul>");
 
                     List<Resource> resources = group.getResources();
-                    Collections.sort(resources, new ResourceComparator());
+                    resources.sort(new ResourceComparator());
 
                     for(Resource resource : resources)
                     {

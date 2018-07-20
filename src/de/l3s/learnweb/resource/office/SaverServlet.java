@@ -108,11 +108,7 @@ public class SaverServlet extends HttpServlet
                 learnweb.log(user, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
             }
         }
-        catch(NumberFormatException e)
-        {
-            log.error(e);
-        }
-        catch(SQLException | IOException e)
+        catch(NumberFormatException | SQLException | IOException e)
         {
             log.error(e);
         }

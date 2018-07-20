@@ -24,8 +24,8 @@ public class SessionCache
 
     private SessionCache()
     {
-        userSessionCache = new HashMap<Integer, List<Session>>();
-        groupSessionCache = new HashMap<Integer, List<Session>>();
+        userSessionCache = new HashMap<>();
+        groupSessionCache = new HashMap<>();
     }
 
     public synchronized void cacheByUserId(int userId, List<Session> sessions)

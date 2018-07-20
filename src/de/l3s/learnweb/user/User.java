@@ -387,7 +387,7 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         //if(null == writeAbleGroups)
         //{
-        writeAbleGroups = new LinkedList<Group>();
+        writeAbleGroups = new LinkedList<>();
         List<Group> groups = getGroups();
         for(Group group : groups)
         {

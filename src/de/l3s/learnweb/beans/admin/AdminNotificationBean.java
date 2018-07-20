@@ -63,7 +63,7 @@ public class AdminNotificationBean extends ApplicationBean
         }
 
         // Set is used to make sure that every user gets the message only once
-        TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
+        TreeSet<Integer> selectedUsers = new TreeSet<>();
         for(String userId : tempSelectedUsers)
         {
             selectedUsers.add(Integer.parseInt(userId));
@@ -154,7 +154,7 @@ public class AdminNotificationBean extends ApplicationBean
             return;
         }
 
-        TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
+        TreeSet<Integer> selectedUsers = new TreeSet<>();
         for(String userId : this.listStudents)
         {
             selectedUsers.add(Integer.parseInt(userId));

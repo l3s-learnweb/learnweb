@@ -64,7 +64,7 @@ public class ResourceManager
         int cacheSize = properties.getPropertyIntValue("RESOURCE_CACHE");
 
         this.learnweb = learnweb;
-        this.cache = cacheSize == 0 ? new DummyCache<Resource>() : new Cache<Resource>(cacheSize);
+        this.cache = cacheSize == 0 ? new DummyCache<>() : new Cache<>(cacheSize);
 
     }
 
@@ -463,7 +463,7 @@ public class ResourceManager
 
     public List<Comment> getCommentsByUserId(int userId) throws SQLException
     {
-        List<Comment> comments = new LinkedList<Comment>();
+        List<Comment> comments = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0");
         select.setInt(1, userId);
@@ -481,7 +481,7 @@ public class ResourceManager
     {
         String userIdString = StringHelper.implodeInt(userIds, ",");
 
-        List<Comment> comments = new LinkedList<Comment>();
+        List<Comment> comments = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` JOIN lw_resource USING(resource_id) WHERE `user_id` IN(" + userIdString + ") AND deleted = 0");
 
@@ -514,7 +514,7 @@ public class ResourceManager
 
     public List<Comment> getCommentsByResourceId(int id) throws SQLException
     {
-        List<Comment> comments = new LinkedList<Comment>();
+        List<Comment> comments = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `resource_id` = ? ORDER BY date DESC");
         select.setInt(1, id);
@@ -564,7 +564,7 @@ public class ResourceManager
 
     public List<Tag> getTagsByUserId(int userId) throws SQLException
     {
-        LinkedList<Tag> tags = new LinkedList<Tag>();
+        LinkedList<Tag> tags = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `user_id` = ? AND deleted = 0");
         select.setInt(1, userId);
@@ -580,7 +580,7 @@ public class ResourceManager
     public OwnerList<Tag, User> getTagsByResource(int resourceId) throws SQLException
     {
         UserManager um = learnweb.getUserManager();
-        OwnerList<Tag, User> tags = new OwnerList<Tag, User>();
+        OwnerList<Tag, User> tags = new OwnerList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name, user_id, timestamp FROM `lw_resource_tag` JOIN lw_tag USING(tag_id) JOIN lw_resource USING(resource_id) WHERE `resource_id` = ?");)
         {
@@ -688,7 +688,7 @@ public class ResourceManager
     public LinkedList<ArchiveUrl> getArchiveUrlsByResourceId(int id) throws SQLException
     {
 
-        LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+        LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp");
         select.setInt(1, id);
         ResultSet rs = select.executeQuery();
@@ -703,7 +703,7 @@ public class ResourceManager
     public LinkedList<ArchiveUrl> getArchiveUrlsByResourceUrl(String url) throws SQLException
     {
         SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+        LinkedList<ArchiveUrl> archiveUrls = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?");
         select.setString(1, url);
         ResultSet rs = select.executeQuery();
@@ -812,7 +812,7 @@ public class ResourceManager
 
     public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
-        List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        List<ResourceDecorator> resources = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
         select.setInt(1, groupId);
@@ -1016,7 +1016,7 @@ public class ResourceManager
      */
     public List<Resource> getResources(String query, String param1, int... params) throws SQLException
     {
-        List<Resource> resources = new LinkedList<Resource>();
+        List<Resource> resources = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement(query);
 
         int i = 1;
@@ -1235,19 +1235,19 @@ public class ResourceManager
     }
 
     //save new resource_langlevel
-    protected void saveLangLevelResource(Resource resource, String[] langlevels, User user) throws SQLException
+    protected void saveLangLevelResource(Resource resource, String[] langLevels, User user) throws SQLException
     {
         LangLevelManager llm = Learnweb.getInstance().getLangLevelManager();
-        for(int i = 0; i < langlevels.length; i++)
+        for(final String langLevel : langLevels)
         {
             //find id of the lang level first
-            int llevelId = llm.getLangLevelIdByLangLevelName(langlevels[i]);
+            int llevelId = llm.getLangLevelIdByLangLevelName(langLevel);
             if(llevelId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_langlevel` (`resource_id`, `user_id`, `langlevel_id`) VALUES (?, ?, ?)");
                 replace.setInt(1, null == resource ? 0 : resource.getId());
                 replace.setInt(2, null == user ? 0 : user.getId());
-                replace.setInt(3, null == langlevels ? 0 : llevelId);
+                replace.setInt(3, null == langLevels ? 0 : llevelId);
                 replace.executeUpdate();
                 replace.close();
             }
@@ -1258,10 +1258,10 @@ public class ResourceManager
     protected void saveTargetResource(Resource resource, String[] targets, User user) throws SQLException
     {
         AudienceManager am = Learnweb.getInstance().getAudienceManager();
-        for(int i = 0; i < targets.length; i++)
+        for(final String target : targets)
         {
             //find id of the audience first
-            int targetId = am.getAudienceIdByAudienceName(targets[i].toLowerCase());
+            int targetId = am.getAudienceIdByAudienceName(target.toLowerCase());
             if(targetId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_audience` (`resource_id`, `user_id`, `audience_id`) VALUES (?, ?, ?)");

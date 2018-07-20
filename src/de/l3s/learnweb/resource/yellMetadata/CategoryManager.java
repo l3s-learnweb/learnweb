@@ -32,7 +32,7 @@ public class CategoryManager
     //get category_resource for a given resource Id
     public List<CategoryResource> getCategoryResourcesByResourceId(int resourceId) throws SQLException
     {
-        List<CategoryResource> cresources = new ArrayList<CategoryResource>();
+        List<CategoryResource> cresources = new ArrayList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_CATRESOURCE + " FROM `lw_resource_category` WHERE resource_id = ?");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -48,7 +48,7 @@ public class CategoryManager
     //get category list for a given resource ID
     public List<Category> getCategoriesByResourceId(int resourceId) throws SQLException
     {
-        List<Category> categories = new LinkedList<Category>();
+        List<Category> categories = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? ORDER BY cat_top_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -63,8 +63,8 @@ public class CategoryManager
 
     public List<String> getCategoryNamesByResourceId(int resourceId) throws SQLException
     {
-        List<Category> categories = new LinkedList<Category>();
-        List<String> cats = new LinkedList<String>();
+        List<Category> categories = new LinkedList<>();
+        List<String> cats = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? ORDER BY cat_top_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -86,7 +86,7 @@ public class CategoryManager
     //get category ids given the full category name (top, middle, bottom). Given string needs to be parsed to identify top, middle and bottom with the delimiter "/"
     public List<Integer> getCategoryIdsByCategoryFullName(String fullcatName) throws SQLException
     {
-        List<Integer> catids = new ArrayList<Integer>();
+        List<Integer> catids = new ArrayList<>();
         int topId, midId, botId;
         String[] ids = fullcatName.split("/");
 
@@ -143,7 +143,7 @@ public class CategoryManager
     //get all top categories
     public List<CategoryTop> getAllTopCategories() throws SQLException
     {
-        List<CategoryTop> cattops = new LinkedList<CategoryTop>();
+        List<CategoryTop> cattops = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` ORDER BY cat_top_name");
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -160,7 +160,7 @@ public class CategoryManager
     //get all middle categories of a given top category. remember to filter out "x"s when displaying
     public List<CategoryMiddle> getAllMiddleCategoriesByCattopID(int cattopId) throws SQLException
     {
-        List<CategoryMiddle> catmids = new LinkedList<CategoryMiddle>();
+        List<CategoryMiddle> catmids = new LinkedList<>();
         if(cattopId == 0)
             return null;
         else if(cattopId < 1)
@@ -182,7 +182,7 @@ public class CategoryManager
     //get all bottom categories given a middle category
     public List<CategoryBottom> getAllBottomCategoriesByCatmidID(int catmidId) throws SQLException
     {
-        List<CategoryBottom> catbots = new LinkedList<CategoryBottom>();
+        List<CategoryBottom> catbots = new LinkedList<>();
         if(catmidId == 0)
             return null;
         else if(catmidId < 1)

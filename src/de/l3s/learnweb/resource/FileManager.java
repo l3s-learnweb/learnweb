@@ -51,7 +51,7 @@ public class FileManager
 
         this.learnweb = learnweb;
         this.urlPattern = properties.getProperty("FILE_MANAGER_URL_PATTERN");
-        this.cache = cacheSize == 0 ? new DummyCache<File>() : new Cache<File>(cacheSize);
+        this.cache = cacheSize == 0 ? new DummyCache<>() : new Cache<>(cacheSize);
         this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
         setServerUrl(learnweb.getSecureServerUrl());
 
@@ -95,7 +95,7 @@ public class FileManager
 
     public List<File> getFilesByResource(int resourceId) throws SQLException
     {
-        List<File> files = new LinkedList<File>();
+        List<File> files = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp");
         select.setInt(1, resourceId);
@@ -109,7 +109,7 @@ public class FileManager
 
     public List<File> getAllFiles() throws SQLException
     {
-        List<File> files = new LinkedList<File>();
+        List<File> files = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE deleted = 0 order by resource_id desc");
 
@@ -244,7 +244,7 @@ public class FileManager
         if(files.size() == 0)
             return;
 
-        List<Integer> fileIds = new ArrayList<Integer>(files.size());
+        List<Integer> fileIds = new ArrayList<>(files.size());
 
         for(File file : files)
         {

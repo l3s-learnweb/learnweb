@@ -77,7 +77,7 @@ public class SurveyResource extends Resource implements Serializable
     private Cache<SurveyUserAnswers> getAnswerCache()
     {
         if(null == answerCache)
-            answerCache = new Cache<SurveyUserAnswers>(1000);
+            answerCache = new Cache<>(1000);
         return answerCache;
     }
 

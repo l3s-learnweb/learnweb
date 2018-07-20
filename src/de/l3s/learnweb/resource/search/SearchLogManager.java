@@ -58,7 +58,7 @@ public class SearchLogManager
     {
         super();
         this.learnweb = learnweb;
-        this.queue = new LinkedBlockingQueue<String>();
+        this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.consumerThread.start();
 
@@ -66,7 +66,7 @@ public class SearchLogManager
         File felJarFile = new File(felAnnotatorPath);
         if(felJarFile.exists())
         {
-            this.searchIdQueue = new LinkedBlockingQueue<String>();
+            this.searchIdQueue = new LinkedBlockingQueue<>();
             this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
             this.felAnnotationConsumerThread.start();
             felAnnotate = true;

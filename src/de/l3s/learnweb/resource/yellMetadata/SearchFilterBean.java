@@ -72,10 +72,10 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
             addFatalMessage(e);
         }
 
-        cattops = new ArrayList<String>();
-        for(int i = 0; i < catTops.size(); i++)
+        cattops = new ArrayList<>();
+        for(CategoryTop catTop : catTops)
         {
-            cattops.add(catTops.get(i).getCattop_name());
+            cattops.add(catTop.getCattop_name());
         }
 
         //middle categories
@@ -88,24 +88,24 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
             addFatalMessage(e1);
         }
 
-        catmids = new ArrayList<String>();
-        for(int i = 0; i < catMids.size(); i++)
+        catmids = new ArrayList<>();
+        for(CategoryMiddle catMid : catMids)
         {
-            if(!(catMids.get(i).getCatmid_name().equalsIgnoreCase("x")))
+            if(!(catMid.getCatmid_name().equalsIgnoreCase("x")))
             {
-                catmids.add(catMids.get(i).getCatmid_name());
+                catmids.add(catMid.getCatmid_name());
             }
         }
 
         //author filter values (must get it from db)
-        authors = new ArrayList<String>();
+        authors = new ArrayList<>();
         authors.add("Shakespear");
         authors.add("Brian C.");
         authors.add("Chloe H.");
         authors.add("Thomas Hardy");
 
         //mtype filter values (fixed values)
-        mtypes = new ArrayList<String>();
+        mtypes = new ArrayList<>();
         mtypes.add("Text");
         mtypes.add("Video");
         mtypes.add("Image");
@@ -113,14 +113,14 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         mtypes.add("App");
 
         //source filter values (must get it from db)
-        sources = new ArrayList<String>();
+        sources = new ArrayList<>();
         sources.add("BBC");
         sources.add("Cambridge");
         sources.add("TED");
         sources.add("Guardian");
 
         //target learner values (fixed values)
-        targets = new ArrayList<String>();
+        targets = new ArrayList<>();
         targets.add("Teachers");
         targets.add("Adult learners");
         targets.add("Teenage learners");
@@ -156,13 +156,13 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         purposes.add("Other");*/
 
         //languages values (fixed values)
-        langs = new ArrayList<String>();
+        langs = new ArrayList<>();
         langs.add("English");
         langs.add("Italian");
         langs.add("German");
 
         //language level values (fixed values)
-        levels = new ArrayList<String>();
+        levels = new ArrayList<>();
         levels.add("C2");
         levels.add("C1");
         levels.add("B2");
@@ -176,7 +176,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         if(StringUtils.isEmpty(query))
             return purposes;
 
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         for(String purpose : purposes)
         {
             if(StringUtils.containsIgnoreCase(purpose, query))
@@ -405,12 +405,12 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
                 e1.printStackTrace();
             }
 
-            catmids = new ArrayList<String>();
-            for(int i = 0; i < catMids.size(); i++)
+            catmids = new ArrayList<>();
+            for(CategoryMiddle catMid : catMids)
             {
-                if(!(catMids.get(i).getCatmid_name().equalsIgnoreCase("x")))
+                if(!(catMid.getCatmid_name().equalsIgnoreCase("x")))
                 {
-                    catmids.add(catMids.get(i).getCatmid_name());
+                    catmids.add(catMid.getCatmid_name());
                 }
             }
         }
@@ -455,12 +455,12 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
                 e1.printStackTrace();
             }
 
-            catbots = new ArrayList<String>();
-            for(int i = 0; i < catBots.size(); i++)
+            catbots = new ArrayList<>();
+            for(CategoryBottom catBot : catBots)
             {
-                if(!(catBots.get(i).getCatbot_name().equalsIgnoreCase("x")))
+                if(!(catBot.getCatbot_name().equalsIgnoreCase("x")))
                 {
-                    catbots.add(catBots.get(i).getCatbot_name());
+                    catbots.add(catBot.getCatbot_name());
                 }
             }
         }

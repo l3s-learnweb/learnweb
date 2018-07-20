@@ -638,7 +638,7 @@ public class Learnweb
      */
     public List<LogEntry> getLogsByUser(int userId, Action[] actions, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<>();
 
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
@@ -684,7 +684,7 @@ public class Learnweb
      */
     public List<LogEntry> getLogsByGroup(int groupId, LogEntry.Action[] actions, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<>();
 
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
@@ -777,7 +777,7 @@ public class Learnweb
 
     public List<LogEntry> getActivityLogOfUserGroups(int userId, LogEntry.Action[] actions, int limit) throws SQLException
     {
-        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<>();
 
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;

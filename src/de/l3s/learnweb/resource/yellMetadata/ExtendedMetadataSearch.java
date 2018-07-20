@@ -37,7 +37,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     protected long totalResults = -1;
     private int userId;
-    private List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
+    private List<ResourceDecorator> results = new LinkedList<>();
 
     public ExtendedMetadataSearch(User user)
     {
@@ -59,7 +59,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
         FilterPaginator cPaginator = new FilterPaginator(this);
 
-        List<Resource> cFinalResults = new ArrayList<Resource>();
+        List<Resource> cFinalResults = new ArrayList<>();
 
         if(gResources.size() > 0)
         {
@@ -69,13 +69,13 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             }
             else
             {
-                for(int i = 0; i < gResources.size(); i++)
+                for(Resource gResource : gResources)
                 {
-                    String result = filterByCategory(gResources.get(i).getId(), catName, catLevel);
+                    String result = filterByCategory(gResource.getId(), catName, catLevel);
 
                     if(result.equalsIgnoreCase("yes"))
                     {
-                        cFinalResults.add(gResources.get(i));
+                        cFinalResults.add(gResource);
                     }
                 }
             }
@@ -94,18 +94,17 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
         String result = "no";
         CategoryManager cm = Learnweb.getInstance().getCategoryManager();
 
-        List<CategoryResource> cr = new ArrayList<CategoryResource>();
+        List<CategoryResource> cr = new ArrayList<>();
         cr = cm.getCategoryResourcesByResourceId(resourceId);
 
         if(cr.size() > 0)
         {
             if(stype.equals("1"))
             {
-
-                int topcat_id = cm.getCategoryTopByName(cname);
-                for(int i = 0; i < cr.size(); i++)
+                int topcatId = cm.getCategoryTopByName(cname);
+                for(CategoryResource aCr : cr)
                 {
-                    if(topcat_id == cr.get(i).getTopcatId())
+                    if(topcatId == aCr.getTopcatId())
                     {
                         result = "yes";
                     }
@@ -114,9 +113,9 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             else if(stype.equals("2"))
             {
                 int midcat_id = cm.getCategoryMiddleByName(cname);
-                for(int i = 0; i < cr.size(); i++)
+                for(CategoryResource aCr : cr)
                 {
-                    if(midcat_id == cr.get(i).getMidcatId())
+                    if(midcat_id == aCr.getMidcatId())
                     {
                         result = "yes";
                     }
@@ -125,9 +124,9 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             else
             {
                 int botcat_id = cm.getCategoryBottomByName(cname);
-                for(int i = 0; i < cr.size(); i++)
+                for(CategoryResource aCr : cr)
                 {
-                    if(botcat_id == cr.get(i).getBotcatId())
+                    if(botcat_id == aCr.getBotcatId())
                     {
                         result = "yes";
                     }
@@ -142,7 +141,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     {
         FilterPaginator fPaginator = new FilterPaginator(this);
 
-        List<Resource> filterResults = new ArrayList<Resource>();
+        List<Resource> filterResults = new ArrayList<>();
 
         //first get resources by groupId
         filterResults = filterResultsByGroupId(groupId);
@@ -281,10 +280,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     public List<ResourceDecorator> convertToFinalResults(List<Resource> fResults)
     {
         //we change the list of resources to list of resource decorator... 
-        List<ResourceDecorator> temp = new LinkedList<ResourceDecorator>();
-        for(int i = 0; i < fResults.size(); i++)
+        List<ResourceDecorator> temp = new LinkedList<>();
+        for(Resource fResult : fResults)
         {
-            ResourceDecorator rd = new ResourceDecorator(fResults.get(i));
+            ResourceDecorator rd = new ResourceDecorator(fResult);
             temp.add(rd);
         }
 
@@ -294,7 +293,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     public List<Resource> filterResultsByGroupId(int groupId)
     {
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
         if(groupId > 0)
         {
             try
@@ -312,17 +311,15 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByAuthors(String[] authors, List<Resource> workingCopy)
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < authors.length; j++)
+            for(final String author : authors)
             {
                 if(r.getAuthor() != null)
                 {
-                    if(r.getAuthor().equalsIgnoreCase(authors[j].toLowerCase()))
+                    if(r.getAuthor().equalsIgnoreCase(author.toLowerCase()))
                     {
                         fResults.add(r);
                     }
@@ -334,17 +331,15 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByLanguages(String[] langs, List<Resource> workingCopy)
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < langs.length; j++)
+            for(final String lang : langs)
             {
                 if(r.getLanguage() != null)
                 {
-                    if(r.getLanguage().equalsIgnoreCase(langs[j]))
+                    if(r.getLanguage().equalsIgnoreCase(lang))
                     {
                         fResults.add(r);
                     }
@@ -357,17 +352,15 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByMsources(String[] msources, List<Resource> workingCopy)
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < msources.length; j++)
+            for(final String msource : msources)
             {
                 if(r.getMsource() != null)
                 {
-                    if(r.getMsource().equalsIgnoreCase(msources[j].toLowerCase()))
+                    if(r.getMsource().equalsIgnoreCase(msource.toLowerCase()))
                     {
                         fResults.add(r);
                     }
@@ -379,19 +372,18 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByMtypes(String[] mtypes, List<Resource> workingCopy)
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-            for(int j = 0; j < mtypes.length; j++)
+            for(final String mtype : mtypes)
             {
                 if(r.getMtype() != null)
                 {
                     String[] rtypes = r.getMtype().split(",");
                     for(int k = 0; k < rtypes.length; k++)
                     {
-                        if(rtypes[k].trim().equalsIgnoreCase(mtypes[j].toLowerCase()))
+                        if(rtypes[k].trim().equalsIgnoreCase(mtype.toLowerCase()))
                         {
                             fResults.add(r);
                         }
@@ -404,7 +396,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByLevels(String[] levels, List<Resource> workingCopy) throws SQLException
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
         for(int i = 0; i < workingCopy.size(); i++)
         {
@@ -431,7 +423,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByTargets(String[] targets, List<Resource> workingCopy) throws SQLException
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
         for(int i = 0; i < workingCopy.size(); i++)
         {
@@ -458,7 +450,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<Resource> filterResultsByPurposes(String[] purposes, List<Resource> workingCopy) throws SQLException
     {
-        List<Resource> fResults = new ArrayList<Resource>();
+        List<Resource> fResults = new ArrayList<>();
 
         for(int i = 0; i < workingCopy.size(); i++)
         {
@@ -537,7 +529,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<ResourceDecorator> getResourcesByPage(int currentPage)
     {
-        List<ResourceDecorator> presources = new LinkedList<ResourceDecorator>();
+        List<ResourceDecorator> presources = new LinkedList<>();
         List<ResourceDecorator> resources = this.results;
         int startIndex = 0;
 

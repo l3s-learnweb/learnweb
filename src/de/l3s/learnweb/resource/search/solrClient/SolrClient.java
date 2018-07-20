@@ -158,7 +158,7 @@ public class SolrClient
 
     public List<Integer> findResourcesByUrl(String url) throws SolrServerException, IOException
     {
-        List<Integer> ids = new LinkedList<Integer>();
+        List<Integer> ids = new LinkedList<>();
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery("url:\"" + url + "\"");
         solrQuery.addFilterQuery("id:r_*");

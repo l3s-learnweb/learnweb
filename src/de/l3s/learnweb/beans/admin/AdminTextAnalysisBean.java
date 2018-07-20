@@ -52,7 +52,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
             return null;
         }
 
-        TreeSet<Integer> selectedUsersSet = new TreeSet<Integer>();
+        TreeSet<Integer> selectedUsersSet = new TreeSet<>();
         for(String userId : tempSelectedUsers)
         {
             selectedUsersSet.add(Integer.parseInt(userId));
@@ -75,8 +75,8 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 
             commentCount = comments.size();
 
-            StringBuffer sbNL = new StringBuffer();
-            StringBuffer sbBR = new StringBuffer();
+            StringBuilder sbNL = new StringBuilder();
+            StringBuilder sbBR = new StringBuilder();
             for(Comment comment : comments)
             {
                 sbNL.append(comment.getText());

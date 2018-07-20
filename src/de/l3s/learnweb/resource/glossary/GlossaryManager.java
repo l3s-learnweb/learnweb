@@ -238,9 +238,9 @@ public class GlossaryManager
                 pstmt.setString(4, e.getDescription());
                 pstmt.executeQuery();
 
-                List<LanguageItem> newUkItems = new ArrayList<LanguageItem>(e.getFirstLanguageItems());
+                List<LanguageItem> newUkItems = new ArrayList<>(e.getFirstLanguageItems());
 
-                List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getSecondLanguageItems());
+                List<LanguageItem> newItItems = new ArrayList<>(e.getSecondLanguageItems());
                 pstmt = null;
                 pstmt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossaryId)); // TODO use prepared statement parameter
                 ResultSet rs = pstmt.executeQuery();
@@ -417,14 +417,14 @@ public class GlossaryManager
     public List<GlossaryItems> getGlossaryItems(int resourceId) throws SQLException
     {
 
-        List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+        List<GlossaryItems> items = new ArrayList<>();
         String populateGlossaries = "SELECT t1.glossary_id, t2.topic_1, t2.topic_2, t2.topic_3, t2.description, t3.* FROM `lw_resource_glossary` t1, `lw_glossary_details` t2, `lw_resource_glossary_terms` t3 where t1.resource_id = ? and t1.deleted=0 and t1.glossary_id=t2.glossary_id and t2.glossary_id=t3.glossary_id and t3.deleted=0 order by(t3.glossary_id)";
         PreparedStatement glossaries = learnweb.getConnection().prepareStatement(populateGlossaries);
         glossaries.setInt(1, resourceId);
         ResultSet rs = glossaries.executeQuery();
 
-        HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<Integer, Timestamp>();
-        HashMap<Integer, String> fullTexts = new HashMap<Integer, String>();
+        HashMap<Integer, Timestamp> glossaryEntryTimestamp = new HashMap<>();
+        HashMap<Integer, String> fullTexts = new HashMap<>();
 
         StringBuilder fulltext = new StringBuilder(); // contains all words from a glossary
         int lastGlossaryId = -1;
@@ -490,7 +490,7 @@ public class GlossaryManager
             it.setPronounciation(rs.getString("pronounciation"));
             it.setReferences(rs.getString("references"));
             it.setTermId(rs.getInt("glossary_term_id"));
-            List<String> setUse = new ArrayList<String>(); // TODO improve
+            List<String> setUse = new ArrayList<>(); // TODO improve
 
             setUse = new ArrayList<>(Arrays.asList(rs.getString("use").split(", ")));
 
@@ -519,7 +519,7 @@ public class GlossaryManager
     @Deprecated
     public List<GlossaryItems> getGlossaryItemsOld(int id)
     {
-        List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+        List<GlossaryItems> items = new ArrayList<>();
 
         PreparedStatement preparedStmt = null;
         ResultSet resultID = null;
@@ -541,7 +541,7 @@ public class GlossaryManager
             while(resultID.next())
             {
 
-                List<LanguageItem> finalList = new ArrayList<LanguageItem>();
+                List<LanguageItem> finalList = new ArrayList<>();
 
                 int glossaryId = resultID.getInt("glossary_id");
                 //get Glossary details
@@ -596,7 +596,7 @@ public class GlossaryManager
                     it.setPronounciation(rs.getString("pronounciation"));
                     it.setReferences(rs.getString("references"));
                     it.setTermId(rs.getInt("glossary_term_id"));
-                    List<String> setUse = new ArrayList<String>(); // TODO improve
+                    List<String> setUse = new ArrayList<>(); // TODO improve
                     if(rs.getString("use").contains(","))
                         setUse = Arrays.asList(rs.getString("use").split(", "));
                     else

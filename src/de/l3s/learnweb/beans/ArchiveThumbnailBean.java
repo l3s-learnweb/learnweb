@@ -57,12 +57,12 @@ public class ArchiveThumbnailBean extends ApplicationBean implements Serializabl
     {
         frameSim = 1f;
         textSim = 1f;
-        hashmapFrame = new LinkedHashMap<String, Set<String>>();
-        hashmapText = new LinkedHashMap<String, Set<String>>();
+        hashmapFrame = new LinkedHashMap<>();
+        hashmapText = new LinkedHashMap<>();
         archiveItShingle = new ArchiveItShingle();
-        archiveUrls = new LinkedList<ArchiveUrl>();
-        selectedArchiveUrls = new HashSet<String>();
-        archiveUrlsHashMap = new HashMap<String, Date>();
+        archiveUrls = new LinkedList<>();
+        selectedArchiveUrls = new HashSet<>();
+        archiveUrlsHashMap = new HashMap<>();
     }
 
     public Set<String> getSelectedArchiveUrls()
@@ -102,7 +102,7 @@ public class ArchiveThumbnailBean extends ApplicationBean implements Serializabl
 
     public List<ArchiveUrl> getListOfUrls() throws SQLException
     {
-        List<ArchiveUrl> listOfUrls = new ArrayList<ArchiveUrl>();
+        List<ArchiveUrl> listOfUrls = new ArrayList<>();
         model = new TimelineModel();
         //Set<String> setOfNearUniqueArchives = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
 

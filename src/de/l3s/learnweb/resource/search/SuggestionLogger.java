@@ -39,7 +39,7 @@ public class SuggestionLogger
     {
         super();
         this.learnweb = learnweb;
-        this.queue = new LinkedBlockingQueue<Container>();
+        this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.consumerThread.start();
     }

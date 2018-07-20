@@ -78,7 +78,7 @@ public class GlossaryItems implements Serializable
 
     public void setFinalItems(List<LanguageItem> finalItems)
     {
-        this.finalItems = new ArrayList<LanguageItem>(); // nonsense
+        this.finalItems = new ArrayList<>(); // nonsense
         this.finalItems = finalItems;
     }
 

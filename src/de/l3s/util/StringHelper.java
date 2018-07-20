@@ -152,7 +152,7 @@ public class StringHelper
 
     public static List<Locale> splitLocales(String input)
     {
-        ArrayList<Locale> locales = new ArrayList<Locale>();
+        ArrayList<Locale> locales = new ArrayList<>();
 
         if(StringUtils.isEmpty(input))
         {

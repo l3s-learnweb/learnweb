@@ -203,7 +203,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             if(null == id)
                 return;
 
-            groupId = id.intValue();
+            groupId = id;
         }
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
@@ -225,7 +225,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 }
                 else
                 {
-                    selectedFolder = getLearnweb().getGroupManager().getFolder(id.intValue());
+                    selectedFolder = getLearnweb().getGroupManager().getFolder(id);
                     buildBreadcrumbsForFolder(selectedFolder);
                 }
             }
@@ -235,7 +235,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private void updateLinksList() throws SQLException
     {
         documentLinks = group.getDocumentLinks();
-        links = new LinkedList<Link>(group.getLinks());
+        links = new LinkedList<>(group.getLinks());
     }
 
     public List<User> getMembers() throws SQLException
@@ -735,10 +735,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public List<SelectItem> getMembersSelectItemList() throws SQLException
     {
         if(null == group)
-            return new ArrayList<SelectItem>();
+            return new ArrayList<>();
 
         List<SelectItem> yourList;
-        yourList = new ArrayList<SelectItem>();
+        yourList = new ArrayList<>();
 
         for(User member : group.getMembers())
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
@@ -1612,19 +1612,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         //get the list of unique authors from database
         try
         {
-            authors = new ArrayList<String>();
+            authors = new ArrayList<>();
             List<Resource> resources = this.group.getResources();
 
-            for(int i = 0; i < resources.size(); i++)
+            for(Resource resource : resources)
             {
                 String exist = "false";
 
-                if((resources.get(i).getAuthor() != null) && (resources.get(i).getAuthor().length() != 0))
+                if((resource.getAuthor() != null) && (resource.getAuthor().length() != 0))
                 {
 
-                    for(int j = 0; j < authors.size(); j++)
+                    for(String author : authors)
                     {
-                        if(authors.get(j).equalsIgnoreCase(resources.get(i).getAuthor().trim()))
+                        if(author.equalsIgnoreCase(resource.getAuthor().trim()))
                         {
                             exist = "true";
                         }
@@ -1632,7 +1632,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                     if(exist.equals("false"))
                     {
-                        authors.add(resources.get(i).getAuthor().trim());
+                        authors.add(resource.getAuthor().trim());
                     }
                 }
             }
@@ -1656,19 +1656,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         //get the list of unique media sources from database
         try
         {
-            msources = new ArrayList<String>();
+            msources = new ArrayList<>();
             List<Resource> resources = this.group.getResources();
 
-            for(int i = 0; i < resources.size(); i++)
+            for(Resource resource : resources)
             {
                 String exist = "false";
 
-                if((resources.get(i).getMsource() != null) && (resources.get(i).getMsource().length() != 0))
+                if((resource.getMsource() != null) && (resource.getMsource().length() != 0))
                 {
 
-                    for(int j = 0; j < msources.size(); j++)
+                    for(String msource : msources)
                     {
-                        if(msources.get(j).equalsIgnoreCase(resources.get(i).getMsource().trim()))
+                        if(msource.equalsIgnoreCase(resource.getMsource().trim()))
                         {
                             exist = "true";
                         }
@@ -1676,7 +1676,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                     if(exist.equals("false"))
                     {
-                        msources.add(resources.get(i).getMsource().trim());
+                        msources.add(resource.getMsource().trim());
                     }
                 }
             }

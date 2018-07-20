@@ -116,7 +116,7 @@ public class TedManager
 
     public List<Transcript> getTranscripts(int resourceId) throws SQLException
     {
-        List<Transcript> transcripts = new LinkedList<Transcript>();
+        List<Transcript> transcripts = new LinkedList<>();
         String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?";
         String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
@@ -182,7 +182,7 @@ public class TedManager
     public Map<String, String> getLangList(int resourceId) throws SQLException
     {
         String langFromPropFile;
-        Map<String, String> langList = new HashMap<String, String>();
+        Map<String, String> langList = new HashMap<>();
         PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.language) as language_code, t2.language FROM `ted_transcripts_paragraphs` t1 JOIN ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id=?");
         getLangList.setInt(1, resourceId);
         ResultSet rs = getLangList.executeQuery();
@@ -226,7 +226,7 @@ public class TedManager
     {
         String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
 
-        List<TranscriptSummary> transcriptSummaries = new ArrayList<TranscriptSummary>();
+        List<TranscriptSummary> transcriptSummaries = new ArrayList<>();
 
         if(selectedUserIds.size() == 0)
             return transcriptSummaries;
@@ -248,7 +248,7 @@ public class TedManager
 
     public HashMap<SummaryType, String> getTranscriptSummariesForResource(int resourceId) throws SQLException
     {
-        HashMap<SummaryType, String> transcriptSummaries = new HashMap<SummaryType, String>();
+        HashMap<SummaryType, String> transcriptSummaries = new HashMap<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT summary_type, summary_text FROM lw_transcript_summary WHERE resource_id = ?");
         pStmt.setInt(1, resourceId);
         pStmt.executeQuery();
@@ -268,7 +268,7 @@ public class TedManager
     {
         String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
 
-        List<TranscriptLog> transcriptLogs = new ArrayList<TranscriptLog>();
+        List<TranscriptLog> transcriptLogs = new ArrayList<>();
 
         if(selectedUserIds.size() == 0)
             return transcriptLogs;
@@ -296,7 +296,7 @@ public class TedManager
 
     public List<SimpleTranscriptLog> getSimpleTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException
     {
-        List<SimpleTranscriptLog> simpleTranscriptLogs = new LinkedList<SimpleTranscriptLog>();
+        List<SimpleTranscriptLog> simpleTranscriptLogs = new LinkedList<>();
 
         //PreparedStatement getUsers = learnweb.getConnection().prepareStatement("SELECT t1.user_id FROM `lw_user_course` t1 WHERE t1.course_id = ? AND t1.user_id !=7727");
         //getUsers.setInt(1, courseId);
@@ -426,7 +426,7 @@ public class TedManager
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ?");
 
-        TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<>();
         params.put("media_types", "video");
         params.put("services", "YouTube");
         params.put("number_of_results", "50");

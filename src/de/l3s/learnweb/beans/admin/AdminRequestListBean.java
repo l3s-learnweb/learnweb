@@ -45,7 +45,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
             if(getUser().isAdmin() || getUser().isModerator())
             {
                 requests = getLearnweb().getRequestManager().getRequests();
-                logins = new ArrayList<Map.Entry<String, Set<String>>>(getLearnweb().getRequestManager().getLogins().entrySet());
+                logins = new ArrayList<>(getLearnweb().getRequestManager().getLogins().entrySet());
                 aggregatedRequests = getLearnweb().getRequestManager().getAggregatedRequests();
                 onUpdateAggregatedRequests();
             }

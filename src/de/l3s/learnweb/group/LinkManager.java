@@ -30,7 +30,7 @@ public class LinkManager
 
     public List<Link> getLinksByGroupId(int groupId, LinkType type) throws SQLException
     {
-        LinkedList<Link> links = new LinkedList<Link>();
+        LinkedList<Link> links = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_link` WHERE group_id = ? AND type = ? AND deleted = 0 ORDER BY title");
         select.setInt(1, groupId);
         select.setString(2, type.name());

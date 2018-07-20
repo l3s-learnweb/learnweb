@@ -154,7 +154,7 @@ public class InterWeb implements Serializable
 
     public static void main(String[] args) throws Exception
     {
-        TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<>();
 
         params.put("media_types", "video");
         //params.put("services", "YouTube,Vimeo");

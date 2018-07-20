@@ -37,7 +37,7 @@ public class ResourceMetaDataBean
             "hu", "hup", "hy", "id", "inh", "is", "it", "ja", "ka", "kk", "km", "kn", "ko", "ku", "ky", "la", "lb", "level", "lo", "lt", "ltg", "lv", "mg", "mk", "ml", "mn", "mr", "ms", "mt", "my", "nb", "ne", "nl", "nn", "oc", "pl", "pt", "pt-br", "ro", "ru", "rup", "sh", "si",
             "sk", "sl", "so", "sq", "sr", "srp", "sv", "sw", "szl", "ta", "te", "tg", "th", "tl", "tr", "tt", "ug", "uk", "ur", "uz", "vi", "zh", "zh-cn", "zh-tw" };
 
-    private static final HashMap<String, List<SelectItem>> languageLists = new HashMap<String, List<SelectItem>>();
+    private static final HashMap<String, List<SelectItem>> languageLists = new HashMap<>();
     private static final HashMap<Integer, List<String>> authorLists = new HashMap<>(); // quick and very dirt implementation
     private static final HashMap<Integer, Long> authorListsCacheTime = new HashMap<>(); // quick and very dirt implementation
 
@@ -63,7 +63,7 @@ public class ResourceMetaDataBean
                 {
                     languageList.add(new SelectItem(language, UtilBean.getLocaleMessage("language_" + language)));
                 }
-                Collections.sort(languageList, TedTranscriptBean.languageComparator());
+                languageList.sort(TedTranscriptBean.languageComparator());
 
                 languageLists.put(locale, languageList);
             }

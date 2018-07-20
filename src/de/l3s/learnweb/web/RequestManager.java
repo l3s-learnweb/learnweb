@@ -55,10 +55,10 @@ public class RequestManager
     private RequestManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        logins = new ConcurrentHashMap<String, Set<String>>();
-        requests = new ConcurrentLinkedQueue<RequestData>();
+        logins = new ConcurrentHashMap<>();
+        requests = new ConcurrentLinkedQueue<>();
         aggrRequestsUpdated = new Date(0);
-        aggregatedRequests = new ArrayList<AggregatedRequestData>();
+        aggregatedRequests = new ArrayList<>();
     }
 
     /**
@@ -75,13 +75,7 @@ public class RequestManager
      */
     public void recordLogin(String ip, String username)
     {
-        Set<String> names = logins.get(ip);
-        if(names == null)
-        {
-            names = new HashSet<String>();
-            logins.put(ip, names);
-        }
-
+        Set<String> names = logins.computeIfAbsent(ip, k -> new HashSet<>());
         names.add(username);
     }
 
@@ -230,7 +224,7 @@ public class RequestManager
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_requests"))
         {
             delete.execute();
-            aggregatedRequests = new ArrayList<AggregatedRequestData>();
+            aggregatedRequests = new ArrayList<>();
         }
         catch(SQLException e)
         {

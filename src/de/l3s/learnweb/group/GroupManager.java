@@ -56,8 +56,8 @@ public class GroupManager
         int folderCacheSize = learnweb.getProperties().getPropertyIntValue("FOLDER_CACHE");
 
         this.learnweb = learnweb;
-        this.groupCache = groupCacheSize == 0 ? new DummyCache<Group>() : new Cache<Group>(groupCacheSize);
-        this.folderCache = groupCacheSize == 0 ? new DummyCache<Folder>() : new Cache<Folder>(folderCacheSize);
+        this.groupCache = groupCacheSize == 0 ? new DummyCache<>() : new Cache<>(groupCacheSize);
+        this.folderCache = groupCacheSize == 0 ? new DummyCache<>() : new Cache<>(folderCacheSize);
     }
 
     public void resetCache()
@@ -71,7 +71,7 @@ public class GroupManager
 
     private List<Group> getGroups(String query, int... params) throws SQLException
     {
-        List<Group> groups = new LinkedList<Group>();
+        List<Group> groups = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement(query);
 
         int i = 1;
@@ -415,7 +415,7 @@ public class GroupManager
      */
     public List<Folder> getFolders(int groupId) throws SQLException
     {
-        List<Folder> folders = new ArrayList<Folder>();
+        List<Folder> folders = new ArrayList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
         select.setInt(1, groupId);
@@ -436,7 +436,7 @@ public class GroupManager
      */
     public List<Folder> getFolders(int groupId, int parentFolderId) throws SQLException
     {
-        List<Folder> folders = new ArrayList<Folder>();
+        List<Folder> folders = new ArrayList<>();
         if(parentFolderId < 0)
         {
             parentFolderId = 0;
@@ -462,7 +462,7 @@ public class GroupManager
      */
     public List<Folder> getFolders(int groupId, int parentFolderId, int userId) throws SQLException
     {
-        List<Folder> folders = new ArrayList<Folder>();
+        List<Folder> folders = new ArrayList<>();
         if(parentFolderId < 0)
         {
             parentFolderId = 0;
@@ -489,7 +489,7 @@ public class GroupManager
      */
     public List<Folder> getGroupsForMyResources(int userId) throws SQLException
     {
-        LinkedList<Folder> folders = new LinkedList<Folder>();
+        LinkedList<Folder> folders = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT DISTINCT(group_id), lw_group.title FROM `lw_resource` JOIN lw_group USING(group_id) WHERE `owner_user_id` = ? AND lw_resource.deleted = 0");
         select.setInt(1, userId);
         ResultSet rs = select.executeQuery();
@@ -731,7 +731,7 @@ public class GroupManager
 
     public List<GroupCategory> getGroupCategoriesByCourse(int courseId) throws SQLException
     {
-        LinkedList<GroupCategory> categories = new LinkedList<GroupCategory>();
+        LinkedList<GroupCategory> categories = new LinkedList<>();
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_title, category_abbreviation FROM `lw_group_category` WHERE category_course_id = ? ORDER BY category_title");
         select.setInt(1, courseId);

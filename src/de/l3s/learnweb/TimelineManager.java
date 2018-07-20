@@ -23,8 +23,8 @@ public class TimelineManager
 
     public List<TimelineData> getTimelineDataGroupedByMonth(int resourceId, String url) throws SQLException
     {
-        List<TimelineData> timelineMonthlyData = new LinkedList<TimelineData>();
-        TreeMap<Date, Integer> monthlySeriesData = new TreeMap<Date, Integer>();
+        List<TimelineData> timelineMonthlyData = new LinkedList<>();
+        TreeMap<Date, Integer> monthlySeriesData = new TreeMap<>();
         PreparedStatement pStmt1 = learnweb.getConnection().prepareStatement("SELECT timestamp,count(*) as no_of_versions FROM `lw_resource_archiveurl` WHERE `resource_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
         pStmt1.setInt(1, resourceId);
         ResultSet rs = pStmt1.executeQuery();
@@ -61,8 +61,8 @@ public class TimelineManager
 
     public List<TimelineData> getTimelineDataGroupedByDay(int resourceId, String url) throws SQLException
     {
-        List<TimelineData> timelineDailyData = new LinkedList<TimelineData>();
-        TreeMap<Date, Integer> dailySeriesData = new TreeMap<Date, Integer>();
+        List<TimelineData> timelineDailyData = new LinkedList<>();
+        TreeMap<Date, Integer> dailySeriesData = new TreeMap<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp, COUNT(*) as no_of_versions FROM lw_resource_archiveurl WHERE `resource_id`=? GROUP BY YEAR(timestamp),MONTH(timestamp),DAY(timestamp) ORDER BY timestamp");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -101,7 +101,7 @@ public class TimelineManager
     public List<ArchiveUrl> getArchiveUrlsByResourceIdAndTimestamp(int resourceId, Date timestamp, String url) throws SQLException
     {
         SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        List<ArchiveUrl> archiveUrlsData = new LinkedList<ArchiveUrl>();
+        List<ArchiveUrl> archiveUrlsData = new LinkedList<>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=? AND DATE(timestamp)= DATE(?)");
         select.setInt(1, resourceId);
         select.setTimestamp(2, new java.sql.Timestamp(timestamp.getTime()));

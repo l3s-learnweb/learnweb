@@ -40,11 +40,10 @@ public class Search
     {
         List<String> idList = new ArrayList<>();
         String queryString = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?item  WHERE {\n" + "  ?item rdfs:label \"" + name + "\"@en .\n" + "}\n";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString);
-        try
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString))
         {
             ResultSet results = qexec.execSelect();
-            for(; results.hasNext();)
+            for(; results.hasNext(); )
             {
                 QuerySolution soln = results.nextSolution();
                 String idString = soln.get("item").toString();
@@ -54,10 +53,6 @@ public class Search
         catch(Exception ex)
         {
             System.out.println(ex.getMessage());
-        }
-        finally
-        {
-            qexec.close();
         }
         return idList;
     }
@@ -126,11 +121,10 @@ public class Search
         entity.setWikiId(id);
         String labelString = "PREFIX schema: <http://schema.org/>\n" + "PREFIX entity: <http://www.wikidata.org/entity/>\n" + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?label1 ?title1 WHERE \n" + "{\n" + "  entity:" + id + " schema:description ?title .\n"
                 + "  entity:" + id + " rdfs:label ?label .\n" + "  FILTER(LANG(?label) = 'en') .\n" + "  FILTER(LANG(?title) = '" + language + "') .\n" + "   BIND(str(?label) AS ?label1) .\n" + "   BIND (str(?title) AS ?title1) .\n" + "}";
-        QueryExecution labelExec = QueryExecutionFactory.sparqlService(serviceUrl, labelString);
-        try
+        try(QueryExecution labelExec = QueryExecutionFactory.sparqlService(serviceUrl, labelString))
         {
             ResultSet res = labelExec.execSelect();
-            for(; res.hasNext();)
+            for(; res.hasNext(); )
             {
                 QuerySolution soln = res.nextSolution();
                 String label = soln.get("label1").toString();
@@ -143,10 +137,7 @@ public class Search
         {
             System.out.println(ex.getMessage());
         }
-        finally
-        {
-            labelExec.close();
-        }
+
         if(language.equals("en"))
         {
             getProp(entity, language);
@@ -191,15 +182,14 @@ public class Search
         }
         queryString += "   OPTIONAL {\n" + "       ?valUrl rdfs:label ?valLabel .\n" + "       FILTER( LANG(?valLabel) = '" + language + "' ) . \n" + "       }\n" + "       FILTER( LANG(?propLabel) = '" + language + "' ) . \n" + "   BIND (str(?propLabel) AS ?propLabel1) .\n"
                 + "   BIND (str(?valUrl) AS ?valUrl1) .\n" + "   BIND (str(?valLabel) AS ?valLabel1) .\n" + "   FILTER regex(str(?propUrl),'direct') .\n" + "}\n";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString);
         Map<String, List<String>> wikiProp = new HashMap<>();
         Map<String, String> propList = new HashMap<>();
         List<ImageUrl> image = new ArrayList<>();
         List<String> instance = new ArrayList<>();
-        try
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString))
         {
             ResultSet results = qexec.execSelect();
-            for(; results.hasNext();)
+            for(; results.hasNext(); )
             {
                 QuerySolution soln = results.nextSolution();
                 String propUrl = soln.get("propUrl").toString();
@@ -280,10 +270,6 @@ public class Search
         {
             System.out.println(ex.getMessage());
         }
-        finally
-        {
-            qexec.close();
-        }
         return entity;
     }
 
@@ -303,12 +289,11 @@ public class Search
         String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "SELECT ?propUrl1 ?valUrl ?title ?otherTitle WHERE {\n" + "   <" + placeId + "> ?propUrl ?valUrl .\n"
                 + "   values ?propUrl {wdt:P31 wdt:P131} .\n" + "   <" + placeId + "> rdfs:label ?title1 .\n" + "   FILTER(LANG(?title1)='en') .\n" + "   OPTIONAL {" + "       <" + placeId + "> rdfs:label ?otherTitle1 .\n" + "       FILTER(LANG(?otherTitle1)='" + language
                 + "'). \n" + "       BIND (str(?otherTitle1) AS ?otherTitle) .\n" + "   }\n" + "   BIND (str(?title1) AS ?title) .\n" + "   BIND (str(?propUrl) AS ?propUrl1) .\n" + "}";
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, query);
         Map<String, List<String>> wikiProp = new HashMap<>();
-        try
+        try(QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, query))
         {
             ResultSet results = qexec.execSelect();
-            for(; results.hasNext();)
+            for(; results.hasNext(); )
             {
                 QuerySolution soln = results.nextSolution();
                 String propUrl = soln.get("propUrl1").toString();
@@ -376,10 +361,6 @@ public class Search
         {
             System.out.println(ex.getMessage());
         }
-        finally
-        {
-            qexec.close();
-        }
         return places;
     }
 
@@ -391,7 +372,7 @@ public class Search
         if(entity.getPropList().containsKey("P569")) //birth template
         {
             FactSheetEntry factSheetEntry = new FactSheetEntry();
-            List<Object> propValueList = new ArrayList<Object>();
+            List<Object> propValueList = new ArrayList<>();
             factSheetEntry.setLabel("born");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             Date date = df.parse(entity.getWikiStats().get("P569").get(0));
@@ -409,7 +390,7 @@ public class Search
         if(entity.getPropList().containsKey("P570")) //death template
         {
             FactSheetEntry factSheetEntry = new FactSheetEntry();
-            List<Object> propValueList = new ArrayList<Object>();
+            List<Object> propValueList = new ArrayList<>();
             factSheetEntry.setLabel("died");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             Date date = df.parse(entity.getWikiStats().get("P570").get(0));
@@ -427,7 +408,7 @@ public class Search
         for(String prop : entity.getPropList().keySet())
         {
             FactSheetEntry factSheetEntry = new FactSheetEntry();
-            List<Object> propValueList = new ArrayList<Object>();
+            List<Object> propValueList = new ArrayList<>();
             if(prop.equals("P2067") && entity.getInstance().contains("Q5"))
             {
                 factSheetEntry.setLabel("weight");

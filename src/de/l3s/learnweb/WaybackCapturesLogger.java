@@ -30,7 +30,7 @@ public class WaybackCapturesLogger
     public WaybackCapturesLogger(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        this.queue = new LinkedBlockingQueue<Container>();
+        this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.consumerThread.start();
         this.cdxExecutorService = Executors.newSingleThreadExecutor();

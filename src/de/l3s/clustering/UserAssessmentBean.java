@@ -49,13 +49,13 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(UserAssessmentBean.class);
 
     //Form variables
-    private List<User> group1 = new ArrayList<User>();
-    private List<User> group2 = new ArrayList<User>();
-    private List<User> group3 = new ArrayList<User>();
-    private List<Course> courses = new ArrayList<Course>();
-    private List<User> users = new ArrayList<User>();
-    private List<Group> groups = new ArrayList<Group>();
-    private Map<String, String> infoDetailUser = new HashMap<String, String>();
+    private List<User> group1 = new ArrayList<>();
+    private List<User> group2 = new ArrayList<>();
+    private List<User> group3 = new ArrayList<>();
+    private List<Course> courses = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
+    private Map<String, String> infoDetailUser = new HashMap<>();
     private List<Metric> listAClass;
 
     private String selectCourse1;
@@ -290,8 +290,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
         if((this.selectChart3.compareTo("bar") == 0) && (this.showb3 == true))
         {
-            this.listAClass = new ArrayList<Metric>();
-            HashMap<String, Long> list = new HashMap<String, Long>();
+            this.listAClass = new ArrayList<>();
+            HashMap<String, Long> list = new HashMap<>();
             list = this.searchActivities();
             String userName = getNameUser(this.selectedUser);
             //log.debug(list);
@@ -301,8 +301,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart3.compareTo("line") == 0) && (this.showl3 == true))
         {
-            this.listAClass = new ArrayList<Metric>();
-            HashMap<String, Long> list = new HashMap<String, Long>();
+            this.listAClass = new ArrayList<>();
+            HashMap<String, Long> list = new HashMap<>();
             list = this.searchActivities();
             String userName = getNameUser(this.selectedUser);
             //log.debug(list);
@@ -312,8 +312,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart3.compareTo("pie") == 0) && (this.showp3 == true))
         {
-            this.listAClass = new ArrayList<Metric>();
-            HashMap<String, Long> list = new HashMap<String, Long>();
+            this.listAClass = new ArrayList<>();
+            HashMap<String, Long> list = new HashMap<>();
             list = this.searchActivities();
             String userName = getNameUser(this.selectedUser);
             //log.debug(list);
@@ -353,8 +353,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
         if((this.selectChart1.compareTo("bar") == 0) && (this.showb1 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
             list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
             //log.debug(list);
@@ -364,8 +364,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart1.compareTo("line") == 0) && (this.showl1 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
             list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
             //log.debug(list);
@@ -375,8 +375,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart1.compareTo("pie") == 0) && (this.showp1 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
             list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
             //log.debug(list);
@@ -415,8 +415,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
         if((this.selectChart2.compareTo("bar") == 0) && (this.showb2 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
             list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
             String c1 = getNameCourse(this.selectCourse20);
@@ -428,8 +428,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart2.compareTo("line") == 0) && (this.showl2 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
             list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
             String c1 = getNameCourse(this.selectCourse20);
@@ -441,8 +441,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         if((this.selectChart2.compareTo("pie") == 0) && (this.showp2 == true))
         {
-            HashMap<String, Long> list = new HashMap<String, Long>();
-            HashMap<String, Long> list2 = new HashMap<String, Long>();
+            HashMap<String, Long> list = new HashMap<>();
+            HashMap<String, Long> list2 = new HashMap<>();
             list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
             list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
             String c1 = getNameCourse(this.selectCourse20);
@@ -467,7 +467,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public HashMap<String, Long> searchActivities()
     {
-        HashMap<String, Long> listActivities = new HashMap<String, Long>();
+        HashMap<String, Long> listActivities = new HashMap<>();
         try
         {
             /* Searching(s) - Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
@@ -523,7 +523,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public HashMap<String, Long> searchGeneralActivities(String classe, String phase)
     {
         // SELECT * FROM `lw_user_log` A1 INNER JOIN `lw_user_course` A2 ON A1.user_id = A2.user_id WHERE A2.course_id=640 AND A1.action=X
-        HashMap<String, Long> listGeneralActivities = new HashMap<String, Long>();
+        HashMap<String, Long> listGeneralActivities = new HashMap<>();
 
         if(phase.compareTo("Search and exploration") == 0)
         {
@@ -588,7 +588,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public HashMap<String, Long> searchGeneralActivitiesbyGroup(String group)
     {
-        HashMap<String, Long> listActivitiesGroup = new HashMap<String, Long>();
+        HashMap<String, Long> listActivitiesGroup = new HashMap<>();
         try
         {
             /* Searching(s) - Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
@@ -747,7 +747,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         UserManager usm = getLearnweb().getUserManager();
         try
         {
-            List<User> l = new ArrayList<User>();
+            List<User> l = new ArrayList<>();
             l = removeAdminUsers(usm.getUsersByCourseId(idCourse));
             this.listUserClass = new String[l.size()];
             //log.debug("lista users:" + l);
@@ -776,7 +776,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         UserManager usm = getLearnweb().getUserManager();
         try
         {
-            List<User> l = new ArrayList<User>();
+            List<User> l = new ArrayList<>();
             l = removeAdminUsers(usm.getUsersByGroupId(idGroup));
             this.listUserGroup = new String[l.size()];
             //log.debug("lista users:" + l);
@@ -866,7 +866,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      */
     public static List<User> removeAdminUsers(List<User> list) throws SQLException
     {
-        List<User> finalList = new ArrayList<User>();
+        List<User> finalList = new ArrayList<>();
 
         for(User user : list)
         {
@@ -1107,7 +1107,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         p2.setShowDataLabels(true);
         p2.setDiameter(200);
 
-        List<PieChartModel> listPie = new ArrayList<PieChartModel>();
+        List<PieChartModel> listPie = new ArrayList<>();
         listPie.add(p1);
         listPie.add(p2);
         return listPie;

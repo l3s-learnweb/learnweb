@@ -138,12 +138,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         {
             new BounceManager(Learnweb.getInstance()).parseInbox();
         }
-        catch(MessagingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(IOException e)
+        catch(MessagingException | IOException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();

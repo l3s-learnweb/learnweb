@@ -15,12 +15,12 @@ public class CategoryTree implements Serializable
     private static final long serialVersionUID = -453437192920100110L;
     private static final Logger log = Logger.getLogger(CategoryTree.class);
 
-    private List<CategoryTop> uniqueTops = new ArrayList<CategoryTop>();
-    private List<CategoryMiddle> uniqueMids = new ArrayList<CategoryMiddle>();
-    private List<CategoryBottom> uniqueBots = new ArrayList<CategoryBottom>();
-    private List<String> uTops = new ArrayList<String>();
-    private List<String> uMids = new ArrayList<String>();
-    private List<String> uBots = new ArrayList<String>();
+    private List<CategoryTop> uniqueTops = new ArrayList<>();
+    private List<CategoryMiddle> uniqueMids = new ArrayList<>();
+    private List<CategoryBottom> uniqueBots = new ArrayList<>();
+    private List<String> uTops = new ArrayList<>();
+    private List<String> uMids = new ArrayList<>();
+    private List<String> uBots = new ArrayList<>();
 
     public CategoryTree()
     {
@@ -51,11 +51,11 @@ public class CategoryTree implements Serializable
 
         CategoryManager cm = Learnweb.getInstance().getCategoryManager();
 
-        for(int i = 0; i < resources.size(); i++)
+        for(Resource resource : resources)
         {
-            if(resources.get(i).getExtendedMetadata().getCategories() != null)
+            if(resource.getExtendedMetadata().getCategories() != null)
             {
-                List<String> rcats = resources.get(i).getExtendedMetadata().getCategories();
+                List<String> rcats = resource.getExtendedMetadata().getCategories();
                 String texist = "false";
                 String mexist = "false";
                 String bexist = "false";

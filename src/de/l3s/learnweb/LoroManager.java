@@ -186,11 +186,7 @@ public class LoroManager
         {
             writer = new PrintWriter("LoroErrorUrl.txt", "UTF-8");
         }
-        catch(FileNotFoundException e)
-        {
-            log.error("unhandled error", e);
-        }
-        catch(UnsupportedEncodingException e)
+        catch(FileNotFoundException | UnsupportedEncodingException e)
         {
             log.error("unhandled error", e);
         }

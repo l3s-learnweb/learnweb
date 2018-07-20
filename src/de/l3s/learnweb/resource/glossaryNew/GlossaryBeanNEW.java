@@ -34,10 +34,10 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private GlossaryEntry formEntry;
     @Deprecated
     private List<GlossaryTerm> formTerms; // TODO use formEntry.getTerms() instead
-    private final List<SelectItem> availableTopicOne = new ArrayList<SelectItem>();
+    private final List<SelectItem> availableTopicOne = new ArrayList<>();
 
-    private List<SelectItem> availableTopicTwo = new ArrayList<SelectItem>();
-    private List<SelectItem> availableTopicThree = new ArrayList<SelectItem>();
+    private List<SelectItem> availableTopicTwo = new ArrayList<>();
+    private List<SelectItem> availableTopicThree = new ArrayList<>();
 
     public void onLoad() throws SQLException
     {
@@ -86,7 +86,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void setNewFormEntry()
     {
         setFormEntry(new GlossaryEntry());
-        setFormTerms(new ArrayList<GlossaryTerm>());
+        setFormTerms(new ArrayList<>());
         formTerms.add(new GlossaryTerm());
     }
 
@@ -287,7 +287,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                 log.debug("add locales " + locale.getLanguage());
                 availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
             }
-            Collections.sort(availableLanguages, Misc.selectItemLabelComparator);
+            availableLanguages.sort(Misc.selectItemLabelComparator);
         }
         return availableLanguages;
     }

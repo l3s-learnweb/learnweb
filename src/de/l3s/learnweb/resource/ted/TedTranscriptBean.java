@@ -97,7 +97,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         //if(logPreference != null)
         //    showDeletedResources = Boolean.parseBoolean(logPreference);
 
-        selectedUsers = new TreeSet<Integer>();
+        selectedUsers = new TreeSet<>();
     }
 
     public Resource getTedResource()
@@ -413,7 +413,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             if(languageList == null)
             {
                 Map<String, String> langList;
-                languageList = new LinkedList<SelectItem>();
+                languageList = new LinkedList<>();
                 langList = Learnweb.getInstance().getTedManager().getLangList(videoResourceId);
 
                 if(!langList.isEmpty())
@@ -422,10 +422,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                     {
                         languageList.add(new SelectItem(entry.getValue(), entry.getKey()));
                     }
-                    Collections.sort(languageList, languageComparator());
+                    languageList.sort(languageComparator());
                 }
                 else
+                {
                     languageList.add(new SelectItem("NA", "No Transcripts Available"));
+                }
 
             }
 
@@ -465,7 +467,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        TreeSet<Integer> selectedUsersSet = new TreeSet<Integer>();
+        TreeSet<Integer> selectedUsersSet = new TreeSet<>();
         for(String userId : tempSelectedUsers)
             selectedUsersSet.add(Integer.parseInt(userId));
 
@@ -527,14 +529,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public static Comparator<SelectItem> languageComparator()
     {
-        return new Comparator<SelectItem>()
-        {
-            @Override
-            public int compare(SelectItem o1, SelectItem o2)
-            {
-                return o1.getLabel().compareTo(o2.getLabel());
-            }
-        };
+        return Comparator.comparing(SelectItem::getLabel);
     }
 
     /*public int getSelectedCourseId()

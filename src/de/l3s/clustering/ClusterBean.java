@@ -31,16 +31,16 @@ public class ClusterBean extends ApplicationBean implements Serializable
     private String classId;
     private String groupId;
 
-    private List<Group> groups = new ArrayList<Group>();
-    private List<List<Integer>> cluster = new ArrayList<List<Integer>>();
+    private List<Group> groups = new ArrayList<>();
+    private List<List<Integer>> cluster = new ArrayList<>();
     private List<Integer> clusS;
-    private HashMap<Integer, HashMap<String, Long>> listActivities = new HashMap<Integer, HashMap<String, Long>>();
-    private HashMap<String, String> listFeatures = new HashMap<String, String>();
-    private List<StudentClusterInfo> listData = new ArrayList<StudentClusterInfo>();
+    private HashMap<Integer, HashMap<String, Long>> listActivities = new HashMap<>();
+    private HashMap<String, String> listFeatures = new HashMap<>();
+    private List<StudentClusterInfo> listData = new ArrayList<>();
 
     //Load info to create the bubbles
-    private List<StudentClusterInfo> cars1 = new ArrayList<StudentClusterInfo>();
-    private List<Point> listPositions = new ArrayList<Point>();
+    private List<StudentClusterInfo> cars1 = new ArrayList<>();
+    private List<Point> listPositions = new ArrayList<>();
 
     //Info to create the clusters
     private int[] Min = { 0, 10000 };
@@ -180,7 +180,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
     {
         UserManager usm = getLearnweb().getUserManager();
 
-        List<User> l = new ArrayList<User>();
+        List<User> l = new ArrayList<>();
         if(this.groupId.compareTo("0") == 0)
         {
             l = UserAssessmentBean.removeAdminUsers(usm.getUsersByCourseId(Integer.valueOf(this.classId)));
@@ -194,7 +194,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
 
         for(User u : l)
         {
-            HashMap<String, Long> listAll = new HashMap<String, Long>();
+            HashMap<String, Long> listAll = new HashMap<>();
             listAll = getActivitiesClass(u.getId());
             listActivities.put(u.getId(), listAll);
             //log.debug("lista:" + u.getId() + "-" + listAll.toString());
@@ -218,8 +218,8 @@ public class ClusterBean extends ApplicationBean implements Serializable
     //Clean some lists related to the clusters and users
     public void cleanClusters()
     {
-        this.cluster = new ArrayList<List<Integer>>();
-        this.listData = new ArrayList<StudentClusterInfo>();
+        this.cluster = new ArrayList<>();
+        this.listData = new ArrayList<>();
     }
 
     //Load the user's name according to his Id
@@ -360,7 +360,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
     //Function responsible for include the users in its cluster according the most predominant behavior
     public void defineCluster(KMeans k, int id)
     {
-        List<Integer> s = new ArrayList<Integer>();
+        List<Integer> s = new ArrayList<>();
 
         for(int i = 0; i < Integer.valueOf(numCluster); i++)
         {
@@ -373,15 +373,15 @@ public class ClusterBean extends ApplicationBean implements Serializable
         //log.debug("Id-" + id + ":" + s.get(0) + "," + s.get(1) + "," + s.get(2));
 
         int max = 0;
-        for(int a = 0; a < s.size(); a++)
+        for(Integer value : s)
         {
-            if((s.get(a) > max) || (s.get(a) == max))
-                max = s.get(a);
+            if((value > max) || (value == max))
+                max = value;
         }
 
         for(int i = 0; i < Integer.valueOf(numCluster); i++)
         {
-            ArrayList<Integer> list = new ArrayList<Integer>();
+            ArrayList<Integer> list = new ArrayList<>();
             cluster.add(list);
         }
 
@@ -418,7 +418,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
     {
         Long searching, addResource, delResource, openResource, createGroup, groupJoining, groupLeaving;
         Long rating, tagging, editResource, commenting, deleteComments;
-        HashMap<String, Long> listActUsers = new HashMap<String, Long>();
+        HashMap<String, Long> listActUsers = new HashMap<>();
 
         if(this.groupId.compareTo("0") == 0)
         {

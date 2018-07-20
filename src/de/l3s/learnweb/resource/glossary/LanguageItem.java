@@ -103,7 +103,7 @@ public class LanguageItem implements Serializable
     {
         String label = ""; // = StringHelper.implode(getSelectedUses(), ", ");
 
-        List<String> useLabel = new ArrayList<String>(getSelectedUses());
+        List<String> useLabel = new ArrayList<>(getSelectedUses());
         for(String u : useLabel)
         {
             label = label + u + ", ";
@@ -202,7 +202,7 @@ public class LanguageItem implements Serializable
 
     public void setSelectedUses(List<String> selectedUses)
     {
-        this.selectedUses = new ArrayList<String>();
+        this.selectedUses = new ArrayList<>();
         if(!selectedUses.isEmpty())
             this.selectedUses = selectedUses;
 

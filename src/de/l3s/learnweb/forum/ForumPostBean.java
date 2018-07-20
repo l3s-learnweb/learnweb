@@ -103,7 +103,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         g3.setSelectItems(new SelectItem[] { new SelectItem("Forum.cell.category.3a", UtilBean.getLocaleMessage("Forum.cell.category.3a")), new SelectItem("Forum.cell.category.3b", UtilBean.getLocaleMessage("Forum.cell.category.3b")),
                 new SelectItem("Forum.cell.category.3c", UtilBean.getLocaleMessage("Forum.cell.category.3c")) });
 
-        ArrayList<SelectItem> categories = new ArrayList<SelectItem>();
+        ArrayList<SelectItem> categories = new ArrayList<>();
         categories.add(g1);
         categories.add(g2);
         categories.add(g3);
