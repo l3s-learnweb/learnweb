@@ -74,7 +74,7 @@ var onRequestHistory = function() {
     });
     
 */
-var сonnectEditor = function(id_div, type) {
+var connectEditor = function(id_div, type) {
 	var mode = type=="edit"?"edit":"view"; 
 	var canBeEdited = type=="edit"?true:false; 
 	docEditor = new DocsAPI.DocEditor(id_div, {

@@ -308,7 +308,7 @@ function check_tag(tagName){
 
 function load_editor() {
 	if ($("#right_pane .editor_preview").length) {
-		сonnectEditor("iframeEditor", "embedded");
+        connectEditor("iframeEditor", "embedded");
 	}
 
 }
@@ -325,7 +325,7 @@ function load_lightbox_editor() {
 	});
 
 	var mode = canBeEdited ? "edit" : "view";
-	сonnectEditor("lightbox_editor", mode);
+    connectEditor("lightbox_editor", mode);
  }
 
 /* Context menu */
