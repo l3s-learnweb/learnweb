@@ -143,7 +143,7 @@ public class ForumManager
     {
         LinkedList<ForumPost> posts = new LinkedList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE user_id = ? ORDER BY post_time DESC");
         select.setInt(1, userId);
         ResultSet rs = select.executeQuery();
         while(rs.next())

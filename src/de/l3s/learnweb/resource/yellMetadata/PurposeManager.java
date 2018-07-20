@@ -96,7 +96,7 @@ public class PurposeManager
         else if(purposeId < 1)
             new IllegalArgumentException("invalid purpose id was requested: " + purposeId).printStackTrace();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` WHERE langlevel_id = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` WHERE purpose_id = ?");
         select.setInt(1, purposeId);
         ResultSet rs = select.executeQuery();
 

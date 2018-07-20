@@ -97,6 +97,7 @@ public class glossaryfixes
                 gloss.next();
                 int newGlossaryId = gloss.getInt(1);
 
+                // TODO: this query uses not existed table
                 ins = lw.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary_copy`(`deleted`, `resource_id`, `glossary_id`, `timestamp`) VALUES (?,?,?,?)");
                 ins.setBoolean(1, deleted);
                 ins.setInt(2, resourceId);
@@ -120,6 +121,7 @@ public class glossaryfixes
                     String phraseology = terms.getString("phraseology");
                     String language = terms.getString("language");
                     Timestamp timestampT = terms.getTimestamp("timestamp");
+                    // TODO: this query uses not existed table
                     PreparedStatement insTerm = lw.getConnection().prepareStatement(
                             "INSERT INTO `lw_resource_glossary_terms_copy`(`deleted`, `user_id`, `glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `timestamp`) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 

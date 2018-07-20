@@ -761,7 +761,7 @@ public class GroupManager
 
     public GroupCategory save(GroupCategory category) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_category` (group_category_id, course_id, category_title, category_abbreviation) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_category` (group_category_id, category_course_id, category_title, category_abbreviation) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
         if(category.getId() < 0) // the Group is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
