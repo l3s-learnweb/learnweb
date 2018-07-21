@@ -46,6 +46,7 @@ public class CategoryTree implements Serializable
 
     private void populateCatTree(List<Resource> resources) throws SQLException
     {
+        // TODO: this method is too complex, needs to be refactored
         // using the given resources, i get unique top, middle, bottom categories
         // this method is called only when group resources are not empty 
 
@@ -55,14 +56,18 @@ public class CategoryTree implements Serializable
         {
             if(resource.getExtendedMetadata().getCategories() != null)
             {
-                List<String> rcats = resource.getExtendedMetadata().getCategories();
-                String texist = "false";
-                String mexist = "false";
-                String bexist = "false";
+                List<String> rCats = resource.getExtendedMetadata().getCategories();
+                boolean tExist = false;
+                boolean mExist = false;
+                boolean bExist = false;
 
-                for(int j = 0; j < rcats.size(); j++)
+                for(String rCat : rCats)
                 {
-                    String[] cat = rcats.get(j).split("/");
+                    String[] cat = rCat.split("/");
+
+                    if (cat.length < 3) {
+                        log.error("Expected length of rCat, at least 3, but given " + cat.length + ": " + rCat);
+                    }
 
                     //prepare unique top categories
                     if(uTops.size() == 0)
@@ -72,15 +77,15 @@ public class CategoryTree implements Serializable
                     else
                     {
                         //check if it exists or not
-                        for(int k = 0; k < uTops.size(); k++)
+                        for(String uTop : uTops)
                         {
-                            if(uTops.get(k).equals(cat[0]))
+                            if(uTop.equals(cat[0]))
                             {
-                                texist = "true";
+                                tExist = true;
                             }
                         }
 
-                        if(texist.equalsIgnoreCase("false"))
+                        if(!tExist)
                         {
                             uTops.add(cat[0]);
                         }
@@ -89,7 +94,7 @@ public class CategoryTree implements Serializable
                     //prepare unique middle categories
                     if(uMids.size() == 0)
                     {
-                        if(!(cat[1].equals("x")))
+                        if(!cat[1].equals("x"))
                         {
                             uMids.add(cat[1]);
                         }
@@ -97,27 +102,24 @@ public class CategoryTree implements Serializable
                     else
                     {
                         //check if it exists or not
-                        for(int k = 0; k < uMids.size(); k++)
+                        for(String uMid : uMids)
                         {
-                            if(uMids.get(k).equals(cat[1]))
+                            if(uMid.equals(cat[1]))
                             {
-                                mexist = "true";
+                                mExist = true;
                             }
                         }
 
-                        if(mexist.equalsIgnoreCase("false"))
+                        if(!mExist && !cat[1].equals("x"))
                         {
-                            if(!(cat[1].equals("x")))
-                            {
-                                uMids.add(cat[1]);
-                            }
+                            uMids.add(cat[1]);
                         }
                     }
 
                     //prepare unique bottom categories
                     if(uBots.size() == 0)
                     {
-                        if(!(cat[2].equals("x")))
+                        if(!cat[2].equals("x"))
                         {
                             uBots.add(cat[2]);
                         }
@@ -125,33 +127,30 @@ public class CategoryTree implements Serializable
                     else
                     {
                         //check if it exists or not 
-                        for(int k = 0; k < uBots.size(); k++)
+                        for(String uBot : uBots)
                         {
-                            if(uBots.get(k).equals(cat[2]))
+                            if(uBot.equals(cat[2]))
                             {
-                                bexist = "true";
+                                bExist = true;
                             }
                         }
 
-                        if(bexist.equalsIgnoreCase("false"))
+                        if(!bExist && !cat[2].equals("x"))
                         {
-                            if(!(cat[2].equals("x")))
-                            {
-                                uBots.add(cat[2]);
-                            }
+                            uBots.add(cat[2]);
                         }
                     }
                 }
             }
         }
 
-        //using uTops, I get the list of uniqueTopcategories 
-        for(int i = 0; i < uTops.size(); i++)
+        //using uTops, I get the list of uniqueTopCategories
+        for(String uTop : uTops)
         {
-            CategoryTop cattop = cm.getTopCategoryByName(uTops.get(i));
-            if(cattop != null)
+            CategoryTop catTop = cm.getTopCategoryByName(uTop);
+            if(catTop != null)
             {
-                uniqueTops.add(cattop);
+                uniqueTops.add(catTop);
             }
             else
             {
@@ -159,23 +158,23 @@ public class CategoryTree implements Serializable
             }
         }
 
-        //using uMids, I get the list of uniqueMidcategories 
-        for(int i = 0; i < uMids.size(); i++)
+        //using uMids, I get the list of uniqueMidCategories
+        for(String uMid : uMids)
         {
-            CategoryMiddle catmid = cm.getMiddleCategoryByName(uMids.get(i));
-            if(catmid != null)
+            CategoryMiddle catMid = cm.getMiddleCategoryByName(uMid);
+            if(catMid != null)
             {
-                uniqueMids.add(catmid);
+                uniqueMids.add(catMid);
             }
         }
 
-        //using uBots, I get the list of uniqueBotcategories
-        for(int i = 0; i < uBots.size(); i++)
+        //using uBots, I get the list of uniqueBotCategories
+        for(String uBot : uBots)
         {
-            CategoryBottom catbot = cm.getBottomCategoryByName(uBots.get(i));
-            if(catbot != null)
+            CategoryBottom catBot = cm.getBottomCategoryByName(uBot);
+            if(catBot != null)
             {
-                uniqueBots.add(catbot);
+                uniqueBots.add(catBot);
             }
         }
     }
