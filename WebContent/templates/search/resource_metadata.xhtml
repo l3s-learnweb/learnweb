@@ -4,54 +4,54 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:p="http://primefaces.org/ui">
 
-    <!--@elvariable id="resource" type="de.l3s.learnweb.resource.ResourceDecorator"-->
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
 
     <div class="metadata">
         <div class="title">
-            <h:outputText value="${resource.title}" escape="false"/>
+            <h:outputText value="${res.title}" escape="false"/>
         </div>
 
         <div class="embedded"><!--${resource.embedded}--></div>
 
         <div class="description">
 
-            <ui:fragment rendered="#{not empty resource.description}">
+            <ui:fragment rendered="#{not empty res.description}">
                 <b><h:outputText value="#{msg.description}:" escape="false"/></b><br/>
-                <h:outputText value="${resource.descriptionHTML}" escape="false"/>
+                <h:outputText value="${res.descriptionHTML}" escape="false"/>
                 <br/><br/>
             </ui:fragment>
 
             <b><h:outputText value="#{msg.location}: " escape="false"/></b>
-            <h:outputLink value="${resource.urlProxied}">
-                <h:outputText value="${resource.location}" escape="false"/>
+            <h:outputLink value="${res.urlProxied}">
+                <h:outputText value="${res.location}" escape="false"/>
             </h:outputLink>
             <br/>
 
             <b><h:outputText value="#{msg.resource_found_at}: " escape="false"/></b>
-            <h:outputText value="#{resource.source.label}" escape="false"/>
+            <h:outputText value="#{res.source.label}" escape="false"/>
             <br/>
 
-            <ui:fragment rendered="#{not empty resource.description}">
+            <ui:fragment rendered="#{not empty res.description}">
                 <b><h:outputText value="#{msg.author}: " escape="false"/></b>
-                <h:outputText value="#{resource.resource.author}"/>
+                <h:outputText value="#{res.resource.author}"/>
                 <br/>
             </ui:fragment>
 
-            <ui:fragment rendered="#{not empty resource.group}">
+            <ui:fragment rendered="#{not empty res.group}">
                 <b><h:outputText value="#{msg.group}: "/></b>
 
                 <h:outputLink value="group/resources.jsf">
-                    <f:param name="group_id" value="#{resource.group.id}"/>
-                    <f:param name="resource_id" value="#{resource.id}"/>
-                    <h:outputText value="#{resource.group.title}"/>
+                    <f:param name="group_id" value="#{res.group.id}"/>
+                    <f:param name="resource_id" value="#{res.id}"/>
+                    <h:outputText value="#{res.group.title}"/>
                 </h:outputLink>
                 <br/>
             </ui:fragment>
 
-            <ui:fragment rendered="#{not empty resource.resource.tags}">
+            <ui:fragment rendered="#{not empty res.resource.tags}">
                 <b><h:outputText value="#{msg.tags}: " escape="false"/></b>
 
-                <ui:repeat var="tag" value="#{resource.resource.tags}" varStatus="status">
+                <ui:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
                     <h:outputText value="#{tag.name}"/><h:outputText value=", " rendered="#{!status.last}" escape="false"/>
                 </ui:repeat>
                 <br/>
@@ -61,10 +61,10 @@
 
 
         <div class="snippet">
-            <ui:fragment rendered="#{(not empty resource.snippet) and false}">
+            <ui:fragment rendered="#{(not empty res.snippet) and false}">
                 <br/>
                 <b><h:outputText value="#{msg.snippet}:" escape="false"/></b><br/>
-                <h:outputText value="${resource.snippet}" escape="false"/>
+                <h:outputText value="${res.snippet}" escape="false"/>
                 <br/><br/>
             </ui:fragment>
             <br/>
