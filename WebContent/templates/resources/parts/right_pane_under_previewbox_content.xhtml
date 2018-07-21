@@ -183,8 +183,7 @@
 			value="#{rightPaneBean.clickedResource.metadataEntries}">
 			<ui:fragment rendered="#{not empty entry.value}">
 				<tr>
-					<td><span class="resource_field"> <h:outputText
-								value="${utilBean.getLocaleMessage(entry.key, null)}" />:
+					<td><span class="resource_field"> <h:outputText value="#{utilBean.getLocaleMessage(entry.key, null)}" />:
 					</span></td>
 					<td><h:outputText value="#{entry.value}" /></td>
 				</tr>

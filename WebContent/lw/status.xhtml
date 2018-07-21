@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xml xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+<xml xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-<services>	
-<ui:repeat var="service" value="#{statusBean.services}">
-	<service>
-		<name><h:outputText value="#{service.name}" escape="false"/></name>
-		<status><h:outputText value="#{service.status}" escape="false"/></status>
-		<url><h:outputText value="#{service.url}" escape="false"/></url>
-		<comment><h:outputText value="#{service.comment}" escape="false"/></comment>
-	</service>
-</ui:repeat>
-</services>	
+
+    <services>
+        <ui:repeat var="service" value="#{statusBean.services}">
+            <service>
+                <name><h:outputText value="#{service.name}" escape="false"/></name>
+                <status><h:outputText value="#{service.status}" escape="false"/></status>
+                <url><h:outputText value="#{service.url}" escape="false"/></url>
+                <comment><h:outputText value="#{service.comment}" escape="false"/></comment>
+            </service>
+        </ui:repeat>
+    </services>
 </xml>
 

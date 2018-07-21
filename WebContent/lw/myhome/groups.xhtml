@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/templates/main/main_old.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/templates/main/main_old.xhtml">
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.groupsTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
@@ -148,7 +147,7 @@
 						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}" oncomplete="applyTooltip()">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
-						<p:confirm message="${utilBean.getLocaleMessage('leave_group_question', group.title)}" />
+						<p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}" />
 				    </p:commandLink>			 
 			    
 					<h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
@@ -229,4 +228,3 @@
 		</h:form>
 	</ui:define>
 </ui:composition>
-</html>

@@ -13,44 +13,44 @@
 
 	<style type="text/css">
 		.ui-state-hover, .ui-state-focus, .ui-state-active{
-			box-shadow:0 0 0px 0px #fff !important;
+			box-shadow:0 0 0 0 #fff !important;
 			background-color:#d1d1d1 !important;
 			background-image:none !important;
 			border:1px solid #a8a8a8 !important;
 		}
 
-		.page_header{margin:5px 5px 0px 5px;}
+		.page_header{margin:5px 5px 0 5px;}
 		#banlistform{padding:5px; width:100%;}
 	</style>
 
-		<div class="page_header">
-			<span>
-				#{msg.requests_header}
-			</span>
-		</div>
+	<div class="page_header">
+		<span>
+			#{msg.requests_header}
+		</span>
+	</div>
 
 	<p:panel>
 	<p:tabView>
         <p:tab title="#{msg.requests}">
 			<h:form id="requestform" >
 
-					<p:dataTable var="entry" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
+					<p:dataTable var="request" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
 			               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 			               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
 			               >
 
-						<p:column headerText="IP" sortBy="#{entry.IP}" filterBy="#{entry.IP}" filterMatchMode="contains">
-							<h:outputText value="#{entry.IP}" />
+						<p:column headerText="IP" sortBy="#{request.IP}" filterBy="#{request.IP}" filterMatchMode="contains">
+							<h:outputText value="#{request.IP}" />
 						</p:column>
 
-						<p:column headerText="#{msg.time}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterFunction="#{adminRequestListBean.filterByDate}">
-							<h:outputText value="#{entry.time}">
+						<p:column headerText="#{msg.time}" sortBy="#{request.time}" filterBy="#{request.time}" filterFunction="#{adminRequestListBean.filterByDate}">
+							<h:outputText value="#{request.time}">
 							    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
 							</h:outputText>
 						</p:column>
 
-						<p:column headerText="URL" sortBy="#{entry.URL}" filterBy="#{entry.URL}" filterMatchMode="contains">
-							<h:outputText value="#{entry.URL}" />
+						<p:column headerText="URL" sortBy="#{request.URL}" filterBy="#{request.URL}" filterMatchMode="contains">
+							<h:outputText value="#{request.URL}" />
 						</p:column>
 
 					</p:dataTable>
@@ -59,21 +59,21 @@
 
         <p:tab title="#{msg.logins}">
 			<h:form>
-				<p:dataTable var="entry" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
+				<p:dataTable var="login" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
 		               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 		               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
 		               >
 
-					<p:column headerText="IP" sortBy="#{entry.key}"  filterBy="#{entry.key}" filterMatchMode="contains">
-						<h:outputText value="#{entry.key}" />
+					<p:column headerText="IP" sortBy="#{login.key}"  filterBy="#{login.key}" filterMatchMode="contains">
+						<h:outputText value="#{login.key}" />
 					</p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.value.size()}"  filterBy="#{entry.value.size()}" filterMatchMode="contains">
-						<h:outputText value="#{entry.value.size()}" />
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{login.value.size()}"  filterBy="#{login.value.size()}" filterMatchMode="contains">
+						<h:outputText value="#{login.value.size()}" />
 					</p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.value.toString()}"  filterBy="#{entry.value.toString()}" filterMatchMode="contains">
-						<h:outputText value="#{entry.value.toString()}" />
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{login.value.toString()}"  filterBy="#{login.value.toString()}" filterMatchMode="contains">
+						<h:outputText value="#{login.value.toString()}" />
 					</p:column>
 
 				</p:dataTable>
@@ -90,27 +90,27 @@
 					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" immediate="true"/>
 				</span>
 
-				<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
+				<p:dataTable var="aRequest" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
 		              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-					<p:column headerText="IP" sortBy="#{entry.IP}"  filterBy="#{entry.IP}" filterMatchMode="contains">
-						<h:outputText value="#{entry.IP}" />
+					<p:column headerText="IP" sortBy="#{aRequest.IP}"  filterBy="#{aRequest.IP}" filterMatchMode="contains">
+						<h:outputText value="#{aRequest.IP}" />
 					</p:column>
 
-					<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}"  filterBy="#{entry.requests}" filterMatchMode="contains">
-						<h:outputText value="#{entry.requests}" />
+					<p:column headerText="#{msg.requests_count}" sortBy="#{aRequest.requests}"  filterBy="#{aRequest.requests}" filterMatchMode="contains">
+						<h:outputText value="#{aRequest.requests}" />
 					</p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}"  filterBy="#{entry.loginCount}" filterMatchMode="contains">
-						<h:outputText value="#{entry.loginCount}" />
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{aRequest.loginCount}"  filterBy="#{aRequest.loginCount}" filterMatchMode="contains">
+						<h:outputText value="#{aRequest.loginCount}" />
 					</p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}" filterBy="#{entry.usernames}" filterMatchMode="contains">
-						<h:outputText value="#{entry.usernames}" />
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{aRequest.usernames}" filterBy="#{aRequest.usernames}" filterMatchMode="contains">
+						<h:outputText value="#{aRequest.usernames}" />
 					</p:column>
 
-					<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterFunction="#{adminRequestListBean.filterByDate}">
-						<h:outputText value="#{entry.time}">
+					<p:column headerText="#{msg.time_stamp}" sortBy="#{aRequest.time}" filterBy="#{aRequest.time}" filterFunction="#{adminRequestListBean.filterByDate}">
+						<h:outputText value="#{aRequest.time}">
 						    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 						</h:outputText>
 					</p:column>

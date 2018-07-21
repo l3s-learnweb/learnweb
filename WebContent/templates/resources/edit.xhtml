@@ -52,17 +52,17 @@
                 <c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
                     <td colspan="2">
                         <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-                            <h3><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}"/></h3>
+                            <h3><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h3>
                         </c:if>
                         <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-                            <h4><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}"/></h4>
+                            <h4><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
                         </c:if>
 
                     </td>
                 </c:if>
                 <c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">
                     <td>
-                        <h:outputText value="${utilBean.getLocaleMessage(field.name, null)}"/>:
+                        <h:outputText value="#{utilBean.getLocaleMessage(field.name, null)}"/>:
                     </td>
                     <td>
                         <c:if test="#{field.moderatorOnly and not userBean.moderator}">

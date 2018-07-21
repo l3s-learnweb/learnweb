@@ -28,10 +28,10 @@
 							<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">	
 								<td colspan="2">
 									<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-										<h3><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" /></h3>
+										<h3><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}" /></h3>
 									</c:if> 
 									<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-										<h4><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" /></h4>
+										<h4><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}" /></h4>
 									</c:if> 
 									
 								</td>
@@ -39,7 +39,7 @@
 							-->
 							<c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">							 
 								<td>
-									<h:outputText value="${utilBean.getLocaleMessage(field.name, null)}" />:
+									<h:outputText value="#{utilBean.getLocaleMessage(field.name, null)}" />:
 								</td>
 								<td>	
 									
@@ -100,7 +100,7 @@
 						</a>
 					
 						<div class="resource-title-text">
-							<span class="resource-title-summary"><span>${utilBean.getLocaleMessage(result.resource.type)}</span> #{msg.added_by} <span>#{result.resource.ownerUser.username}</span></span>
+							<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(result.resource.type)}</span> #{msg.added_by} <span>#{result.resource.ownerUser.username}</span></span>
 						</div>
 						
 							
@@ -302,7 +302,7 @@
 									<tr>
 										<td>
 											<span class="resource_field">
-												<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
+												<h:outputText value="#{utilBean.getLocaleMessage(entry.key, null)}" />:
 											</span>
 										</td>
 										<td>

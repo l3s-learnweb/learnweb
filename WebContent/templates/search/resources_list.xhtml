@@ -1,64 +1,72 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
 
-<ui:composition>
+    <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-	<h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
-	<h:outputScript  name="js/jquery.tooltipster.min.js" target="head"/>
-     
-	<ui:repeat var="res" value="#{resources}">
-		
-		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
-			<h:outputText value="#{msg.page} " />
-			<h:outputText value="#{(res.tempId+9) / 10}" >
-				<f:convertNumber maxFractionDigits="0" />
-			</h:outputText>			
-		</h:panelGroup>	
-			
-		<div class="resource" id="resource_${res.tempId}">		
-			
-			<h:outputLink class="resourceWebLink" target="_blank" value="#{res.urlProxied}"><h:outputText value="#{res.title}" escape="false" /></h:outputLink>
-			
-			<div style="margin:0.2rem 0 0.2rem 0;">
-				<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{msg['application.name']} <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
-				<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id == -1}" target="_blank">#{res.url}</h:outputLink>
-				<ui:fragment rendered="${res.archived}">
-					<div>#{msg['Archive.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['Archive.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
-				</ui:fragment>
-			</div>				
-			<h:outputText value="#{res.snippet}" styleClass="description" escape="false"></h:outputText>
+    <h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
+    <h:outputScript name="js/jquery.tooltipster.min.js" target="head"/>
 
-			<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link">
-				<b><h:outputText value="#{msg.options}: " /></b>
+    <ui:repeat var="res" value="#{resources}">
+        <h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+            <h:outputText value="#{msg.page} "/>
+            <h:outputText value="#{(res.tempId+9) / 10}">
+                <f:convertNumber maxFractionDigits="0"/>
+            </h:outputText>
+        </h:panelGroup>
 
-				<h:outputLink value="#" onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
-					rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}">
-					<h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}" style="vertical-align: middle; margin-right:4px;" />#{msg.addToMyResources}
-					</h:outputLink>
-			</h:panelGroup>
-			<h:panelGroup rendered="#{not empty res.group}" style="margin-right:10px;display:inline-block;">
-				<b><h:outputText value="#{msg.group}: " /></b>
+        <div class="resource" id="resource_${res.tempId}">
+            <h:outputLink class="resourceWebLink" target="_blank" value="#{res.urlProxied}">
+                <h:outputText value="#{res.title}" escape="false"/>
+            </h:outputLink>
 
-				<h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
-					<f:param name="group_id" value="#{res.group.id}" />
-					<h:outputText value="#{res.group.title}" />
-				</h:outputLink>
-			</h:panelGroup>
-			<h:panelGroup styleClass="metadata-field" rendered="#{not empty res.getMetadataValue('collector')}">
-				<b><h:outputText value=" #{msg.collector}: " /></b>
-				<h:outputText value="#{res.getMetadataValue('collector')}" />
-			</h:panelGroup>
-			<h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
-				<b><h:outputText value=" #{msg.collector}: " /></b>
-				<h:outputText value="#{res.resource.ownerUser.fullName}" />
-			</h:panelGroup>
+            <div style="margin:0.2rem 0 0.2rem 0;">
+                <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{msg['application.name']}
+                    <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+                <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id == -1}" target="_blank">#{res.url}</h:outputLink>
+                <ui:fragment rendered="${res.archived}">
+                    <div>#{msg['Archive.captured_between']}
+                        <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                            <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                        </a> #{msg['Archive.captured_between_and']}
+                        <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                            <h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                        </a>
+                    </div>
+                </ui:fragment>
+            </div>
 
+            <h:outputText value="#{res.snippet}" styleClass="description" escape="false"></h:outputText>
 
-		</div>		
-	</ui:repeat>
+            <h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link">
+                <b><h:outputText value="#{msg.options}: "/></b>
+
+                <h:outputLink value="#" rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}"
+                              onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
+                    <h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}"
+                                    style="vertical-align: middle; margin-right:4px;"/>#{msg.addToMyResources}
+                </h:outputLink>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not empty res.group}" style="margin-right:10px;display:inline-block;">
+                <b><h:outputText value="#{msg.group}: "/></b>
+                <h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
+                    <f:param name="group_id" value="#{res.group.id}"/>
+                    <h:outputText value="#{res.group.title}"/>
+                </h:outputLink>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="metadata-field" rendered="#{not empty res.getMetadataValue('collector')}">
+                <b><h:outputText value=" #{msg.collector}: "/></b>
+                <h:outputText value="#{res.getMetadataValue('collector')}"/>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
+                <b><h:outputText value=" #{msg.collector}: "/></b>
+                <h:outputText value="#{res.resource.ownerUser.fullName}"/>
+            </h:panelGroup>
+        </div>
+    </ui:repeat>
 </ui:composition>
-</html>

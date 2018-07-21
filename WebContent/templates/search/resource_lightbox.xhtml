@@ -1,37 +1,28 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
 
-<ui:composition>
-	<div id="lightbox">
-		<div id="lightbox_background" onclick="lightbox_close();"></div>
-		
-		<div id="lightbox_container">
+    <div id="lightbox">
+        <div id="lightbox_background" onclick="lightbox_close();"></div>
 
-			<div id="lightbox_left">
-				<div id="lightbox_title"></div>
+        <div id="lightbox_container">
+            <div id="lightbox_left">
+                <div id="lightbox_title"></div>
 
-				
-				<div id="lightbox_content">
-				
-					<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
-					<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
-				</div>
-				
-				
-				<div id="lightbox_thumbnails"></div>
+                <div id="lightbox_content">
+                    <div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
+                    <div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
+                </div>
 
-			</div>
+                <div id="lightbox_thumbnails"></div>
+            </div>
 
-			<div id="lightbox_right">
-				<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="#{msg.close}"></a>
-
-				<div id="lightbox_metadata"></div>
-			</div>	
-		</div>
-	</div>
+            <div id="lightbox_right">
+                <a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="#{msg.close}"></a>
+                <div id="lightbox_metadata"></div>
+            </div>
+        </div>
+    </div>
 </ui:composition>
-</html>

@@ -65,7 +65,7 @@
 														styleClass="resource-title-name"
 														title="#{item.resource.title}" />
 
-													<span class="resource-title-summary"><span>${utilBean.getLocaleMessage(item.resource.type)}</span>
+													<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(item.resource.type)}</span>
 														#{msg.added_by} <span>#{item.resource.getOwnerUser().username}</span></span>
 												</div>
 											</div>
@@ -127,7 +127,7 @@
 													<h:outputText value="#{item.title}" escape="false"
 														styleClass="resource-title-name" title="#{item.title}" />
 
-													<span class="resource-title-summary"><span>${utilBean.getLocaleMessage(item.type)}</span>
+													<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(item.type)}</span>
 														#{msg.added_by} <span>#{item.getOwnerUser().username}</span></span>
 												</div>
 											</div>
@@ -181,6 +181,4 @@
 			</h:form>
 		</ui:fragment>
 	</h:form>
-
-
 </ui:composition>
