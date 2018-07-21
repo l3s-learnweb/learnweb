@@ -22,9 +22,16 @@ public enum SERVICE // when adding more services remember to update the service 
 
     private final String label;
 
-    private SERVICE(String label)
+    SERVICE(String label)
     {
         this.label = label;
+    }
+
+    /**
+     * Same as SERVICE.valueOf(), but removes spaces, dashes and case insensitive.
+     */
+    public static SERVICE parse(String value) throws IllegalArgumentException {
+        return valueOf(value.toLowerCase().replaceAll("[ -]", ""));
     }
 
     public boolean isLearnwebSource()

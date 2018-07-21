@@ -306,7 +306,7 @@ public class SearchFilters implements Serializable
             switch(this)
             {
             case service:
-                return getServiceByName(item).toString();
+                return SERVICE.parse(item).toString();
             case group:
                 return getGroupNameById(item);
             default:
@@ -477,7 +477,7 @@ public class SearchFilters implements Serializable
                         switch(f)
                         {
                         case service:
-                            setFilter(f, getServiceByName(fValue));
+                            setFilter(f, SERVICE.parse(fValue));
                             break;
                         case type:
                             setFilter(f, TYPE.valueOf(fValue));
@@ -558,7 +558,7 @@ public class SearchFilters implements Serializable
         {
             for(Count c : availableResources.get(fs))
             {
-                SERVICE src = getServiceByName(c.getName());
+                SERVICE src = SERVICE.parse(c.getName());
                 FilterItem fi = new FilterItem(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
                 filters.add(fi);
             }
@@ -899,11 +899,6 @@ public class SearchFilters implements Serializable
         {
             return id;
         }
-    }
-
-    public static SERVICE getServiceByName(String name)
-    {
-        return SERVICE.valueOf(name.toLowerCase().replace("-", ""));
     }
 
     public Long getTotalResults()

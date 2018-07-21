@@ -541,7 +541,7 @@ public class Search implements Serializable
         {
             try
             {
-                SERVICE src = SearchFilters.getServiceByName(groupName);
+                SERVICE src = SERVICE.parse(groupName);
                 this.groupAlias = src.name();
                 this.groupName = src.toString();
             }
