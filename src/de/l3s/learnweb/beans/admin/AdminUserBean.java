@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.LoginBean;
 import de.l3s.learnweb.user.User;
 
@@ -33,7 +34,15 @@ public class AdminUserBean extends ApplicationBean implements Serializable
         Integer courseId = getParameterInt("course_id");
 
         if(courseId != null)
-            users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
+        {
+            Course course = getLearnweb().getCourseManager().getCourseById(courseId);
+            if(null == course)
+            {
+                addInvalidParameterMessage("course_id");
+                return;
+            }
+            users = course.getMembers();
+        }
         else if(user.isAdmin())
             users = getLearnweb().getUserManager().getUsers();
         else if(user.isModerator())

@@ -622,6 +622,17 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setImageFileId(int imageFileId)
     {
+        if(imageFileId == 0 && this.imageFileId != 0) // delete existing image
+        {
+            try
+            {
+                Learnweb.getInstance().getFileManager().delete(this.imageFileId);
+            }
+            catch(Exception e)
+            {
+                log.error("Can't delete profile image of user " + toString());
+            }
+        }
         this.imageFileId = imageFileId;
     }
 

@@ -7,10 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -20,10 +22,12 @@ import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.User;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class AdminCoursesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
+    private static final Logger log = Logger.getLogger(AdminCoursesBean.class);
+
     private List<Course> courses;
     @NotNull
     @Size(min = 2, max = 50)
@@ -77,9 +81,10 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         {
             getLearnweb().getCourseManager().delete(course, getUser().isAdmin());
 
+            log.info("Deleted course " + course);
             log(Action.course_delete, 0, course.getId());
-
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted.");
+
             load(); // update course list
         }
         catch(Exception e)
@@ -94,9 +99,10 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         {
             getLearnweb().getCourseManager().anonymize(course);
 
+            log.info("Anonymized course " + course);
             log(Action.course_anonymize, 0, course.getId());
-
             addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been anonymized.");
+
             load(); // update course list
         }
         catch(Exception e)

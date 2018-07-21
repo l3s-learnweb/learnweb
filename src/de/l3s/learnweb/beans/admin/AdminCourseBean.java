@@ -8,10 +8,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
 
 @Named
-@SessionScoped
+@SessionScoped // TODO this should not be session scoped. but right no it doesn't work without. need to update frontend
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1276599881084055950L;

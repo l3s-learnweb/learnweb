@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
@@ -19,6 +19,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Course.Option;
 
 @Named
 @ViewScoped
@@ -179,6 +180,11 @@ public class RegistrationBean extends ApplicationBean implements Serializable
             if(null == course)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
+                wizardParamInvalid = true;
+            }
+            else if(course.getOption(Option.Users_Disable_Wizard))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
                 wizardParamInvalid = true;
             }
             else

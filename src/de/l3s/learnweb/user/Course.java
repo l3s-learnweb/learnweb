@@ -25,11 +25,11 @@ public class Course implements Serializable, Comparable<Course>, HasId
     {
         Unused_1,
         Unused_2,
-        Unused_5,
         Unused_3,
+        Unused_4,
         Users_Require_mail_address,
-        Unused_4, // this should be a organization option
-        Groups_Google_Docs_Sign_In_enabled, // this should be a organization option
+        Users_Disable_Wizard,
+        Groups_Google_Docs_Sign_In_enabled,
         Users_Require_Affiliation,
         Users_Require_Student_Id
     }
@@ -285,4 +285,11 @@ public class Course implements Serializable, Comparable<Course>, HasId
         if(groupCategories != null)
             groupCategories = null; // clear cache
     }
+
+    @Override
+    public String toString()
+    {
+        return "Course [id=" + id + ", title=" + title + "]";
+    }
+
 }

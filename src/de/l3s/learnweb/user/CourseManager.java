@@ -19,6 +19,7 @@ import com.google.common.hash.Hashing;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.user.Course.Option;
 import de.l3s.util.Sql;
 
 /**
@@ -219,6 +220,11 @@ public class CourseManager
      */
     public void anonymize(Course course) throws SQLException
     {
+        // disable registration wizard
+        course.setOption(Option.Users_Disable_Wizard, true);
+        save(course);
+
+        // anonymize users
         List<User> undeletedUsers = new LinkedList<>(); // users that can't be deleted because they are member of other courses
         for(User user : course.getMembers())
         {
@@ -236,7 +242,7 @@ public class CourseManager
                 user.setAffiliation("");
                 user.setDateOfBirth(new Date(0));
                 user.setFullName("");
-                user.setImageFileId(-1);
+                user.setImageFileId(0);
                 user.setInterest("");
                 user.setProfession("");
                 user.setStudentId("");
@@ -244,6 +250,8 @@ public class CourseManager
 
                 user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
                 user.setEmailConfirmed(true); // disable mail validation
+
+                user.save();
             }
         }
     }
