@@ -1,325 +1,336 @@
-<ui:composition template="/templates/main/main.xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/templates/main/main.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="query" value="#{searchBean.query}" />
-			<f:viewParam name="action" value="#{searchBean.queryMode}" />
-			<f:viewParam name="service" value="#{searchBean.queryService}" />
-			<f:viewParam name="filter" value="#{searchBean.queryFilters}" />
-			<f:viewAction action="#{searchBean.preRenderView}"/>
-		</f:metadata>
-	</ui:define>
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="query" value="#{searchBean.query}"/>
+            <f:viewParam name="action" value="#{searchBean.queryMode}"/>
+            <f:viewParam name="service" value="#{searchBean.queryService}"/>
+            <f:viewParam name="filter" value="#{searchBean.queryFilters}"/>
+            <f:viewAction action="#{searchBean.preRenderView}"/>
+        </f:metadata>
+    </ui:define>
 
-	<ui:param name="pageTitle" value="#{msg.searchTitle}" />	
-	<ui:param name="helpText" value="#{msg.searchHelp}"/>
-	<ui:param name="loginRequired" value="true" />
-	 
-	<ui:define name="sub_menu_bar">
-		<div id="sub_menu_bar">  			
-			<h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" 
-				rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-       		  	#{msg.back_to} 
-     		  	<i>
-     		  		#{userBean.user.activeGroup.title}
-   		  		</i>
-				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
-			</h:outputLink>		
-					
-			<h:form styleClass="links">
-				<h:outputText value="Web" styleClass="activeResource" rendered="#{searchBean.searchMode == 'text'}" />
-				<h:link value="Web" outcome="search" rendered="#{searchBean.searchMode != 'text'}" >
-					<f:param name="action" value="text" />
-					<f:param name="query" value="#{searchBean.query}" />								
-				</h:link>
+    <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
+    <ui:param name="helpText" value="#{msg.searchHelp}"/>
+    <ui:param name="loginRequired" value="true"/>
 
-				<h:outputText value="#{msg.Images}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'image'}" />
-				<h:link value="#{msg.Images}" outcome="search" rendered="#{searchBean.searchMode != 'image'}" >
-					<f:param name="action" value="image" />
-					<f:param name="query" value="#{searchBean.query}" />
-				</h:link>
+    <ui:define name="sub_menu_bar">
+        <div id="sub_menu_bar">
+            <h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+                #{msg.back_to}
+                <i>#{userBean.user.activeGroup.title}</i>
+                <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
+            </h:outputLink>
 
-				<h:outputText value="#{msg.Videos}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'video'}" />
-				<h:link value="#{msg.Videos}" outcome="search" rendered="#{searchBean.searchMode != 'video'}" >
-					<f:param name="action" value="video" />
-					<f:param name="query" value="#{searchBean.query}" />
-				</h:link>
-			</h:form>	
-		</div>
-	</ui:define>
-				
-	<ui:define name="center_layout">
-		<h:outputStylesheet library="lightbox" name="lightbox.css"  />		
-		<h:outputStylesheet library="search" name="search.css"  />		
-		<h:outputScript library="search" name="search.js" target="head"/>
-		
-		<h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
-			<h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
-				<h:outputFormat value="#{msg.search_groups_header_empty}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() == 1}">
-					<f:param value="#{searchBean.totalFromCurrentService}"/>
-					<f:param value="#{searchBean.searchService.name()}"/>
-					<f:param value="#{searchBean.searchService}"/>
-				</h:outputFormat>
-				<h:outputFormat value="#{msg.search_groups_header}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() != 1}">
-					<f:param value="#{searchBean.totalFromCurrentService}"/>
-					<f:param value="#{searchBean.searchService.name()}"/>
-					<f:param value="#{searchBean.searchService}"/>
-				</h:outputFormat>
-			</h:panelGroup>
-			<h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
-				<span class="navigate left">
-					<a id="scrollLeft" href="#">
-						<span class="arrow"></span>
-					</a>
-				</span>
-				<div class="group-menu-container">
-					<ui:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
-						<h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{searchBean.searchService.name() != gr.groupAlias}">
-							<f:param name="service" value="#{gr.groupAlias}"/>
-							<f:param name="action" value="#{searchBean.searchMode}"/>
-							<f:param name="query" value="#{searchBean.query}"/>
+            <h:form styleClass="links">
+                <h:outputText value="Web" styleClass="activeResource" rendered="#{searchBean.searchMode == 'text'}"/>
+                <h:link value="Web" outcome="search" rendered="#{searchBean.searchMode != 'text'}">
+                    <f:param name="action" value="text"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
 
-							<h4 class="group-menu-title">
-								<h:outputFormat value="#{msg.search_groups_title}" escape="false">
-									<f:param value="#{gr.groupName}"/>
-									<f:param value="#{gr.totalResources}"/>
-								</h:outputFormat>
-							</h4>
-							<div class="group-menu-content group-content-#{searchBean.searchMode}">
-								<h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
-									<ui:repeat value="#{gr.resources}" var="res">
-										<div class="article-wrapper">
-											<h6>
-												<span><h:outputText value="#{res.title}" escape="false"/></span>
-												<span class="url">#{res.url}</span>
-											</h6>
-											
-											<p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
-										</div>
-									</ui:repeat>
-								</h:panelGroup>
-								<h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-									<ui:repeat value="#{gr.resources}" var="res">
-										<div class="image-wrapper">
-											<img src="${res.thumbnail2.url}" />
-										</div>
-									</ui:repeat>
-								</h:panelGroup>
-							</div>
-						</h:link>
-					</ui:repeat>
-				</div>
-				<span class="navigate right">
-					<a id="scrollRight" href="#">
-						<span class="arrow"></span>
-					</a>
-				</span>
-			</h:panelGroup>
-		</h:panelGroup>
-		<div id="filters_menu_bar_wrapper">
-			<div class="filters_menu_bar">
-				<h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
-					<ul>
-						<li class="filter sources active" id="source_filter">
-							<span class="filter-name">
-								<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
-								<span class="arrow"></span>
-							</span>
-							<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
-								<ui:repeat value="#{searchBean.availableSources}" var="item">
-									<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
-										<h:outputText value="#{item.name}"/>
-										
-										<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-											<f:param value="#{item.counter}"/>
-										</h:outputFormat>
-																			
-										<f:param name="action" value="#{searchBean.searchMode}"/>
-										<f:param name="service" value="#{item.url}"/>
-										<f:param name="query" value="#{searchBean.query}"/>
-									</h:outputLink>
-								</ui:repeat>
-							</h:panelGroup>
-						</li>
-						<ui:repeat value="#{searchBean.availableFilters}" var="filter">
-							<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
-								<span class="filter-name">
-									<span class="trimmed-text">#{filter.name}</span>
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
-									<h:panelGroup styleClass="vCarousel-container" layout="block">
-										<h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
-											<h:outputText value="#{filter.anyText}" />
-										
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
-											<f:param name="service" value="#{searchBean.queryService}"/>
-											<f:param name="query" value="#{searchBean.query}"/>
-										</h:outputLink>
-										<ui:repeat value="#{filter.items}" var="item">
-											<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
-												<h:outputText value="#{item.name}"/>
-												
-												<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-													<f:param value="#{item.counter}"/>
-												</h:outputFormat>
-											
-												<f:param name="action" value="#{searchBean.searchMode}" />
-												<f:param name="filter" value="#{item.url}" />
-												<f:param name="service" value="#{searchBean.queryService}"/>
-												<f:param name="query" value="#{searchBean.query}" />
-											</h:outputLink>
-										</ui:repeat>
-									</h:panelGroup>
-									<h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
-								</h:panelGroup>
-							</li>
-						</ui:repeat>
-					</ul>
-					<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
-						<f:param name="action" value="#{searchBean.searchMode}" />
-						<f:param name="query" value="#{searchBean.query}" />
-					</h:link>
-				</h:panelGroup>	
-			</div>
-		</div>
-		
-		<script type="text/javascript">
-			var view = '#{searchBean.view}';
-			var userId = '#{userBean.user.id}';
-		</script>			
-		 
-		<ui:decorate template="/templates/search/resource_lightbox.xhtml" /> 	
+                <h:outputText value="#{msg.Images}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'image'}"/>
+                <h:link value="#{msg.Images}" outcome="search" rendered="#{searchBean.searchMode != 'image'}">
+                    <f:param name="action" value="image"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
 
-		<div id="results" class="#{searchBean.view}_view">			
-			<div class="resources">
-				<ui:decorate  template="/templates/search/resources.xhtml">
-					<ui:param name="resources" value="#{searchBean.search.resources}" />
-					<ui:param name="view" value="#{searchBean.view}" />					
-				</ui:decorate>
-			</div>	
-			<div class="clear"></div>
-		</div>		
-		
-		<h:panelGroup id="factsheet">
-			<ui:fragment rendered="${searchBean.graphLoaded}">
-				<ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>		
-			</ui:fragment>		
-		</h:panelGroup>
+                <h:outputText value="#{msg.Videos}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'video'}"/>
+                <h:link value="#{msg.Videos}" outcome="search" rendered="#{searchBean.searchMode != 'video'}">
+                    <f:param name="action" value="video"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
+            </h:form>
+        </div>
+    </ui:define>
 
-		<div id="search_loading_more_results">
-			#{msg.loading_more_results} <span class="loading-icon" />
-		</div>
-		<div id="search_no_more_results">
-			#{msg.no_more_results}
-		</div>
-		<div id="search_nothing_found">
-			#{msg.nothingFound}
-		</div>
+    <ui:define name="center_layout">
+        <h:outputStylesheet library="lightbox" name="lightbox.css"/>
+        <h:outputStylesheet library="search" name="search.css"/>
+        <h:outputScript library="search" name="search.js" target="head"/>
 
-		<div id="new_results" style="display:none;">	
-			<h:panelGroup id="nextPage" layout="block">				
-				<ui:decorate  template="/templates/search/resources.xhtml">
-					<ui:param name="view" value="#{searchBean.view}" />	
-					<ui:param name="resources" value="#{searchBean.nextPage}" />
-				</ui:decorate>		
-			</h:panelGroup>
-		</div>
-	
-		<!-- TODO: all remote commands cause an update of :nextPage  -->
-		<h:form class="display-none">	
-			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadNextPage')" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
+        <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
+            <h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
+                <h:outputFormat value="#{msg.search_groups_header_empty}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() == 1}">
+                    <f:param value="#{searchBean.totalFromCurrentService}"/>
+                    <f:param value="#{searchBean.searchService.name()}"/>
+                    <f:param value="#{searchBean.searchService}"/>
+                </h:outputFormat>
+                <h:outputFormat value="#{msg.search_groups_header}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() != 1}">
+                    <f:param value="#{searchBean.totalFromCurrentService}"/>
+                    <f:param value="#{searchBean.searchService.name()}"/>
+                    <f:param value="#{searchBean.searchService}"/>
+                </h:outputFormat>
+            </h:panelGroup>
 
-			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
+            <h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
+                <span class="navigate left"><a id="scrollLeft" href="#"><span class="arrow"></span></a></span>
 
-			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true"/>
+                <div class="group-menu-container">
+                    <ui:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
+                        <h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{searchBean.searchService.name() != gr.groupAlias}">
+                            <f:param name="service" value="#{gr.groupAlias}"/>
+                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
 
-			<!--<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />-->
+                            <h4 class="group-menu-title">
+                                <h:outputFormat value="#{msg.search_groups_title}" escape="false">
+                                    <f:param value="#{gr.groupName}"/>
+                                    <f:param value="#{gr.totalResources}"/>
+                                </h:outputFormat>
+                            </h4>
+                            <div class="group-menu-content group-content-#{searchBean.searchMode}">
+                                <h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
+                                    <ui:repeat value="#{gr.resources}" var="res">
+                                        <div class="article-wrapper">
+                                            <h6>
+                                                <span><h:outputText value="#{res.title}" escape="false"/></span>
+                                                <span class="url">#{res.url}</span>
+                                            </h6>
 
-			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
+                                            <p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
+                                        </div>
+                                    </ui:repeat>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
+                                    <ui:repeat value="#{gr.resources}" var="res">
+                                        <div class="image-wrapper">
+                                            <img src="${res.thumbnail2.url}"/>
+                                        </div>
+                                    </ui:repeat>
+                                </h:panelGroup>
+                            </div>
+                        </h:link>
+                    </ui:repeat>
+                </div>
 
-			<!-- <p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/> -->
+                <span class="navigate right"><a id="scrollRight" href="#"><span class="arrow"></span></a></span>
+            </h:panelGroup>
+        </h:panelGroup>
 
-			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadInterwebCounts')" update=":filters :groups_menu_bar" name="loadFilterCounts" oncomplete="updateCarousel();setContentPadding();" async="false" process="@this" partialSubmit="true"/>				
-		</h:form>
- 
- 		<h:panelGroup id="nothing"></h:panelGroup>
- 		
-		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="true" style="z-index:1500;">			
-			<h:form id="resource_form" rendered="#{userBean.loggedIn}" >
-				<ui:fragment rendered="#{not empty searchBean.selectedResource}">
-					<table id="add_attributes_table" class="full-width">
-						<colgroup>
-							<col span="1" style="width: 10%; min-width: 10rem;" />
-							<col span="1" />
-						</colgroup>
+        <div id="filters_menu_bar_wrapper">
+            <div class="filters_menu_bar">
+                <h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
+                    <ul>
+                        <li class="filter sources active" id="source_filter">
+                                <span class="filter-name">
+                                    <span class="trimmed-text">#{searchBean.searchService.toString()}</span>
+                                    <span class="arrow"></span>
+                                </span>
+                            <h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
+                                <ui:repeat value="#{searchBean.availableSources}" var="item">
+                                    <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+                                        <h:outputText value="#{item.name}"/>
 
-						<tr>
-							<td><h:outputText value="#{msg.add_to}:" escape="false" /></td>
-							<td>
-								<p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}"
-									style="max-height:28rem; width:100%; min-width:60rem; overflow:auto; box-sizing: border-box;">
-									<p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+                                        <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+                                            <f:param value="#{item.counter}"/>
+                                        </h:outputFormat>
 
-									<p:treeNode type="group">
-										<h:outputText id="group" value="#{node.title}"/>
-									</p:treeNode>
+                                        <f:param name="action" value="#{searchBean.searchMode}"/>
+                                        <f:param name="service" value="#{item.url}"/>
+                                        <f:param name="query" value="#{searchBean.query}"/>
+                                    </h:outputLink>
+                                </ui:repeat>
+                            </h:panelGroup>
+                        </li>
+                        <ui:repeat value="#{searchBean.availableFilters}" var="filter">
+                            <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
+                                    <span class="filter-name">
+                                        <span class="trimmed-text">#{filter.name}</span>
+                                        <span class="arrow"></span>
+                                    </span>
+                                <h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
+                                    <h:panelGroup styleClass="vCarousel-container" layout="block">
+                                        <h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
+                                            <h:outputText value="#{filter.anyText}"/>
 
-									<p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-										<h:outputText value="#{node.name}" />
-									</p:treeNode>
-								</p:tree>
-							</td>
-						</tr>
+                                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                                            <f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}"/>
+                                            <f:param name="service" value="#{searchBean.queryService}"/>
+                                            <f:param name="query" value="#{searchBean.query}"/>
+                                        </h:outputLink>
+                                        <ui:repeat value="#{filter.items}" var="item">
+                                            <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+                                                <h:outputText value="#{item.name}"/>
 
-						<ui:decorate template="/templates/resources/edit.xhtml">
-							<ui:param name="res" value="#{searchBean.selectedResource}" />
-						</ui:decorate>
+                                                <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+                                                    <f:param value="#{item.counter}"/>
+                                                </h:outputFormat>
 
-						<ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-							<tr>
-								<td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
-								<td><h:panelGroup class="wayback_span"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup></td>
-							</tr>
-						</ui:fragment>
+                                                <f:param name="action" value="#{searchBean.searchMode}"/>
+                                                <f:param name="filter" value="#{item.url}"/>
+                                                <f:param name="service" value="#{searchBean.queryService}"/>
+                                                <f:param name="query" value="#{searchBean.query}"/>
+                                            </h:outputLink>
+                                        </ui:repeat>
+                                    </h:panelGroup>
+                                    <h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
+                                </h:panelGroup>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                    <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
+                        <f:param name="action" value="#{searchBean.searchMode}"/>
+                        <f:param name="query" value="#{searchBean.query}"/>
+                    </h:link>
+                </h:panelGroup>
+            </div>
+        </div>
 
-						<ui:fragment rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-							<tr>
-								<td><h:outputText value="#{msg['Archive.captured_between']}:" /></td>
-								<td>
-									<h:panelGroup class="wayback_span">
-										<h:panelGroup class="wayback_span" rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-											<a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank">
-												<h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}">
-													<f:convertDateTime type="date" dateStyle="short" />
-												</h:outputText>
-											</a> #{msg['Archive.captured_between_and']} <a href="${searchBean.selectedResource.lastArchivedObject.archiveUrl}" target="_blank">
-												<h:outputText value="${searchBean.selectedResource.lastArchivedObject.timestamp}">
-													<f:convertDateTime type="date" dateStyle="short" />
-												</h:outputText>
-											</a>
-										</h:panelGroup>
-									</h:panelGroup>
-								</td>
-							</tr>
-						</ui:fragment>
+        <script type="text/javascript">
+            var view = '#{searchBean.view}';
+            var userId = '#{userBean.user.id}';
+        </script>
 
-						<tr>
-							<td></td>
-							<td>
-								<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true" onclick="PF('add_button').disable()" widgetVar="add_button"/>
-								<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" style="margin-left:0.5rem;" />
-							</td>
-						</tr>
-					</table>
-				</ui:fragment>
-			</h:form> 			
-		</p:dialog>	
-		
-	</ui:define>
-	
+        <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
+
+        <div id="results" class="#{searchBean.view}_view">
+            <div class="resources">
+                <ui:decorate template="/templates/search/resources.xhtml">
+                    <ui:param name="resources" value="#{searchBean.search.resources}"/>
+                    <ui:param name="view" value="#{searchBean.view}"/>
+                </ui:decorate>
+            </div>
+            <div class="clear"></div>
+        </div>
+
+        <h:panelGroup id="factsheet">
+            <ui:fragment rendered="${searchBean.graphLoaded}">
+                <ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>
+            </ui:fragment>
+        </h:panelGroup>
+
+        <div id="search_loading_more_results">
+            #{msg.loading_more_results} <span class="loading-icon"/>
+        </div>
+        <div id="search_no_more_results">
+            #{msg.no_more_results}
+        </div>
+        <div id="search_nothing_found">
+            #{msg.nothingFound}
+        </div>
+
+        <div id="new_results" style="display:none;">
+            <h:panelGroup id="nextPage" layout="block">
+                <ui:decorate template="/templates/search/resources.xhtml">
+                    <ui:param name="view" value="#{searchBean.view}"/>
+                    <ui:param name="resources" value="#{searchBean.nextPage}"/>
+                </ui:decorate>
+            </h:panelGroup>
+        </div>
+
+        <!-- TODO: all remote commands cause an update of :nextPage  -->
+        <h:form class="display-none">
+            <p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadNextPage')"
+                             update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this"
+                             partialSubmit="true"/>
+
+            <p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" immediate="true" ignoreAutoUpdate="true"
+                             onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this"
+                             partialSubmit="true"/>
+
+            <p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true"
+                             onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this"
+                             partialSubmit="true"/>
+
+            <!--<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />-->
+
+            <p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"
+                             onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form"
+                             partialSubmit="true"/>
+
+            <!-- <p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/> -->
+
+            <p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true"
+                             onstart="console.log('loadInterwebCounts')" update=":filters :groups_menu_bar" name="loadFilterCounts"
+                             oncomplete="updateCarousel();setContentPadding();" async="false" process="@this" partialSubmit="true"/>
+        </h:form>
+
+        <h:panelGroup id="nothing"></h:panelGroup>
+
+        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="true" style="z-index:1500;">
+            <h:form id="resource_form" rendered="#{userBean.loggedIn}">
+                <ui:fragment rendered="#{not empty searchBean.selectedResource}">
+                    <table id="add_attributes_table" class="full-width">
+                        <colgroup>
+                            <col span="1" style="width: 10%; min-width: 10rem;"/>
+                            <col span="1"/>
+                        </colgroup>
+
+                        <tr>
+                            <td><h:outputText value="#{msg.add_to}:" escape="false"/></td>
+                            <td>
+                                <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
+                                        selectionMode="single" selection="#{searchBean.selectedNode}"
+                                        style="max-height:28rem; width:100%; min-width:60rem; overflow:auto; box-sizing: border-box;">
+                                    <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+
+                                    <p:treeNode type="group">
+                                        <h:outputText id="group" value="#{node.title}"/>
+                                    </p:treeNode>
+
+                                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </td>
+                        </tr>
+
+                        <ui:decorate template="/templates/resources/edit.xhtml">
+                            <ui:param name="res" value="#{searchBean.selectedResource}"/>
+                        </ui:decorate>
+
+                        <ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                            <tr>
+                                <td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
+                                <td><h:panelGroup class="wayback_span"><a
+                                        href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}"
+                                        target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']}
+                                    <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}"
+                                       target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                            <tr>
+                                <td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
+                                <td>
+                                    <h:panelGroup class="wayback_span">
+                                        <h:panelGroup class="wayback_span" rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                                            <a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank">
+                                                <h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}">
+                                                    <f:convertDateTime type="date" dateStyle="short"/>
+                                                </h:outputText>
+                                            </a>
+                                            #{msg['Archive.captured_between_and']}
+                                            <a href="${searchBean.selectedResource.lastArchivedObject.archiveUrl}" target="_blank">
+                                                <h:outputText value="${searchBean.selectedResource.lastArchivedObject.timestamp}">
+                                                    <f:convertDateTime type="date" dateStyle="short"/>
+                                                </h:outputText>
+                                            </a>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form"
+                                                 update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true"
+                                                 onclick="PF('add_button').disable()" widgetVar="add_button"/>
+                                <p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" style="margin-left:0.5rem;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </ui:fragment>
+            </h:form>
+        </p:dialog>
+    </ui:define>
 </ui:composition>

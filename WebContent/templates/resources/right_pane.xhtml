@@ -297,11 +297,11 @@
                     <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or rightPaneBean.clickedResource.type eq 'presentation' or rightPaneBean.clickedResource.type eq 'document' or rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'glossary' or rightPaneBean.clickedResource.type eq 'survey'}">
                         <div class="align-center" style="margin-top: 5px;">
                             <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
-                                <ui:param name="resource" value="#{rightPaneBean.clickedResource}"/>
+                                <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                             </ui:decorate>
 
                             <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
-                                <ui:param name="resource" value="#{rightPaneBean.clickedResource}"/>
+                                <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                             </ui:decorate>
                         </div>
 
@@ -528,7 +528,6 @@
 				</ui:fragment>
             </h:panelGroup>
 
-
             <!-- Edit resource block -->
             <h:form rendered="#{rightPaneBean.paneAction == 'editResource' and rightPaneBean.clickedResource.id != -1}"
                     id="edit_form">
@@ -536,11 +535,11 @@
                         rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image'}">
                     <div class="align-center" style="margin-top: 5px;">
                         <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
-                            <ui:param name="resource" value="#{rightPaneBean.clickedResource}"/>
+                            <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                         </ui:decorate>
 
                         <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
-                            <ui:param name="resource" value="#{rightPaneBean.clickedResource}"/>
+                            <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                         </ui:decorate>
                     </div>
                     <div class="align-center" style="padding-top: 10px">

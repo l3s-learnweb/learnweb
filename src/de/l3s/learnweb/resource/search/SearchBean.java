@@ -420,7 +420,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void setQueryMode(String queryMode)
     {
-        if(queryMode != null && !queryMode.isEmpty())
+        if(StringUtils.isNotEmpty(queryMode))
         {
             this.queryMode = queryMode;
         }
@@ -433,7 +433,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void setQueryService(String queryService)
     {
-        if(queryService != null && !queryService.isEmpty())
+        if(StringUtils.isNotEmpty(queryService))
         {
             this.queryService = queryService;
         }
@@ -656,7 +656,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setResultsPerService(20);
             metaSearch.setConfigGroupResultsByField("location");
             metaSearch.setConfigResultsPerGroup(10);
-            metaSearch.getResourcesByPage(2);
+            metaSearch.getResourcesByPage(2); // fetch resources
             resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup);
             Collections.sort(resourcesGroupedBySource);
         }

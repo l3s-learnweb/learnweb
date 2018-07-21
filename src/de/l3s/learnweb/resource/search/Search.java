@@ -419,7 +419,6 @@ public class Search implements Serializable
     }
 
     /**
-     *
      * @return All resources that have been loaded until now. So you have to use get getResourcesByPage first
      */
     public LinkedList<ResourceDecorator> getResources()
@@ -438,6 +437,7 @@ public class Search implements Serializable
         {
             GroupedResources gr = new GroupedResources();
             gr.setGroupName(res.getLocation());
+            log.warn("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
 
             if(groupedResources.contains(gr))
             {

@@ -1,29 +1,28 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-	xmlns:p="http://primefaces.org/ui">
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-	<ui:fragment>
-     <form id="editor_values">
-		<input type="hidden" id="ed_file_name" value="#{fileEditorBean.resource.fileName}" />
-		<input type="hidden" id="ed_file_ext" value="#{fileEditorBean.filesExtension}" />
-		<input type="hidden" id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}" />
-		<input type="hidden" id="ed_callback_url" value="#{fileEditorBean.callbackUrl}" />
-		<input type="hidden" id="ed_file_key" value="#{fileEditorBean.key}" />
-		<input type="hidden" id="ed_file_type" value="#{fileEditorBean.fileType}" />
-		<input type="hidden" id="ed_resource_id" value="#{fileEditorBean.resource.id}" />
-	</form>
-		<h:outputScript target="head">
-			var ONLY_OFFICE_CLIENT_URL = '#{fileEditorBean.onlyOfficeClientUrl}';
-			var LEARNWEB_SERVER_URL = '#{learnwebBean.learnweb.serverUrl}';
-		</h:outputScript>
-		<h:outputScript library="resource-office-edit" name="api4.js" target="head" />
-		<h:outputScript library="resource-office-edit" name="editor2.js" target="head" />
-		
-		<div id="iframeEditor"/>
-		
-	</ui:fragment>
+    <ui:fragment>
+        <form id="editor_values">
+            <input type="hidden" id="ed_file_name" value="#{fileEditorBean.resource.fileName}"/>
+            <input type="hidden" id="ed_file_ext" value="#{fileEditorBean.filesExtension}"/>
+            <input type="hidden" id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}"/>
+            <input type="hidden" id="ed_callback_url" value="#{fileEditorBean.callbackUrl}"/>
+            <input type="hidden" id="ed_file_key" value="#{fileEditorBean.key}"/>
+            <input type="hidden" id="ed_file_type" value="#{fileEditorBean.fileType}"/>
+            <input type="hidden" id="ed_resource_id" value="#{fileEditorBean.resource.id}"/>
+        </form>
 
+        <h:outputScript target="head">
+            var ONLY_OFFICE_CLIENT_URL = '#{fileEditorBean.onlyOfficeClientUrl}';
+            var LEARNWEB_SERVER_URL = '#{learnwebBean.learnweb.serverUrl}';
+        </h:outputScript>
+
+        <h:outputScript library="resource-office-edit" name="api4.js" target="head"/>
+        <h:outputScript library="resource-office-edit" name="editor2.js" target="head"/>
+
+        <div id="iframeEditor"/>
+    </ui:fragment>
 </ui:composition>
