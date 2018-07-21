@@ -245,7 +245,7 @@ function displayNextPage(xhr, status, args)
 		if(status !== "success")
 			console.log('fehler', status);
 		
-		if($('#results .resource').size() > 0)
+		if($('#results .resource').length > 0)
 			$('#search_no_more_results').show();
 		else		
 			$('#search_nothing_found').show();
