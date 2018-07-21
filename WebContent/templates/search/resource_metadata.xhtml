@@ -11,7 +11,7 @@
             <h:outputText value="${res.title}" escape="false"/>
         </div>
 
-        <div class="embedded"><!--${resource.embedded}--></div>
+        <div class="embedded"><!--${res.embedded}--></div>
 
         <div class="description">
 
@@ -79,7 +79,7 @@
             </h:outputLink>
 
             <h:outputLink value="#"
-                          onclick="setSelectedResource([{name:'resource_id', value:${resource.tempId}}]); PF('resource_dialog').show(); return false;"
+                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
                           rendered="#{userBean.loggedIn}"
                           title="#{msg.addToMyResources}">
 
