@@ -1,29 +1,30 @@
 package de.l3s.learnweb.resource.yellMetadata;
 
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.Resource;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.Resource;
-
-public class CategoryMiddle implements Comparable<CategoryMiddle>, Serializable
+public class CategoryMiddle implements Comparable<CategoryMiddle>, Serializable, CategoryInterface
 {
     private static final long serialVersionUID = -3539397525937561097L;
+
     private int id;
-    private String catmid_name;
-    private int cattop_id;
+    private String catName;
+    private int catTopId;
 
     public CategoryMiddle()
     {
 
     }
 
-    public CategoryMiddle(int id, String catmid_name, int cattop_id)
+    public CategoryMiddle(int id, String catName, int catTopId)
     {
         this.id = id;
-        this.catmid_name = catmid_name;
-        this.cattop_id = cattop_id;
+        this.catName = catName;
+        this.catTopId = catTopId;
     }
 
     public int getId()
@@ -36,24 +37,24 @@ public class CategoryMiddle implements Comparable<CategoryMiddle>, Serializable
         this.id = id;
     }
 
-    public String getCatmid_name()
+    public String getCatName()
     {
-        return catmid_name;
+        return catName;
     }
 
-    public void setCatmid_name(String catmid_name)
+    public void setCatName(String catName)
     {
-        this.catmid_name = catmid_name;
+        this.catName = catName;
     }
 
-    public int getCattop_id()
+    public int getCatTopId()
     {
-        return cattop_id;
+        return catTopId;
     }
 
-    public void setCattop_id(int cattop_id)
+    public void setCatTopId(int catTopId)
     {
-        this.cattop_id = cattop_id;
+        this.catTopId = catTopId;
     }
 
     public List<Resource> getResources() throws SQLException
@@ -64,7 +65,7 @@ public class CategoryMiddle implements Comparable<CategoryMiddle>, Serializable
     @Override
     public int compareTo(CategoryMiddle o)
     {
-        return this.getCatmid_name().compareTo(o.getCatmid_name());
+        return this.getCatName().compareTo(o.getCatName());
     }
 
 }

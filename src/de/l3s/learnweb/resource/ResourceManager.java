@@ -1227,9 +1227,9 @@ public class ResourceManager
         PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
         replace.setInt(1, null == resource ? 0 : resource.getId());
         replace.setInt(2, null == user ? 0 : user.getId());
-        replace.setInt(3, null == category ? 0 : category.getCattop().getId());
-        replace.setInt(4, null == category ? 0 : category.getCatmid().getId());
-        replace.setInt(5, null == category ? 0 : category.getCatbot().getId());
+        replace.setInt(3, null == category ? 0 : category.getCatTop().getId());
+        replace.setInt(4, null == category ? 0 : category.getCatMid().getId());
+        replace.setInt(5, null == category ? 0 : category.getCatBot().getId());
         replace.executeUpdate();
         replace.close();
     }

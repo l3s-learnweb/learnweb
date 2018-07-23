@@ -39,8 +39,8 @@ function prepareTreeData() {
 	for (var i = 0; i < uniqueTops.length; i++) {
 		var child1 = {};
 		child1.parent = "Top Level";
-		child1.name = uniqueTops[i].cattop_name;
-		
+		child1.name = uniqueTops[i].catName;
+
 		// children 2 - middle categories
 		var children2 = getMiddleCats(uniqueTops[i].id, child1.name);
 		if (children2.length > 0) {
@@ -60,10 +60,10 @@ function getMiddleCats(childid, childname) {
 	//iterate uniqueSubs and filter those whose top category matches childname
 	for (var i = 0; i < uniqueSubs.length; i++) {
 		
-		if (uniqueSubs[i].cattop_id == childid){
+		if (uniqueSubs[i].catTopId == childid){
 			var child2 = {};
 			child2.parent = childname;
-			child2.name = uniqueSubs[i].catmid_name;
+			child2.name = uniqueSubs[i].catName;
 			// children3 - categories
 			var children3 = getBottomCats(uniqueSubs[i].id, child2.name);
 			if (children3.length > 0) {
@@ -81,9 +81,9 @@ function getBottomCats(subid, subtoxname) {
 	//iterate through uniqueCats and filter those whose middle cat is same as subtoxname
 	for (var i = 0; i < uniqueCats.length; i++) {
 		
-		if (uniqueCats[i].catmid_id == subid){
+		if (uniqueCats[i].catMidId == subid){
 			var child3 = {};
-			child3.name = uniqueCats[i].catbot_name;
+			child3.name = uniqueCats[i].catName;
 			child3.parent = subtoxname;
 			children3.push(child3);
 		}

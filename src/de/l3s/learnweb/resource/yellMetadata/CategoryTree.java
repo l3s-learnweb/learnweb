@@ -29,7 +29,6 @@ public class CategoryTree implements Serializable
 
     public CategoryTree(List<Resource> resources)
     {
-
         if(resources.size() > 0)
         {
             try
@@ -41,12 +40,10 @@ public class CategoryTree implements Serializable
                 log.fatal("populating category tree failed");
             }
         }
-
     }
 
     private void populateCatTree(List<Resource> resources) throws SQLException
     {
-        // TODO: this method is too complex, needs to be refactored
         // using the given resources, i get unique top, middle, bottom categories
         // this method is called only when group resources are not empty 
 
@@ -56,88 +53,31 @@ public class CategoryTree implements Serializable
         {
             if(resource.getExtendedMetadata().getCategories() != null)
             {
-                List<String> rCats = resource.getExtendedMetadata().getCategories();
-                boolean tExist = false;
-                boolean mExist = false;
-                boolean bExist = false;
-
-                for(String rCat : rCats)
+                for(String category : resource.getExtendedMetadata().getCategories())
                 {
-                    String[] cat = rCat.split("/");
-
-                    if (cat.length < 3) {
-                        log.error("Expected length of rCat, at least 3, but given " + cat.length + ": " + rCat);
-                    }
+                    String[] categoryParts = category.split("/");
 
                     //prepare unique top categories
-                    if(uTops.size() == 0)
-                    {
-                        uTops.add(cat[0]);
-                    }
-                    else
-                    {
-                        //check if it exists or not
-                        for(String uTop : uTops)
+                    if (categoryParts.length >= 1 && !categoryParts[0].equals("x")) {
+                        if(uTops.size() == 0 || !uTops.contains(categoryParts[0]))
                         {
-                            if(uTop.equals(cat[0]))
-                            {
-                                tExist = true;
-                            }
-                        }
-
-                        if(!tExist)
-                        {
-                            uTops.add(cat[0]);
+                            uTops.add(categoryParts[0]);
                         }
                     }
 
                     //prepare unique middle categories
-                    if(uMids.size() == 0)
-                    {
-                        if(!cat[1].equals("x"))
+                    if (categoryParts.length >= 2 && !categoryParts[1].equals("x")) {
+                        if(uMids.size() == 0 || !uMids.contains(categoryParts[1]))
                         {
-                            uMids.add(cat[1]);
-                        }
-                    }
-                    else
-                    {
-                        //check if it exists or not
-                        for(String uMid : uMids)
-                        {
-                            if(uMid.equals(cat[1]))
-                            {
-                                mExist = true;
-                            }
-                        }
-
-                        if(!mExist && !cat[1].equals("x"))
-                        {
-                            uMids.add(cat[1]);
+                            uMids.add(categoryParts[1]);
                         }
                     }
 
                     //prepare unique bottom categories
-                    if(uBots.size() == 0)
-                    {
-                        if(!cat[2].equals("x"))
+                    if (categoryParts.length >= 3 && !categoryParts[2].equals("x")) {
+                        if(uBots.size() == 0 || !uBots.contains(categoryParts[2]))
                         {
-                            uBots.add(cat[2]);
-                        }
-                    }
-                    else
-                    {
-                        //check if it exists or not 
-                        for(String uBot : uBots)
-                        {
-                            if(uBot.equals(cat[2]))
-                            {
-                                bExist = true;
-                            }
-                        }
-
-                        if(!bExist && !cat[2].equals("x"))
-                        {
-                            uBots.add(cat[2]);
+                            uBots.add(categoryParts[2]);
                         }
                     }
                 }

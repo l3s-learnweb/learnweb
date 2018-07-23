@@ -1,29 +1,30 @@
 package de.l3s.learnweb.resource.yellMetadata;
 
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.Resource;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.Resource;
-
-public class CategoryBottom implements Comparable<CategoryBottom>, Serializable
+public class CategoryBottom implements Comparable<CategoryBottom>, Serializable, CategoryInterface
 {
     private static final long serialVersionUID = 5670585204494899758L;
+
     private int id;
-    private String catbot_name;
-    private int catmid_id;
+    private String catName;
+    private int catMidId;
 
     public CategoryBottom()
     {
 
     }
 
-    public CategoryBottom(int id, String catbot_name, int catmid_id)
+    public CategoryBottom(int id, String catName, int catMidId)
     {
         this.id = id;
-        this.catbot_name = catbot_name;
-        this.catmid_id = catmid_id;
+        this.catName = catName;
+        this.catMidId = catMidId;
     }
 
     public int getId()
@@ -36,24 +37,24 @@ public class CategoryBottom implements Comparable<CategoryBottom>, Serializable
         this.id = id;
     }
 
-    public String getCatbot_name()
+    public String getCatName()
     {
-        return catbot_name;
+        return catName;
     }
 
-    public void setCatbot_name(String catbot_name)
+    public void setCatName(String catName)
     {
-        this.catbot_name = catbot_name;
+        this.catName = catName;
     }
 
-    public int getCatmid_id()
+    public int getCatMidId()
     {
-        return catmid_id;
+        return catMidId;
     }
 
-    public void setCatmid_id(int catmid_id)
+    public void setCatMidId(int catMidId)
     {
-        this.catmid_id = catmid_id;
+        this.catMidId = catMidId;
     }
 
     public List<Resource> getResources() throws SQLException
@@ -64,7 +65,7 @@ public class CategoryBottom implements Comparable<CategoryBottom>, Serializable
     @Override
     public int compareTo(CategoryBottom o)
     {
-        return this.getCatbot_name().compareTo(o.getCatbot_name());
+        return this.getCatName().compareTo(o.getCatName());
     }
 
 }

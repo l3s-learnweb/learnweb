@@ -74,9 +74,10 @@ public class CategoryManager
         }
         select.close();
 
-        for(Category cat : categories)
+        // TODO: it should be processed in loop above
+        for(Category category : categories)
         {
-            String catname = cat.getCat();
+            String catname = category.getCatName();
             cats.add(catname);
         }
 
@@ -270,7 +271,7 @@ public class CategoryManager
     //get bottom category given the name and mid category Id. if it does not exist create one
     public int getCategoryBottomByNameAndMidcatId(String catbotName, int catmidId) throws SQLException
     {
-        CategoryBottom catbot = new CategoryBottom();
+        CategoryBottom catBot = new CategoryBottom();
         //int catbotId;
         if(catbotName == null)
         {
@@ -288,11 +289,11 @@ public class CategoryManager
         }
         else
         {
-            catbot = createCategoryBottom(rs);
+            catBot = createCategoryBottom(rs);
             select.close();
         }
 
-        return catbot.getId();
+        return catBot.getId();
     }
 
     //get middle category given the name and top category Id (if it does not exist, this is an error because middle categories are fixed)
@@ -315,8 +316,8 @@ public class CategoryManager
                 log.debug("invalid cat middle name was requested: " + catmidName, new IllegalArgumentException());
                 return -1;
             }
-            CategoryMiddle catmid = createCategoryMiddle(rs);
-            return catmid.getId();
+            CategoryMiddle catMid = createCategoryMiddle(rs);
+            return catMid.getId();
         }
     }
 
@@ -341,8 +342,8 @@ public class CategoryManager
                 new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
                 return -1;
             }
-            CategoryTop cattop = createCategoryTop(rs);
-            return cattop.getId();
+            CategoryTop catTop = createCategoryTop(rs);
+            return catTop.getId();
         }
     }
 
@@ -364,10 +365,10 @@ public class CategoryManager
                 new IllegalArgumentException("invalid cat bot name was requested: " + catbotName).printStackTrace();
                 return -1;
             }
-            CategoryBottom catbot = createCategoryBottom(rs);
+            CategoryBottom catBot = createCategoryBottom(rs);
             select.close();
 
-            return catbot.getId();
+            return catBot.getId();
         }
     }
 
@@ -391,8 +392,8 @@ public class CategoryManager
                 log.warn("invalid cat mid name was requested: " + catmidName);
                 return -1;
             }
-            CategoryMiddle catmid = createCategoryMiddle(rs);
-            return catmid.getId();
+            CategoryMiddle catMid = createCategoryMiddle(rs);
+            return catMid.getId();
         }
     }
 
@@ -413,8 +414,8 @@ public class CategoryManager
             {
                 new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
             }
-            CategoryTop cattop = createCategoryTop(rs);
-            return cattop;
+            CategoryTop catTop = createCategoryTop(rs);
+            return catTop;
         }
     }
 
@@ -436,15 +437,15 @@ public class CategoryManager
                 new IllegalArgumentException("invalid cat mid name was requested: " + catmidName).printStackTrace();
             }
 
-            CategoryMiddle catmid = createCategoryMiddle(rs);
-            return catmid;
+            CategoryMiddle catMid = createCategoryMiddle(rs);
+            return catMid;
         }
     }
 
     //get bottom category given the name
     public CategoryBottom getBottomCategoryByName(String catbotName) throws SQLException
     {
-        CategoryBottom catbot = new CategoryBottom();
+        CategoryBottom catBot = new CategoryBottom();
 
         if(catbotName == null)
         {
@@ -461,10 +462,10 @@ public class CategoryManager
         }
         else
         {
-            catbot = createCategoryBottom(rs);
+            catBot = createCategoryBottom(rs);
             select.close();
         }
-        return catbot;
+        return catBot;
     }
 
     //save new bottom category given the name and midcatId
@@ -501,51 +502,51 @@ public class CategoryManager
     private Category createCategory(ResultSet rs) throws SQLException
     {
 
-        //retrive top, middle and bottom categories using their ids
-        CategoryBottom catbot = getCategoryBottomById(rs.getInt("cat_bot_id"));
-        CategoryMiddle catmid = getCategoryMiddleById(rs.getInt("cat_mid_id"));
-        CategoryTop cattop = getCategoryTopById(rs.getInt("cat_top_id"));
+        //retrieve top, middle and bottom categories using their ids
+        CategoryBottom catBot = getCategoryBottomById(rs.getInt("cat_bot_id"));
+        CategoryMiddle catMid = getCategoryMiddleById(rs.getInt("cat_mid_id"));
+        CategoryTop catTop = getCategoryTopById(rs.getInt("cat_top_id"));
 
-        Category cat = new Category(cattop, catmid, catbot);
+        Category category = new Category(catTop, catMid, catBot);
 
-        return cat;
+        return category;
     }
 
     //create category bottom
 
     private CategoryBottom createCategoryBottom(ResultSet rs) throws SQLException
     {
-        CategoryBottom catbot = new CategoryBottom();
+        CategoryBottom catBot = new CategoryBottom();
 
-        catbot.setId(rs.getInt("cat_bot_id"));
-        catbot.setCatbot_name(rs.getString("cat_bot_name"));
-        catbot.setCatmid_id(rs.getInt("cat_mid_id"));
+        catBot.setId(rs.getInt("cat_bot_id"));
+        catBot.setCatName(rs.getString("cat_bot_name"));
+        catBot.setCatMidId(rs.getInt("cat_mid_id"));
 
-        return catbot;
+        return catBot;
     }
 
     //create category middle
 
     private CategoryMiddle createCategoryMiddle(ResultSet rs) throws SQLException
     {
-        CategoryMiddle catmid = new CategoryMiddle();
+        CategoryMiddle catMid = new CategoryMiddle();
 
-        catmid.setId(rs.getInt("cat_mid_id"));
-        catmid.setCatmid_name(rs.getString("cat_mid_name"));
-        catmid.setCattop_id(rs.getInt("cat_top_id"));
+        catMid.setId(rs.getInt("cat_mid_id"));
+        catMid.setCatName(rs.getString("cat_mid_name"));
+        catMid.setCatTopId(rs.getInt("cat_top_id"));
 
-        return catmid;
+        return catMid;
     }
 
     //create category top
 
     private CategoryTop createCategoryTop(ResultSet rs) throws SQLException
     {
-        CategoryTop cattop = new CategoryTop();
+        CategoryTop catTop = new CategoryTop();
 
-        cattop.setId(rs.getInt("cat_top_id"));
-        cattop.setCattop_name(rs.getString("cat_top_name"));
+        catTop.setId(rs.getInt("cat_top_id"));
+        catTop.setCatName(rs.getString("cat_top_name"));
 
-        return cattop;
+        return catTop;
     }
 }

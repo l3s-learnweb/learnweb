@@ -75,7 +75,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         cattops = new ArrayList<>();
         for(CategoryTop catTop : catTops)
         {
-            cattops.add(catTop.getCattop_name());
+            cattops.add(catTop.getCatName());
         }
 
         //middle categories
@@ -91,9 +91,9 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         catmids = new ArrayList<>();
         for(CategoryMiddle catMid : catMids)
         {
-            if(!(catMid.getCatmid_name().equalsIgnoreCase("x")))
+            if(!(catMid.getCatName().equalsIgnoreCase("x")))
             {
-                catmids.add(catMid.getCatmid_name());
+                catmids.add(catMid.getCatName());
             }
         }
 
@@ -408,9 +408,9 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
             catmids = new ArrayList<>();
             for(CategoryMiddle catMid : catMids)
             {
-                if(!(catMid.getCatmid_name().equalsIgnoreCase("x")))
+                if(!(catMid.getCatName().equalsIgnoreCase("x")))
                 {
-                    catmids.add(catMid.getCatmid_name());
+                    catmids.add(catMid.getCatName());
                 }
             }
         }
@@ -458,9 +458,9 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
             catbots = new ArrayList<>();
             for(CategoryBottom catBot : catBots)
             {
-                if(!(catBot.getCatbot_name().equalsIgnoreCase("x")))
+                if(!(catBot.getCatName().equalsIgnoreCase("x")))
                 {
-                    catbots.add(catBot.getCatbot_name());
+                    catbots.add(catBot.getCatName());
                 }
             }
         }

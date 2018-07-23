@@ -747,16 +747,16 @@ public class GroupManager
 
     public GroupCategory getGroupCategoryById(int categoryId) throws SQLException
     {
-        GroupCategory cat = null;
+        GroupCategory groupCategory = null;
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_course_id, category_title, category_abbreviation FROM `lw_group_category` WHERE group_category_id = ?");
         select.setInt(1, categoryId);
         ResultSet rs = select.executeQuery();
         if(rs.next())
-            cat = new GroupCategory(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
+            groupCategory = new GroupCategory(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
 
         select.close();
-        return cat;
+        return groupCategory;
     }
 
     public GroupCategory save(GroupCategory category) throws SQLException

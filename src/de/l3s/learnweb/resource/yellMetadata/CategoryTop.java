@@ -1,27 +1,28 @@
 package de.l3s.learnweb.resource.yellMetadata;
 
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.Resource;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.Resource;
-
-public class CategoryTop implements Comparable<CategoryTop>, Serializable
+public class CategoryTop implements Comparable<CategoryTop>, Serializable, CategoryInterface
 {
     private static final long serialVersionUID = -3916250891965668996L;
+
     private int id;
-    private String cattop_name;
+    private String catName;
 
     public CategoryTop()
     {
 
     }
 
-    public CategoryTop(int id, String cattop_name)
+    public CategoryTop(int id, String catName)
     {
         this.id = id;
-        this.cattop_name = cattop_name;
+        this.catName = catName;
     }
 
     public int getId()
@@ -34,14 +35,14 @@ public class CategoryTop implements Comparable<CategoryTop>, Serializable
         this.id = id;
     }
 
-    public String getCattop_name()
+    public String getCatName()
     {
-        return cattop_name;
+        return catName;
     }
 
-    public void setCattop_name(String cattop_name)
+    public void setCatName(String catName)
     {
-        this.cattop_name = cattop_name;
+        this.catName = catName;
     }
 
     public List<Resource> getResources() throws SQLException
@@ -52,7 +53,7 @@ public class CategoryTop implements Comparable<CategoryTop>, Serializable
     @Override
     public int compareTo(CategoryTop o)
     {
-        return this.getCattop_name().compareTo(o.getCattop_name());
+        return this.getCatName().compareTo(o.getCatName());
     }
 
 }

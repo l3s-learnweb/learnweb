@@ -1,101 +1,103 @@
 package de.l3s.learnweb.resource.yellMetadata;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
-import java.util.Objects;
 
+// TODO: All this categories (top, mod, bot) should be replaced by something more abstract
 //composite class of CategoryTop, CategoryMid, CategoryBot
-
 public class Category implements Comparable<Category>, Serializable
 {
     private static final long serialVersionUID = -5463021088765191168L;
-    CategoryTop cattop = new CategoryTop();
-    CategoryMiddle catmid = new CategoryMiddle();
-    CategoryBottom catbot = new CategoryBottom();
-    String cat;
+
+    private CategoryTop catTop;
+    private CategoryMiddle catMid;
+    private CategoryBottom catBot;
+    private String catName;
 
     public Category()
     {
 
     }
 
-    public Category(CategoryTop cattop, CategoryMiddle catmid, CategoryBottom catbot)
+    public Category(CategoryTop catTop, CategoryMiddle catMid, CategoryBottom catBot)
     {
-        this.cattop = cattop;
-        this.catmid = catmid;
-        this.catbot = catbot;
-        if(!Objects.equals(catbot.getCatbot_name(), "x") && !Objects.equals(catmid.getCatmid_name(), "x"))
+        this.catTop = catTop;
+        this.catMid = catMid;
+        this.catBot = catBot;
+        this.catName = generateCatName();
+    }
+
+    public CategoryTop getCatTop()
+    {
+        return catTop;
+    }
+
+    public void setCatTop(CategoryTop catTop)
+    {
+        this.catTop = catTop;
+        this.catName = null;
+    }
+
+    public CategoryMiddle getCatMid()
+    {
+        return catMid;
+    }
+
+    public void setCatMid(CategoryMiddle catMid)
+    {
+        this.catMid = catMid;
+        this.catName = null;
+    }
+
+    public CategoryBottom getCatBot()
+    {
+        return catBot;
+    }
+
+    public void setCatBot(CategoryBottom catBot)
+    {
+        this.catBot = catBot;
+        this.catName = null;
+    }
+
+    public String getCatName()
+    {
+        if(this.catName == null)
         {
-            this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name() + "/" + catbot.getCatbot_name();
-        }
-        else if(!Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
-        {
-            this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name();
-        }
-        else if(Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
-        {
-            this.cat = cattop.getCattop_name();
-        }
-    }
-
-    public CategoryTop getCattop()
-    {
-        return cattop;
-    }
-
-    public void setCattop(CategoryTop cattop)
-    {
-        this.cattop = cattop;
-    }
-
-    public CategoryMiddle getCatmid()
-    {
-        return catmid;
-    }
-
-    public void setCatmid(CategoryMiddle catmid)
-    {
-        this.catmid = catmid;
-    }
-
-    public CategoryBottom getCatbot()
-    {
-        return catbot;
-    }
-
-    public void setCatbot(CategoryBottom catbot)
-    {
-        this.catbot = catbot;
-    }
-
-    public String getCat()
-    {
-        if(!Objects.equals(catbot.getCatbot_name(), "x") && !Objects.equals(catmid.getCatmid_name(), "x"))
-        {
-            this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name() + "/" + catbot.getCatbot_name();
-        }
-        else if(!Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
-        {
-            this.cat = cattop.getCattop_name() + "/" + catmid.getCatmid_name();
-        }
-        else if(Objects.equals(catmid.getCatmid_name(), "x") && Objects.equals(catbot.getCatbot_name(), "x"))
-        {
-            this.cat = cattop.getCattop_name();
+            this.catName = generateCatName();
         }
 
-        return this.cat;
+        return this.catName;
     }
 
-    public void setCat(String cat)
+    private String generateCatName()
     {
-        this.cat = cat;
+        if(isCatExists(catTop))
+        {
+            if(isCatExists(catMid))
+            {
+                if(isCatExists(catBot))
+                {
+                    return catTop.getCatName() + "/" + catMid.getCatName() + "/" + catBot.getCatName();
+                }
+
+                return catTop.getCatName() + "/" + catMid.getCatName();
+            }
+
+            return catTop.getCatName();
+        }
+
+        return "x";
+    }
+
+    private static boolean isCatExists(CategoryInterface category)
+    {
+        return category != null && category.getCatName() != null && !category.getCatName().equals("x");
     }
 
     @Override
     public int compareTo(Category o)
     {
-        return this.getCat().compareTo(o.getCat());
+        return this.getCatName().compareTo(o.getCatName());
     }
 
 }
