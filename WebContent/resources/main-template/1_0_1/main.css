@@ -21,7 +21,7 @@ iframe { border:none }
 .ui-datatable th.ui-state-default { background-color: rgb(196, 196, 196); }
 
 .ui-button,.ui-button span,button.ui-button.ui-state-default span,.ui-button.ui-state-default span {
-	font-weight:400; 
+	font-weight:400;
 }
 
 .ui-widget,
@@ -592,7 +592,7 @@ iframe { border:none }
 .center-header ul a {
 	padding:5px 15px;
 	display:block;
-	
+
 }
 .center-header a.active,
 .center-header a:hover { background-color: #EEE; text-decoration:none; }
@@ -628,7 +628,7 @@ iframe { border:none }
 	background-color:#eee !important;
 	margin-bottom:5px;
 	padding:1rem !important;
-	display:block;	
+	display:block;
 	position: relative;
 }
 .ui-datatable .ui-datatable-header { border:1px solid #ccc !important; }
@@ -2056,4 +2056,8 @@ transform: translate(-22.5px, -14.5px) scale(0.225, 0.15) translate(22.5px, 22.5
   height: 45px !important;
   -webkit-transform: translate(-22.5px, -22.5px) scale(0.225) translate(22.5px, 22.5px);
   transform: translate(-22.5px, -22.5px) scale(0.225) translate(22.5px, 22.5px);
+}
+
+.margin_link{
+	margin-right:7px;
 }

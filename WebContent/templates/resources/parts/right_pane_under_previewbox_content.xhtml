@@ -13,14 +13,14 @@
 				<td><a href="#{rightPaneBean.clickedResource.fileUrl}">
 						<span style="text-decoration: underline;" class="float-left">#{rightPaneBean.clickedResource.fileName}</span>
 						<span class="ui-icon ui-icon-arrowthickstop-1-s float-left "></span>
-					</a> 
+					</a>
 					<ui:fragment rendered="${not empty rightPaneBean.clickedResource.originalFile}">
 						<div style="clear: both;"></div>
 						<a href="#{rightPaneBean.clickedResource.originalFile.url}">
 							<span style="float: left; text-decoration: underline;">#{rightPaneBean.clickedResource.originalFile.name}</span>
 							<span class="ui-icon ui-icon-arrowthickstop-1-s" style="float: left;"></span>
 						</a>
-                        (Backup 
+                        (Backup
                         <h:outputText value="#{rightPaneBean.clickedResource.originalFile.lastModified}">
 							<f:convertDateTime type="date" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}" />
 						</h:outputText>)
@@ -81,7 +81,7 @@
 							value="#{rightPaneBean.clickedResource.id}" />
                                         #{msg.link_to_content}
                                     </h:outputLink></td>
-			</tr>		
+			</tr>
 		</ui:fragment>
 
 		<ui:fragment
@@ -89,18 +89,18 @@
 			<tr>
 				<td><span class="resource_field"> #{msg.discuss}: </span></td>
 				<td>
-					<h:outputLink value="#{resourceDetailBean.hypothesisLink}">
+					<h:outputLink value="#{resourceDetailBean.hypothesisLink}" class="margin_link">
                     	#{msg.link_to_discuss}
-                    </h:outputLink> 
-                    
-					<h:outputLink value="#{rightPaneBean.clickedResource.group.hypothesisLink}" style="text-decoration:underline;">
+                    </h:outputLink>
+
+					<h:outputLink value="#{rightPaneBean.clickedResource.group.hypothesisLink}" class="margin_link">
 					    (#{msg.discuss_group_invite})
 					</h:outputLink>
-					
+
 					<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;">
 						<f:param name="type" value="user" />
                         [?]
-                    </h:outputLink>                    
+                    </h:outputLink>
                 </td>
 			</tr>
 		</ui:fragment>

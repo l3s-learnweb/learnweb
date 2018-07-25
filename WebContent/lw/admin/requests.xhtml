@@ -34,23 +34,23 @@
         <p:tab title="#{msg.requests}">
 			<h:form id="requestform" >
 
-					<p:dataTable var="request" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
+					<p:dataTable var="reqData" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
 			               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 			               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
 			               >
 
-						<p:column headerText="IP" sortBy="#{request.IP}" filterBy="#{request.IP}" filterMatchMode="contains">
-							<h:outputText value="#{request.IP}" />
+						<p:column headerText="IP" sortBy="#{reqData.IP}" filterBy="#{reqData.IP}" filterMatchMode="contains">
+							<h:outputText value="#{reqData.IP}" />
 						</p:column>
 
-						<p:column headerText="#{msg.time}" sortBy="#{request.time}" filterBy="#{request.time}" filterFunction="#{adminRequestListBean.filterByDate}">
-							<h:outputText value="#{request.time}">
+						<p:column headerText="#{msg.time}" sortBy="#{reqData.time}" filterBy="#{reqData.time}" filterFunction="#{adminRequestListBean.filterByDate}">
+							<h:outputText value="#{reqData.time}">
 							    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
 							</h:outputText>
 						</p:column>
 
-						<p:column headerText="URL" sortBy="#{request.URL}" filterBy="#{request.URL}" filterMatchMode="contains">
-							<h:outputText value="#{request.URL}" />
+						<p:column headerText="URL" sortBy="#{reqData.URL}" filterBy="#{reqData.URL}" filterMatchMode="contains">
+							<h:outputText value="#{reqData.URL}" />
 						</p:column>
 
 					</p:dataTable>
