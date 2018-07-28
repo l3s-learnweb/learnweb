@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
-                        <p:dataList id="usersList" value="#{dashboardBean.usersList}" var="user" type="ordered">
+                        <p:dataList id="usersList" value="#{glossaryDashboardUsersBean.usersList}" var="user" type="ordered">
                             <a target="_self" href="#{request.contextPath}/lw/admin/dashboard/user.jsf?userId=#{user.id}">
                                 <h:outputText value="#{user.username}"/>
                             </a>

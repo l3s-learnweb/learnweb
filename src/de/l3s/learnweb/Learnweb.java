@@ -25,6 +25,7 @@ import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.dashboard.DashboardManager;
+import de.l3s.learnweb.dashboard.ActivityDashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.LinkManager;
@@ -134,6 +135,7 @@ public class Learnweb
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
     private final SERVICE service; // describes whether this instance runs for Learnweb or AMA
     private PeerAssessmentManager peerAssessmentManager;
+    private ActivityDashboardManager activityDashboardManager;
 
     /**
      * Use createInstance() first
@@ -334,6 +336,7 @@ public class Learnweb
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         dashboardManager = DashboardManager.getInstance(this);
         peerAssessmentManager = new PeerAssessmentManager(this);
+        activityDashboardManager = new ActivityDashboardManager(this);
         glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
 
         learnwebIsLoading = false;
@@ -1015,6 +1018,11 @@ public class Learnweb
     public de.l3s.learnweb.resource.glossaryNew.GlossaryManager getGlossaryManager()
     {
         return glossaryManager;
+    }
+
+    public ActivityDashboardManager getActivityDashboardManager()
+    {
+        return activityDashboardManager;
     }
 
 }

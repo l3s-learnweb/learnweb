@@ -8,11 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
@@ -24,7 +22,6 @@ import de.l3s.learnweb.dashboard.DashboardManager.DescFieldData;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
 
 @Named
 @SessionScoped
@@ -38,8 +35,11 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     private Date startDate = null;
     private Date endDate = null;
-    private List<Integer> selectedUsersIds = null;
+
     private DashboardManager dashboardManager = null;
+
+    @Inject
+    private GlossaryDashboardUsersBean glossaryDashboardUsersBean;
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;
@@ -78,8 +78,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
             endDate = new Date(Long.parseLong(savedEndDate));
 
             dashboardManager = getLearnweb().getDashboardManager();
-            if (selectedUsersIds == null) {
-                selectedUsersIds = getUser().getOrganisation().getUserIds();
+            if(glossaryDashboardUsersBean.getSelectedUsersIds() == null)
+            {
+                glossaryDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
             }
 
             fetchDataFromManager();
@@ -102,6 +103,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     private void fetchDataFromManager() throws SQLException
     {
+        List<Integer> selectedUsersIds = glossaryDashboardUsersBean.getSelectedUsersIds();
         totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
         totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
 
@@ -193,48 +195,23 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return descFieldsStatistic;
     }
 
-    public ArrayList<User> getUsersList() throws SQLException
+    public void onSubmitSelectedUsers() throws SQLException
     {
-        ArrayList<User> users = new ArrayList<>();
-        UserManager userManager = getLearnweb().getUserManager();
-        for(int userId : selectedUsersIds)
+        glossaryDashboardUsersBean.onSubmitSelectedUsers();
+        if(glossaryDashboardUsersBean.getSelectedUsersIds() != null)
         {
-            users.add(userManager.getUser(userId));
-        }
-        return users;
-    }
-
-    public void onSubmitSelectedUsers()
-    {
-        try
-        {
-            List<Integer> newSelectedUsers = getSelectedUsers();
-            if (newSelectedUsers != null) {
-                selectedUsersIds = newSelectedUsers;
-                cleanAndUpdateStoredData();
-            }
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
+            cleanAndUpdateStoredData();
         }
     }
 
-    private ArrayList<Integer> getSelectedUsers()
+    public GlossaryDashboardUsersBean getGlossaryDashboardUsersBean()
     {
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
-
-        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "select_user");
-            return null;
-        }
-
-        ArrayList<Integer> selectedUsersSet = new ArrayList<>();
-        for(String userId : tempSelectedUsers)
-            selectedUsersSet.add(Integer.parseInt(userId));
-
-        return selectedUsersSet;
+        return glossaryDashboardUsersBean;
     }
+
+    public void setGlossaryDashboardUsersBean(GlossaryDashboardUsersBean glossaryDashboardUsersBean)
+    {
+        this.glossaryDashboardUsersBean = glossaryDashboardUsersBean;
+    }
+
 }

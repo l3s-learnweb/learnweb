@@ -98,7 +98,7 @@ public class LogEntry implements Serializable
         public static final HashSet<Action> RESOURCE_RELATED_ACTIONS = Sets.newHashSet(tagging_resource, rating_resource,
                 commenting_resource, opening_resource, deleting_resource, adding_resource, edit_resource,
                 thumb_rating_resource, group_removing_resource, resource_thumbnail_update, adding_resource_metadata,
-                edit_resource_metadata, downloading);
+                edit_resource_metadata, downloading, resource_thumbnail_update);
 
         public static final HashSet<Action> SEARCH_RELATED_ACTIONS = Sets.newHashSet(searching, group_resource_search,
                 group_category_search, group_metadata_search);
@@ -106,6 +106,17 @@ public class LogEntry implements Serializable
         public static final HashSet<Action> GLOSSARY_RELATED_ACTIONS = Sets.newHashSet(glossary_open, glossary_create,
                 glossary_entry_edit, glossary_entry_add, glossary_entry_delete, glossary_term_edit, glossary_term_add,
                 glossary_term_delete);
+
+        public static final HashSet<Action> FOLDER_ACTIONS = Sets.newHashSet(deleting_folder, add_folder,
+                edit_folder, opening_folder);
+
+        public static final HashSet<Action> GROUP_ACTIONS = Sets.newHashSet(group_adding_document, group_adding_link,
+                group_joining, group_creating, group_leaving, group_deleting, group_changing_description, group_changing_discussion_link, group_changing_leader,
+                group_changing_restriction, group_changing_title, group_removing_resource, group_deleting_link);
+        public static final HashSet<Action> LOG_ACTIONS = Sets.newHashSet(login, logout, moderator_login,
+                register);
+        public static final HashSet<Action> OTHER_ACTIONS = Sets.newHashSet(submission_view_resource, forum_post_added, forum_reply_message,
+                changing_profile, open_link, deleting_comment, survey_save, survey_submit, submission_submitted, extended_metadata_open_dialog, adding_yourown_metadata, course_delete, course_anonymize);
     }
 
     private int userId;
