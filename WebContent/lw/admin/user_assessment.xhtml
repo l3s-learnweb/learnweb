@@ -66,9 +66,9 @@
 								<p:inputText id="op11" value="#{userAssessmentBean.title}"/>
 								
 								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback1" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
 	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback" />
+	    						<h:outputText id="displayFeedback1" />
 							
 								<p:outputLabel value="#{msg.FormativeAssessment_class}" />
 						        <p:selectOneMenu id="op13" value="#{userAssessmentBean.classFeedback}">
@@ -147,9 +147,9 @@
 								<p:inputText id="op21" value="#{userAssessmentBean.title}" />
 								
 								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback2" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
 	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback" />
+	    						<h:outputText id="displayFeedback2" />
 							
 								<p:outputLabel value="#{msg.FormativeAssessment_selectGroup}" />
 						        <p:selectOneMenu id="op23" value="#{userAssessmentBean.groupFeedback}">
@@ -229,9 +229,9 @@
 								<p:inputText id="op31" value="#{userAssessmentBean.title}" />
 								
 								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback3" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
 	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback" />
+	    						<h:outputText id="displayFeedback3" />
 					        </h:panelGrid>
 					        
 					        <p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedbackUser}" >

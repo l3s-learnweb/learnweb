@@ -44,8 +44,8 @@
 						<br />
 					</div>
 				</ui:fragment>
-				
-				<h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" id="welcometext" />	
+
+				<h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" styleClass="welcometext" />
 			</p:panel>
 			
 			<ui:repeat var="course" value="#{userBean.user.courses}">
@@ -56,8 +56,8 @@
 							<a href="admin/course.jsf?course_id=#{course.id}"><h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /></a>
 						</h:panelGroup>
 					</f:facet>
-					
-					<h:outputText value="#{course.welcomeMessage}" escape="false" id="welcometext" />
+
+					<h:outputText value="#{course.welcomeMessage}" escape="false" styleClass="welcometext" />
 					</p:panel>
 			</ui:repeat>
 			

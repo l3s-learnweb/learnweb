@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="learnweb_main@learnweb.l3s.uni-hannover.de" uuid="64209905-4ed1-46f6-80c1-186f07081750">
+    <data-source source="LOCAL" name="learnweb_main@learnweb.l3s.uni-hannover.de" read-only="true" uuid="64209905-4ed1-46f6-80c1-186f07081750">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>

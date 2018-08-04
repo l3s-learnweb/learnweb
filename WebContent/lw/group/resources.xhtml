@@ -153,6 +153,7 @@
             </ul>
 
             <c:if test="${userBean.user.organisation.id ne 480}">
+                <!--suppress XmlDuplicatedId -->
                 <h:panelGroup id="resourcesFilters" layout="block">
                     <h:form styleClass="resources-filters" id="filters">
                         <ul>
@@ -242,6 +243,7 @@
         </ui:fragment>
 
         <c:if test="${userBean.user.organisation.id eq 480}">
+            <!--suppress XmlDuplicatedId -->
             <h:panelGroup id="resourcesFilters" layout="block">
                 <!-- from here begins the new metadata visualization -->
                 <h:form id="yell-filters-tabs">
