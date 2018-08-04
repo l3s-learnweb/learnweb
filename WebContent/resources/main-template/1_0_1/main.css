@@ -460,7 +460,7 @@ iframe { border:none }
 	top:3px;
 	width:26px;
 	height:26px;
-	background:url("#{resource['search/icon/cancel-inv.png']}") center no-repeat;
+	background:url("#{resource['image:cross_white.png']}") center no-repeat;
 }
 #footer {
 	color:#ffffff;
@@ -1863,7 +1863,7 @@ div.title {
 	padding-left:25px;
 	padding-right:15px;
 	font-weight:bold;
-	background:url("#{resource['image/test.gif']}") no-repeat bottom left;
+	background:url("#{resource['image:test.gif']}") no-repeat bottom left;
 }
 
 .northunit{border:none;}

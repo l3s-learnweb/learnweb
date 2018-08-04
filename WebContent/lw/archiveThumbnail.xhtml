@@ -17,8 +17,9 @@ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 
 		<h:outputScript name="archive-thumbnail/contentflow.js" target="head" />
 		<h:outputScript name="archive-thumbnail/archive_thumbnail.js" target="head" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/archive-thumbnail/mycontentflow.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/archive-thumbnail/styles.css" />
+
+		<h:outputStylesheet name="archive-thumbnail/mycontentflow.css" />
+		<h:outputStylesheet name="archive-thumbnail/styles.css" />
     	
     	<h:panelGroup id="maincontent"  layout="block">
     		

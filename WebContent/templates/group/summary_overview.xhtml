@@ -5,19 +5,14 @@
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
+	<h:outputStylesheet name="vendor/slick-v1.8.0/slick.css" />
+	<h:outputStylesheet name="vendor/slick-v1.8.0/slick-theme.css" />
+	<h:outputScript name="vendor/slick-v1.8.0/slick.min.js" target="head" />
 
-	<h:outputStylesheet library="slick" name="slick.css" />
-	<h:outputStylesheet library="slick" name="slick-theme.css" />
-	<h:outputStylesheet library="resource-summary-overview"
-		name="tabs_style.css" />
-	<h:outputStylesheet library="resource-pane-template"
-		name="resource-pane.css" />
-	<h:outputStylesheet library="resource-summary-overview"
-		name="group_summary_overview.css" />
+	<h:outputStylesheet library="resources" name="resource-pane.css" />
+	<h:outputStylesheet library="resource-summary-overview" name="group_summary_overview.css" />
+	<h:outputScript library="resource-summary-overview" name="group_summary_overview.js" target="body" />
 
-	<h:outputScript library="resource-summary-overview"
-		name="group_summary_overview.js" target="body" />
-	<h:outputScript library="slick" name="slick.js" target="head" />
 	<h:form>
 		<p:remoteCommand name="onAfterChange"
 			actionListener="#{groupOverviewBean.displayClickedResourceFromSlider()}"

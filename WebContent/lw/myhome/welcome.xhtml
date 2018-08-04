@@ -103,7 +103,7 @@
 					<ui:repeat var="submission" value="#{submissionBean.activeSubmissions}">
 						<ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
 						<li>
-							<h:outputLink value="myhome/submission_resources.jsf" style="text-decoration: underline; pointer:cursor;">
+							<h:outputLink value="myhome/submission_resources.jsf" style="text-decoration: underline;">
 								<f:param name="user_id" value="${userBean.user.id}" />
 								<f:param name="submission_id" value="${submission.id}" />
 								<b>${submission.title}:</b>

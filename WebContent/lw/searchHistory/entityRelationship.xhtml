@@ -18,18 +18,19 @@
 	<ui:param name="loginRequired" value="true" />
 	
 	<ui:define name="center_layout">
-	
-		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<script src="https://d3js.org/d3-color.v1.min.js"></script>
-   		<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-    	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-    	<script src="https://d3js.org/d3-scale.v1.min.js"></script>
-		
+
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3.min.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-tip.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-color.v1.min.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-interpolate.v1.min.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-scale-chromatic.v1.min.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-scale.v1.min.js" />
+
+		<h:outputScript target="head" name="vendor/jsnetworkx-v0.3.4/jsnetworkx.js" />
+
+		<h:outputScript library="search-history" name="entity-relationship2.js" />
 		<h:outputStylesheet library="search-history" name="queryPath.css"  />
-		
-		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
-		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
-		
+
 		<h:form>
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
 			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets snippet-viewer-entity" oncomplete="$('.snippet-viewer').show();"/>
@@ -124,8 +125,6 @@
 				</h:panelGroup>
 			</div>
 		</div>
-
-		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/entity-relationship2.js"></script>
 	</ui:define>
 	
 </ui:composition>

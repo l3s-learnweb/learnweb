@@ -76,10 +76,8 @@
 	</ui:define>
 	
 	<ui:define name="center_layout">
-
-		<h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
-
-	    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+		<h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
+		<h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 	    
 	    <script type="text/javascript">
 	    	function applyTooltip()

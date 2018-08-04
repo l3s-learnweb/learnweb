@@ -1,0 +1,1 @@
+Is archive_timeline.js deprecated version of archive_timeline_template.js? Should we remove it?

@@ -1,7 +1,7 @@
 <ui:composition template="/templates/main/main.xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true" />
@@ -14,9 +14,8 @@
 	<ui:param name="pageTitle" value="Activity Dashboard" />
 
 	<ui:define name="center_layout">
-		<h:outputStylesheet name="activity-dashboard/activity_dashboard.css" />
-		<h:outputScript name="activity-dashboard/activity_dashboard.js"
-			target="body" />
+		<h:outputStylesheet library="admin-dashboard" name="activity.css" />
+		<h:outputScript library="admin-dashboard" name="activity.js" target="body" />
 
 		<div class="ui-g" style="margin: 5px;">
 			<div class="ui-g-12 ui-md-2">

@@ -1,9 +1,12 @@
 @media print {
-    #left_pane,
-    .ui-column-filter
-    {display:none  !important;}
+    #left_pane, .ui-column-filter{
+		display: none !important;
+	}
 }
-.ui-datatable-header {bolder:1px solid red !important;}
+
+.ui-datatable-header {
+	border: 1px solid red !important;
+}
 
 .glossary_footer_text{
 	font-size: 2rem;

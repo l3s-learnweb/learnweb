@@ -8,7 +8,6 @@
 	
 	<ui:composition> 
 		<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
-		<h:outputScript library="js" target="head" name="selectionTree.js" />
 
 		<h:form>
 			<h:panelGrid columns="2" cellspacing="1" id="pg4">
@@ -47,7 +46,7 @@
 					<g transform="translate(#{user.cx},#{user.cy})" class="node">
 						<title>#{user.info}</title>
 						<circle r="#{user.radius}" fill="#{user.color}"></circle>
-						<text style="text-anchor: middle; text-font: 15px sans-serif;" dy=".3em">#{user.nome}</text>
+						<text style="text-anchor: middle; font: 15px sans-serif;" dy=".3em">#{user.nome}</text>
 					</g>
 			    </c:forEach>
 				</svg>

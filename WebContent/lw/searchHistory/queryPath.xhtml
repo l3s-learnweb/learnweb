@@ -17,11 +17,12 @@
 		<h4>#{newSearchHistoryBean.title}</h4>
 		<!-- Include your demo2.xhtml code inside this tag -->
 		<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/> -->
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/search-history/queryPath.css" />
-		<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
-	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
-	    
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3.min.js" />
+		<h:outputScript target="head" name="vendor/d3js-v3.5.17/d3-tip.js" />
+		<h:outputScript target="head" name="vendor/jsnetworkx-v0.3.4/jsnetworkx.js" />
+
+		<h:outputStylesheet library="search-history" name="queryPath.css"  />
+
 	    <div id="demo-canvas" class="w3-container" style="height:500px; margin:0 auto;">
 		<button onclick="draw()">draw</button>
 		</div>

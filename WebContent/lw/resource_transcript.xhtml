@@ -19,21 +19,19 @@
 	<ui:define name="center_layout">
 
 		<h:form class="display-none" id="command_form">
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this"
-				update=":growl" />
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this"
-				update=":growl :transcript :transcript_options" />
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this"
-				update="@none" />
+			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this"  update=":growl" />
+			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options" />
+			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
 		</h:form>
 
-		<h:outputStylesheet library="ted_transcript" name="jquery.contextMenu.css" />
-		<h:outputScript library="ted_transcript" name="jquery.contextMenu.js" />
-		<h:outputScript library="ted_transcript" name="spectrum.js" />
-		<h:outputScript library="ted_transcript" name="ntc.js" />
-		<h:outputStylesheet library="resource_transcript" name="resource_transcript.css" />
-		<h:outputStylesheet library="ted_transcript" name="spectrum.css" />
-		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head" />
+		<h:outputStylesheet name="vendor/contextMenu-v2.7.0/jquery.contextMenu.min.css" />
+		<h:outputScript name="vendor/contextMenu-v2.7.0/jquery.contextMenu.min.js" />
+
+		<h:outputStylesheet name="vendor/spectrum-v1.8.0/spectrum.css" />
+		<h:outputScript name="vendor/spectrum-v1.8.0/spectrum.js" />
+
+		<h:outputStylesheet library="resource-transcript" name="resource_transcript.css" />
+		<h:outputScript library="ted-transcript" name="ted-transcript.js" target="head" />
 
 		<script type="text/javascript">
   			var noteId = #{tedTranscriptBean.noteId};

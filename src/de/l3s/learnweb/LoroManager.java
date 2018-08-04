@@ -411,6 +411,7 @@ public class LoroManager
         }
         else if(rs.getString("doc_format").contains("video"))
         {
+            // TODO: don't use scripts from CDN, they may collect some data and therefore we need to include them to EULA
             resource.setType(Resource.ResourceType.video);
             resource.setEmbeddedRaw(
                     "<link href=\"//vjs.zencdn.net/6.2.4/video-js.css\" rel=\"stylesheet\"/><script src=\"//vjs.zencdn.net/6.2.4/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-fill vjs-default-skin vjs-big-play-centered\" data-setup='{\"controls\": true, \"autoplay\": false, \"preload\": \"auto\"}' width=\"100%\" height=\"100%\"><source src=\""

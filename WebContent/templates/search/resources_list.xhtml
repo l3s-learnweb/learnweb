@@ -6,8 +6,8 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <h:outputStylesheet library="main-template" name="tooltipster.min.css"/>
-    <h:outputScript name="js/jquery.tooltipster.min.js" target="head"/>
+    <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
+    <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 
     <ui:repeat var="res" value="#{resources}">
         <h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">

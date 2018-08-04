@@ -13,11 +13,9 @@
 
     <ui:define name="head-meta">
         <ui:fragment rendered="#{userBean.user.organisation.id eq 480}">
-            <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/d3.css"/>
-            <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/Learnweb_chloe_v2.css"/>
-
-            <h:outputScript library="js" name="d3.min.js" target="head"/>
-            <h:outputScript library="js" name="Learnweb_chloe2.js" target="head"/>
+            <h:outputScript target="head" name="vendor/d3js-v3.5.17/d3.min.js" />
+            <h:outputScript library="resources" name="resource_chloe_interface.js" target="head"/>
+            <h:outputStylesheet library="resources" name="resource_chloe_interface.css" />
         </ui:fragment>
     </ui:define>
 

@@ -7,8 +7,8 @@
 
     <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" id="right_pane">
 
-        <h:outputScript library="resource-pane-template" name="resource-pane4.js" target="head"/>
-        <h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
+        <h:outputScript library="resources" name="resource-pane.js" target="head"/>
+        <h:outputStylesheet library="resources" name="resource-pane.css"/>
 
         <h:panelGroup layout="block" id="right_pane_wrapper" styleClass="right-panel">
             <h:inputHidden id="panel_header_title" value="#{rightPaneBean.panelTitle}" readonly="true"/>
@@ -365,15 +365,15 @@
                                     <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.targetCount}">
                                         <label class="rdlabel"><b>Target learner (stats): </b></label>
                                         <ui:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
-                                            <h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="2%" alt="very young learners"
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/green_circle.png" width="2%" alt="very young learners"
                                                             rendered="#{t.key == 'very young learners (pre-school)'}"/>
-                                            <h:graphicImage class="circle" value="/resources/resources-chloe/images/blue_circle.png" width="2%" alt="young learners"
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/blue_circle.png" width="2%" alt="young learners"
                                                             rendered="#{t.key == 'young learners (elementary)'}"/>
-                                            <h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/yellow_circle.png" width="2%" alt="teenage learners"
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/yellow_circle.png" width="2%" alt="teenage learners"
                                                             rendered="#{t.key == 'teenage learners'}"/>
-                                            <h:graphicImage class="circle" value="/resources/resources-chloe/images/red_circle.png" width="2%" alt="teachers"
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="teachers"
                                                             rendered="#{t.key == 'teachers'}"/>
-                                            <h:graphicImage class="circle" value="/resources/resources-chloe/images/red_circle.png" width="2%" alt="adult learners"
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="adult learners"
                                                             rendered="#{t.key == 'adult learners'}"/>
 
                                             <h:outputText value="Pre-school" rendered="#{t.key == 'very young learners (pre-school)'}"/>
@@ -397,13 +397,13 @@
                                     <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.purposeCount}">
                                         <label class="rdlabel"><b>Purpose of use (stats): </b></label>
                                         <ui:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
-                                            <h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/speaking.png" alt=" "
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/speaking.png" alt=" "
                                                             width="2%" rendered="#{p.key == 'speaking skills'}"/>
-                                            <h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/listening.png" alt=" "
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/listening.png" alt=" "
                                                             width="2%" rendered="#{p.key == 'listening skills'}"/>
-                                            <h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/writing.png" alt=" "
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/writing.png" alt=" "
                                                             width="2%" rendered="#{p.key == 'writing skills'}"/>
-                                            <h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/reading.png" alt=" "
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/reading.png" alt=" "
                                                             width="2%" rendered="#{p.key == 'reading skills'}"/>
 
                                             <h:outputText value="Speaking" rendered="#{p.key == 'speaking skills'}"/>
