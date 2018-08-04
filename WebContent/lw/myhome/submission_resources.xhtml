@@ -46,7 +46,7 @@
 
 		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
 		<h:panelGroup id="resourceGrid2" styleClass="resource-grid" layout="block">
-				<ui:repeat var="res" value="#{submissionBean.selectedResources}" >
+				<p:repeat var="res" value="#{submissionBean.selectedResources}" >
 
 					<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 						<div class="resource-block">
@@ -81,7 +81,7 @@
 
 						</div>
 					</h:panelGroup>
-				</ui:repeat>
+				</p:repeat>
 
 				<h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
 				<h:panelGroup id="add_resource_sign" class="resource-item" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
@@ -123,7 +123,7 @@
 				</div>
 				<div id="lightbox_content" style="overflow-y:auto;overflow-x:hidden;background: white;">
 				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
-				<ui:repeat var="res" value="#{submissionBean.resources}" >
+				<p:repeat var="res" value="#{submissionBean.resources}" >
 
 					<h:panelGroup styleClass="resource-item2 group-resources-item2" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 						<div class="resource-block">
@@ -149,7 +149,7 @@
 						</div>
 						
 					</h:panelGroup>
-				</ui:repeat>
+				</p:repeat>
 				<h:panelGroup style="background-color:white;height:100%;" rendered="#{empty submissionBean.resources}" layout="block">
 					<h:outputText value="#{msg.no_resources_found}" class="nothing_found" style="color:black;"/>
 					<span style="color:black;" class="nothing_found">

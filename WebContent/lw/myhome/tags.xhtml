@@ -29,7 +29,7 @@
 					<f:facet name="header">
 						#{msg.resource}
 					</f:facet>
-					<ui:repeat var="res" value="#{tag.resources}">
+					<p:repeat var="res" value="#{tag.resources}">
 						<div class="float-left" style="width:50%;padding:1px 0;">
 							<h:outputLink value="myhome/resources.jsf">
 								<f:param name="resource_id" value="#{res.id}" />
@@ -37,7 +37,7 @@
 								<h:outputText value="#{res.title}" escape="false" />
 							</h:outputLink>
 						</div>
-					</ui:repeat>
+					</p:repeat>
 				</p:column>
 			</p:dataTable>
 		</h:form>

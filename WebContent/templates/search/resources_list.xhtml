@@ -9,7 +9,7 @@
     <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
     <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 
-    <ui:repeat var="res" value="#{resources}">
+    <p:repeat var="res" value="#{resources}">
         <h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
             <h:outputText value="#{msg.page} "/>
             <h:outputText value="#{(res.tempId+9) / 10}">
@@ -68,5 +68,5 @@
                 <h:outputText value="#{res.resource.ownerUser.fullName}"/>
             </h:panelGroup>
         </div>
-    </ui:repeat>
+    </p:repeat>
 </ui:composition>

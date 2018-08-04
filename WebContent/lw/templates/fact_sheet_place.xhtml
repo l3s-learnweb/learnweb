@@ -27,9 +27,9 @@
 						</td>
 						<td>
 							<div id="am-container" class="am-container fact_sheet_images">
-								<ui:repeat var="image" value="#{searchBean.images.resources}">
+								<p:repeat var="image" value="#{searchBean.images.resources}">
 									<a href=""><img src="#{image.thumbnail2.url}"></img></a>
-								</ui:repeat>
+								</p:repeat>
 							</div>
 						</td>
 					</tr>
@@ -106,9 +106,9 @@
 				<ui:fragment rendered="#{searchBean.graph.entities.size() gt 1}">
 					<div id="related_search">Related Links</div>
 					<ul id="related_search_list">
-						<ui:repeat var="entity" value="#{searchBean.graph.entities.subList(1,searchBean.graph.entities.size())}">
+						<p:repeat var="entity" value="#{searchBean.graph.entities.subList(1,searchBean.graph.entities.size())}">
 							<li><a target="_new" href="#{entity.url}">#{entity.label}</a></li>
-						</ui:repeat>
+						</p:repeat>
 					</ul>
 				</ui:fragment>
 			</div>

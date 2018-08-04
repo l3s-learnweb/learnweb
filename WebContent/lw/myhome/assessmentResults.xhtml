@@ -14,7 +14,7 @@
 
 			<h:outputText rendered="#{empty assessmentResultBean.peerAssessmentPairs}" value="You did not participate in any assessment." />
 				
-			<ui:repeat var="pair" value="#{assessmentResultBean.peerAssessmentPairs}">
+			<p:repeat var="pair" value="#{assessmentResultBean.peerAssessmentPairs}">
 
 				<ui:fragment rendered="#{not assessmentResultBean.mandatorySurveySubmitted}">
 					Please answer the
@@ -38,20 +38,20 @@
 
 					<h:outputText value="Assessment:" class="bold" />
 					<h:panelGroup rendered="#{not empty pair.assessment.submittedAnswersOfAllUsers and pair.assessment.submittedAnswersOfAllUsers.size() == 1}">
-						<ui:repeat var="answer" value="#{pair.assessment.submittedAnswersOfAllUsers}">
+						<p:repeat var="answer" value="#{pair.assessment.submittedAnswersOfAllUsers}">
 							<h:outputLink value="survey/answer.jsf">
 								<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
 								<f:param name="user_id" value="#{answer.userId}" />
 								<h:outputText value="#{pair.peerAssessment.title} (#{answer.user.realUsername})" />
 							</h:outputLink>
-						</ui:repeat>
+						</p:repeat>
 					</h:panelGroup>
 					<h:outputText rendered="#{empty pair.assessment.submittedAnswersOfAllUsers}"
 						value="The teacher's assessment wasn't submitted (yet). Maybe you will retrieve it directly from your teacher." />
 
 				</h:panelGrid>
 
-			</ui:repeat>
+			</p:repeat>
 		</p:panel>
 
 	</ui:define>

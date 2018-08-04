@@ -101,7 +101,7 @@
 						<a href="#" onclick="$(this).next().toggle(); return false;"><h:outputText value="#{pair.assessedUser.studentId}" /></a>
 
 						<span class="display-none">
-							<ui:repeat var="subpair" value="#{pair.assessedUser.assessorPeerAssessment}">
+							<p:repeat var="subpair" value="#{pair.assessedUser.assessorPeerAssessment}">
 								<p>
 									has assessed <h:outputText value="#{subpair.assessedUser.courses[0].title} " /> <h:outputText value="#{subpair.assessedUser.studentId} " />
 									
@@ -117,7 +117,7 @@
 										styleClass="red bold" />
 									<h:outputText value=" Submitted" rendered="#{subpair.peerAssessmentUserAnswers.submitted}" styleClass="green bold" />
 								</p>
-							</ui:repeat>
+							</p:repeat>
 						</span>
 					</p:column>
 					<p:column rendered="#{showEmail}">
@@ -153,7 +153,7 @@
 						<h:outputText value=" Saved" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}" styleClass="red bold" />
 						<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}" styleClass="green bold" />
 						
-						<ui:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
+						<p:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
 							<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
 								<h:outputText value=", " />
 								<h:outputLink value="survey/answer.jsf">
@@ -164,7 +164,7 @@
 								<h:outputText value=" Saved" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}" styleClass="red bold" />
 								<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}" styleClass="green bold" />
 							</ui:fragment>
-						</ui:repeat>
+						</p:repeat>
 						
 					</p:column>
 				</p:dataTable>

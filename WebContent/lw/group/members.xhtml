@@ -50,7 +50,7 @@
       
         <h:panelGrid id="resource_disp">
 	        <h:form>
-				<ui:repeat id="datagrid" var="user" value="#{groupDetailBean.getMembers()}">  
+				<p:repeat id="datagrid" var="user" value="#{groupDetailBean.getMembers()}">
 			        
 			        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
 			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{user}"/>
@@ -64,7 +64,7 @@
 				            	</div>
 				            </div>
 			        </p:commandLink>	        
-			    </ui:repeat>
+			    </p:repeat>
 		    </h:form>
 	    </h:panelGrid>
 	</ui:define>

@@ -101,9 +101,9 @@
 				</p:column>
 				
 				<p:column headerText="Groups" sortBy="${adminUserBean.concatGroups(user.groups)}">				
-					<ui:repeat var="group" value="#{user.groups}" varStatus="status">
+					<p:repeat var="group" value="#{user.groups}" varStatus="status">
 						<h:outputText value="#{group.title}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
-					</ui:repeat>
+					</p:repeat>
 				</p:column>	
 						
 				<p:column style="width: 7%;" rendered="#{userBean.user.admin}">

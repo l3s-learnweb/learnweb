@@ -364,7 +364,7 @@
                                     </ui:fragment>
                                     <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.targetCount}">
                                         <label class="rdlabel"><b>Target learner (stats): </b></label>
-                                        <ui:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                                        <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
                                             <h:graphicImage class="circle" value="/resources/resources/img-chloe/green_circle.png" width="2%" alt="very young learners"
                                                             rendered="#{t.key == 'very young learners (pre-school)'}"/>
                                             <h:graphicImage class="circle" value="/resources/resources/img-chloe/blue_circle.png" width="2%" alt="young learners"
@@ -382,7 +382,7 @@
                                             <h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}"/>
                                             <h:outputText value="Teachers" rendered="#{t.key == 'teachers'}"/>
                                             <h:outputText value="[#{t.value}] "/>
-                                        </ui:repeat>
+                                        </p:repeat>
                                         <br/>
                                     </ui:fragment>
 
@@ -396,7 +396,7 @@
                                     </ui:fragment>
                                     <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.purposeCount}">
                                         <label class="rdlabel"><b>Purpose of use (stats): </b></label>
-                                        <ui:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                        <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/speaking.png" alt=" "
                                                             width="2%" rendered="#{p.key == 'speaking skills'}"/>
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/listening.png" alt=" "
@@ -412,14 +412,14 @@
                                             <h:outputText value="Reading" rendered="#{p.key == 'reading skills'}"/>
                                             <h:outputText value="[#{p.value}] "
                                                           rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}"/>
-                                        </ui:repeat>
+                                        </p:repeat>
                                         <br/>
 
-                                        <ui:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                        <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                             <ui:fragment rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
                                                 <span class="tag tag-grey">#{p.key}</span>
                                             </ui:fragment>
-                                        </ui:repeat>
+                                        </p:repeat>
                                     </ui:fragment>
 
                                 </div> <!-- detailList -->

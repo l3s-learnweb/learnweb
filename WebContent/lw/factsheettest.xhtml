@@ -63,12 +63,12 @@
 			
 			</h:panelGrid>
 			
-			<ui:repeat var="fact" value="#{factSheetBean.entity.facts}">
+			<p:repeat var="fact" value="#{factSheetBean.entity.facts}">
 				
 				<ui:decorate template="/templates/factsheet/fact.xhtml">
 					<ui:param name="fact" value="#{fact}" />
 				</ui:decorate>
-			</ui:repeat>
+			</p:repeat>
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

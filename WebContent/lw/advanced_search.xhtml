@@ -87,7 +87,7 @@
 	
 		<h:panelGroup id="datagrid" layout="block">
 			<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
-				<ui:repeat value="#{advSearchBean.paginator.currentPage}" var="result">
+				<p:repeat value="#{advSearchBean.paginator.currentPage}" var="result">
 					<div class="grey_border" style="margin-bottom:1rem;">
 						<h3>
 							<a href="group/resources.jsf?group_id=#{result.resource.groupId}&amp;resource_id=#{result.resource.id}&amp;folder_id=#{result.resource.folderId}">
@@ -205,9 +205,9 @@
 										</span>
 									</td>
 									<td>
-										<ui:repeat var="language" value="#{result.resource.metadataMultiValue['language']}" varStatus="status">
+										<p:repeat var="language" value="#{result.resource.metadataMultiValue['language']}" varStatus="status">
 											<h:outputText value="#{msg['language_' += language]}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
-										</ui:repeat>	
+										</p:repeat>
 									</td>
 								</tr>
 							</ui:fragment>
@@ -297,7 +297,7 @@
 							</ui:fragment>
 							
 												
-							<ui:repeat var="entry" value="#{result.resource.metadataEntries}">
+							<p:repeat var="entry" value="#{result.resource.metadataEntries}">
 								<ui:fragment rendered="#{not empty entry.value}">
 									<tr>
 										<td>
@@ -310,7 +310,7 @@
 										</td>
 									</tr>
 								</ui:fragment>
-							</ui:repeat>
+							</p:repeat>
 							
 							
 							<tr>
@@ -335,7 +335,7 @@
 						</h:panelGroup>
 
 					</div>
-				</ui:repeat>
+				</p:repeat>
 			</h:panelGroup>
 
 			<h:outputText value="${msg.no_resources_found}" class="nothing_found"

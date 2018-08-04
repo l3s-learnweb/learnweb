@@ -51,9 +51,9 @@
             <ui:fragment rendered="#{not empty res.resource.tags}">
                 <b><h:outputText value="#{msg.tags}: " escape="false"/></b>
 
-                <ui:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
+                <p:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
                     <h:outputText value="#{tag.name}"/><h:outputText value=", " rendered="#{!status.last}" escape="false"/>
-                </ui:repeat>
+                </p:repeat>
                 <br/>
             </ui:fragment>
             <br/>

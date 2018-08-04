@@ -67,7 +67,7 @@
 			</div>
 		</h:panelGroup>
 		<h:panelGroup layout="block" id="user_submissions">
-		<ui:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
+		<p:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
 			<div class="submission_card">
 				<h3 style="display:inline;">#{userSubmission.user.username} (#{msg.student_id}: #{userSubmission.user.studentId})</h3>
 				<h:form style="display: inline; position:absolute;" prependId="false">
@@ -86,7 +86,7 @@
 					<hr/>
 					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
 						<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
-								<ui:repeat var="res" value="#{userSubmission.resources}" >
+								<p:repeat var="res" value="#{userSubmission.resources}" >
 				
 									<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 										<div class="resource-block">
@@ -111,12 +111,12 @@
 				
 										</div>
 									</h:panelGroup>
-								</ui:repeat>
+								</p:repeat>
 						</h:panelGroup>
 					</h:panelGroup>				
 				</h:panelGroup>
 			</div>
-		</ui:repeat>
+		</p:repeat>
 		</h:panelGroup>
 		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 	</ui:define>

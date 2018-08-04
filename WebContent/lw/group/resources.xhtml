@@ -157,7 +157,7 @@
                 <h:panelGroup id="resourcesFilters" layout="block">
                     <h:form styleClass="resources-filters" id="filters">
                         <ul>
-                            <ui:repeat value="#{groupDetailBean.availableFilters}" var="filter">
+                            <p:repeat value="#{groupDetailBean.availableFilters}" var="filter">
                                 <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
                                 <span class="filter-name">
                                     <span class="trimmed-text">#{filter.name}</span>
@@ -172,7 +172,7 @@
                                                                  oncomplete="updateCarousel();resourceDND();"/>
                                             </li>
 
-                                            <ui:repeat value="#{filter.items}" var="item">
+                                            <p:repeat value="#{filter.items}" var="item">
                                                 <li class="#{item.active ? 'active' : null}">
                                                     <p:commandButton
                                                             value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
@@ -180,7 +180,7 @@
                                                             update=":resourcesView :paginator :resourcesFilters"
                                                             oncomplete="updateCarousel();resourceDND();"/>
                                                 </li>
-                                            </ui:repeat>
+                                            </p:repeat>
 
                                         </h:panelGroup>
                                         <li class="vCarousel-expand">
@@ -188,7 +188,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                            </ui:repeat>
+                            </p:repeat>
 
                             <li class="search-box #{groupDetailBean.query != null ? 'active' : null}">
                                 <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
@@ -222,12 +222,12 @@
                             <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
                         </li>
 
-                        <ui:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
+                        <p:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
                             <li data-folderId="#{folder.id}">
                                 <h:outputLink rendered="#{not status.last}" value="#" nclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
                                 <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
                             </li>
-                        </ui:repeat>
+                        </p:repeat>
                     </ul>
                 </ui:fragment>
             </h:panelGroup>

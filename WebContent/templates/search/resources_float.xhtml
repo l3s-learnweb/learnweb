@@ -6,7 +6,7 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <ui:repeat var="res" value="#{resources}">
+    <p:repeat var="res" value="#{resources}">
         <div class="resource" id="resource_${res.tempId}" style="max-width:${res.thumbnail2b.width}px">
             <h:panelGroup styleClass="#{res.newResource ? 'float_newResource' : 'oldResource'}">
                 <img src="${res.thumbnail2b.url}" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}" class="smallImage"/>
@@ -30,5 +30,5 @@
                 <ui:param name="res" value="#{res}"/>
             </ui:decorate>
         </div>
-    </ui:repeat>
+    </p:repeat>
 </ui:composition>

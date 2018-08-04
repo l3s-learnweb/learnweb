@@ -7,10 +7,10 @@
 	<div class="fact_sheet_detail">
 		<span class="fact_sheet_field">#{fact.label}:</span>
 		<span class="fact_sheet_value">
-			<ui:repeat var="entry" value="#{fact.data}" varStatus="status">
+			<p:repeat var="entry" value="#{fact.data}" varStatus="status">
 				<h:outputText value=", " rendered="#{not status.first}" />
 				<h:outputText value="#{entry}" />
-			</ui:repeat>
+			</p:repeat>
 		</span>
 	</div>
 </ui:composition>

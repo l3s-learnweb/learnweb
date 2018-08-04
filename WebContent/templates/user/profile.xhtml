@@ -65,14 +65,14 @@
 	</div>
 				
 	<div id="group_table" class="grey_border">
-		<ui:repeat var="group" value="#{user.groups}">
+		<p:repeat var="group" value="#{user.groups}">
 			<div class="float-left">		
 				<h:outputLink value="group/overview.jsf">
 					<f:param name="group_id" value="#{group.id}" />
 					<h:outputText value="#{group.title}" />
 				</h:outputLink>
-			</div>	
-		</ui:repeat>
+			</div>
+		</p:repeat>
 		<br class="clear"/>		
 	</div>
 

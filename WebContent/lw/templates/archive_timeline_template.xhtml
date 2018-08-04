@@ -95,11 +95,11 @@
                 </div>
                 <hr/>
                 <h:panelGroup layout="block" class="day-headers">
-                    <ui:repeat var="day" value="${rightPaneBean.shortWeekDays}">
+                    <p:repeat var="day" value="${rightPaneBean.shortWeekDays}">
                         <h:panelGroup layout="block" class="day header">
                             #{day}
                         </h:panelGroup>
-                    </ui:repeat>
+                    </p:repeat>
                 </h:panelGroup>
                 <div class="days" data-group="days">
                     <!-- the place where days will be generated -->

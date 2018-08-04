@@ -26,12 +26,12 @@ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     		<h:panelGroup id="contentFlow" styleClass="ContentFlow" layout="block">
             	<div class="loadIndicator"><div class="indicator"></div></div>
             	<div class="flow">
-                	<ui:repeat var="image" value="#{archiveThumbnailBean.listOfUrls}">
+                	<p:repeat var="image" value="#{archiveThumbnailBean.listOfUrls}">
                       <div class="item">
                       <img src="#{image.fileUrl}" class="content" alt=""/>
                       <div class="caption">#{msg.date}: <a href="#{image.archiveUrl}" target="_blank">${userBean.formatDate(image.timestamp)}</a></div>
                       </div>
-                	</ui:repeat>
+                	</p:repeat>
             	</div>
             	<div class="globalCaption"></div>
         	</h:panelGroup>

@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:panelGroup id="dataList" styleClass="dataList">
-        <ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+        <p:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
             <h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item" layout="block"
                           pt:data-itemType="resource"
                           pt:data-itemId="#{res.resource.id}"
@@ -90,7 +90,7 @@
                             <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
                                 <label class="rlabel"><b>Target
                                     learner (stats): </b></label>
-                                <ui:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                                <p:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
 
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources/img-chloe/green_circle.png"
@@ -118,12 +118,12 @@
                                     <h:outputText value="Teachers" rendered="#{t.key == 'teachers'}"/>
                                     <h:outputText value="[#{t.value}] "/>
 
-                                </ui:repeat>
+                                </p:repeat>
                                 <br/>
                             </ui:fragment>
                             <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
                                 <label class="rlabel"><b>Purpose of use (stats): </b></label>
-                                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/speaking.png" width="3%"
                                                     rendered="#{p.key == 'speaking skills'}" alt="speaking"/>
@@ -143,22 +143,22 @@
                                     <h:outputText value="Reading" rendered="#{p.key == 'reading skills'}"/>
                                     <h:outputText value="[#{p.value}] "
                                                   rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}"/>
-                                </ui:repeat>
+                                </p:repeat>
                                 <br/>
 
-                                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <ui:fragment
                                             rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
                                         <span class="tag tag-grey">#{p.key}</span>
                                     </ui:fragment>
-                                </ui:repeat>
+                                </p:repeat>
                             </ui:fragment>
                         </div>
                     </div>
                 </div>
                 <hr style="margin-top:5px; margin-bottom:5px;"/>
             </h:panelGroup>
-        </ui:repeat>
+        </p:repeat>
 
         <h:outputText value="${msg.no_resources_found}" class="nothing_found"
                       rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>

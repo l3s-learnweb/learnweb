@@ -71,7 +71,7 @@
                 <span class="navigate left"><a id="scrollLeft" href="#"><span class="arrow"></span></a></span>
 
                 <div class="group-menu-container">
-                    <ui:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
+                    <p:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
                         <h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{searchBean.searchService.name() != gr.groupAlias}">
                             <f:param name="service" value="#{gr.groupAlias}"/>
                             <f:param name="action" value="#{searchBean.searchMode}"/>
@@ -85,7 +85,7 @@
                             </h4>
                             <div class="group-menu-content group-content-#{searchBean.searchMode}">
                                 <h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
-                                    <ui:repeat value="#{gr.resources}" var="res">
+                                    <p:repeat value="#{gr.resources}" var="res">
                                         <div class="article-wrapper">
                                             <h6>
                                                 <span><h:outputText value="#{res.title}" escape="false"/></span>
@@ -94,18 +94,18 @@
 
                                             <p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
                                         </div>
-                                    </ui:repeat>
+                                    </p:repeat>
                                 </h:panelGroup>
                                 <h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                                    <ui:repeat value="#{gr.resources}" var="res">
+                                    <p:repeat value="#{gr.resources}" var="res">
                                         <div class="image-wrapper">
                                             <img src="${res.thumbnail2.url}"/>
                                         </div>
-                                    </ui:repeat>
+                                    </p:repeat>
                                 </h:panelGroup>
                             </div>
                         </h:link>
-                    </ui:repeat>
+                    </p:repeat>
                 </div>
 
                 <span class="navigate right"><a id="scrollRight" href="#"><span class="arrow"></span></a></span>
@@ -122,7 +122,7 @@
                                     <span class="arrow"></span>
                                 </span>
                             <h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
-                                <ui:repeat value="#{searchBean.availableSources}" var="item">
+                                <p:repeat value="#{searchBean.availableSources}" var="item">
                                     <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
                                         <h:outputText value="#{item.name}"/>
 
@@ -134,10 +134,10 @@
                                         <f:param name="service" value="#{item.url}"/>
                                         <f:param name="query" value="#{searchBean.query}"/>
                                     </h:outputLink>
-                                </ui:repeat>
+                                </p:repeat>
                             </h:panelGroup>
                         </li>
-                        <ui:repeat value="#{searchBean.availableFilters}" var="filter">
+                        <p:repeat value="#{searchBean.availableFilters}" var="filter">
                             <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
                                     <span class="filter-name">
                                         <span class="trimmed-text">#{filter.name}</span>
@@ -153,7 +153,7 @@
                                             <f:param name="service" value="#{searchBean.queryService}"/>
                                             <f:param name="query" value="#{searchBean.query}"/>
                                         </h:outputLink>
-                                        <ui:repeat value="#{filter.items}" var="item">
+                                        <p:repeat value="#{filter.items}" var="item">
                                             <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
                                                 <h:outputText value="#{item.name}"/>
 
@@ -166,12 +166,12 @@
                                                 <f:param name="service" value="#{searchBean.queryService}"/>
                                                 <f:param name="query" value="#{searchBean.query}"/>
                                             </h:outputLink>
-                                        </ui:repeat>
+                                        </p:repeat>
                                     </h:panelGroup>
                                     <h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
                                 </h:panelGroup>
                             </li>
-                        </ui:repeat>
+                        </p:repeat>
                     </ul>
                     <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
                         <f:param name="action" value="#{searchBean.searchMode}"/>
