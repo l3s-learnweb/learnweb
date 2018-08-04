@@ -179,8 +179,7 @@
 				style="display: inline-block; width: 300px;"> </span></td>
 		</tr>
 
-		<ui:repeat var="entry"
-			value="#{rightPaneBean.clickedResource.metadataEntries}">
+		<ui:repeat var="entry" value="#{rightPaneBean.clickedResource.metadataEntries}">
 			<ui:fragment rendered="#{not empty entry.value}">
 				<tr>
 					<td><span class="resource_field"> <h:outputText value="#{utilBean.getLocaleMessage(entry.key, null)}" />:

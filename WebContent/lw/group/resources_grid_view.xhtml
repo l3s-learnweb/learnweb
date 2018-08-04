@@ -49,7 +49,7 @@
 
         <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
             <p:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
-                <!--@elvariable id="res" type="de.l3s.learnweb.ResourceDecorator"-->
+                <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
                 <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
                               pt:data-itemType="resource"
                               pt:data-itemId="#{res.resource.id}"

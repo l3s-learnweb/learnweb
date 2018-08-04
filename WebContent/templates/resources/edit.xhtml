@@ -3,7 +3,7 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui">
 
-    <!--@elvariable id="res" type="de.l3s.learnweb.Resource"-->
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
     <c:if test="#{userBean.user.organisation.id eq 480}">
         <!-- Input fields for the yell course -->
@@ -114,8 +114,8 @@
                                                       multiple="true" title="#{field.info}" required="#{field.required}"
                                                       filter="#{field.optionsList.size() gt 8}"
                                                       filterMatchMode="startsWith" panelStyle="width:250px">
-                                    <f:selectItems value="#{field.optionsList}" var="option" itemLabel="#{option.label}"
-                                                   itemValue="#{option.value}"/>
+                                    <f:selectItems value="#{field.optionsList}" var="selectItemOption" itemLabel="#{selectItemOption.label}"
+                                                   itemValue="#{selectItemOption.value}"/>
                                 </p:selectCheckboxMenu>
                                 <p:tooltip for="input_selectmultiple_#{field.name}" position="left"
                                            rendered="#{not empty field.info}"/>

@@ -2,6 +2,7 @@
   <dictionary name="astappev">
     <words>
       <w>anonymization</w>
+      <w>anonymized</w>
       <w>archiveit</w>
       <w>archiveweb</w>
       <w>astappev</w>
@@ -15,6 +16,7 @@
       <w>djvu</w>
       <w>docservice</w>
       <w>docx</w>
+      <w>enddate</w>
       <w>epub</w>
       <w>exceptionhandler</w>
       <w>fakenews</w>
@@ -70,6 +72,7 @@
       <w>smtp</w>
       <w>sparql</w>
       <w>srtings</w>
+      <w>startdate</w>
       <w>summeries</w>
       <w>teded</w>
       <w>tedx</w>

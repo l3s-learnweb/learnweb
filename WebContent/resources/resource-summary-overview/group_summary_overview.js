@@ -53,7 +53,7 @@ $(".dropdown-btn")
 											nextElement.removeClass('open');
 											nextElement.height(0);
 										} else {
-											if ($(this).attr('id') == 'added_res_tab_new_changes') {
+											if ($(this).attr('id') === 'added_res_tab_new_changes') {
 												var currentIndex = nextElement
 														.find('.slick-current')
 														.attr(
@@ -62,7 +62,7 @@ $(".dropdown-btn")
 														'added');
 												closeTheOtherSlider($('#added_res_tab'));
 											}
-											if ($(this).attr('id') == 'added_res_tab') {
+											if ($(this).attr('id') === 'added_res_tab') {
 												var currentIndex = nextElement
 														.find('.slick-current')
 														.attr(
@@ -96,12 +96,12 @@ function initPanel() {
 					nextElement.removeClass('open');
 					nextElement.height(0);
 				} else {
-					if ($(this).attr('id') == 'added_res_tab_new_changes') {
+					if ($(this).attr('id') === 'added_res_tab_new_changes') {
 						var currentIndex = nextElement.find('.slick-current')
 								.attr('data-slick-index');
 						displayResource(currentIndex, 'added');
 					}
-					if ($(this).attr('id') == 'added_res_tab') {
+					if ($(this).attr('id') === 'added_res_tab') {
 						var currentIndex = nextElement.find('.slick-current')
 								.attr('data-slick-index');
 						displayResource(currentIndex, 'updated');

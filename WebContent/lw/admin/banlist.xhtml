@@ -60,27 +60,27 @@
 		</p:dialog>
 
 		<h:form id="suspiciouslistform" >
-			<p:dataTable var="entry" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+			<p:dataTable var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
+						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-					<p:column headerText="IP" sortBy="#{entry.IP}" >
-						<h:outputText value="#{entry.IP}" />
+					<p:column headerText="IP" sortBy="#{aggrReqData.IP}" >
+						<h:outputText value="#{aggrReqData.IP}" />
 					</p:column>
 
-					<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}"  >
-						<h:outputText value="#{entry.requests}" />
+					<p:column headerText="#{msg.requests_count}" sortBy="#{aggrReqData.requests}"  >
+						<h:outputText value="#{aggrReqData.requests}" />
 					</p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}">
-						<h:outputText value="#{entry.loginCount}" />
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{aggrReqData.loginCount}">
+						<h:outputText value="#{aggrReqData.loginCount}" />
 					</p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}">
-						<h:outputText value="#{entry.usernames}" />
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{aggrReqData.usernames}">
+						<h:outputText value="#{aggrReqData.usernames}" />
 					</p:column>
 
-					<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}">
-						<h:outputText value="#{entry.time}">
+					<p:column headerText="#{msg.time_stamp}" sortBy="#{aggrReqData.time}">
+						<h:outputText value="#{aggrReqData.time}">
 						    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 						</h:outputText>
 					</p:column>
@@ -96,10 +96,10 @@
 							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.ban}" />
 						</p:commandLink>
 
-						<p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(entry.IP)}" process="@this"
-							update=":suspiciouslistform :growl"
-							style="text-decoration:none;" title="#{msg.remove}">
-							<p:confirm message="#{msg.remove} #{entry.IP}?" />
+						<p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}" process="@this"
+									   update=":suspiciouslistform :growl"
+									   style="text-decoration:none;" title="#{msg.remove}">
+							<p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
 							<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.remove}" />
 						</p:commandLink>
 					</p:column>
@@ -142,37 +142,37 @@
 
 		<p:panel header="#{msg.banlist}">
 		<h:form id="banlistform" >
-			<p:dataTable var="entry" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+			<p:dataTable var="accessData" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
-					<h:outputText value="#{entry.name}" />
+				<p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
+					<h:outputText value="#{accessData.name}" />
 				</p:column>
 
-				<p:column headerText="#{msg.bandate}" sortBy="#{entry.banDate}">
-					<h:outputText value="#{entry.banDate}">
+				<p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
+					<h:outputText value="#{accessData.banDate}">
 					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{msg.bannedon}" sortBy="#{entry.bannedOn}">
-					<h:outputText value="#{entry.bannedOn}">
+				<p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
+					<h:outputText value="#{accessData.bannedOn}">
 					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{msg.attempts}" sortBy="#{entry.attempts}">
-					<h:outputText value="#{entry.attempts}"/>
+				<p:column headerText="#{msg.attempts}" sortBy="#{accessData.attempts}">
+					<h:outputText value="#{accessData.attempts}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.options}">
 					<f:facet name="header">
 						#{msg.options}
 					</f:facet>
-					<p:commandLink actionListener="#{adminBanlistBean.onUnban(entry.name)}" process="@this"
-						update=":banlistform :growl"
-						style="text-decoration:none;" title="#{msg.unban}">
-						<p:confirm message="#{msg.unban} #{entry.name}?" />
+					<p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
+								   update=":banlistform :growl"
+								   style="text-decoration:none;" title="#{msg.unban}">
+						<p:confirm message="#{msg.unban} #{accessData.name}?" />
 						<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.unban}" />
 					</p:commandLink>
 				</p:column>

@@ -27,6 +27,7 @@ import de.l3s.util.StringHelper;
 
 public class LoroManager
 {
+    // TODO: this settings should be moved to configuration
     public static final String DB_CONNECTION = "jdbc:mysql://prometheus.kbs.uni-hannover.de:3306/learnweb_crawler?characterEncoding=utf8";
     public static final String DB_USER = "learnweb_crawler";
     public static final String DB_PASSWORD = "***REMOVED***";

@@ -82,8 +82,8 @@
 									required="#{field.required}"
 									filter="#{field.optionsList.size() gt 8}"
 									filterMatchMode="startsWith" panelStyle="width:250px">
-									<f:selectItems value="#{field.answers}" var="option"
-										itemLabel="#{option.label}" itemValue="#{option.value}" />
+									<f:selectItems value="#{field.optionsList}" var="selectItemOption"
+										itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}" />
 								</p:selectCheckboxMenu>
 							</c:if>
 							<c:if test="#{field.type eq 'ONE_RADIO'}">

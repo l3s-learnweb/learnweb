@@ -55,14 +55,14 @@ function prepareTreeData() {
 	return tdata;
 }
 
-function getMiddleCats(childid, childname) {
+function getMiddleCats(childId, childName) {
 	var children2 = [];
-	//iterate uniqueSubs and filter those whose top category matches childname
+	//iterate uniqueSubs and filter those whose top category matches childName
 	for (var i = 0; i < uniqueSubs.length; i++) {
 		
-		if (uniqueSubs[i].catTopId == childid){
+		if (uniqueSubs[i].catTopId == childId){
 			var child2 = {};
-			child2.parent = childname;
+			child2.parent = childName;
 			child2.name = uniqueSubs[i].catName;
 			// children3 - categories
 			var children3 = getBottomCats(uniqueSubs[i].id, child2.name);
@@ -76,15 +76,15 @@ function getMiddleCats(childid, childname) {
 	return children2;
 }
 
-function getBottomCats(subid, subtoxname) {
+function getBottomCats(subId, subToxName) {
 	var children3 = [];
-	//iterate through uniqueCats and filter those whose middle cat is same as subtoxname
+	//iterate through uniqueCats and filter those whose middle cat is same as subToxName
 	for (var i = 0; i < uniqueCats.length; i++) {
 		
-		if (uniqueCats[i].catMidId == subid){
+		if (uniqueCats[i].catMidId == subId){
 			var child3 = {};
 			child3.name = uniqueCats[i].catName;
-			child3.parent = subtoxname;
+			child3.parent = subToxName;
 			children3.push(child3);
 		}
 	}

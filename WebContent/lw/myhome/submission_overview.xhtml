@@ -42,7 +42,7 @@
 		
 		function toggleSurveySelectField(show, surveySelectType)
 		{
-			var selectFieldIdPrefix = surveySelectType == "edit" ? "#edit_dialog_survey" : "#create_dialog_survey";
+			var selectFieldIdPrefix = surveySelectType === "edit" ? "#edit_dialog_survey" : "#create_dialog_survey";
 		    if(show)
 		    {
 		    	$(selectFieldIdPrefix + '_text').show();
@@ -59,7 +59,7 @@
 		function handleDialogSubmit(xhr, status, args, dialogWidgetVar) {
 	        if (args.validationFailed) {
 	        	PF(dialogWidgetVar).show();
-	        	var surveySelectType = dialogWidgetVar == 'create_submission_dialog' ? 'create' : 'edit';
+	        	var surveySelectType = dialogWidgetVar === 'create_submission_dialog' ? 'create' : 'edit';
 	        	toggleSurveySelectField(surveyCheckBox.input.is(':checked'), surveySelectType);
 	        } else {
 	        	PF(dialogWidgetVar).hide();
@@ -70,7 +70,7 @@
 		function courseChange(data)
 		{
 			var status = data.status;
-			if(status == "success")
+			if(status === "success")
 			{
 				toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
 				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');

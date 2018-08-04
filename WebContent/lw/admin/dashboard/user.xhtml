@@ -248,7 +248,7 @@
                                                 <p:tooltip for="eventsNumber" value="Events like mouse movements, clicks, etc." />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.totalEvents}"/>
+                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.totalEvents}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -261,7 +261,7 @@
                                                 <p:tooltip for="timeStay" value="Total time when web pages were opened by the user" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.timeStayFormatted}"/>
+                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.timeStayFormatted}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -274,7 +274,7 @@
                                                 <p:tooltip for="timeActive" value="Active time on web pages" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.timeActiveFormatted}"/>
+                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.timeActiveFormatted}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -287,7 +287,7 @@
                                                 <p:tooltip for="clicks" value="Mouse clicks" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.clicks}"/>
+                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.clicks}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -300,7 +300,7 @@
                                                 <p:tooltip for="keyPresses" value="Total number of key presses on the keyboard" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.keyPresses}"/>
+                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.keyPresses}"/>
                                             </div>
                                         </p:panel>
                                     </div>

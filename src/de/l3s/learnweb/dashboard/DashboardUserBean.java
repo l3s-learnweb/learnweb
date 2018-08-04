@@ -213,7 +213,12 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         return glossaryDescriptions;
     }
 
-    public DashboardManager.TrackerStatistic getTrackerStatistic()
+    public LinkedList<DashboardManager.TrackerStatistic> getTrackerStatistics()
+    {
+        return trackerStatistics;
+    }
+
+    public DashboardManager.TrackerStatistic getSingleTrackerStatistics()
     {
         if(trackerStatistics.isEmpty())
         {
