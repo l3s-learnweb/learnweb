@@ -492,6 +492,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         String type = event.getTreeNode().getType();
 
+        // TODO Dupe
         if(type.equals("group"))
         {
             Group group = (Group) event.getTreeNode().getData();

@@ -494,6 +494,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         String type = event.getTreeNode().getType();
 
+        // TODO Oleh
+        // TODO Dupe: duplicate exists in my SearchBean.onNodeSelect
         if(type.equals("group"))
         {
             Group group = (Group) event.getTreeNode().getData();
@@ -1195,6 +1197,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 }
             }
 
+            // TODO Oleh
+            // TODO Dupe: duplicate exists in my MyResourceBean.actionCopyGroupItems
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
@@ -1454,6 +1458,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
+            // TODO Oleh
+            // TODO Dupe: duplicate exists in my MyResourceBean.addTagToGroupItems
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);

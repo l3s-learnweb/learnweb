@@ -287,6 +287,7 @@ public class LoroManager
                         {
                             if((!rs.getString("preview_img_url").endsWith(".jpg") || !rs.getString("preview_img_url").endsWith(".png")) && !rs.getString("doc_format").contains("image"))
                             {
+                                // TODO Dupe: same code found in the class
                                 try
                                 {
                                     rpm.processWebsite(loroResource); //For websites where preview image is not available
@@ -320,6 +321,7 @@ public class LoroManager
                                 {
                                     if(isLoroResourceDeleted(loroResource, rs.getString("doc_url")))
                                     {
+                                        // TODO Dupe: same code found in the class
                                         resourceManager.deleteResourcePermanent(loroResource.getId());
                                         PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `LORO_resource_docs` WHERE `resource_id` = ? and filename = ?");
                                         delete.setInt(1, loroResource.getId());
@@ -337,7 +339,7 @@ public class LoroManager
                         }
                         else
                         {
-
+                            // TODO Dupe: same code found in the class
                             try
                             {
                                 rpm.processWebsite(loroResource); //For websites where preview image is not available

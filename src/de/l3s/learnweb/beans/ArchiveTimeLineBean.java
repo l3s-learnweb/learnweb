@@ -37,6 +37,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
         PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
+        // TODO Dupe: the same code occurred 4 times in the class
         while(rs.next())
         {
             JSONArray innerArray = new JSONArray();

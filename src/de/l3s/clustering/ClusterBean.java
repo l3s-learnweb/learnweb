@@ -226,6 +226,7 @@ public class ClusterBean extends ApplicationBean implements Serializable
     {
         try
         {
+            // TODO Dupe: same code found in UserAssessmentBean.getNameUser(), probably this method should be moved to userManager
             String userName = (String) Sql.getSingleResult("SELECT username FROM lw_user WHERE user_id=" + cod);
             return userName;
         }

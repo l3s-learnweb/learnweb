@@ -284,6 +284,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         {
             int numResources = 0, numSkipped = 0;
 
+            // TODO Dupe: same as in GroupDetailBean
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
@@ -374,6 +375,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 return;
             }
 
+            // TODO Dupe: same as in GroupDetailBean
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
@@ -598,6 +600,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         String type = event.getTreeNode().getType();
 
+        // TODO Dupe: same as GroupDetailBean and SearchBean
         if(type.equals("group"))
         {
             Group group = (Group) event.getTreeNode().getData();

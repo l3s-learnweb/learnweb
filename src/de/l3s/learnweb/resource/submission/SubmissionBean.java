@@ -159,6 +159,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
+        // TODO Dupe: same as SubmissionModeratorBean.actionSelectGroupItem
         try
         {
             String itemType = params.get("itemType");

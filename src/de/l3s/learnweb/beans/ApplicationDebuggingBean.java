@@ -68,14 +68,13 @@ public class ApplicationDebuggingBean implements Serializable
 
     /**
      * get a message from the message property files depending on the currently used local
-     *
+     * // TODO Dupe: the same code exists in UtilBean.getLocaleMessage method
      * @param msgKey
      * @param args
      * @return
      */
     protected String getLocaleMessage(String msgKey, Object... args)
     {
-
         ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", Locale.US);
 
         String msg;

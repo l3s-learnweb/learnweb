@@ -550,6 +550,7 @@ public class ArchiveUrlManager
         {
             try
             {
+                // TODO Dupe: same code exists in ResourceManager.saveArchiveUrlsByResourceId method
                 PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
                 prepStmt.setInt(1, resourceId);
                 prepStmt.setString(2, version.getArchiveUrl());

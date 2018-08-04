@@ -212,6 +212,11 @@ public class AdvancedSearchBean implements Serializable
         this.result = result;
     }
 
+    /**
+     * TODO Dupe: same method exists in SolrSearch class
+     * @param query
+     * @return
+     */
     private String removeMyGroupQuery(String query)
     {
         String newsQuery = "";

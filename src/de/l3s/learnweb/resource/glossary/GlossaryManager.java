@@ -299,7 +299,8 @@ public class GlossaryManager
 
                     }
                 }
-                //TODO:: Combine both?
+
+                //TODO Dupe: Combine both?
                 for(LanguageItem u : e.getSecondLanguageItems())
                 {
                     PreparedStatement preparedStmt = null;

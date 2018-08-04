@@ -628,6 +628,7 @@ public class SearchFilters implements Serializable
                     for(DATE d : DATE.values())
                     {
                         Long counter = null;
+                        // TODO Dupe: duplicate code in same class
                         if(availableResources.containsKey(fs))
                         {
                             for(Count c : availableResources.get(fs))
