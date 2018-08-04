@@ -99,10 +99,10 @@
 				<h:form rendered="#{not empty myResourcesBean.breadcrumb}">
 					<ul>
 						<li>
-							<a href="myhome/resources.jsf">#{msg.myResourcesTitle}</a>
+							<h:link value="#{msg.myResourcesTitle}" outcome="/lw/myhome/resources.jsf" />
 						</li>
 
-						<ui:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
+						<p:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
 							<li>
 								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :resourcesView :right_pane_wrapper" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
 									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
@@ -111,7 +111,7 @@
 								
 								<h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
 							</li>
-						</ui:repeat>
+						</p:repeat>
 					</ul>
 				</h:form>
 			</h:panelGroup>

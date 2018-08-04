@@ -24,7 +24,7 @@
             <ui:repeat value="#{userBean.groupMenu}" var="group">
                 <div class="panelmenu">
                     <h3 class="group_link">
-                        <a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+                        <h:link value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
                     </h3>
                 </div>
             </ui:repeat>
@@ -37,7 +37,7 @@
                 <h:panelGroup rendered="#{groupDetailBean.groupId != group.id}">
                     <div class="panelmenu">
                         <h3 class="group_link">
-                            <a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+                            <h:link value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
                         </h3>
                     </div>
                 </h:panelGroup>

@@ -61,7 +61,7 @@
         </h:panelGroup>
 
         <h:panelGroup layout="block" id="legal_footer" rendered="#{false and not userBean.loggedIn}">
-            <a href="imprint.jsf">#{msg['imprint.title']}</a>
+            <h:link value="#{msg['imprint.title']}" outcome="/lw/imprint.jsf"/>
         </h:panelGroup>
 
         <h:form styleClass="display-none">

@@ -32,10 +32,7 @@
 					#{msg.selected_comments}: 
 					<h:outputText value="#{adminTextAnalysisBean.commentCount}" />
 					<hr/>
-					<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" 
-						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-						#{msg.comments_analyse}
-					</a>
+					<h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank" style="padding:5px 10px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
 					<hr/>
 						
 					<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
