@@ -297,17 +297,17 @@
         var _checkConfigParams = function() {
             if (_config.document) {
                 if (!_config.document.url || ((typeof _config.document.fileType !== 'string' || _config.document.fileType=='') &&
-                                              (typeof _config.documentType !== 'string' || _config.documentType==''))) {
+                    (typeof _config.documentType !== 'string' || _config.documentType==''))) {
                     window.alert("One or more required parameter for the config object is not set");
                     return false;
                 }
 
                 var appMap = {
-                        'text': 'docx',
-                        'text-pdf': 'pdf',
-                        'spreadsheet': 'xlsx',
-                        'presentation': 'pptx'
-                    }, app;
+                    'text': 'docx',
+                    'text-pdf': 'pdf',
+                    'spreadsheet': 'xlsx',
+                    'presentation': 'pptx'
+                }, app;
 
                 if (typeof _config.documentType === 'string' && _config.documentType != '') {
                     app = appMap[_config.documentType.toLowerCase()];
@@ -321,7 +321,7 @@
 
                 if (typeof _config.document.fileType === 'string' && _config.document.fileType != '') {
                     var type = /^(?:(xls|xlsx|ods|csv|xlst|xlsy|gsheet|xlsm|xlt|xltm|xltx|fods|ots)|(pps|ppsx|ppt|pptx|odp|pptt|ppty|gslides|pot|potm|potx|ppsm|pptm|fodp|otp)|(doc|docx|doct|odt|gdoc|txt|rtf|pdf|mht|htm|html|epub|djvu|xps|docm|dot|dotm|dotx|fodt|ott))$/
-                                    .exec(_config.document.fileType);
+                        .exec(_config.document.fileType);
                     if (!type) {
                         window.alert("The \"document.fileType\" parameter for the config object is invalid. Please correct it.");
                         return false;
@@ -349,7 +349,7 @@
 
                 _config.document.token = _config.token;
             }
-            
+
             return true;
         };
 
@@ -654,7 +654,7 @@
         } else
         if (!!config.document && typeof config.document.fileType === 'string') {
             var type = /^(?:(xls|xlsx|ods|csv|xlst|xlsy|gsheet|xlsm|xlt|xltm|xltx)|(pps|ppsx|ppt|pptx|odp|pptt|ppty|gslides|pot|potm|potx|ppsm|pptm))$/
-                            .exec(config.document.fileType);
+                .exec(config.document.fileType);
             if (type) {
                 if (typeof type[1] === 'string') app = appMap['spreadsheet']; else
                 if (typeof type[2] === 'string') app = appMap['presentation'];
@@ -690,7 +690,7 @@
 
         if (config.frameEditorId)
             params += "&frameEditorId=" + config.frameEditorId;
-        
+
         return params;
     }
 
@@ -724,7 +724,7 @@
                     dest[prop] = src[prop];
                 } else
                 if (typeof dest[prop] === 'object' &&
-                        typeof src[prop] === 'object') {
+                    typeof src[prop] === 'object') {
                     extend(dest[prop], src[prop])
                 }
             }
@@ -733,4 +733,3 @@
     }
 
 })(window.DocsAPI = window.DocsAPI || {}, window, document);
-
