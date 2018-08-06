@@ -9,20 +9,20 @@
 
     <div id="userselect">
 
-        <div class="klapper_zu">&nbsp;&#160;</div>
+        <div class="klapper_zu">&#160;</div>
         <input type="checkbox" name="ignore" value="1" class="checker"/>
         <h:outputText value=" #{msg.courses}:" style="font-weight:bold;"/>
         <ul>
             <p:repeat var="course" value="#{userBean.user.courses}">
                 <li>
-                    <div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
+                    <div class="klapper_zu klapper_auf">&#160;</div>
                     <input type="checkbox" name="ignore" value="1" class="checker"/>
                     <h:outputText value=" #{course.title}" style="font-weight:bold;"/>
 
                     <ul class="display-none">
                         <p:repeat var="group" value="#{course.groups}">
                             <li>
-                                <div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
+                                <div class="klapper_zu klapper_auf">&#160;</div>
                                 <input type="checkbox" name="ignore" value="1" class="checker"/>
                                 <h:outputText value=" #{group.title} (#{msg.group})"/>
 
