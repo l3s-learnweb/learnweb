@@ -1,43 +1,37 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition> 
-		<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
-		<h:outputScript library="main-template" target="head" name="selectionTree.js" />
+    <h:outputScript library="primefaces" target="head" name="jquery/jquery.js"/>
+    <h:outputScript library="main-template" target="head" name="selectionTree.js"/>
 
-		<div id="userselect">
-			
-				<div class="klapper_zu">&#160;</div>
-				<input type="checkbox" name="ignore" value="1" class="checker" />
-				<h:outputText value="#{msg.courses}:" style="font-weight:bold;"/>			
-				<ul>			
-					<ui:repeat var="course" value="#{userBean.user.courses}">
-						<li>
-							<div class="klapper_zu klapper_auf">&#160;</div>
-							<input type="checkbox" name="ignore" value="1" class="checker" />
-							<h:outputText value="#{course.title}" style="font-weight:bold;"/>
-								
-							<ul class="display-none">
-								<ui:repeat var="group" value="#{course.groups}">
-								<li>
-									<input name="selected_groups" id="us_form:us_checkbox:#{course.id}:#{group.id}" value="#{group.id}" 
-										type="checkbox" />
-									<label for="us_form:us_checkbox:#{course.id}:#{group.id}" class="">
-										#{group.title}
-									</label>													
-								</li>					
-					
-								</ui:repeat>
-							</ul>
-						</li>
-					</ui:repeat>
-				</ul>
-			
-		</div>
+    <div id="userselect">
+        <div class="klapper_zu">&#160;</div>
+        <input type="checkbox" name="ignore" value="1" class="checker"/>
+        <h:outputText value=" #{msg.courses}:" style="font-weight:bold;"/>
 
-	</ui:composition>
-</html>
+        <ul>
+            <ui:repeat var="course" value="#{userBean.user.courses}">
+                <li>
+                    <div class="klapper_zu klapper_auf">&#160;</div>
+                    <input type="checkbox" name="ignore" value="1" class="checker"/>
+                    <h:outputText value=" #{course.title}" style="font-weight:bold;"/>
+
+                    <ul class="display-none">
+                        <ui:repeat var="group" value="#{course.groups}">
+                            <li>
+                                <input name="selected_groups" id="us_form:us_checkbox:#{course.id}:#{group.id}" value="#{group.id}" type="checkbox"/>
+                                <label for="us_form:us_checkbox:#{course.id}:#{group.id}" class="">
+                                    #{group.title}
+                                </label>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </li>
+            </ui:repeat>
+        </ul>
+    </div>
+
+</ui:composition>

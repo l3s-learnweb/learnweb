@@ -8,10 +8,10 @@
     <h:outputScript library="main-template" target="head" name="selectionTree.js"/>
 
     <div id="userselect">
-
         <div class="klapper_zu">&#160;</div>
         <input type="checkbox" name="ignore" value="1" class="checker"/>
         <h:outputText value=" #{msg.courses}:" style="font-weight:bold;"/>
+
         <ul>
             <p:repeat var="course" value="#{userBean.user.courses}">
                 <li>
