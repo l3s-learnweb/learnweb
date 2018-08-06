@@ -709,13 +709,13 @@
 .ui-icon-mygrid {
     border-radius:0px;
     -webkit-border-radius:0px;
-    background-image: url(#{resource['resources:resources-view-icons/grid.png']}) !important;
+    background-image: url("#{resource['resources/resources-view-icons/grid.png']}") !important;
 }
 
 .ui-icon-mylist {
     border-radius:0px;
     -webkit-border-radius:0px;
-    background-image: url(#{resource['resources:resources-view-icons/list.png']}) !important;
+    background-image: url("#{resource['resources/resources-view-icons/list.png']}") !important;
 }
 
 a.more_resources_link {
