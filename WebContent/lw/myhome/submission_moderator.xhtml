@@ -19,10 +19,10 @@
 
 	<ui:define name="center_layout">
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand"
-				actionListener="#{submissionBean.actionSelectGroupItem}"
-				update=":right_pane_wrapper :growl"
-				oncomplete="update_header();load_editor(); " />
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
+			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();load_editor(); " />
 		</h:form>
 
 		<h:outputStylesheet library="resource-submission" name="submit.css" />

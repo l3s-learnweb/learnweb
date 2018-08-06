@@ -16,6 +16,12 @@
 	<ui:param name="helpText" value="#{msg.groupOverviewHelp}" />
 
 	<ui:define name="center_layout">
+
+		<h:form>
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+		</h:form>
+
 		<ui:fragment rendered="#{groupOverviewBean.group ne null}">
 			<ui:decorate template="/templates/group/menu.xhtml">
 				<ui:param name="group" value="#{groupOverviewBean.group}" />
@@ -35,10 +41,10 @@
 			</ui:decorate>
 
 			<script type="text/javascript">
-			/* <!-- */
-			$("#center_pane").prepend($("#group_header"));
-			/* --> */
-		</script>
+				/* <!-- */
+				$("#center_pane").prepend($("#group_header"));
+				/* --> */
+			</script>
 
 			<ui:fragment rendered="${not groupOverviewBean.group.canViewResources(userBean.user)}">
 				<h3 class="error">

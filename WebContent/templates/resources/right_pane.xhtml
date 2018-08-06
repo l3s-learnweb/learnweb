@@ -41,8 +41,8 @@
                         * #{msg.mandatory_field}
 
                         <p:commandButton id="create_file_button" widgetVar="create-button" value="#{msg.create}" styleClass="greenbutton float-right"
-                                         update=":growl :right_pane_wrapper :resourcesView" actionListener="#{addResourceBean.createFile}" ajax="true"
-                                         onstart="PF('create-button').disable()" oncomplete="update_header();resourceDND(); load_lightbox_editor();load_editor();">
+                                         update=":growl :right_pane_wrapper" actionListener="#{addResourceBean.createFile}" ajax="true"
+                                         onstart="PF('create-button').disable()" oncomplete="update_header();resourceAddedHook();load_lightbox_editor();load_editor();">
                             <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
                             <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
                         </p:commandButton>
@@ -219,29 +219,22 @@
                         </div>
                     </p:blockUI>
 
-                    <p:commandButton id="create_glossary_button" value="Create Glossary"
-                                     styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :resourcesView"
-                                     action="#{addResourceBean.addGlossary}" ajax="true"
-                                     oncomplete="update_header();resourceDND();"
+                    <p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" ajax="true"
+                                     action="#{addResourceBean.addGlossary}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                         <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
-                    <p:commandButton id="create_survey_button" value="Create survey"
-                                     styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :resourcesView"
-                                     action="#{addResourceBean.addSurvey}" ajax="true"
-                                     oncomplete="update_header();resourceDND();"
+
+                    <p:commandButton id="create_survey_button" value="Create survey" styleClass="greenbutton float-right" ajax="true"
+                                     action="#{addResourceBean.addSurvey}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'survey'}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                         <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
 
-                    <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true"
-                                     actionListener="#{addResourceBean.cancelUpload}" ajax="true"
-                                     update=":right_pane_wrapper"
-                                     oncomplete="update_header(); PF('block-step1').hide(); PF('next-button').enable();"
+                    <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" ajax="true"
+                                     actionListener="#{addResourceBean.cancelUpload}" update=":right_pane_wrapper" oncomplete="update_header();PF('block-step1').hide();PF('next-button').enable();"
                                      style="margin-right:0.5em;" rendered="#{addResourceBean.formStep == 1}">
                         <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
                     </p:commandButton>
@@ -264,18 +257,15 @@
                         </table>
                     </p:fieldset>
 
-                    <p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right"
-                                     update=":growl :right_pane_wrapper :resourcesView"
-                                     action="#{addResourceBean.addResource}" ajax="true"
-                                     oncomplete="update_header();resourceDND(); load_editor();"
+                    <p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" ajax="true"
+                                     action="#{addResourceBean.addResource}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();load_editor();"
                                      rendered="#{addResourceBean.formStep > 1}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                         <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
 
-                    <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true"
-                                     actionListener="#{addResourceBean.clearForm()}" ajax="true"
-                                     update=":right_pane_wrapper" oncomplete="update_header()"
+                    <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" ajax="true"
+                                     actionListener="#{addResourceBean.clearForm()}" update=":right_pane_wrapper" oncomplete="update_header()"
                                      style="margin-right:0.5em;">
                         <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
                     </p:commandButton>
@@ -511,8 +501,7 @@
 								<br/>
                                 <br/>
                                 <p:commandButton value="Save" actionListener="#{resourceDetailBean.addNewMetadata}"
-                                                 update=":right_pane_wrapper :growl :resourcesView"
-                                                 onsuccess="adlg.hide();"/> 
+                                                 update=":right_pane_wrapper :growl" onsuccess="adlg.hide();resourceUpdatedHook();"/>
                                 <p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
                             </h:form>
                         </p:dialog>
@@ -570,9 +559,8 @@
                     <tr>
                         <td colspan="2">
                             <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
-                                             actionListener="#{rightPaneBean.editClickedResource}"
-                                             update=":resourcesView :right_pane_wrapper"
-                                             oncomplete="update_header();resourceDND();" style="margin-right:0;">
+                                             actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane_wrapper"
+                                             oncomplete="update_header();resourceUpdatedHook();" style="margin-right:0;">
                                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}"
                                                              value="viewResource"/>
                             </p:commandButton>

@@ -32,12 +32,15 @@
     <ui:define name="center_layout">
 
         <h:form>
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();" />
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();" />
+
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupDetailBean.actionSelectGroupItem}"
-                             update=":right_pane_wrapper :growl" oncomplete="update_header();resourceDND();"/>
+                             update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupDetailBean.actionEditGroupItem}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
             <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}"
-                             update=":right_pane_wrapper :growl :resourcesView" oncomplete="update_header();"/>
+                             update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
             <p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}"
                              update=":group_menu_tree :breadcrumbs :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl" oncomplete="update_header();resourceDND();scroller();"/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}"

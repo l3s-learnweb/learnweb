@@ -12,6 +12,12 @@
     <ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
 
     <ui:define name="center_layout">
+
+        <h:form>
+            <p:remoteCommand name="resourceAddedHook" update=":datagrid" />
+            <p:remoteCommand name="resourceUpdatedHook" update=":datagrid" />
+        </h:form>
+
         <div class="center-header" id="group_header">
             <h2>
                 #{msg.activity_stream}
@@ -27,7 +33,6 @@
             /* --> */
         </script>
 
-		<h:panelGroup id="resourcesView" layout="block">
         <h:dataTable var="datagrid" value="#{activityResourceBean.newsList}" id="datagrid" style="width:100%" styleClass="not-selectable">
             <h:column>
                 <div class="newsfeed_user_image_div">
@@ -83,7 +88,6 @@
             </h:column>
 
         </h:dataTable>
-    	</h:panelGroup>
     </ui:define>
 
     <ui:define name="right_layout">

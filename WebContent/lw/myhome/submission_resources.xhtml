@@ -19,6 +19,11 @@
 	<ui:param name="loginRequired" value="true" />
 
 	<ui:define name="center_layout">
+
+		<h:form>
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
+			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+		</h:form>
 	
 		<script>
 			var max_resources = #{submissionBean.selectedSubmission.noOfResources};

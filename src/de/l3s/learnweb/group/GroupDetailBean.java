@@ -664,6 +664,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
         SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
+        searchFilters.cleanAll();
         searchFilters.putResourceCounter(sp.getFacetFields());
         searchFilters.putResourceCounter(sp.getFacetQueries());
         return sp;
