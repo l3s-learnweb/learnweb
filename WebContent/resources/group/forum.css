@@ -165,7 +165,7 @@
 	font-weight: bold;
 }
 .new-topic-title {
-	background:url('#{resource["main-template:img/message.png"]}') left no-repeat;
+	background:url('#{resource["main-template/img/message.png"]}') left no-repeat;
 	background-size: 18px 18px;
 	padding-left:26px; 
 }

@@ -63,6 +63,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         newPost.setTopicId(topicId);
 
         fm.save(newPost);
+        posts.add(newPost);
 
         newPost = new ForumPost();
         log(Action.forum_reply_message, group.getId(), topicId, topic.getTitle());
@@ -136,7 +137,6 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
     public void deletePost(ForumPost post) throws SQLException
     {
-
         User user = getUser();
         if(user.isModerator() || user.getId() == post.getUserId())
         {
@@ -144,6 +144,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
             ForumManager fm = getLearnweb().getForumManager();
             fm.deletePost(post);
         }
+
+        posts.remove(post);
     }
 
     public void quotePost(ForumPost post) throws SQLException

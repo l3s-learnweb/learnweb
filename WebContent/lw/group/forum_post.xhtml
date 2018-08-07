@@ -28,20 +28,15 @@
 			
 				<h:form id="center_header_form">
 					<ui:fragment rendered="#{forumPostBean.member}">
-						<a
-							href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
-							class="resource_button greenbutton"
-							onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
-							#{msg['ForumIndex.post_reply']} </a>
+						<a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
+						   class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
+							#{msg['ForumIndex.post_reply']}
+						</a>
 					</ui:fragment>
 
-					<p:commandLink rendered="#{not forumPostBean.member}"
-						action="#{groupsBean.joinGroup}"
-						styleClass="resource_button greenbutton"
-						update=":growl :group_menu @form" partialSubmit="true"
-						process="@this" value="#{msg.join_group}">
-						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
-							value="#{forumPostBean.group}" />
+					<p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"
+								   update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumPostBean.group}" />
 					</p:commandLink>
 				</h:form>
 			</ui:define>
@@ -54,32 +49,25 @@
 		</script>
 
 		<h:form prependId="false">
-			<p:dataTable var="post" value="#{forumPostBean.posts}" rows="10"
-				paginator="true" lazy="false" paginatorPosition="bottom"
-				id="forum_post_table"
-				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+			<p:dataTable var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" lazy="false" paginatorPosition="bottom"
+						 id="forum_post_table" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-				<p:ajax event="page"
-					onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
+				<p:ajax event="page" onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
 
 				<p:column headerText="#{msg.author}" styleClass="align-center">
 					<h:link value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
 
 					<br style="margin-bottom: 0.5rem;" />
 
-					<img height="100" width="100"
-						src="${learnwebBean.getProfileImage(post.user)}" id="profile_image"
-						alt="profile image" />
+					<img height="100" width="100" src="${learnwebBean.getProfileImage(post.user)}" id="profile_image" alt="profile image" />
 
 					<div class="align-left">
 						<h:outputText value="#{msg.registered_since}: " />
 						<h:outputText value="#{post.user.registrationDate}">
-							<f:convertDateTime dateStyle="default" type="date"
-								timeZone="#{userBean.timeZone}" />
+							<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 						</h:outputText>
 						<br />
-						<h:outputText
-							value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
+						<h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
 					</div>
 				</p:column>
 
@@ -89,8 +77,7 @@
 						<div class="float-right">
 							#{msg['ForumIndex.postedOn']}
 							<h:outputText value="#{post.date}">
-								<f:convertDateTime type="both" timeStyle="short"
-									dateStyle="long" timeZone="#{userBean.timeZone}" />
+								<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 						</div>
 						<ui:fragment rendered="#{not empty post.category}">
@@ -113,66 +100,58 @@
 								</div>
 							</ui:fragment>
 
-							<h:commandLink value="#{msg.delete}"
-								rendered="#{forumPostBean.canDeletePost(post)}"
-								actionListener="#{forumPostBean.deletePost(post)}"
-								styleClass="greenbutton float-right" />
-							<h:outputLink value="group/forum_post_edit.jsf"
-								rendered="#{forumPostBean.canEditPost(post)}"
-								styleClass="greenbutton float-right">
+							<p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" ajax="true"
+										   actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right" update=":forum_post_table" />
+							<h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
 								<f:param name="post_id" value="#{post.id}" />
 						    	#{msg.edit}
 					    	</h:outputLink>
-							<p:commandLink value="#{msg['ForumIndex.quote']}"
-								actionListener="#{forumPostBean.quotePost(post)}"
-								oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');"
-								update=":post_form:post_message" ajax="true"
-								styleClass="greenbutton float-right" />
+							<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}"
+										   oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message"
+										   ajax="true" styleClass="greenbutton float-right" />
 						</div>
 					</div>
 				</p:column>
-
 			</p:dataTable>
 		</h:form>
 
 		<ui:fragment rendered="#{forumPostBean.member}">
 			<div class="page_header" id="reply">
-				<span> #{msg['ForumIndex.reply']} </span>
+				<span>#{msg['ForumIndex.reply']}</span>
 			</div>
 
-			<div class="grey_border">
-				<h:form id="post_form">
-					<table id="answer_table">
-						<tr>
-							<td class="width_10"><h:outputText value="#{msg.category}: " />
-							</td>
-							<td><p:selectOneMenu id="post_category"
-									styleClass="category" value="#{forumPostBean.newPost.category}"
-									editable="true" label="#{msg.category}"
-									required="#{forumPostBean.group.restrictionForumCategoryRequired}">
-
-									<f:selectItems value="#{forumPostBean.categories}" />
-								</p:selectOneMenu></td>
-							<td class="width_30"><p:message for="post_category" /></td>
-						</tr>
-						<tr>
-							<td colspan="2"><p:editor id="post_message"
-									widgetVar="editorWidget" value="#{forumPostBean.newPost.text}"
-									label="#{msg['PostShow.postContent']}"
-									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
-								</p:editor></td>
-							<td class="width_30"><p:message for="post_message" /></td>
-						</tr>
-						<tr>
-							<td colspan="3"><p:commandButton ajax="true"
-									value="#{msg.save}" styleClass="greenbutton save_button"
-									action="#{forumPostBean.onSavePost}" validateClient="true"
-									update="@form :forum_post_table" /></td>
-						</tr>
-					</table>
-				</h:form>
-			</div>
+			<h:form id="post_form" styleClass="grey_border">
+				<table id="answer_table">
+					<tr>
+						<td class="width_10">
+							<h:outputText value="#{msg.category}: " />
+						</td>
+						<td><p:selectOneMenu id="post_category" styleClass="category" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
+											 value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
+								<f:selectItems value="#{forumPostBean.categories}" />
+							</p:selectOneMenu></td>
+						<td class="width_30">
+							<p:message for="post_category" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<p:editor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" label="#{msg['PostShow.postContent']}"
+									  controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+							</p:editor>
+						</td>
+						<td class="width_30">
+							<p:message for="post_message" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
+								action="#{forumPostBean.onSavePost}" validateClient="true" update="@form :forum_post_table" />
+						</td>
+					</tr>
+				</table>
+			</h:form>
 		</ui:fragment>
 	</ui:define>
-
 </ui:composition>

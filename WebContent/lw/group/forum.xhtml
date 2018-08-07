@@ -51,7 +51,7 @@
 		/* --> */
 		</script>			
 	
-		<h:form prependId="false" rendered="#{not facesContext.validationFailed}">
+		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 				emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
@@ -134,8 +134,8 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<p:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" 
-									action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form"  />
+								<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
+									action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :form_list_topics" />
 							</td>
 						</tr>
 					</table>
