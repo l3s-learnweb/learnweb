@@ -11,10 +11,10 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 	<ui:param name="disableGrowl" value="false" />
+	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
+	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 
 	<ui:define name="center_layout">
 
@@ -23,34 +23,25 @@
 			<ui:param name="active" value="options" />
 
 			<ui:define name="title">
-				<h2>
-					#{msg.options}
-				</h2>
-				#{msg.of} #{groupDetailBean.group.title}
-
+				<h2>#{msg.options}</h2> #{msg.of} #{groupDetailBean.group.title}
 			</ui:define>
 		</ui:decorate>
 
 		<script type="text/javascript">
-		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
 			function onClickCopyGroup()
 			{
 				var groupSize = #{groupDetailBean.group.resources.size()};
 				return confirm('Do you really want to copy '+ groupSize + ' resources?');
 			}
-		/* --> */
 		</script>
-
 
 		<ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">
 
-
 			<div class="page_header">
-				<span>
-					#{msg.edit_group}
-				</span>
+				<span>#{msg.edit_group}</span>
 			</div>
+
 			<h:form id="group_moderator_form">
 				<h:panelGrid columns="3" style="margin-left:1rem;">
 					<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
@@ -59,7 +50,7 @@
 
 					<h:outputLabel value="#{msg.description}:" for="edit_group_description"/>
 					<p:editor id="edit_group_description" value="#{groupDetailBean.editedGroupDescription}"
-								controls="bold italic underline bullets numbering undo redo link unlink" style="width:40rem;" height="150">
+							  controls="bold italic underline bullets numbering undo redo link unlink" style="width:40rem;" height="150">
 					</p:editor>
 					<h:outputText value="" />
 
@@ -78,49 +69,39 @@
 
 					<ui:fragment rendered="#{not empty groupDetailBean.newHypothesisLink}">
 		               	<h:outputLabel value="#{msg.hypothesis_token}:" for="set_hypothesis_token"/>
-	               	</ui:fragment>
-	               	<ui:fragment rendered="#{not empty groupDetailBean.newHypothesisLink}">
 						<p:inputText value="#{groupDetailBean.newHypothesisToken}" id="set_hypothesis_token" style="width:39rem;"/>
-	               	</ui:fragment>
-	               	<ui:fragment rendered="#{not empty groupDetailBean.newHypothesisLink}">
-		               	<ui:fragment rendered="#{empty groupDetailBean.newHypothesisToken}">
-			               	<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;">
-		                    <f:param name="type" value="admin"/>
-		                     [?]
-		                	</h:outputLink>
-		               	</ui:fragment>
+
+						<ui:fragment rendered="#{empty groupDetailBean.newHypothesisToken}">
+							<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;">
+								<f:param name="type" value="admin"/>
+								[?]
+							</h:outputLink>
+						</ui:fragment>
 						<ui:fragment rendered="#{not empty groupDetailBean.newHypothesisToken}">
-			               	<h:outputLink value="admin/group_discussion_activity.jsf" style="text-decoration:underline;">
-		                    	<f:param name="groupID" value="#{groupDetailBean.groupId}"/>
-		                     Discussion Activity
-		                	</h:outputLink>
-		               	</ui:fragment>
-
-
+							<h:outputLink value="admin/group_discussion_activity.jsf" style="text-decoration:underline;">
+								<f:param name="groupID" value="#{groupDetailBean.groupId}"/>
+								Discussion Activity
+							</h:outputLink>
+						</ui:fragment>
 	               	</ui:fragment>
 
-					<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}"
-						update=":growl :group_menu"	style="border-radius:0px;">
-					</p:commandButton>
-					<h:outputText value="" />
-					<h:outputText value="" />
+					<p:commandButton value="#{msg.save}" action="#{groupDetailBean.onGroupEdit}"
+                                     update=":growl :group_moderator_form" style="border-radius:0;" />
 				</h:panelGrid>
+			</h:form>
 
+			<style type="text/css">
+				#group_security h2 {
+					margin: 2rem 0 0 0;
+					font-size: 1.5rem;
+				}
+			</style>
 
-				<style type="text/css">
-					#group_security h2 {
-						margin: 2rem 0 0 0;
-						font-size: 1.5rem;
-					}
-				</style>
+			<div class="page_header" style="margin-top:0.5rem">
+				<span>#{msg.options}</span>
+			</div>
 
-
-				<div class="page_header" style="margin-top:0.5rem">
-					<span>
-						#{msg.options}
-					</span>
-				</div>
-
+			<h:form id="group_security_form">
 				<div id="group_security" style="padding-left:1.2rem; margin-top:-1rem">
 
 					<h2>#{msg['policy.title.join']}</h2>
@@ -168,8 +149,8 @@
 					</h:panelGrid>
 
 					<br/>
-					<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}"
-						update=":growl :group_menu"	style="border-radius:0px;">
+					<p:commandButton value="#{msg.save}" action="#{groupDetailBean.onGroupEdit}"
+                                     update=":growl :group_menu :group_security_form" style="border-radius:0;">
 					</p:commandButton>
 				</div>
 			</h:form>
@@ -185,11 +166,10 @@
 				<h:panelGrid columns="3">
 					<h:outputText value="#{msg.copy_all_resources}"/>
 					<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
-						<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}"
-							itemValue="#{group.id}"/>
+						<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 					</h:selectOneMenu>
 					<p:commandButton value="#{msg.copy}" action="#{groupDetailBean.copyGroup}" process="@form"
-						update=":growl" onstart="return onClickCopyGroup();"/>
+									 update=":growl" onstart="return onClickCopyGroup();"/>
 				</h:panelGrid>
 			</h:form>
 
