@@ -28,10 +28,10 @@
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBean.paginator}" rows="#{glossaryBean.paginator ? 12 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBean.filteredItems}" sortBy="#{item.date}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} ">
-
+<!-- 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
-						<p:ajax event="sort" oncomplete="groupRow()" />
+						<p:ajax event="sort" oncomplete="groupRow()" /> -->
 
 						<f:facet name="header">
 							<p:outputPanel>
@@ -45,8 +45,9 @@
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
 							<h:outputText value="#{item.glossId}"></h:outputText>
 						</p:column>
-						<p:column style=" width:20px;">
-							<p:commandLink action="#{glossaryBean.delete(item)}" process="@this">
+						<p:column style=" width:20px;" groupRow="true">
+							<p:outputLabel for="del" value="#{item.glossId}" style="display:none" ></p:outputLabel>
+							<p:commandLink id="del" action="#{glossaryBean.delete(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 							</p:commandLink>
 
@@ -57,19 +58,23 @@
 						</p:column>
 
 						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topic1}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.topic1}">
+							sortBy="#{item.topic1}" groupRow="true">
+							<p:outputLabel for="cell1" value="#{item.glossId}" style="display:none" ></p:outputLabel>
 							<h:outputText value="#{item.topic1}" pt:data-itemId="#{item.glossId}" id="cell1" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topic2}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.topic2}">
+							sortBy="#{item.topic2}" groupRow="true">
+							<p:outputLabel for="cell2" value="#{item.glossId}" style="display:none" ></p:outputLabel>
 							<h:outputText value="#{item.topic2}" pt:data-itemId="#{item.glossId}" id="cell2" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topic3}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.topic3}">
+							sortBy="#{item.topic3}" groupRow="true">
+							<p:outputLabel for="cell3" value="#{item.glossId}" style="display:none" ></p:outputLabel>
 							<h:outputText value="#{item.topic3}" pt:data-itemId="#{item.glossId}" id="cell3" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
-							filterStyle="width: 90%;">
+							filterStyle="width: 90%;" groupRow="true">
+							<p:outputLabel for="cell4" value="#{item.glossId}" style="display:none" ></p:outputLabel>
 							<h:outputText value="#{item.description}" pt:data-itemId="#{item.glossId}" id="cell4" />
 						</p:column>
 
@@ -109,8 +114,8 @@
 								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-align:center;" />
 								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 								</p:commandLink>
-								<p:commandLink id="show_all" actionListener="#{glossaryBean.togglePaginator()}" oncomplete="groupRow();" update=":my_gloss_table @this">
-       							 <h:outputText value="#{glossaryBean.toggleValue}" />
+								<p:commandLink id="show_all" actionListener="#{glossaryBean.togglePaginator()}" update=":my_gloss_table @this">
+       							 <h:outputText value="#{glossaryBean.toggleValue}" /> <!-- oncomplete="groupRow();"  -->
     							</p:commandLink>
 							</p:panelGrid>
 				
@@ -308,7 +313,7 @@
 				</div>
 			</h:panelGroup>
 		</ui:fragment>
-		<script type="text/javascript">
+		<!-- <script type="text/javascript">
 			//<![CDATA[
 			var groupRow = function() {
 				var colIndex = 2;
@@ -358,7 +363,7 @@
 				groupRow();
 			});
 			//]]>
-		</script>
+		</script> -->
 		<ui:fragment rendered="#{glossaryBean.resourceId le 0}">
 			<div class="noresource">
 				<br /> <br />
