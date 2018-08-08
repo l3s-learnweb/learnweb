@@ -66,7 +66,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         // learnweb types
         survey,
         glossary,
-        ;
+        glossary2;
 
         @Override
         public String toString()
@@ -83,7 +83,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         /**
          * Same as ResourceType.valueOf(), but case insensitive.
          */
-        public static ResourceType parse(String value) throws IllegalArgumentException {
+        public static ResourceType parse(String value) throws IllegalArgumentException
+        {
             return valueOf(value.toLowerCase());
         }
     }
