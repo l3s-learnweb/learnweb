@@ -8,9 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -38,7 +36,6 @@ import de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.learnweb.user.Course;
 import de.l3s.util.StringHelper;
 
 @Named
@@ -274,7 +271,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void addSurvey() throws IOException
     {
-
         try
         {
             resource.setDeleted(false);
@@ -304,7 +300,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 resource.save();
             }
 
-            getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
+            //getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
             log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
@@ -318,6 +314,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
+    /*  never used?
     public String[] getCourseList()
     {
         List<Course> courseByOrganization = getLearnweb().getCourseManager().getCoursesByOrganisationId(getUser().getOrganisationId());
@@ -329,6 +326,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
         return courseTitles.toArray(new String[0]);
     }
+    
+    */
 
     public Resource getResource()
     {

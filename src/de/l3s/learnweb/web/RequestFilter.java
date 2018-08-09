@@ -57,8 +57,7 @@ public class RequestFilter implements Filter
                 {
                     String path = req.getRequestURI().substring(req.getContextPath().length());
 
-                    log.debug("block request: " + path);
-                    // blocked request except for some special pages and folders
+                    // block requests except for some special pages and folders
                     if(!path.equals("/lw/error-blocked.jsf") && !path.startsWith("/javax.faces.resource/") && !path.startsWith("/resources/"))
                     {
                         HttpServletResponse httpResponse = (HttpServletResponse) response;

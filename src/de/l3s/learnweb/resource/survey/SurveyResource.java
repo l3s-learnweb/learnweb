@@ -19,7 +19,7 @@ public class SurveyResource extends Resource implements Serializable
     private int surveyId;
     private Date start = null;
     private Date end = null;
-    private boolean saveable; // if true users can save before their answers before finally submitting them
+    private boolean saveable; // if true users can save their answers before finally submitting them
 
     private Survey survey;
 
@@ -43,15 +43,15 @@ public class SurveyResource extends Resource implements Serializable
     /**
      * Copy constructor
      *
-     * @param old
+     * @param other
      */
-    public SurveyResource(SurveyResource old)
+    public SurveyResource(SurveyResource other)
     {
-        super(old);
-        setSurveyId(old.getSurveyId());
-        setStart(old.getStart());
-        setEnd(old.getEnd());
-        setSaveable(old.isSaveable());
+        super(other);
+        setSurveyId(other.getSurveyId());
+        setStart(other.getStart());
+        setEnd(other.getEnd());
+        setSaveable(other.isSaveable());
     }
 
     @Override

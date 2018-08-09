@@ -9,10 +9,10 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -390,11 +390,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                         newResource.setGroupId(targetGroupId);
                         newResource.setFolderId(targetFolderId);
                         resource = getUser().addResource(newResource);
-                        if(resource.getType().equals(Resource.ResourceType.survey))
-                        {
-                            getLearnweb().getCreateSurveyManager().copySurveyResource(itemId, newResource.getId());
-                        }
-                        else if(resource.getType().equals(Resource.ResourceType.glossary))
+
+                        if(resource.getType().equals(Resource.ResourceType.glossary))
                         {
                             getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
                         }

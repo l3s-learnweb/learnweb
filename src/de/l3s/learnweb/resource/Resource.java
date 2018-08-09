@@ -604,8 +604,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         setOnlineStatus(old.onlineStatus);
         setIdAtService(old.idAtService);
         setRestricted(old.restricted);
-        setResourceTimestamp(old.resourceTimestamp);
-        setCreationDate(old.creationDate);
+        setResourceTimestamp(new Date());
+        setCreationDate(new Date());
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
@@ -619,7 +619,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }

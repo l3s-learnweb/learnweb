@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -115,7 +114,7 @@ public class SurveyManager
         return surveyResources;
     }
     
-    // TODO this method is extremely inefficient
+    
     public List<SurveyUserAnswers> getAnswerOfAllUserForSurveyResource(int surveyResourceId, HashMap<Integer, String> question) throws SQLException
     {
         List<SurveyUserAnswers> answers = new ArrayList<SurveyUserAnswers>();
@@ -249,7 +248,6 @@ public class SurveyManager
 
     public Survey getSurvey(int surveyId) throws SQLException
     {
-        // TODO add survey cache
         Survey survey = new Survey();
         survey.setId(surveyId);
 

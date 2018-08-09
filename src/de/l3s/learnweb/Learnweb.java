@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.dashboard.DashboardManager;
 import de.l3s.learnweb.dashboard.ActivityDashboardManager;
+import de.l3s.learnweb.dashboard.DashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.LinkManager;
@@ -44,7 +44,6 @@ import de.l3s.learnweb.resource.search.SuggestionLogger;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.survey.SurveyManager;
-import de.l3s.learnweb.resource.survey.createSurveyManager;
 import de.l3s.learnweb.resource.ted.TedManager;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
 import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
@@ -108,7 +107,6 @@ public class Learnweb
     private final SuggestionLogger suggestionLogger;
     private final SurveyManager surveyManager;
     private final SubmissionManager submissionManager;
-    private final createSurveyManager createSurveyManager;
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
@@ -332,7 +330,6 @@ public class Learnweb
         searchLogManager = new SearchLogManager(this);
         surveyManager = new SurveyManager(this);
         submissionManager = new SubmissionManager(this);
-        createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         dashboardManager = DashboardManager.getInstance(this);
         peerAssessmentManager = new PeerAssessmentManager(this);
@@ -943,11 +940,6 @@ public class Learnweb
     public SurveyManager getSurveyManager()
     {
         return surveyManager;
-    }
-
-    public createSurveyManager getCreateSurveyManager()
-    {
-        return createSurveyManager;
     }
 
     public ConverterService getConverterService()

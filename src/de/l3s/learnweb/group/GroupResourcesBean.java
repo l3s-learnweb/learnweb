@@ -5,23 +5,20 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
-import javax.validation.constraints.Size;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,9 +30,14 @@ import com.google.gson.Gson;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Link.LinkType;
+import de.l3s.learnweb.resource.AbstractPaginator;
+import de.l3s.learnweb.resource.AddFolderBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
+import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -44,7 +46,6 @@ import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.learnweb.resource.yellMetadata.CategoryTree;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
-import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -297,9 +298,12 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void setQuery(String query)
     {
-        if (StringUtils.isEmpty(query)) {
+        if(StringUtils.isEmpty(query))
+        {
             this.query = null;
-        } else {
+        }
+        else
+        {
             this.query = query;
         }
     }
@@ -783,11 +787,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                         newResource.setGroupId(targetGroupId);
                         newResource.setFolderId(targetFolderId);
                         resource = getUser().addResource(newResource);
-                        if(resource.getType().equals(Resource.ResourceType.survey))
-                        {
-                            getLearnweb().getCreateSurveyManager().copySurveyResource(itemId, newResource.getId());
-                        }
-                        else if(resource.getType().equals(Resource.ResourceType.glossary))
+
+                        if(resource.getType().equals(Resource.ResourceType.glossary))
                         {
                             getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
                         }
