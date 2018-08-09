@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import javax.mail.MessagingException;
 
 import de.l3s.learnweb.Learnweb;
@@ -15,7 +15,7 @@ import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.util.email.BounceManager;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;

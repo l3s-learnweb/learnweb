@@ -192,7 +192,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * If no thumbnails have been assigend this method will create default thumbnails for the small thumbnails
+     * If no thumbnails have been assigned this method will create default thumbnails for the small thumbnails
      */
     public void setDefaultThumbnailIfNull()
     {
@@ -606,7 +606,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         setRestricted(old.restricted);
         setResourceTimestamp(old.resourceTimestamp);
         setCreationDate(old.creationDate);
-        setArchiveUrls(old.getArchiveUrls());
+        setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
         // sets the originalResourceId to the id of the source resource
@@ -619,7 +619,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }

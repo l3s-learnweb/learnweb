@@ -87,13 +87,4 @@ public class Mail
     {
         return message.toString();
     }
-
-    public static void main(String[] args) throws AddressException, MessagingException
-    {
-        Mail mail = new Mail();
-        mail.setRecipient(javax.mail.Message.RecipientType.BCC, "kemkes@l3s.de");
-        mail.setHTML("bla bla");
-        mail.setSubject("Learnweb: ");
-        mail.sendMail();
-    }
 }

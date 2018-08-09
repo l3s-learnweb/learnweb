@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -22,7 +22,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.BeanHelper;
 
-@Named("loginBean")
+@Named()
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {
@@ -184,7 +184,7 @@ public class LoginBean extends ApplicationBean implements Serializable
             getFacesContext().getExternalContext().invalidateSession(); // end session
         }
 
-        // TODO implement logoutPage
+        // TODO Philipp implement logoutPage
 
         if(getLearnweb().getService() == SERVICE.AMA)
             return "/ama/index.xhtml?faces-redirect=true";

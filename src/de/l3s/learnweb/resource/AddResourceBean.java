@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.StringUtils;
@@ -108,9 +108,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
                 resource.setFileName(info.getFileName());
 
-                log.debug("Extracting info from uploaded file...");
+                log.debug("Extracting metadata from uploaded file...");
                 rme.processFileResource(resource, info);
                 resource.setDescription(StringUtils.EMPTY);
+
                 log.debug("Creating thumbnails from uploaded file...");
                 Thread createThumbnailThread = new CreateThumbnailThread(resource);
                 createThumbnailThread.start();
@@ -184,38 +185,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log.debug("Creating thumbnails from uploaded file...");
             Thread createThumbnailThread = new CreateThumbnailThread(resource);
             createThumbnailThread.start();
-            createThumbnailThread.join(500);
-
-            /* not used in any course right now
-             * disabled to save time
-             *
-            User user = getUser();
-            //resource = user.addResource(resource);
-
-            // check if the user is logged in at interweb and to which services the file can be uploaded to
-            if(user.isLoggedInInterweb())
-            {
-                String type = resource.getType().toLowerCase();
-                List<ServiceInformation> services = user.getInterweb().getAuthorizationInformation(true).getServices();
-                uploadServices = new LinkedList<ServiceInformation>(); // the services which accept the resource media type
-                for(ServiceInformation service : services)
-                {
-                    if(service.isAuthorized())
-                    {
-                        if(service.getId().equals("YouTube") && type.equals("video"))
-                        {
-                            selectedUploadServices = new ArrayList<String>();
-                            selectedUploadServices.add("YouTube");
-                            uploadServices.add(service);
-                        }
-                        else if(service.getId().equals("Flickr") && type.equals("video"))
-                            continue;
-                        else if(service.getMediaTypes().contains(type))
-                            uploadServices.add(service);
-                    }
-                }
-            }
-             */
+            createThumbnailThread.join(1000);
 
             nextStep();
         }

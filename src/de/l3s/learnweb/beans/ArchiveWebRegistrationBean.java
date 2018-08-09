@@ -3,12 +3,12 @@ package de.l3s.learnweb.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -81,24 +81,24 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 
     public void sendMail()
     {
-        String to = "kemkes@l3s.de";
+        String adminEmail = getLearnweb().getProperties().getProperty("ADMIN_MAIL");
 
         try
         {
-            Mail message = new Mail();// new MimeMessage(session);
-            //message.setFrom(new InternetAddress("interweb9@googlemail.com"));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            Mail message = new Mail();
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
             message.setSubject("ArchiveWeb Registration");
             message.setText("username: " + username + "\npassword: " + password + "\nemail: " + email + "\naffiliation: " + affiliation + "\ndescription: " + description + "\n\n-------\n" + BeanHelper.getRequestSummary());
             message.sendMail();
-            //Transport.send(message);
+
+            addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to you shortly.");
+            clearForm();
         }
         catch(MessagingException mex)
         {
             addFatalMessage(mex);
         }
-        clearForm();
-        addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to you shortly.");
+
     }
 
     public void clearForm()

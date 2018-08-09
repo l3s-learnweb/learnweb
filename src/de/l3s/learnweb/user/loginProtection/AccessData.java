@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user.loginProtection;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,8 +12,10 @@ import java.util.Date;
  * @author Kate
  *
  */
-public class AccessData
+public class AccessData implements Serializable
 {
+    private static final long serialVersionUID = -2074629486516643542L;
+
     private int attempts;
     private String name;
     private Date banDate;

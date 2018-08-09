@@ -2,7 +2,6 @@ package de.l3s.learnweb.user.loginProtection;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
@@ -48,7 +47,7 @@ public class ProtectionManager
     private Queue<LoginAttemptData> attemptedLogins;
     List<AggregatedRequestData> suspiciousActivityList;
 
-    private final static String ADMIN_EMAIL = "kemkes@l3s.de";
+    private final String adminEmail;
     private int suspiciousAlertsCounter = 0;
     private final static int SUSPICIOUS_EMAIL_THRESHOLD = 30;
 
@@ -61,6 +60,7 @@ public class ProtectionManager
     public ProtectionManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
+        adminEmail = learnweb.getProperties().getProperty("ADMIN_MAIL");
         accessMap = new ConcurrentHashMap<>();
         attemptedLogins = new ConcurrentLinkedQueue<>();
         suspiciousActivityList = new ArrayList<>();
@@ -128,6 +128,12 @@ public class ProtectionManager
             return null;
         }
         return ad.getBanDate();
+    }
+
+    public boolean isBanned(String ip)
+    {
+        Date ipBan = getBannedUntil(ip);
+        return ipBan != null && ipBan.after(new Date());
     }
 
     public boolean needsCaptcha(String name)
@@ -236,7 +242,7 @@ public class ProtectionManager
         {
             Mail message = new Mail();
             message.setSubject("[Learnweb] Suspicious activity alert");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(ADMIN_EMAIL));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(adminEmail));
 
             StringBuilder content = new StringBuilder("Multiple accounts have been flagged as suspicious by Learnweb protection system. Please look at them closer at http://learnweb.l3s.uni-hannover.de/lw/admin/banlist.jsf.\n"
                     + "Here are the ten most recent entries in the suspicious list: "
@@ -321,7 +327,6 @@ public class ProtectionManager
         }
 
         log.debug("Unbanned " + name);
-
     }
 
     public void clearBans()
@@ -347,12 +352,10 @@ public class ProtectionManager
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -7);
 
-        try
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?");)
         {
-            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?");
             delete.setTimestamp(1, new java.sql.Timestamp(cal.getTimeInMillis()));
             delete.execute();
-
         }
         catch(SQLException e)
         {
@@ -373,14 +376,7 @@ public class ProtectionManager
 
     public void ban(String name, int banDays, int banHours, int banMinutes, boolean isIP)
     {
-
-        AccessData accData;
-        accData = accessMap.get(name);
-        if(accData == null)
-        {
-            accData = new AccessData(name);
-            accessMap.put(name, accData);
-        }
+        AccessData accData = accessMap.computeIfAbsent(name, n -> new AccessData(n));
 
         accData.setBan(banDays, banHours, banMinutes);
 
@@ -426,13 +422,7 @@ public class ProtectionManager
 
     public void permaban(String name, boolean isIP)
     {
-        AccessData accData;
-        accData = accessMap.get(name);
-        if(accData == null)
-        {
-            accData = new AccessData(name);
-            accessMap.put(name, accData);
-        }
+        AccessData accData = accessMap.computeIfAbsent(name, n -> new AccessData(n));
 
         accData.permaban();
 

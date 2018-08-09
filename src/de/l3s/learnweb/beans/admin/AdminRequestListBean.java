@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.Set;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.web.AggregatedRequestData;
@@ -24,7 +23,7 @@ import de.l3s.learnweb.web.RequestData;
 public class AdminRequestListBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
-    private Queue<RequestData> requests;
+    private List<RequestData> requests;
     private List<RequestData> filteredRequests;
 
     private List<Map.Entry<String, Set<String>>> logins;
@@ -42,9 +41,9 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     {
         try
         {
-            if(getUser().isAdmin() || getUser().isModerator())
+            if(getUser() != null && getUser().isAdmin())
             {
-                requests = getLearnweb().getRequestManager().getRequests();
+                requests = new ArrayList<>(getLearnweb().getRequestManager().getRequests());
                 logins = new ArrayList<>(getLearnweb().getRequestManager().getLogins().entrySet());
                 aggregatedRequests = getLearnweb().getRequestManager().getAggregatedRequests();
                 onUpdateAggregatedRequests();
@@ -63,7 +62,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         return strDate.contains((String) filter);
     }
 
-    public Queue<RequestData> getRequests()
+    public List<RequestData> getRequests()
     {
         return requests;
     }
