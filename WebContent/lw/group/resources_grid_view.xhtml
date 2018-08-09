@@ -6,11 +6,11 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:panelGroup id="datagrid" styleClass="datagrid" layout="block">
-        <h:panelGroup styleClass="search-results-header" layout="block" rendered="#{groupDetailBean.query != null}">
+        <h:panelGroup styleClass="search-results-header" layout="block" rendered="#{groupResourcesBean.query != null}">
             #{msg.search_results}
         </h:panelGroup>
-        <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block" rendered="#{groupDetailBean.query == null}">
-            <p:repeat value="#{groupDetailBean.subFolders}" var="folder">
+        <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
+            <p:repeat value="#{groupResourcesBean.subFolders}" var="folder">
                 <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
                               pt:data-itemType="folder"
                               pt:data-itemId="#{folder.folderId}"
@@ -48,7 +48,7 @@
         </h:panelGroup>
 
         <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
-            <p:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+            <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
                 <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
                 <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
                               pt:data-itemType="resource"
@@ -105,10 +105,10 @@
         </h:panelGroup>
 
         <h:outputText value="${msg.no_resources_found}" class="nothing_found"
-                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
 
         <h:outputText value="#{msg.no_results_found}" class="nothing_found"
-                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
+                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
 
     </h:panelGroup>
 

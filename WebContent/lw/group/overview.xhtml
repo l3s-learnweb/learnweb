@@ -131,7 +131,7 @@
 						<br></br>
 						<h:form>
 							<h:panelGroup id="history" class="newsfeed_history">
-								<p:commandButton value="#{msg.full_history}" styleClass="blackbutton" rendered="#{not groupOverviewBean.isAllLogs()}"
+								<p:commandButton value="#{msg.full_history}" styleClass="blackbutton" rendered="#{not groupOverviewBean.showAllLogs}"
 									update=":datagrid history" actionListener="#{groupOverviewBean.fetchAllLogs()}" />
 							</h:panelGroup>
 						</h:form>

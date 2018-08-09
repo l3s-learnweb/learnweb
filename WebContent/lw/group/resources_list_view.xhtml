@@ -3,7 +3,7 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:panelGroup id="dataList" styleClass="dataList">
-        <p:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+        <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
             <h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item" layout="block"
                           pt:data-itemType="resource"
                           pt:data-itemId="#{res.resource.id}"
@@ -161,10 +161,10 @@
         </p:repeat>
 
         <h:outputText value="${msg.no_resources_found}" class="nothing_found"
-                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
 
         <h:outputText value="#{msg.no_results_found}" class="nothing_found"
-                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'FilterPaginator'}"/>
+                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'FilterPaginator'}"/>
 
         <!--<h:outputText value="#{msg.no_results_found}" class="nothing_found"
             rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" /> -->

@@ -11,38 +11,38 @@
 	</ui:define>
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:viewAction action="#{groupDetailBean.onLoad}"/>
+			<f:viewParam name="group_id" value="#{groupLinksBean.groupId}" />
+			<f:viewAction action="#{groupLinksBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>			
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
+	<ui:param name="pageTitle" value="#{groupLinksBean.group.title}" />
 
 	<ui:define name="center_layout">
 		<script type="text/javascript">
-			var googleSignInEnabled = #{groupDetailBean.group.googleDocsSignInEnabled};
+			var googleSignInEnabled = #{groupLinksBean.group.googleDocsSignInEnabled};
 		</script>
 		<h:outputScript library="group" name="links.js" target="head"/>
 		
 		<ui:decorate template="/templates/group/menu.xhtml">
-			<ui:param name="group" value="#{groupDetailBean.group}" />
+			<ui:param name="group" value="#{groupLinksBean.group}" />
 			<ui:param name="active" value="links" />
 			
 			<ui:define name="title">
 				<h2>
 					#{msg.links}
 				</h2> 
-				#{msg.of} #{groupDetailBean.group.title}
+				#{msg.of} #{groupLinksBean.group.title}
 				
 				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}"
+					<p:commandLink rendered="#{not groupLinksBean.member}"
 						action="#{groupsBean.joinGroup}"
 						styleClass="resource_button greenbutton"
 						update=":growl :group_menu @form" partialSubmit="true"
 						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
-							value="#{groupDetailBean.group}" />
+							value="#{groupLinksBean.group}" />
 					</p:commandLink>
 				</h:form>
 			</ui:define>
@@ -56,15 +56,15 @@
 		
 		<p:dialog appendTo="@(body)" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
 			<h:form id="link_edit_form">
-				<h:panelGrid columns="2" rendered="#{groupDetailBean.selectedLink != null}">					
+				<h:panelGrid columns="2" rendered="#{groupLinksBean.selectedLink != null}">
 					<h:outputLabel value="#{msg.title}:" for="link_title_edit"/>
-					<p:inputText value="#{groupDetailBean.selectedLink.title}" id="link_title_edit" styleClass="links_input" />
+					<p:inputText value="#{groupLinksBean.selectedLink.title}" id="link_title_edit" styleClass="links_input" />
 					
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" 
+					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupLinksBean.onEditLink}"
 						process="@form" oncomplete="PF('link_dialog').hide();" update=":message :grouplinks">
-						<f:setPropertyActionListener target="#{groupDetailBean.editLink}" value="#{groupDetailBean.selectedLink}" />
-						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>						
+						<f:setPropertyActionListener target="#{groupLinksBean.editLink}" value="#{groupLinksBean.selectedLink}" />
+						<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 					</p:commandButton>
 				</h:panelGrid>
 			</h:form>						
@@ -73,18 +73,18 @@
 		
 		<h:panelGroup id="grouplinks" layout="block" style="padding-right:5px;">		
 
-			<ui:fragment rendered="${empty groupDetailBean.links or empty groupDetailBean.documentLinks}">
+			<ui:fragment rendered="${empty groupLinksBean.links or empty groupLinksBean.documentLinks}">
 			No links have been added.
 			</ui:fragment>	
 					
-			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
+			<h:panelGroup rendered="${not empty groupLinksBean.links}">
 				<h:form styleClass="links_form">		
 					<h4 class="clear">
 						<h:outputText value="#{msg.links}:" />
 					</h4>
 				
 					<br class="clear"/>
-					<p:dataList var="link" value="${groupDetailBean.links}" styleClass="links_datalist">		
+					<p:dataList var="link" value="${groupLinksBean.links}" styleClass="links_datalist">
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">
 								#{link.title}
@@ -92,18 +92,18 @@
 						
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" 
 									styleClass="links_graphic" />
-								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
-								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
+								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
+								<f:param name="group_id" value="#{groupLinksBean.groupId}" />
 							</p:commandLink> 
 							
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
+							<p:commandLink actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks"
 								title="#{msg.delete}" 
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
-								rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
-								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+								rendered="${(userBean.admin || userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
+								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" 
 									styleClass="links_graphic"/> 
 							</p:commandLink>
@@ -112,12 +112,12 @@
 				</h:form>
 			</h:panelGroup>
 				
-			<h:panelGroup rendered="${not empty groupDetailBean.documentLinks}">	
+			<h:panelGroup rendered="${not empty groupLinksBean.documentLinks}">
 				<h:form styleClass="links_form">				
 					<h4 class="clear">
 						<h:outputText value="#{msg.documents}" />:
 					</h4>
-					<p:dataList var="link" value="${groupDetailBean.documentLinks}" styleClass="links_datalist">		
+					<p:dataList var="link" value="${groupLinksBean.documentLinks}" styleClass="links_datalist">
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output" onclick="return onLinkClick(this);">
 								#{link.title}
@@ -125,17 +125,17 @@
 							
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
-								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
-								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
+								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
+								<f:param name="group_id" value="#{groupLinksBean.groupId}" />
 							</p:commandLink>
 									
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
+							<p:commandLink actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks"
 								title="#{msg.delete}" 
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
-								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
+								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" 
 									styleClass="links_graphic"/> 
 							</p:commandLink>
@@ -145,43 +145,43 @@
 			</h:panelGroup>
 		</h:panelGroup>
 
-		<p:panel toggleable="true" header="#{msg.options}" rendered="${groupDetailBean.group.isMember(userBean.user)}" 
+		<p:panel toggleable="true" header="#{msg.options}" rendered="${groupLinksBean.group.isMember(userBean.user)}"
 			styleClass="clear links_panel" style="margin-top:20px; margin-right:5px;">
 			<h:form id="link_form">
 				<h:panelGrid columns="3">					
 							
 					<h:outputLabel value="#{msg.type}:" for="link_type" />
-					<h:selectOneMenu value="#{groupDetailBean.newLinkType}" id="link_type">
+					<h:selectOneMenu value="#{groupLinksBean.newLinkType}" id="link_type">
 						<f:selectItem itemValue="document" itemLabel="Google Document (Word)" />
 						<f:selectItem itemValue="spreadsheet" itemLabel="Google Spreadsheet (Excel)" />
 						<f:selectItem itemValue="presentation" itemLabel="Google Presentation (PowerPoint)" />
 						<f:selectItem itemValue="url" itemLabel="#{msg.website}"  />	 
 						<p:ajax process="@this" update="urlpanel1 urlpanel2 urlpanel3" />
-						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+						<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 					</h:selectOneMenu>
 					<h:outputText value="" />					
 					
 					<h:panelGroup id="urlpanel1">
-						<h:outputLabel rendered="#{groupDetailBean.newLinkType == 'url'}" for="link_url" value="URL:" />
+						<h:outputLabel rendered="#{groupLinksBean.newLinkType == 'url'}" for="link_url" value="URL:" />
 					</h:panelGroup>
 					<h:panelGroup id="urlpanel2">
-						<p:inputText rendered="#{groupDetailBean.newLinkType == 'url'}" styleClass="links_inputtext" 
-							id="link_url" value="#{groupDetailBean.newLinkUrl}" />
+						<p:inputText rendered="#{groupLinksBean.newLinkType == 'url'}" styleClass="links_inputtext"
+							id="link_url" value="#{groupLinksBean.newLinkUrl}" />
 					</h:panelGroup>
 					<h:panelGroup id="urlpanel3">
-						<p:message rendered="#{groupDetailBean.newLinkType == 'url'}" showSummary="true" showDetail="false" 
+						<p:message rendered="#{groupLinksBean.newLinkType == 'url'}" showSummary="true" showDetail="false"
 							styleClass="error" for="link_url" />
 					</h:panelGroup>
 					
 						
 					<h:outputLabel for="link_title" value="#{msg.title}:" />
-					<p:inputText id="link_title" value="#{groupDetailBean.newLinkTitle}" styleClass="links_inputtext2"/>
+					<p:inputText id="link_title" value="#{groupLinksBean.newLinkTitle}" styleClass="links_inputtext2"/>
 					<p:message showSummary="true" showDetail="false" styleClass="error" for="link_title"/>
 	
 					<h:outputText value="" />
-					<p:commandButton action="#{groupDetailBean.onAddLink}" ajax="true" value="#{msg.addLink}" 
+					<p:commandButton action="#{groupLinksBean.onAddLink}" ajax="true" value="#{msg.addLink}"
 						process="@form" update=":grouplinks link_form :growl">					
-						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+						<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 					</p:commandButton>
 					<h:outputText value="" />
 				</h:panelGrid>
@@ -189,7 +189,7 @@
 		</p:panel>
 		
 		<h:form style="display:none;">	
-			<p:remoteCommand actionListener="${groupDetailBean.saveGmailId()}" name="saveGmailId" process="@this"/>
+			<p:remoteCommand actionListener="${groupLinksBean.saveGmailId()}" name="saveGmailId" process="@this"/>
 		</h:form>	
 	</ui:define>
 </ui:composition>

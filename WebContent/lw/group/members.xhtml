@@ -1,42 +1,38 @@
 <ui:composition template="/templates/main/main_old.xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
-
-	<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:viewAction action="#{groupDetailBean.onLoad}"/>
+			<f:viewParam name="group_id" value="#{groupMembersBean.groupId}" />
+			<f:viewAction action="#{groupMembersBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.groupMember}" />	
-    		
+	<ui:param name="pageTitle" value="#{msg.groupMember}" />
+	<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
+
 	<ui:define name="center_layout">	
 		<h:outputStylesheet library="group" name="group.css" />
 
 		<ui:decorate template="/templates/group/menu.xhtml">
-			<ui:param name="group" value="#{groupDetailBean.group}" />
+			<ui:param name="group" value="#{groupMembersBean.group}" />
 			<ui:param name="active" value="members" />
-			
+
 			<ui:define name="title">
 				<h2>
 					#{msg.members}
 				</h2> 
-				#{msg.of} #{groupDetailBean.group.title}
-				
+				#{msg.of} #{groupMembersBean.group.title}
+
 				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}"
-						action="#{groupsBean.joinGroup}"
-						styleClass="resource_button greenbutton"
-						update=":growl :group_menu @form :resource_disp"
-						partialSubmit="true" process="@this" value="#{msg.join_group}">
-						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
-							value="#{groupDetailBean.group}" />
+					<p:commandLink rendered="#{not groupMembersBean.member}" action="#{groupsBean.joinGroup}"
+                        update=":growl :group_menu @form :resource_disp" partialSubmit="true" process="@this"
+                        value="#{msg.join_group}" styleClass="resource_button greenbutton">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupMembersBean.group}" />
 					</p:commandLink>
 				</h:form>
 			</ui:define>
@@ -46,14 +42,14 @@
 		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
 		/* --> */
-		</script>	
-      
+		</script>
+
         <h:panelGrid id="resource_disp">
 	        <h:form>
-				<p:repeat id="datagrid" var="user" value="#{groupDetailBean.getMembers()}">
+				<p:repeat id="datagrid" var="user" value="#{groupMembersBean.members}">
 			        
 			        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
-			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{user}"/>
+			        	<f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
 				            <div class="members_panelgrid grey_border"> 
 				            	<img src="#{user.image}" width="100" height="100" />
 				            	<ui:fragment rendered="#{not empty user.credits}">
@@ -68,10 +64,10 @@
 		    </h:form>
 	    </h:panelGrid>
 	</ui:define>
-	
+
 	<ui:define name="right_layout">
 		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
-			header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
+			header="#{groupMembersBean.clickedUser eq null ? msg.user_details : groupMembersBean.clickedUser.username}" id="right_pane">
 			<div id="right_pane_wrapper">
 				<h:form id="right_form">
 					<script type="text/javascript">
@@ -81,14 +77,12 @@
 							scroller();
 						}
 					</script>
-					
-					<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
-					
+
+					<ui:fragment rendered="#{groupMembersBean.clickedUser ne null}">
 						<ui:decorate template="/templates/user/profile.xhtml">
-							<ui:param name="user" value="#{groupDetailBean.clickedUser}" />	
-							<ui:param name="userDetailsHidden" value="#{groupDetailBean.userDetailsHidden}" />		
+							<ui:param name="user" value="#{groupMembersBean.clickedUser}" />
+							<ui:param name="userDetailsHidden" value="#{groupMembersBean.userDetailsHidden}" />
 						</ui:decorate>
-						
 					</ui:fragment>
 				</h:form>
 			</div>

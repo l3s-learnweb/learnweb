@@ -21,10 +21,10 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="group_id" value="#{groupDetailBean.groupId}"/>
-            <f:viewParam name="folder_id" value="#{groupDetailBean.selectedFolderId}"/>
+            <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}"/>
+            <f:viewParam name="folder_id" value="#{groupResourcesBean.selectedFolderId}"/>
             <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
-            <f:viewAction action="#{groupDetailBean.onLoad}"/>
+            <f:viewAction action="#{groupResourcesBean.onLoad}"/>
             <f:viewAction action="#{rightPaneBean.onLoad}"/>
         </f:metadata>
     </ui:define>
@@ -35,21 +35,21 @@
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();" />
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();" />
 
-            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupDetailBean.actionSelectGroupItem}"
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
-            <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupDetailBean.actionEditGroupItem}"
+            <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
-            <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}"
+            <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
-            <p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}"
+            <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
                              update=":group_menu_tree :breadcrumbs :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl" oncomplete="update_header();resourceDND();scroller();"/>
-            <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}"
+            <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
                              update=":group_menu_tree :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl" oncomplete="resourceDND();update_header();"/>
-            <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}"
+            <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
                              update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
-            <p:remoteCommand name="filterByCategoryCommand" actionListener="#{groupDetailBean.onCategoryFilterClick}"
+            <p:remoteCommand name="filterByCategoryCommand" actionListener="#{groupResourcesBean.onCategoryFilterClick}"
                              update=":resourcesView :paginator :resourcesFilters" oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"/>
         </h:form>
 
@@ -57,21 +57,21 @@
             <h2>#{msg.resources}</h2>
             <span class="header_detail">
                     #{msg.of}
-                #{groupDetailBean.group.title}
-                (#{groupDetailBean.group.resourcesCount} #{msg.resources})
+                #{groupResourcesBean.group.title}
+                (#{groupResourcesBean.group.resourcesCount} #{msg.resources})
             </span>
 
             <c:if test="${userBean.user.organisation.id eq 480}">
                 <h:form styleClass="layout_button" id="group_layout_options" prependId="false">
                     <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist"
                                      update=":resourcesView :group_layout_options"
-                                     rendered="#{groupDetailBean.gridView}">
-                        <f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="false"/>
+                                     rendered="#{groupResourcesBean.gridView}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="false"/>
                     </p:commandButton>
                     <p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid"
                                      update=":resourcesView :group_layout_options"
-                                     rendered="#{!groupDetailBean.gridView}">
-                        <f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="true"/>
+                                     rendered="#{!groupResourcesBean.gridView}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="true"/>
                     </p:commandButton>
                 </h:form>
             </c:if>
@@ -79,10 +79,10 @@
             <h:form id="center_header_form">
                 <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
                                  iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton"
-                                 type="button" rendered="#{groupDetailBean.group.canAddResources(userBean.user)}"/>
+                                 type="button" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
                 <p:tieredMenu overlay="true" trigger="add_group_resource_button" my="left top" at="left bottom"
                               style="width:200px" widgetVar="add_resource_menu"
-                              rendered="#{groupDetailBean.group.canAddResources(userBean.user)}">
+                              rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
                     <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed"
                                 onclick="doAction('create-folder'); PF('add_resource_menu').hide(); return false;"/>
                     <p:separator/>
@@ -111,34 +111,34 @@
                                 onclick="doAction('add-glossary'); PF('add_resource_menu').hide(); return false;"/>
                 </p:tieredMenu>
 
-                <p:commandLink rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"
+                <p:commandLink rendered="#{groupResourcesBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"
                                action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"
                                update=":growl :group_menu @form" partialSubmit="true" process="@this">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}"/>
+                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
                 </p:commandLink>
             </h:form>
 
             <ul>
                 <li>
-                    <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{groupDetailBean.group.id}" />
+                    <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{groupResourcesBean.group.id}" />
                 </li>
                 <li>
-                    <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{groupDetailBean.group.id}" />
+                    <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{groupResourcesBean.group.id}" />
                 </li>
                 <li>
-                    <h:link value="#{msg.members}" outcome="/lw/group/members.jsf?group_id=#{groupDetailBean.group.id}" />
+                    <h:link value="#{msg.members}" outcome="/lw/group/members.jsf?group_id=#{groupResourcesBean.group.id}" />
                 </li>
-				<ui:fragment rendered="#{not empty groupDetailBean.group.links or not empty groupDetailBean.group.documentLinks}">								
+				<ui:fragment rendered="#{not empty groupResourcesBean.group.links or not empty groupResourcesBean.group.documentLinks}">
 				<li>
-                    <h:link value="#{msg.links}" outcome="/lw/group/links.jsf?group_id=#{groupDetailBean.group.id}" />
+                    <h:link value="#{msg.links}" outcome="/lw/group/links.jsf?group_id=#{groupResourcesBean.group.id}" />
 				</li>	
 				</ui:fragment>	
                 <li>
-                    <h:link value="#{msg.forum}" outcome="/lw/group/forum.jsf?group_id=#{groupDetailBean.group.id}" />
+                    <h:link value="#{msg.forum}" outcome="/lw/group/forum.jsf?group_id=#{groupResourcesBean.group.id}" />
                 </li>
-                <ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">
+                <ui:fragment rendered="${groupResourcesBean.group.course.isModerator(userBean.user) || groupResourcesBean.group.isLeader(userBean.user)}">
                     <li>
-                        <h:link value="#{msg.options}" outcome="/lw/group/options.jsf?group_id=#{groupDetailBean.group.id}" />
+                        <h:link value="#{msg.options}" outcome="/lw/group/options.jsf?group_id=#{groupResourcesBean.group.id}" />
                     </li>
                 </ui:fragment>
             </ul>
@@ -148,7 +148,7 @@
                 <h:panelGroup id="resourcesFilters" layout="block">
                     <h:form styleClass="resources-filters" id="filters">
                         <ul>
-                            <p:repeat value="#{groupDetailBean.availableFilters}" var="filter">
+                            <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                                 <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
                                 <span class="filter-name">
                                     <span class="trimmed-text">#{filter.name}</span>
@@ -158,7 +158,7 @@
                                         <h:panelGroup styleClass="vCarousel-container" layout="block">
                                             <li class="#{!filter.active ? 'active' : null}">
                                                 <p:commandButton value="#{filter.anyText}"
-                                                                 action="#{groupDetailBean.changeFilters(filter.anyUrl)}"
+                                                                 action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
                                                                  update=":resourcesView :paginator :resourcesFilters"
                                                                  oncomplete="updateCarousel();resourceDND();"/>
                                             </li>
@@ -167,7 +167,7 @@
                                                 <li class="#{item.active ? 'active' : null}">
                                                     <p:commandButton
                                                             value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
-                                                            action="#{groupDetailBean.changeFilters(item.url)}"
+                                                            action="#{groupResourcesBean.changeFilters(item.url)}"
                                                             update=":resourcesView :paginator :resourcesFilters"
                                                             oncomplete="updateCarousel();resourceDND();"/>
                                                 </li>
@@ -181,22 +181,22 @@
                                 </li>
                             </p:repeat>
 
-                            <li class="search-box #{groupDetailBean.query != null ? 'active' : null}">
+                            <li class="search-box #{groupResourcesBean.query != null ? 'active' : null}">
                                 <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
 
                                 <div id="search_filter_form">
-                                    <h:inputText value="#{groupDetailBean.query}"/>
+                                    <h:inputText value="#{groupResourcesBean.query}"/>
 
-                                    <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true"
+                                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true"
                                                      oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
                                                      process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
                                 </div>
                             </li>
 
-                            <h:panelGroup rendered="#{groupDetailBean.searchFilters != null or groupDetailBean.query != null}">
+                            <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
                                 <li class="filter clear-filters">
                                     <p:commandButton value="#{msg.clear_filters}"
-                                                     action="#{groupDetailBean.clearFilters()}"
+                                                     action="#{groupResourcesBean.clearFilters()}"
                                                      update=":resourcesView :paginator :resourcesFilters"
                                                      oncomplete="updateCarousel();resourceDND();"/>
                                 </li>
@@ -207,13 +207,13 @@
             </c:if>
 
             <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
-                <ui:fragment rendered="#{not empty groupDetailBean.breadcrumbs}">
+                <ui:fragment rendered="#{not empty groupResourcesBean.breadcrumbs}">
                     <ul>
                         <li data-folderId="0">
-                            <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
+                            <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupResourcesBean.group.title}</h:outputLink>
                         </li>
 
-                        <p:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
+                        <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}" varStatus="status">
                             <li data-folderId="#{folder.id}">
                                 <h:outputLink rendered="#{not status.last}" value="#" nclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
                                 <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
@@ -224,11 +224,11 @@
             </h:panelGroup>
         </div>
 
-        <ui:fragment rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
+        <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
             <h3 class="error">
                 #{msg.group_resources_access_denied}
                 <h:outputText
-                        rendered="${groupDetailBean.group.policyView != 'GROUP_LEADER' and groupDetailBean.group.canJoinGroup(userBean.user)}"
+                        rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"
                         value="#{msg.group_resources_access_denied_join_first}"/>
             </h3>
         </ui:fragment>
@@ -243,11 +243,11 @@
 
                         <p:tab id="keyword_tab" title="Keyword Search">
                             <h:form id="header_query_form" prependId="false">
-                                <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupDetailBean.query}"
+                                <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}"
                                              id="input_query_form"
                                              onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
-                                <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="false"
+                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false"
                                                  oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
                                                  process="@form" update=":resourcesView :paginator :resourcesFilters"
                                                  value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
@@ -263,17 +263,17 @@
                                                 <h:panelGroup>
                                                     <h:outputLabel for="alist" value="Author:  "/>
                                                     <p:selectCheckboxMenu id="alist"
-                                                                          value="#{groupDetailBean.selectedAuthors}"
+                                                                          value="#{groupResourcesBean.selectedAuthors}"
                                                                           label="Authors" multiple="true" filter="true"
                                                                           filterMatchMode="startsWith">
-                                                        <f:selectItems value="#{groupDetailBean.authors}"/>
+                                                        <f:selectItems value="#{groupResourcesBean.authors}"/>
                                                     </p:selectCheckboxMenu>
                                                 </h:panelGroup>
 
                                                 <h:panelGroup>
                                                     <h:outputLabel for="mtlist" value="Media Type:  "/>
                                                     <p:selectCheckboxMenu id="mtlist"
-                                                                          value="#{groupDetailBean.selectedMtypes}"
+                                                                          value="#{groupResourcesBean.selectedMtypes}"
                                                                           label="Media Types" multiple="true" filter="true"
                                                                           filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
@@ -284,18 +284,18 @@
                                                 <h:panelGroup>
                                                     <h:outputLabel for="slist" value="Media Source:  "/>
                                                     <p:selectCheckboxMenu id="slist"
-                                                                          value="#{groupDetailBean.selectedSources}"
+                                                                          value="#{groupResourcesBean.selectedSources}"
                                                                           label="Sources" multiple="true" filter="true"
                                                                           filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
-                                                        <f:selectItems value="#{groupDetailBean.msources}"/>
+                                                        <f:selectItems value="#{groupResourcesBean.msources}"/>
                                                     </p:selectCheckboxMenu>
                                                 </h:panelGroup>
 
                                                 <h:panelGroup>
                                                     <h:outputLabel for="llist" value="Language:"/>
                                                     <p:selectCheckboxMenu id="llist"
-                                                                          value="#{groupDetailBean.selectedLanguages}"
+                                                                          value="#{groupResourcesBean.selectedLanguages}"
                                                                           label="Languages" multiple="true" filter="true"
                                                                           filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
@@ -306,7 +306,7 @@
                                                 <h:panelGroup>
                                                     <h:outputLabel for="levlist" value="Language Level:"/>
                                                     <p:selectCheckboxMenu id="levlist"
-                                                                          value="#{groupDetailBean.selectedLevels}"
+                                                                          value="#{groupResourcesBean.selectedLevels}"
                                                                           label="Levels" multiple="true" filter="true"
                                                                           filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
@@ -317,7 +317,7 @@
                                                 <h:panelGroup>
                                                     <h:outputLabel for="aglist" value="Target Learner:"/>
                                                     <p:selectCheckboxMenu id="aglist"
-                                                                          value="#{groupDetailBean.selectedTargets}"
+                                                                          value="#{groupResourcesBean.selectedTargets}"
                                                                           label="Target Learners" multiple="true"
                                                                           filter="true" filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
@@ -328,7 +328,7 @@
                                                 <h:panelGroup>
                                                     <h:outputLabel for="aclist" value="Purpose of Use:"/>
                                                     <p:selectCheckboxMenu id="aclist"
-                                                                          value="#{groupDetailBean.selectedPurposes}"
+                                                                          value="#{groupResourcesBean.selectedPurposes}"
                                                                           label="Purposes of Use" multiple="true"
                                                                           filter="true" filterMatchMode="startsWith"
                                                                           panelStyle="width:250px">
@@ -338,7 +338,7 @@
 
 
                                                 <p:commandButton styleClass="greenbutton" value="Filter"
-                                                                 actionListener="#{groupDetailBean.onMetadataFilterClick}"
+                                                                 actionListener="#{groupResourcesBean.onMetadataFilterClick}"
                                                                  oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
                                                                  process="@form"
                                                                  update=":paginator :resourcesView"/>
@@ -365,9 +365,9 @@
                     </p:tabView>
                 </h:form>
 
-                <h:outputText id="cat_tree" value="#{groupDetailBean.groupCatJson}" style="display:none"/>
-                <h:outputText id="group_name" value="#{groupDetailBean.group.title}" style="display:none"/>
-                <h:outputText id="group_resource" value="#{groupDetailBean.group.resourcesCount}" style="display:none"/>
+                <h:outputText id="cat_tree" value="#{groupResourcesBean.groupCatJson}" style="display:none"/>
+                <h:outputText id="group_name" value="#{groupResourcesBean.group.title}" style="display:none"/>
+                <h:outputText id="group_resource" value="#{groupResourcesBean.group.resourcesCount}" style="display:none"/>
 
                 <script type="text/javascript">
 
@@ -377,21 +377,21 @@
             </h:panelGroup>
         </c:if>
 
-        <ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
+        <ui:fragment rendered="#{groupResourcesBean.group.canViewResources(userBean.user)}">
             <h:panelGroup id="resourcesView" layout="block" style="height: 100%; width: 100%;"
-                          pt:data-canAddResources="#{groupDetailBean.group.canAddResources(userBean.user)}"
-                          pt:data-canMoveResources="#{groupDetailBean.group.canMoveResources(userBean.user)}">
+                          pt:data-canAddResources="#{groupResourcesBean.group.canAddResources(userBean.user)}"
+                          pt:data-canMoveResources="#{groupResourcesBean.group.canMoveResources(userBean.user)}">
 
                 <c:if test="${userBean.user.organisation.id eq 480}">
-                    <ui:fragment rendered="#{not empty groupDetailBean.selectedCatNode}">
-                        <h:outputText value="Selected category is: #{groupDetailBean.selectedCatNode}"/>
+                    <ui:fragment rendered="#{not empty groupResourcesBean.selectedCatNode}">
+                        <h:outputText value="Selected category is: #{groupResourcesBean.selectedCatNode}"/>
                     </ui:fragment>
 
-                    <ui:fragment rendered="#{!groupDetailBean.gridView}">
+                    <ui:fragment rendered="#{!groupResourcesBean.gridView}">
                         <ui:decorate template="/lw/group/resources_list_view.xhtml"></ui:decorate>
                     </ui:fragment>
 
-                    <ui:fragment rendered="#{groupDetailBean.gridView}">
+                    <ui:fragment rendered="#{groupResourcesBean.gridView}">
                         <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
                     </ui:fragment>
                 </c:if>
@@ -403,7 +403,7 @@
 
             <h:panelGroup id="paginator" layout="block">
                 <ui:decorate template="/templates/main/paging.xhtml">
-                    <ui:param name="paginator" value="${groupDetailBean.paginator}"/>
+                    <ui:param name="paginator" value="${groupResourcesBean.paginator}"/>
                 </ui:decorate>
             </h:panelGroup>
 
@@ -485,8 +485,8 @@
                 <h:outputText value="#{msg.add_to}:"/>
 
                 <h:form>
-                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
-                        <p:ajax event="select" listener="#{groupDetailBean.onTargetNodeSelect}"/>
+                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
+                        <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
 
                         <p:treeNode type="group">
                             <h:outputText id="group" value="#{node.title}"/>
@@ -532,7 +532,7 @@
 
     <ui:define name="right_layout">
         <ui:decorate template="/templates/resources/right_pane.xhtml">
-            <ui:param name="bean" value="#{groupDetailBean}"/>
+            <ui:param name="bean" value="#{groupResourcesBean}"/>
         </ui:decorate>
     </ui:define>
 </ui:composition>

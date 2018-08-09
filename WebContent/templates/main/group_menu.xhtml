@@ -34,19 +34,19 @@
     <ui:fragment rendered="#{userBean.groupResourcesPage}">
         <h:panelGroup layout="block" id="group_menu_tree" styleClass="group-menu">
             <ui:repeat value="#{userBean.groupMenu}" var="group">
-                <h:panelGroup rendered="#{groupDetailBean.groupId != group.id}">
+                <h:panelGroup rendered="#{groupResourcesBean.groupId != group.id}">
                     <div class="panelmenu">
                         <h3 class="group_link">
                             <h:link value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
                         </h3>
                     </div>
                 </h:panelGroup>
-                <h:panelGroup rendered="#{groupDetailBean.groupId == group.id}">
+                <h:panelGroup rendered="#{groupResourcesBean.groupId == group.id}">
                     <div class="panelmenu active folder-tree">
                         <div id="folders_tree_wrap">
                             <h:form id="folders_tree_form">
-                                <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">
-                                    <p:ajax event="select" update=":breadcrumbs :resourcesView :paginator :right_pane_wrapper" listener="#{groupDetailBean.onGroupMenuNodeSelect}" oncomplete="updateCarousel();scroller();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
+                                <p:tree id="folders_tree" value="#{groupResourcesBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupResourcesBean.selectedNode}" datakey="#{node.folderId}">
+                                    <p:ajax event="select" update=":breadcrumbs :resourcesView :paginator :right_pane_wrapper" listener="#{groupResourcesBean.onGroupMenuNodeSelect}" oncomplete="updateCarousel();scroller();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
                                     <p:ajax event="expand" oncomplete="resourceDND();"/>
                                     <p:ajax event="collapse" oncomplete="resourceDND();"/>
 

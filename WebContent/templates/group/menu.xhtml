@@ -2,7 +2,6 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
     xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="group" type="de.l3s.learnweb.group.Group"-->
@@ -14,7 +13,6 @@
         <ul>
             <li>
                 <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{group.id}" styleClass="#{active == 'overview' ? 'active' : ''}" />
-
             </li>
             <li>
                 <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{group.id}" styleClass="#{active == 'resources' ? 'active' : ''}" />

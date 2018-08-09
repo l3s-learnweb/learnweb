@@ -423,7 +423,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         documentLinks = null;
     }
 
-    public void setLastVisit(User user) throws Exception
+    public void setLastVisit(User user) throws SQLException
     {
         int time = UtilBean.time();
         Learnweb.getInstance().getGroupManager().setLastVisit(user, this, time);

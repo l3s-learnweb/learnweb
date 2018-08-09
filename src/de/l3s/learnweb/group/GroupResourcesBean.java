@@ -16,6 +16,8 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
+import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -32,14 +34,8 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Link.LinkType;
-import de.l3s.learnweb.resource.AbstractPaginator;
-import de.l3s.learnweb.resource.AddFolderBean;
-import de.l3s.learnweb.resource.AddResourceBean;
-import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
-import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -54,47 +50,20 @@ import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
-public class GroupDetailBean extends ApplicationBean implements Serializable
+public class GroupResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
-    private static final Logger log = Logger.getLogger(GroupDetailBean.class);
+    private static final Logger log = Logger.getLogger(GroupResourcesBean.class);
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     // Group base attributes
     private int groupId; // Current group id
     private Group group; // Current group
+
     private Folder selectedFolder; // Current opened folder
     private TreeNode selectedNode; // Current folder in left panel
     private List<Folder> breadcrumbs;
 
-    private List<User> members;
-
-    // Group edit fields (Required for editing group)
-    private String editedGroupDescription;
-    @NotEmpty
-    @Size(min = 3, max = 60)
-    private String editedGroupTitle;
-    private int editedGroupLeaderId;
-
-    private User clickedUser;
-
-    private boolean isNewestResourceHidden = false;
-
-    // New link form
-    @NotEmpty
-    private String newLinkUrl;
-    @NotEmpty
-    private String newLinkTitle;
-    private String newLinkType;
-    private String newHypothesisLink;
-    private String newHypothesisToken;
-
-    private Link selectedLink;
-    private Link editLink;
-
-    private List<Link> links; // the same as group.getLinks() but with a link to the forum
-    private List<Link> documentLinks;
-    private String resourceSorting = "title";
     private Order order = Order.TITLE;
 
     // Folders tree
@@ -143,20 +112,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private final int pageSize;
 
-    public GroupDetailBean() throws SQLException
+    public GroupResourcesBean()
     {
         pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
-
-        loadGroup();
-
-        if(null == group)
-        {
-            return;
-        }
-
-        updateLinksList();
-
-        clickedUser = new User(); // TODO initialize with null
 
         searchFilters = new SearchFilters();
         searchFilters.setMode(MODE.group);
@@ -164,53 +122,21 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         //updateResourcesFromSolr(); //not necessary on most pages
     }
 
-    public void onLoad()
+    public void onLoad() throws SQLException
     {
         User user = getUser();
-        if(null != user && null != group)
-        {
-            try
-            {
-                user.setActiveGroup(group);
-                group.setLastVisit(user);
-            }
-            catch(Exception e1)
-            {
-                addFatalMessage(e1);
-            }
-        }
-    }
-
-    public boolean isUserDetailsHidden()
-    {
-        User user = getUser();
-        if(user == null)
-            return false;
-        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
-            return true;
-        return false;
-    }
-
-    private void loadGroup() throws SQLException
-    {
-        if(null == group)
-        {
-            Integer id = getParameterInt("group_id");
-
-            if(null == id)
-                return;
-
-            groupId = id;
-        }
+        if(null == user) // not logged in
+            return;
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        if(group != null)
+
+        if(null == group)
+            addInvalidParameterMessage("group_id");
+
+        if(null != group)
         {
-            editedGroupDescription = group.getDescription();
-            editedGroupLeaderId = group.getLeader() == null ? 0 : group.getLeader().getId();
-            editedGroupTitle = group.getTitle();
-            newHypothesisLink = group.getHypothesisLink();
-            newHypothesisToken = group.getHypothesisToken();
+            user.setActiveGroup(group);
+            group.setLastVisit(user);
 
             if(null == selectedFolder)
             {
@@ -227,28 +153,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 }
             }
         }
-    }
-
-    private void updateLinksList() throws SQLException
-    {
-        documentLinks = group.getDocumentLinks();
-        links = new LinkedList<>(group.getLinks());
-    }
-
-    public List<User> getMembers() throws SQLException
-    {
-        if(null == members)
-        {
-            loadGroup();
-
-            if(null == group)
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "Missing or wrong parameter: group_id");
-                return null;
-            }
-            members = group.getMembers();
-        }
-        return members;
     }
 
     public Group getGroup()
@@ -279,81 +183,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String getNewLinkUrl()
-    {
-        return newLinkUrl;
-    }
-
-    public void setNewLinkUrl(String newLinkUrl)
-    {
-        this.newLinkUrl = newLinkUrl;
-    }
-
-    public String getNewLinkTitle()
-    {
-        return newLinkTitle;
-    }
-
-    public void setNewLinkTitle(String newLinkTitle)
-    {
-        this.newLinkTitle = newLinkTitle;
-    }
-
-    public String getNewLinkType()
-    {
-        return newLinkType;
-    }
-
-    public void setNewLinkType(String newLinkType)
-    {
-        this.newLinkType = newLinkType;
-    }
-
-    public List<Link> getDocumentLinks() throws SQLException
-    {
-        if(null == documentLinks)
-            updateLinksList();
-
-        return documentLinks;
-    }
-
-    public Link getSelectedLink()
-    {
-        return selectedLink;
-    }
-
-    public void setSelectedLink(Link selectedLink)
-    {
-        this.selectedLink = selectedLink;
-    }
-
-    public Link getEditLink()
-    {
-        return editLink;
-    }
-
-    public void setEditLink(Link editLink)
-    {
-        this.editLink = editLink;
-    }
-
-    public void onDeleteLinkFromGroup(int linkId)
-    {
-        try
-        {
-
-            group.deleteLink(linkId);
-
-            addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
-            updateLinksList();
-        }
-        catch(SQLException e)
-        {
-            log.error("unhandled error", e);
-            addMessage(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
-        }
-    }
-
     public boolean isMember() throws SQLException
     {
         User user = getUser();
@@ -367,97 +196,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return group.isMember(user);
     }
 
-    public void onAddLink()
-    {
-        try
-        {
-            if(!group.isMember(getUser()))
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
-                return;
-            }
-
-            LinkType type;
-
-            if(!newLinkType.equals("url")) // newLinkType == google document
-            {
-                newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
-                type = LinkType.DOCUMENT;
-                log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
-            }
-            else
-            {
-                if(newLinkUrl.startsWith("https://docs.google.com"))
-                {
-                    type = LinkType.DOCUMENT;
-                    log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
-                }
-                else
-                {
-                    type = LinkType.LINK;
-                    log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
-                }
-            }
-
-            group.addLink(newLinkTitle, newLinkUrl, type);
-
-            addMessage(FacesMessage.SEVERITY_INFO, "link_added");
-
-            newLinkUrl = null;
-            newLinkTitle = null;
-            updateLinksList();
-        }
-        catch(Throwable t)
-        {
-            addFatalMessage(t);
-        }
-    }
-
-    public String onEditLink()
-    {
-        try
-        {
-            if(!group.isMember(getUser()))
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
-            }
-            else
-            {
-                getLearnweb().getLinkManager().save(selectedLink);
-                /*
-                group.clearLinksCache();
-                documentLinks = group.getLinks();
-                */
-                updateLinksList();
-                addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-            }
-        }
-        catch(Exception e)
-        {
-            addFatalMessage(e);
-        }
-        return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
-    }
-
     public void onSortingChanged(ValueChangeEvent e)
     {
         // TODO implement
         order = Order.TYPE;
-    }
-
-    public String getResourceSorting()
-    {
-        return resourceSorting;
-    }
-
-    public void setResourceSorting(String resourceSorting)
-    {
-        this.resourceSorting = resourceSorting;
-    }
-
-    public boolean isNewestResourceHidden()
-    {
-        return isNewestResourceHidden;
     }
 
     public int getSelectedResourceTargetGroupId()
@@ -522,24 +264,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         addResourceBean.setTargetFolderId(selectedResourceTargetFolderId);
     }
 
-    public List<Link> getLinks() throws SQLException
-    {
-        if(null == links)
-            updateLinksList();
-
-        return links;
-    }
-
-    public User getClickedUser()
-    {
-        return clickedUser;
-    }
-
-    public void setClickedUser(User clickedUser)
-    {
-        this.clickedUser = clickedUser;
-    }
-
     public AbstractPaginator getPaginator()
     {
         if(null == paginator)
@@ -584,19 +308,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         updateResourcesFromSolr();
         log(Action.group_resource_search, groupId, 0, query);
-    }
-
-    public void saveGmailId()
-    {
-        String gmailId = getParameter("gmail_id");
-        try
-        {
-            getLearnweb().getUserManager().saveGmailId(gmailId, getUser().getId());
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while inserting gmail id" + e);
-        }
     }
 
     public List<Filter> getAvailableFilters()
@@ -732,50 +443,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.group = group;
     }
 
-    public List<SelectItem> getMembersSelectItemList() throws SQLException
-    {
-        if(null == group)
-            return new ArrayList<>();
-
-        List<SelectItem> yourList;
-        yourList = new ArrayList<>();
-
-        for(User member : group.getMembers())
-            yourList.add(new SelectItem(member.getId(), member.getUsername()));
-
-        return yourList;
-    }
-
-    public String getEditedGroupDescription()
-    {
-        return editedGroupDescription;
-    }
-
-    public void setEditedGroupDescription(String editedGroupDescription)
-    {
-        this.editedGroupDescription = editedGroupDescription;
-    }
-
-    public String getEditedGroupTitle()
-    {
-        return editedGroupTitle;
-    }
-
-    public void setEditedGroupTitle(String editedGroupTitle)
-    {
-        this.editedGroupTitle = editedGroupTitle;
-    }
-
-    public int getEditedGroupLeaderId()
-    {
-        return editedGroupLeaderId;
-    }
-
-    public void setEditedGroupLeaderId(int editedGroupLeaderId)
-    {
-        this.editedGroupLeaderId = editedGroupLeaderId;
-    }
-
     public static long getSerialVersionUID()
     {
         return serialVersionUID;
@@ -789,26 +456,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public static DateFormat getSolrDateFormat()
     {
         return SOLR_DATE_FORMAT;
-    }
-
-    public void setMembers(List<User> members)
-    {
-        this.members = members;
-    }
-
-    public void setNewestResourceHidden(boolean newestResourceHidden)
-    {
-        isNewestResourceHidden = newestResourceHidden;
-    }
-
-    public void setLinks(List<Link> links)
-    {
-        this.links = links;
-    }
-
-    public void setDocumentLinks(List<Link> documentLinks)
-    {
-        this.documentLinks = documentLinks;
     }
 
     public Order getOrder()
@@ -862,84 +509,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             breadcrumbs.add(0, folder);
             addFolderToBreadcrumbs(folder.getParentFolder());
         }
-    }
-
-    public void onGroupEdit()
-    {
-        if(null == group)
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            return;
-        }
-
-        try
-        {
-            getUser().setActiveGroup(group);
-
-            if(!editedGroupDescription.equals(group.getDescription()))
-            {
-                group.setDescription(editedGroupDescription);
-                log(Action.group_changing_description, group.getId(), group.getId());
-            }
-            if(!editedGroupTitle.equals(group.getTitle()))
-            {
-                log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
-                group.setTitle(editedGroupTitle);
-            }
-            if(editedGroupLeaderId != group.getLeaderUserId())
-            {
-                group.setLeaderUserId(editedGroupLeaderId);
-                log(Action.group_changing_leader, group.getId(), group.getId());
-            }
-            if(!Objects.equals(newHypothesisLink, group.getHypothesisLink()))
-            {
-                group.setHypothesisLink(newHypothesisLink);
-                log(Action.group_changing_leader, group.getId(), group.getId());
-            }
-            if(!Objects.equals(newHypothesisToken, group.getHypothesisToken()))
-            {
-                group.setHypothesisToken(newHypothesisToken);
-            }
-            getLearnweb().getGroupManager().save(group);
-            //getLearnweb().getGroupManager().resetCache();
-            getUser().clearCaches();
-
-        }
-        catch(SQLException e)
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            log.error("unhandled error", e);
-        }
-
-        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
-    }
-
-    public void copyGroup()
-    {
-
-        if(null == group)
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            return;
-        }
-
-        try
-        {
-            group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
-        }
-        catch(SQLException e)
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            log.error("unhandled error", e);
-        }
-        addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
-    }
-
-    public List<Group> getUserCopyableGroups() throws SQLException
-    {
-        List<Group> copyableGroups = getUser().getWriteAbleGroups();
-        copyableGroups.remove(group);
-        return copyableGroups;
     }
 
     public RightPaneBean getRightPaneBean()
@@ -1779,25 +1348,4 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
-
-    public String getNewHypothesisLink()
-    {
-        return newHypothesisLink;
-    }
-
-    public void setNewHypothesisLink(String newHypothesisLink)
-    {
-        this.newHypothesisLink = newHypothesisLink;
-    }
-
-    public String getNewHypothesisToken()
-    {
-        return newHypothesisToken;
-    }
-
-    public void setNewHypothesisToken(String newHypothesisToken)
-    {
-        this.newHypothesisToken = newHypothesisToken;
-    }
-
 }

@@ -15,10 +15,10 @@ import javax.inject.Named;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import de.l3s.learnweb.group.GroupResourcesBean;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.group.GroupDetailBean;
 import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
 
@@ -51,9 +51,9 @@ public class UtilBean implements Serializable
         return (UserBean) getManagedBean("userBean");
     }
 
-    public static GroupDetailBean getGroupDetailBean()
+    public static GroupResourcesBean getGroupResourcesBean()
     {
-        return (GroupDetailBean) getManagedBean("groupDetailBean");
+        return (GroupResourcesBean) getManagedBean("groupResourcesBean");
     }
 
     public static MyResourcesBean getMyResourcesBean()

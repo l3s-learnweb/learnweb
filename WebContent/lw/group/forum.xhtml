@@ -39,7 +39,7 @@
 				<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}" 
 					styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
 					process="@this" value="#{msg.join_group}">
-					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}" />
 				</p:commandLink>
 			</h:form>
 			</ui:define>

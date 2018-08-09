@@ -263,7 +263,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
-            UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+            UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
 
         }
         catch(SQLException e)
@@ -308,7 +308,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
-            UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+            UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
 
             //resource.setUrl("");
         }
@@ -407,7 +407,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             if(resource.getGroupId() != 0)
-                UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+                UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
 
             UtilBean.getMyResourcesBean().updateResources();
         }

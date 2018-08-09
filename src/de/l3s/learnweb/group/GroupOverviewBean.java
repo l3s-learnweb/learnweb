@@ -31,17 +31,17 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6297485484480890425L;
 
-    @Inject
-    private RightPaneBean rightPaneBean;
-
     private int groupId;
     private Group group;
 
+    @Inject
+    private RightPaneBean rightPaneBean;
+
+    private List<LogEntry> logMessages;
+    private boolean showAllLogs = false;
+
     private SummaryOverview groupSummary;
     private Resource clickedResource;
-    private boolean allLogs = false;
-    private List<LogEntry> logMessages;
-
     private String summaryTitle;
 
     public void onLoad() throws SQLException
@@ -54,6 +54,12 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 
         if(null == group)
             addInvalidParameterMessage("group_id");
+
+        if(null != group)
+        {
+            user.setActiveGroup(group);
+            group.setLastVisit(user);
+        }
     }
 
     public List<LogEntry> getLogMessages()
@@ -67,12 +73,11 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 
     public void fetchAllLogs()
     {
-        allLogs = true;
+        showAllLogs = true;
         loadLogs(-1);
     }
 
     /**
-     *
      * @param limit if limit is -1 all log entries are returned
      */
     private void loadLogs(int limit)
@@ -80,7 +85,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         try
         {
             logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
-
         }
         catch(SQLException e)
         {
@@ -88,9 +92,9 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
     }
 
-    public boolean isAllLogs()
+    public boolean isShowAllLogs()
     {
-        return allLogs;
+        return showAllLogs;
     }
 
     public SummaryOverview getSummaryOverview()
@@ -173,14 +177,9 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    public String getSummaryTitle()
     {
-        this.rightPaneBean = rightPaneBean;
-    }
-
-    public Group getGroup()
-    {
-        return group;
+        return summaryTitle;
     }
 
     public int getGroupId()
@@ -193,8 +192,13 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         this.groupId = groupId;
     }
 
-    public String getSummaryTitle()
+    public Group getGroup()
     {
-        return summaryTitle;
+        return group;
+    }
+
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    {
+        this.rightPaneBean = rightPaneBean;
     }
 }
