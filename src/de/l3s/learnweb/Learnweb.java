@@ -729,51 +729,53 @@ public class Learnweb
             select.setTimestamp(2, Timestamp.valueOf(from));
             select.setTimestamp(3, Timestamp.valueOf(to));
             ResultSet rs = select.executeQuery();
-            if(rs.next())
-            {
-                summary = new SummaryOverview();
+
+            if (!rs.next()) {
+                return null;
             }
-            while(rs.next())
-            {
+
+            summary = new SummaryOverview();
+
+            do {
                 LogEntry logEntry = new LogEntry(rs);
                 switch(logEntry.getAction())
                 {
-                case deleting_resource:
-                    summary.getDeletedResources().add(logEntry);
-                    break;
-                case adding_resource:
-                    Resource resource = logEntry.getResource();
-                    if(resource != null)
-                    {
-                        summary.getAddedResources().add(logEntry);
-                    }
-                    break;
-                case forum_post_added:
-                case forum_reply_message:
-                    summary.getForumsInfo().add(logEntry);
-                    break;
-                case group_joining:
-                case group_leaving:
-                    summary.getMembersInfo().add(logEntry);
-                    break;
-                case changing_resource:
-                    Resource logEntryResource = logEntry.getResource();
-                    if(logEntryResource != null)
-                    {
-                        if(summary.getUpdatedResources().keySet().contains(logEntryResource))
+                    case deleting_resource:
+                        summary.getDeletedResources().add(logEntry);
+                        break;
+                    case adding_resource:
+                        Resource resource = logEntry.getResource();
+                        if(resource != null)
                         {
-                            summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                            summary.getAddedResources().add(logEntry);
                         }
-                        else
+                        break;
+                    case forum_post_added:
+                    case forum_reply_message:
+                        summary.getForumsInfo().add(logEntry);
+                        break;
+                    case group_joining:
+                    case group_leaving:
+                        summary.getMembersInfo().add(logEntry);
+                        break;
+                    case changing_resource:
+                        Resource logEntryResource = logEntry.getResource();
+                        if(logEntryResource != null)
                         {
-                            summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
+                            if(summary.getUpdatedResources().keySet().contains(logEntryResource))
+                            {
+                                summary.getUpdatedResources().get(logEntryResource).add(logEntry);
+                            }
+                            else
+                            {
+                                summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
+                            }
                         }
-                    }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
                 }
-            }
+            } while (rs.next());
         }
         return summary;
     }

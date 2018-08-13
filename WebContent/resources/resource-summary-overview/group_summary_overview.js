@@ -1,4 +1,4 @@
-$(document).on('ready', function() {
+$(function() {
 	$(".added_res_slider").slick({
 		dots : true,
 		infinite : true,
@@ -6,7 +6,6 @@ $(document).on('ready', function() {
 		slidesToShow : 3,
 		slidesToScroll : 1,
 		focusOnSelect : true
-
 	});
 
 	$(".added_res_slider").on('afterChange', function(event, slick, currentSlide) {
@@ -56,8 +55,7 @@ $(".dropdown-btn")
 											if ($(this).attr('id') === 'added_res_tab_new_changes') {
 												var currentIndex = nextElement
 														.find('.slick-current')
-														.attr(
-																'data-slick-index');
+														.attr('data-slick-index');
 												displayResource(currentIndex,
 														'added');
 												closeTheOtherSlider($('#added_res_tab'));
@@ -65,8 +63,7 @@ $(".dropdown-btn")
 											if ($(this).attr('id') === 'added_res_tab') {
 												var currentIndex = nextElement
 														.find('.slick-current')
-														.attr(
-																'data-slick-index');
+														.attr('data-slick-index');
 												displayResource(currentIndex,
 														'updated');
 												closeTheOtherSlider($('#added_res_tab_new_changes'))
