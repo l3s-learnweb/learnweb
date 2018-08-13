@@ -358,10 +358,6 @@ public class BounceManager extends Observable
                 {
                     return ts;
                 }
-                else
-                {
-                    return new Date(0L);
-                }
             }
 
         }
@@ -370,8 +366,7 @@ public class BounceManager extends Observable
             log.error("Failed to get last bounce address. Setting current date as it. SQLException: ", e);
         }
 
-        return new Date(0L);
-
+        return new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 365); // one year before
     }
 
     /**
