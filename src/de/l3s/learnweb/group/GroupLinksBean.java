@@ -1,18 +1,20 @@
 package de.l3s.learnweb.group;
 
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
@@ -250,7 +252,6 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
     {
         try
         {
-
             group.deleteLink(linkId);
 
             addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");

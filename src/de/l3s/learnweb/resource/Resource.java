@@ -1,8 +1,5 @@
 package de.l3s.learnweb.resource;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -619,7 +616,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -2012,17 +2009,18 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.languageTwo = languageTwo;
     }
 
+    /*
     private void writeObject(ObjectOutputStream oos) throws IOException
     {
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-
+    
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();
         log.debug("Deserialize resource: " + id);
-    }
+    }*/
 
     protected Object readResolve()
     {
@@ -2032,10 +2030,10 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         {
             return Learnweb.getInstance().getResourceManager().getResource(id);
         }
-        catch(SQLException e)
+        catch(Exception e)
         {
             log.fatal("Can't load resource: " + id);
-            return null;
+            return this;
         }
     }
 

@@ -1,22 +1,22 @@
 package de.l3s.learnweb.group;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.Organisation;
-import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Organisation;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
 public class GroupMembersBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -235626744365943867L;
-    private static final Logger log = Logger.getLogger(GroupMembersBean.class);
+    //private static final Logger log = Logger.getLogger(GroupMembersBean.class);
 
     private int groupId;
     private Group group;

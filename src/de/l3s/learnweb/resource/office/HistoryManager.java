@@ -61,6 +61,7 @@ public class HistoryManager
         history.getUser().setName(rs.getString("username"));
         history.setChanges(new ArrayList<>());
         history.setVersion(rs.getInt("history_version"));
+
         try(PreparedStatement selectChange = learnweb.getConnection().prepareStatement("SELECT created_date, u.user_id, u.username FROM lw_user u inner join lw_history_change h where u.user_id = h.user_id and resource_history_id = ?"))
         {
             selectChange.setInt(1, history.getId());
@@ -69,7 +70,6 @@ public class HistoryManager
                 history.getChanges().add(createChange(resultSet));
         }
         return history;
-
     }
 
     private Change createChange(ResultSet rs) throws SQLException

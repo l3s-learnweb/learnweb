@@ -426,8 +426,7 @@ public class ResourceManager
     public Resource addResource(Resource resource, User user) throws SQLException
     {
         resource.setUser(user);
-
-        saveResource(resource);
+        resource.save();
 
         try
         {
@@ -438,7 +437,6 @@ public class ResourceManager
         {
             log.error("Can't save archiveUrls", e);
         }
-        resource = cache.put(resource);
 
         resource.setDefaultThumbnailIfNull();
 
