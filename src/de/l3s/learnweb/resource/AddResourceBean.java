@@ -269,6 +269,47 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void addGlossary2() throws IOException
+    {
+        try
+        {
+            resource.setDeleted(false);
+            resource.setSource(SERVICE.learnweb);
+            resource.setType(ResourceType.glossary2);
+            resource.setUrl(getLearnweb().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(resource.getId()));
+
+            Resource iconResource = getLearnweb().getResourceManager().getResource(200233);
+            resource.setThumbnail0(iconResource.getThumbnail0());
+            resource.setThumbnail1(iconResource.getThumbnail1());
+            resource.setThumbnail2(iconResource.getThumbnail2());
+            resource.setThumbnail3(iconResource.getThumbnail3());
+            resource.setThumbnail4(iconResource.getThumbnail4());
+
+            // add resource to a group if selected
+            resource.setGroupId(getTargetGroupId());
+            resource.setFolderId(getTargetFolderId());
+            getUser().setActiveGroup(getTargetGroupId());
+
+            if(resource.getId() == -1)
+            {
+                resource = getUser().addResource(resource);
+                // getLearnweb().getGlossaryManager().createGlossaryResource(resource);
+            }
+            else
+                resource.save();
+
+            log(Action.adding_resource, getTargetGroupId(), resource.getId());
+            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
+
+            UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
     public void addSurvey() throws IOException
     {
         try

@@ -12,7 +12,6 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.Resource;
 
 public class GlossaryManager
 {
@@ -24,12 +23,14 @@ public class GlossaryManager
         this.learnweb = learnweb;
     }
 
-    public void createGlossaryResource(Resource resource) throws SQLException //Called when resource is created in right-pane
+    public void saveGlossaryResource(GlossaryResource resource) throws SQLException //Called when resource is created in right-pane
     {
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
         insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages()));
         insertGlossary.executeQuery();
+        if(!resource.getEntries().isEmpty())
+            copyGlossaryEntries(resource.getEntries(), resource.getUserId(), resource.isDeleted());
 
     }
 
@@ -131,16 +132,20 @@ public class GlossaryManager
         }
     }
 
-    public void copyGlossary(int oldResourceId, int newResourceId, int userId) throws SQLException
+    //Required to set new IDs for entries and terms
+    public void copyGlossaryEntries(List<GlossaryEntry> entries, int userId, boolean delete) throws SQLException
     {
-        GlossaryResource newResource = getGlossaryResource(oldResourceId);
-        newResource.getEntries().forEach(entry -> entry.setId(-1));
-        newResource.getEntries().forEach(entry -> entry.getTerms().forEach(term -> term.setId(-1)));
-        newResource.setId(newResourceId);
-        createGlossaryResource(newResource);
-        for(GlossaryEntry entry : newResource.getEntries())
+        if(delete)
         {
-            saveEntry(entry, userId);
+            entries.forEach(entry -> entry.setDeleted(true));
+        }
+        entries.forEach(entry -> entry.setId(-1));
+        entries.forEach(entry -> entry.getTerms().forEach(term -> term.setId(-1)));
+
+        //createGlossaryResource(newResource);
+        for(GlossaryEntry entry : entries)
+        {
+            saveEntry(entry, userId); //TODO:: userId of user who copies or id of old user???
         }
     }
 

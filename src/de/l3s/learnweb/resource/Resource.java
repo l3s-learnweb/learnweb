@@ -149,6 +149,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
 
     //glossary information
+    private List<String> glossaryLanguages; //New Glossary
     @Deprecated
     private String languageOne; // TODO remove
     @Deprecated
@@ -616,7 +617,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -2015,12 +2016,22 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-    
+
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();
         log.debug("Deserialize resource: " + id);
     }*/
+
+    public List<String> getGlossaryLanguages()
+    {
+        return glossaryLanguages;
+    }
+
+    public void setGlossaryLanguages(List<String> glossaryLanguages)
+    {
+        this.glossaryLanguages = glossaryLanguages;
+    }
 
     protected Object readResolve()
     {
