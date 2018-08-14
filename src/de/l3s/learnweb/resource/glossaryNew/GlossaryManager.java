@@ -25,13 +25,40 @@ public class GlossaryManager
 
     public void saveGlossaryResource(GlossaryResource resource) throws SQLException //Called when resource is created in right-pane
     {
+        if(resource.isDeleted()) //set resource and entries as deleted
+        {
+            delete(resource);
+            return;
+        }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
         insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages()));
         insertGlossary.executeQuery();
-        if(!resource.getEntries().isEmpty())
-            copyGlossaryEntries(resource.getEntries(), resource.getUserId(), resource.isDeleted());
+        if(resource.getEntries() != null || !resource.getEntries().isEmpty()) //when copying
+            copyGlossaryEntries(resource.getEntries(), resource.getId(), resource.getUserId(), resource.isDeleted());
 
+    }
+
+    /**
+     * To set new IDs for entries and terms
+     *
+     * @param entries
+     * @param resourceId
+     * @param userId
+     * @param delete
+     * @throws SQLException
+     */
+    public void copyGlossaryEntries(List<GlossaryEntry> entries, int resourceId, int userId, boolean delete) throws SQLException
+    {
+        for(GlossaryEntry entry : entries)
+        {
+            if(delete)
+                entry.setDeleted(true);
+            entry.setId(-1);
+            entry.setResourceId(resourceId);
+            entry.getTerms().forEach(term -> term.setId(-1));
+            saveEntry(entry, userId); //TODO:: userId of user who copies or id of old user???
+        }
     }
 
     public void saveEntry(GlossaryEntry entry, int userId) throws SQLException
@@ -132,23 +159,6 @@ public class GlossaryManager
         }
     }
 
-    //Required to set new IDs for entries and terms
-    public void copyGlossaryEntries(List<GlossaryEntry> entries, int userId, boolean delete) throws SQLException
-    {
-        if(delete)
-        {
-            entries.forEach(entry -> entry.setDeleted(true));
-        }
-        entries.forEach(entry -> entry.setId(-1));
-        entries.forEach(entry -> entry.getTerms().forEach(term -> term.setId(-1)));
-
-        //createGlossaryResource(newResource);
-        for(GlossaryEntry entry : entries)
-        {
-            saveEntry(entry, userId); //TODO:: userId of user who copies or id of old user???
-        }
-    }
-
     public GlossaryResource getGlossaryResource(int resourceId) throws SQLException
     {
         log.info("getting glossary resource");
@@ -162,7 +172,7 @@ public class GlossaryManager
             glossary.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
         }
         //Glossary Entries details
-        List<GlossaryEntry> entries = getGlossaryEntries(resourceId);
+        List<GlossaryEntry> entries = getGlossaryEntries(glossary.getId());
         glossary.setEntries(entries);
         return glossary;
 
@@ -252,12 +262,42 @@ public class GlossaryManager
         return convertedLanguages;
     }
 
-    public void delete(int resourceId) throws SQLException
+    public void delete(GlossaryResource resource) throws SQLException
     {
         PreparedStatement deleteGlossary = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_resource` SET `deleted`=? WHERE `resource_id`=?");
         deleteGlossary.setBoolean(1, true);
-        deleteGlossary.setInt(2, resourceId);
+        deleteGlossary.setInt(2, resource.getId());
         deleteGlossary.executeQuery();
+        if(resource.getEntries() != null || !resource.getEntries().isEmpty())
+        {
+            for(GlossaryEntry entry : resource.getEntries())
+            {
+                entry.setDeleted(true);
+                saveEntry(entry, 0);
+            }
+        }
+
+    }
+
+    /**
+     * loads glossary metadata into glossaryresource
+     * 
+     * @param glossaryResource
+     * @throws SQLException
+     */
+    public void loadGlossaryResource(GlossaryResource glossaryResource) throws SQLException
+    {
+        PreparedStatement getGlossary = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_resource` WHERE `resource_id`=?");
+        getGlossary.setInt(1, glossaryResource.getId());
+        ResultSet result = getGlossary.executeQuery();
+        if(result.next())
+        {
+            glossaryResource.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
+            glossaryResource.setGlossaryLanguages(Arrays.asList(result.getString("allowed_languages").split(",")));
+        }
+        //Glossary Entries details
+        List<GlossaryEntry> entries = getGlossaryEntries(glossaryResource.getId());
+        glossaryResource.setEntries(entries);
 
     }
 }

@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,10 +44,22 @@ public class GlossaryResource extends Resource implements Serializable
 
     }
 
+    public GlossaryResource(Resource resource) throws IllegalAccessException, InvocationTargetException
+    {
+        super(resource);
+    }
+
     @Override
     public GlossaryResource clone()
     {
         return new GlossaryResource(this);
+    }
+
+    @Override
+    protected void postConstruct() throws SQLException
+    {
+        super.postConstruct();
+        Learnweb.getInstance().getGlossaryManager().loadGlossaryResource(this);
     }
 
     @Override

@@ -3,16 +3,21 @@ package de.l3s.learnweb.resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -33,9 +38,11 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.glossary.LanguageItem.LANGUAGE;
+import de.l3s.learnweb.resource.glossaryNew.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 
 @Named
@@ -269,7 +276,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void addGlossary2() throws IOException
+    public void addGlossary2() throws IOException, IllegalAccessException, InvocationTargetException
     {
         try
         {
@@ -293,10 +300,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             if(resource.getId() == -1)
             {
                 resource = getUser().addResource(resource);
-                // getLearnweb().getGlossaryManager().createGlossaryResource(resource);
             }
             else
                 resource.save();
+            GlossaryResource glossary = new GlossaryResource(resource);
+            glossary.setId(resource.getId());
+            getLearnweb().getGlossaryManager().saveGlossaryResource(glossary);
 
             log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
@@ -643,6 +652,24 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setFileEditorBean(FileEditorBean fileEditorBean)
     {
         this.fileEditorBean = fileEditorBean;
+    }
+
+    private transient List<SelectItem> availableLanguages;
+
+    public List<SelectItem> getAvailableLanguages()
+    {
+        if(null == availableLanguages)
+        {
+            availableLanguages = new ArrayList<>();
+
+            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages())
+            {
+                log.debug("add locales " + locale.getLanguage());
+                availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+            }
+            availableLanguages.sort(Misc.selectItemLabelComparator);
+        }
+        return availableLanguages;
     }
 
     public LANGUAGE[] getGlossaryLanguage()

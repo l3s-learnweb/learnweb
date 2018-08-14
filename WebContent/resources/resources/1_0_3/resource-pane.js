@@ -394,6 +394,9 @@ function doAction(action, extraAttr1, extraAttr2) {
         case 'add-glossary':
             createGroupItemCommand([{name: 'type', value: 'glossary'}]);
             break;
+        case 'add-glossary2':
+            createGroupItemCommand([{name: 'type', value: 'glossary2'}]);
+            break;
         case 'add-survey':
             createGroupItemCommand([{name: 'type', value: 'survey'}]);
             break;

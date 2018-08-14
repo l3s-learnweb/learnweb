@@ -379,7 +379,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -476,24 +476,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             allowedTermLanguages.sort(Misc.selectItemLabelComparator);
         }
         return allowedTermLanguages;
-    }
-
-    private transient List<SelectItem> availableLanguages;
-
-    public List<SelectItem> getAvailableLanguages()
-    {
-        if(null == availableLanguages)
-        {
-            availableLanguages = new ArrayList<>();
-
-            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages())
-            {
-                log.debug("add locales " + locale.getLanguage());
-                availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
-            }
-            availableLanguages.sort(Misc.selectItemLabelComparator);
-        }
-        return availableLanguages;
     }
 
     public boolean isPaginator()

@@ -607,6 +607,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
+        setGlossaryLanguages(old.glossaryLanguages);
         // sets the originalResourceId to the id of the source resource
         if(old.originalResourceId == 0)
             setOriginalResourceId(old.id);
