@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource.glossaryNew;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Locale;
 
 import javax.validation.constraints.Size;
 
@@ -28,7 +27,7 @@ public class GlossaryTerm implements Serializable
     private String source;
     @Size(max = 500)
     private String phraseology;
-    private Locale language;
+    private String language;
     private Timestamp timestamp;
     private boolean termPasted;
     private boolean pronounciationPasted;
@@ -95,12 +94,12 @@ public class GlossaryTerm implements Serializable
         this.phraseology = phraseology;
     }
 
-    public Locale getLanguage()
+    public String getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(Locale language)
+    public void setLanguage(String language)
     {
         this.language = language;
     }

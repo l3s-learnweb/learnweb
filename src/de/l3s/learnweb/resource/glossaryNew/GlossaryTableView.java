@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.sql.Timestamp;
+import java.util.Locale;
 
 public class GlossaryTableView
 {
@@ -46,7 +47,7 @@ public class GlossaryTableView
 
     public String getLanguage()
     {
-        return term.getLanguage().getDisplayLanguage();
+        return new Locale(term.getLanguage()).getDisplayLanguage();
     }
 
     public String getUses()
@@ -77,5 +78,10 @@ public class GlossaryTableView
     public Timestamp getTimestamp()
     {
         return term.getTimestamp();
+    }
+
+    public GlossaryEntry getEntry()
+    {
+        return entry;
     }
 }

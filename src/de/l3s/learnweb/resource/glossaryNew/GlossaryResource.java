@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,9 +20,9 @@ public class GlossaryResource extends Resource implements Serializable
 
     }
 
-    private List<Locale> allowedLanguages;
+    private List<Locale> allowedLanguages = new LinkedList<>();
 
-    private List<GlossaryEntry> entries;
+    private List<GlossaryEntry> entries = new LinkedList<>();
 
     public List<Locale> getAllowedLanguages()
     {
@@ -36,6 +37,11 @@ public class GlossaryResource extends Resource implements Serializable
     public List<GlossaryEntry> getEntries()
     {
         return entries;
+    }
+
+    public void setEntries(List<GlossaryEntry> entries)
+    {
+        this.entries = entries;
     }
 
 }

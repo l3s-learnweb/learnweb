@@ -10,7 +10,7 @@ public class GlossaryEntry implements Serializable
 {
     private static final long serialVersionUID = 1251808024273639912L;
 
-    private int id;
+    private int id = -1;
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
@@ -21,7 +21,6 @@ public class GlossaryEntry implements Serializable
     private String topicOne;
     private String topicTwo;
     private String topicThree;
-
     private List<GlossaryTerm> terms = new LinkedList<>();
 
     public String getDescription()
@@ -117,6 +116,11 @@ public class GlossaryEntry implements Serializable
     public List<GlossaryTerm> getTerms()
     {
         return terms;
+    }
+
+    public void setTerms(List<GlossaryTerm> terms)
+    {
+        this.terms = terms;
     }
 
     public void addTerm(GlossaryTerm term)

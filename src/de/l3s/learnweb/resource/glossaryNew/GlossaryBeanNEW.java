@@ -1,19 +1,44 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.imageio.ImageIO;
+import javax.inject.Named;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -32,12 +57,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
-    @Deprecated
-    private List<GlossaryTerm> formTerms; // TODO use formEntry.getTerms() instead
     private final List<SelectItem> availableTopicOne = new ArrayList<>();
-
     private List<SelectItem> availableTopicTwo = new ArrayList<>();
     private List<SelectItem> availableTopicThree = new ArrayList<>();
+    private boolean paginator = true;
+    private String toggleLabel = "Show All";
 
     public void onLoad() throws SQLException
     {
@@ -48,11 +72,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
 
-        /*if(glossaryResource == null)
+        if(glossaryResource == null)
         {
             addInvalidParameterMessage("resource_id");
             return;
-        }*/
+        }
         availableTopicOne.add(new SelectItem("Environment"));
         availableTopicOne.add(new SelectItem("European Politics"));
         availableTopicOne.add(new SelectItem("Medicine"));
@@ -66,58 +90,100 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     private void loadGlossaryTable(GlossaryResource glossaryResource2)
     {
-        // TODO Auto-generated method stub
         //set tableItems
         tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource2);
 
     }
 
-    public void setGlossaryForm(List<GlossaryTableView> tableItems)
+    public void setGlossaryForm(GlossaryTableView tableItem)
     {
-        //TODO:: set entry details and term details along with ids.
+        //set form entry
+        formEntry = tableItem.getEntry();
 
     }
 
-    public void onSave(GlossaryEntry entry)
+    public String onSave()
     {
-        getLearnweb().getGlossaryManager().saveEntry(entry);
+        if(formEntry.getTerms().size() == 0 || formEntry.getTerms().size() == numberOfDeletedTerms() || formEntry.getTerms().get(0).getTerm().isEmpty())
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation")); // TODO use translate
+            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
+        }
+        try
+        {
+            getLearnweb().getGlossaryManager().saveEntry(formEntry, getUser().getId());
+        }
+        catch(SQLException e)
+        {
+            log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
+
+        }
+        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
     public void setNewFormEntry()
     {
-        setFormEntry(new GlossaryEntry());
-        setFormTerms(new ArrayList<>());
-        formTerms.add(new GlossaryTerm());
+        formEntry = new GlossaryEntry();
+        formEntry.setResourceId(resourceId);
+        formEntry.addTerm(new GlossaryTerm());
     }
 
-    public void deleteEntry(GlossaryEntry entry)
+    public String deleteEntry(GlossaryTableView row)
     {
-        //TODO:: delete entry+terms with delete button from table view
+        row.getEntry().setDeleted(true);
+        try
+        {
+            getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), getUser().getId());
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
+            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+        }
+        catch(SQLException e)
+        {
+            log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
+
+        }
+        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
     }
 
     public void deleteTerm(GlossaryTerm term)
     {
-        //TODO:: delete terms from form.
-        //if termid<0, ignore else delete from db
+
+        if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
+            return;
+
+        if(term.getId() < 0)
+        {
+            formEntry.getTerms().remove(term);
+
+        }
+        else
+        {
+            formEntry.getTerms().remove(term);
+            term.setDeleted(true);
+            formEntry.getTerms().add(term);
+        }
+        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
+
+    }
+
+    public int numberOfDeletedTerms()
+    {
+        int deletedTerms = 0;
+
+        for(GlossaryTerm t : formEntry.getTerms())
+        {
+            if(t.isDeleted())
+                deletedTerms++;
+        }
+        return deletedTerms;
     }
 
     public void addTerm()
     {
-        formTerms.add(new GlossaryTerm());
+        formEntry.addTerm(new GlossaryTerm());
         log(Action.glossary_term_add, glossaryResource); // should store resourceId + term_id
 
-    }
-
-    public void postProcessXls(Object document)
-    {
-        //TODO:: postprocess of xls (Check if possible to simplify with primefaces postprocess)
-    }
-
-    //not necessary??
-    public File text2Image(String textString)
-    {
-        return null;
-        //TODO:: method to get watermark
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
@@ -191,6 +257,154 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
     }
 
+    public void togglePaginator()
+    {
+        paginator = !paginator;
+        toggleLabel = toggleLabel.equalsIgnoreCase("show all") ? getLocaleMessage("Glossary.collapse") : getLocaleMessage("Glossary.show_all");
+    }
+
+    public String getToggleLabel()
+    {
+        return toggleLabel;
+    }
+
+    public void postProcessXls(Object document)
+    {
+        try
+        {
+            log.debug("post processing glossary xls");
+
+            HSSFWorkbook wb = (HSSFWorkbook) document;
+
+            HSSFSheet sheet = wb.getSheetAt(0);
+
+            HSSFRow row0 = sheet.getRow(1);
+            HSSFCell cell0;
+
+            File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
+
+            InputStream is = new FileInputStream(watermark);
+
+            byte[] bytes = IOUtils.toByteArray(is);
+            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+            is.close();
+            CreationHelper helper = wb.getCreationHelper();
+            Drawing drawing = sheet.createDrawingPatriarch();
+            ClientAnchor anchor = helper.createClientAnchor();
+            anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
+
+            if(row0 != null)
+            {
+                cell0 = row0.getCell(0);
+            }
+            else
+            {
+
+                return;
+            }
+
+            for(int i = 2; i <= sheet.getLastRowNum(); i++)
+            {
+                HSSFRow row = sheet.getRow(i);
+                HSSFCell cell = row.getCell(0);
+
+                if(cell != null)
+                {
+                    cell.setCellValue(cell.getStringCellValue());
+                    if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
+                    {
+                        cell0.setCellValue(cell0.getStringCellValue());
+                        continue;
+                    }
+                    else
+                    {
+                        int rowIndex = i;
+                        if(sheet.getRow(rowIndex).getCell(0) != null)
+                        {
+                            cell0 = sheet.getRow(rowIndex).getCell(0);
+                            sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
+                        }
+                    }
+                }
+
+            }
+
+            //Set owner details
+
+            //set top-left corner of the picture,
+            //subsequent call of Picture#resize() will operate relative to it
+            int row1 = (sheet.getLastRowNum() / 4);
+            int row2 = ((sheet.getLastRowNum() / 4) * 3);
+            anchor.setCol1(3);
+            anchor.setRow1(row1);
+            anchor.setCol2(10);
+            anchor.setRow2(row2);
+
+            Picture pict = drawing.createPicture(anchor, pictureIdx);
+            HSSFCellStyle copyrightStyle = wb.createCellStyle();
+            copyrightStyle.setLocked(true);
+            sheet.protectSheet("learnweb");
+            watermark.delete();
+
+        }
+        catch(Exception e)
+        {
+            log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
+        }
+
+    }
+
+    public File text2Image(String textString) throws IOException
+    {
+        //create a File Object
+
+        File file = File.createTempFile(textString, ".png");
+        //File file = new File("./uploaded_files/tmp/" + textString + ".png");
+        //create the font you wish to use
+        Font font = new Font("Tahoma", Font.PLAIN, 18);
+
+        //create the FontRenderContext object which helps us to measure the text
+        FontRenderContext frc = new FontRenderContext(null, true, true);
+
+        //get the height and width of the text
+        Rectangle2D bounds = font.getStringBounds(textString, frc);
+        int width = (int) bounds.getWidth();
+        int height = (int) bounds.getHeight();
+
+        //create a BufferedImage object
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        //calling createGraphics() to get the Graphics2D
+        Graphics2D graphic = image.createGraphics();
+
+        //set color and other parameters
+        /*Color background = new Color(1f, 1f, 1f, 0.0f);
+        
+        graphic.setColor(background);
+        graphic.setBackground(background);*/
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+        graphic.fillRect(0, 0, width, height);
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        Color textColor = new Color(0, 0, 0, 0.5f);
+        graphic.setColor(textColor);
+        graphic.setFont(font);
+        graphic.drawString(textString, (float) bounds.getX(), (float) -bounds.getY());
+
+        //releasing resources
+        graphic.dispose();
+
+        //creating the file
+        ImageIO.write(image, "png", file);
+
+        return file;
+    }
+
+    public void rotatePDF(Object document)
+    {
+        Document doc = (Document) document;
+        doc.setPageSize(PageSize.A4.rotate());
+    }
+
     public int getResourceId()
     {
         return resourceId;
@@ -223,30 +437,13 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public int getCount()
     {
-        // return glossaryResource.getEntries().size();
-        return 0;
+        return glossaryResource.getEntries().size();
+
     }
 
     public GlossaryEntry getFormEntry()
     {
         return formEntry;
-    }
-
-    public void setFormEntry(GlossaryEntry formEntry) // TODO necessary?
-    {
-        this.formEntry = formEntry;
-    }
-
-    @Deprecated
-    public List<GlossaryTerm> getFormTerms()
-    {
-        return formTerms;
-    }
-
-    @Deprecated
-    public void setFormTerms(List<GlossaryTerm> formTerms) // TODO necessary?
-    {
-        this.formTerms = formTerms;
     }
 
     public List<SelectItem> getAvailableTopicOne()
@@ -259,19 +456,26 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return availableTopicTwo;
     }
 
-    public void setAvailableTopicTwo(List<SelectItem> availableTopicTwo) // TODO necessary?
-    {
-        this.availableTopicTwo = availableTopicTwo;
-    }
-
     public List<SelectItem> getAvailableTopicThree()
     {
         return availableTopicThree;
     }
 
-    public void setAvailableTopicThree(List<SelectItem> availableTopicThree) // TODO necessary?
+    private transient List<SelectItem> allowedTermLanguages;
+
+    public List<SelectItem> getAllowedTermLanguages()
     {
-        this.availableTopicThree = availableTopicThree;
+        if(null == allowedTermLanguages)
+        {
+            allowedTermLanguages = new ArrayList<>();
+            for(Locale locale : getGlossaryResource().getAllowedLanguages())
+            {
+                log.debug("add locales " + locale.getLanguage());
+                allowedTermLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+            }
+            allowedTermLanguages.sort(Misc.selectItemLabelComparator);
+        }
+        return allowedTermLanguages;
     }
 
     private transient List<SelectItem> availableLanguages;
@@ -282,7 +486,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         {
             availableLanguages = new ArrayList<>();
 
-            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages()) // TODO use glossaryResource.getAllowedLanguages() instead
+            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages())
             {
                 log.debug("add locales " + locale.getLanguage());
                 availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
@@ -290,6 +494,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             availableLanguages.sort(Misc.selectItemLabelComparator);
         }
         return availableLanguages;
+    }
+
+    public boolean isPaginator()
+    {
+        return paginator;
     }
 
 }

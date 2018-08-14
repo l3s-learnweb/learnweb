@@ -22,13 +22,10 @@
 			<h:panelGroup id="main_component" layout="block">
 				
 				<h:form id= "form" prependId="false">
-				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12"
+				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 12 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} Exporters">
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-						<p:ajax event="filter" oncomplete="groupRow()" />
-						<p:ajax event="page" oncomplete="groupRow()" />
-						<p:ajax event="sort" oncomplete="groupRow()" />
 
 						<f:facet name="header">
 							<p:outputPanel>
@@ -37,20 +34,10 @@
 								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
 						</f:facet>
-
-						<f:facet name="Exporters">
-							<h:commandLink styleClass="excel_export_todo_use">
-								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
-								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBeanNEW.postProcessXls}" />
-								</h:commandLink>
-								<h:commandLink>
-								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="top:7px;left:3px;position:relative;" />
-								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
-
-							</h:commandLink>
-						</f:facet>
-						<p:column style=" width:20px;">
-							<p:commandLink action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
+						
+						<p:column style=" width:20px;" groupRow="true" exportable="false">
+							<p:outputLabel for="edit" value="#{item.getEntryId()}" style="display:none;"/>
+							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 							</p:commandLink>
 
@@ -60,26 +47,30 @@
 							</p:commandLink>
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						<p:column headerText="#{msg['Glossary.topic']} 1" groupRow="true" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicOne()}">
-							<h:outputText value="#{item.topic1}" pt:data-itemId="#{item.getEntryId()}" id="cell1" />
+							<p:outputLabel for="cell1" value="#{item.getEntryId()}" style="display:none;"/>
+							<h:outputText value="#{item.getTopicOne()}" pt:data-itemId="#{item.getEntryId()}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						<p:column headerText="#{msg['Glossary.topic']} 2" groupRow="true" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicTwo()}">
-							<h:outputText value="#{item.topic2}" pt:data-itemId="#{item.getEntryId()}" id="cell2" />
+							<p:outputLabel for="cell2" value="#{item.getEntryId()}" style="display:none;"/>
+							<h:outputText value="#{item.getTopicTwo()}" pt:data-itemId="#{item.getEntryId()}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						<p:column headerText="#{msg['Glossary.topic']} 3" groupRow="true" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicThree()}">
-							<h:outputText value="#{item.topic3}" pt:data-itemId="#{item.getEntryId()}" id="cell3" />
+							<p:outputLabel for="cell3" value="#{item.getEntryId()}" style="display:none;"/>
+							<h:outputText value="#{item.getTopicThree()}" pt:data-itemId="#{item.getEntryId()}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.description']}" groupRow="true" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
 							filterStyle="width: 90%;">
+							<p:outputLabel for="cell4" value="#{item.getEntryId()}" style="display:none;"/>
 							<h:outputText value="#{item.getDescription()}" pt:data-itemId="#{item.getEntryId()}" id="cell4" />
 						</p:column>
 
 						<p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.getTerm()}" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicOne()}#{item.getTopicTwo()}#{item.getEntryId()}#{item.getTerm()}">
-							<h:outputText value="#{item.value}" />
+							<h:outputText value="#{item.getTerm()}" />
 						</p:column>
 						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}">
 							<h:outputText value="#{item.getLanguage()}" />
@@ -101,12 +92,23 @@
 						</p:column>
 						
 						
-						<f:facet name="footer">
-							<p:outputPanel>
-								<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}"></h:outputText>
-							</p:outputPanel>
-						</f:facet>
+						
 						</p:dataTable>
+						<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
+						
+								<h:outputLabel value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;" styleClass="glossary_footer_text"></h:outputLabel>
+								<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
+								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"  width="24" style="position:relative; text-alignt:center; display: block; " />
+								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBeanNEW.postProcessXls}" />
+								</p:commandLink>
+								<p:commandLink style="text-align:center;" ajax="false">
+								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
+								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
+								</p:commandLink>
+								<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this">
+       							 <h:outputText value="#{glossaryBeanNEW.toggleLabel}" />
+    							</p:commandLink>
+							</p:panelGrid>
 
 					<br />
 					<br />
@@ -153,41 +155,31 @@
 							<h:outputText value="" />
 
 							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
-							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" requiredMessage="#{msg['Glossary.description_message']}" />
+							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" pt:onpaste="#{glossaryBeanNEW.formEntry.setDescriptionPasted(true)}" requiredMessage="#{msg['Glossary.description_message']}" />
 							<p:message for="description" />
 				</p:panelGrid>
 				
 				<br />
-						<p:dataTable value="#{glossaryBeanNEW.formTerms}" var="term" id="lang_terms" tableStyle="width:100%">
-							<!-- <f:facet name="header">
-								<h:outputText value="#{glossaryBean.primaryLanguage.label}"></h:outputText>
-							</f:facet> -->
+						<p:dataTable value="#{glossaryBeanNEW.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
+				
+							<p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
-							<p:column headerText="#{msg['Glossary.term']}">
-
-								<p:inputText id="term" value="#{term.term}" style="width: 90%" requiredMessage="#{msg.mandatory_field}" />
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="#{term.setTermPasted(true)}"/>
 								<p:message for="term" />
 								
 							</p:column>
 							
-							<p:column headerText="#{msg.language}">
+							<p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
 
 
-								<p:selectCheckboxMenu id="language" label="--select--" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" >
-									<f:selectItem itemValue="english" itemLabel="english"></f:selectItem>
-									<f:selectItem itemValue="english" itemLabel="german"></f:selectItem>
-									<f:selectItem itemValue="english" itemLabel="italian"></f:selectItem>
-									<f:selectItem itemValue="english" itemLabel="french"></f:selectItem>
-								</p:selectCheckboxMenu>
-								<p:message for="language" />
-
-								<!--<p:selectOneMenu id="language" value="#{term.language}">
-									<f:selectItems value="#{glossaryBeanNEW.availableLanguages}" />
+								
+								<p:selectOneMenu id="language" value="#{term.language}">
+									<f:selectItems value="#{glossaryBeanNEW.allowedTermLanguages}" />
 								</p:selectOneMenu>
-								<p:message for="language" /> -->
+								<p:message for="language" />
 								</p:column>
 
-							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center">
+							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center" rendered="#{not term.deleted}">
 								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="#{term.getUsesDisplayLabel()}"><!-- Test this -->
 									<f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}" />
 									<f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}" />
@@ -196,15 +188,15 @@
 									<p:ajax event="toggleSelect"  update="use" />
 								</p:selectCheckboxMenu>
 							</p:column>
-							<p:column headerText="#{msg['Glossary.pronounciation']}">
+							<p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="pronoun" value='#{term.pronounciation}' style="width: 90%" />
+								<p:inputText id="pronoun" value='#{term.pronounciation}' style="width: 90%" pt:onpaste="#{term.setPronounciationPasted(true)}" />
 							</p:column>
-							<p:column headerText="#{msg['Glossary.acronym']}">
+							<p:column headerText="#{msg['Glossary.acronym']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="acro" value='#{term.acronym}' style="width: 90%" />
+								<p:inputText id="acro" value='#{term.acronym}' style="width: 90%" pt:onpaste="#{term.setAcronymPasted(true)}" />
 							</p:column>
-							<p:column headerText="#{msg.source}">
+							<p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
 
 								<p:selectOneMenu id="ref" value="#{term.source}" style="width: 80% !important" autoWidth="false">
 									<f:selectItem itemValue="#{null}" itemLabel="--#{msg['Glossary.select']}--" />
@@ -220,27 +212,27 @@
 									<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 								</p:selectOneMenu>
 							</p:column>
-							<p:column headerText="#{msg['Glossary.phraseology']}">
+							<p:column headerText="#{msg['Glossary.phraseology']}" rendered="#{not term.deleted}">
 
-								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" />
+								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" pt:onpaste="#{term.setPhraseologyPasted(true)}"/>
 							</p:column>
-							<p:column width="10">
+							<p:column width="10" rendered="#{not term.deleted}">
 								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms">
-									<f:ajax execute="lang_terms" />
+									<f:ajax execute="@this lang_terms" />
 									<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 								</p:commandLink>
 								<p:tooltip for="delete_term" value="#{msg['Glossary.remove_row']}" position="bottom" />
 							</p:column>
 						</p:dataTable>
 						<br />
-						<p:commandButton value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBeanNEW.addTerm()}" styleClass="greenbutton"
+						<p:commandButton value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBeanNEW.addTerm()}" style="float:left;" styleClass="greenbutton"
 							update=":glossary_add :lang_terms">
 							<f:ajax execute="@this lang_terms" />
 						</p:commandButton>
 
 						<br />
 						<br />
-						<p:commandButton id="save" value="#{msg.save}" action="#{glossaryBeanNEW.onSave}" styleClass="greenbutton resource_button" update=":glossary_add" binding="#{save}">
+						<p:commandButton id="save" value="#{msg.save}" action="#{glossaryBeanNEW.onSave()}" styleClass="greenbutton resource_button" update=":glossary_add" binding="#{save}">
 							<f:ajax execute="@form" />
 
 
@@ -258,5 +250,7 @@
 				
 			</h:panelGroup>
 		</ui:fragment>
+		
 	</ui:define>
+	
 </ui:composition>
