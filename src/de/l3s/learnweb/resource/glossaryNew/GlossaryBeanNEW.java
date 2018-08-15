@@ -53,7 +53,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GlossaryBeanNEW.class);
 
     private int resourceId;
-    private GlossaryResource glossaryResource;
+    private GlossaryResource glossaryResource = new GlossaryResource();
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
@@ -69,8 +69,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return;
-
-        glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
+        glossaryResource.setId(resourceId);
+        getLearnweb().getGlossaryManager().loadGlossaryResource(this.glossaryResource);
 
         if(glossaryResource == null)
         {
@@ -106,7 +106,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         if(formEntry.getTerms().size() == 0 || formEntry.getTerms().size() == numberOfDeletedTerms() || formEntry.getTerms().get(0).getTerm().isEmpty())
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation")); // TODO use translate
+            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
         }
         try

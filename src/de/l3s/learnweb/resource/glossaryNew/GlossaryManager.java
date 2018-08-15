@@ -164,34 +164,6 @@ public class GlossaryManager
         }
     }
 
-    public GlossaryResource getGlossaryResource(int resourceId) throws SQLException
-    {
-        // TODO check how the getSurveyResoruce method works it must retrieve the
-        /*
-         * This method should only be a helper that casts a Resource savely to a GlossaryResource.
-         *
-         * The code below must go into the GlossaryResource.postConstruct() method.
-         *
-         * Otherwise I could retrieve a (Glossary)Resource obj from the ResourceManager which misses all the additional Glossary fields.
-         */
-
-        log.info("getting glossary resource");
-        GlossaryResource glossary = new GlossaryResource();
-        glossary.setId(resourceId);
-        PreparedStatement getGlossary = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_resource` WHERE `resource_id`=?");
-        getGlossary.setInt(1, resourceId);
-        ResultSet result = getGlossary.executeQuery();
-        if(result.next())
-        {
-            glossary.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
-        }
-        //Glossary Entries details
-        List<GlossaryEntry> entries = getGlossaryEntries(glossary.getId());
-        glossary.setEntries(entries);
-        return glossary;
-
-    }
-
     public List<GlossaryEntry> getGlossaryEntries(int resourceId) throws SQLException
     {
         PreparedStatement getEntries = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `resource_id`=? and deleted = ?");
@@ -308,6 +280,11 @@ public class GlossaryManager
         {
             glossaryResource.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
             glossaryResource.setGlossaryLanguages(Arrays.asList(result.getString("allowed_languages").split(",")));
+        }
+        else
+        {
+            glossaryResource = null;
+            return;
         }
         //Glossary Entries details
         List<GlossaryEntry> entries = getGlossaryEntries(glossaryResource.getId());
