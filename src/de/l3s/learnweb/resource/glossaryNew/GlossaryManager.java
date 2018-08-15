@@ -34,6 +34,8 @@ public class GlossaryManager
         insertGlossary.setInt(1, resource.getId());
         insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages()));
         insertGlossary.executeQuery();
+
+        // TODO how do you know that the Glossary needs to be copied now?
         if(resource.getEntries() != null || !resource.getEntries().isEmpty()) //when copying
             copyGlossaryEntries(resource.getEntries(), resource.getId(), resource.getUserId(), resource.isDeleted());
 
@@ -77,6 +79,8 @@ public class GlossaryManager
         }
         else
         {
+            // TODO Rishita: use INSERT INTO ON DUPLICATE UPDATE see Learnweb code mail from 04.05.2018 and SQL.getCreateStatement
+
             if(entry.getId() < 0) // new entry
             {
                 PreparedStatement insertEntry = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_entry`(`resource_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -119,6 +123,7 @@ public class GlossaryManager
                 "UPDATE `lw_glossary_term` SET `entry_id`=?, `deleted`=?, `term`=?, `language`=?, `uses`=?, `pronounciation`=?, `acronym`=?, `source`=?, `phraseology`=?, `term_pasted`=?, `pronounciation_pasted`=?, `acronym_pasted`=?, `phraseology_pasted`=? WHERE `term_id`=?");
         for(GlossaryTerm term : terms)
         {
+            // TODO see line 80
             if(term.getId() < 0)//new term
             {
                 termInsert.setInt(1, entryId);
@@ -161,6 +166,15 @@ public class GlossaryManager
 
     public GlossaryResource getGlossaryResource(int resourceId) throws SQLException
     {
+        // TODO check how the getSurveyResoruce method works it must retrieve the
+        /*
+         * This method should only be a helper that casts a Resource savely to a GlossaryResource.
+         *
+         * The code below must go into the GlossaryResource.postConstruct() method.
+         *
+         * Otherwise I could retrieve a (Glossary)Resource obj from the ResourceManager which misses all the additional Glossary fields.
+         */
+
         log.info("getting glossary resource");
         GlossaryResource glossary = new GlossaryResource();
         glossary.setId(resourceId);
@@ -281,7 +295,7 @@ public class GlossaryManager
 
     /**
      * loads glossary metadata into glossaryresource
-     * 
+     *
      * @param glossaryResource
      * @throws SQLException
      */
