@@ -119,6 +119,7 @@ public class GlossaryManager
 
     }
 
+    //  TODO entryId and userId are stored in the GlossaryTerm. No need to provide them separately
     public void saveTerms(List<GlossaryTerm> terms, int entryId, int userId) throws SQLException
     {
         PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
