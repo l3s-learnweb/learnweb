@@ -14,6 +14,7 @@ public class GlossaryEntry implements Serializable
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
+    private int lastChangedByUserId;
 
     private String description;
     private boolean descriptionPasted = false;
@@ -126,6 +127,16 @@ public class GlossaryEntry implements Serializable
     public void addTerm(GlossaryTerm term)
     {
         this.terms.add(term);
+    }
+
+    public int getLastChangedByUserId()
+    {
+        return lastChangedByUserId;
+    }
+
+    public void setLastChangedByUserId(int lastChangedByUserId)
+    {
+        this.lastChangedByUserId = lastChangedByUserId;
     }
 
 }

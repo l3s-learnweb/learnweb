@@ -32,7 +32,7 @@ public class GlossaryManager
         }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages()));
+        insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
         insertGlossary.executeQuery();
 
         // TODO how do you know that the Glossary needs to be copied now?
@@ -65,6 +65,10 @@ public class GlossaryManager
 
     public void saveEntry(GlossaryEntry entry, int userId) throws SQLException
     {
+        // TODO I think the userId parameter can be removed.
+        // When an entry is deleted I would not set it to zero. The idea of the deleted flag was that we can undo deletions. But when you change the user_id this becomes harder.
+        // When a glossary resource was cloned we could keep the createdByUserId and lastChangedByUserId as they are. When a resource is copied the new user becomes only owner of the resource. The entries keep their original creator. What do you think?
+
         if(entry.isDeleted())
         {
             PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=? WHERE `entry_id`=?");
@@ -166,28 +170,30 @@ public class GlossaryManager
 
     public List<GlossaryEntry> getGlossaryEntries(int resourceId) throws SQLException
     {
-        PreparedStatement getEntries = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `resource_id`=? and deleted = ?");
-        getEntries.setInt(1, resourceId);
-        getEntries.setBoolean(2, false);
-        ResultSet resultEntries = getEntries.executeQuery();
         List<GlossaryEntry> entries = new LinkedList<>();
-        while(resultEntries.next())
+
+        try(PreparedStatement getEntries = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `resource_id`=? and deleted = ?");)
         {
-            GlossaryEntry entry = new GlossaryEntry();
-            entry.setDeleted(false);
-            entry.setResourceId(resourceId);
-            entry.setId(resultEntries.getInt("entry_id"));
-            entry.setUserId(resultEntries.getInt("user_id"));
-            entry.setTopicOne(resultEntries.getString("topic_one"));
-            entry.setTopicTwo(resultEntries.getString("topic_two"));
-            entry.setTopicThree(resultEntries.getString("topic_three"));
-            entry.setDescription(resultEntries.getString("description"));
-            entry.setDescriptionPasted(resultEntries.getBoolean("description_pasted"));
+            getEntries.setInt(1, resourceId);
+            getEntries.setBoolean(2, false);
+            ResultSet resultEntries = getEntries.executeQuery();
+            while(resultEntries.next())
+            {
+                GlossaryEntry entry = new GlossaryEntry();
+                entry.setResourceId(resourceId);
+                entry.setId(resultEntries.getInt("entry_id"));
+                entry.setUserId(resultEntries.getInt("user_id"));
+                entry.setTopicOne(resultEntries.getString("topic_one"));
+                entry.setTopicTwo(resultEntries.getString("topic_two"));
+                entry.setTopicThree(resultEntries.getString("topic_three"));
+                entry.setDescription(resultEntries.getString("description"));
+                entry.setDescriptionPasted(resultEntries.getBoolean("description_pasted"));
 
-            //get terms for given entry
-            entry.setTerms(getGlossaryTerms(entry.getId()));
+                //get terms for given entry
+                entry.setTerms(getGlossaryTerms(entry.getId()));
 
-            entries.add(entry);
+                entries.add(entry);
+            }
         }
         return entries;
     }
@@ -195,31 +201,31 @@ public class GlossaryManager
     public List<GlossaryTerm> getGlossaryTerms(int entryId) throws SQLException
     {
         List<GlossaryTerm> entryTerms = new LinkedList<>();
-        PreparedStatement getTerms = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_term` WHERE `entry_id`=? and `deleted`=?");
-        getTerms.setInt(1, entryId);
-        getTerms.setBoolean(2, false);
-        ResultSet terms = getTerms.executeQuery();
-        while(terms.next())
+        try(PreparedStatement getTerms = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_term` WHERE `entry_id`=? and `deleted`=?");)
         {
-            GlossaryTerm term = new GlossaryTerm();
-            term.setDeleted(false);
-            term.setEntryId(entryId);
-            term.setId(terms.getInt("term_id"));
-            term.setUserId(terms.getInt("user_id"));
-            term.setTerm(terms.getString("term"));
-            term.setLanguage(terms.getString("language"));
-            term.setUses(Arrays.asList(terms.getString("uses").split(",")));
-            term.setPronounciation(terms.getString("pronounciation"));
-            term.setAcronym(terms.getString("acronym"));
-            term.setSource(terms.getString("source"));
-            term.setPhraseology(terms.getString("phraseology"));
-            term.setTimestamp(terms.getTimestamp("timestamp"));
-            term.setTermPasted(terms.getBoolean("term_pasted"));
-            term.setPronounciationPasted(terms.getBoolean("pronounciation_pasted"));
-            term.setAcronymPasted(terms.getBoolean("acronym_pasted"));
-            term.setPhraseologyPasted(terms.getBoolean("phraseology_pasted"));
-            entryTerms.add(term);
-
+            getTerms.setInt(1, entryId);
+            getTerms.setBoolean(2, false);
+            ResultSet terms = getTerms.executeQuery();
+            while(terms.next())
+            {
+                GlossaryTerm term = new GlossaryTerm();
+                term.setEntryId(entryId);
+                term.setId(terms.getInt("term_id"));
+                term.setUserId(terms.getInt("user_id"));
+                term.setTerm(terms.getString("term"));
+                term.setLanguage(terms.getString("language"));
+                term.setUses(Arrays.asList(terms.getString("uses").split(",")));
+                term.setPronounciation(terms.getString("pronounciation"));
+                term.setAcronym(terms.getString("acronym"));
+                term.setSource(terms.getString("source"));
+                term.setPhraseology(terms.getString("phraseology"));
+                term.setTimestamp(terms.getTimestamp("timestamp"));
+                term.setTermPasted(terms.getBoolean("term_pasted"));
+                term.setPronounciationPasted(terms.getBoolean("pronounciation_pasted"));
+                term.setAcronymPasted(terms.getBoolean("acronym_pasted"));
+                term.setPhraseologyPasted(terms.getBoolean("phraseology_pasted"));
+                entryTerms.add(term);
+            }
         }
         return entryTerms;
     }
@@ -237,6 +243,7 @@ public class GlossaryManager
         return tableView;
     }
 
+    // TODO instead you can user the already existing method from StringHelper splitLocales
     public List<Locale> convertStringToLocale(String string)
     {
         List<String> languages = Arrays.asList(string.split(","));
@@ -250,6 +257,7 @@ public class GlossaryManager
 
     public void delete(GlossaryResource resource) throws SQLException
     {
+        // TODO use autoclose; see line 200 and already mentioned "Learnweb Code" email
         PreparedStatement deleteGlossary = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_resource` SET `deleted`=? WHERE `resource_id`=?");
         deleteGlossary.setBoolean(1, true);
         deleteGlossary.setInt(2, resource.getId());
@@ -279,11 +287,11 @@ public class GlossaryManager
         if(result.next())
         {
             glossaryResource.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
-            glossaryResource.setGlossaryLanguages(Arrays.asList(result.getString("allowed_languages").split(",")));
+            glossaryResource.setGlossaryLanguages(Arrays.asList(result.getString("allowed_languages").split(","))); // TODO remove
         }
         else
         {
-            glossaryResource = null;
+            glossaryResource = null; // TODO see SurveyManager. you must log this and other errors. Instead you produce a NPE somewhere else
             return;
         }
         //Glossary Entries details

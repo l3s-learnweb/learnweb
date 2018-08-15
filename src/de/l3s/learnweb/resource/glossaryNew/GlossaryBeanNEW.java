@@ -95,7 +95,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     }
 
-    public void setGlossaryForm(GlossaryTableView tableItem)
+    public void setGlossaryForm(GlossaryTableView tableItem) // is that ever used?
     {
         //set form entry
         formEntry = tableItem.getEntry();
@@ -118,7 +118,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
 
         }
-        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved")); // TODO you will show a success message even when an error occured ...
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
@@ -132,6 +132,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public String deleteEntry(GlossaryTableView row)
     {
         row.getEntry().setDeleted(true);
+        row.getEntry().setLastChangedByUserId(getUser().getId());
         try
         {
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), getUser().getId());
@@ -141,8 +142,9 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
-
+            addFatalMessage(e); // TODO use at least this. Don't ignore errors. The user must be informed
         }
+
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
     }
 
@@ -461,7 +463,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return availableTopicThree;
     }
 
-    private transient List<SelectItem> allowedTermLanguages;
+    private transient List<SelectItem> allowedTermLanguages; // cache for the allowed languages select list
 
     public List<SelectItem> getAllowedTermLanguages()
     {
