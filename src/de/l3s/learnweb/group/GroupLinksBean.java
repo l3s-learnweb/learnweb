@@ -12,8 +12,8 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -138,19 +138,19 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
             {
                 newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
                 type = Link.LinkType.DOCUMENT;
-                log(LogEntry.Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
+                log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
             }
             else
             {
                 if(newLinkUrl.startsWith("https://docs.google.com"))
                 {
                     type = Link.LinkType.DOCUMENT;
-                    log(LogEntry.Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
+                    log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
                 }
                 else
                 {
                     type = Link.LinkType.LINK;
-                    log(LogEntry.Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
+                    log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
                 }
             }
 
@@ -254,6 +254,7 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
         {
             group.deleteLink(linkId);
 
+            log(Action.group_deleting_link, group.getId(), group.getId(), newLinkTitle);
             addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
             updateLinksList();
         }

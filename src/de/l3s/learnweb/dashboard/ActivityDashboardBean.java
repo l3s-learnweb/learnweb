@@ -20,8 +20,9 @@ import javax.inject.Named;
 
 import org.primefaces.model.chart.LineChartModel;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -53,22 +54,22 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     public void init()
     {
         actions = new TreeMap<String, String>();
-        actions.put("Resource actions", getStringOfActions(Action.RESOURCE_RELATED_ACTIONS));
-        actions.put("Folder actions", getStringOfActions(Action.FOLDER_ACTIONS));
-        actions.put("Glossary actions", getStringOfActions(Action.GLOSSARY_RELATED_ACTIONS));
-        actions.put("Login/Logout actions", getStringOfActions(Action.LOG_ACTIONS));
-        actions.put("Search actions", getStringOfActions(Action.SEARCH_RELATED_ACTIONS));
-        actions.put("Other actions", getStringOfActions(Action.OTHER_ACTIONS));
-        actions.put("Group actions", getStringOfActions(Action.GROUP_ACTIONS));
-        groupedActions = new ArrayList<SelectItem>();
+        actions.put("Resource actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.RESOURCE)));
+        actions.put("Folder actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.FOLDER)));
+        actions.put("Glossary actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GLOSSARY)));
+        actions.put("Login/Logout actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.USER)));
+        actions.put("Search actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.SEARCH)));
+        actions.put("Other actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.OTHER)));
+        actions.put("Group actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GROUP)));
 
-        groupedActions.add(createGroupCheckboxes("Resource actions", Action.RESOURCE_RELATED_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Folder actions", Action.FOLDER_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Glossary actions", Action.GLOSSARY_RELATED_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Login/Logout actions", Action.LOG_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Search actions", Action.SEARCH_RELATED_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Group actions", Action.GROUP_ACTIONS));
-        groupedActions.add(createGroupCheckboxes("Other actions", Action.OTHER_ACTIONS));
+        groupedActions = new ArrayList<SelectItem>();
+        groupedActions.add(createGroupCheckboxes("Resource actions", Action.getActionsByCategory(ActionCategory.RESOURCE)));
+        groupedActions.add(createGroupCheckboxes("Folder actions", Action.getActionsByCategory(ActionCategory.FOLDER)));
+        groupedActions.add(createGroupCheckboxes("Glossary actions", Action.getActionsByCategory(ActionCategory.GLOSSARY)));
+        groupedActions.add(createGroupCheckboxes("Login/Logout actions", Action.getActionsByCategory(ActionCategory.USER)));
+        groupedActions.add(createGroupCheckboxes("Search actions", Action.getActionsByCategory(ActionCategory.SEARCH)));
+        groupedActions.add(createGroupCheckboxes("Group actions", Action.getActionsByCategory(ActionCategory.GROUP)));
+        groupedActions.add(createGroupCheckboxes("Other actions", Action.getActionsByCategory(ActionCategory.OTHER)));
     }
 
     public void onFullActivitiesClick()

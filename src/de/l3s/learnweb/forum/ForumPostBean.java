@@ -7,15 +7,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -66,7 +66,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         posts.add(newPost);
 
         newPost = new ForumPost();
-        log(Action.forum_reply_message, group.getId(), topicId, topic.getTitle());
+        log(Action.forum_post_added, group.getId(), topicId, topic.getTitle());
         return null;
     }
 
@@ -140,12 +140,13 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(user.isModerator() || user.getId() == post.getUserId())
         {
-
             ForumManager fm = getLearnweb().getForumManager();
             fm.deletePost(post);
         }
 
         posts.remove(post);
+
+        log(Action.forum_post_deleted, group.getId(), post.getId(), topic.getTitle());
     }
 
     public void quotePost(ForumPost post) throws SQLException

@@ -1,14 +1,28 @@
 package de.l3s.learnweb.dashboard;
 
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.util.MapHelper;
-import org.apache.log4j.Logger;
-import org.primefaces.model.chart.*;
-
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LegendPlacement;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.chart.PieChartModel;
+
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.ActionCategory;
+import de.l3s.util.MapHelper;
 
 class DashboardChartsFactory
 {
@@ -28,17 +42,20 @@ class DashboardChartsFactory
 
         for(Integer actionId : actionsMap.keySet())
         {
-            if (actionId < actionTypes.length) {
+            if(actionId < actionTypes.length)
+            {
                 Action action = actionTypes[actionId];
-                if(Action.SEARCH_RELATED_ACTIONS.contains(action))
+                if(Action.getActionsByCategory(ActionCategory.SEARCH).contains(action))
                     search += actionsMap.get(actionId);
-                else if(Action.GLOSSARY_RELATED_ACTIONS.contains(action))
+                else if(Action.getActionsByCategory(ActionCategory.GLOSSARY).contains(action))
                     glossary += actionsMap.get(actionId);
-                else if(Action.RESOURCE_RELATED_ACTIONS.contains(action))
+                else if(Action.getActionsByCategory(ActionCategory.RESOURCE).contains(action))
                     resource += actionsMap.get(actionId);
                 else
                     system += actionsMap.get(actionId);
-            } else {
+            }
+            else
+            {
                 log.error("Unknown actionId: " + actionId);
             }
         }
@@ -217,21 +234,22 @@ class DashboardChartsFactory
     {
         LineChartModel model = new LineChartModel();
 
-        for(ActivityGraphData activityData :data) {
-        LineChartSeries interactions = new LineChartSeries();
+        for(ActivityGraphData activityData : data)
+        {
+            LineChartSeries interactions = new LineChartSeries();
             interactions.setLabel(activityData.getName());
 
-        Calendar start = Calendar.getInstance();
-        start.setTime(startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(endDate);
+            Calendar start = Calendar.getInstance();
+            start.setTime(startDate);
+            Calendar end = Calendar.getInstance();
+            end.setTime(endDate);
 
-        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-        {
-            String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
-            interactions.set(dateKey, activityData.getActionsPerDay().getOrDefault(dateKey, 0));
-        }
-        model.addSeries(interactions);
+            for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
+            {
+                String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
+                interactions.set(dateKey, activityData.getActionsPerDay().getOrDefault(dateKey, 0));
+            }
+            model.addSeries(interactions);
         }
         model.setLegendPosition("e");
         model.setShowPointLabels(true);

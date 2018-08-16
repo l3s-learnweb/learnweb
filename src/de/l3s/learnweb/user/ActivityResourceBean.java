@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 
 @Named
 @ViewScoped
@@ -32,9 +32,9 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
             Action.rating_resource,
             Action.tagging_resource,
             Action.thumb_rating_resource,
-            Action.forum_post_added,
-            Action.changing_resource,
-            Action.forum_reply_message
+            Action.forum_topic_added,
+            Action.changing_office_resource,
+            Action.forum_post_added
     };
 
     private List<LogEntry> newsList;
@@ -43,7 +43,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 
     private void generateNewsList() throws SQLException
     {
-        newsList = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
+        newsList = getLearnweb().getLogManager().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
     }
 
     public List<LogEntry> getNewsList() throws SQLException

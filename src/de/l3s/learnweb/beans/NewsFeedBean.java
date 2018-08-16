@@ -3,11 +3,11 @@ package de.l3s.learnweb.beans;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 
 @Named
 @RequestScoped
@@ -19,7 +19,7 @@ public class NewsFeedBean extends ApplicationBean
 
     private final static Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
             Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
-            Action.changing_resource,
+            Action.changing_office_resource,
             Action.group_removing_resource };
 
     public NewsFeedBean()
@@ -45,7 +45,7 @@ public class NewsFeedBean extends ApplicationBean
         {
             try
             {
-                newsList = getLearnweb().getLogsByUser(entityId, filter, 50);
+                newsList = getLearnweb().getLogManager().getLogsByUser(entityId, filter, 50);
             }
             catch(SQLException e)
             {

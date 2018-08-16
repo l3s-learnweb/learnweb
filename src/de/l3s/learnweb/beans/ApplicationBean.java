@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
@@ -16,12 +16,9 @@ public class ApplicationBean
 {
     private transient Learnweb learnweb;
     private transient String sessionId;
-    private long startTime;
-    //private transient User user;
 
     public ApplicationBean()
     {
-        startTime = System.currentTimeMillis();
     }
 
     public String getSessionId()
@@ -227,7 +224,7 @@ public class ApplicationBean
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    protected void log(LogEntry.Action action, int groupId, int targetId, int params)
+    protected void log(Action action, int groupId, int targetId, int params)
     {
         log(action, groupId, targetId, Integer.toString(params), getUser());
     }
@@ -237,7 +234,7 @@ public class ApplicationBean
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    public void log(LogEntry.Action action, int groupId, int targetId, String params)
+    public void log(Action action, int groupId, int targetId, String params)
     {
         log(action, groupId, targetId, params, getUser());
     }
@@ -247,7 +244,7 @@ public class ApplicationBean
      * The parameters "targetId" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    public void log(LogEntry.Action action, int groupId, int targetId)
+    public void log(Action action, int groupId, int targetId)
     {
         log(action, groupId, targetId, null, getUser());
     }
@@ -257,23 +254,22 @@ public class ApplicationBean
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      */
-    protected void log(LogEntry.Action action, int groupId, int targetId, String params, User user)
+    protected void log(Action action, int groupId, int targetId, String params, User user)
     {
-        int executionTime = (int) (System.currentTimeMillis() - startTime);
-        getLearnweb().log(user, action, groupId, targetId, params, getSessionId(), executionTime);
+        getLearnweb().getLogManager().log(user, action, groupId, targetId, params, getSessionId());
     }
 
-    protected void log(LogEntry.Action action, Resource resource, int params)
+    protected void log(Action action, Resource resource, int params)
     {
         log(action, resource.getGroupId(), resource.getId(), Integer.toString(params), getUser());
     }
 
-    protected void log(LogEntry.Action action, Resource resource, String params)
+    protected void log(Action action, Resource resource, String params)
     {
         log(action, resource.getGroupId(), resource.getId(), params, getUser());
     }
 
-    protected void log(LogEntry.Action action, Resource resource)
+    protected void log(Action action, Resource resource)
     {
         log(action, resource.getGroupId(), resource.getId(), null, getUser());
     }

@@ -1,16 +1,16 @@
 package de.l3s.learnweb.dashboard;
 
-import static de.l3s.learnweb.LogEntry.Action.adding_resource;
-import static de.l3s.learnweb.LogEntry.Action.adding_resource_metadata;
-import static de.l3s.learnweb.LogEntry.Action.adding_yourown_metadata;
-import static de.l3s.learnweb.LogEntry.Action.edit_resource;
-import static de.l3s.learnweb.LogEntry.Action.edit_resource_metadata;
-import static de.l3s.learnweb.LogEntry.Action.extended_metadata_open_dialog;
-import static de.l3s.learnweb.LogEntry.Action.group_category_search;
-import static de.l3s.learnweb.LogEntry.Action.group_metadata_search;
-import static de.l3s.learnweb.LogEntry.Action.group_resource_search;
-import static de.l3s.learnweb.LogEntry.Action.opening_resource;
-import static de.l3s.learnweb.LogEntry.Action.searching;
+import static de.l3s.learnweb.logging.Action.adding_resource;
+import static de.l3s.learnweb.logging.Action.adding_resource_metadata;
+import static de.l3s.learnweb.logging.Action.adding_yourown_metadata;
+import static de.l3s.learnweb.logging.Action.edit_resource;
+import static de.l3s.learnweb.logging.Action.edit_resource_metadata;
+import static de.l3s.learnweb.logging.Action.extended_metadata_open_dialog;
+import static de.l3s.learnweb.logging.Action.group_category_search;
+import static de.l3s.learnweb.logging.Action.group_metadata_search;
+import static de.l3s.learnweb.logging.Action.group_resource_search;
+import static de.l3s.learnweb.logging.Action.opening_resource;
+import static de.l3s.learnweb.logging.Action.searching;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -19,15 +19,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationDebuggingBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -90,7 +90,7 @@ public class DashboardSearchHistoryUserBean extends ApplicationDebuggingBean imp
 
             Action[] filter = new Action[] { opening_resource, searching, adding_resource, edit_resource, group_resource_search, extended_metadata_open_dialog, adding_yourown_metadata, adding_resource_metadata, edit_resource_metadata, group_metadata_search,
                     group_category_search };
-            List<LogEntry> logEntries = getLearnweb().getLogsByUser(paramUserId, filter, 5000);
+            List<LogEntry> logEntries = getLearnweb().getLogManager().getLogsByUser(paramUserId, filter, 5000);
 
             for(LogEntry logEntry : logEntries)
             {

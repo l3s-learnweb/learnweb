@@ -25,11 +25,11 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.facts2.FactSheet;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AddResourceBean.CreateThumbnailThread;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;

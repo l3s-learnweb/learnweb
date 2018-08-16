@@ -40,8 +40,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.Misc;
 

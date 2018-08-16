@@ -18,8 +18,8 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
@@ -118,7 +118,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             Resource resource = rightPaneBean.getClickedResource();
             resource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-            log(LogEntry.Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
+            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
             tagName = ""; // clear tag input field
         }
         catch(Exception e)
@@ -255,7 +255,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             rightPaneBean.getClickedResource().deleteComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(LogEntry.Action.deleting_comment, rightPaneBean.getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
+            log(Action.deleting_comment, rightPaneBean.getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
         }
         catch(Exception e)
         {
@@ -268,7 +268,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         try
         {
             Comment comment = rightPaneBean.getClickedResource().addComment(newComment, getUser());
-            log(LogEntry.Action.commenting_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), comment.getId());
+            log(Action.commenting_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), comment.getId());
             addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
             newComment = "";
         }
@@ -311,7 +311,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 rpm.processArchivedVersion(rightPaneBean.getClickedResource(), archiveUrl);
 
             rightPaneBean.getClickedResource().save();
-            log(LogEntry.Action.resource_thumbnail_update, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "");
+            log(Action.resource_thumbnail_update, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         }
         catch(Exception e)
@@ -407,7 +407,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(LogEntry.Action.rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
+        log(Action.rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -437,7 +437,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(LogEntry.Action.thumb_rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
+        log(Action.thumb_rating_resource, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -477,7 +477,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sLevels += selectedLevel + ";";
                 }
-                log(LogEntry.Action.adding_yourown_metadata, resource.getGroupId(), resource.getId(), "language levels: " + sLevels);
+                log(Action.adding_yourown_metadata, resource.getGroupId(), resource.getId(), "language levels: " + sLevels);
                 selectedLevels = null; // clear lang level field
             }
             catch(Exception e)
@@ -498,7 +498,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sTargets += selectedTarget + ";";
                 }
-                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "audiences: " + sTargets);
+                log(Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "audiences: " + sTargets);
                 selectedTargets = null;
             }
             catch(SQLException e)
@@ -520,7 +520,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sPurposes += selectedPurpose + ";";
                 }
-                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "purposes: " + sPurposes);
+                log(Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "purposes: " + sPurposes);
                 selectedPurposes = null;
             }
             catch(SQLException e)
@@ -549,7 +549,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 rightPaneBean.getClickedResource().addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
 
                 String sCat = selectedTopcat + "/" + selectedMidcat + "/" + selectedBotcat;
-                log(LogEntry.Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "category: " + sCat);
+                log(Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "category: " + sCat);
 
             }
             catch(SQLException e)
@@ -642,7 +642,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         //log.debug("onOpenExtendedMetadataDialog");
         int groupId = rightPaneBean.getClickedResource() == null ? 0 : rightPaneBean.getClickedResource().getGroupId();
-        log(LogEntry.Action.extended_metadata_open_dialog, groupId, rightPaneBean.getClickedResource().getId());
+        log(Action.extended_metadata_open_dialog, groupId, rightPaneBean.getClickedResource().getId());
     }
 
     public String getHypothesisLink()

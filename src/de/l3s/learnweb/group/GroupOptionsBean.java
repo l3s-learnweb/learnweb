@@ -15,8 +15,8 @@ import javax.validation.constraints.Size;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -96,22 +96,22 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
             if(!editedGroupDescription.equals(group.getDescription()))
             {
                 group.setDescription(editedGroupDescription);
-                log(LogEntry.Action.group_changing_description, group.getId(), group.getId());
+                log(Action.group_changing_description, group.getId(), group.getId());
             }
             if(!editedGroupTitle.equals(group.getTitle()))
             {
-                log(LogEntry.Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
+                log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
                 group.setTitle(editedGroupTitle);
             }
             if(editedGroupLeaderId != group.getLeaderUserId())
             {
                 group.setLeaderUserId(editedGroupLeaderId);
-                log(LogEntry.Action.group_changing_leader, group.getId(), group.getId());
+                log(Action.group_changing_leader, group.getId(), group.getId());
             }
             if(!Objects.equals(newHypothesisLink, group.getHypothesisLink()))
             {
                 group.setHypothesisLink(newHypothesisLink);
-                log(LogEntry.Action.group_changing_leader, group.getId(), group.getId());
+                log(Action.group_changing_leader, group.getId(), group.getId());
             }
             if(!Objects.equals(newHypothesisToken, group.getHypothesisToken()))
             {

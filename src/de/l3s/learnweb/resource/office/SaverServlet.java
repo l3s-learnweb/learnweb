@@ -15,21 +15,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import de.l3s.learnweb.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.office.history.model.Change;
 import de.l3s.learnweb.resource.office.history.model.History;
 import de.l3s.learnweb.resource.office.history.model.OfficeUser;
 import de.l3s.learnweb.resource.office.history.model.SavingInfo;
-import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
 
 /**
  * Servlet Class
@@ -42,15 +42,12 @@ import de.l3s.learnweb.resource.Resource;
 public class SaverServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7296371511069054378L;
-
-    private static final String FILE_ID = "fileId";
-
-    private static final String USER_ID = "userId";
-
     private final static Logger log = Logger.getLogger(SaverServlet.class);
 
-    private static final String ERROR_0 = "{\"error\":0}";
+    private static final String FILE_ID = "fileId";
+    private static final String USER_ID = "userId";
 
+    private static final String ERROR_0 = "{\"error\":0}";
     private static final String DELIMITER = "\\A";
 
     private static Learnweb learnweb;
@@ -58,7 +55,6 @@ public class SaverServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
     {
-        long startTime = System.currentTimeMillis();
         HttpSession session = request.getSession(true);
         try(PrintWriter writer = response.getWriter())
         {
@@ -70,7 +66,7 @@ public class SaverServlet extends HttpServlet
                 String body = scanner.hasNext() ? scanner.next() : StringUtils.EMPTY;
                 Gson gson = new Gson();
                 SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
-                parseResponse(savingInfo, fileId, userId, session.getId(), (int) startTime);
+                parseResponse(savingInfo, fileId, userId, session.getId());
             }
             writer.write(ERROR_0);
         }
@@ -80,7 +76,7 @@ public class SaverServlet extends HttpServlet
         }
     }
 
-    private void parseResponse(SavingInfo info, int fileId, int userId, String sessionId, int startTime)
+    private void parseResponse(SavingInfo info, int fileId, int userId, String sessionId)
     {
         try
         {
@@ -105,7 +101,7 @@ public class SaverServlet extends HttpServlet
                 createResourceHistory(info, previousVersionFile, file.getResourceId(), userId);
 
                 User user = learnweb.getUserManager().getUser(userId);
-                learnweb.log(user, Action.changing_resource, resource.getGroupId(), resource.getId(), null, sessionId, (int) System.currentTimeMillis() - startTime);
+                learnweb.getLogManager().log(user, Action.changing_office_resource, resource.getGroupId(), resource.getId(), null, sessionId);
             }
         }
         catch(NumberFormatException | SQLException | IOException e)

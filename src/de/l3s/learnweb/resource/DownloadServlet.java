@@ -24,7 +24,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 
@@ -108,8 +108,6 @@ public class DownloadServlet extends HttpServlet
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException
     {
-        long startTime = System.currentTimeMillis();
-
         // extract the file id from the request string
         String requestString = request.getRequestURI();
 
@@ -292,7 +290,7 @@ public class DownloadServlet extends HttpServlet
                     user = learnweb.getUserManager().getUser(userId);
 
                 if(null != user)
-                    learnweb.log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
+                    learnweb.getLogManager().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId());
             }
 
             /* Prepare and initialize response */

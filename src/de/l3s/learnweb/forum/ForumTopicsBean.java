@@ -13,9 +13,9 @@ import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped
@@ -85,7 +85,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
         fm.save(newPost);
 
-        log(Action.forum_post_added, groupId, topic.getId(), newTopicTitle);
+        log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
         return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
 

@@ -9,9 +9,9 @@ import javax.faces.view.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped

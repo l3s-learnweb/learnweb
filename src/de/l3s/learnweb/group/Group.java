@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Link.LinkType;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
@@ -456,7 +456,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public List<LogEntry> getLogs(Action[] actions, int limit) throws SQLException
     {
-        return Learnweb.getInstance().getLogsByGroup(id, actions, limit);
+        return Learnweb.getInstance().getLogManager().getLogsByGroup(id, actions, limit);
     }
 
     /**

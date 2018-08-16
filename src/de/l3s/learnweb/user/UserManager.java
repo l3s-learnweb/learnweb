@@ -16,7 +16,7 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -321,7 +321,7 @@ public class UserManager
 
     public Date getLastLoginDate(int userId) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + LogEntry.Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1");
         select.setInt(1, userId);
         ResultSet rs = select.executeQuery();
         if(!rs.next())

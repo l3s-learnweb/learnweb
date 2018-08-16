@@ -20,7 +20,7 @@ import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.glossaryNew.GlossaryResource;

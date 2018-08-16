@@ -10,8 +10,8 @@ import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;

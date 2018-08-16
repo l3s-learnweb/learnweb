@@ -9,17 +9,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.jena.ext.com.google.common.collect.Lists;
 
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
@@ -84,7 +84,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     {
         try
         {
-            logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
+            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, limit);
         }
         catch(SQLException e)
         {
@@ -101,21 +101,21 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     {
         try
         {
-            final List<Action> actions = Lists.newArrayList(LogEntry.Action.forum_post_added, LogEntry.Action.deleting_resource,
-                    LogEntry.Action.adding_resource, LogEntry.Action.group_joining, LogEntry.Action.group_leaving, LogEntry.Action.forum_reply_message, LogEntry.Action.changing_resource);
+            final List<Action> actions = Lists.newArrayList(Action.forum_topic_added, Action.deleting_resource,
+                    Action.adding_resource, Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource);
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_week_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_month_overview_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_six_month_changes");
             }
             return groupSummary;

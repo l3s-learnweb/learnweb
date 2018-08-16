@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -20,10 +20,10 @@ import org.json.simple.JSONObject;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 
 // TODO Oleh: rename to ResourcePaneBean
@@ -153,12 +153,12 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         else if(clickedAbstractResource instanceof Folder)
         {
             paneAction = RightPaneAction.viewFolder;
-            log(Action.opening_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
+            log(Action.opening_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
         }
         else
         {
             paneAction = RightPaneAction.viewResource;
-            log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), "");
+            log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
         }
     }
 

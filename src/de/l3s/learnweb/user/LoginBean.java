@@ -16,9 +16,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.Learnweb.SERVICE;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.BeanHelper;
 

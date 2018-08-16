@@ -8,8 +8,8 @@ import javax.faces.view.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped

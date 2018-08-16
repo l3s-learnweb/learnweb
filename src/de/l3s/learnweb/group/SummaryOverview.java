@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 
 public class SummaryOverview

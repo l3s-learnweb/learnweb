@@ -4,17 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
@@ -22,16 +13,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.dashboard.ActivityDashboardManager;
 import de.l3s.learnweb.dashboard.DashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.LinkManager;
-import de.l3s.learnweb.group.SummaryOverview;
+import de.l3s.learnweb.logging.LogManager;
 import de.l3s.learnweb.resource.FileManager;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
@@ -51,16 +40,13 @@ import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
 import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.CourseManager;
-import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.OrganisationManager;
-import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
 import de.l3s.util.PropertiesBundle;
-import de.l3s.util.StringHelper;
 import de.l3s.util.email.BounceManager;
 
 public class Learnweb
@@ -72,7 +58,6 @@ public class Learnweb
     private Connection dbConnection;
     private InterWeb interweb;
 
-    private PreparedStatement pstmtLog;
     private PropertiesBundle properties;
     private String serverUrl;
     private String secureServerUrl;
@@ -111,7 +96,6 @@ public class Learnweb
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
     private final de.l3s.learnweb.resource.glossaryNew.GlossaryManager glossaryManager; //new Glossary Manager
-
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
     private final SearchSessionEdgeComputator searchSessionEdgeComputator;
@@ -120,6 +104,9 @@ public class Learnweb
     private final BounceManager bounceManager;
     private final DashboardManager dashboardManager;
     private final ConverterService serviceConverter;
+    private final LogManager logManager;
+    private final PeerAssessmentManager peerAssessmentManager;
+    private final ActivityDashboardManager activityDashboardManager;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -132,8 +119,6 @@ public class Learnweb
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
     private final SERVICE service; // describes whether this instance runs for Learnweb or AMA
-    private PeerAssessmentManager peerAssessmentManager;
-    private ActivityDashboardManager activityDashboardManager;
 
     /**
      * Use createInstance() first
@@ -335,6 +320,7 @@ public class Learnweb
         peerAssessmentManager = new PeerAssessmentManager(this);
         activityDashboardManager = new ActivityDashboardManager(this);
         glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
+        logManager = LogManager.getInstance(this);
 
         learnwebIsLoading = false;
 
@@ -354,7 +340,6 @@ public class Learnweb
         protectionManager = new ProtectionManager(this);
         bounceManager = new BounceManager(this);
 
-        maxlogBatchSize = isInDevelopmentMode() ? 1 : 10;
     }
 
     /**
@@ -417,12 +402,8 @@ public class Learnweb
 
     private void connect() throws SQLException
     {
-        // ?useUnicode=true
         dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url") + "?log=false", properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
         dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
-
-        pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
     }
 
     //getters and setters for newly added managers (Chloe)
@@ -508,19 +489,7 @@ public class Learnweb
         suggestionLogger.stop();
         waybackCapturesLogger.stop();
         searchLogManager.stop();
-
-        try
-        {
-            if(logBatchSize > 0)
-            {
-                pstmtLog.executeBatch();
-                logBatchSize = 0;
-            }
-        }
-        catch(Exception e)
-        {
-            log.warn(e);
-        }
+        logManager.onDestroy();
 
         try
         {
@@ -540,276 +509,6 @@ public class Learnweb
         checkConnection();
 
         return dbConnection;
-    }
-
-    private int logBatchSize = 0;
-    private int maxlogBatchSize;
-
-    /**
-     * @param user
-     * @param action
-     * @param groupId the group this action belongs to; null if no group
-     * @param targetId optional value; should be 0 if not required
-     * @param params
-     * @param sessionId
-     * @param executionTime how long did the action need to execute (in milliseconds)
-     */
-    public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
-    {
-        int userId = 0;
-        if(user != null)
-        {
-            userId = user.getId();
-
-            if(user.getOrganisation().getOption(Organisation.Option.Privacy_Logging_disabled))
-            {
-                // TODO Oleh: Should we disable it completely or anonymize it?
-                //log.warn("Log ignored.");
-                return;
-            }
-        }
-
-        if(groupId == -1)
-            groupId = (null == user) ? 0 : user.getActiveGroupId();
-
-        log(userId, action, groupId, targetId, params, sessionId, executionTime);
-    }
-
-    /**
-     * Logs a user action. The parameters "targetId" and "params" depend on the
-     * logged action. Look at the code of LogEntry.Action for explanation.
-     *
-     * @param userId
-     * @param action
-     * @param groupId the group this action belongs to; null if no group
-     * @param targetId optional value; should be 0 if not required
-     * @param params
-     * @param sessionId
-     * @param executionTime how long did the action need to execute (in milliseconds)
-     */
-    private void log(int userId, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
-    {
-        if(null == action)
-            throw new IllegalArgumentException();
-
-        params = StringHelper.shortnString(params, 250);
-
-        try
-        {
-            checkConnection();
-
-            synchronized(pstmtLog)
-            {
-                pstmtLog.setInt(1, userId);
-                pstmtLog.setString(2, sessionId);
-                pstmtLog.setInt(3, action.ordinal());
-                pstmtLog.setInt(4, targetId);
-                pstmtLog.setString(5, params);
-                pstmtLog.setInt(6, groupId);
-                pstmtLog.setTimestamp(7, new Timestamp(new Date().getTime()));
-                pstmtLog.setInt(8, executionTime);
-                pstmtLog.addBatch();
-
-                logBatchSize++;
-
-                if(logBatchSize > maxlogBatchSize)
-                {
-                    pstmtLog.executeBatch();
-                    logBatchSize = 0;
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
-        }
-    }
-
-    private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,14,19,21,32,11,54,55,6,8) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
-    private final static Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
-            Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource,
-            Action.group_deleting_link, Action.changing_resource, Action.forum_post_added, Action.forum_reply_message };
-
-    /**
-     *
-     * @param userId
-     * @param actions if actions is null the default filter is used
-     * @param limit
-     * @param limit if limit is -1 all log entries are returned
-     * @return
-     * @throws SQLException
-     */
-    public List<LogEntry> getLogsByUser(int userId, Action[] actions, int limit) throws SQLException
-    {
-        LinkedList<LogEntry> log = new LinkedList<>();
-
-        if(null == actions)
-            actions = LOG_DEFAULT_FILTER;
-
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
-        select.setInt(1, userId);
-
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            log.add(new LogEntry(rs));
-        }
-        select.close();
-
-        return log;
-    }
-
-    /**
-     *
-     * @param groupId
-     * @param actions if actions is null the default filter is used
-     * @return
-     * @throws SQLException
-     */
-    public List<LogEntry> getLogsByGroup(int groupId, LogEntry.Action[] actions) throws SQLException
-    {
-        return getLogsByGroup(groupId, actions, -1);
-    }
-
-    /**
-     *
-     * @param groupId
-     * @param actions if actions is null the default filter is used
-     * @param limit if limit is -1 all log entries are returned
-     * @return
-     * @throws SQLException
-     */
-    public List<LogEntry> getLogsByGroup(int groupId, LogEntry.Action[] actions, int limit) throws SQLException
-    {
-        LinkedList<LogEntry> log = new LinkedList<>();
-
-        if(null == actions)
-            actions = LOG_DEFAULT_FILTER;
-
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-
-        String limitStr = "";
-        if(limit > 0)
-            limitStr = "LIMIT " + limit;
-
-        try(PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr))
-        {
-            select.setInt(1, groupId);
-
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
-                log.add(new LogEntry(rs));
-            }
-        }
-        return log;
-    }
-
-    public SummaryOverview getLogsByGroup(int groupId, List<Action> actions, LocalDateTime from, LocalDateTime to) throws SQLException
-    {
-        SummaryOverview summary = null;
-        String actionsString = actions.stream()
-                .map(a -> String.valueOf(a.ordinal()))
-                .collect(Collectors.joining(","));
-        try(PreparedStatement select = getConnection().prepareStatement(
-                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
-        {
-            select.setInt(1, groupId);
-            select.setTimestamp(2, Timestamp.valueOf(from));
-            select.setTimestamp(3, Timestamp.valueOf(to));
-            ResultSet rs = select.executeQuery();
-
-            if (!rs.next()) {
-                return null;
-            }
-
-            summary = new SummaryOverview();
-
-            do {
-                LogEntry logEntry = new LogEntry(rs);
-                switch(logEntry.getAction())
-                {
-                    case deleting_resource:
-                        summary.getDeletedResources().add(logEntry);
-                        break;
-                    case adding_resource:
-                        Resource resource = logEntry.getResource();
-                        if(resource != null)
-                        {
-                            summary.getAddedResources().add(logEntry);
-                        }
-                        break;
-                    case forum_post_added:
-                    case forum_reply_message:
-                        summary.getForumsInfo().add(logEntry);
-                        break;
-                    case group_joining:
-                    case group_leaving:
-                        summary.getMembersInfo().add(logEntry);
-                        break;
-                    case changing_resource:
-                        Resource logEntryResource = logEntry.getResource();
-                        if(logEntryResource != null)
-                        {
-                            if(summary.getUpdatedResources().keySet().contains(logEntryResource))
-                            {
-                                summary.getUpdatedResources().get(logEntryResource).add(logEntry);
-                            }
-                            else
-                            {
-                                summary.getUpdatedResources().put(logEntryResource, new LinkedList<>(Collections.singletonList(logEntry)));
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            } while (rs.next());
-        }
-        return summary;
-    }
-
-    public List<LogEntry> getActivityLogOfUserGroups(int userId, LogEntry.Action[] actions, int limit) throws SQLException
-    {
-        LinkedList<LogEntry> log = new LinkedList<>();
-
-        if(null == actions)
-            actions = LOG_DEFAULT_FILTER;
-
-        StringBuilder sb = new StringBuilder();
-        for(Action action : actions)
-        {
-            sb.append(",");
-            sb.append(action.ordinal());
-        }
-
-        String limitStr = "";
-        if(limit > 0)
-            limitStr = "LIMIT " + limit;
-
-        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
-        select.setInt(1, userId);
-        select.setInt(2, userId);
-
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            log.add(new LogEntry(rs));
-        }
-        select.close();
-
-        return log;
     }
 
     /**
@@ -910,11 +609,6 @@ public class Learnweb
         return waybackCapturesLogger;
     }
 
-    public static void main(String[] args)
-    {
-        Learnweb.getInstance();
-    }
-
     public GlossaryManager getGlossariesManager()
     {
         return glossariesManager;
@@ -1004,11 +698,6 @@ public class Learnweb
         return peerAssessmentManager;
     }
 
-    public void setPeerAssessmentManager(PeerAssessmentManager peerAssessmentManager)
-    {
-        this.peerAssessmentManager = peerAssessmentManager;
-    }
-
     public de.l3s.learnweb.resource.glossaryNew.GlossaryManager getGlossaryManager()
     {
         return glossaryManager;
@@ -1019,4 +708,8 @@ public class Learnweb
         return activityDashboardManager;
     }
 
+    public LogManager getLogManager()
+    {
+        return logManager;
+    }
 }

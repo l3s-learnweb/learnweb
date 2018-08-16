@@ -26,9 +26,9 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadata;
 import de.l3s.learnweb.user.User;
@@ -1218,7 +1218,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 else if(getSource().equals(SERVICE.ted))
                     embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed").replace("https://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
                 else if(getSource().equals(SERVICE.youtube))
-                    embeddedCode = "<iframe src=\"https://youtube.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
+                    embeddedCode = "<iframe src=\"https://www.youtube-nocookie.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
                 else if(getSource().equals(SERVICE.vimeo))
                     embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
@@ -1236,7 +1236,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             {
                 log.warn("can't create embeddedCode for resource: " + toString());
             }
-
         }
 
         return embeddedCode;

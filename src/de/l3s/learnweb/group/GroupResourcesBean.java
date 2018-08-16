@@ -28,8 +28,8 @@ import org.primefaces.model.TreeNode;
 import com.google.gson.Gson;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AddFolderBean;
 import de.l3s.learnweb.resource.AddResourceBean;

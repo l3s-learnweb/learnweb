@@ -22,9 +22,9 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.util.StringHelper;
 
 @Named
