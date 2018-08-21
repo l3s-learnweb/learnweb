@@ -39,11 +39,6 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
 
     private Group group;
 
-    public GroupLinksBean() throws SQLException
-    {
-        updateLinksList();
-    }
-
     public void onLoad() throws SQLException
     {
         User user = getUser();
