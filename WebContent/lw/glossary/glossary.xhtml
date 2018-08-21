@@ -25,7 +25,10 @@
 				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 12 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
+						
+						<p:ajax event="filter" oncomplete="groupRow()" />
+						<p:ajax event="page" oncomplete="groupRow()" />
+						<p:ajax event="sort" oncomplete="groupRow()" /> 
 
 						<f:facet name="header">
 							<p:outputPanel>
@@ -34,9 +37,10 @@
 								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
 						</f:facet>
-						
+						<p:column headerText="glossary ID" style="display:none" exportable="false">
+							<h:outputText value="#{item.getEntryId()}"></h:outputText>
+						</p:column>
 						<p:column style=" width:20px;" groupRow="true" exportable="false">
-							<p:outputLabel for="edit" value="#{item.getEntryId()}" style="display:none;"/>
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 							</p:commandLink>
@@ -46,25 +50,21 @@
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</p:commandLink>
 						</p:column>
-
-						<p:column headerText="#{msg['Glossary.topic']} 1" groupRow="true" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						
+						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicOne()}">
-							<p:outputLabel for="cell1" value="#{item.getEntryId()}" style="display:none;"/>
 							<h:outputText value="#{item.getTopicOne()}" pt:data-itemId="#{item.getEntryId()}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" groupRow="true" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicTwo()}">
-							<p:outputLabel for="cell2" value="#{item.getEntryId()}" style="display:none;"/>
 							<h:outputText value="#{item.getTopicTwo()}" pt:data-itemId="#{item.getEntryId()}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" groupRow="true" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains" filterStyle="width: 90%;"
+						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains" filterStyle="width: 90%;"
 							sortBy="#{item.getTopicThree()}">
-							<p:outputLabel for="cell3" value="#{item.getEntryId()}" style="display:none;"/>
 							<h:outputText value="#{item.getTopicThree()}" pt:data-itemId="#{item.getEntryId()}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" groupRow="true" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
 							filterStyle="width: 90%;">
-							<p:outputLabel for="cell4" value="#{item.getEntryId()}" style="display:none;"/>
 							<h:outputText value="#{item.getDescription()}" pt:data-itemId="#{item.getEntryId()}" id="cell4" />
 						</p:column>
 
@@ -106,7 +106,7 @@
 								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
 								</p:commandLink>
 								<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this">
-       							 <h:outputText value="#{glossaryBeanNEW.toggleLabel}" />
+       							 <h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();"/>
     							</p:commandLink>
 							</p:panelGrid>
 
@@ -170,9 +170,6 @@
 							</p:column>
 							
 							<p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
-
-
-								
 								<p:selectOneMenu id="language" value="#{term.language}">
 									<f:selectItems value="#{glossaryBeanNEW.allowedTermLanguages}" />
 								</p:selectOneMenu>
@@ -250,7 +247,68 @@
 				
 			</h:panelGroup>
 		</ui:fragment>
-		
-	</ui:define>
-	
+		<script type="text/javascript">
+			//<![CDATA[
+			var groupRow = function() {
+				var colIndex = 2;
+				var rows = $('#my_gloss_table').find('tr');
+				var groupStartIndex = null, rowGroupCellData = null, rowGroupCount = 1, columnData = null;
+
+				var groupCounter = 1;
+				
+				for (var i = 0; i < rows.length; i++) {
+					var row = rows.eq(i);
+					var columns = [];
+					var column = row.children('td').eq(colIndex);
+
+					for (var j = 0; j < 6; j++)
+						columns.push(row.children('td').eq(j));
+
+					columnData = column.find("span").first().data("itemid");
+
+					if (rowGroupCellData !== columnData) {
+						groupCounter++;
+						groupStartIndex = i;
+						rowGroupCellData = columnData;
+						rowGroupCount = 1;
+					} 
+					else {
+						for (var k = 0; k < columns.length; k++)
+							columns[k].remove();
+
+						//column.remove();
+						rowGroupCount++;
+					}
+
+					if (groupStartIndex != null && rowGroupCount > 1) 
+					{						
+						for (var l = 0; l < columns.length; l++)
+						{
+							var cell = rows.eq(groupStartIndex).children('td').eq(l);
+							cell.attr('rowspan', rowGroupCount);							
+							cell.removeClass(); // remove all classes
+							cell.addClass(groupCounter % 2 === 0? 'ui-datatable-even' : 'ui-datatable-odd');
+						}
+					}					
+				}
+			};
+
+			$(document).ready(function() {
+				groupRow();
+			});
+			//]]>
+		</script>
+		<ui:fragment rendered="#{glossaryBeanNEW.resourceId le 0}">
+			<div class="noresource">
+				<br /> <br />
+				<h:outputText value="Please select correct glossary resource." style="text-align:center; font-weight:bold"></h:outputText>
+			</div>
+		</ui:fragment>
+ 		<ui:fragment rendered="#{glossaryBeanNEW.glossaryResource.deleted eq true}">
+			<div class="noresource">
+				<br /> <br />
+				<h:outputText value="The resource you are trying to access is deleted and does not exist." style="text-align:center; font-weight:bold"></h:outputText>
+			</div>
+		</ui:fragment>	 
+	</ui:define>	
 </ui:composition>

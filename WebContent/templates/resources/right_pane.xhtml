@@ -161,7 +161,7 @@
                                     <h:outputText value="Allowed languages: "/>
                                 </p:column>
                                 <p:column rendered="#{addResourceBean.formStep == 1}">
-                                    <p:selectCheckboxMenu id="lang" label="--#{msg.language}--" value="#{addResourceBean.resource.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}">
+                                    <p:selectCheckboxMenu id="lang" label="--#{msg.language}--" value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}">
                                         <f:selectItems value="#{addResourceBean.availableLanguages}" ></f:selectItems>
                                     </p:selectCheckboxMenu>
                                 </p:column>
@@ -229,7 +229,7 @@
                         </div>
                     </p:blockUI>
 					<p:commandButton id="create_glossary_button2" value="Create Glossary" styleClass="greenbutton float-right" ajax="true"
-                                     action="#{addResourceBean.addGlossary2}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
+                                     action="#{addResourceBean.addResource}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary2'}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                         <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>

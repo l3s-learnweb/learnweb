@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -32,11 +31,10 @@ public class GlossaryManager
         }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, String.join(",", resource.getGlossaryLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
+        insertGlossary.setString(2, String.join(",", resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
         insertGlossary.executeQuery();
 
-        // TODO how do you know that the Glossary needs to be copied now?
-        if(resource.getEntries() != null || !resource.getEntries().isEmpty()) //when copying
+        if(resource.isCloned() && (resource.getEntries() != null || !resource.getEntries().isEmpty())) //when copying
             copyGlossaryEntries(resource.getEntries(), resource.getId(), resource.getUserId(), resource.isDeleted());
 
     }
@@ -120,6 +118,7 @@ public class GlossaryManager
     }
 
     //  TODO entryId and userId are stored in the GlossaryTerm. No need to provide them separately
+    //@Philipp: Entry ID for a new entry that is recently added is not stored in GlossaryTerm yet.
     public void saveTerms(List<GlossaryTerm> terms, int entryId, int userId) throws SQLException
     {
         PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
@@ -244,25 +243,9 @@ public class GlossaryManager
         return tableView;
     }
 
-    // TODO instead you can user the already existing method from StringHelper splitLocales
-    public List<Locale> convertStringToLocale(String string)
-    {
-        List<String> languages = Arrays.asList(string.split(","));
-        List<Locale> convertedLanguages = new LinkedList<>();
-        for(String lang : languages)
-        {
-            convertedLanguages.add(new Locale(lang));
-        }
-        return convertedLanguages;
-    }
-
     public void delete(GlossaryResource resource) throws SQLException
     {
-        // TODO use autoclose; see line 200 and already mentioned "Learnweb Code" email
-        PreparedStatement deleteGlossary = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_resource` SET `deleted`=? WHERE `resource_id`=?");
-        deleteGlossary.setBoolean(1, true);
-        deleteGlossary.setInt(2, resource.getId());
-        deleteGlossary.executeQuery();
+
         if(resource.getEntries() != null || !resource.getEntries().isEmpty())
         {
             for(GlossaryEntry entry : resource.getEntries())
@@ -287,12 +270,12 @@ public class GlossaryManager
         ResultSet result = getGlossary.executeQuery();
         if(result.next())
         {
-            glossaryResource.setAllowedLanguages(convertStringToLocale(result.getString("allowed_languages")));
-            glossaryResource.setGlossaryLanguages(Arrays.asList(result.getString("allowed_languages").split(","))); // TODO remove
+            glossaryResource.setAllowedLanguages(new ArrayList<String>(Arrays.asList(result.getString("allowed_languages").split(","))));
         }
         else
         {
-            glossaryResource = null; // TODO see SurveyManager. you must log this and other errors. Instead you produce a NPE somewhere else
+            glossaryResource = null;
+            log.error("Error in loading languages for glossary while loading glossary resource from Database");
             return;
         }
         //Glossary Entries details

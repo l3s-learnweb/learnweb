@@ -1,11 +1,10 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -19,10 +18,12 @@ public class GlossaryResource extends Resource implements Serializable
     /**
      *
      */
+
     private static final long serialVersionUID = 8388778401614338522L;
-    private List<Locale> allowedLanguages = new LinkedList<>();
+    private ArrayList<String> allowedLanguages = new ArrayList<String>();
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean deleted = false;
+    private boolean cloned = false;
 
     //constructor does nothing
     public GlossaryResource()
@@ -38,15 +39,15 @@ public class GlossaryResource extends Resource implements Serializable
     public GlossaryResource(GlossaryResource otherGlossaryResource)
     {
         super(otherGlossaryResource);
-        setAllowedLanguages(otherGlossaryResource.getAllowedLanguages());
-        setEntries(otherGlossaryResource.getEntries());
-        setDeleted(otherGlossaryResource.isDeleted());
+        setAllowedLanguages(otherGlossaryResource.allowedLanguages);
+        setDeleted(otherGlossaryResource.deleted);
+        setCloned(true);
+        setEntries(new ArrayList<GlossaryEntry>(otherGlossaryResource.entries.size()));
+        for(int i = 0; i < otherGlossaryResource.entries.size(); i++)
+        {
+            this.entries.add(i, otherGlossaryResource.entries.get(i).clone());
+        }
 
-    }
-
-    public GlossaryResource(Resource resource) throws IllegalAccessException, InvocationTargetException
-    {
-        super(resource);
     }
 
     @Override
@@ -65,6 +66,14 @@ public class GlossaryResource extends Resource implements Serializable
     @Override
     public Resource save() throws SQLException
     {
+        Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233);
+        this.setThumbnail0(iconResource.getThumbnail0());
+        this.setThumbnail1(iconResource.getThumbnail1());
+        this.setThumbnail2(iconResource.getThumbnail2());
+        this.setThumbnail3(iconResource.getThumbnail3());
+        this.setThumbnail4(iconResource.getThumbnail4());
+        this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(this.getId()));
+
         // save normal resource fields
         super.save();
 
@@ -74,12 +83,12 @@ public class GlossaryResource extends Resource implements Serializable
         return this;
     }
 
-    public List<Locale> getAllowedLanguages()
+    public ArrayList<String> getAllowedLanguages()
     {
         return allowedLanguages;
     }
 
-    public void setAllowedLanguages(List<Locale> allowedLanguages)
+    public void setAllowedLanguages(ArrayList<String> allowedLanguages)
     {
         this.allowedLanguages = allowedLanguages;
     }
@@ -104,6 +113,16 @@ public class GlossaryResource extends Resource implements Serializable
     public void setDeleted(boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public boolean isCloned()
+    {
+        return cloned;
+    }
+
+    public void setCloned(boolean cloned)
+    {
+        this.cloned = cloned;
     }
 
 }

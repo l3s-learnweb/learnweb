@@ -2,6 +2,7 @@ package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Size;
@@ -16,7 +17,7 @@ public class GlossaryTerm implements Serializable
     private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
-
+    private int lastChangedByUserId;
     @Size(max = 100)
     private String term;
     private List<String> uses;
@@ -33,6 +34,46 @@ public class GlossaryTerm implements Serializable
     private boolean pronounciationPasted;
     private boolean acronymPasted;
     private boolean phraseologyPasted;
+
+    /**
+     * do nothing constructor
+     */
+    public GlossaryTerm()
+    {
+
+    }
+
+    public GlossaryTerm(GlossaryTerm oldTerm)
+    {
+        setId(-1);
+        setDeleted(oldTerm.deleted);
+        setEntryId(oldTerm.entryId);
+        setUserId(oldTerm.userId);
+        setTerm(oldTerm.term);
+        setLastChangedByUserId(oldTerm.lastChangedByUserId);
+        setUses(new ArrayList<String>(oldTerm.uses.size()));
+        for(int i = 0; i < oldTerm.uses.size(); i++)
+        {
+            this.uses.add(i, oldTerm.uses.get(i));
+        }
+        setPronounciation(oldTerm.pronounciation);
+        setAcronym(oldTerm.acronym);
+        setSource(oldTerm.source);
+        setPhraseology(oldTerm.phraseology);
+        setLanguage(oldTerm.language);
+        setTimestamp(new Timestamp(System.currentTimeMillis()));
+        setTermPasted(oldTerm.termPasted);
+        setPronounciationPasted(oldTerm.pronounciationPasted);
+        setAcronymPasted(oldTerm.acronymPasted);
+        setPhraseologyPasted(oldTerm.phraseologyPasted);
+
+    }
+
+    @Override
+    public GlossaryTerm clone()
+    {
+        return new GlossaryTerm(this);
+    }
 
     public String getTerm()
     {
@@ -157,6 +198,16 @@ public class GlossaryTerm implements Serializable
     public int getUserId()
     {
         return userId;
+    }
+
+    public int getLastChangedByUserId()
+    {
+        return lastChangedByUserId;
+    }
+
+    public void setLastChangedByUserId(int lastChangedByUserId)
+    {
+        this.lastChangedByUserId = lastChangedByUserId;
     }
 
     public void setUserId(int userId)

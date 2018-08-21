@@ -2,6 +2,7 @@ package de.l3s.learnweb.group;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -655,7 +656,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void actionCreateGroupItem()
+    public void actionCreateGroupItem() throws IllegalAccessException, InvocationTargetException, IOException
     {
         String type = getParameter("type");
 
@@ -694,7 +695,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             break;
         case "glossary2":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.glossary2);
+            addResourceBean.setResourceAsGlossary();
             break;
         case "survey":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);

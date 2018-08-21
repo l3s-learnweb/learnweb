@@ -3,7 +3,6 @@ package de.l3s.learnweb.resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -276,49 +275,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void addGlossary2() throws IOException, IllegalAccessException, InvocationTargetException
-    {
-        try
-        {
-            resource.setDeleted(false);
-            resource.setSource(SERVICE.learnweb);
-            resource.setType(ResourceType.glossary2);
-            resource.setUrl(getLearnweb().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(resource.getId()));
-
-            Resource iconResource = getLearnweb().getResourceManager().getResource(200233);
-            resource.setThumbnail0(iconResource.getThumbnail0());
-            resource.setThumbnail1(iconResource.getThumbnail1());
-            resource.setThumbnail2(iconResource.getThumbnail2());
-            resource.setThumbnail3(iconResource.getThumbnail3());
-            resource.setThumbnail4(iconResource.getThumbnail4());
-
-            // add resource to a group if selected
-            resource.setGroupId(getTargetGroupId());
-            resource.setFolderId(getTargetFolderId());
-            getUser().setActiveGroup(getTargetGroupId());
-
-            if(resource.getId() == -1)
-            {
-                resource = getUser().addResource(resource);
-            }
-            else
-                resource.save();
-            GlossaryResource glossary = new GlossaryResource(resource);
-            glossary.setId(resource.getId());
-            getLearnweb().getGlossaryManager().saveGlossaryResource(glossary);
-
-            log(Action.adding_resource, getTargetGroupId(), resource.getId());
-            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-
-            UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
-
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
-        }
-    }
-
     public void addSurvey() throws IOException
     {
         try
@@ -384,6 +340,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         return resource;
     }
 
+    public void setResourceAsGlossary()
+    {
+        this.resource = new GlossaryResource();
+        resource.setSource(SERVICE.internet);
+        resource.setLocation("Learnweb");
+        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
+        resource.setType(Resource.ResourceType.glossary2);
+        resource.setDeleted(true);
+    }
+
     public void validateNewDocName(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         String fileName = (String) value;
@@ -400,7 +366,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             log.debug("addResource; res=" + resource);
 
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN))
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN) && !resource.getType().equals(ResourceType.glossary2))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Select a file first");
                 return;

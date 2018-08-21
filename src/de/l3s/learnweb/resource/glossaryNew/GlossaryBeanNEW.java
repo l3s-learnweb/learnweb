@@ -74,6 +74,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         if(glossaryResource == null)
         {
+            log.error("Error in loading glossary resource");
             addInvalidParameterMessage("resource_id");
             return;
         }
@@ -104,6 +105,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public String onSave()
     {
+        formEntry.setLastChangedByUserId(getUser().getId());
+        formEntry.getTerms().forEach(term -> term.setLastChangedByUserId(getUser().getId()));
         if(formEntry.getTerms().size() == 0 || formEntry.getTerms().size() == numberOfDeletedTerms() || formEntry.getTerms().get(0).getTerm().isEmpty())
         {
             addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
@@ -132,7 +135,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public String deleteEntry(GlossaryTableView row)
     {
         row.getEntry().setDeleted(true);
-        row.getEntry().setLastChangedByUserId(getUser().getId());
         try
         {
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), getUser().getId());
@@ -150,7 +152,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void deleteTerm(GlossaryTerm term)
     {
-
         if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
             return;
 
@@ -470,8 +471,9 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         if(null == allowedTermLanguages)
         {
             allowedTermLanguages = new ArrayList<>();
-            for(Locale locale : getGlossaryResource().getAllowedLanguages())
+            for(String language : glossaryResource.getAllowedLanguages())
             {
+                Locale locale = Locale.forLanguageTag(language);
                 log.debug("add locales " + locale.getLanguage());
                 allowedTermLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
             }

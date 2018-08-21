@@ -149,7 +149,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
 
     //glossary information
-    private List<String> glossaryLanguages; //New Glossary
     @Deprecated
     private String languageOne; // TODO remove
     @Deprecated
@@ -607,7 +606,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         setArchiveUrls(new LinkedList<>(old.getArchiveUrls()));
         setDeleted(old.deleted);
         setReadOnlyTranscript(old.readOnlyTranscript);
-        setGlossaryLanguages(old.glossaryLanguages);
         // sets the originalResourceId to the id of the source resource
         if(old.originalResourceId == 0)
             setOriginalResourceId(old.id);
@@ -2022,16 +2020,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.id = ois.readInt();
         log.debug("Deserialize resource: " + id);
     }*/
-
-    public List<String> getGlossaryLanguages()
-    {
-        return glossaryLanguages;
-    }
-
-    public void setGlossaryLanguages(List<String> glossaryLanguages)
-    {
-        this.glossaryLanguages = glossaryLanguages;
-    }
 
     protected Object readResolve()
     {

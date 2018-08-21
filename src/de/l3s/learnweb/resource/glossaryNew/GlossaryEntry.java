@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +24,44 @@ public class GlossaryEntry implements Serializable
     private String topicTwo;
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
+
+    /**
+     * do nothing constructor
+     */
+    public GlossaryEntry()
+    {
+
+    }
+
+    /**
+     * copy constructor
+     *
+     * @param oldEntry
+     */
+    public GlossaryEntry(GlossaryEntry oldEntry)
+    {
+        setId(-1);
+        setResourceId(oldEntry.resourceId);
+        setDeleted(oldEntry.deleted);
+        setUserId(oldEntry.userId);
+        setLastChangedByUserId(oldEntry.lastChangedByUserId);
+        setDescription(oldEntry.description);
+        setDescriptionPasted(oldEntry.descriptionPasted);
+        setTopicOne(oldEntry.topicOne);
+        setTopicTwo(oldEntry.topicTwo);
+        setTopicThree(oldEntry.topicThree);
+        setTerms(new ArrayList<GlossaryTerm>(oldEntry.terms.size()));
+        for(int i = 0; i < oldEntry.terms.size(); i++)
+        {
+            this.terms.add(i, oldEntry.terms.get(i).clone());
+        }
+    }
+
+    @Override
+    public GlossaryEntry clone()
+    {
+        return new GlossaryEntry(this);
+    }
 
     public String getDescription()
     {
