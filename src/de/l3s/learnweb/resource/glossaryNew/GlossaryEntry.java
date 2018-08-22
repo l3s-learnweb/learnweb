@@ -1,11 +1,12 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.constraints.Size;
+
+import org.jsoup.helper.Validate;
 
 public class GlossaryEntry implements Serializable
 {
@@ -50,10 +51,10 @@ public class GlossaryEntry implements Serializable
         setTopicOne(oldEntry.topicOne);
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
-        setTerms(new ArrayList<GlossaryTerm>(oldEntry.terms.size()));
-        for(int i = 0; i < oldEntry.terms.size(); i++)
+
+        for(GlossaryTerm oldTerm : oldEntry.terms)
         {
-            this.terms.add(i, oldEntry.terms.get(i).clone());
+            this.addTerm(oldTerm.clone());
         }
     }
 
@@ -121,6 +122,9 @@ public class GlossaryEntry implements Serializable
     public void setId(int id)
     {
         this.id = id;
+
+        // update all terms too
+        getTerms().forEach(term -> term.setEntryId(id));
     }
 
     public int getResourceId()
@@ -158,8 +162,10 @@ public class GlossaryEntry implements Serializable
         return terms;
     }
 
-    public void setTerms(List<GlossaryTerm> terms)
+    void setTerms(List<GlossaryTerm> terms)
     {
+        Validate.notNull(terms);
+
         this.terms = terms;
     }
 

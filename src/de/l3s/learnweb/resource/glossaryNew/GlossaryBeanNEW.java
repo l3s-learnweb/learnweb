@@ -53,7 +53,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GlossaryBeanNEW.class);
 
     private int resourceId;
-    private GlossaryResource glossaryResource = new GlossaryResource();
+    private GlossaryResource glossaryResource = new GlossaryResource(); // TODO don't init
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
@@ -69,7 +69,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return;
-        glossaryResource.setId(resourceId);
+        glossaryResource.setId(resourceId); // TODO see mail
         getLearnweb().getGlossaryManager().loadGlossaryResource(this.glossaryResource);
 
         if(glossaryResource == null)
@@ -108,6 +108,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         formEntry.setLastChangedByUserId(getUser().getId());
         formEntry.getTerms().forEach(term -> term.setLastChangedByUserId(getUser().getId()));
         if(formEntry.getTerms().size() == 0 || formEntry.getTerms().size() == numberOfDeletedTerms() || formEntry.getTerms().get(0).getTerm().isEmpty())
+        // TODO formEntry.getTerms().get(0).getTerm().isEmpty() why is this used? looks strange. Term is a mandatory input field and should never be empty
         {
             addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
@@ -121,7 +122,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
 
         }
-        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved")); // TODO you will show a success message even when an error occured ...
+        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved")); // TODO you will show a success message even when an error occurred ...
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
@@ -474,7 +475,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             for(String language : glossaryResource.getAllowedLanguages())
             {
                 Locale locale = Locale.forLanguageTag(language);
-                log.debug("add locales " + locale.getLanguage());
                 allowedTermLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
             }
             allowedTermLanguages.sort(Misc.selectItemLabelComparator);

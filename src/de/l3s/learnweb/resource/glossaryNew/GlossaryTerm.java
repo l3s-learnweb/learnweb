@@ -51,11 +51,6 @@ public class GlossaryTerm implements Serializable
         setUserId(oldTerm.userId);
         setTerm(oldTerm.term);
         setLastChangedByUserId(oldTerm.lastChangedByUserId);
-        setUses(new ArrayList<String>(oldTerm.uses.size()));
-        for(int i = 0; i < oldTerm.uses.size(); i++)
-        {
-            this.uses.add(i, oldTerm.uses.get(i));
-        }
         setPronounciation(oldTerm.pronounciation);
         setAcronym(oldTerm.acronym);
         setSource(oldTerm.source);
@@ -67,6 +62,13 @@ public class GlossaryTerm implements Serializable
         setAcronymPasted(oldTerm.acronymPasted);
         setPhraseologyPasted(oldTerm.phraseologyPasted);
 
+        setUses(new ArrayList<String>(oldTerm.uses.size()));
+        for(int i = 0; i < oldTerm.uses.size(); i++)
+        {
+            this.uses.add(i, oldTerm.uses.get(i));
+        }
+
+        // TODO since Strings are immutable this should be sufficient do clone the list. please test: setUses(new ArrayList<String>(oldTerm.uses));
     }
 
     @Override

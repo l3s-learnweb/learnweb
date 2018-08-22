@@ -5,8 +5,8 @@ import static de.l3s.learnweb.resource.office.FileUtility.getFileExtension;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.File;
@@ -32,12 +32,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     private String key;
 
-    private final String onlyOfficeClientUrl;
-
-    public FileEditorBean()
-    {
-        this.onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
-    }
+    private String onlyOfficeClientUrl;
 
     public void fillInFileInfo(Resource resource)
     {
@@ -74,7 +69,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return getServerUrlWithoutContextPath() + request.getContextPath();
     }
-
+    
     private String getServerUrlWithoutContextPath()
     {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -134,6 +129,8 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public String getOnlyOfficeClientUrl()
     {
+        if(null == onlyOfficeClientUrl)
+            onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
         return onlyOfficeClientUrl;
     }
 

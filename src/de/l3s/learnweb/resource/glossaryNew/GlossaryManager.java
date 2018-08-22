@@ -34,31 +34,30 @@ public class GlossaryManager
         insertGlossary.setString(2, String.join(",", resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
         insertGlossary.executeQuery();
 
-        if(resource.isCloned() && (resource.getEntries() != null || !resource.getEntries().isEmpty())) //when copying
-            copyGlossaryEntries(resource.getEntries(), resource.getId(), resource.getUserId(), resource.isDeleted());
-
+        if(resource.isClonedButNotPersisted()) // after a resource has been cloned we have to persist the cloned entries
+            saveEntries(resource);
     }
 
     /**
      * To set new IDs for entries and terms
      *
-     * @param entries
-     * @param resourceId
-     * @param userId
-     * @param delete
      * @throws SQLException
      */
-    public void copyGlossaryEntries(List<GlossaryEntry> entries, int resourceId, int userId, boolean delete) throws SQLException
+    private void saveEntries(GlossaryResource resource) throws SQLException
     {
-        for(GlossaryEntry entry : entries)
+        if(resource.getEntries() == null)
+            return;
+
+        for(GlossaryEntry entry : resource.getEntries())
         {
-            if(delete)
-                entry.setDeleted(true);
+            entry.setDeleted(resource.isDeleted());
             entry.setId(-1);
-            entry.setResourceId(resourceId);
+            entry.setResourceId(resource.getId());
             entry.getTerms().forEach(term -> term.setId(-1));
-            saveEntry(entry, userId); //TODO:: userId of user who copies or id of old user???
+            saveEntry(entry, resource.getUserId()); //TODO:: userId of user who copies or id of old user???
         }
+
+        resource.setClonedButNotPersisted(false);
     }
 
     public void saveEntry(GlossaryEntry entry, int userId) throws SQLException
@@ -95,14 +94,13 @@ public class GlossaryManager
                 insertEntry.setString(6, entry.getDescription());
                 insertEntry.setBoolean(7, entry.isDescriptionPasted());
                 insertEntry.executeQuery();
+
                 ResultSet entryInserted = insertEntry.getGeneratedKeys();
                 entryInserted.next();
                 entry.setId(entryInserted.getInt(1));
-
             }
             else //old entry updated
             {
-
                 PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=? WHERE `entry_id`=?");
                 updateEntry.setString(1, entry.getTopicOne());
                 updateEntry.setString(2, entry.getTopicTwo());
@@ -112,14 +110,15 @@ public class GlossaryManager
                 updateEntry.setInt(6, entry.getId());
                 updateEntry.executeUpdate();
             }
-            saveTerms(entry.getTerms(), entry.getId(), userId);
+            saveTerms(entry.getTerms(), userId);
         }
 
     }
 
     //  TODO entryId and userId are stored in the GlossaryTerm. No need to provide them separately
     //@Philipp: Entry ID for a new entry that is recently added is not stored in GlossaryTerm yet.
-    public void saveTerms(List<GlossaryTerm> terms, int entryId, int userId) throws SQLException
+    // It is much cleaner to update the terms when its parent entry.id is updated; Fixed it myself
+    public void saveTerms(List<GlossaryTerm> terms, int userId) throws SQLException
     {
         PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
                 "INSERT INTO `lw_glossary_term`(`entry_id`, `user_id`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -130,7 +129,7 @@ public class GlossaryManager
             // TODO see line 80
             if(term.getId() < 0)//new term
             {
-                termInsert.setInt(1, entryId);
+                termInsert.setInt(1, term.getEntryId());
                 termInsert.setInt(2, userId);
                 termInsert.setString(3, term.getTerm());
                 termInsert.setString(4, term.getLanguage());
@@ -144,10 +143,12 @@ public class GlossaryManager
                 termInsert.setBoolean(12, term.isAcronymPasted());
                 termInsert.setBoolean(13, term.isPhraseologyPasted());
                 termInsert.addBatch();
+
+                // TODO the generated id must be retrieved to update term.id here
             }
             else
             {
-                termUpdate.setInt(1, entryId);
+                termUpdate.setInt(1, term.getEntryId());
                 termUpdate.setBoolean(2, term.isDeleted());
                 termUpdate.setString(3, term.getTerm());
                 termUpdate.setString(4, term.getLanguage());
@@ -245,7 +246,6 @@ public class GlossaryManager
 
     public void delete(GlossaryResource resource) throws SQLException
     {
-
         if(resource.getEntries() != null || !resource.getEntries().isEmpty())
         {
             for(GlossaryEntry entry : resource.getEntries())
@@ -254,7 +254,6 @@ public class GlossaryManager
                 saveEntry(entry, 0);
             }
         }
-
     }
 
     /**
@@ -275,7 +274,7 @@ public class GlossaryManager
         else
         {
             glossaryResource = null;
-            log.error("Error in loading languages for glossary while loading glossary resource from Database");
+            log.error("Error in loading languages for glossary while loading glossary resource from Database"); // TODO add at least the resource id so that one has a chance to find the problematic resource
             return;
         }
         //Glossary Entries details

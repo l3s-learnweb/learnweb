@@ -157,14 +157,14 @@
 							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
 							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" pt:onpaste="#{glossaryBeanNEW.formEntry.setDescriptionPasted(true)}" requiredMessage="#{msg['Glossary.description_message']}" />
 							<p:message for="description" />
-				</p:panelGrid>
-				
-				<br />
+						</p:panelGrid>
+						
+						<br />
 						<p:dataTable value="#{glossaryBeanNEW.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
 				
 							<p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="#{term.setTermPasted(true)}"/>
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="console.log('term pasted');#{term.setTermPasted(true)}"/>
 								<p:message for="term" />
 								
 							</p:column>
@@ -242,7 +242,7 @@
 						<br />
 						<br />
 				
-				</h:form>
+					</h:form>
 				</div>
 				
 			</h:panelGroup>

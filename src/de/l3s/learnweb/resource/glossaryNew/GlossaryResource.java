@@ -20,10 +20,10 @@ public class GlossaryResource extends Resource implements Serializable
      */
 
     private static final long serialVersionUID = 8388778401614338522L;
-    private ArrayList<String> allowedLanguages = new ArrayList<String>();
+    private ArrayList<String> allowedLanguages = new ArrayList<String>(); // TODO must use Locale. Strings are error prone
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean deleted = false;
-    private boolean cloned = false;
+    private boolean clonedButNotPersited = false;
 
     //constructor does nothing
     public GlossaryResource()
@@ -41,7 +41,7 @@ public class GlossaryResource extends Resource implements Serializable
         super(otherGlossaryResource);
         setAllowedLanguages(otherGlossaryResource.allowedLanguages);
         setDeleted(otherGlossaryResource.deleted);
-        setCloned(true);
+        setClonedButNotPersisted(true);
         setEntries(new ArrayList<GlossaryEntry>(otherGlossaryResource.entries.size()));
         for(int i = 0; i < otherGlossaryResource.entries.size(); i++)
         {
@@ -115,14 +115,14 @@ public class GlossaryResource extends Resource implements Serializable
         this.deleted = deleted;
     }
 
-    public boolean isCloned()
+    public boolean isClonedButNotPersisted()
     {
-        return cloned;
+        return clonedButNotPersited;
     }
 
-    public void setCloned(boolean cloned)
+    public void setClonedButNotPersisted(boolean cloned) // TODO this was never set to false. Must be done after the entries have been saved; Already fixed it
     {
-        this.cloned = cloned;
+        this.clonedButNotPersited = cloned;
     }
 
 }
