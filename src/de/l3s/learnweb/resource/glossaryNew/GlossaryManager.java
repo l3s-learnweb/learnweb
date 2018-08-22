@@ -111,6 +111,7 @@ public class GlossaryManager
                 updateEntry.executeUpdate();
             }
             saveTerms(entry.getTerms(), userId);
+
         }
 
     }
@@ -166,6 +167,9 @@ public class GlossaryManager
             }
             termInsert.executeBatch();
             termUpdate.executeBatch();
+
+            if(term.isDeleted()) // TODO check if you can now remove the all the rendered="#{not term.deleted}" statements from glossay.xhtml
+                terms.remove(term);
         }
     }
 
