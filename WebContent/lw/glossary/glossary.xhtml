@@ -40,7 +40,7 @@
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
 							<h:outputText value="#{item.getEntryId()}"></h:outputText>
 						</p:column>
-						<p:column style=" width:20px;" groupRow="true" exportable="false">
+						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 							</p:commandLink>
