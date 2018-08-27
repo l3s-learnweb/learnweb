@@ -32,14 +32,11 @@ public class JobScheduler
         //UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
         //scheduler.schedule("0 1 13,27 * *", yovistoTask);
 
-        //Schedules the task, at 1:00 everyday to check for new TED videos
-        //scheduler.schedule("0 1 * * *", new CheckNewTedVideos());
-
-        //Schedules the task at 1:00 on alternate days to update existing TED videos
-        //scheduler.schedule("0 1 2-30/2 * *", new CheckUpdatedTedVideos());
-
-        //Runs the TED crawler at 1:00 everyday to check for new/update TED videos
-        scheduler.schedule("0 1 * * *", new TedCrawlerSimple());
+        if(learnweb.getService().equals(Learnweb.SERVICE.LEARNWEB))
+        {
+            //Runs the TED crawler at 1:00 everyday to check for new/update TED videos
+            scheduler.schedule("0 1 * * *", new TedCrawlerSimple());
+        }
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());
