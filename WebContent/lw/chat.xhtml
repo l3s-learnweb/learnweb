@@ -41,7 +41,7 @@
  
             <p:inputText value="#{chatView.globalMessage}" styleClass="messageInput" />
             <p:spacer width="5" />
-            <p:commandButton value="Send" actionListener="#{chatView.sendGlobal}" oncomplete="$('.messageInput').val('').focus()" />
+            <p:commandButton value="Send" actionListener="#{chatView.sendGlobal}" oncomplete="$('.messageInput').val('').trigger('focus')" />
             <p:spacer width="5" />
             <p:commandButton value="Disconnect" actionListener="#{chatView.disconnect}" global="false" update="container" />
         </h:panelGroup>

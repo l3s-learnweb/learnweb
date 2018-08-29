@@ -278,7 +278,7 @@
               thisRef.applyTransform($(day), 'rotateY(0deg)');
             }
             if (thisRef.options.onDayClick) {
-              thisRef.$element.find('[data-group="days"] .day a').click(function() {
+              thisRef.$element.find('[data-group="days"] .day a').on('click', function() {
                 return thisRef.options.onDayClick.call(this, thisRef.options.events);
               });
             }
@@ -288,7 +288,7 @@
               });
             }
             if (thisRef.options.onActiveDayClick) {
-              thisRef.$element.find('[data-group="days"] .day.active a').click(function() {
+              thisRef.$element.find('[data-group="days"] .day.active a').on('click', function() {
                 return thisRef.options.onActiveDayClick.call(this, thisRef.options.events);
               });
             }
@@ -324,7 +324,7 @@
         if (options.onInit) {
           options.onInit.call(data);
         }
-        return $this.find("[data-go]").click(function() {
+        return $this.find("[data-go]").on('click', function() {
           if ($(this).data("go") === "prev") {
             data.prev();
           }

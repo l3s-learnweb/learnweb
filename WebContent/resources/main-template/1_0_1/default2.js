@@ -70,8 +70,7 @@ $(document).ready(function()
 		var group = $(this);
 		var links = group.children('div');
 
-		group.find('h3 .iconarrow').click(function()
-		{
+		group.find('h3 .iconarrow').on('click', function() {
 			links.slideToggle();
 			group.toggleClass('active');
 			return true;

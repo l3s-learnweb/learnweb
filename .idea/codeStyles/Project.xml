@@ -5,9 +5,6 @@
     <HTMLCodeStyleSettings>
       <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html,body,thead,tbody,tfoot,ui:composition" />
     </HTMLCodeStyleSettings>
-    <JSCodeStyleSettings>
-      <option name="FUNCTION_EXPRESSION_BRACE_STYLE" value="2" />
-    </JSCodeStyleSettings>
     <JavaCodeStyleSettings>
       <option name="GENERATE_FINAL_LOCALS" value="true" />
       <option name="GENERATE_FINAL_PARAMETERS" value="true" />
@@ -37,11 +34,6 @@
       <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
       <option name="KEEP_SIMPLE_LAMBDAS_IN_ONE_LINE" value="true" />
       <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="true" />
-    </codeStyleSettings>
-    <codeStyleSettings language="JavaScript">
-      <option name="BRACE_STYLE" value="2" />
-      <option name="CLASS_BRACE_STYLE" value="2" />
-      <option name="METHOD_BRACE_STYLE" value="2" />
     </codeStyleSettings>
   </code_scheme>
 </component>

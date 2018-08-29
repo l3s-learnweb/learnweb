@@ -120,7 +120,7 @@ function updateThumbnail(){
 
 function archiveListInitialize(){
 	$('.years ul').hide();
-    $('.years').click(function() {
+    $('.years').on('click', function() {
     	$(this).find('span').toggleClass("bold");
         $(this).find('ul').slideToggle();
     });
@@ -129,10 +129,10 @@ function archiveListInitialize(){
 function prepareCommentButton() {
     var button = $('#comment_button');
     button.hide();
-    $('#commentfield').focus(function () {
+    $('#commentfield').on('focus', function () {
         button.slideDown();
     });
-    $('#comment_form').focusout(function () {
+    $('#comment_form').on('blur', function () {
         $('#comment_button').slideUp(1000);
     });
 }
@@ -301,6 +301,7 @@ function resourceDND() {
         }
     });
 }
+
 function check_tag(tagName){
 	
 	
@@ -317,12 +318,8 @@ function load_lightbox_editor() {
 	lightbox_open();
 	var canBeEdited = ($('#ed_can_be_edited').val() == 'true');
 
-	$('#lightbox_background').click(function() {
-		lightbox_close_for_editor();
-	});
-	$('#lightbox_close').click(function() {
-		lightbox_close_for_editor();
-	});
+	$('#lightbox_background').on('click', lightbox_close_for_editor);
+	$('#lightbox_close').on('click', lightbox_close_for_editor);
 
 	var mode = canBeEdited ? "edit" : "view";
     connectEditor("lightbox_editor", mode);

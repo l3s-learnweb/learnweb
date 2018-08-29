@@ -373,7 +373,9 @@
 
                 <script type="text/javascript">
 
-                    $(document).on('ready', prepareCatInterface($("#cat_tree").text(), $("#group_name").text(), $("#group_resource").text()));
+                    $(function() {
+                        prepareCatInterface($("#cat_tree").text(), $("#group_name").text(), $("#group_resource").text());
+                    });
 
                 </script>
             </h:panelGroup>
@@ -522,7 +524,7 @@
             $(document).on("click", "#search_filter_icon", function ()
             {
                 $("#search_filter_form").animate({width: "toggle"}, 500, 'swing');
-                $("#search_filter_form input").focus();
+                $("#search_filter_form input").trigger('focus');
                 $("#search_filter_icon").hide();
             });
 

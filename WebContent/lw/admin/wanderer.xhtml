@@ -844,7 +844,7 @@ $("#text").unbind().change(check_text);
 
 $("#wander").unbind().mouseover(check_text)
 
-$("#wander").click(function(){
+$("#wander").on('click', function(){
 
 	var text = $("#text").val();
 	var textA = text.split(" ");
@@ -878,7 +878,7 @@ function events() {
 			if ($("#options").hasClass("active")) {
 				apply();
 			}
-			$("#exclude").blur();
+			$("#exclude").trigger('blur');
 		}
 		// escape
 	  else if (e.keyCode == 27) {
@@ -889,7 +889,7 @@ function events() {
 			
 			if ($("#search").is(":focus")) {
 				suggest();
-				$("#search").blur();
+				$("#search").trigger('blur');
 			}
 			else if (active.length>0) {
 				$(".active").addClass("hover");
@@ -899,7 +899,7 @@ function events() {
 		}	
 	});
 
-	$("#selectall").unbind().click(function(){
+	$("#selectall").unbind().on('click', function(){
 
 		var types = ["JJ", "RR", "CC", "DD", "NN", "MC", "II", "PP", "PU", "SY", "FU", "VV"];
 		for (var i=0; i < types.length; i+=1) {
@@ -915,7 +915,7 @@ function events() {
 		// return
 		if (e.keyCode==13) {		
 			var index = parseInt($($("#suggestions div")[suggestionindex]).prop("id").split("s_")[1]);
-			$("#search").blur();
+			$("#search").trigger('blur');
 			active = [index];
 			layout();		
 		}
@@ -947,13 +947,13 @@ function events() {
 
 	});
 
-	$("#apply").unbind().click(apply);
+	$("#apply").unbind().on('click', apply);
 
-	$("#header h1").unbind().click(home);
+	$("#header h1").unbind().on('click', home);
 
-	$("#options_button").unbind().click(function(e){options();});
+	$("#options_button").unbind().on('click', function(e){options();});
 
-	$("#help_button").unbind().click(function(e){help();});
+	$("#help_button").unbind().on('click', function(e){help();});
 
 	
 }
@@ -979,7 +979,7 @@ function options(show) {
 		feedback(false);
 		log("options", "open");		
 		suggest();
-		$("#exclude").focus();		
+		$("#exclude").trigger('focus');
 		$("#options_button").addClass('active');				
 		$("#options").addClass('active');
 	}
@@ -1034,7 +1034,7 @@ function feedback(show) {
 		$("#feedback_submit, #feedback_text, #feedback_intro").css({display: 'block'});
 		$("#feedback_thanks").css({display: 'none'});					
 		
-		$("#feedback_submit").unbind().click(function(){
+		$("#feedback_submit").unbind().on('click', function(){
 			
 			var text = $("#feedback_text").val();
 			
@@ -1155,7 +1155,7 @@ function suggest(query) {
 	
 	
 	// events
-	$("#suggestions div").click(function(){
+	$("#suggestions div").on('click', function(){
 		var index = parseInt($(this).prop("id").split("s_")[1]);
 		log("search", index);
 		active = [index];
@@ -1978,11 +1978,11 @@ function instances(showall) {
 		);
 
 		// show more
-		$("#showall").click(function(){			
+		$("#showall").on('click', function(){
 			instances(true)	;
 		});
 
-		$("#instances div:not(#showall) span").click( function(){
+		$("#instances div:not(#showall) span").on('click', function(){
 			var index = parseInt($(this).attr("class").split("w_")[1]);
 			var Word = Words[wordmap[index]];
 			
