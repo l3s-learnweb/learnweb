@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -24,12 +25,14 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 import de.l3s.learnweb.user.User;
+import org.apache.log4j.Logger;
 
 @Named
 @ViewScoped
 public class GroupOverviewBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6297485484480890425L;
+    private static final Logger log = Logger.getLogger(GroupOverviewBean.class);
 
     private int groupId;
     private Group group;
@@ -132,8 +135,13 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String index = params.get("index");
         String type = params.get("type");
+
         if(groupSummary != null && index != null && type != null)
         {
+            if (StringUtils.isEmpty(index)) { // TODO: remove later, added to investigate issue
+                log.error("getChosenResourceFromSlider: index is empty for type `" + type + "`.");
+            }
+
             return new AbstractMap.SimpleEntry<>(type, getClickedResourceFromOverview(Integer.valueOf(index), type));
         }
         return null;
