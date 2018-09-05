@@ -3,14 +3,20 @@ package de.l3s.learnweb.resource.glossaryNew;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.util.BeanHelper;
+import de.l3s.util.StringHelper;
 
 public class GlossaryManager
 {
@@ -31,7 +37,7 @@ public class GlossaryManager
         }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, String.join(",", resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
+        insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
         insertGlossary.executeQuery();
 
         if(resource.isClonedButNotPersisted()) // after a resource has been cloned we have to persist the cloned entries
@@ -39,7 +45,7 @@ public class GlossaryManager
     }
 
     /**
-     * To set new IDs for entries and terms
+     * To set new IDs for entries and terms which are copied
      *
      * @throws SQLException
      */
@@ -50,126 +56,153 @@ public class GlossaryManager
 
         for(GlossaryEntry entry : resource.getEntries())
         {
+            entry.setUserId(resource.getUserId()); //User ID of user who created the entry
             entry.setDeleted(resource.isDeleted());
             entry.setId(-1);
             entry.setResourceId(resource.getId());
             entry.getTerms().forEach(term -> term.setId(-1));
-            saveEntry(entry, resource.getUserId()); //TODO:: userId of user who copies or id of old user???
+            saveEntry(entry, resource);
         }
 
-        resource.setClonedButNotPersisted(false);
+        resource.setClonedButNotPersisted(false); //Required to reset it if it was set prior to this.
     }
 
-    public void saveEntry(GlossaryEntry entry, int userId) throws SQLException
+    public void saveEntry(GlossaryEntry entry, GlossaryResource glossaryResource) throws SQLException
     {
         // TODO I think the userId parameter can be removed.
-        // When an entry is deleted I would not set it to zero. The idea of the deleted flag was that we can undo deletions. But when you change the user_id this becomes harder.
         // When a glossary resource was cloned we could keep the createdByUserId and lastChangedByUserId as they are. When a resource is copied the new user becomes only owner of the resource. The entries keep their original creator. What do you think?
-
+        entry.setTimestamp(new Timestamp(System.currentTimeMillis())); // change timestamp of entry to latest timestamp
         if(entry.isDeleted())
         {
-            PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=? WHERE `entry_id`=?");
-            deleteEntry.setBoolean(1, true);
-            deleteEntry.setInt(2, entry.getId());
-            deleteEntry.executeQuery();
-
-            PreparedStatement deleteTerms = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_term` SET `deleted`=? WHERE `entry_id`=?");
-            deleteTerms.setBoolean(1, true);
-            deleteTerms.setInt(2, entry.getId());
-            deleteTerms.executeQuery();
+            try(PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+            {
+                deleteEntry.setBoolean(1, true);
+                deleteEntry.setInt(2, entry.getLastChangedByUserId());
+                deleteEntry.setInt(3, entry.getId());
+                deleteEntry.executeQuery();
+            }
+            try(PreparedStatement deleteTerms = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_term` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+            {
+                deleteTerms.setBoolean(1, true);
+                deleteTerms.setInt(2, entry.getLastChangedByUserId());
+                deleteTerms.setInt(3, entry.getId());
+                deleteTerms.executeQuery();
+            }
+            glossaryResource.getEntries().remove(entry);
         }
         else
         {
+            //Discuss with @Philipp
             // TODO Rishita: use INSERT INTO ON DUPLICATE UPDATE see Learnweb code mail from 04.05.2018 and SQL.getCreateStatement
 
             if(entry.getId() < 0) // new entry
             {
-                PreparedStatement insertEntry = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_entry`(`resource_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        PreparedStatement.RETURN_GENERATED_KEYS);
-                insertEntry.setInt(1, entry.getResourceId());
-                insertEntry.setInt(2, userId);
-                insertEntry.setString(3, entry.getTopicOne());
-                insertEntry.setString(4, entry.getTopicTwo());
-                insertEntry.setString(5, entry.getTopicThree());
-                insertEntry.setString(6, entry.getDescription());
-                insertEntry.setBoolean(7, entry.isDescriptionPasted());
-                insertEntry.executeQuery();
+                try(PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
+                        "INSERT INTO `lw_glossary_entry`(`resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        PreparedStatement.RETURN_GENERATED_KEYS);)
+                {
 
-                ResultSet entryInserted = insertEntry.getGeneratedKeys();
-                entryInserted.next();
-                entry.setId(entryInserted.getInt(1));
+                    entry.setUserId(entry.getLastChangedByUserId());//last change by userID == original user ID in insert
+                    insertEntry.setInt(1, entry.getResourceId());
+                    insertEntry.setInt(2, entry.getOriginalEntryId());
+                    insertEntry.setInt(3, entry.getLastChangedByUserId());
+                    insertEntry.setInt(4, entry.getUserId());
+                    insertEntry.setString(5, entry.getTopicOne());
+                    insertEntry.setString(6, entry.getTopicTwo());
+                    insertEntry.setString(7, entry.getTopicThree());
+                    insertEntry.setString(8, entry.getDescription());
+                    insertEntry.setBoolean(9, entry.isDescriptionPasted());
+                    insertEntry.executeQuery();
+                    ResultSet entryInserted = insertEntry.getGeneratedKeys();
+                    entryInserted.next();
+                    entry.setId(entryInserted.getInt(1));
+                    glossaryResource.getEntries().add(entry);
+                }
             }
             else //old entry updated
             {
-                PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=? WHERE `entry_id`=?");
-                updateEntry.setString(1, entry.getTopicOne());
-                updateEntry.setString(2, entry.getTopicTwo());
-                updateEntry.setString(3, entry.getTopicThree());
-                updateEntry.setString(4, entry.getDescription());
-                updateEntry.setBoolean(5, entry.isDescriptionPasted());
-                updateEntry.setInt(6, entry.getId());
-                updateEntry.executeUpdate();
+                try(PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+                {
+                    updateEntry.setString(1, entry.getTopicOne());
+                    updateEntry.setString(2, entry.getTopicTwo());
+                    updateEntry.setString(3, entry.getTopicThree());
+                    updateEntry.setString(4, entry.getDescription());
+                    updateEntry.setBoolean(5, entry.isDescriptionPasted());
+                    updateEntry.setInt(6, entry.getLastChangedByUserId());
+                    updateEntry.setInt(7, entry.getId());
+                    updateEntry.executeUpdate();
+                }
             }
-            saveTerms(entry.getTerms(), userId);
+            saveTerms(entry);
 
         }
 
     }
 
-    //  TODO entryId and userId are stored in the GlossaryTerm. No need to provide them separately
-    //@Philipp: Entry ID for a new entry that is recently added is not stored in GlossaryTerm yet.
-    // It is much cleaner to update the terms when its parent entry.id is updated; Fixed it myself
-    public void saveTerms(List<GlossaryTerm> terms, int userId) throws SQLException
+    public void saveTerms(GlossaryEntry entry) throws SQLException
     {
-        PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
-                "INSERT INTO `lw_glossary_term`(`entry_id`, `user_id`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        PreparedStatement termUpdate = learnweb.getConnection().prepareStatement(
-                "UPDATE `lw_glossary_term` SET `entry_id`=?, `deleted`=?, `term`=?, `language`=?, `uses`=?, `pronounciation`=?, `acronym`=?, `source`=?, `phraseology`=?, `term_pasted`=?, `pronounciation_pasted`=?, `acronym_pasted`=?, `phraseology_pasted`=? WHERE `term_id`=?");
-        for(GlossaryTerm term : terms)
+
+        for(GlossaryTerm term : entry.getTerms())
         {
             // TODO see line 80
             if(term.getId() < 0)//new term
             {
-                termInsert.setInt(1, term.getEntryId());
-                termInsert.setInt(2, userId);
-                termInsert.setString(3, term.getTerm());
-                termInsert.setString(4, term.getLanguage());
-                termInsert.setString(5, String.join(",", term.getUses()));
-                termInsert.setString(6, term.getPronounciation());
-                termInsert.setString(7, term.getAcronym());
-                termInsert.setString(8, term.getSource());
-                termInsert.setString(9, term.getPhraseology());
-                termInsert.setBoolean(10, term.isTermPasted());
-                termInsert.setBoolean(11, term.isPronounciationPasted());
-                termInsert.setBoolean(12, term.isAcronymPasted());
-                termInsert.setBoolean(13, term.isPhraseologyPasted());
-                termInsert.addBatch();
-
-                // TODO the generated id must be retrieved to update term.id here
+                try(PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
+                        "INSERT INTO `lw_glossary_term`(`entry_id`, `original_term_id`, `last_changed_by_user_id`, `user_id`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        PreparedStatement.RETURN_GENERATED_KEYS);)
+                {
+                    termInsert.setInt(1, entry.getId());
+                    termInsert.setInt(2, term.getOriginalTermId());
+                    termInsert.setInt(3, entry.getLastChangedByUserId());
+                    termInsert.setInt(4, entry.getUserId());
+                    termInsert.setString(5, term.getTerm());
+                    termInsert.setString(6, term.getLanguage().getLanguage());
+                    termInsert.setString(7, String.join(",", term.getUses()));
+                    termInsert.setString(8, term.getPronounciation());
+                    termInsert.setString(9, term.getAcronym());
+                    termInsert.setString(10, term.getSource());
+                    termInsert.setString(11, term.getPhraseology());
+                    termInsert.setBoolean(12, term.isTermPasted());
+                    termInsert.setBoolean(13, term.isPronounciationPasted());
+                    termInsert.setBoolean(14, term.isAcronymPasted());
+                    termInsert.setBoolean(15, term.isPhraseologyPasted());
+                    termInsert.executeQuery();
+                    ResultSet termInserted = termInsert.getGeneratedKeys();
+                    termInserted.next();
+                    //set term values
+                    term.setId(termInserted.getInt(1));
+                    term.setLastChangedByUserId(entry.getLastChangedByUserId());
+                    term.setUserId(entry.getUserId());
+                }
             }
             else
             {
-                termUpdate.setInt(1, term.getEntryId());
-                termUpdate.setBoolean(2, term.isDeleted());
-                termUpdate.setString(3, term.getTerm());
-                termUpdate.setString(4, term.getLanguage());
-                termUpdate.setString(5, String.join(",", term.getUses()));
-                termUpdate.setString(6, term.getPronounciation());
-                termUpdate.setString(7, term.getAcronym());
-                termUpdate.setString(8, term.getSource());
-                termUpdate.setString(9, term.getPhraseology());
-                termUpdate.setBoolean(10, term.isTermPasted());
-                termUpdate.setBoolean(11, term.isPronounciationPasted());
-                termUpdate.setBoolean(12, term.isAcronymPasted());
-                termUpdate.setBoolean(13, term.isPhraseologyPasted());
-                termUpdate.setInt(14, term.getId());
-                termUpdate.addBatch();
+                try(PreparedStatement termUpdate = learnweb.getConnection().prepareStatement(
+                        "UPDATE `lw_glossary_term` SET `entry_id`=?, `deleted`=?, `term`=?, `language`=?, `uses`=?, `pronounciation`=?, `acronym`=?, `source`=?, `phraseology`=?, `term_pasted`=?, `pronounciation_pasted`=?, `acronym_pasted`=?, `phraseology_pasted`=?, `last_changed_by_user_id`=? WHERE `term_id`=?");)
+                {
+                    termUpdate.setInt(1, term.getEntryId());
+                    termUpdate.setBoolean(2, term.isDeleted());
+                    termUpdate.setString(3, term.getTerm());
+                    termUpdate.setString(4, term.getLanguage().getLanguage());
+                    termUpdate.setString(5, String.join(",", term.getUses()));
+                    termUpdate.setString(6, term.getPronounciation());
+                    termUpdate.setString(7, term.getAcronym());
+                    termUpdate.setString(8, term.getSource());
+                    termUpdate.setString(9, term.getPhraseology());
+                    termUpdate.setBoolean(10, term.isTermPasted());
+                    termUpdate.setBoolean(11, term.isPronounciationPasted());
+                    termUpdate.setBoolean(12, term.isAcronymPasted());
+                    termUpdate.setBoolean(13, term.isPhraseologyPasted());
+                    termUpdate.setInt(14, entry.getLastChangedByUserId());
+                    termUpdate.setInt(15, term.getId());
+                    termUpdate.executeQuery();
+                    //set term
+                    term.setLastChangedByUserId(entry.getLastChangedByUserId());
+                }
             }
-            termInsert.executeBatch();
-            termUpdate.executeBatch();
 
-            if(term.isDeleted()) // TODO check if you can now remove the all the rendered="#{not term.deleted}" statements from glossay.xhtml
-                terms.remove(term);
+            if(term.isDeleted())
+                entry.getTerms().remove(term);
         }
     }
 
@@ -193,10 +226,10 @@ public class GlossaryManager
                 entry.setTopicThree(resultEntries.getString("topic_three"));
                 entry.setDescription(resultEntries.getString("description"));
                 entry.setDescriptionPasted(resultEntries.getBoolean("description_pasted"));
+                entry.setTimestamp(resultEntries.getTimestamp("timestamp"));
 
                 //get terms for given entry
                 entry.setTerms(getGlossaryTerms(entry.getId()));
-
                 entries.add(entry);
             }
         }
@@ -218,7 +251,7 @@ public class GlossaryManager
                 term.setId(terms.getInt("term_id"));
                 term.setUserId(terms.getInt("user_id"));
                 term.setTerm(terms.getString("term"));
-                term.setLanguage(terms.getString("language"));
+                term.setLanguage(new Locale(terms.getString("language")));
                 term.setUses(Arrays.asList(terms.getString("uses").split(",")));
                 term.setPronounciation(terms.getString("pronounciation"));
                 term.setAcronym(terms.getString("acronym"));
@@ -255,7 +288,7 @@ public class GlossaryManager
             for(GlossaryEntry entry : resource.getEntries())
             {
                 entry.setDeleted(true);
-                saveEntry(entry, 0);
+                saveEntry(entry, resource);
             }
         }
     }
@@ -273,17 +306,59 @@ public class GlossaryManager
         ResultSet result = getGlossary.executeQuery();
         if(result.next())
         {
-            glossaryResource.setAllowedLanguages(new ArrayList<String>(Arrays.asList(result.getString("allowed_languages").split(","))));
+            glossaryResource.setAllowedLanguages(StringHelper.splitLocales(result.getString("allowed_languages")));
         }
         else
         {
+            log.error("Error in loading languages for glossary while loading glossary resource from Database. Resource ID: " + glossaryResource.getId());
             glossaryResource = null;
-            log.error("Error in loading languages for glossary while loading glossary resource from Database"); // TODO add at least the resource id so that one has a chance to find the problematic resource
             return;
         }
         //Glossary Entries details
         List<GlossaryEntry> entries = getGlossaryEntries(glossaryResource.getId());
         glossaryResource.setEntries(entries);
+
+    }
+
+    public GlossaryResource getGlossaryResource(int resourceId) throws SQLException
+    {
+        Resource resource = learnweb.getResourceManager().getResource(resourceId);
+
+        if(resource == null)
+            return null;
+
+        if(resource.getType() != ResourceType.glossary2)
+        {
+            log.error("Glossary resource requested but the resource is of type " + resource.getType() + "; " + BeanHelper.getRequestSummary());
+            return null;
+        }
+
+        return (GlossaryResource) resource;
+    }
+
+    public GlossaryEntry reloadEntry(int entryId) throws SQLException
+    {
+        try(PreparedStatement reloadEntry = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `entry_id`=?");)
+        {
+            GlossaryEntry entry = new GlossaryEntry();
+            reloadEntry.setInt(1, entryId);
+            ResultSet resultEntry = reloadEntry.executeQuery();
+            if(resultEntry.next())
+            {
+                entry.setResourceId(resultEntry.getInt("resource_id"));
+                entry.setId(resultEntry.getInt("entry_id"));
+                entry.setUserId(resultEntry.getInt("user_id"));
+                entry.setTopicOne(resultEntry.getString("topic_one"));
+                entry.setTopicTwo(resultEntry.getString("topic_two"));
+                entry.setTopicThree(resultEntry.getString("topic_three"));
+                entry.setDescription(resultEntry.getString("description"));
+                entry.setDescriptionPasted(resultEntry.getBoolean("description_pasted"));
+
+                //get terms for given entry
+                entry.setTerms(getGlossaryTerms(entry.getId()));
+            }
+            return entry;
+        }
 
     }
 }

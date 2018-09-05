@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -20,10 +21,10 @@ public class GlossaryResource extends Resource implements Serializable
      */
 
     private static final long serialVersionUID = 8388778401614338522L;
-    private ArrayList<String> allowedLanguages = new ArrayList<String>(); // TODO must use Locale. Strings are error prone
+    private List<Locale> allowedLanguages = new ArrayList<Locale>(); // TODO must use Locale. Strings are error prone @Philipp: This is used to save allowed languages selected from right-pane. It throws ELException: Cannot convert it of type class java.lang.String to class java.util.locale.
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean deleted = false;
-    private boolean clonedButNotPersited = false;
+    private boolean clonedButNotSaved = false;
 
     //constructor does nothing
     public GlossaryResource()
@@ -83,14 +84,14 @@ public class GlossaryResource extends Resource implements Serializable
         return this;
     }
 
-    public ArrayList<String> getAllowedLanguages()
+    public List<Locale> getAllowedLanguages()
     {
         return allowedLanguages;
     }
 
-    public void setAllowedLanguages(ArrayList<String> allowedLanguages)
+    public void setAllowedLanguages(List<Locale> list)
     {
-        this.allowedLanguages = allowedLanguages;
+        this.allowedLanguages = list;
     }
 
     public List<GlossaryEntry> getEntries()
@@ -117,12 +118,12 @@ public class GlossaryResource extends Resource implements Serializable
 
     public boolean isClonedButNotPersisted()
     {
-        return clonedButNotPersited;
+        return clonedButNotSaved;
     }
 
-    public void setClonedButNotPersisted(boolean cloned) // TODO this was never set to false. Must be done after the entries have been saved; Already fixed it
+    public void setClonedButNotPersisted(boolean cloned)
     {
-        this.clonedButNotPersited = cloned;
+        this.clonedButNotSaved = cloned;
     }
 
 }

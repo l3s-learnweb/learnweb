@@ -53,7 +53,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GlossaryBeanNEW.class);
 
     private int resourceId;
-    private GlossaryResource glossaryResource = new GlossaryResource(); // TODO don't init
+    private GlossaryResource glossaryResource;
     private List<GlossaryTableView> tableItems;
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
@@ -69,12 +69,10 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return;
-        glossaryResource.setId(resourceId); // TODO see mail
-        getLearnweb().getGlossaryManager().loadGlossaryResource(this.glossaryResource);
-
+        glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
         if(glossaryResource == null)
         {
-            log.error("Error in loading glossary resource");
+            log.error("Error in loading glossary resource for resource ID:" + resourceId + "on load");
             addInvalidParameterMessage("resource_id");
             return;
         }
@@ -107,22 +105,44 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         formEntry.setLastChangedByUserId(getUser().getId());
         formEntry.getTerms().forEach(term -> term.setLastChangedByUserId(getUser().getId()));
-        if(formEntry.getTerms().size() == 0 || formEntry.getTerms().size() == numberOfDeletedTerms() || formEntry.getTerms().get(0).getTerm().isEmpty())
-        // TODO formEntry.getTerms().get(0).getTerm().isEmpty() why is this used? looks strange. Term is a mandatory input field and should never be empty
+        if(formEntry.getTerms().size() == numberOfDeletedTerms())
         {
             addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
         }
         try
         {
-            getLearnweb().getGlossaryManager().saveEntry(formEntry, getUser().getId());
+            formEntry.setLastChangedByUserId(getUser().getId());
+            getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
         }
         catch(SQLException e)
         {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
+            addFatalMessage(e);
+            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+        }
+        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+        setKeepMessages();
+        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+    }
+
+    /**
+     * Method undoes any action taken on formEntry on click of "Cancel"
+     */
+    public String onCancel()
+    {
+        try
+        {
+            glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
+            glossaryResource.getEntries().add(getLearnweb().getGlossaryManager().reloadEntry(formEntry.getId()));
 
         }
-        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved")); // TODO you will show a success message even when an error occurred ...
+        catch(SQLException e)
+        {
+            log.error("Error in reloading entry for glossary resource ID:" + resourceId, e);
+            addFatalMessage(e);
+        }
+        setNewFormEntry();
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
@@ -136,18 +156,20 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public String deleteEntry(GlossaryTableView row)
     {
         row.getEntry().setDeleted(true);
+        row.getEntry().setLastChangedByUserId(getUser().getId());
         try
         {
-            getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), getUser().getId());
+            getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
+            setKeepMessages();
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
         catch(SQLException e)
         {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
-            addFatalMessage(e); // TODO use at least this. Don't ignore errors. The user must be informed
+            addFatalMessage(e);
         }
-
+        setKeepMessages();
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
     }
 
@@ -168,7 +190,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             formEntry.getTerms().add(term);
         }
         addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
-
+        setKeepMessages();
     }
 
     public int numberOfDeletedTerms()
@@ -354,6 +376,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
+            addFatalMessage(e);
         }
 
     }
@@ -472,10 +495,9 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         if(null == allowedTermLanguages)
         {
             allowedTermLanguages = new ArrayList<>();
-            for(String language : glossaryResource.getAllowedLanguages())
+            for(Locale language : glossaryResource.getAllowedLanguages())
             {
-                Locale locale = Locale.forLanguageTag(language);
-                allowedTermLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+                allowedTermLanguages.add(new SelectItem(language, getLocaleMessage("language_" + language.getLanguage())));
             }
             allowedTermLanguages.sort(Misc.selectItemLabelComparator);
         }

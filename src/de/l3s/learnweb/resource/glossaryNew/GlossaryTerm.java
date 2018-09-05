@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.constraints.Size;
 
@@ -14,6 +15,7 @@ public class GlossaryTerm implements Serializable
     private static final long serialVersionUID = -8309235925484416943L;
 
     private int id = -1;
+    private int originalTermId = 0;
     private boolean deleted;
     private int entryId;
     private int userId; // the user who created this term
@@ -28,7 +30,7 @@ public class GlossaryTerm implements Serializable
     private String source;
     @Size(max = 500)
     private String phraseology;
-    private String language;
+    private Locale language;
     private Timestamp timestamp;
     private boolean termPasted;
     private boolean pronounciationPasted;
@@ -46,6 +48,7 @@ public class GlossaryTerm implements Serializable
     public GlossaryTerm(GlossaryTerm oldTerm)
     {
         setId(-1);
+        setOriginalTermId(oldTerm.id);
         setDeleted(oldTerm.deleted);
         setEntryId(oldTerm.entryId);
         setUserId(oldTerm.userId);
@@ -137,12 +140,12 @@ public class GlossaryTerm implements Serializable
         this.phraseology = phraseology;
     }
 
-    public String getLanguage()
+    public Locale getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(String language)
+    public void setLanguage(Locale language)
     {
         this.language = language;
     }
@@ -253,6 +256,16 @@ public class GlossaryTerm implements Serializable
             return "Use";
         else
             return StringHelper.implode(getUses(), ", ");
+    }
+
+    public int getOriginalTermId()
+    {
+        return originalTermId;
+    }
+
+    public void setOriginalTermId(int originalTermId)
+    {
+        this.originalTermId = originalTermId;
     }
 
 }

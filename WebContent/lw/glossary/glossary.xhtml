@@ -28,7 +28,7 @@
 						
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
-						<p:ajax event="sort" oncomplete="groupRow()" /> 
+						<p:ajax event="sort" oncomplete="groupRow()" />
 
 						<f:facet name="header">
 							<p:outputPanel>
@@ -42,7 +42,7 @@
 						</p:column>
 						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
-								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
+								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl"/>
 							</p:commandLink>
 
 
@@ -96,7 +96,7 @@
 						</p:dataTable>
 						<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
 						
-								<h:outputLabel value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;" styleClass="glossary_footer_text"></h:outputLabel>
+								<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;" styleClass="glossary_footer_text"></h:outputText>
 								<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
 								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"  width="24" style="position:relative; text-alignt:center; display: block; " />
 								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBeanNEW.postProcessXls}" />
@@ -124,7 +124,7 @@
 				
 				<div id="glossform" style="display: none">
 					<h:form id="glossary_add" styleClass="grey_border" prependId="false">
-						<p:growl id="glossgrowl" redisplay="false" globalOnly="true" showDetail="true">
+						<p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
 							<p:autoUpdate />
 						</p:growl>
 						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
@@ -216,7 +216,7 @@
 								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" pt:onpaste="#{term.setPhraseologyPasted(true)}"/>
 							</p:column>
 							<p:column width="10" rendered="#{not term.deleted}">
-								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms">
+								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms :growl">
 									<f:ajax execute="@this lang_terms" />
 									<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 								</p:commandLink>
@@ -231,14 +231,13 @@
 
 						<br />
 						<br />
-						<p:commandButton id="save" value="#{msg.save}" action="#{glossaryBeanNEW.onSave()}" styleClass="greenbutton resource_button" update=":glossary_add" binding="#{save}">
+						<p:commandButton id="save" value="#{msg.save}" action="#{glossaryBeanNEW.onSave()}" styleClass="greenbutton resource_button" update=":glossary_add :growl" binding="#{save}" oncomplete="groupRow()">
 							<f:ajax execute="@form" />
 
 
 						</p:commandButton>
-						<p:commandButton value="#{msg.cancel}" actionListener="#{glossaryBeanNEW.setNewFormEntry()}" styleClass="greenbutton resource_button" update="@form :glossary_add"
-							onclick="$('#glossform').css('display', 'none')" process="@this" resetValues="true">
-
+						<p:commandButton value="#{msg.cancel}" action="#{glossaryBeanNEW.onCancel()}" styleClass="greenbutton resource_button" update="@form :glossary_add :lang_terms"
+							 process="@this" resetValues="true" oncomplete="groupRow()">
 						</p:commandButton>
 
 						<br />

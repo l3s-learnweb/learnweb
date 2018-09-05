@@ -1,6 +1,7 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,11 +14,12 @@ public class GlossaryEntry implements Serializable
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
+    private int originalEntryId = 0;
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
     private int lastChangedByUserId;
-
+    private Timestamp timestamp;
     private String description;
     private boolean descriptionPasted = false;
     @Size(max = 100)
@@ -42,6 +44,7 @@ public class GlossaryEntry implements Serializable
     public GlossaryEntry(GlossaryEntry oldEntry)
     {
         setId(-1);
+        setOriginalEntryId(oldEntry.id);
         setResourceId(oldEntry.resourceId);
         setDeleted(oldEntry.deleted);
         setUserId(oldEntry.userId);
@@ -182,6 +185,26 @@ public class GlossaryEntry implements Serializable
     public void setLastChangedByUserId(int lastChangedByUserId)
     {
         this.lastChangedByUserId = lastChangedByUserId;
+    }
+
+    public int getOriginalEntryId()
+    {
+        return originalEntryId;
+    }
+
+    public void setOriginalEntryId(int originalEntryId)
+    {
+        this.originalEntryId = originalEntryId;
+    }
+
+    public Timestamp getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp)
+    {
+        this.timestamp = timestamp;
     }
 
 }
