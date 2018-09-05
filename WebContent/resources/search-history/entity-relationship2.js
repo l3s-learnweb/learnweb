@@ -1,13 +1,31 @@
 //function to execute on page load
 $(document).ready(function(){
 	$('.hideIcon').on('click',function(){
-		$('.snippet-viewer').hide();
+        hideSnippet();
 	});
 
 	bindClickToSessionBlock();
 
 	$('#query_path_button').hide();
 });
+
+function showSnippet()
+{
+	var $graph = $('#knowledge-graph');
+	var $snippet = $('#knowledge-snippet');
+
+	$graph.removeClass('ui-g-12 ui-md-12 ui-lg-12').addClass('ui-g-9 ui-md-9 ui-lg-9');
+    $snippet.show();
+}
+
+function hideSnippet()
+{
+    var $graph = $('#knowledge-graph');
+    var $snippet = $('#knowledge-snippet');
+
+    $snippet.hide();
+    $graph.removeClass('ui-g-9 ui-md-9 ui-lg-9').addClass('ui-g-12 ui-md-12 ui-lg-12');
+}
 
 function selectGroupId()
 {
@@ -24,13 +42,6 @@ function groupChange(data)
 	{
 		bindClickToSessionBlock(selectedGroupId);
 	}
-}
-
-function unselectGroup()
-{
-	setGroupUnselected([]);
-	$('#select-groups').hide();
-	document.getElementById('select-group-menu').selectedIndex = 0
 }
 
 function bindClickToSessionBlock (selectedGroupId)
@@ -74,7 +85,7 @@ function filterSnippets()
 		}
 	});*/
 
-	$('.snippet-viewer').show();
+    showSnippet();
 }
 
 //draw query path

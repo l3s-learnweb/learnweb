@@ -11,12 +11,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.faces.bean.ManagedProperty;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,22 +39,23 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private final static Logger log = Logger.getLogger(NewSearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
+    private int userId;
+
+    private String searchQuery = "";
+
+    // for graph
     private List<String> queries;
     private Set<String> entities;
 
     private List<Session> sessions;
-    private String title;
-    private int userId;
+    private boolean showGroupHistory = false;
+
     private int selectedUserId;
     private int selectedGroupId;
-    private boolean groupIdSelected;
-    private List<Session> groupSessions;
     private String selectedSessionId;
     private String selectedEntity;
-    private DateFormat dateFormatter;
-    private DateFormat timeFormatter;
-    private Map<Integer, List<SearchResult>> searchIdSnippets;
 
+    private Map<Integer, List<SearchResult>> searchIdSnippets;
     private List<Integer> selectedSearchIds;
     private Map<Integer, String> searchIdQueryMap;
 
@@ -71,13 +75,10 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             userId = getUser().getId();
             selectedUserId = userId;
         }
-
-        groupIdSelected = false;
     }
 
     public NewSearchHistoryBean()
     {
-        title = "Search History";
         queries = new ArrayList<>();
         entities = new HashSet<>();
         searchIdSnippets = new HashMap<>();
@@ -98,7 +99,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public String getQueriesAsJson()
     {
         List<Query> queries = null;
-        if(!groupIdSelected)
+        if(!showGroupHistory)
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedUserId, selectedSessionId);
         else
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedGroupId, selectedSessionId);
@@ -174,11 +175,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return entities;
     }
 
-    public String getTitle()
-    {
-        return title;
-    }
-
     public String getSelectedEntity()
     {
         return selectedEntity;
@@ -189,36 +185,25 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return searchIdQueryMap.getOrDefault(searchId, "");
     }
 
-    public List<Session> getSessions()
+    public List<Session> getSessions() throws SQLException
     {
-        if(this.groupIdSelected)
+        if(this.showGroupHistory)
         {
-            /*if(groupSessions != null)
-            {
-                //log.info("# group sessions: " + groupSessions.size());
-                for(Session session : groupSessions)
+            if (sessions == null && selectedGroupId > 0) {
+                if(!SessionCache.Instance().existsGroupId(selectedGroupId))
                 {
-                    for(Query query : session.getQueries())
-                    {
-                        //log.info(query.getQuery() + " -> ");
-                    }
+                    SessionCache.Instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
                 }
-            }*/
-            return groupSessions;
+                sessions = SessionCache.Instance().getByGroupId(selectedGroupId);
+            }
+
+            return sessions;
         }
         else
         {
             if(sessions == null)
             {
-                try
-                {
-                    //log.info("user id: " + userId);
-                    sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
-                }
-                catch(SQLException e)
-                {
-                    log.error("Error while fetching list of sessions for particular user: " + userId, e);
-                }
+                sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
             }
 
             return sessions;
@@ -248,7 +233,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return searchResults;
     }
 
-    public void actionUpdateKGData() throws Exception
+    public void actionUpdateKGData()
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String sessionId = params.get("session-id");
@@ -258,39 +243,32 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         //log.info("session id: " + sessionId + "user id: " + userId);
     }
 
-    public void actionSelectedGroupId() throws Exception
+    public void actionSelectedGroupId()
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int groupId = Integer.parseInt(params.get("group-id"));
         selectedGroupId = groupId;
         log.info("selected group id: " + groupId);
-
-        if(!SessionCache.Instance().existsGroupId(selectedGroupId))
-        {
-            SessionCache.Instance().cacheByGroupId(groupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(groupId));
-        }
-        this.groupSessions = SessionCache.Instance().getByGroupId(groupId);
-
-        groupIdSelected = true;
     }
 
-    public void onChangeGroup(AjaxBehaviorEvent event) throws Exception
+    public void onChangeGroup(AjaxBehaviorEvent event)
     {
         //log.info("group id: " + selectedGroupId);
-
-        if(!SessionCache.Instance().existsGroupId(selectedGroupId))
-        {
-            SessionCache.Instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
-        }
-        this.groupSessions = SessionCache.Instance().getByGroupId(selectedGroupId);
-
-        groupIdSelected = true;
     }
 
-    public void actionSetGroupUnselected()
+    public void actionSetShowGroupHistory()
     {
-        selectedUserId = getUserId();
-        groupIdSelected = false;
+        showGroupHistory = true;
+        searchQuery = null;
+        sessions = null;
+    }
+
+    public void actionSetShowUserHistory()
+    {
+        showGroupHistory = false;
+        searchQuery = null;
+        sessions = null;
+        selectedGroupId = -1;
     }
 
     public void actionSelectedSearchId()
@@ -313,23 +291,9 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             selectedSearchIds.add(Integer.parseInt(searchId));
     }
 
-    public String formatDate(Date date, Locale locale)
+    public boolean isShowGroupHistory()
     {
-        if(dateFormatter == null)
-            dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-        return dateFormatter.format(date);
-    }
-
-    public String formatTime(Date date, Locale locale)
-    {
-        if(timeFormatter == null)
-            timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-        return timeFormatter.format(date);
-    }
-
-    public boolean getGroupIdSelected()
-    {
-        return groupIdSelected;
+        return showGroupHistory;
     }
 
     public int getUserId()
@@ -367,78 +331,43 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         this.selectedGroupId = selectedGroupId;
     }
 
-}
+    public void search() throws SQLException
+    {
+        sessions = null;
+        filterSessionsByQuery(searchQuery);
+    }
 
-/*
-public void actionUpdateKGData()
-{
-    Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-    String sessionId = params.get("session-id");
-    selectedSessionId = sessionId;
-    log.info(sessionId);
-
-    // update queries
-    if(this.queries == null)
+    private void filterSessionsByQuery(String filterQuery) throws SQLException
     {
-        this.queries = new ArrayList<String>();
-    }
-    this.queries.clear();
-    SearchHistoryManager manager = this.getLearnweb().getSearchHistoryManager();
-    List<Query> queryList = manager.getQueriesForSessionId(this.selectedSessionId);
-    for(Query query : queryList)
-    {
-        this.queries.add(query.getQuery());
-    }
-    log.info("get queries:" + this.queries.size() + ", session id: " + this.selectedSessionId);
-
-    // update entities
-    if(this.entities == null)
-    {
-        this.entities = new ArrayList<String>();
-    }
-    this.entities.clear();
-    Set<String> entitySet = manager.getMergedEntities(queryList);
-    for(String entity : entitySet)
-    {
-        this.entities.add(entity);
-    }
-    log.info("get entities:" + this.entities.size() + ", session id: " + this.selectedSessionId);
-
-    // update related
-    if(this.related == null)
-    {
-        this.related = new ArrayList<>();
-    }
-    this.related.clear();
-    for(Query query : queryList)
-    {
-        List<String> relatedEntityStrs = new ArrayList<>();
-        List<String> relatedEntityList = manager.getRelatedEntitiesForSearchId(query.getSearchId());
-        for(String entity : relatedEntityList)
-        {
-            relatedEntityStrs.add("\"" + entity + "\"");
+        if (StringUtils.isEmpty(filterQuery)) {
+            return;
         }
-        this.related.add(relatedEntityStrs);
-    }
-    log.info("get related:" + this.related.size() + ", session id: " + this.selectedSessionId);
 
-    // update edges
-    if(this.edges == null)
+        boolean isSearchUser = false;
+        if (filterQuery.startsWith("user:") || filterQuery.startsWith("u:")) {
+            isSearchUser = true;
+            filterQuery = filterQuery.replace("user:", "").replace("u:", "").trim();
+        }
+
+        final boolean finalIsSearchUser = isSearchUser;
+        final String finalQuery = filterQuery;
+        sessions = getSessions().stream().filter(session -> {
+            if (finalIsSearchUser) {
+                return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
+            }
+
+            return session.getQueries().stream().anyMatch(query -> StringUtils.containsIgnoreCase(query.getQuery(), finalQuery));
+
+        }).collect(Collectors.toList());
+    }
+
+    public String getSearchQuery()
     {
-        this.edges = new ArrayList<>();
+        return searchQuery;
     }
-    this.edges.clear();
 
-    Set<Edge> edgeSet = manager.getAllEdges(entitySet);
-    for(Edge edge : edgeSet)
+    public void setSearchQuery(final String searchQuery)
     {
-        List<String> edgeNodes = new ArrayList<>();
-        edgeNodes.add("\"" + edge.getSource() + "\"");
-        edgeNodes.add("\"" + edge.getTarget() + "\"");
-        this.edges.add(edgeNodes);
+        this.searchQuery = searchQuery;
     }
-
-    log.info("get edges:" + this.edges.size() + ", session id: " + this.selectedSessionId);
-
 }
-*/

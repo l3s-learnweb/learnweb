@@ -262,7 +262,7 @@ public class SearchHistoryManager
         return edges;
     }
 
-    public List<Session> getSessionsForGroupId(int groupId) throws Exception
+    public List<Session> getSessionsForGroupId(int groupId) throws SQLException
     {
         List<Session> sessions = new ArrayList<>();
         Set<String> sessionIds = new HashSet<>();

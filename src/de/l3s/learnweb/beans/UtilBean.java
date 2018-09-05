@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,9 @@ public class UtilBean implements Serializable
 {
     private final static long serialVersionUID = 6252597111468136574L;
     private final static Logger log = Logger.getLogger(UtilBean.class);
+
+    private DateFormat dateFormatter;
+    private DateFormat timeFormatter;
 
     public static ExternalContext getExternalContext()
     {
@@ -136,5 +140,19 @@ public class UtilBean implements Serializable
     public String addSlashes(String input)
     {
         return input.replace("\"", "\\\"");
+    }
+
+    public String formatDate(Date date, Locale locale)
+    {
+        if(dateFormatter == null)
+            dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormatter.format(date);
+    }
+
+    public String formatTime(Date date, Locale locale)
+    {
+        if(timeFormatter == null)
+            timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+        return timeFormatter.format(date);
     }
 }

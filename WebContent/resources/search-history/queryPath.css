@@ -29,39 +29,19 @@
   left: 0;
 }
 
-/* CSS grid styles for the container */
-.history-container {
-	height:100vh;
-	padding-top:5px;
-	padding-left: 5px;
-	display: grid;
-	grid-template-columns: 1.5fr 4.5fr;
-}
-
 .session-timeline {
-	height:95vh;
 	border-right: 1px solid lightgrey;
-	grid-column: 1 / 2;
-
 }
 
 .knowledge-graph {
 	height:95vh;
-	grid-column: 2 / -1;
 }
 
 .snippet-viewer {
 	display: none;
-    position: absolute;
-    padding: 5px 0px 0px 5px;
     background-color: white;
-    right: 0;
-    top: 48px;
-    height: 91%;
-    width: 250px;
-    z-index: 500;
-    overflow-y: hidden;
     box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
+    height: 100vh;
 }
 
 .reference_url {
@@ -98,9 +78,7 @@
 
 /* styles for vertical session timeline */
 .box {
-  /*margin: 0 10%;*/
-  height: 96%;
-  overflow: auto;
+  overflow-y: scroll;
   padding: 0 0 0 40px;
 }
 
@@ -136,7 +114,6 @@
   color: #fff;
   border-radius: 10px;
   line-height: 20px;
-  width: 60%;
 }
 
 .box ul li > span {
@@ -168,6 +145,10 @@
 }
 .box ul li > span:after {
   top: 95%;
+}
+
+.box ul li .session_username {
+    font-weight: bold;
 }
 
 .box .title {
