@@ -25,6 +25,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.office.FileEditorBean;
+import org.primefaces.PrimeFaces;
 
 // TODO Oleh: rename to ResourcePaneBean
 @Named
@@ -95,20 +96,41 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
     public void editClickedResource() throws SQLException
     {
-        if(clickedAbstractResource != null && clickedAbstractResource.canEditResource(getUser()))
-        {
-            log(clickedAbstractResource instanceof Folder ? Action.edit_folder : Action.edit_resource,
-                    clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
+        if (clickedAbstractResource == null || !clickedAbstractResource.canEditResource(getUser())) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "The resource is not selected or you don't have permission to edit it");
+            return;
+        }
 
-            try
+        try
+        {
+            clickedAbstractResource.unlockResource(getUser());
+            clickedAbstractResource.save();
+
+            if (clickedAbstractResource instanceof Folder)
             {
-                clickedAbstractResource.save();
-                addMessage(FacesMessage.SEVERITY_INFO, clickedAbstractResource instanceof Folder ? "folderUpdated" : "resourceUpdated", clickedAbstractResource.getTitle());
+                log(Action.edit_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
+                addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedAbstractResource.getTitle());
             }
-            catch(SQLException e)
+            else
             {
-                addFatalMessage(e);
+                log(Action.edit_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
+                addMessage(FacesMessage.SEVERITY_INFO, "resourceUpdated", clickedAbstractResource.getTitle());
             }
+
+            setViewResource(clickedAbstractResource);
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public void cancelEditClickedResource()
+    {
+        if (clickedAbstractResource != null)
+        {
+            clickedAbstractResource.unlockResource(getUser());
+            setViewResource(clickedAbstractResource);
         }
     }
 
@@ -138,45 +160,60 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
     public void resetPane()
     {
-        setClickedAbstractResource(null);
+        clickedAbstractResource = null;
         paneAction = RightPaneAction.none;
     }
 
-    public void setViewResource(AbstractResource resourceToView)
+    public void setViewResource(AbstractResource resource)
     {
-        setClickedAbstractResource(resourceToView);
+        setClickedAbstractResource(resource);
 
-        if(resourceToView == null)
+        if(resource == null)
         {
             resetPane();
         }
-        else if(clickedAbstractResource instanceof Folder)
+        else if(resource instanceof Folder)
         {
             paneAction = RightPaneAction.viewFolder;
-            log(Action.opening_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
+            log(Action.opening_folder, resource.getGroupId(), resource.getId());
         }
         else
         {
             paneAction = RightPaneAction.viewResource;
-            log(Action.opening_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
+            log(Action.opening_resource, resource.getGroupId(), resource.getId());
         }
     }
 
-    public void setEditResource(AbstractResource resourceToEdit)
+    public void setEditResource(AbstractResource resource)
     {
-        setClickedAbstractResource(resourceToEdit);
-
-        if(resourceToEdit == null)
-        {
-            resetPane();
+        if (!resource.lockResource(getUser())) {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Editing of the resource is not possible, because another user is already editing it.");
+            return;
         }
-        else if(clickedAbstractResource instanceof Folder)
+
+        setClickedAbstractResource(resource);
+
+        if(resource instanceof Folder)
         {
             paneAction = RightPaneAction.editFolder;
+            log(Action.opening_folder, resource.getGroupId(), resource.getId());
         }
         else
         {
             paneAction = RightPaneAction.editResource;
+            log(Action.opening_resource, resource.getGroupId(), resource.getId());
+        }
+    }
+
+    public void editActivityListener()
+    {
+        if (clickedAbstractResource != null)
+        {
+            if (!clickedAbstractResource.lockerUpdate(getUser())) {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Your editing is interrupted by another user!");
+                setViewResource(clickedAbstractResource);
+                PrimeFaces.current().ajax().update(":right_pane_wrapper");
+            }
         }
     }
 
@@ -216,9 +253,9 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         return clickedAbstractResource;
     }
 
-    public void setClickedAbstractResource(AbstractResource clickedAbstractResource)
+    public void setClickedAbstractResource(AbstractResource resource)
     {
-        this.clickedAbstractResource = clickedAbstractResource;
+        clickedAbstractResource = resource;
 
         if(getClickedResource() != null && getClickedResource().isOfficeResource())
             fileEditorBean.fillInFileInfo(getClickedResource());

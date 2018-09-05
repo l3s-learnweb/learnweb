@@ -4,6 +4,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
+import java.util.Date;
 import java.sql.SQLException;
 
 /**
@@ -12,6 +13,8 @@ import java.sql.SQLException;
  */
 public abstract class AbstractResource implements HasId
 {
+    private EditLocker editLocker;
+
     abstract public int getId();
 
     abstract public void setId(int id);
@@ -72,6 +75,54 @@ public abstract class AbstractResource implements HasId
 
         if(user.isAdmin() || getUserId() == user.getId())
             return true;
+
+        return false;
+    }
+
+    public boolean lockResource(User user)
+    {
+        if (isEditPossible()) {
+            editLocker = new EditLocker(user);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean unlockResource(User user)
+    {
+        if (editLocker != null && editLocker.getUser().equals(user)) {
+            editLocker = null;
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean lockerUpdate(User user)
+    {
+        if (editLocker != null && editLocker.getUser().equals(user)) {
+            editLocker.setLastActivity(new Date());
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isEditLocked()
+    {
+        return editLocker != null;
+    }
+
+    public boolean isEditPossible()
+    {
+        if (!isEditLocked())
+            return true;
+
+        if (editLocker.isSessionExpired()) {
+            editLocker = null;
+            return true;
+        }
 
         return false;
     }

@@ -17,6 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -31,14 +32,8 @@ import com.google.gson.Gson;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.AbstractPaginator;
-import de.l3s.learnweb.resource.AddFolderBean;
-import de.l3s.learnweb.resource.AddResourceBean;
-import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
-import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -618,36 +613,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             String itemType = params.get("itemType");
             int itemId = StringHelper.parseInt(params.get("itemId"), -1);
 
-            if(itemType != null && itemType.equals("folder") && itemId > 0)
+            AbstractResource resource = getLearnweb().getGroupManager().getAbstractResource(itemType, itemId);
+            if(resource != null && resource.canEditResource(getUser()))
             {
-                Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                if(folder != null && folder.canEditResource(getUser()))
-                {
-                    rightPaneBean.setViewResource(folder);
-                    rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.editFolder);
-                }
-                else
-                {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it");
-                }
-            }
-            else if(itemType != null && itemType.equals("resource") && itemId > 0)
-            {
-                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null && resource.canEditResource(getUser()))
-                {
-                    rightPaneBean.setViewResource(resource);
-                    rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.editResource);
-                }
-                else
-                {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target resource doesn't exists or you don't have permission to edit it");
-                }
+                rightPaneBean.setEditResource(resource);
             }
             else
             {
-                throw new NullPointerException("Unsupported itemType");
-
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it");
             }
         }
         catch(NullPointerException | SQLException e)
@@ -1354,4 +1327,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
+
+
 }

@@ -24,6 +24,7 @@ import de.l3s.learnweb.group.Group.POLICY_JOIN;
 import de.l3s.learnweb.group.Group.POLICY_VIEW;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -641,6 +642,26 @@ public class GroupManager
 
         replace.close();
         return folder;
+    }
+
+    public AbstractResource getAbstractResource(String resourceType, int resourceId) throws SQLException
+    {
+        if (resourceId == -1)
+            return null;
+
+        if (resourceType == null || resourceType.isEmpty())
+            throw new NullPointerException("resourceType is null or empty");
+
+        if (resourceType.equals("folder"))
+        {
+            return getFolder(resourceId);
+        }
+        else if (resourceType.equals("resource"))
+        {
+            return learnweb.getResourceManager().getResource(resourceId);
+        }
+
+        throw new NullPointerException("Unsupported resourceType: " + resourceType);
     }
 
     /**

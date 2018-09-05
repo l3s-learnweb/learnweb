@@ -580,18 +580,14 @@
 
                     <tr>
                         <td colspan="2">
+                            <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+
                             <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
                                              actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane_wrapper"
-                                             oncomplete="update_header();resourceUpdatedHook();" style="margin-right:0;">
-                                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}"
-                                                             value="viewResource"/>
-                            </p:commandButton>
+                                             oncomplete="update_header();resourceUpdatedHook();" style="margin-right:0;" />
                             <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
-                                             update=":right_pane_wrapper" style="margin-right:0.5em"
-                                             immediate="true">
-                                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}"
-                                                             value="viewResource"/>
-                            </p:commandButton>
+                                             actionListener="#{rightPaneBean.cancelEditClickedResource}" update=":right_pane_wrapper"
+                                             style="margin-right:0.5em" immediate="true" />
                         </td>
                     </tr>
                 </table>
@@ -753,15 +749,14 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="align-right">
+                                <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+
                                 <p:commandButton styleClass="graybutton" style="margin-right:0.5em;" oncomplete="update_header();"
-                                                 value="#{msg.cancel}" update=":right_pane_wrapper" immediate="true">
-                                    <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewFolder"/>
-                                </p:commandButton>
+                                                 actionListener="#{rightPaneBean.cancelEditClickedResource}"
+                                                 value="#{msg.cancel}" update=":right_pane_wrapper" immediate="true" />
                                 <p:commandButton styleClass="greenbutton" style="margin-right:0.5em;" oncomplete="update_header();resourceDND();"
                                                  value="#{msg.save}" update=":group_menu_tree :folderGrid :right_pane_wrapper :growl"
-                                                 actionListener="#{rightPaneBean.editClickedResource}">
-                                    <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewFolder"/>
-                                </p:commandButton>
+                                                 actionListener="#{rightPaneBean.editClickedResource}" />
                             </td>
                         </tr>
                     </table>
