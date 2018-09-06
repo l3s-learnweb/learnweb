@@ -97,7 +97,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     public void editClickedResource() throws SQLException
     {
         if (clickedAbstractResource == null || !clickedAbstractResource.canEditResource(getUser())) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "The resource is not selected or you don't have permission to edit it");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceNotSelectedOrUserCanNotEditIt");
             return;
         }
 
@@ -162,10 +162,19 @@ public class RightPaneBean extends ApplicationBean implements Serializable
     {
         clickedAbstractResource = null;
         paneAction = RightPaneAction.none;
+        releaseResourceIfLocked();
+    }
+
+    public void releaseResourceIfLocked()
+    {
+        if (clickedAbstractResource != null && clickedAbstractResource.isEditLocked()) {
+            clickedAbstractResource.unlockResource(getUser());
+        }
     }
 
     public void setViewResource(AbstractResource resource)
     {
+        releaseResourceIfLocked();
         setClickedAbstractResource(resource);
 
         if(resource == null)
@@ -186,8 +195,10 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
     public void setEditResource(AbstractResource resource)
     {
+        releaseResourceIfLocked();
+
         if (!resource.lockResource(getUser())) {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Editing of the resource is not possible, because another user is already editing it.");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
             return;
         }
 
@@ -210,7 +221,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         if (clickedAbstractResource != null)
         {
             if (!clickedAbstractResource.lockerUpdate(getUser())) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Your editing is interrupted by another user!");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditInterrupt");
                 setViewResource(clickedAbstractResource);
                 PrimeFaces.current().ajax().update(":right_pane_wrapper");
             }

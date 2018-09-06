@@ -114,6 +114,15 @@ public abstract class AbstractResource implements HasId
         return editLocker != null;
     }
 
+    public String getLockUsername()
+    {
+        if (editLocker != null) {
+            return editLocker.getUser().getUsername();
+        }
+
+        return null;
+    }
+
     public boolean isEditPossible()
     {
         if (!isEditLocked())
