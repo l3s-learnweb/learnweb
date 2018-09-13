@@ -841,6 +841,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
+                        if (!sourceFolder.isEditPossible()) {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceFolder.getLockUsername());
+                            return;
+                        }
+
                         sourceFolder.moveTo(targetGroupId, targetFolderId);
                         numFolders++;
                     }
@@ -860,6 +865,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             numSkipped++;
                             log.warn("The user don't have permissions to delete resource which it want to move.");
                             continue;
+                        }
+
+                        if (!sourceResource.isEditPossible()) {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceResource.getLockUsername());
+                            return;
                         }
 
                         sourceResource.moveTo(targetGroupId, targetFolderId);
@@ -921,6 +931,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
+                        if (!folder.isEditPossible()) {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", folder.getLockUsername());
+                            return;
+                        }
+
                         int folderGroupId = folder.getGroupId();
                         String folderName = folder.getTitle();
                         if(rightPaneBean.isTheResourceClicked(folder))
@@ -950,6 +965,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             numSkipped++;
                             log.warn("The use don't have permissions to delete resource in target group.");
                             continue;
+                        }
+
+                        if (!resource.isEditPossible()) {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
+                            return;
                         }
 
                         int resourceGroupId = resource.getGroupId();
