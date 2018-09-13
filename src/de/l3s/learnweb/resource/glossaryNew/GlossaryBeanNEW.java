@@ -121,6 +121,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             addFatalMessage(e);
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
+        // TODO you will show a success message even when an error occurred ...
+        // TODO this is still not fixed. you must move the following code inside the try block
         addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
         setKeepMessages();
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
@@ -161,7 +163,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         {
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
-            setKeepMessages();
+            setKeepMessages(); // TODO duplicated coded if you always return the same string than use only one return at the end of the method. check other methods too
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
         catch(SQLException e)
@@ -406,7 +408,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
