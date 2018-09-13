@@ -68,7 +68,7 @@
                                 </div>
                             </div>
 
-                            <h:panelGroup class="resource-controls" layout="block">
+                            <h:panelGroup class="resource-controls #{res.isEditLocked() ? 'edit-locked' : ''}" layout="block">
                                 <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
                                     <h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
                                 </h:outputLink>

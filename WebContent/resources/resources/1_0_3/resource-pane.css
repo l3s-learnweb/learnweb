@@ -378,6 +378,10 @@
     transition: visibility 0s, opacity 0.2s ease-in-out;
 }
 
+.resource-controls.edit-locked {
+    background: rgba(239, 129, 129, 0.73);
+}
+
 .resource-item:hover .resource-controls, .folder-item:hover .resource-controls {
     visibility: visible;
     opacity: 1;

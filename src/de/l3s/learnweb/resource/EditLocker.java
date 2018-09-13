@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class EditLocker
 {
-    private final static int LOCK_SESSION_EXPIRES_IN_MS = 10 * 60 * 1000;
+    private final static int LOCK_SESSION_EXPIRES_IN_MS = 2 * 60 * 1000;
 
     private final User user;
     private final Date editStarted;

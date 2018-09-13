@@ -540,8 +540,10 @@
             </h:panelGroup>
 
             <!-- Edit resource block -->
-            <h:form rendered="#{rightPaneBean.paneAction == 'editResource' and rightPaneBean.clickedResource.id != -1}"
-                    id="edit_form">
+            <h:form rendered="#{rightPaneBean.paneAction == 'editResource' and rightPaneBean.clickedResource.id != -1}" id="edit_form">
+
+                <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+
                 <ui:fragment
                         rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image'}">
                     <div class="align-center" style="margin-top: 5px;">
@@ -712,6 +714,9 @@
             <!-- Edit folder block -->
             <h:panelGroup rendered="#{rightPaneBean.paneAction == 'editFolder' and rightPaneBean.clickedFolder != null}" layout="block">
                 <h:form id="edit_folder_form">
+
+                    <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+
                     <table id="edit_folder_table" class="full-width">
                         <tr>
                             <td>
@@ -764,6 +769,12 @@
             </h:panelGroup>
 
             <script type="text/javascript">
+                window.onbeforeunload = function()
+                {
+                    if (typeof onUnloadCommand !== 'undefined')
+                        onUnloadCommand();
+                };
+
                 $("#right_pane_wrapper img").bind('load', function ()
                 {
                     scroller();

@@ -283,6 +283,11 @@ public class ResourceDecorator implements Serializable
         return resource.getLanguage();
     }
 
+    public Boolean isEditLocked()
+    {
+        return resource.isEditLocked();
+    }
+
     public ExtendedMetadata getExtendedMetadata() throws SQLException
     {
         return resource.getExtendedMetadata();
