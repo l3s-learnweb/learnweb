@@ -16,7 +16,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.util.BeanHelper;
-import de.l3s.util.StringHelper;
 
 public class GlossaryManager
 {
@@ -37,7 +36,7 @@ public class GlossaryManager
         }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages())
+        insertGlossary.setString(2, String.join(",", resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages()) when PF bug resolved
         insertGlossary.executeQuery();
 
         if(resource.isClonedButNotPersisted()) // after a resource has been cloned we have to persist the cloned entries
@@ -69,8 +68,6 @@ public class GlossaryManager
 
     public void saveEntry(GlossaryEntry entry, GlossaryResource glossaryResource) throws SQLException
     {
-        // TODO I think the userId parameter can be removed.
-        // When a glossary resource was cloned we could keep the createdByUserId and lastChangedByUserId as they are. When a resource is copied the new user becomes only owner of the resource. The entries keep their original creator. What do you think?
         entry.setTimestamp(new Timestamp(System.currentTimeMillis())); // change timestamp of entry to latest timestamp
         if(entry.isDeleted())
         {
@@ -306,7 +303,7 @@ public class GlossaryManager
         ResultSet result = getGlossary.executeQuery();
         if(result.next())
         {
-            glossaryResource.setAllowedLanguages(StringHelper.splitLocales(result.getString("allowed_languages")));
+            glossaryResource.setAllowedLanguages(Arrays.asList(result.getString("allowed_languages").split(",")));
         }
         else
         {

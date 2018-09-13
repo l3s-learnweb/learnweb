@@ -162,7 +162,7 @@
                                 </p:column>
                                 <p:column rendered="#{addResourceBean.formStep == 1}">
                                     <p:selectCheckboxMenu id="lang" label="--#{msg.language}--" value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}">
-                                        <f:selectItems value="#{addResourceBean.availableLanguages}" var="allwd_lang" itemValue="#{allwd_lang.getValue()}" itemLabel="#{allwd_lang.getLabel()}"></f:selectItems>
+                                        <f:selectItems value="#{addResourceBean.availableLanguages}"></f:selectItems>
                                     </p:selectCheckboxMenu>
                                 </p:column>
                             </p:row>

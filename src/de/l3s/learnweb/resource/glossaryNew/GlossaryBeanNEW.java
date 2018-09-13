@@ -121,6 +121,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             addFatalMessage(e);
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
+        //TODO:: @Philipp:: There is a return statement in catch block so it won't reach here and show the messages again
         // TODO you will show a success message even when an error occurred ...
         // TODO this is still not fixed. you must move the following code inside the try block
         addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
@@ -162,7 +163,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         try
         {
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");//TODO:: @Philipp:: Return strings are different. One has redirect whilst the other doesn't
             setKeepMessages(); // TODO duplicated coded if you always return the same string than use only one return at the end of the method. check other methods too
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
@@ -408,7 +409,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -497,9 +498,9 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         if(null == allowedTermLanguages)
         {
             allowedTermLanguages = new ArrayList<>();
-            for(Locale language : glossaryResource.getAllowedLanguages())
+            for(String language : glossaryResource.getAllowedLanguages())
             {
-                allowedTermLanguages.add(new SelectItem(language, getLocaleMessage("language_" + language.getLanguage())));
+                allowedTermLanguages.add(new SelectItem(new Locale(language), getLocaleMessage("language_" + language)));
             }
             allowedTermLanguages.sort(Misc.selectItemLabelComparator);
         }

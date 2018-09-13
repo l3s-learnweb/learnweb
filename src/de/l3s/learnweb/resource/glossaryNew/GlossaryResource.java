@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -21,7 +20,7 @@ public class GlossaryResource extends Resource implements Serializable
      */
 
     private static final long serialVersionUID = 8388778401614338522L;
-    private List<Locale> allowedLanguages = new ArrayList<Locale>(); // TODO must use Locale. Strings are error prone @Philipp: This is used to save allowed languages selected from right-pane. It throws ELException: Cannot convert it of type class java.lang.String to class java.util.locale.
+    private List<String> allowedLanguages = new ArrayList<String>(); // TODO Change this to locale when PF bug is resolved
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean deleted = false;
     private boolean clonedButNotSaved = false;
@@ -84,12 +83,12 @@ public class GlossaryResource extends Resource implements Serializable
         return this;
     }
 
-    public List<Locale> getAllowedLanguages()
+    public List<String> getAllowedLanguages()
     {
         return allowedLanguages;
     }
 
-    public void setAllowedLanguages(List<Locale> list)
+    public void setAllowedLanguages(List<String> list)
     {
         this.allowedLanguages = list;
     }
