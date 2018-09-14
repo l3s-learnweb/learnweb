@@ -17,7 +17,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.*;
+import de.l3s.learnweb.resource.search.SearchLogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -97,6 +99,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     //for category filter search
     private CategoryTree groupCatTree;
     private String groupCatJson; //JSONified groupCatTree for javascript function
+
+    private transient SearchLogManager searchLogger;
 
     @Inject
     private RightPaneBean rightPaneBean;
@@ -298,16 +302,17 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             this.query = null;
         }
-        else
+        else if (this.query == null || !this.query.equalsIgnoreCase(query))
         {
             this.query = query;
+            log(Action.group_resource_search, groupId, 0, query);
+            logQuery(query, ""); //  searchFilters.toString()
         }
     }
 
     public void onQueryChange() throws SQLException
     {
         updateResourcesFromSolr();
-        log(Action.group_resource_search, groupId, 0, query);
     }
 
     public List<Filter> getAvailableFilters()
@@ -1348,5 +1353,16 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
 
+    public void logQuery(String query, String searchFilters)
+    {
+        getSearchLogger().logGroupQuery(group, query, searchFilters, UtilBean.getUserBean().getLocaleCode(), getUser());
+    }
 
+    private SearchLogManager getSearchLogger()
+    {
+        if(searchLogger == null)
+            searchLogger = Learnweb.getInstance().getSearchLogManager();
+
+        return searchLogger;
+    }
 }

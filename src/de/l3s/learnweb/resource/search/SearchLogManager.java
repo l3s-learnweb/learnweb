@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import de.l3s.learnweb.group.Group;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
@@ -33,6 +34,7 @@ public class SearchLogManager
 {
     private static final Logger log = Logger.getLogger(SearchLogManager.class);
     private static final String QUERY_COLUMNS = "`query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`";
+    private static final String QUERY_COLUMNS_FOR_GROUP = "`group_id`, `query`, `language`, `filters`, `user_id`, `timestamp`";
     private static final String RESOURCE_COLUMNS = "`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`";
     private static final String ACTION_COLUMNS = "`search_id`, `rank`, `user_id`, `action`, `timestamp`";
     private static final String LAST_ENTRY = "last_entry"; // this element indicates that the consumer thread should stop
@@ -108,6 +110,40 @@ public class SearchLogManager
         catch(Exception e)
         {
             log.error("Could not log query=" + query + "; mode=" + searchMode + "; filters=" + searchFilters + "; user=" + user + ";", e);
+        }
+        return -1;
+    }
+
+    public int logGroupQuery(final Group group, final String query, String searchFilters, final String language, final User user)
+    {
+        int userId = user == null ? 0 : user.getId();
+
+        if(searchFilters == null)
+            searchFilters = "";
+        else if(searchFilters.length() > 1000)
+            searchFilters = searchFilters.substring(0, 1000);
+
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ") VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
+        {
+            insert.setInt(1, group.getId());
+            insert.setString(2, query);
+            insert.setString(3, language);
+            insert.setString(4, searchFilters);
+            insert.setInt(5, userId);
+            insert.executeUpdate();
+
+            ResultSet rs = insert.getGeneratedKeys();
+            if(!rs.next())
+                throw new SQLException("database error: no id generated");
+            int searchId = rs.getInt(1);
+
+            insert.close();
+
+            return searchId;
+        }
+        catch(Exception e)
+        {
+            log.error("Could not log query=" + query + "; filters=" + searchFilters + "; group title=" + group.getTitle() + "; user=" + user + ";", e);
         }
         return -1;
     }

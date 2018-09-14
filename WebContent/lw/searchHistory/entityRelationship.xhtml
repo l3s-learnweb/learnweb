@@ -93,9 +93,9 @@
 									<h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}" pt:data-userId="#{session1.userId}">
 										<div class="title"></div>
 										<div class="info">
-											<ui:repeat var="query" value="#{session1.queries}">
+											<p:repeat var="query" value="#{session1.queries}">
 												<span class="source_#{query.service}">#{query.query}</span>
-											</ui:repeat>
+											</p:repeat>
 										</div>
 
 										<div class="time">
