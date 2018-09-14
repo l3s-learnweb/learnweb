@@ -45,7 +45,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
     @Size(min = 0, max = 65000)
     private String welcomeMessage;
 
-    private BitSet options = new BitSet();
+    private BitSet options = new BitSet(Option.values().length);
 
     // derived/cached values:
     private int memberCount = -1;

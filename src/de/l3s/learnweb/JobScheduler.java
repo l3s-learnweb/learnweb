@@ -34,8 +34,8 @@ public class JobScheduler
 
         if(learnweb.getService().equals(Learnweb.SERVICE.LEARNWEB))
         {
-            //Runs the TED crawler at 1:00 everyday to check for new/update TED videos
-            scheduler.schedule("0 1 * * *", new TedCrawlerSimple());
+            //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
+            scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());
         }
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
@@ -44,8 +44,11 @@ public class JobScheduler
         //Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
 
-        //Checks bounced mail every day at 3:00AM
-        scheduler.schedule("0 3 * * *", new BounceFetcher());
+        if(!Learnweb.isInDevelopmentMode() && !learnweb.getService().equals(Learnweb.SERVICE.AMA)) // don't run the fetcher for ama since it has no mail address set up
+        {
+            //Checks bounced mail every day at 3:00AM
+            scheduler.schedule("0 3 * * *", new BounceFetcher());
+        }
     }
 
     public void startAllJobs()
