@@ -87,6 +87,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     }
 
+    /*    public void setPaste(String item)
+    {
+        setPreference(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pastedVariable"), "true");
+    }*/
+
     private void loadGlossaryTable(GlossaryResource glossaryResource2)
     {
         //set tableItems
@@ -103,30 +108,60 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public String onSave()
     {
+        //logging
+        if(formEntry.getId() < 1)
+            log(Action.glossary_entry_add, glossaryResource, glossaryResource.getGroupId());
+        else
+            log(Action.glossary_entry_edit, glossaryResource, glossaryResource.getGroupId());
+
         formEntry.setLastChangedByUserId(getUser().getId());
-        formEntry.getTerms().forEach(term -> term.setLastChangedByUserId(getUser().getId()));
+
+        //Set Pasted values to true for given entry
+        setPastedValues();
+
         if(formEntry.getTerms().size() == numberOfDeletedTerms())
         {
             addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
-            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
+            setKeepMessages();
+            return null;
         }
         try
         {
             formEntry.setLastChangedByUserId(getUser().getId());
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+            setKeepMessages();
+            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+
         }
         catch(SQLException e)
         {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
             addFatalMessage(e);
-            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+            setKeepMessages();
+            return null;
+
         }
-        //TODO:: @Philipp:: There is a return statement in catch block so it won't reach here and show the messages again
-        // TODO you will show a success message even when an error occurred ...
-        // TODO this is still not fixed. you must move the following code inside the try block
-        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
-        setKeepMessages();
-        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+
+    }
+
+    private void setPastedValues()
+    {
+        formEntry.setDescriptionPasted(Boolean.parseBoolean(getPreference("description", "yes")));
+        for(GlossaryTerm term : formEntry.getTerms())
+        {
+            term.setTermPasted(Boolean.parseBoolean(getPreference("term", "yes")));
+            term.setPronounciationPasted(Boolean.parseBoolean(getPreference("pronounciation", "yes")));
+            term.setAcronymPasted(Boolean.parseBoolean(getPreference("acronym", "yes")));
+            term.setPhraseologyPasted(Boolean.parseBoolean(getPreference("phraseology", "yes")));
+
+            //set last changed by user id for terms
+            term.setLastChangedByUserId(getUser().getId());
+            //log term edit actions
+            if(term.getId() > 0)
+                log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
+        }
+
     }
 
     /**
@@ -158,22 +193,25 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public String deleteEntry(GlossaryTableView row)
     {
+        log(Action.glossary_entry_delete, glossaryResource, glossaryResource.getGroupId());
         row.getEntry().setDeleted(true);
         row.getEntry().setLastChangedByUserId(getUser().getId());
         try
         {
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");//TODO:: @Philipp:: Return strings are different. One has redirect whilst the other doesn't
-            setKeepMessages(); // TODO duplicated coded if you always return the same string than use only one return at the end of the method. check other methods too
+            glossaryResource.getEntries().remove(row.getEntry());
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
+            setKeepMessages();
             return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
         catch(SQLException e)
         {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
             addFatalMessage(e);
+            setKeepMessages();
+            return null;
         }
-        setKeepMessages();
-        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
+
     }
 
     public void deleteTerm(GlossaryTerm term)
@@ -194,6 +232,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
         setKeepMessages();
+        log(Action.glossary_term_delete, glossaryResource, glossaryResource.getGroupId());
     }
 
     public int numberOfDeletedTerms()
@@ -211,7 +250,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void addTerm()
     {
         formEntry.addTerm(new GlossaryTerm());
-        log(Action.glossary_term_add, glossaryResource); // should store resourceId + term_id
+        log(Action.glossary_term_add, glossaryResource, glossaryResource.getGroupId()); // should store resourceId + term_id
 
     }
 
@@ -409,7 +448,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

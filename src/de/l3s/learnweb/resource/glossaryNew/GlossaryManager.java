@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -94,12 +93,26 @@ public class GlossaryManager
 
             if(entry.getId() < 0) // new entry
             {
+                //String ins = "INSERT INTO `lw_glossary_entry`(`entry_id`, `resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_changed_by_user_id`=VALUES(`last_changed_by_user_id`), `topic_one`=VALUES(`topic_one`), `topic_two`=VALUES(`topic_two`), `topic_three`=VALUES(`topic_three`), `description`=VALUES(`description`), `description_pasted`=VALUES(`description_pasted`)";
                 try(PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
                         "INSERT INTO `lw_glossary_entry`(`resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         PreparedStatement.RETURN_GENERATED_KEYS);)
                 {
+                    //PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
+                    //ins, PreparedStatement.RETURN_GENERATED_KEYS);
 
                     entry.setUserId(entry.getLastChangedByUserId());//last change by userID == original user ID in insert
+                    /*insertEntry.setInt(1, entry.getId());
+                    insertEntry.setInt(2, entry.getResourceId());
+                    insertEntry.setInt(3, entry.getOriginalEntryId());
+                    insertEntry.setInt(4, entry.getLastChangedByUserId());
+                    insertEntry.setInt(5, entry.getUserId());
+                    insertEntry.setString(6, entry.getTopicOne());
+                    insertEntry.setString(7, entry.getTopicTwo());
+                    insertEntry.setString(8, entry.getTopicThree());
+                    insertEntry.setString(9, entry.getDescription());
+                    insertEntry.setBoolean(10, entry.isDescriptionPasted());
+                    insertEntry.executeUpdate();*/
                     insertEntry.setInt(1, entry.getResourceId());
                     insertEntry.setInt(2, entry.getOriginalEntryId());
                     insertEntry.setInt(3, entry.getLastChangedByUserId());
@@ -114,6 +127,13 @@ public class GlossaryManager
                     entryInserted.next();
                     entry.setId(entryInserted.getInt(1));
                     glossaryResource.getEntries().add(entry);
+                    /*if(entry.getId() < 1)
+                    {
+                    ResultSet entryInserted = insertEntry.getGeneratedKeys();
+                    entryInserted.next();
+                    entry.setId(entryInserted.getInt(1));
+                    glossaryResource.getEntries().add(entry);
+                    }*/
                 }
             }
             else //old entry updated
@@ -153,7 +173,7 @@ public class GlossaryManager
                     termInsert.setInt(3, entry.getLastChangedByUserId());
                     termInsert.setInt(4, entry.getUserId());
                     termInsert.setString(5, term.getTerm());
-                    termInsert.setString(6, term.getLanguage().getLanguage());
+                    termInsert.setString(6, term.getLanguage());
                     termInsert.setString(7, String.join(",", term.getUses()));
                     termInsert.setString(8, term.getPronounciation());
                     termInsert.setString(9, term.getAcronym());
@@ -180,7 +200,7 @@ public class GlossaryManager
                     termUpdate.setInt(1, term.getEntryId());
                     termUpdate.setBoolean(2, term.isDeleted());
                     termUpdate.setString(3, term.getTerm());
-                    termUpdate.setString(4, term.getLanguage().getLanguage());
+                    termUpdate.setString(4, term.getLanguage());
                     termUpdate.setString(5, String.join(",", term.getUses()));
                     termUpdate.setString(6, term.getPronounciation());
                     termUpdate.setString(7, term.getAcronym());
@@ -215,8 +235,10 @@ public class GlossaryManager
             while(resultEntries.next())
             {
                 GlossaryEntry entry = new GlossaryEntry();
+                entry.setDeleted(false);
                 entry.setResourceId(resourceId);
                 entry.setId(resultEntries.getInt("entry_id"));
+                entry.setOriginalEntryId(resultEntries.getInt("original_entry_id"));
                 entry.setUserId(resultEntries.getInt("user_id"));
                 entry.setTopicOne(resultEntries.getString("topic_one"));
                 entry.setTopicTwo(resultEntries.getString("topic_two"));
@@ -248,7 +270,7 @@ public class GlossaryManager
                 term.setId(terms.getInt("term_id"));
                 term.setUserId(terms.getInt("user_id"));
                 term.setTerm(terms.getString("term"));
-                term.setLanguage(new Locale(terms.getString("language")));
+                term.setLanguage(terms.getString("language"));
                 term.setUses(Arrays.asList(terms.getString("uses").split(",")));
                 term.setPronounciation(terms.getString("pronounciation"));
                 term.setAcronym(terms.getString("acronym"));
