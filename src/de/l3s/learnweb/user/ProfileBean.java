@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -411,6 +411,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
+        if(getUser().isAdmin()) // admins can change the password of all users
+            return;
+
         UserManager um = getLearnweb().getUserManager();
         User user = getSelectedUser(); // the current user
 
