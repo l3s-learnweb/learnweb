@@ -199,6 +199,12 @@ public class RightPaneBean extends ApplicationBean implements Serializable
 
         if (!resource.lockResource(getUser())) {
             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
+
+            if (resource instanceof Resource) {
+                log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
+            } else if (resource instanceof Folder) {
+                log(Action.lock_rejected_edit_folder, resource.getGroupId(), resource.getId());
+            }
             return;
         }
 
@@ -224,6 +230,12 @@ public class RightPaneBean extends ApplicationBean implements Serializable
                 addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditInterrupt");
                 setViewResource(clickedAbstractResource);
                 PrimeFaces.current().ajax().update(":right_pane_wrapper");
+
+                if (clickedAbstractResource instanceof Resource) {
+                    log(Action.lock_interrupted_returned_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
+                } else if (clickedAbstractResource instanceof Folder) {
+                    log(Action.lock_interrupted_returned_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
+                }
             }
         }
     }
