@@ -327,6 +327,12 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public void setSelectedGroupId(int selectedGroupId)
     {
+        if (selectedGroupId != this.selectedGroupId) {
+            showGroupHistory = true;
+            searchQuery = null;
+            sessions = null;
+        }
+
         //log.info("selected group id: " + selectedGroupId);
         this.selectedGroupId = selectedGroupId;
     }
