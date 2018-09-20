@@ -5,8 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
@@ -45,6 +45,13 @@ public class SurveyBean extends ApplicationBean implements Serializable
         if(resource == null)
         {
             addInvalidParameterMessage("resource_id");
+            return;
+        }
+
+        if(resource.isDeleted())
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "This resource has been deleted");
+            resource = null;
             return;
         }
 
@@ -89,7 +96,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         /*
         int userId = getUser().getId();
         PeerAssessmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
-
+        
         if(pair != null)
             return true;
         */

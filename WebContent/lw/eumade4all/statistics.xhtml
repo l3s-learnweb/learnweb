@@ -1,0 +1,94 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg.statistics}"/>
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="loginRequired" value="true"/>
+	
+	
+	<ui:define name="center_layout">
+		<style type="text/css">
+		 .ui-datatable {margin-bottom:4rem;}
+		 #statistics_table .ui-dt-c { text-align:center; }
+		</style>
+		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+		
+		<div class="ui-datatable ui-widget">
+			<table role="grid" id="statistics_table" >
+				<thead>
+					<tr role="row">
+						<th class="ui-state-default" role="columnheader" style="width:20%">
+							<div class="ui-dt-c">
+								<span></span>
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
+								<span>Aarhus</span>
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
+								<span>Florence</span>
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
+								<span>Leeds</span>
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
+								<span>Messina</span>
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
+								<span>Rome</span>
+							</div>
+						</th>
+					</tr>
+				</thead>
+				        
+				<tbody class="ui-datatable-data ui-widget-content">
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="">Baseline survey</div></td>
+						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=205861">107</a></div></td>
+						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213674">30</a></div></td>
+						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204489">31</a></div></td>
+						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213673">24</a></div></td>
+						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204678">82</a></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="">Evaluation form</div></td>
+						<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=216012">#{eUMade4AllStatisticsBean.evaluationFormAnswer}</a></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="">Students' satisfaction survey</div></td>
+						<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=219453">#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}</a></div></td>
+					</tr>
+					
+					
+				</tbody>
+			</table>
+		</div>	
+		
+		 <!-- 		
+		<p:dataTable var="row" value="#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}" >
+			<f:facet name="header">
+		        Surveys
+		    </f:facet>
+    
+		    <p:column headerText="Aarhus">
+		        <h:outputText value="#{row.aarhus}" />
+		        <h:outputLink value="#{row.aarhus.link}">#{row.aarhus.title}</h:outputLink>
+		    </p:column>
+		  
+		</p:dataTable>	
+			 -->
+		
+	</ui:define>		
+</ui:composition>

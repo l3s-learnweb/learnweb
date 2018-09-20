@@ -53,11 +53,24 @@ public class Course implements Serializable, Comparable<Course>, HasId
 
     public Course()
     {
+        options.set(0, true);
+        /*
+        log.debug(options);
+        log.debug(options.size());
+        log.debug(getOptions().length);
+        */
     }
 
     protected void setOptions(long[] optionValues)
     {
         this.options = BitSet.valueOf(optionValues);
+        /*
+        log.debug("set");
+        
+        log.debug(options);
+        log.debug(options.size());
+        log.debug(getOptions().length);
+        */
     }
 
     public boolean getOption(Option option)
