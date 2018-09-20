@@ -30,35 +30,44 @@
 				</span>
 			</div>
 			
-			<p:panel  style="margin:5px;"> 
-				<h3>The meaning of each row is:</h3><br/>
-				<p><b>Assessor</b> has assessed the <b>Submission</b> of <b>Assessed</b> with <b>Peer Assessment</b>.</p>
-				<p>You should grade the <b>Submission</b> of the <b>Assessed</b> user and the evaluation he has submitted for a third user. Click on the <b>Student Id</b> of the <b>Assessed</b> user to see whom he has assessed.</p>
-				
-			</p:panel>
+			<h:form style="margin:5px ;">
+				<p:panel > 
+					<h2>Visualization</h2>
+					<p>
+					<p:selectBooleanButton offLabel="Simplified view" onLabel="Full view" value="#{adminPeerAssessmentPairBeen.fullView}">
+						<p:ajax update="@form"></p:ajax>
+					</p:selectBooleanButton>					
+					</p>
+					<br/>
+					<hr/><br/>
+					<h2>The meaning of each row</h2>
+					<ui:fragment rendered="#{adminPeerAssessmentPairBeen.fullView}"><p><b>Assessor (a student)</b> has assessed the <b>Submission</b> of <b>Assessed</b> with <b>Peer Assessment</b>.</p></ui:fragment>
+					<p>You should grade the <b>Submission</b> of the <b>Assessed</b> user and the evaluation he has submitted for a third user. Click on the <b>Student Id</b> of the <b>Assessed</b> user to see whom he has assessed.</p>
+					
+				</p:panel>
 		
-			<h:form style="margin:5px;">
+			
 				<p:dataTable id="processTable" var="pair"
 					value="#{adminPeerAssessmentPairBeen.pairs}"
-					tableStyle="width: 96%; table-layout:auto"
+					tableStyle="width: 100%; table-layout:auto"
 					emptyMessage="No pairs found">
 
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column colspan="${showEmail? 3:2}" headerText="Assessor" style="font-size:1.2em" />
+							<p:column colspan="${showEmail? 3:2}" headerText="Assessor" style="font-size:1.2em" rendered="#{adminPeerAssessmentPairBeen.fullView}" />
 							<p:column colspan="${showEmail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
 							<p:column colspan="3" headerText="Assessment" style="font-size:1.2em"  />
 						</p:row>
 
 						<p:row>
-							<p:column headerText="Course"
+							<p:column headerText="Course" rendered="#{adminPeerAssessmentPairBeen.fullView}"
 								sortBy="#{pair.assessorUser.courses[0].title}">
 							</p:column>
-							<p:column headerText="Student Id"
+							<p:column headerText="Student Id" rendered="#{adminPeerAssessmentPairBeen.fullView}"
 								sortBy="#{pair.assessorUser.studentId}">
 							</p:column>
 							
-							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail and adminPeerAssessmentPairBeen.fullView}"
 								sortBy="#{pair.assessorUser.email}">
 							</p:column>
 							
@@ -75,7 +84,7 @@
 							<p:column headerText="Submission">
 							</p:column>
 
-							<p:column headerText="Peer Assessment" sortBy="#{pair.peerAssessmentSurveyResourceId}">
+							<p:column headerText="Peer Assessment" sortBy="#{pair.peerAssessmentSurveyResourceId}" rendered="#{adminPeerAssessmentPairBeen.fullView}">
 							</p:column>
 							
 							<p:column headerText="Teacher's Assessments">
@@ -83,13 +92,13 @@
 						</p:row>
 					</p:columnGroup>
 
-					<p:column>
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
 						<h:outputText value="#{pair.assessorUser.courses[0].title}" />
 					</p:column>
-					<p:column>
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
 						<h:outputText value="#{pair.assessorUser.studentId}" />					
 					</p:column>
-					<p:column rendered="#{showEmail}">
+					<p:column rendered="#{showEmail and adminPeerAssessmentPairBeen.fullView}">
 						<h:outputText value="#{pair.assessorUser.email}" />
 						<h:outputText value="#{pair.assessorUser.id}" />
 					</p:column>
@@ -133,7 +142,7 @@
 						</h:outputLink>
 					</p:column>
 					
-					<p:column>
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
 						<h:outputLink value="survey/answer.jsf">
 							<f:param name="resource_id" value="#{pair.peerAssessmentSurveyResourceId}" />							
 							<f:param name="user_id" value="#{pair.assessorUserId}" />

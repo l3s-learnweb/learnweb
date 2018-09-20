@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
@@ -19,6 +19,7 @@ public class AdminPeerAssessmentPairBeen extends ApplicationBean implements Seri
 
     private int peerAssessmentId = 0;
     private List<PeerAssessmentPair> pairs;
+    private boolean fullView = false;
 
     public AdminPeerAssessmentPairBeen()
     {
@@ -55,4 +56,13 @@ public class AdminPeerAssessmentPairBeen extends ApplicationBean implements Seri
         this.peerAssessmentId = peerAssessmentId;
     }
 
+    public boolean isFullView()
+    {
+        return fullView;
+    }
+
+    public void setFullView(boolean fullView)
+    {
+        this.fullView = fullView;
+    }
 }
