@@ -248,30 +248,31 @@ public class GlossaryManager
                 entry.setTimestamp(resultEntries.getTimestamp("timestamp"));
 
                 //get terms for given entry
-                entry.setTerms(getGlossaryTerms(entry.getId()));
+                entry.setTerms(getGlossaryTerms(entry));
                 entries.add(entry);
             }
         }
         return entries;
     }
 
-    public List<GlossaryTerm> getGlossaryTerms(int entryId) throws SQLException
+    public List<GlossaryTerm> getGlossaryTerms(GlossaryEntry entry) throws SQLException
     {
         List<GlossaryTerm> entryTerms = new LinkedList<>();
         try(PreparedStatement getTerms = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_term` WHERE `entry_id`=? and `deleted`=?");)
         {
-            getTerms.setInt(1, entryId);
+            StringBuilder fulltext = new StringBuilder();
+            getTerms.setInt(1, entry.getId());
             getTerms.setBoolean(2, false);
             ResultSet terms = getTerms.executeQuery();
             while(terms.next())
             {
                 GlossaryTerm term = new GlossaryTerm();
-                term.setEntryId(entryId);
+                term.setEntryId(entry.getId());
                 term.setId(terms.getInt("term_id"));
                 term.setUserId(terms.getInt("user_id"));
                 term.setTerm(terms.getString("term"));
                 term.setLanguage(terms.getString("language"));
-                term.setUses(Arrays.asList(terms.getString("uses").split(",")));
+                term.setUses(terms.getString("uses").isEmpty() ? new ArrayList<String>() : Arrays.asList(terms.getString("uses").split(",")));
                 term.setPronounciation(terms.getString("pronounciation"));
                 term.setAcronym(terms.getString("acronym"));
                 term.setSource(terms.getString("source"));
@@ -281,8 +282,14 @@ public class GlossaryManager
                 term.setPronounciationPasted(terms.getBoolean("pronounciation_pasted"));
                 term.setAcronymPasted(terms.getBoolean("acronym_pasted"));
                 term.setPhraseologyPasted(terms.getBoolean("phraseology_pasted"));
+
+                //Append fulltext with all words from term
+                fulltext.append(term.getTerm() + " " + term.getAcronym() + " " + term.getPronounciation() + " " + term.getSource() + " " + term.getPhraseology() + " " + term.getUses());
                 entryTerms.add(term);
             }
+            //Append words from entry
+            fulltext.append(" " + entry.getTopicOne() + " " + entry.getTopicTwo() + " " + entry.getTopicThree() + " " + entry.getDescription());
+            entry.setFulltext(fulltext.toString());
         }
         return entryTerms;
     }
@@ -374,7 +381,7 @@ public class GlossaryManager
                 entry.setDescriptionPasted(resultEntry.getBoolean("description_pasted"));
 
                 //get terms for given entry
-                entry.setTerms(getGlossaryTerms(entry.getId()));
+                entry.setTerms(getGlossaryTerms(entry));
             }
             return entry;
         }

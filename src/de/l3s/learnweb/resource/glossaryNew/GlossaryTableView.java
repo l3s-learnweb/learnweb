@@ -84,4 +84,9 @@ public class GlossaryTableView
     {
         return entry;
     }
+
+    public String getFulltext()
+    {
+        return entry.getFulltext();
+    }
 }

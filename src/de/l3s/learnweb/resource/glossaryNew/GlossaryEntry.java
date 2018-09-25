@@ -27,6 +27,7 @@ public class GlossaryEntry implements Serializable
     private String topicTwo;
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
+    private String fulltext; //fulltext search in glossary
 
     /**
      * do nothing constructor
@@ -54,6 +55,7 @@ public class GlossaryEntry implements Serializable
         setTopicOne(oldEntry.topicOne);
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
+        setFulltext(oldEntry.fulltext);
 
         for(GlossaryTerm oldTerm : oldEntry.terms)
         {
@@ -195,6 +197,16 @@ public class GlossaryEntry implements Serializable
     public void setOriginalEntryId(int originalEntryId)
     {
         this.originalEntryId = originalEntryId;
+    }
+
+    public String getFulltext()
+    {
+        return fulltext;
+    }
+
+    public void setFulltext(String fulltext)
+    {
+        this.fulltext = fulltext;
     }
 
     public Timestamp getTimestamp()

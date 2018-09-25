@@ -22,7 +22,7 @@
 			<h:panelGroup id="main_component" layout="block">
 				
 				<h:form id= "form" prependId="false">
-				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 12 : 0}"
+				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 10 : 0}"
 						paginatorPosition="bottom" filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						
@@ -90,7 +90,9 @@
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.getPhraseology()}" />
 						</p:column>
-						
+						<p:column headerText="fulltext search" filterBy="#{item.getFulltext()}" style="display:none" exportable="false">
+							blank
+						</p:column>
 						
 						
 						</p:dataTable>
@@ -105,7 +107,7 @@
 								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
 								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
 								</p:commandLink>
-								<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this">
+								<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this" rendered="#{glossaryBeanNEW.getCount() >= 10}">
        							 <h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();"/>
     							</p:commandLink>
 							</p:panelGrid>
@@ -181,12 +183,12 @@
 								</p:column>
 
 							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center" rendered="#{not term.deleted}">
-								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="#{term.getUsesDisplayLabel()}"><!-- Test this -->
+								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="Uses" multiple="true" filter="true" filterMatchMode="startsWith">
 									<f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}" />
 									<f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}" />
 									<f:selectItem itemValue="informal" itemLabel="#{msg['Glossary.use_informal']}" />
-									<p:ajax event="change" update="use"></p:ajax>
-									<p:ajax event="toggleSelect"  update="use" />
+<!-- 									<p:ajax event="change" update="use"></p:ajax>
+									<p:ajax event="toggleSelect"  update="use" /> -->
 								</p:selectCheckboxMenu>
 							</p:column>
 							<p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">

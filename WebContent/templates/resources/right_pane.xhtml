@@ -232,7 +232,7 @@
                                      action="#{addResourceBean.addResource}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary2'}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
-                        <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>
+                        <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
 					
                     <p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" ajax="true"
