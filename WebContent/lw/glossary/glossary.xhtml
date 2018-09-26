@@ -22,10 +22,11 @@
 			<h:panelGroup id="main_component" layout="block">
 				
 				<h:form id= "form" prependId="false">
-				<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 10 : 0}"
-						paginatorPosition="bottom" filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
+					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
+						paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 10 : 0}" paginatorPosition="bottom"
+						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-						
+
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
 						<p:ajax event="sort" oncomplete="groupRow()" />
@@ -34,7 +35,8 @@
 							<p:outputPanel>
 								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
-								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="#{msg['Glossary.search_filter_placeholder']}" />
+								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px"
+									placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
 						</f:facet>
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
@@ -42,7 +44,7 @@
 						</p:column>
 						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
-								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl"/>
+								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />
 							</p:commandLink>
 
 
@@ -50,26 +52,26 @@
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</p:commandLink>
 						</p:column>
-						
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.getTopicOne()}">
+
+						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.getTopicOne()}">
 							<h:outputText value="#{item.getTopicOne()}" pt:data-itemId="#{item.getEntryId()}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.getTopicTwo()}">
+						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.getTopicTwo()}">
 							<h:outputText value="#{item.getTopicTwo()}" pt:data-itemId="#{item.getEntryId()}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains" filterStyle="width: 90%;"
-							sortBy="#{item.getTopicThree()}">
+						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.getTopicThree()}">
 							<h:outputText value="#{item.getTopicThree()}" pt:data-itemId="#{item.getEntryId()}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true" filterMatchMode="contains"
-							filterStyle="width: 90%;">
+						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true"
+							filterMatchMode="contains" filterStyle="width: 90%;">
 							<h:outputText value="#{item.getDescription()}" pt:data-itemId="#{item.getEntryId()}" id="cell4" />
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.getTerm()}" filterStyle="width: 90%;"
-							sortBy="#{item.getTopicOne()}#{item.getTopicTwo()}#{item.getEntryId()}#{item.getTerm()}">
+						<p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.getTerm()}"
+							filterStyle="width: 90%;" sortBy="#{item.getTopicOne()}#{item.getTopicTwo()}#{item.getEntryId()}#{item.getTerm()}">
 							<h:outputText value="#{item.getTerm()}" />
 						</p:column>
 						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}">
@@ -90,35 +92,34 @@
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.getPhraseology()}" />
 						</p:column>
-						<p:column headerText="fulltext search" filterBy="#{item.getFulltext()}" style="display:none" exportable="false">
+						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false">
 							blank
+							<h:outputText value="#{item.fulltext}" />
 						</p:column>
-						
-						
-						</p:dataTable>
-						<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
-						
-								<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;" styleClass="glossary_footer_text"></h:outputText>
-								<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
-								<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"  width="24" style="position:relative; text-alignt:center; display: block; " />
-								<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBeanNEW.postProcessXls}" />
-								</p:commandLink>
-								<p:commandLink style="text-align:center;" ajax="false">
-								<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
-								<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
-								</p:commandLink>
-								<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this" rendered="#{glossaryBeanNEW.getCount() >= 10}">
-       							 <h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();"/>
-    							</p:commandLink>
-							</p:panelGrid>
+					</p:dataTable>
+					
+					<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
+						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;"
+							styleClass="glossary_footer_text"></h:outputText>
+						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
+							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
+								style="position:relative; text-alignt:center; display: block; " />
+							<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBeanNEW.postProcessXls}" />
+						</p:commandLink>
+						<p:commandLink style="text-align:center;" ajax="false">
+							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
+							<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
+						</p:commandLink>
+						<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this"
+							rendered="#{glossaryBeanNEW.getCount() >= 10}">
+							<h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();" />
+						</p:commandLink>
+					</p:panelGrid>
 
 					<br />
 					<br />
 					<br />
-
-				
 				</h:form>
-				
 				
 				<button type="button" onclick="openGlossForm()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton">
 					<h:outputText value="#{msg['Glossary.add_new_entry']}"></h:outputText>
