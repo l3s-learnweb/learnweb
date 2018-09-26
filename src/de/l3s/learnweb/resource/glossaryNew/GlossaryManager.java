@@ -9,9 +9,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.util.BeanHelper;
@@ -127,6 +131,9 @@ public class GlossaryManager
                     entryInserted.next();
                     entry.setId(entryInserted.getInt(1));
                     glossaryResource.getEntries().add(entry);
+                    HttpSession session;
+                    String sessionId = (session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)) != null ? session.getId() : null;
+                    learnweb.getLogManager().log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(), glossaryResource.getId(), Integer.toString(entry.getId()), sessionId);
                     /*if(entry.getId() < 1)
                     {
                     ResultSet entryInserted = insertEntry.getGeneratedKeys();
@@ -150,13 +157,13 @@ public class GlossaryManager
                     updateEntry.executeUpdate();
                 }
             }
-            saveTerms(entry);
+            saveTerms(entry, glossaryResource.getGroupId());
 
         }
 
     }
 
-    public void saveTerms(GlossaryEntry entry) throws SQLException
+    public void saveTerms(GlossaryEntry entry, int groupId) throws SQLException
     {
 
         for(GlossaryTerm term : entry.getTerms())
@@ -190,6 +197,10 @@ public class GlossaryManager
                     term.setId(termInserted.getInt(1));
                     term.setLastChangedByUserId(entry.getLastChangedByUserId());
                     term.setUserId(entry.getUserId());
+
+                    HttpSession session;
+                    String sessionId = (session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)) != null ? session.getId() : null;
+                    learnweb.getLogManager().log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_term_add, groupId, entry.getResourceId(), Integer.toString(entry.getId()), sessionId);
                 }
             }
             else

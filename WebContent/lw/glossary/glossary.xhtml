@@ -40,7 +40,7 @@
 							</p:outputPanel>
 						</f:facet>
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
-							<h:outputText value="#{item.getEntryId()}"></h:outputText>
+							<h:outputText value="#{item.entryId}"></h:outputText>
 						</p:column>
 						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
@@ -53,47 +53,46 @@
 							</p:commandLink>
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.getTopicOne()}" filterMatchMode="contains"
-							filterStyle="width: 90%;" sortBy="#{item.getTopicOne()}">
-							<h:outputText value="#{item.getTopicOne()}" pt:data-itemId="#{item.getEntryId()}" id="cell1" />
+						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.topicOne}">
+							<h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.getTopicTwo()}" filterMatchMode="contains"
-							filterStyle="width: 90%;" sortBy="#{item.getTopicTwo()}">
-							<h:outputText value="#{item.getTopicTwo()}" pt:data-itemId="#{item.getEntryId()}" id="cell2" />
+						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.topicTwo}">
+							<h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.getTopicThree()}" filterMatchMode="contains"
-							filterStyle="width: 90%;" sortBy="#{item.getTopicThree()}">
-							<h:outputText value="#{item.getTopicThree()}" pt:data-itemId="#{item.getEntryId()}" id="cell3" />
+						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
+							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
+							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.getDescription()}" filterBy="#{item.description}" filterable="true"
+						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
 							filterMatchMode="contains" filterStyle="width: 90%;">
-							<h:outputText value="#{item.getDescription()}" pt:data-itemId="#{item.getEntryId()}" id="cell4" />
+							<h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4" />
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.getTerm()}"
-							filterStyle="width: 90%;" sortBy="#{item.getTopicOne()}#{item.getTopicTwo()}#{item.getEntryId()}#{item.getTerm()}">
-							<h:outputText value="#{item.getTerm()}" />
+						<p:column headerText="#{msg['Glossary.term']}" filterable="true" filterMatchMode="contains" filterBy="#{item.term}"
+							filterStyle="width: 90%;" sortBy="#{item.topicOne}#{item.topicTwo}#{item.entryId}#{item.term}">
+							<h:outputText value="#{item.term}" />
 						</p:column>
 						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}">
-							<h:outputText value="#{item.getLanguage()}" />
+							<h:outputText value="#{item.language}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}">
-							<h:outputText value="#{item.getUses()}" />
+							<h:outputText value="#{item.uses}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
-							<h:outputText value="#{item.getPronounciation()}" />
+							<h:outputText value="#{item.pronounciation}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.acronym']}">
-							<h:outputText value="#{item.getAcronym()}" />
+							<h:outputText value="#{item.acronym}" />
 						</p:column>
 						<p:column headerText="#{msg.source}">
-							<h:outputText value="#{item.getSource()}" />
+							<h:outputText value="#{item.source}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.phraseology']}">
-							<h:outputText value="#{item.getPhraseology()}" />
+							<h:outputText value="#{item.phraseology}" />
 						</p:column>
-						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false">
-							blank
+						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
 							<h:outputText value="#{item.fulltext}" />
 						</p:column>
 					</p:dataTable>
@@ -188,8 +187,6 @@
 									<f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}" />
 									<f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}" />
 									<f:selectItem itemValue="informal" itemLabel="#{msg['Glossary.use_informal']}" />
-<!-- 									<p:ajax event="change" update="use"></p:ajax>
-									<p:ajax event="toggleSelect"  update="use" /> -->
 								</p:selectCheckboxMenu>
 							</p:column>
 							<p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">

@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 
 import org.jsoup.helper.Validate;
 
+import scala.collection.mutable.StringBuilder;
+
 public class GlossaryEntry implements Serializable
 {
     private static final long serialVersionUID = 1251808024273639912L;
@@ -67,6 +69,21 @@ public class GlossaryEntry implements Serializable
     public GlossaryEntry clone()
     {
         return new GlossaryEntry(this);
+    }
+
+    private void generateFulltext()
+    {
+        StringBuilder text = new StringBuilder();
+        //entry details
+        text.append(topicOne + " " + topicTwo + " " + topicThree + " " + description);
+        //term details
+        for(GlossaryTerm term : terms)
+        {
+            if(!term.isDeleted())
+                text.append(" " + term.getTerm() + " " + term.getAcronym() + " " + term.getPronounciation() + " " + term.getSource() + " " + term.getPhraseology() + " " + term.getUses());
+        }
+        fulltext = text.toString();
+
     }
 
     public String getDescription()
@@ -201,6 +218,8 @@ public class GlossaryEntry implements Serializable
 
     public String getFulltext()
     {
+        if(fulltext == null)
+            generateFulltext();
         return fulltext;
     }
 

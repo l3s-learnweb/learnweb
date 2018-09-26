@@ -109,12 +109,13 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public String onSave()
     {
         //logging
-        if(formEntry.getId() < 1)
-            log(Action.glossary_entry_add, glossaryResource, glossaryResource.getGroupId());
-        else
+        if(formEntry.getId() > 1)
             log(Action.glossary_entry_edit, glossaryResource, glossaryResource.getGroupId());
 
         formEntry.setLastChangedByUserId(getUser().getId());
+
+        //to reset fulltext search
+        formEntry.setFulltext(null);
 
         //Set Pasted values to true for given entry
         setPastedValues();
@@ -180,6 +181,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             log.error("Error in reloading entry for glossary resource ID:" + resourceId, e);
             addFatalMessage(e);
         }
+
         setNewFormEntry();
         return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
@@ -193,7 +195,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public String deleteEntry(GlossaryTableView row)
     {
-        log(Action.glossary_entry_delete, glossaryResource, glossaryResource.getGroupId());
+        log(Action.glossary_entry_delete, glossaryResource.getId(), row.getEntryId(), glossaryResource.getGroupId());
         row.getEntry().setDeleted(true);
         row.getEntry().setLastChangedByUserId(getUser().getId());
         try
@@ -230,9 +232,10 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             term.setDeleted(true);
             formEntry.getTerms().add(term);
         }
+        formEntry.setFulltext(null);
         addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
         setKeepMessages();
-        log(Action.glossary_term_delete, glossaryResource, glossaryResource.getGroupId());
+        log(Action.glossary_term_delete, glossaryResource.getId(), term.getId(), glossaryResource.getGroupId());
     }
 
     public int numberOfDeletedTerms()
@@ -250,7 +253,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public void addTerm()
     {
         formEntry.addTerm(new GlossaryTerm());
-        log(Action.glossary_term_add, glossaryResource, glossaryResource.getGroupId()); // should store resourceId + term_id
 
     }
 
@@ -448,7 +450,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
