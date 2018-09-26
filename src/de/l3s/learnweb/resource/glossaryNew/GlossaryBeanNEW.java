@@ -132,7 +132,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
             setKeepMessages();
-            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+            return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
 
         }
         catch(SQLException e)
@@ -172,6 +172,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         try
         {
+            // TODO better use glossaryResource.getEntries().remove(formEntry); ?
             glossaryResource.getEntries().removeIf(entry -> entry.getId() == formEntry.getId());
             glossaryResource.getEntries().add(getLearnweb().getGlossaryManager().reloadEntry(formEntry.getId()));
 
@@ -183,7 +184,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
 
         setNewFormEntry();
-        return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+        return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
     }
 
     public void setNewFormEntry()
@@ -204,7 +205,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             glossaryResource.getEntries().remove(row.getEntry());
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
             setKeepMessages();
-            return "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+            return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
         }
         catch(SQLException e)
         {
@@ -223,7 +224,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         if(term.getId() < 0)
         {
-            formEntry.getTerms().remove(term);
+            formEntry.getTerms().remove(term); // TODO remove duplicated code
 
         }
         else
@@ -450,7 +451,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

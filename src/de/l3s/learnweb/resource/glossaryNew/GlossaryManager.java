@@ -373,7 +373,7 @@ public class GlossaryManager
         return (GlossaryResource) resource;
     }
 
-    public GlossaryEntry reloadEntry(int entryId) throws SQLException
+    public GlossaryEntry reloadEntry(int entryId) throws SQLException // TODO remove
     {
         try(PreparedStatement reloadEntry = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `entry_id`=?");)
         {
