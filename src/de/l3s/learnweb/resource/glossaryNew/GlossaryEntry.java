@@ -86,6 +86,14 @@ public class GlossaryEntry implements Serializable
 
     }
 
+    public GlossaryTerm getTerm(int termId)
+    {
+        for(GlossaryTerm term : terms)
+            if(term.getId() == termId)
+                return term;
+        return null;
+    }
+
     public String getDescription()
     {
         return description;
