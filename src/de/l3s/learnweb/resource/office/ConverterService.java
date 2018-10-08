@@ -66,50 +66,52 @@ public class ConverterService
         return converterResponse;
     }
 
-    public InputStream convert(ConverterRequest request) throws IOException
-    {
-        try
+    public InputStream convert(ConverterRequest request) throws ConverterException, IOException
+    {/* test: handle exception in resource preview maker
+
+     try
+     {*/
+        String newFileUrl = getConvertedUri(request);
+        URL url = new URL(newFileUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        InputStream stream = connection.getInputStream();
+        if(stream == null)
         {
-            String newFileUrl = getConvertedUri(request);
-            URL url = new URL(newFileUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            InputStream stream = connection.getInputStream();
-            if(stream == null)
-            {
-                throw new Exception("Error during conversion : stream is null");
-            }
-            return stream;
+            throw new ConverterException("Error during conversion : stream is null");
+        }
+        return stream;
+        /*
         }
         catch(Exception ex)
         {
-            log.error("Error during conversion; URL: " + request.getUrl() + "; " + ex);
+        log.error("Error during conversion; URL: " + request.getUrl() + "; " , ex);
         }
-        return null;
+        return null;*/
     }
 
-    public String getConvertedUri(ConverterRequest request) throws Exception
+    public String getConvertedUri(ConverterRequest request) throws ConverterException
     {
         ConverterResponse response = sendRequestToConvertServer(request);
 
         if(response == null)
-            throw new Exception("Invalid answer format");
+            throw new ConverterException("Invalid answer format");
 
         if(response.getError() != null)
             processConvertServiceResponseError(response.getError());
 
         if(response.isEndConvert() == null || !response.isEndConvert())
-            throw new Exception("Conversion is not finished");
+            throw new ConverterException("Conversion is not finished");
 
         if(response.getPercent() == 0)
-            throw new Exception("Percent is null");
+            throw new ConverterException("Percent is null");
 
         if(response.getFileUrl() == null || response.getFileUrl().length() == 0)
-            throw new Exception("FileUrl is null");
+            throw new ConverterException("FileUrl is null");
 
         return response.getFileUrl();
     }
 
-    private void processConvertServiceResponseError(int errorCode) throws Exception
+    private void processConvertServiceResponseError(int errorCode) throws ConverterException
     {
         String errorMessage = "";
         String errorMessageTemplate = "Error occurred in the ConverterService: ";
@@ -146,7 +148,16 @@ public class ConverterService
             errorMessage = "ErrorCode = " + errorCode;
             break;
         }
-        throw new Exception(errorMessage);
+        throw new ConverterException(errorMessage);
     }
 
+    public static class ConverterException extends Exception
+    {
+        public ConverterException(String errorMessage)
+        {
+            super(errorMessage);
+        }
+
+        private static final long serialVersionUID = 8151643724813680762L;
+    }
 }

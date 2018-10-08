@@ -179,11 +179,10 @@ public class ResourcePreviewMaker
                 thumbnailStream.close();
             }
         }
-        catch(IOException | SQLException e)
+        catch(Exception e)
         {
             log.error("An error occurs during creating thumbnail for the document: resource_id=" + resource.getId() + "; file=" + resource.getFileUrl(), e);
         }
-
     }
 
     public void processImage(Resource resource, InputStream inputStream) throws IOException, SQLException
