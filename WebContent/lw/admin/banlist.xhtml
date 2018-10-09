@@ -29,37 +29,35 @@
 
 		<p style="color: #c94132;">#{msg.suspicious_activity_message}</p> <br/>
 
-		<p:dialog header="Ban" widgetVar="bandialog" modal="true" height="100">
-			<h:form class="banform" id="banformdialog">
-			<h:panelGrid columns="3">
-				#{msg.name_or_ip}:
-				<h:inputText value="#{adminBanlistBean.name}" id="name" required="true"/>
+			<p:dialog header="Ban" widgetVar="bandialog" modal="true" height="100">
+				<h:form class="banform" id="banformdialog">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{msg.name_or_ip}:" />						
+						<p:inputText value="#{adminBanlistBean.name}" id="name" required="true" />
+						<p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
+							<f:selectItem itemValue="user" itemLabel="User" />
+							<f:selectItem itemValue="ip" itemLabel="IP" />
+						</p:selectOneRadio>
+						
+						<h:outputText value="#{msg.ban_for}:" />
+						<ui:fragment>
+							<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput" style="width:50px" />
+							<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput" style="width:50px" />
+							<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput" style="width:50px" />
+						</ui:fragment>
 
-				<h:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
-				   	<f:selectItem itemValue="user" itemLabel="User"/>
-				   	<f:selectItem itemValue="ip" itemLabel="IP" />
-				</h:selectOneRadio>
-				<br/>
+						<ui:fragment>
+							<p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;" id="permabancheckbox"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
+						</ui:fragment>
 
-				#{msg.ban_for}: <br/>
+						<p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;" />
+						<h:outputText />
+						<h:outputText />
+					</h:panelGrid>
+				</h:form>
+			</p:dialog>
 
-				<ui:fragment>
-					<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput"/>
-					<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput"/>
-					<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput"/>
-				</ui:fragment>
-
-				<ui:fragment>
-					<label><h:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;"/>
-					#{msg.permaban}</label>
-				</ui:fragment>
-
-				<h:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;"/>
-				</h:panelGrid>
-			</h:form>
-		</p:dialog>
-
-		<h:form id="suspiciouslistform" >
+			<h:form id="suspiciouslistform" >
 			<p:dataTable var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
 						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
@@ -96,7 +94,7 @@
 							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.ban}" />
 						</p:commandLink>
 
-						<p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}" process="@this"
+						<p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}" 
 									   update=":suspiciouslistform :growl"
 									   style="text-decoration:none;" title="#{msg.remove}">
 							<p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
@@ -110,30 +108,29 @@
 		<br/>
 		<p:panel header="#{msg.manual_ban}" style="margin:5px;">
 			<h:form class="banform" id="banformreg">
-			<h:panelGrid columns="3">
-				#{msg.name_or_ip}:
-				<h:inputText value="#{adminBanlistBean.name}" id="name" required="true"/>
+				<h:panelGrid columns="3">
+					<h:outputText value="#{msg.name_or_ip}:" />
+					<p:inputText value="#{adminBanlistBean.name}" id="name" required="true" />
+					<p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
+						<f:selectItem itemValue="user" itemLabel="User" />
+						<f:selectItem itemValue="ip" itemLabel="IP" />
+					</p:selectOneRadio>
+					
+					<h:outputText value="#{msg.ban_for}:" />
+					<ui:fragment>
+						<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput" style="width:50px" />
+						<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput" style="width:50px" />
+						<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput" style="width:50px" />
+					</ui:fragment>
 
-				<h:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
-				   	<f:selectItem itemValue="user" itemLabel="User"/>
-				   	<f:selectItem itemValue="ip" itemLabel="IP" />
-				</h:selectOneRadio>
-				<br/>
+					<ui:fragment>
+						<p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;" id="permabancheckbox"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
+					</ui:fragment>
 
-				#{msg.ban_for}: <br/>
+					<p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;" ajax="false" />
+					<h:outputText />		
+					<h:outputText />		
 
-				<ui:fragment>
-					<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput"/>
-					<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput"/>
-					<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput"/>
-				</ui:fragment>
-
-				<ui:fragment>
-					<h:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;"/>
-					#{msg.permaban}
-				</ui:fragment>
-
-				<h:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;"/>
 				</h:panelGrid>
 			</h:form>
 		</p:panel>

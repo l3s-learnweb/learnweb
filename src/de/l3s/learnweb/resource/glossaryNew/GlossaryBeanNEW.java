@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -34,7 +33,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.lowagie.text.Document;
@@ -43,7 +41,6 @@ import com.lowagie.text.PageSize;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.Misc;
 
 @Named
 @ViewScoped
@@ -404,7 +401,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             anchor.setCol2(10);
             anchor.setRow2(row2);
 
-            Picture pict = drawing.createPicture(anchor, pictureIdx);
+            //Picture pict =
+            drawing.createPicture(anchor, pictureIdx);
             HSSFCellStyle copyrightStyle = wb.createCellStyle();
             copyrightStyle.setLocked(true);
             sheet.protectSheet("learnweb");
@@ -532,12 +530,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         if(null == allowedTermLanguages)
         {
-            allowedTermLanguages = new ArrayList<>();
-            for(String language : glossaryResource.getAllowedLanguages())
-            {
-                allowedTermLanguages.add(new SelectItem(new Locale(language), getLocaleMessage("language_" + language)));
-            }
-            allowedTermLanguages.sort(Misc.selectItemLabelComparator);
+            allowedTermLanguages = localesToSelectitems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
     }

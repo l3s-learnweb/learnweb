@@ -616,7 +616,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -2014,7 +2014,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-    
+
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();
@@ -2032,11 +2032,19 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         {
             return Learnweb.getInstance().getResourceManager().getResource(id);
         }
+        catch(RuntimeException e)
+        {
+            if(!e.getMessage().startsWith("Learnweb is not initialized correctly.")) // ignore this error
+            {
+                log.fatal("Can't load resource:  " + id, e);
+            }
+        }
         catch(Exception e)
         {
             log.fatal("Can't load resource:  " + id, e);
-            return this;
         }
+
+        return this;
     }
 
 }

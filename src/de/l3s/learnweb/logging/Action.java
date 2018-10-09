@@ -78,6 +78,8 @@ public enum Action
     lock_interrupted_returned_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // when first user which edit resource after inactive time returns to editing, but locker is no longer belongs to it
     lock_rejected_edit_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
     lock_interrupted_returned_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
+    deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
+    deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
     ;
     private final ActionTargetId targetId;
     private final ActionCategory category;

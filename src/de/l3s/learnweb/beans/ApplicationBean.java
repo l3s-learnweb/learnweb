@@ -1,7 +1,12 @@
 package de.l3s.learnweb.beans;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -11,6 +16,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
+import de.l3s.util.Misc;
 
 public class ApplicationBean
 {
@@ -304,4 +310,22 @@ public class ApplicationBean
         Logger.getLogger(ApplicationBean.class).warn("access denied " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
     }
 
+    /**
+     * Converts a list of Locales to a list of SelectItems. The Locales are translated to the current frontend language
+     *
+     * @param locales
+     * @return
+     */
+    protected List<SelectItem> localesToSelectitems(List<Locale> locales)
+    {
+        ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
+
+        for(Locale locale : locales)
+        {
+            selectItems.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+        }
+        selectItems.sort(Misc.selectItemLabelComparator);
+
+        return selectItems;
+    }
 }

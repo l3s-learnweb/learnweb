@@ -8,10 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -41,7 +38,6 @@ import de.l3s.learnweb.resource.glossaryNew.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 
 @Named
@@ -60,15 +56,14 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private LANGUAGE[] glossaryLanguage = { LANGUAGE.DE, LANGUAGE.EN, LANGUAGE.FR, LANGUAGE.IT, LANGUAGE.NL };
     private String newUrl;
-    @Deprecated
-    private Date surveyOpenDate; // TODO if a survey is created then this.resource should become a SurveyResource instance
-    @Deprecated
-    private Date surveyCloseDate; // TODO if a survey is created then this.resource should become a SurveyResource instance
 
     private int formStep = 1;
 
     @Inject
     private FileEditorBean fileEditorBean;
+
+    // caches
+    private transient List<SelectItem> availableGlossaryLanguages;
 
     public AddResourceBean()
     {
@@ -329,10 +324,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             courseTitles.add(c.getTitle());
         }
-
+    
         return courseTitles.toArray(new String[0]);
     }
-    
+
     */
 
     public Resource getResource()
@@ -342,12 +337,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void setResourceAsGlossary()
     {
-        this.resource = new GlossaryResource();
-        resource.setSource(SERVICE.internet);
-        resource.setLocation("Learnweb");
-        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-        resource.setType(Resource.ResourceType.glossary2);
-        resource.setDeleted(true);
+        GlossaryResource glossaryResource = new GlossaryResource();
+
+        glossaryResource.setDeleted(true);
+        glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
+
+        this.resource = glossaryResource;
     }
 
     public void validateNewDocName(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
@@ -620,61 +615,17 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.fileEditorBean = fileEditorBean;
     }
 
-    private transient List<SelectItem> availableLanguages;
-
-    public List<SelectItem> getAvailableLanguages()
+    public List<SelectItem> getAvailableGlossaryLanguages()
     {
-        if(null == availableLanguages)
+        if(null == availableGlossaryLanguages)
         {
-            availableLanguages = new ArrayList<>();
-
-            for(Locale locale : getUser().getOrganisation().getGlossaryLanguages())
-            {
-                log.debug("add locales " + locale.getLanguage());
-                availableLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
-            }
-            availableLanguages.sort(Misc.selectItemLabelComparator);
+            availableGlossaryLanguages = localesToSelectitems(getUser().getOrganisation().getGlossaryLanguages());
         }
-        return availableLanguages;
-    }
-
-    public LANGUAGE[] getGlossaryLanguage()
-    {
-        return glossaryLanguage;
-    }
-
-    public void setGlossaryLanguage(LANGUAGE[] glossaryLanguage)
-    {
-        this.glossaryLanguage = glossaryLanguage;
-    }
-
-    @Deprecated
-    public Date getSurveyOpenDate()
-    {
-        return surveyOpenDate;
-    }
-
-    @Deprecated
-    public void setSurveyOpenDate(Date surveyOpen)
-    {
-        this.surveyOpenDate = surveyOpen;
-    }
-
-    @Deprecated
-    public Date getSurveyCloseDate()
-    {
-        return surveyCloseDate;
-    }
-
-    @Deprecated
-    public void setSurveyCloseDate(Date surveyCloseDate)
-    {
-        this.surveyCloseDate = surveyCloseDate;
+        return availableGlossaryLanguages;
     }
 
     public static class CreateThumbnailThread extends Thread
     {
-
         private Resource resource;
 
         public CreateThumbnailThread(Resource resource)
@@ -700,6 +651,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
         }
 
+    }
+
+    public LANGUAGE[] getGlossaryLanguage()
+    {
+        return glossaryLanguage;
+    }
+
+    public void setGlossaryLanguage(LANGUAGE[] glossaryLanguage)
+    {
+        this.glossaryLanguage = glossaryLanguage;
     }
 
 }

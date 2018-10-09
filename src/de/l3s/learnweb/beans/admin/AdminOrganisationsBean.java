@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.model.SelectItem;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -23,6 +25,7 @@ import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.Misc;
 
 @Named
 @SessionScoped
@@ -33,9 +36,17 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     private List<Organisation> organisations;
     private Organisation selectedOrganisation;
     private LinkedList<OptionWrapperGroup> optionGroups;
+    private ArrayList<SelectItem> availableGlossaryLanguages;
 
     public AdminOrganisationsBean() throws SQLException
     {
+        if(getUser() == null)
+            return;
+        if(!getUser().isModerator())
+        {
+            addAccessDeniedMessage();
+            return;
+        }
         log.debug("init AdminOrganisationsBean");
         organisations = new ArrayList<>(getLearnweb().getOrganisationManager().getOrganisationsAll());
         setSelectedOrganisation(getUser().getOrganisation()); // by default edit the users organization
@@ -144,6 +155,31 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     public List<Organisation> getOrganisations()
     {
         return organisations;
+    }
+
+    public List<SelectItem> getAvailableGlossaryLanguages()
+    {
+        if(null == availableGlossaryLanguages)
+        {
+            ArrayList<Locale> glossaryLanguages = new ArrayList<>(4);
+            glossaryLanguages.add(new Locale("de"));
+            glossaryLanguages.add(new Locale("it"));
+            glossaryLanguages.add(new Locale("nl"));
+            glossaryLanguages.add(new Locale("en"));
+            glossaryLanguages.add(new Locale("fr"));
+            glossaryLanguages.add(new Locale("es"));
+            glossaryLanguages.add(new Locale("pt"));
+            glossaryLanguages.add(new Locale("ru"));
+            glossaryLanguages.add(new Locale("zh"));
+            availableGlossaryLanguages = new ArrayList<>();
+
+            for(Locale locale : glossaryLanguages)
+            {
+                availableGlossaryLanguages.add(new SelectItem(locale, getLocaleMessage("language_" + locale.getLanguage())));
+            }
+            availableGlossaryLanguages.sort(Misc.selectItemLabelComparator);
+        }
+        return availableGlossaryLanguages;
     }
 
     // only helper classes to display the options

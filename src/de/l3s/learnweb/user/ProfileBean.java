@@ -231,6 +231,52 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
     }
 
+    public String onDeleteAccountSoft()
+    {
+        return onDelete(false);
+    }
+
+    public String onDeleteAccountHard()
+    {
+        return onDelete(true);
+    }
+
+    /**
+     * @see de.l3s.learnweb.user.UserManager.deleteUserSoft
+     * @see de.l3s.learnweb.user.UserManager.deleteUserHard
+     * @param hardDelete
+     * @return
+     */
+    private String onDelete(boolean hardDelete)
+    {
+        try
+        {
+            if(hardDelete)
+            {
+                getLearnweb().getUserManager().deleteUserHard(getSelectedUser());
+
+                log(Action.deleted_user_hard, 0, 0);
+            }
+            else
+            {
+                getLearnweb().getUserManager().deleteUserSoft(getSelectedUser());
+
+                log(Action.deleted_user_soft, 0, 0);
+            }
+
+            getFacesContext().getExternalContext().invalidateSession(); // end session
+            addMessage(FacesMessage.SEVERITY_INFO, "user.account.deleted");
+            setKeepMessages();
+            return "/lw/user/login.jsf&faces-redirect=true";
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+        return null;
+
+    }
+
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         if(getSelectedUser().getRealUsername().equals(value))

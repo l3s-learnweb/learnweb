@@ -51,6 +51,12 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 
                 return;
             }
+            else if(exception instanceof IllegalArgumentException && exception.getMessage().startsWith("Illegal base64 character -54"))
+            {
+                log.warn(exception.getMessage() + "; This happens often due to ; On " + description);
+
+                return;
+            }
             else
             {
                 log.fatal("Fatal unhandled error on " + description, exception);

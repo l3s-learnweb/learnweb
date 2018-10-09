@@ -496,7 +496,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
             this.glossaryLanguages.add(new Locale("en"));
         }
         else
+        {
             this.glossaryLanguages = glossaryLanguages;
+        }
     }
 
     public void setOptions(BitSet options)

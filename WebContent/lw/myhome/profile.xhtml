@@ -214,6 +214,17 @@
 						</table>
 		
 					</h:form>
+					
+					<div class="page_header">
+						<span>
+							#{msg.miscellaneous}
+						</span>
+					</div>
+					<h:form id="deleteform" class="grey_border">
+						<p:commandButton action="#{profileBean.onDeleteAccountSoft}" value="#{msg['user.account.deleteSoft.button']}">
+							<p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false" />
+						</p:commandButton>		
+					</h:form>
 				</div>
 			
 			</p:layoutUnit>

@@ -1,7 +1,5 @@
 package de.l3s.learnweb.user;
 
-import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +12,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.hash.Hashing;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -235,23 +231,7 @@ public class CourseManager
             }
             else
             {
-                log.debug("Anonymize user: " + user);
-
-                user.setAdditionalInformation("");
-                user.setAddress("");
-                user.setAffiliation("");
-                user.setDateOfBirth(new Date(0));
-                user.setFullName("");
-                user.setImageFileId(0);
-                user.setInterest("");
-                user.setProfession("");
-                user.setStudentId("");
-                user.setUsername("Anonym " + user.getId());
-
-                user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
-                user.setEmailConfirmed(true); // disable mail validation
-
-                user.save();
+                learnweb.getUserManager().anonymize(user);
             }
         }
     }
@@ -285,7 +265,7 @@ public class CourseManager
                 undeletedUsers.add(user);
             }
             else
-                userManager.deleteUser(user);
+                userManager.deleteUserHard(user);
         }
 
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?"))

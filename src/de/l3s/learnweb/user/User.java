@@ -47,6 +47,7 @@ public class User implements Comparable<User>, Serializable, HasId
     public static final int GENDER_FEMALE = 2;
 
     private int id = -1;
+    private boolean deleted;
     private int imageFileId; // profile image
     private int organisationId;
     private String fullName; //Full Name
@@ -242,7 +243,7 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         if(getOrganisation().getId() == 1249 && getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             return "Anonymous";
-        //return "user " + id;
+
         return username;
     }
 
@@ -807,4 +808,15 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         return Learnweb.getInstance().getPeerAssessmentManager().getPairsByAssessedUserId(getId());
     }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
 }

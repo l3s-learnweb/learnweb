@@ -19,6 +19,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.util.BeanHelper;
+import de.l3s.util.StringHelper;
 
 public class GlossaryManager
 {
@@ -39,7 +40,7 @@ public class GlossaryManager
         }
         PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
         insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, String.join(",", resource.getAllowedLanguages())); // TODO use StringHelper.join(resource.getAllowedLanguages()) when PF bug resolved
+        insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages()));
         insertGlossary.executeQuery();
 
         if(resource.isClonedButNotPersisted()) // after a resource has been cloned we have to persist the cloned entries
@@ -357,7 +358,7 @@ public class GlossaryManager
         ResultSet result = getGlossary.executeQuery();
         if(result.next())
         {
-            glossaryResource.setAllowedLanguages(Arrays.asList(result.getString("allowed_languages").split(",")));
+            glossaryResource.setAllowedLanguages(StringHelper.splitLocales(result.getString("allowed_languages")));
         }
         else
         {

@@ -2,6 +2,7 @@ package de.l3s.learnweb.user;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,8 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
+
+import com.google.common.hash.Hashing;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
@@ -34,7 +37,6 @@ public class UserManager
     private final static Logger log = Logger.getLogger(UserManager.class);
 
     // if you change this, you have to change createUser() too
-    private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, active_course_id, registration_date, password, preferences, credits, fullname, affiliation, accept_terms_and_conditions";
 
     private Learnweb learnweb;
     private ICache<User> cache;
@@ -338,9 +340,14 @@ public class UserManager
      * Saves the User to the database.
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
      */
+
+    private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, active_group_id, image_file_id, "
+            + "gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, registration_date, password, preferences, "
+            + "credits, fullname, affiliation, accept_terms_and_conditions, deleted";
+
     public User save(User user) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
         if(user.getId() < 0) // the User is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
@@ -350,31 +357,28 @@ public class UserManager
         replace.setString(3, user.getEmail());
         replace.setString(4, user.getEmailConfirmationToken());
         replace.setBoolean(5, user.isEmailConfirmed());
-
         replace.setInt(6, user.getOrganisationId());
-        replace.setString(7, "");
-        replace.setString(8, "");
-        replace.setInt(9, user.getActiveGroupId());
-        replace.setInt(10, user.getImageFileId());
-        replace.setInt(11, user.getGender());
-        replace.setDate(12, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
-        replace.setString(13, user.getAddress());
-        replace.setString(14, user.getProfession());
-        replace.setString(15, user.getAdditionalInformation());
-        replace.setString(16, user.getInterest());
-        replace.setString(17, user.getStudentId());
-        replace.setInt(18, user.isAdmin() ? 1 : 0);
-        replace.setInt(19, user.isModerator() ? 1 : 0);
-        replace.setInt(20, 0); // not used any more
-        replace.setTimestamp(21, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
-        replace.setString(22, user.getPassword());
+        replace.setInt(7, user.getActiveGroupId());
+        replace.setInt(8, user.getImageFileId());
+        replace.setInt(9, user.getGender());
+        replace.setDate(10, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
+        replace.setString(11, user.getAddress());
+        replace.setString(12, user.getProfession());
+        replace.setString(13, user.getAdditionalInformation());
+        replace.setString(14, user.getInterest());
+        replace.setString(15, user.getStudentId());
+        replace.setInt(16, user.isAdmin() ? 1 : 0);
+        replace.setInt(17, user.isModerator() ? 1 : 0);
+        replace.setTimestamp(18, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
+        replace.setString(19, user.getPassword());
 
-        Sql.setSerializedObject(replace, 23, user.getPreferences());
+        Sql.setSerializedObject(replace, 20, user.getPreferences());
 
-        replace.setString(24, user.getCredits());
-        replace.setString(25, user.getFullName());
-        replace.setString(26, user.getAffiliation());
-        replace.setBoolean(27, user.isAcceptTermsAndConditions());
+        replace.setString(21, user.getCredits());
+        replace.setString(22, user.getFullName());
+        replace.setString(23, user.getAffiliation());
+        replace.setBoolean(24, user.isAcceptTermsAndConditions());
+        replace.setBoolean(25, user.isDeleted());
         replace.executeUpdate();
 
         if(user.getId() < 0) // get the assigned id
@@ -403,6 +407,7 @@ public class UserManager
 
         user = new User();
         user.setId(rs.getInt("user_id"));
+        user.setDeleted(rs.getBoolean("deleted"));
         user.setUsername(rs.getString("username"));
         user.setEmail(rs.getString("email"));
         user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
@@ -472,15 +477,29 @@ public class UserManager
         }
     }
 
-    public void deleteUser(User user) throws SQLException
+    public void anonymize(User user) throws SQLException
     {
-        log.debug("Deleting user " + user);
+        log.debug("Anonymize user: " + user);
 
-        for(Resource resource : user.getResources())
-        {
-            resource.delete();
-        }
+        user.setAdditionalInformation("");
+        user.setAddress("");
+        user.setAffiliation("");
+        user.setDateOfBirth(new Date(0));
+        user.setFullName("");
+        user.setImageFileId(0);
+        user.setInterest("");
+        user.setProfession("");
+        user.setStudentId("");
+        user.setUsername("Anonym " + user.getId());
 
+        user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
+        user.setEmailConfirmed(true); // disable mail validation
+
+        user.save();
+    }
+
+    public void deleteUserHard(User user) throws SQLException
+    {
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_log WHERE `user_id` = ?"))
         {
             delete.setInt(1, user.getId());
@@ -531,18 +550,44 @@ public class UserManager
             delete.setInt(1, user.getId());
             delete.executeUpdate();
         }
+
+        for(Resource resource : user.getResources())
+        {
+            resource.delete();
+        }
+    }
+
+    /**
+     * <ul>
+     * <li>The user is removed from all his groups.
+     * <li>His private resources are deleted
+     * <li>His name and password are changed so that he can't login
+     * </ul>
+     *
+     * @param user
+     * @throws SQLException
+     */
+    public void deleteUserSoft(User user) throws SQLException
+    {
+        log.debug("Deleting user " + user);
+
+        for(Resource resource : user.getResources())
+        {
+            if(resource.getGroupId() == 0) // delete only private resources
+                resource.delete();
+        }
+
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_group_user WHERE `user_id` = ?"))
         {
             delete.setInt(1, user.getId());
             delete.executeUpdate();
         }
 
-        cache.remove(user.getId());
-
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
+        user.setDeleted(true);
+        user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
+        user.setEmailConfirmed(true); // disable mail validation
+        user.setPassword("deleted user", true);
+        user.setUsername(user.getRealUsername() + " (Deleted)");
+        user.save();
     }
 }

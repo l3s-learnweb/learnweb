@@ -5,9 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.SERVICE;
 
 /**
  * @author Rishita
@@ -15,12 +17,9 @@ import de.l3s.learnweb.resource.Resource;
  */
 public class GlossaryResource extends Resource implements Serializable
 {
-    /**
-     *
-     */
-
     private static final long serialVersionUID = 8388778401614338522L;
-    private List<String> allowedLanguages = new ArrayList<String>(); // TODO Change this to locale when PF bug is resolved
+
+    private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
     private boolean deleted = false;
     private boolean clonedButNotSaved = false;
@@ -28,7 +27,10 @@ public class GlossaryResource extends Resource implements Serializable
     //constructor does nothing
     public GlossaryResource()
     {
-
+        this.setSource(SERVICE.learnweb);
+        this.setLocation("Learnweb");
+        this.setStorageType(Resource.LEARNWEB_RESOURCE);
+        this.setType(Resource.ResourceType.glossary2);
     }
 
     /**
@@ -39,7 +41,7 @@ public class GlossaryResource extends Resource implements Serializable
     public GlossaryResource(GlossaryResource otherGlossaryResource)
     {
         super(otherGlossaryResource);
-        setAllowedLanguages(otherGlossaryResource.allowedLanguages);
+        setAllowedLanguages(new ArrayList<>(otherGlossaryResource.allowedLanguages));
         setDeleted(otherGlossaryResource.deleted);
         setClonedButNotPersisted(true);
         setEntries(new ArrayList<GlossaryEntry>(otherGlossaryResource.entries.size()));
@@ -48,6 +50,16 @@ public class GlossaryResource extends Resource implements Serializable
             this.entries.add(i, otherGlossaryResource.entries.get(i).clone());
         }
 
+    }
+
+    public List<Locale> getAllowedLanguages()
+    {
+        return allowedLanguages;
+    }
+
+    public void setAllowedLanguages(List<Locale> allowedLanguages)
+    {
+        this.allowedLanguages = allowedLanguages;
     }
 
     @Override
@@ -72,7 +84,7 @@ public class GlossaryResource extends Resource implements Serializable
         this.setThumbnail2(iconResource.getThumbnail2());
         this.setThumbnail3(iconResource.getThumbnail3());
         this.setThumbnail4(iconResource.getThumbnail4());
-        this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + Integer.toString(this.getId()));
+        this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + this.getId());
 
         // save normal resource fields
         super.save();
@@ -81,16 +93,6 @@ public class GlossaryResource extends Resource implements Serializable
         Learnweb.getInstance().getGlossaryManager().saveGlossaryResource(this);
 
         return this;
-    }
-
-    public List<String> getAllowedLanguages()
-    {
-        return allowedLanguages;
-    }
-
-    public void setAllowedLanguages(List<String> list)
-    {
-        this.allowedLanguages = list;
     }
 
     public List<GlossaryEntry> getEntries()

@@ -161,8 +161,9 @@
                                     <h:outputText value="Allowed languages: "/>
                                 </p:column>
                                 <p:column rendered="#{addResourceBean.formStep == 1}">
-                                    <p:selectCheckboxMenu id="lang" label="--#{msg.language}--" value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}">
-                                        <f:selectItems value="#{addResourceBean.availableLanguages}"></f:selectItems>
+                                    <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
+										label="#{msg.language}" multiple="true" converter="#{localeConverter}">
+                                        <f:selectItems value="#{addResourceBean.availableGlossaryLanguages}"></f:selectItems>
                                     </p:selectCheckboxMenu>
                                 </p:column>
                             </p:row>
