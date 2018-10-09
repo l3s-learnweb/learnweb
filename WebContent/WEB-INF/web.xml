@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1"
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-	<display-name>Learnweb 2.12.2</display-name>
-	<context-param> 
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
-		<!-- Development Production -->
-	</context-param>
-	<context-param> 
-		<param-name>facelets.DEVELOPMENT</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+    <display-name>Learnweb 2.12.2</display-name>
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+        <!-- Development Production -->
+    </context-param>
+    <context-param>
+        <param-name>facelets.DEVELOPMENT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
     </context-param>
@@ -25,227 +27,229 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>omega</param-value>
     </context-param>
-	<context-param>
-		<description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
-	</context-param>
+    <context-param>
+        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
 
-	<context-param>
-		 <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-		 <param-value>***REMOVED***</param-value>
-	 </context-param>
-	<context-param>
-		 <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-		 <param-value>***REMOVED***</param-value>
-	 </context-param>
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>***REMOVED***</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>***REMOVED***</param-value>
+    </context-param>
 
-	<error-page>
-		<exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
-		<location>/lw/error-db.jsf</location>
-	</error-page>
-	<error-page>
-		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
-		<location>/lw/error-expired.jsf</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/lw/error-404.jsf</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/lw/error.jsf</location>
-	</error-page>
-	<error-page>
-		<error-code>503</error-code>
-		<location>/lw/error-server.jsf</location>
-	</error-page>
-	<filter>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-		<init-param>
-			<param-name>logLevel</param-name>
-			<param-value>ERROR</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter>
-		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-		<servlet-name>Faces Servlet</servlet-name>
-	</filter-mapping>
-	<session-config>
-		<session-timeout>100</session-timeout>
-	</session-config>
+    <error-page>
+        <exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
+        <location>/lw/error-db.jsf</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/lw/error-expired.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/lw/error-404.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/lw/error.jsf</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/lw/error-server.jsf</location>
+    </error-page>
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>ERROR</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    <session-config>
+        <session-timeout>100</session-timeout>
+    </session-config>
 
-	<filter>
-	    <filter-name>RequestFilter</filter-name>
-	    <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
-	  </filter>
-	<filter-mapping>
-		<filter-name>RequestFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+    <filter>
+        <filter-name>RequestFilter</filter-name>
+        <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
-	<context-param>
-		<param-name>com.sun.faces.numberOfViewsInSession</param-name>
-		<param-value>300</param-value>
-	</context-param>
-	<context-param>
-		<param-name>com.sun.faces.numberOfLogicalViews</param-name>
-		<param-value>300</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-		<param-value>resources.application</param-value>
-	</context-param>
-	<context-param>
-		<description>
-	This parameter tells MyFaces if javascript code should be allowed in
-	the rendered HTML output.
-	If javascript is allowed, command_link anchors will have javascript code
-	that submits the corresponding form.
-	If javascript is not allowed, the state saving info and nested parameters
-	will be added as url parameters.
-	Default is 'true'</description>
-		<param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
-		<description>
-	If true, rendered HTML code will be formatted, so that it is 'human-readable'
-	i.e. additional line separators and whitespace will be written, that do not
-	influence the HTML code.
-	Default is 'true'
-	</description>
-		<param-name>org.apache.myfaces.PRETTY_HTML</param-name>
-		<param-value>false</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
-		<param-value>false</param-value>
-	</context-param>
-	<context-param>
-		<description>
-	If true, a javascript function will be rendered that is able to restore the
-	former vertical scroll on every request. Convenient feature if you have pages
-	with long lists and you do not want the browser page to always jump to the top
-	if you trigger a link or button action that stays on the same page.
-	Default is 'false'
-    </description>
-		<param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
-		<param-value>false</param-value>
-	</context-param>
+    <context-param>
+        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
+        <param-value>300</param-value>
+    </context-param>
+    <context-param>
+        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
+        <param-value>300</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>resources.application</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            This parameter tells MyFaces if javascript code should be allowed in the rendered HTML output.
+            If javascript is allowed, command_link anchors will have javascript code that submits the corresponding form.
+            If javascript is not allowed, the state saving info and nested parameters will be added as url parameters.
+            Default is 'true'
+        </description>
+        <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            If true, rendered HTML code will be formatted, so that it is 'human-readable'
+            i.e. additional line separators and whitespace will be written, that do not
+            influence the HTML code.
+            Default is 'true'
+        </description>
+        <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            If true, a javascript function will be rendered that is able to restore the
+            former vertical scroll on every request. Convenient feature if you have pages
+            with long lists and you do not want the browser page to always jump to the top
+            if you trigger a link or button action that stays on the same page.
+            Default is 'false'
+        </description>
+        <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
-	<context-param>
-		<param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
-		<param-value>true</param-value>
-	</context-param>
+    <context-param>
+        <param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
-	<context-param>
-		<param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
-		<param-value>true</param-value>
-	</context-param>
+    <context-param>
+        <param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
-	<context-param>
-		<param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
-		<param-value>true</param-value>
-	</context-param>
+    <context-param>
+        <param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
-	<!--
+    <!--
         <listener>
             <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
         </listener>
      -->
 
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.jsf</url-pattern>
-	</servlet-mapping>
-	<context-param>
-		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-		<param-value>.xhtml</param-value>
-	</context-param>
-	<servlet>
-		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
-		<display-name>Simple DownloadServlet</display-name>
-		<servlet-name>downloadServlet</servlet-name>
-		<servlet-class>de.l3s.learnweb.resource.DownloadServlet</servlet-class>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>downloadServlet</servlet-name>
-		<url-pattern>/download/*</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description>Redirects users to the Learnweb or ArchiveWeb Frontpage</description>
-		<display-name>FrontpageServlet</display-name>
-		<servlet-name>frontpageServlet</servlet-name>
-		<servlet-class>de.l3s.learnweb.beans.FrontpageServlet</servlet-class>
-		<load-on-startup>3</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>frontpageServlet</servlet-name>
-		<url-pattern></url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description>Servlet for saving edited documents</description>
-		<display-name>SaverServlet</display-name>
-		<servlet-name>saverServlet</servlet-name>
-		<servlet-class>de.l3s.learnweb.resource.office.SaverServlet</servlet-class>
-		<load-on-startup>4</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>saverServlet</servlet-name>
-		<url-pattern>/save</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description>Servlet for getting document history</description>
-		<display-name>HistoryServlet</display-name>
-		<servlet-name>historyServlet</servlet-name>
-		<servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
-		<load-on-startup>5</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>historyServlet</servlet-name>
-		<url-pattern>/history</url-pattern>
-	</servlet-mapping>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    <context-param>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
+    </context-param>
+    <servlet>
+        <description>Simple Servlet for Streaming Files to the Clients Browser</description>
+        <display-name>Simple DownloadServlet</display-name>
+        <servlet-name>downloadServlet</servlet-name>
+        <servlet-class>de.l3s.learnweb.resource.DownloadServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>downloadServlet</servlet-name>
+        <url-pattern>/download/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <description>Redirects users to the Learnweb or ArchiveWeb Frontpage</description>
+        <display-name>FrontpageServlet</display-name>
+        <servlet-name>frontpageServlet</servlet-name>
+        <servlet-class>de.l3s.learnweb.beans.FrontpageServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>frontpageServlet</servlet-name>
+        <url-pattern></url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <description>Servlet for saving edited documents</description>
+        <display-name>SaverServlet</display-name>
+        <servlet-name>saverServlet</servlet-name>
+        <servlet-class>de.l3s.learnweb.resource.office.SaverServlet</servlet-class>
+        <load-on-startup>4</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>saverServlet</servlet-name>
+        <url-pattern>/save</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <description>Servlet for getting document history</description>
+        <display-name>HistoryServlet</display-name>
+        <servlet-name>historyServlet</servlet-name>
+        <servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>historyServlet</servlet-name>
+        <url-pattern>/history</url-pattern>
+    </servlet-mapping>
 
-	<welcome-file-list>
-		<welcome-file>index.jsf</welcome-file>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
+    <welcome-file-list>
+        <welcome-file>index.jsf</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
 
-	<security-constraint>
-		<display-name>Restrict raw XHTML Documents</display-name>
-		<web-resource-collection>
-			<web-resource-name>XHTML</web-resource-name>
-			<url-pattern>*.xhtml</url-pattern>
-		</web-resource-collection>
-		<auth-constraint />
-	</security-constraint>
+    <security-constraint>
+        <display-name>Restrict raw XHTML Documents</display-name>
+        <web-resource-collection>
+            <web-resource-name>XHTML</web-resource-name>
+            <url-pattern>*.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint/>
+    </security-constraint>
 
-	<!-- replace remote address with real ip from x-forwarded-for header
-	<filter>
-		<filter-name>RemoteIpFilter</filter-name>
-		<filter-class>org.apache.catalina.filters.RemoteIpFilter</filter-class>
-	</filter>
+    <!-- replace remote address with real ip from x-forwarded-for header
+    <filter>
+        <filter-name>RemoteIpFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.RemoteIpFilter</filter-class>
+    </filter>
 
-	<filter-mapping>
-		<filter-name>RemoteIpFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>
- -->
+    <filter-mapping>
+        <filter-name>RemoteIpFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    -->
 </web-app>
