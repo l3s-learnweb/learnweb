@@ -17,9 +17,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.resource.*;
-import de.l3s.learnweb.resource.search.SearchLogManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -33,12 +30,21 @@ import com.google.gson.Gson;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.AbstractPaginator;
+import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.AddFolderBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
+import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
+import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.learnweb.resource.yellMetadata.CategoryTree;
@@ -302,7 +308,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             this.query = null;
         }
-        else if (this.query == null || !this.query.equalsIgnoreCase(query))
+        else if(this.query == null || !this.query.equalsIgnoreCase(query))
         {
             this.query = query;
             log(Action.group_resource_search, groupId, 0, query);
@@ -846,7 +852,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
-                        if (!sourceFolder.isEditPossible()) {
+                        if(!sourceFolder.isEditPossible())
+                        {
                             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceFolder.getLockUsername());
                             return;
                         }
@@ -872,7 +879,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
-                        if (!sourceResource.isEditPossible()) {
+                        if(!sourceResource.isEditPossible())
+                        {
                             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceResource.getLockUsername());
                             return;
                         }
@@ -936,7 +944,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
-                        if (!folder.isEditPossible()) {
+                        if(!folder.isEditPossible())
+                        {
                             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", folder.getLockUsername());
                             return;
                         }
@@ -972,7 +981,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             continue;
                         }
 
-                        if (!resource.isEditPossible()) {
+                        if(!resource.isEditPossible())
+                        {
                             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
                             return;
                         }
@@ -1358,7 +1368,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         getSearchLogger().logGroupQuery(group, query, searchFilters, UtilBean.getUserBean().getLocaleCode(), getUser());
     }
 
-    private SearchLogManager getSearchLogger()
+    private SearchLogManager getSearchLogger() // TODO remove just use getLearnweb().getSearchLogManager() which is already cached
     {
         if(searchLogger == null)
             searchLogger = Learnweb.getInstance().getSearchLogManager();
