@@ -228,8 +228,8 @@ public class Learnweb
             propertiesFileName = "lw_local_luyan";
         else if((new File("F:\\workspace\\lwresources").exists()))
             propertiesFileName = "lw_local_mariia";
-        else if((new File("C:\\Users\\Kate\\Documents\\LEARNWEB").exists()))
-            propertiesFileName = "lw_local_kate";
+        else if((new File("D:\\DevEnv\\Learnweb_resources").exists()))
+            propertiesFileName = "lw_local_kateryna";
         else
             developmentMode = false;
 

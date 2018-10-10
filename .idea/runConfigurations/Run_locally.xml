@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run locally" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 8" ALTERNATIVE_JRE_ENABLED="false">
+    <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8090/" />
     <option name="UPDATE_ON_FRAME_DEACTIVATION" value="true" />
     <deployment>
       <artifact name="Learnweb:war exploded">
@@ -10,6 +11,7 @@
     </deployment>
     <server-settings>
       <option name="BASE_DIRECTORY_NAME" value="Unnamed_Learnweb_2" />
+      <option name="HTTP_PORT" value="8090" />
       <option name="PRESERVE_SESSIONS" value="true" />
     </server-settings>
     <predefined_log_file id="Tomcat" enabled="true" />
@@ -17,6 +19,7 @@
     <predefined_log_file id="Tomcat Manager" enabled="false" />
     <predefined_log_file id="Tomcat Host Manager" enabled="false" />
     <predefined_log_file id="Tomcat Localhost Access" enabled="false" />
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="59182" />
     </RunnerSettings>
@@ -65,8 +68,7 @@
         <option name="PROGRAM_PARAMETERS" value="" />
       </SHUTDOWN>
     </ConfigurationWrapper>
-    <method v="2">
-      <option name="Make" enabled="true" />
+    <method>
       <option name="BuildArtifacts" enabled="true">
         <artifact name="Learnweb:war exploded" />
       </option>
