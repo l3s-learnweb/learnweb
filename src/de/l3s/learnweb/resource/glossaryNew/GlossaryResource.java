@@ -85,7 +85,7 @@ public class GlossaryResource extends Resource implements Serializable
         this.setThumbnail3(iconResource.getThumbnail3());
         this.setThumbnail4(iconResource.getThumbnail4());
         this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + this.getId());
-
+        this.setUser(getUser());
         // save normal resource fields
         super.save();
 

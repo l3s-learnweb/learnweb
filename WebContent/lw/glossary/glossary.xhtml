@@ -168,9 +168,7 @@
 				
 							<p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPreference('term', 'true');"/>
-								<h:inputHidden id="termPasted" value="#{term.termPasted}" />
-								
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPreference('term', 'true');"/>								
 								<p:message for="term" />
 								
 							</p:column>

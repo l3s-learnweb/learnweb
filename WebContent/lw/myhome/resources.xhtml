@@ -87,11 +87,12 @@
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
 						<f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="newResource"/>
 					</p:menuitem>
-					<p:menuitem value="Add Glossary" icon="ui-icon-link" update=":right_pane_wrapper" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+					<p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" update=":right_pane_wrapper" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
-						<f:setPropertyActionListener target="#{addResourceBean.resource.type}" value="glossary"></f:setPropertyActionListener>
+						<f:setPropertyActionListener target="#{addResourceBean.resource.type}" value="glossary2"></f:setPropertyActionListener>
 						<f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="newResource"/>
-					</p:menuitem>			        
+						<f:actionListener binding="#{addResourceBean.setResourceAsGlossary()}"/>
+					</p:menuitem>        
 			    </p:tieredMenu>
 			
 			</h:form>
