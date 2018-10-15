@@ -22,6 +22,7 @@
 
 
 jQuery.migrateVersion = "3.0.1";
+jQuery.migrateMute = true;
 
 /* exported migrateWarn, migrateWarnFunc, migrateWarnProp */
 

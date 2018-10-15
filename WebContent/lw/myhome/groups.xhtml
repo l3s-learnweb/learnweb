@@ -48,9 +48,16 @@
 							<h:outputText value="" />
 															
 							<h:outputText value="#{msg.description}:" />					
-							<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
-								controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
-							</p:editor>
+							<p:textEditor  id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" style="width:22rem;">
+								<f:facet name="toolbar">
+									<span class="ql-formats">
+										<button class="ql-bold"></button>
+										<button class="ql-italic"></button>
+										<button class="ql-underline"></button>
+										<button class="ql-strike"></button>
+									</span>
+								</f:facet>
+							</p:textEditor >
 							<p:message for="new_description" showSummary="true" showDetail="false"/>
 
 							<ui:fragment rendered="false">

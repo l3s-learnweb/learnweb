@@ -525,10 +525,21 @@
                 $("#search_filter_form input").trigger('focus');
                 $("#search_filter_icon").hide();
             });
-
-            updateCarousel();
+           
+           	updateCarousel();
 
             $("#center_pane").prepend($("#group_header")).append($("#paginator"));
+            
+            $(function ()
+            {
+            	$("#center_pane .ui-layout-unit-content").height( $("#center_pane").height() - $("#center_pane #group_header").outerHeight() - $("#center_pane #paginator").outerHeight());
+            });
+             
+
+            
+            
+           
+            
         </script>
     </ui:define>
 
