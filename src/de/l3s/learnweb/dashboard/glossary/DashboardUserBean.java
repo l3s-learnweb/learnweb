@@ -1,4 +1,4 @@
-package de.l3s.learnweb.dashboard;
+package de.l3s.learnweb.dashboard.glossary;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
@@ -49,10 +49,10 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
-    private ArrayList<DashboardManager.DescFieldData> descFieldsStatistic;
+    private ArrayList<DescFieldData> descFieldsStatistic;
     private ArrayList<String> glossaryDescriptions;
     private Map<String, Integer> proxySourcesWithCounters;
-    private LinkedList<DashboardManager.TrackerStatistic> trackerStatistics;
+    private LinkedList<TrackerStatistic> trackerStatistics;
 
     private LineChartModel interactionsChart;
     private BarChartModel usersActivityTypesChart;
@@ -88,7 +88,7 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
         selectedUsersIds = Collections.singletonList(selectedUser.getId());
 
-        dashboardManager = getLearnweb().getDashboardManager();
+        dashboardManager = DashboardManager.getInstance();
 
         fetchDataFromManager();
     }
@@ -156,35 +156,35 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
     public LineChartModel getInteractionsChart()
     {
         if(interactionsChart == null)
-            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
         return interactionsChart;
     }
 
     public BarChartModel getUserFieldsChart()
     {
         if(userFieldsChart == null)
-            userFieldsChart = DashboardChartsFactory.createUserFieldsChart(glossaryFieldsSummeryPerUser);
+            userFieldsChart = GlossaryDashboardChartsFactory.createUserFieldsChart(glossaryFieldsSummeryPerUser);
         return userFieldsChart;
     }
 
     public BarChartModel getUsersActivityTypesChart()
     {
         if(usersActivityTypesChart == null)
-            usersActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
         return usersActivityTypesChart;
     }
 
     public BarChartModel getProxySourcesChart()
     {
         if(proxySourcesChart == null)
-            proxySourcesChart = DashboardChartsFactory.createProxySourcesChart(proxySourcesWithCounters);
+            proxySourcesChart = GlossaryDashboardChartsFactory.createProxySourcesChart(proxySourcesWithCounters);
         return proxySourcesChart;
     }
 
     public PieChartModel getUsersSourcesChart()
     {
         if(usersSourcesChart == null)
-            usersSourcesChart = DashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+            usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
         return usersSourcesChart;
     }
 
@@ -213,16 +213,16 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         return glossaryDescriptions;
     }
 
-    public LinkedList<DashboardManager.TrackerStatistic> getTrackerStatistics()
+    public LinkedList<TrackerStatistic> getTrackerStatistics()
     {
         return trackerStatistics;
     }
 
-    public DashboardManager.TrackerStatistic getSingleTrackerStatistics()
+    public TrackerStatistic getSingleTrackerStatistics()
     {
         if(trackerStatistics.isEmpty())
         {
-            return new DashboardManager.TrackerStatistic();
+            return new TrackerStatistic();
         }
 
         return trackerStatistics.get(0);

@@ -1,4 +1,6 @@
-package de.l3s.learnweb.dashboard;
+package de.l3s.learnweb.dashboard.activity;
+
+import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;

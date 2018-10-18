@@ -1,34 +1,26 @@
-package de.l3s.learnweb.dashboard;
+package de.l3s.learnweb.dashboard.glossary;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
+import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.dashboard.DashboardManager.DescFieldData;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
-import de.l3s.learnweb.user.User;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 @Named
 @SessionScoped
-public class DashboardBean extends ApplicationBean implements Serializable
+public class GlossaryDashboardBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    private static final Logger log = Logger.getLogger(DashboardBean.class);
+    private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
@@ -36,7 +28,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private Date startDate = null;
     private Date endDate = null;
 
-    private DashboardManager dashboardManager = null;
+    private GlossaryDashboardManager dashboardManager = null;
 
     @Inject
     private GlossaryDashboardUsersBean glossaryDashboardUsersBean;
@@ -57,7 +49,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private transient BarChartModel usersGlossaryChart;
     private transient PieChartModel usersSourcesChart;
 
-    public DashboardBean()
+    public GlossaryDashboardBean()
     {
     }
 
@@ -77,7 +69,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            dashboardManager = getLearnweb().getDashboardManager();
+            dashboardManager = new GlossaryDashboardManager();
             if(glossaryDashboardUsersBean.getSelectedUsersIds() == null)
             {
                 glossaryDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
@@ -145,28 +137,28 @@ public class DashboardBean extends ApplicationBean implements Serializable
     public LineChartModel getInteractionsChart()
     {
         if(interactionsChart == null)
-            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
         return interactionsChart;
     }
 
     public BarChartModel getUsersActivityTypesChart()
     {
         if(usersActivityTypesChart == null)
-            usersActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
         return usersActivityTypesChart;
     }
 
     public BarChartModel getUsersGlossaryChart()
     {
         if(usersGlossaryChart == null)
-            usersGlossaryChart = DashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+            usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
         return usersGlossaryChart;
     }
 
     public PieChartModel getUsersSourcesChart()
     {
         if(usersSourcesChart == null)
-            usersSourcesChart = DashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+            usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
         return usersSourcesChart;
     }
 

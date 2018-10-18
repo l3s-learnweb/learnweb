@@ -1,4 +1,4 @@
-package de.l3s.learnweb.dashboard;
+package de.l3s.learnweb.dashboard.activity;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -20,6 +20,7 @@ import javax.inject.Named;
 
 import org.primefaces.model.chart.LineChartModel;
 
+import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
@@ -117,7 +118,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            activityDashboardManager = getLearnweb().getActivityDashboardManager();
+            activityDashboardManager = new ActivityDashboardManager();
             if(activityDashboardUsersBean.getSelectedUsersIds() == null)
             {
                 activityDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
@@ -149,7 +150,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
                 activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
                 data.add(activityData);
             }
-            interactionsChart = DashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
 
         }
         else if(selectedGroupedActions != null && selectedGroupedActions.length != 0)
@@ -162,7 +163,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
                 activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName));
                 data.add(activityData);
             }
-            interactionsChart = DashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
         }
     }
 

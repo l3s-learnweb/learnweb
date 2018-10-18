@@ -1,4 +1,4 @@
-package de.l3s.learnweb.dashboard;
+package de.l3s.learnweb.dashboard.activity;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,10 +16,9 @@ public class ActivityDashboardManager
 {
     private final Learnweb learnweb;
 
-    public ActivityDashboardManager(Learnweb learnweb)
+    public ActivityDashboardManager()
     {
-        super();
-        this.learnweb = learnweb;
+        this.learnweb = Learnweb.getInstance();
     }
 
     public Map<String, Integer> getActionsCountPerDay(Collection<Integer> userIds, Date startDate, Date endDate, String actions) throws SQLException

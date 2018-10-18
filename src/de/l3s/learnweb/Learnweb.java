@@ -14,8 +14,6 @@ import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.dashboard.ActivityDashboardManager;
-import de.l3s.learnweb.dashboard.DashboardManager;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.LinkManager;
@@ -102,11 +100,9 @@ public class Learnweb
     private final RequestManager requestManager;
     private final ProtectionManager protectionManager;
     private final BounceManager bounceManager;
-    private final DashboardManager dashboardManager;
     private final ConverterService serviceConverter;
     private final LogManager logManager;
     private final PeerAssessmentManager peerAssessmentManager;
-    private final ActivityDashboardManager activityDashboardManager;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -316,9 +312,7 @@ public class Learnweb
         surveyManager = new SurveyManager(this);
         submissionManager = new SubmissionManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
-        dashboardManager = DashboardManager.getInstance(this);
         peerAssessmentManager = new PeerAssessmentManager(this);
-        activityDashboardManager = new ActivityDashboardManager(this);
         glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
         logManager = LogManager.getInstance(this);
 
@@ -688,11 +682,6 @@ public class Learnweb
         return service;
     }
 
-    public DashboardManager getDashboardManager()
-    {
-        return dashboardManager;
-    }
-
     public PeerAssessmentManager getPeerAssessmentManager()
     {
         return peerAssessmentManager;
@@ -701,11 +690,6 @@ public class Learnweb
     public de.l3s.learnweb.resource.glossaryNew.GlossaryManager getGlossaryManager()
     {
         return glossaryManager;
-    }
-
-    public ActivityDashboardManager getActivityDashboardManager()
-    {
-        return activityDashboardManager;
     }
 
     public LogManager getLogManager()
