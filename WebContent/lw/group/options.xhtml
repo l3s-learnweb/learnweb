@@ -2,6 +2,7 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
@@ -67,26 +68,27 @@
 	                     [?]
 	                </h:outputLink>
 
-					<ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
+					<c:if test="#{not empty groupOptionsBean.newHypothesisLink}">
 		               	<h:outputLabel value="#{msg.hypothesis_token}:" for="set_hypothesis_token"/>
 						<p:inputText value="#{groupOptionsBean.newHypothesisToken}" id="set_hypothesis_token" style="width:39rem;"/>
 
-						<ui:fragment rendered="#{empty groupOptionsBean.newHypothesisToken}">
-							<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;">
-								<f:param name="type" value="admin"/>
-								[?]
-							</h:outputLink>
-						</ui:fragment>
-						<ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisToken}">
-							<h:outputLink value="admin/group_discussion_activity.jsf" style="text-decoration:underline;">
-								<f:param name="groupID" value="#{groupOptionsBean.groupId}"/>
-								Discussion Activity
-							</h:outputLink>
-						</ui:fragment>
-	               	</ui:fragment>
+						<h:outputLink value="discussion_help.jsf" target="_blank" style="text-decoration:underline;"
+							rendered="#{empty groupOptionsBean.newHypothesisToken}">
+							<f:param name="type" value="admin" />
+							[?]
+						</h:outputLink>
+
+						<h:outputLink value="admin/group_discussion_activity.jsf" style="text-decoration:underline;"
+							rendered="#{not empty groupOptionsBean.newHypothesisToken}">
+							<f:param name="groupID" value="#{groupOptionsBean.groupId}" />
+							Discussion Activity
+						</h:outputLink>
+					</c:if>
 
 					<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}"
                                      update=":growl :group_moderator_form" style="border-radius:0;" />
+					<h:outputText value="" />
+					<h:outputText value="" />
 				</h:panelGrid>
 			</h:form>
 
