@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
@@ -36,6 +37,8 @@ public class JobScheduler
         {
             //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
             scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());
+            //Runs the speech repository crawler at 22:00 once a week to check for new/update of videos
+            scheduler.schedule("0 22 * 1 *", new SpeechRepositoryCrawlerSimple());
         }
 
         //Cleans up expired bans once a week on Sunday at 3:00AM

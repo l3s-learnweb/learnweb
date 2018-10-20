@@ -80,6 +80,7 @@
 .box {
   overflow-y: scroll;
   padding: 0 0 0 40px;
+  height: calc(100vh - 180px);
 }
 
 .box ul {
