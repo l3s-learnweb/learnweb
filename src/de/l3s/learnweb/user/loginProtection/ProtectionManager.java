@@ -55,7 +55,7 @@ public class ProtectionManager
     private final static int CAPTCHA_THRESHOLD = 3;
     private final static int MINUTES_ANALYZED = 10;
     private final static int BAN_THRESHOLD = 100;
-    private final static Path WHITELIST_PATH = Paths.get("whitelist.txt");
+    private final static Path WHITELIST_PATH = Paths.get("whitelist.txt"); // TODO: probably should be changed
 
     public ProtectionManager(Learnweb learnweb)
     {
