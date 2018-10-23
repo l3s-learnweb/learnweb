@@ -187,6 +187,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(folderId > 0)
         {
             selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
+            buildBreadcrumbsForFolder(selectedFolder);
         }
     }
 
