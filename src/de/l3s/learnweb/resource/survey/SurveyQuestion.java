@@ -71,6 +71,12 @@ public class SurveyQuestion implements Serializable
         }
     }
 
+    public SurveyQuestion(QuestionType type, String label)
+    {
+        this(type);
+        setLabel(label);
+    }
+
     public QuestionType getType()
     {
         return type;
@@ -162,7 +168,7 @@ public class SurveyQuestion implements Serializable
 
     /**
      * Temp method for euMade4all delete after the project
-     * 
+     *
      * @return
      */
     public List<String> getEUMadeAnswersWithout()

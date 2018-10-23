@@ -15,12 +15,15 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentManager;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.resource.survey.SurveyManager;
+import de.l3s.learnweb.resource.survey.SurveyQuestion;
+import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.survey.SurveyUserAnswers;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implements Serializable
+public class EUMade4AllStatisticsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5340388635921946783L;
     private static final Logger log = Logger.getLogger(EUMade4AllStatisticsBean.class);
@@ -28,8 +31,14 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
     private int evaluationFormAnswer;
     private int aarhusSurveyAnswer;
     private LinkedList<UserStatistic> userStatistics;
+    private LinkedList<SurveyQuestion> questionColumns;
+    private int assessmentType; // use to filter output by assessment type
 
-    public EUMade4AllStatisticsBean() throws SQLException
+    public EUMade4AllStatisticsBean()
+    {
+    }
+
+    public void onLoad() throws SQLException
     {/*
      if(getUser() == null)
       return;
@@ -38,7 +47,7 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
       addAccessDeniedMessage();
       return;
      }
-
+     
      205861  107     EU-Aarhus,Public
      213674  30      EU-Florence
      204489  31      EU-Leeds
@@ -92,6 +101,9 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
 
             for(PeerAssessmentPair pair : pairs)
             {
+                if(assessmentType != 0 && assessmentType != pair.getPeerAssessment().getSurveyId())
+                    continue;
+
                 // check if the assessed user has submitted the baseline and evaluation surveys
                 SurveyResource baselineSurvey = baselineSurveyAnswers.get(pair.getAssessedUserId());
                 boolean evaluationAnswersSubmitted = evaluationSurvey.isSubmitted(pair.getAssessedUserId());
@@ -99,15 +111,117 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
             }
         }
 
+        questionColumns = new LinkedList<>();
+
+        // add baseline survey
+        questionColumns.add(new SurveyQuestion(QuestionType.INPUT_TEXT, "Baseline"));
+
+        for(SurveyQuestion question : sm.getSurveyResource(205861).getQuestions())
+        {
+            if(question.getType().isReadonly() || question.getLabel().equals("Name:") || question.getLabel().equals("Surname:"))
+                continue;
+
+            questionColumns.add(question);
+        }
+
+        // add evaluation survey
+        questionColumns.add(new SurveyQuestion(QuestionType.INPUT_TEXT, "Evaluation"));
+
+        for(SurveyQuestion question : evaluationSurvey.getQuestions())
+        {
+            if(question.getType().isReadonly() || question.getLabel().equals("Name of Your University:"))
+                continue;
+
+            questionColumns.add(question);
+        }
+
+        if(assessmentType != 0)
+        {
+            questionColumns.add(new SurveyQuestion(QuestionType.INPUT_TEXT, "Peer assessment"));
+
+            for(SurveyQuestion question : getLearnweb().getSurveyManager().getSurvey(assessmentType).getQuestions())
+            {
+                if(question.getType().isReadonly() || question.getLabel().equals("Name of Your University:hj"))
+                    continue;
+
+                questionColumns.add(question);
+            }
+
+            /*
+             15 25 corporate video x
+            16      26 about
+            19      27 fan video
+            20      24 video mediated x
+            21      23 weblogs x
+             */
+
+            int assessmentSurveyId;
+            switch(assessmentType)
+            {
+            case 23:
+                assessmentSurveyId = 21; //webblogs
+                break;
+            case 25:
+                assessmentSurveyId = 15;// corporate video
+                break;
+            case 24:
+                assessmentSurveyId = 20;// video medeiated itneractions
+                break;
+            case 27:
+                assessmentSurveyId = 19;// fan video
+                break;
+            case 26:
+                assessmentSurveyId = 16;// about
+                break;
+            default:
+                addFatalMessage(new RuntimeException("invalid type " + assessmentType));
+                return;
+            }
+
+            questionColumns.add(new SurveyQuestion(QuestionType.INPUT_TEXT, "Teacher's assessment"));
+
+            for(SurveyQuestion question : getLearnweb().getSurveyManager().getSurvey(assessmentSurveyId).getQuestions())
+            {
+                if(question.getType().isReadonly() || question.getLabel().equals("Name of Your University:hj"))
+                    continue;
+
+                questionColumns.add(question);
+            }
+        }
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException
+    public int getAssessmentType()
     {
-        Learnweb lw = Learnweb.createInstance(null);
+        return assessmentType;
+    }
 
-        EUMade4AllStatisticsBean stats = new EUMade4AllStatisticsBean();
+    public String getAssessmentTypeName()
+    {
+        switch(assessmentType)
+        {
+        case 23:
+            return "WEBLOGS";
+        case 25:
+            return "CORPORATE VIDEO";
+        case 24:
+            return "VIDEO MEDIATED INTERACTIONS";
+        case 27:
+            return "FAN VIDEO";
+        case 26:
+            return "ABOUT US PAGE";
+        default:
+            return "unknown";
+        }
+    }
 
-        lw.onDestroy();
+    public void setAssessmentType(int assessmentType)
+    {
+        this.assessmentType = assessmentType;
+    }
+
+    public LinkedList<SurveyQuestion> getQuestionColumns()
+    {
+        return questionColumns;
     }
 
     public int getEvaluationFormAnswer()
@@ -234,6 +348,11 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
             return peerAssessmentPair.getAssessedUserId();
         }
 
+        public User getUser() throws SQLException
+        {
+            return Learnweb.getInstance().getUserManager().getUser(getUserId());
+        }
+
         public PeerAssessmentPair getPeerAssessmentPair()
         {
             return peerAssessmentPair;
@@ -257,6 +376,46 @@ public class EUMade4AllStatisticsBean extends ApplicationDebuggingBean implement
         public int getEvaluationSurveyResourceId()
         {
             return evaluationSurveyResourceId;
+        }
+
+        public String getAnswer(int questionId)
+        {
+            try
+            {
+                SurveyManager sm = Learnweb.getInstance().getSurveyManager();
+
+                // depending on the columnId we have to select the correct survey
+                if(questionId == 0)
+                    return "|";
+                else if(questionId >= 3 && questionId <= 44) // baseline survey
+                {
+                    if(getBaselineSurveyResourceId() < 0)
+                        return "";
+
+                    return sm.getSurveyResource(getBaselineSurveyResourceId()).getAnswersOfUser(getUserId()).getAnswer(questionId);
+                }
+                else if(questionId >= 971 && questionId <= 1005)
+                {
+                    if(getEvaluationSurveyResourceId() < 0)
+                        return "";
+
+                    return sm.getSurveyResource(getEvaluationSurveyResourceId()).getAnswersOfUser(getUserId()).getAnswer(questionId);
+                }
+                else if(questionId >= 71 && questionId <= 397 || questionId >= 1006 && questionId <= 1010) // asessment survey
+                {
+                    return peerAssessmentPair.getAssessment().getSubmittedAnswersOfAllUsers().get(0).getAnswer(questionId); // only one user must have submitted the assessment survey
+                }
+                else // asessment survey
+                {
+                    return peerAssessmentPair.getPeerAssessmentUserAnswers().getAnswer(questionId);
+                }
+
+            }
+            catch(Exception e)
+            {
+                log.error("Can't load survey answer");
+            }
+            return "[System error]";
         }
 
     }

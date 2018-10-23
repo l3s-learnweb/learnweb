@@ -19,7 +19,6 @@ public class PeerAssessmentPair implements Serializable
     private final int submissionId;
     private transient User assessorUser;
     private transient User assessedUser;
-    private transient SurveyUserAnswers peerAssessmentUserAnswers;
 
     /**
      *
@@ -53,9 +52,7 @@ public class PeerAssessmentPair implements Serializable
 
     public SurveyUserAnswers getPeerAssessmentUserAnswers() throws SQLException
     {
-        if(null == peerAssessmentUserAnswers) // load survey details
-            peerAssessmentUserAnswers = getPeerAssessment().getAnswersOfUser(assessorUserId);
-        return peerAssessmentUserAnswers;
+        return getPeerAssessment().getAnswersOfUser(assessorUserId);
     }
 
     public User getAssessorUser() throws SQLException
@@ -74,7 +71,7 @@ public class PeerAssessmentPair implements Serializable
 
     /**
      * Assessor (a student) has assessed the Submission of Assessed with this Peer Assessment.
-     * 
+     *
      * @return
      * @throws SQLException
      */

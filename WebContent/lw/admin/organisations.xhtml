@@ -46,7 +46,7 @@
 				</p:column>	
 				
 				<p:column headerText="#{msg.edit}">	
-					<p:commandButton action="organisation" value="#{msg.edit}">
+					<p:commandButton action="organisation" value="#{msg.edit}" ajax="false">
 						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />				
 					</p:commandButton>			
 				</p:column>	
