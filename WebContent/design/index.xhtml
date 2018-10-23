@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:view contentType="text/html">
+		<h:head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>Hello world!</title>
+
+			<link type="text/css" rel="stylesheet" href="#{request.contextPath}/design/assets/normalize.css" />
+			<link type="text/css" rel="stylesheet" href="#{request.contextPath}/design/assets/primeflex.css" />
+			<link type="text/css" rel="stylesheet" href="#{request.contextPath}/design/assets/main.css" />
+
+			<script src="#{request.contextPath}/design/assets/main.js"></script>
+
+			<base href="#{request.contextPath}/" />
+		</h:head>
+
+		<h:body>
+
+			<div class="p-grid vertical-container" style="height: 200px; background: gray;">
+				<div class="p-col p-col-align-start" style="background: red;">
+					<div class="box">4</div>
+				</div>
+				<div class="p-col p-col-align-center" style="background: blue;">
+					<div class="box">4</div>
+				</div>
+				<div class="p-col p-col-align-end" style="background: green;">
+					<div class="box">4</div>
+				</div>
+			</div>
+
+			<div class="p-grid vertical-container" style="height: 200px;">
+				<div class="p-col p-col-align-center" style="text-align: center">
+					<h:form>
+						<p:growl id="message" showDetail="true" />
+
+						<p:commandButton value="Destroy the World" update="message">
+							<p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+					</h:form>
+				</div>
+			</div>
+	
+		</h:body>
+	</f:view>
+</html>
