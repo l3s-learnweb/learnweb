@@ -61,11 +61,15 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     public ArrayList<User> getUsersList() throws SQLException
     {
         ArrayList<User> users = new ArrayList<>();
-        UserManager userManager = getLearnweb().getUserManager();
-        for(int userId : selectedUsersIds)
-        {
-            users.add(userManager.getUser(userId));
+
+        if (selectedUsersIds != null && selectedUsersIds.size() > 0) {
+            UserManager userManager = getLearnweb().getUserManager();
+            for(int userId : selectedUsersIds)
+            {
+                users.add(userManager.getUser(userId));
+            }
         }
+
         return users;
     }
 
