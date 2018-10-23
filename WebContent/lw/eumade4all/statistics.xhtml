@@ -9,86 +9,189 @@
 	<ui:param name="loginRequired" value="true"/>
 	
 	
-	<ui:define name="center_layout">
-		<style type="text/css">
-		 .ui-datatable {margin-bottom:4rem;}
-		 #statistics_table .ui-dt-c { text-align:center; }
-		</style>
-		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+	<ui:define name="center_layout">				
+	
+		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
 		
-		<div class="ui-datatable ui-widget">
-			<table role="grid" id="statistics_table" >
-				<thead>
-					<tr role="row">
-						<th class="ui-state-default" role="columnheader" style="width:20%">
-							<div class="ui-dt-c">
-								<span></span>
-							</div>
-						</th>
-						<th class="ui-state-default" role="columnheader">
-							<div class="ui-dt-c">
-								<span>Aarhus</span>
-							</div>
-						</th>
-						<th class="ui-state-default" role="columnheader">
-							<div class="ui-dt-c">
-								<span>Florence</span>
-							</div>
-						</th>
-						<th class="ui-state-default" role="columnheader">
-							<div class="ui-dt-c">
-								<span>Leeds</span>
-							</div>
-						</th>
-						<th class="ui-state-default" role="columnheader">
-							<div class="ui-dt-c">
-								<span>Messina</span>
-							</div>
-						</th>
-						<th class="ui-state-default" role="columnheader">
-							<div class="ui-dt-c">
-								<span>Rome</span>
-							</div>
-						</th>
-					</tr>
-				</thead>
-				        
-				<tbody class="ui-datatable-data ui-widget-content">
-					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="">Baseline survey</div></td>
-						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=205861">107</a></div></td>
-						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213674">30</a></div></td>
-						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204489">31</a></div></td>
-						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213673">24</a></div></td>
-						<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204678">82</a></div></td>
-					</tr>
-					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="">Evaluation form</div></td>
-						<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=216012">#{eUMade4AllStatisticsBean.evaluationFormAnswer}</a></div></td>
-					</tr>
-					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="">Students' satisfaction survey</div></td>
-						<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=219453">#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}</a></div></td>
-					</tr>
-					
-					
-				</tbody>
-			</table>
-		</div>	
+		<ui:fragment rendered="#{userBean.moderator}">	
+			<style type="text/css">
+			 .ui-datatable {margin-bottom:4rem;}
+			 #statistics_table .ui-dt-c { text-align:center; }
+			</style>
+			<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+			
+			<div class="ui-datatable ui-widget">
+				<table role="grid" id="statistics_table" >
+					<thead>
+						<tr role="row">
+							<th class="ui-state-default" role="columnheader" style="width:20%">
+								<div class="ui-dt-c">
+									<span></span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Aarhus</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Florence</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Leeds</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Messina</span>
+								</div>
+							</th>
+							<th class="ui-state-default" role="columnheader">
+								<div class="ui-dt-c">
+									<span>Rome</span>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					        
+					<tbody class="ui-datatable-data ui-widget-content">
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Baseline survey</div></td>
+							<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=205861">107</a></div></td>
+							<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213674">30</a></div></td>
+							<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204489">31</a></div></td>
+							<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=213673">24</a></div></td>
+							<td><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=204678">82</a></div></td>
+						</tr>
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Evaluation form</div></td>
+							<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=216012">#{eUMade4AllStatisticsBean.evaluationFormAnswer}</a></div></td>
+						</tr>
+						<tr class="ui-widget-content ui-datatable-even">
+							<td><div class="">Students' satisfaction survey</div></td>
+							<td colspan="5"><div class="ui-dt-c"><a href="https://learnweb.l3s.uni-hannover.de/lw/survey/results.jsf?resource_id=219453">#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}</a></div></td>
+						</tr>
+						
+						
+					</tbody>
+				</table>
+			</div>	
 		
-		 <!-- 		
-		<p:dataTable var="row" value="#{eUMade4AllStatisticsBean.aarhusSurveyAnswer}" >
-			<f:facet name="header">
-		        Surveys
-		    </f:facet>
-    
-		    <p:column headerText="Aarhus">
-		        <h:outputText value="#{row.aarhus}" />
-		        <h:outputLink value="#{row.aarhus.link}">#{row.aarhus.title}</h:outputLink>
-		    </p:column>
-		  
-		</p:dataTable>	
-			 -->
+			<div class="page_header">
+				<span>
+					Detailed User statistics
+				</span>
+			</div>
+			
+			<h:form>
+				<p:panel > 	
+					<p>Each row lists one <b>User</b>, his <b>Submission</b> and the Peer and Teachers <b>Assessement</b> he has retrieved. It shows also the <b>Surveys</b> the user has submitted.</p>
+					
+				</p:panel>
+		
+			
+				<p:dataTable id="processTable" var="stat"
+					value="#{eUMade4AllStatisticsBean.userStatistics}"
+					tableStyle="width: 100%; table-layout:auto"
+					emptyMessage="No pairs found">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="${showEmail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
+							<p:column colspan="3" headerText="Assessment" style="font-size:1.2em"  />
+							<p:column colspan="2" headerText="Surveys" style="font-size:1.2em"  />
+						</p:row>
+
+						<p:row>
+							
+							<p:column headerText="Course"
+								sortBy="#{stat.pair.assessedUser.courses[0].title}">
+							</p:column>
+							<p:column headerText="Student Id"
+								sortBy="#{stat.pair.assessedUser.studentId}">
+							</p:column>
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
+								sortBy="#{stat.pair.assessedUser.email}">
+							</p:column>
+							
+							<p:column headerText="Submission">
+							</p:column>
+
+							<p:column headerText="Peer Assessment" sortBy="#{stat.pair.peerAssessmentSurveyResourceId}">
+							</p:column>
+							
+							<p:column headerText="Teacher's Assessments">
+							</p:column>							
+							
+							<p:column headerText="Baseline">
+							</p:column>
+							
+							<p:column headerText="Evaluation">
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+					
+					<p:column>
+						<h:outputText value="#{stat.pair.assessedUser.courses[0].title}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{stat.pair.assessedUser.studentId}" />
+					</p:column>
+					<p:column rendered="#{showEmail}">
+						<h:outputText value="#{stat.pair.assessedUser.email}" />
+						<h:outputText value="#{stat.pair.assessedUser.id}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLink value="myhome/submission_resources.jsf">
+							<f:param name="user_id" value="#{stat.pair.assessedUserId}"/>
+							<f:param name="submission_id" value="#{stat.pair.submissionId}"/>
+							Submission
+						</h:outputLink>
+					</p:column>
+					
+					<p:column>
+						<h:outputLink value="survey/answer.jsf">
+							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.pair.assessorUserId}" />
+							<h:outputText value="#{stat.pair.peerAssessment.title}" />
+						</h:outputLink>
+					</p:column>
+					
+					<p:column>	
+						<p:repeat var="user" value="#{stat.pair.assessment.usersWhoSubmitted}">	
+							<h:outputLink value="survey/answer.jsf">
+								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}" />							
+								<f:param name="user_id" value="#{user.id}" />							
+								<h:outputText value="#{user.realUsername}" />	 
+							</h:outputLink>
+						</p:repeat>						
+					</p:column>
+					
+					<p:column>
+						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputLink value="survey/answer.jsf" rendered="#{stat.baselineSurveyResourceId gt 0}">
+							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.userId}" />
+							<h:outputText value="Baseline" />
+						</h:outputLink>
+					</p:column>
+					
+						<p:column>
+						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputLink value="survey/answer.jsf" rendered="#{stat.evaluationSurveyResourceId gt 0}">
+							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}" />							
+							<f:param name="user_id" value="#{stat.userId}" />
+							<h:outputText value="Evaluation" />
+						</h:outputLink>
+					</p:column>
+					
+				</p:dataTable>
+			</h:form>
+		</ui:fragment>
 		
 	</ui:define>		
 </ui:composition>

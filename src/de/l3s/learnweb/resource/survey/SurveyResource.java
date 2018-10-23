@@ -145,6 +145,11 @@ public class SurveyResource extends Resource implements Serializable
         return Learnweb.getInstance().getSurveyManager().getUsersWhoSavedSurveyResource(getId());
     }
 
+    public List<User> getUsersWhoSubmitted() throws SQLException
+    {
+        return Learnweb.getInstance().getSurveyManager().getUsersWhoSubmittedSurveyResource(getId());
+    }
+
     @Override
     public Resource save() throws SQLException
     {

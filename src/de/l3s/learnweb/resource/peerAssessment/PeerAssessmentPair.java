@@ -72,6 +72,12 @@ public class PeerAssessmentPair implements Serializable
         return assessedUser;
     }
 
+    /**
+     * Assessor (a student) has assessed the Submission of Assessed with this Peer Assessment.
+     * 
+     * @return
+     * @throws SQLException
+     */
     public SurveyResource getPeerAssessment() throws SQLException
     {
         return (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(peerAssessmentSurveyResourceId);

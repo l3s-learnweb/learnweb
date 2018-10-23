@@ -69,6 +69,7 @@ public class ApplicationDebuggingBean implements Serializable
     /**
      * get a message from the message property files depending on the currently used local
      * // TODO Dupe: the same code exists in UtilBean.getLocaleMessage method
+     * 
      * @param msgKey
      * @param args
      * @return
@@ -174,5 +175,11 @@ public class ApplicationDebuggingBean implements Serializable
     protected void addFatalMessage(String desc, Throwable exception)
     {
         Logger.getLogger(ApplicationDebuggingBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
+    }
+
+    public void addAccessDeniedMessage()
+    {
+        // TODO Auto-generated method stub
+
     }
 }
