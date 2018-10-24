@@ -64,6 +64,8 @@ public class Speechrepository
             resource.setMetadataValue("domains", rs.getString("domains"));
             resource.setMetadataValue("terminology", rs.getString("terminology"));
 
+            log.debug("process entry id " + resource.getIdAtService());
+
             // parse language
             Matcher matcher = languagePattern.matcher(rs.getString("language"));
             int matchCount = 0;
@@ -92,8 +94,7 @@ public class Speechrepository
                 resource.setCreationDate(date);
             }
 
-            resource.setTranscript("");
-            //
+            //resource.setTranscript("");
 
             rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
             resource.setGroup(group);
