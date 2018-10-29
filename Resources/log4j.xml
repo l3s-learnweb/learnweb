@@ -26,7 +26,7 @@
         <param name="SMTPHost" value="l3s.de" />
         <param name="From" value="no-reply@l3s.de" />
       
-        <param name="To" value="kemkes@l3s.de,astappev@l3s.de,kalyani@l3s.de,tolmachova@l3s.de" />
+        <param name="To" value="kemkes@l3s.de,astappev@l3s.de,tolmachova@l3s.de" />
         <param name="Subject" value="[log4J] Error detected on LearnWeb" />
            <!-- 
         <param name="To" value="kemkes@l3s.de,rokicki@l3s.de" />

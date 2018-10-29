@@ -31,7 +31,7 @@ public class ConverterService
     {
         String fileExt = file.getName().substring(file.getName().lastIndexOf("."));
         String key = FileUtility.generateRevisionId(file);
-        return new ConverterRequest(fileExt, "png", file.getName(), file.getName(), key, new OfficeThumbnailParams());
+        return new ConverterRequest(fileExt, "png", file.getName(), file.getUrl(), key, new OfficeThumbnailParams());
     }
 
     public ConverterService(Learnweb learnweb)
@@ -68,7 +68,7 @@ public class ConverterService
 
     public InputStream convert(ConverterRequest request) throws ConverterException, IOException
     {/* test: handle exception in resource preview maker
-
+     
      try
      {*/
         String newFileUrl = getConvertedUri(request);
