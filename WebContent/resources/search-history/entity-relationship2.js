@@ -48,7 +48,9 @@ function bindClickToSessionBlock (selectedGroupId)
 {
 	var sessioncolor =  (selectedGroupId == undefined) ? "#489a83" : "#848484";
 	$('.session_block').on('click', function(e){
-		var element = e.currentTarget;
+        hideSnippet();
+
+        var element = e.currentTarget;
 		var sessionId = element.getAttribute("data-sessionid");
 		var userId = element.getAttribute("data-userid");
 		if(selectedGroupId == undefined){
