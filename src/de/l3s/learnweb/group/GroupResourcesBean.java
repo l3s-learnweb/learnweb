@@ -822,8 +822,17 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
             if(dest != null)
             {
-                targetGroupId = StringHelper.parseInt(dest.getString("groupId"), groupId);
-                targetFolderId = StringHelper.parseInt(dest.getString("folderId"), 0);
+                try {
+                    targetGroupId = Integer.parseInt(dest.getString("groupId"));
+                } catch(JSONException | NumberFormatException e) {
+                    targetGroupId = groupId;
+                }
+
+                try {
+                    targetFolderId = Integer.parseInt(dest.getString("folderId"));
+                } catch(JSONException | NumberFormatException e) {
+                    targetFolderId = 0;
+                }
             }
 
             if(targetGroupId != 0)
