@@ -612,6 +612,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         else
             setOriginalResourceId(old.originalResourceId);
 
+        setMetadata(new HashMap<>(old.getMetadata()));
         /*
         for(File file :files)
         {

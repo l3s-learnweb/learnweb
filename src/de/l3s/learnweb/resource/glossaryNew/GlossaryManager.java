@@ -38,11 +38,12 @@ public class GlossaryManager
             delete(resource);
             return;
         }
-        PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)");
-        insertGlossary.setInt(1, resource.getId());
-        insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages()));
-        insertGlossary.executeQuery();
-
+        try(PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)"))
+        {
+            insertGlossary.setInt(1, resource.getId());
+            insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages()));
+            insertGlossary.executeQuery();
+        }
         if(resource.isClonedButNotPersisted()) // after a resource has been cloned we have to persist the cloned entries
             saveEntries(resource);
     }
