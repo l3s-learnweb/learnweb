@@ -351,7 +351,8 @@ public class GlossaryDashboardChartsFactory
         public void setDescription(String description)
         {
             this.description = description;
-            this.length = description.split(" ").length;
+            if (description != null && !description.isEmpty())
+                this.length = description.split(" ").length;
         }
 
         public String getLang()

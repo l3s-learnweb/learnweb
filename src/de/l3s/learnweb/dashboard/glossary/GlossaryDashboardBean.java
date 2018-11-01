@@ -62,12 +62,10 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         try
         {
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, -1);
+            cal.add(Calendar.MONTH, -3); // load data from last 3 month until now
 
-            String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
-            String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
-            startDate = new Date(Long.parseLong(savedStartDate));
-            endDate = new Date(Long.parseLong(savedEndDate));
+            startDate = new Date(cal.getTimeInMillis());
+            endDate = new Date(new Date().getTime());
 
             dashboardManager = new GlossaryDashboardManager();
             if(glossaryDashboardUsersBean.getSelectedUsersIds() == null)

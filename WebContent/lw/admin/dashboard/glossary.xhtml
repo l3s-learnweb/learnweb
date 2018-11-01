@@ -190,7 +190,7 @@
                                             <p:tooltip for="fieldsTable" value="The amount of fields that were filled by users" />
                                         </f:facet>
                                         <h:panelGrid columns="1">
-                                            <p:dataTable value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list">
+                                            <p:dataTable value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list" emptyMessage="Nothing was found for the user and date range that you selected.">
                                                 <p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
                                                           filterBy="#{gfs.user.username}" filterMatchMode="contains">
                                                     <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
