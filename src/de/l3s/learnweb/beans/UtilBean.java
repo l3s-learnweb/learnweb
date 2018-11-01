@@ -155,4 +155,9 @@ public class UtilBean implements Serializable
             timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
         return timeFormatter.format(date);
     }
+
+    public static String formatValAndPct(int value, int total) {
+        if (total == 0 || value == 0) return "0";
+        return String.format("%d (%.2f%%)", value, (double) value / total * 100);
+    }
 }

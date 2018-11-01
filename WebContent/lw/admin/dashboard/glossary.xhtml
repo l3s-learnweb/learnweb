@@ -187,66 +187,63 @@
                                     <p:panel id="fields" header="Fields" style="margin-bottom:20px">
                                         <f:facet name="actions">
                                             <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                            <p:tooltip for="fieldsTable" value="??" />
+                                            <p:tooltip for="fieldsTable" value="The amount of fields that were filled by users" />
                                         </f:facet>
                                         <h:panelGrid columns="1">
-                                            <p:dataTable value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}" var="gfs"
-                                                         styleClass="countries_list">
-                                                <p:column headerText="#{msg.username}" sortable="true"
-                                                          sortBy="#{gfs.user.username}" filterable="true"
+                                            <p:dataTable value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list">
+                                                <p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
                                                           filterBy="#{gfs.user.username}" filterMatchMode="contains">
                                                     <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
                                                 </p:column>
-                                                <p:column styleClass="align-right" headerText="Terms"
-                                                          sortBy="#{gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" headerText="Total Terms" sortBy="#{gfs.total}" sortable="true">
                                                     #{gfs.total}
                                                 </p:column>
-                                                <p:column styleClass="align-right"
-                                                          sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.total}" sortable="true">
+                                                    <f:facet name="header">Pasted Terms</f:facet>
+                                                    #{utilBean.formatValAndPct(gfs.termsPasted, gfs.total)}
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
                                                     <f:facet name="header">Pronunciation</f:facet>
-
-                                                    <h:outputText value="#{gfs.pronounciation/gfs.total*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
-                                                    </h:outputText>%
+                                                    #{utilBean.formatValAndPct(gfs.pronounciation, gfs.total)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}"
-                                                          sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true">
+                                                    <f:facet name="header">Pasted Pronunciation</f:facet>
+                                                    #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}" sortable="true">
                                                     <f:facet name="header">Acronym</f:facet>
-                                                    <h:outputText value="#{gfs.acronym/gfs.total*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
-                                                    </h:outputText>%
+                                                    #{utilBean.formatValAndPct(gfs.acronym, gfs.total)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}"
-                                                          sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
+                                                    <f:facet name="header">Pasted Acronym</f:facet>
+                                                    #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}" sortable="true">
                                                     <f:facet name="header">Phraseology</f:facet>
-                                                    <h:outputText value="#{gfs.phraseology/gfs.total*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
-                                                    </h:outputText>%
+                                                    #{utilBean.formatValAndPct(gfs.phraseology, gfs.total)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}"
-                                                          sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
+                                                    <f:facet name="header">Pasted Phraseology</f:facet>
+                                                    #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}" sortable="true">
                                                     <f:facet name="header">Uses</f:facet>
-                                                    <h:outputText value="#{gfs.uses/gfs.total*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
-                                                    </h:outputText>%
+                                                    #{utilBean.formatValAndPct(gfs.uses, gfs.total)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}"
-                                                          sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}" sortable="true">
                                                     <f:facet name="header">Source</f:facet>
-                                                    <h:outputText value="#{gfs.source/gfs.total*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
-                                                    </h:outputText>%
+                                                    #{utilBean.formatValAndPct(gfs.source, gfs.total)}
                                                 </p:column>
                                                 <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
                                                     <f:facet name="header">AVG %</f:facet>
                                                     <h:outputText value="#{gfs.avg*100}">
-                                                        <f:convertNumber locale="#{userBean.locale}"
-                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                        <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.totalPastedPct}" sortable="true">
+                                                    <f:facet name="header">Total pasted %</f:facet>
+                                                    <h:outputText value="#{gfs.totalPastedPct*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
                                                     </h:outputText>%
                                                 </p:column>
                                             </p:dataTable>

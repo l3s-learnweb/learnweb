@@ -100,9 +100,13 @@ public class GlossaryDashboardManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT r.owner_user_id, "
                         + "COUNT(*) AS total_terms, "
+                        + "COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
                         + "COUNT( NULLIF( gt.pronounciation, '' ) ) AS pronounciation, "
+                        + "COUNT( NULLIF( gt.pronounciation_pasted, 0 ) ) AS pronounciation_pasted, "
                         + "COUNT( NULLIF( gt.acronym, '' ) ) AS acronym, "
+                        + "COUNT( NULLIF( gt.acronym_pasted, 0 ) ) AS acronym_pasted, "
                         + "COUNT( NULLIF( gt.phraseology, '' ) ) AS phraseology, "
+                        + "COUNT( NULLIF( gt.phraseology_pasted, 0 ) ) AS phraseology_pasted, "
                         + "COUNT( NULLIF( gt.uses, '' ) ) AS uses, "
                         + "COUNT( NULLIF( gt.source, '' ) ) AS source "
                         + "FROM lw_resource r "
@@ -121,9 +125,13 @@ public class GlossaryDashboardManager
                 GlossaryFieldSummery fieldSummery = new GlossaryFieldSummery();
                 fieldSummery.setUserId(rs.getInt("owner_user_id"));
                 fieldSummery.setTotal(rs.getInt("total_terms"));
+                fieldSummery.setTermsPasted(rs.getInt("term_pasted"));
                 fieldSummery.setPronounciation(rs.getInt("pronounciation"));
+                fieldSummery.setPronounciationPasted(rs.getInt("pronounciation_pasted"));
                 fieldSummery.setAcronym(rs.getInt("acronym"));
+                fieldSummery.setAcronymPasted(rs.getInt("acronym_pasted"));
                 fieldSummery.setPhraseology(rs.getInt("phraseology"));
+                fieldSummery.setPhraseologyPasted(rs.getInt("phraseology_pasted"));
                 fieldSummery.setUses(rs.getInt("uses"));
                 fieldSummery.setSource(rs.getInt("source"));
 

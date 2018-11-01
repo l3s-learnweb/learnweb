@@ -522,11 +522,16 @@ public class GlossaryDashboardChartsFactory
     public static class GlossaryFieldSummery implements Serializable
     {
         private static final long serialVersionUID = -4378112533840640208L;
+
         int userId = -1;
         int total;
+        int termsPasted;
         int pronounciation;
+        int pronounciationPasted;
         int acronym;
+        int acronymPasted;
         int phraseology;
+        int phraseologyPasted;
         int uses;
         int source;
 
@@ -535,6 +540,13 @@ public class GlossaryDashboardChartsFactory
         public float getAvg()
         {
             return ((float) (pronounciation + acronym + phraseology + uses + source) / (total * 5));
+        }
+
+        public float getTotalPastedPct()
+        {
+            long totalFields = pronounciation + acronym + phraseology + total;
+            long pastedFields = pronounciationPasted + acronymPasted + phraseologyPasted + termsPasted;
+            return ((float) pastedFields / totalFields);
         }
 
         public User getUser()
@@ -558,7 +570,7 @@ public class GlossaryDashboardChartsFactory
             return userId;
         }
 
-        public void setUserId(int userId)
+        public void setUserId(final int userId)
         {
             this.userId = userId;
         }
@@ -568,9 +580,19 @@ public class GlossaryDashboardChartsFactory
             return total;
         }
 
-        public void setTotal(int total)
+        public void setTotal(final int total)
         {
             this.total = total;
+        }
+
+        public int getTermsPasted()
+        {
+            return termsPasted;
+        }
+
+        public void setTermsPasted(final int termsPasted)
+        {
+            this.termsPasted = termsPasted;
         }
 
         public int getPronounciation()
@@ -578,9 +600,19 @@ public class GlossaryDashboardChartsFactory
             return pronounciation;
         }
 
-        public void setPronounciation(int pronounciation)
+        public void setPronounciation(final int pronounciation)
         {
             this.pronounciation = pronounciation;
+        }
+
+        public int getPronounciationPasted()
+        {
+            return pronounciationPasted;
+        }
+
+        public void setPronounciationPasted(final int pronounciationPasted)
+        {
+            this.pronounciationPasted = pronounciationPasted;
         }
 
         public int getAcronym()
@@ -588,9 +620,19 @@ public class GlossaryDashboardChartsFactory
             return acronym;
         }
 
-        public void setAcronym(int acronym)
+        public void setAcronym(final int acronym)
         {
             this.acronym = acronym;
+        }
+
+        public int getAcronymPasted()
+        {
+            return acronymPasted;
+        }
+
+        public void setAcronymPasted(final int acronymPasted)
+        {
+            this.acronymPasted = acronymPasted;
         }
 
         public int getPhraseology()
@@ -598,9 +640,19 @@ public class GlossaryDashboardChartsFactory
             return phraseology;
         }
 
-        public void setPhraseology(int phraseology)
+        public void setPhraseology(final int phraseology)
         {
             this.phraseology = phraseology;
+        }
+
+        public int getPhraseologyPasted()
+        {
+            return phraseologyPasted;
+        }
+
+        public void setPhraseologyPasted(final int phraseologyPasted)
+        {
+            this.phraseologyPasted = phraseologyPasted;
         }
 
         public int getUses()
@@ -608,7 +660,7 @@ public class GlossaryDashboardChartsFactory
             return uses;
         }
 
-        public void setUses(int uses)
+        public void setUses(final int uses)
         {
             this.uses = uses;
         }
@@ -618,7 +670,7 @@ public class GlossaryDashboardChartsFactory
             return source;
         }
 
-        public void setSource(int source)
+        public void setSource(final int source)
         {
             this.source = source;
         }
