@@ -1,15 +1,24 @@
 package de.l3s.learnweb.dashboard.glossary;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
-import de.l3s.util.StringHelper;
-import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.DescFieldData;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.GlossaryFieldSummery;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.GlossaryStatistic;
+import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.TrackerStatistic;
+import de.l3s.util.StringHelper;
 
 public class GlossaryDashboardManager
 {
@@ -98,8 +107,9 @@ public class GlossaryDashboardManager
         ArrayList<GlossaryFieldSummery> summeries = new ArrayList<>(userIds.size());
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT r.owner_user_id, "
+                "SELECT ge.user_id, "
                         + "COUNT(*) AS total_terms, "
+                        + "COUNT(distinct entry_id) AS entries,"
                         + "COUNT( NULLIF( gt.term_pasted, 0 ) ) AS term_pasted, "
                         + "COUNT( NULLIF( gt.pronounciation, '' ) ) AS pronounciation, "
                         + "COUNT( NULLIF( gt.pronounciation_pasted, 0 ) ) AS pronounciation_pasted, "
@@ -113,8 +123,8 @@ public class GlossaryDashboardManager
                         + "JOIN lw_glossary_entry ge USING(resource_id) "
                         + "JOIN lw_glossary_term gt USING(entry_id) "
                         + "WHERE ge.deleted != 1 AND r.deleted != 1 AND gt.deleted != 1 "
-                        + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
-                        + "AND ge.timestamp BETWEEN ? AND ? GROUP BY r.owner_user_id"))
+                        + "AND ge.user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
+                        + "AND ge.timestamp BETWEEN ? AND ? GROUP BY ge.user_id"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -123,8 +133,9 @@ public class GlossaryDashboardManager
             while(rs.next())
             {
                 GlossaryFieldSummery fieldSummery = new GlossaryFieldSummery();
-                fieldSummery.setUserId(rs.getInt("owner_user_id"));
-                fieldSummery.setTotal(rs.getInt("total_terms"));
+                fieldSummery.setUserId(rs.getInt("user_id"));
+                fieldSummery.setEntries(rs.getInt("entries"));
+                fieldSummery.setTerms(rs.getInt("total_terms"));
                 fieldSummery.setTermsPasted(rs.getInt("term_pasted"));
                 fieldSummery.setPronounciation(rs.getInt("pronounciation"));
                 fieldSummery.setPronounciationPasted(rs.getInt("pronounciation_pasted"));

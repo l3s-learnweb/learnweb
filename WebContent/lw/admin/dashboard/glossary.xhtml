@@ -195,44 +195,47 @@
                                                           filterBy="#{gfs.user.username}" filterMatchMode="contains">
                                                     <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
                                                 </p:column>
-                                                <p:column styleClass="align-right" headerText="Total Terms" sortBy="#{gfs.total}" sortable="true">
-                                                    #{gfs.total}
+                                                <p:column styleClass="align-right" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
+                                                    #{gfs.entries}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
+                                                    #{gfs.terms}
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Pasted Terms</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.termsPasted, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Pronunciation</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.pronounciation, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
                                                 </p:column>
                                                 <p:column styleClass="align-right" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true">
                                                     <f:facet name="header">Pasted Pronunciation</f:facet>
                                                     #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Acronym</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.acronym, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
                                                 </p:column>
                                                 <p:column styleClass="align-right" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
                                                     <f:facet name="header">Pasted Acronym</f:facet>
                                                     #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Phraseology</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.phraseology, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
                                                 </p:column>
                                                 <p:column styleClass="align-right" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
                                                     <f:facet name="header">Pasted Phraseology</f:facet>
                                                     #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Uses</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.uses, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
                                                 </p:column>
-                                                <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}" sortable="true">
+                                                <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.terms}" sortable="true">
                                                     <f:facet name="header">Source</f:facet>
-                                                    #{utilBean.formatValAndPct(gfs.source, gfs.total)}
+                                                    #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
                                                 </p:column>
                                                 <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
                                                     <f:facet name="header">AVG %</f:facet>
@@ -252,6 +255,7 @@
                                 </h:form>
                             </div>
                         </div>
+                        <!-- 
                         <div class="ui-g">
                             <div class="ui-g-12">
                                 <h:form>
@@ -285,17 +289,10 @@
                                 </h:form>
                             </div>
                         </div>
+                         -->
                     </h:panelGroup>
                 </div>
             </div>
-
-            <footer>
-                <div class="pull-right">
-                    Davide Taibi
-                    <a href="http://www.itd.cnr.it">CNR-ITD</a>
-                </div>
-                <div class="clearfix"></div>
-            </footer>
         </div>
     </ui:define>
 </ui:composition>

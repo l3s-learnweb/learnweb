@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.Validate;
 
 import scala.collection.mutable.StringBuilder;
@@ -141,7 +142,8 @@ public class GlossaryEntry implements Serializable
 
     public void setDescriptionPasted(boolean onPasteDescription)
     {
-        this.descriptionPasted = onPasteDescription;
+        if(!StringUtils.isEmpty(description))
+            this.descriptionPasted = onPasteDescription;
     }
 
     public int getId()

@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.l3s.util.StringHelper;
 
 public class GlossaryTerm implements Serializable
@@ -166,7 +168,8 @@ public class GlossaryTerm implements Serializable
 
     public void setTermPasted(boolean termPasted)
     {
-        this.termPasted = termPasted;
+        if(!StringUtils.isEmpty(term))
+            this.termPasted = termPasted;
     }
 
     public boolean isPronounciationPasted()
@@ -176,7 +179,8 @@ public class GlossaryTerm implements Serializable
 
     public void setPronounciationPasted(boolean pronounciationPasted)
     {
-        this.pronounciationPasted = pronounciationPasted;
+        if(!StringUtils.isEmpty(pronounciation))
+            this.pronounciationPasted = pronounciationPasted;
     }
 
     public boolean isAcronymPasted()
@@ -186,7 +190,8 @@ public class GlossaryTerm implements Serializable
 
     public void setAcronymPasted(boolean acronymPasted)
     {
-        this.acronymPasted = acronymPasted;
+        if(!StringUtils.isEmpty(acronym))
+            this.acronymPasted = acronymPasted;
     }
 
     public boolean isPhraseologyPasted()
@@ -196,7 +201,8 @@ public class GlossaryTerm implements Serializable
 
     public void setPhraseologyPasted(boolean phraseologyPasted)
     {
-        this.phraseologyPasted = phraseologyPasted;
+        if(!StringUtils.isEmpty(phraseology))
+            this.phraseologyPasted = phraseologyPasted;
     }
 
     public int getUserId()

@@ -15,7 +15,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.google.common.net.InetAddresses;
 
-import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
@@ -158,7 +157,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         String viewId = getFacesContext().getViewRoot().getViewId();
         if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml") && moderatorUserId > 0)
         {
-            return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
+            return userOrganisation.getWelcomePage() + "?faces-redirect=true";
         }
 
         // otherwise reload his last page
@@ -169,7 +168,6 @@ public class LoginBean extends ApplicationBean implements Serializable
     {
         UserBean userBean = UtilBean.getUserBean();
         User user = userBean.getUser();
-        int organisationId = user.getOrganisationId();
         String logoutPage = user.getOrganisation().getLogoutPage();
 
         if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator logs out from a user account
@@ -184,14 +182,17 @@ public class LoginBean extends ApplicationBean implements Serializable
             getFacesContext().getExternalContext().invalidateSession(); // end session
         }
 
-        // TODO Philipp implement logoutPage
+        return logoutPage + "faces-redirect=true";
 
+        /*
+        int organisationId = user.getOrganisationId();
         if(getLearnweb().getService() == SERVICE.AMA)
             return "/ama/index.xhtml?faces-redirect=true";
         if(organisationId == 848) // is archive web course
             return "/aw/index.xhtml?faces-redirect=true";
         else
             return "/lw/index.xhtml?faces-redirect=true";
+            */
     }
 
     public ConfirmRequiredBean getConfirmRequiredBean()

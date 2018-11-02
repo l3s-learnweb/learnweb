@@ -158,19 +158,24 @@
 							<h:outputText value="" />
 							
 							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
-							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" pt:onpaste="setPreference('description', 'true');" requiredMessage="#{msg['Glossary.description_message']}" />
-							<p:message for="description" />
-							
-						</p:panelGrid>
+							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
+							<p:message for="description" />							
+						</p:panelGrid>						
+						
+	        			<h:inputHidden value="#{glossaryBeanNEW.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
 						
 						<br />
 						<p:dataTable value="#{glossaryBeanNEW.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
-				
+        					
 							<p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPreference('term', 'true');"/>								
-								<p:message for="term" />
-								
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPasteStatus(this, 'term');"/>								
+								<p:message for="term" />								
+									
+	        					<h:inputHidden value="#{term.termPasted}" id="paste_status_term"></h:inputHidden>
+	        					<h:inputHidden value="#{term.pronounciationPasted}" id="paste_status_pronounciation"></h:inputHidden>
+	        					<h:inputHidden value="#{term.acronymPasted}" id="paste_status_acronym"></h:inputHidden>
+	        					<h:inputHidden value="#{term.phraseologyPasted}" id="paste_status_phraseology"></h:inputHidden>								
 							</p:column>
 							
 							<p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
@@ -189,11 +194,11 @@
 							</p:column>
 							<p:column headerText="#{msg['Glossary.pronounciation']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="pronoun" value='#{term.pronounciation}' style="width: 90%" pt:onpaste="setPreference('pronounciation', 'true');" />
+								<p:inputText id="pronoun" value='#{term.pronounciation}' style="width: 90%" pt:onpaste="setPasteStatus(this, 'pronounciation');" />
 							</p:column>
 							<p:column headerText="#{msg['Glossary.acronym']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="acro" value='#{term.acronym}' style="width: 90%" pt:onpaste="setPreference('acronym', 'true');" />
+								<p:inputText id="acro" value='#{term.acronym}' style="width: 90%" pt:onpaste="setPasteStatus(this, 'acronym');" />
 							</p:column>
 							<p:column headerText="#{msg.source}" rendered="#{not term.deleted}">
 
@@ -213,7 +218,7 @@
 							</p:column>
 							<p:column headerText="#{msg['Glossary.phraseology']}" rendered="#{not term.deleted}">
 
-								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" pt:onpaste="setPreference('phraseology', 'true');"/>
+								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" pt:onpaste="setPasteStatus(this, 'phraseology');"/>
 							</p:column>
 							<p:column width="10" rendered="#{not term.deleted}">
 								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms :growl">
@@ -298,6 +303,11 @@
 			$(document).ready(function() {
 				groupRow();
 			});
+			
+			function setPasteStatus(element, field)
+			{
+				console.log($(element).attr('id'), field);
+			}
 			//]]>
 		</script>
 		<ui:fragment rendered="#{glossaryBeanNEW.resourceId le 0}">

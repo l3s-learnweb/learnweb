@@ -140,7 +140,7 @@ public class DashboardManager
             {
                 GlossaryFieldSummery fieldSummery = new GlossaryFieldSummery();
                 fieldSummery.setUserId(rs.getInt("owner_user_id"));
-                fieldSummery.setTotal(rs.getInt("count"));
+                fieldSummery.setTerms(rs.getInt("count"));
                 fieldSummery.setPronounciation(rs.getInt("pronounciation"));
                 fieldSummery.setAcronym(rs.getInt("acronym"));
                 fieldSummery.setPhraseology(rs.getInt("phraseology"));

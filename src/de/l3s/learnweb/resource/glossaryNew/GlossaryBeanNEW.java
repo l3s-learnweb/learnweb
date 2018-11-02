@@ -123,8 +123,16 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         //to reset fulltext search
         formEntry.setFulltext(null);
 
-        //Set Pasted values to true for given entry
-        setPastedValues();
+        //set last changed by user id for terms
+        for(GlossaryTerm term : formEntry.getTerms())
+        {
+            // TODO check if the term was really modified
+
+            term.setLastChangedByUserId(getUser().getId());
+            //log term edit actions
+            if(term.getId() > 0)
+                log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
+        }
 
         if(formEntry.getTerms().size() == numberOfDeletedTerms())
         {
@@ -149,25 +157,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         setNewFormEntry();
         return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
-
-    }
-
-    private void setPastedValues()
-    {
-        formEntry.setDescriptionPasted(Boolean.parseBoolean(getPreference("description", "yes")));
-        for(GlossaryTerm term : formEntry.getTerms())
-        {
-            term.setTermPasted(Boolean.parseBoolean(getPreference("term", "yes")));
-            term.setPronounciationPasted(Boolean.parseBoolean(getPreference("pronounciation", "yes")));
-            term.setAcronymPasted(Boolean.parseBoolean(getPreference("acronym", "yes")));
-            term.setPhraseologyPasted(Boolean.parseBoolean(getPreference("phraseology", "yes")));
-
-            //set last changed by user id for terms
-            term.setLastChangedByUserId(getUser().getId());
-            //log term edit actions
-            if(term.getId() > 0)
-                log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
-        }
 
     }
 
@@ -442,7 +431,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

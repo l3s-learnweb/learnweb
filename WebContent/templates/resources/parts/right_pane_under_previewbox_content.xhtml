@@ -72,18 +72,7 @@
 			</tr>
 		</ui:fragment>
 
-		<ui:fragment
-			rendered="#{userBean.optionContentAnnotationFieldEnabled and rightPaneBean.clickedResource.type eq 'website'}">
-			<tr>
-				<td><span class="resource_field"> #{msg.content}: </span></td>
-				<td><h:outputLink value="resource_transcript.jsf"
-						style="text-decoration:underline;">
-						<f:param name="resource_id"
-							value="#{rightPaneBean.clickedResource.id}" />
-                                        #{msg.link_to_content}
-                                    </h:outputLink></td>
-			</tr>
-		</ui:fragment>
+
 
 		<ui:fragment
 			rendered="#{not empty rightPaneBean.clickedResource.group and rightPaneBean.clickedResource.type eq 'website' and not empty rightPaneBean.clickedResource.group.hypothesisLink}">
@@ -227,6 +216,19 @@
                                     </h:outputLink></td>
 			</tr>
 		</ui:fragment>
+		
+		<ui:fragment
+			rendered="#{(userBean.optionContentAnnotationFieldEnabled and rightPaneBean.clickedResource.type eq 'website')}">
+			<tr>
+				<td><span class="resource_field"> #{msg.content}: </span></td>
+				<td><h:outputLink value="resource_transcript.jsf" style="text-decoration:underline;">
+						<f:param name="resource_id"
+							value="#{rightPaneBean.clickedResource.id}" />
+                                        #{msg.link_to_content}
+                                    </h:outputLink></td>
+			</tr>
+		</ui:fragment>
+				
 		<ui:fragment
 			rendered="${not empty rightPaneBean.clickedResource.creationDate}">
 			<tr>

@@ -10,9 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.StringHelper;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -25,10 +22,13 @@ import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
+import de.l3s.util.StringHelper;
 
 public class GlossaryDashboardChartsFactory
 {
@@ -351,7 +351,7 @@ public class GlossaryDashboardChartsFactory
         public void setDescription(String description)
         {
             this.description = description;
-            if (description != null && !description.isEmpty())
+            if(description != null && !description.isEmpty())
                 this.length = description.split(" ").length;
         }
 
@@ -524,28 +524,29 @@ public class GlossaryDashboardChartsFactory
     {
         private static final long serialVersionUID = -4378112533840640208L;
 
-        int userId = -1;
-        int total;
-        int termsPasted;
-        int pronounciation;
-        int pronounciationPasted;
-        int acronym;
-        int acronymPasted;
-        int phraseology;
-        int phraseologyPasted;
-        int uses;
-        int source;
+        private int userId = -1;
+        private int terms;
+        private int termsPasted;
+        private int pronounciation;
+        private int pronounciationPasted;
+        private int acronym;
+        private int acronymPasted;
+        private int phraseology;
+        private int phraseologyPasted;
+        private int uses;
+        private int source;
+        private int entries;
 
         private transient User user;
 
         public float getAvg()
         {
-            return ((float) (pronounciation + acronym + phraseology + uses + source) / (total * 5));
+            return ((float) (pronounciation + acronym + phraseology + uses + source) / (terms * 5));
         }
 
         public float getTotalPastedPct()
         {
-            long totalFields = pronounciation + acronym + phraseology + total;
+            long totalFields = pronounciation + acronym + phraseology + terms;
             long pastedFields = pronounciationPasted + acronymPasted + phraseologyPasted + termsPasted;
             return ((float) pastedFields / totalFields);
         }
@@ -566,6 +567,16 @@ public class GlossaryDashboardChartsFactory
             return user;
         }
 
+        public int getEntries()
+        {
+            return entries;
+        }
+
+        public void setEntries(int entries)
+        {
+            this.entries = entries;
+        }
+
         public int getUserId()
         {
             return userId;
@@ -576,14 +587,14 @@ public class GlossaryDashboardChartsFactory
             this.userId = userId;
         }
 
-        public int getTotal()
+        public int getTerms()
         {
-            return total;
+            return terms;
         }
 
-        public void setTotal(final int total)
+        public void setTerms(final int total)
         {
-            this.total = total;
+            this.terms = total;
         }
 
         public int getTermsPasted()
