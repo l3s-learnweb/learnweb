@@ -45,9 +45,14 @@ public class GlossaryTableView
         return term.getTerm();
     }
 
-    public String getLanguage()
+    public Locale getLanguage()
     {
-        return new Locale(term.getLanguage()).getDisplayLanguage();
+        return term.getLanguage();
+    }
+
+    public String getLanguageTag()
+    {
+        return term.getLanguage().toLanguageTag();
     }
 
     public String getUses()

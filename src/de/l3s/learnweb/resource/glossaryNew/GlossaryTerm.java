@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.constraints.Size;
 
@@ -29,9 +30,9 @@ public class GlossaryTerm implements Serializable
     @Size(max = 100)
     private String acronym;
     private String source;
-    @Size(max = 500)
+    @Size(max = 1500)
     private String phraseology;
-    private String language; //TODO:: change to locale when PF bug resolved
+    private Locale language; //TODO:: change to locale when PF bug resolved
     private Timestamp timestamp;
     private boolean termPasted = false;
     private boolean pronounciationPasted = false;
@@ -141,12 +142,12 @@ public class GlossaryTerm implements Serializable
         this.phraseology = phraseology;
     }
 
-    public String getLanguage()
+    public Locale getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(String language)
+    public void setLanguage(Locale language)
     {
         this.language = language;
     }

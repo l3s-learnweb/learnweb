@@ -23,7 +23,7 @@
 				
 				<h:form id= "form" prependId="false">
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
-						paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 10 : 0}" paginatorPosition="bottom"
+						paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
 						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
@@ -75,7 +75,7 @@
 							<h:outputText value="#{item.term}" />
 						</p:column>
 						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}">
-							<h:outputText value="#{item.language}" />
+							<h:outputText value="#{msg['language_' += item.languageTag]}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}">
 							<h:outputText value="#{item.uses}" />
@@ -98,7 +98,7 @@
 					</p:dataTable>
 					
 					<p:panelGrid columns="4" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
-						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.getCount()}" style="text-align:center;"
+						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.entryCount}" style="text-align:center;"
 							styleClass="glossary_footer_text"></h:outputText>
 						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
 							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
@@ -110,7 +110,7 @@
 							<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
 						<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this"
-							rendered="#{glossaryBeanNEW.getCount() >= 10}">
+							rendered="#{glossaryBeanNEW.entryCount >= 100}">
 							<h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();" />
 						</p:commandLink>
 					</p:panelGrid>
@@ -179,7 +179,7 @@
 							</p:column>
 							
 							<p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
-								<p:selectOneMenu id="language" value="#{term.language}">
+								<p:selectOneMenu id="language" value="#{term.language}" converter="#{localeConverter}">
 									<f:selectItems value="#{glossaryBeanNEW.allowedTermLanguages}" />
 								</p:selectOneMenu>
 								<p:message for="language" />
@@ -306,7 +306,11 @@
 			
 			function setPasteStatus(element, field)
 			{
-				console.log($(element).attr('id'), field);
+				var id = $(element).attr('id');
+				id = id.substring(0, id.lastIndexOf(':'));
+				id = id +":paste_status_"+ field;
+				id = "#"+ id.replace(/:/g, '\\:'); //  need to escape : for jquery
+				$(id).val('true');				
 			}
 			//]]>
 		</script>

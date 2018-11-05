@@ -156,8 +156,6 @@ public class LanguageBundle extends ResourceBundle
         System.out.println(new Locale("nl"));
         System.out.println(new Locale("en"));
 
-        System.exit(1);
-
         Locale locale = new Locale("de", "DE", "");
 
         log.debug(locale + "; " + locale.toLanguageTag());
@@ -168,7 +166,7 @@ public class LanguageBundle extends ResourceBundle
         log.debug(bundle.getString("register_account_already_wizard"));
         log.debug(bundle.getString("register_lw_account_wizard"));
 
-        locale = new Locale("de");
+        locale = new Locale("en", "UK");
         bundle = new LanguageBundle(locale);
         System.out.println(bundle.getString("homepageTitle"));
         bundle = new LanguageBundle(locale);

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -224,7 +225,7 @@ public class GlossaryManager
             termUpdate.setInt(1, term.getEntryId());
             termUpdate.setBoolean(2, term.isDeleted());
             termUpdate.setString(3, term.getTerm());
-            termUpdate.setString(4, term.getLanguage());
+            termUpdate.setString(4, term.getLanguage().toLanguageTag());
             termUpdate.setString(5, String.join(",", term.getUses()));
             termUpdate.setString(6, term.getPronounciation());
             termUpdate.setString(7, term.getAcronym());
@@ -254,7 +255,7 @@ public class GlossaryManager
             termInsert.setInt(3, entry.getLastChangedByUserId());
             termInsert.setInt(4, entry.getUserId());
             termInsert.setString(5, term.getTerm());
-            termInsert.setString(6, term.getLanguage());
+            termInsert.setString(6, term.getLanguage().toLanguageTag());
             termInsert.setString(7, String.join(",", term.getUses()));
             termInsert.setString(8, term.getPronounciation());
             termInsert.setString(9, term.getAcronym());
@@ -326,7 +327,7 @@ public class GlossaryManager
                 term.setId(terms.getInt("term_id"));
                 term.setUserId(terms.getInt("user_id"));
                 term.setTerm(terms.getString("term"));
-                term.setLanguage(terms.getString("language"));
+                term.setLanguage(Locale.forLanguageTag(terms.getString("language")));
                 term.setUses(terms.getString("uses").isEmpty() ? new ArrayList<String>() : Arrays.asList(terms.getString("uses").split(",")));
                 term.setPronounciation(terms.getString("pronounciation"));
                 term.setAcronym(terms.getString("acronym"));

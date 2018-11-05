@@ -23,11 +23,14 @@ public class GlossaryEntry implements Serializable
     private int userId; // the user who created this entry
     private int lastChangedByUserId;
     private Timestamp timestamp;
+    @Size(max = 900)
     private String description;
     private boolean descriptionPasted = false;
-    @Size(max = 100)
+    @Size(max = 90)
     private String topicOne;
+    @Size(max = 90)
     private String topicTwo;
+    @Size(max = 90)
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; //fulltext search in glossary

@@ -431,7 +431,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -487,7 +487,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         this.filteredTableItems = filteredTableItems;
     }
 
-    public int getCount()
+    public int getEntryCount()
     {
         return glossaryResource.getEntries().size();
 
