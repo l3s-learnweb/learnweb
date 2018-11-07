@@ -25,7 +25,10 @@
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
 						paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
 						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						draggableColumns="false"
+						resizableColumns="false"
+						>
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
@@ -42,7 +45,7 @@
 						<p:column headerText="glossary ID" style="display:none" exportable="false">
 							<h:outputText value="#{item.entryId}"></h:outputText>
 						</p:column>
-						<p:column style=" width:20px;" exportable="false">
+						<p:column style=" width:20px;" exportable="false" >
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />
 							</p:commandLink>
@@ -158,7 +161,7 @@
 							<h:outputText value="" />
 							
 							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
-							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="true" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
+							<p:inputText id="description" value="#{glossaryBeanNEW.formEntry.description}" styleClass="inputfield" required="#{glossaryBeanNEW.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
 							<p:message for="description" />							
 						</p:panelGrid>						
 						

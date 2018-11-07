@@ -38,7 +38,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Resource_Show_Content_Annotation_Field,
         Privacy_Logging_disabled,
         Privacy_Tracker_disabled,
-        Users_Hide_language_switch
+        Users_Hide_language_switch,
+        Glossary_Add_Watermark,
+        Glossary_Mandatory_Description
     }
 
     private int id;

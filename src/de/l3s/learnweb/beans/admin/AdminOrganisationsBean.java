@@ -162,14 +162,17 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
         if(null == availableGlossaryLanguages)
         {
             ArrayList<Locale> glossaryLanguages = new ArrayList<>(4);
+            glossaryLanguages.add(new Locale("ar"));
             glossaryLanguages.add(new Locale("de"));
+            glossaryLanguages.add(new Locale("el"));
+            glossaryLanguages.add(new Locale("en"));
+            glossaryLanguages.add(new Locale("es"));
+            glossaryLanguages.add(new Locale("fr"));
             glossaryLanguages.add(new Locale("it"));
             glossaryLanguages.add(new Locale("nl"));
-            glossaryLanguages.add(new Locale("en"));
-            glossaryLanguages.add(new Locale("fr"));
-            glossaryLanguages.add(new Locale("es"));
             glossaryLanguages.add(new Locale("pt"));
             glossaryLanguages.add(new Locale("ru"));
+            glossaryLanguages.add(new Locale("sv"));
             glossaryLanguages.add(new Locale("zh"));
             availableGlossaryLanguages = new ArrayList<>();
 

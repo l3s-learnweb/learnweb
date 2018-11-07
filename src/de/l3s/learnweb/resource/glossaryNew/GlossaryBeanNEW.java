@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -40,6 +41,7 @@ import com.lowagie.text.PageSize;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -59,6 +61,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<SelectItem> availableTopicThree = new ArrayList<>();
     private boolean paginator = true;
     private String toggleLabel = "Show All";
+    private boolean optionMandatoryDescription;
 
     public void onLoad() throws SQLException
     {
@@ -81,6 +84,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         loadGlossaryTable(glossaryResource);
         setFilteredTableItems(tableItems);
         setNewFormEntry();
+
+        optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
 
     }
 
@@ -173,7 +178,10 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         formEntry = new GlossaryEntry();
         formEntry.setResourceId(resourceId);
-        formEntry.addTerm(new GlossaryTerm());
+
+        // add two terms
+        addTerm();
+        addTerm();
     }
 
     public String deleteEntry(GlossaryTableView row)
@@ -232,8 +240,19 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void addTerm()
     {
-        formEntry.addTerm(new GlossaryTerm());
+        GlossaryTerm newTerm = new GlossaryTerm();
 
+        // find a language that is not used yet in this entry
+        List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
+        for(GlossaryTerm term : formEntry.getTerms())
+        {
+            unusedLanguages.remove(term.getLanguage());
+        }
+        if(unusedLanguages.size() == 0) // all languages have been used in this glossary
+            unusedLanguages = glossaryResource.getAllowedLanguages();
+
+        newTerm.setLanguage(unusedLanguages.get(0));
+        formEntry.addTerm(newTerm);
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
@@ -322,81 +341,83 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     {
         try
         {
-            log.debug("post processing glossary xls");
-
-            HSSFWorkbook wb = (HSSFWorkbook) document;
-
-            HSSFSheet sheet = wb.getSheetAt(0);
-
-            HSSFRow row0 = sheet.getRow(1);
-            HSSFCell cell0;
-
-            File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
-
-            InputStream is = new FileInputStream(watermark);
-
-            byte[] bytes = IOUtils.toByteArray(is);
-            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-            is.close();
-            CreationHelper helper = wb.getCreationHelper();
-            Drawing drawing = sheet.createDrawingPatriarch();
-            ClientAnchor anchor = helper.createClientAnchor();
-            anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
-
-            if(row0 != null)
+            if(getUser().getOrganisation().getOption(Option.Glossary_Add_Watermark))
             {
-                cell0 = row0.getCell(0);
-            }
-            else
-            {
+                log.debug("post processing glossary xls");
 
-                return;
-            }
+                HSSFWorkbook wb = (HSSFWorkbook) document;
 
-            for(int i = 2; i <= sheet.getLastRowNum(); i++)
-            {
-                HSSFRow row = sheet.getRow(i);
-                HSSFCell cell = row.getCell(0);
+                HSSFSheet sheet = wb.getSheetAt(0);
 
-                if(cell != null)
+                HSSFRow row0 = sheet.getRow(1);
+                HSSFCell cell0;
+
+                File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
+
+                InputStream is = new FileInputStream(watermark);
+
+                byte[] bytes = IOUtils.toByteArray(is);
+                int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+                is.close();
+                CreationHelper helper = wb.getCreationHelper();
+                Drawing drawing = sheet.createDrawingPatriarch();
+                ClientAnchor anchor = helper.createClientAnchor();
+                anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
+
+                if(row0 != null)
                 {
-                    cell.setCellValue(cell.getStringCellValue());
-                    if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
-                    {
-                        cell0.setCellValue(cell0.getStringCellValue());
-                        continue;
-                    }
-                    else
-                    {
-                        int rowIndex = i;
-                        if(sheet.getRow(rowIndex).getCell(0) != null)
-                        {
-                            cell0 = sheet.getRow(rowIndex).getCell(0);
-                            sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
-                        }
-                    }
+                    cell0 = row0.getCell(0);
+                }
+                else
+                {
+
+                    return;
                 }
 
+                for(int i = 2; i <= sheet.getLastRowNum(); i++)
+                {
+                    HSSFRow row = sheet.getRow(i);
+                    HSSFCell cell = row.getCell(0);
+
+                    if(cell != null)
+                    {
+                        cell.setCellValue(cell.getStringCellValue());
+                        if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
+                        {
+                            cell0.setCellValue(cell0.getStringCellValue());
+                            continue;
+                        }
+                        else
+                        {
+                            int rowIndex = i;
+                            if(sheet.getRow(rowIndex).getCell(0) != null)
+                            {
+                                cell0 = sheet.getRow(rowIndex).getCell(0);
+                                sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
+                            }
+                        }
+                    }
+
+                }
+
+                //Set owner details
+
+                //set top-left corner of the picture,
+                //subsequent call of Picture#resize() will operate relative to it
+                int row1 = (sheet.getLastRowNum() / 4);
+                int row2 = ((sheet.getLastRowNum() / 4) * 3);
+                anchor.setCol1(3);
+                anchor.setRow1(row1);
+                anchor.setCol2(10);
+                anchor.setRow2(row2);
+
+                //Picture pict =
+                drawing.createPicture(anchor, pictureIdx);
+                HSSFCellStyle copyrightStyle = wb.createCellStyle();
+                copyrightStyle.setLocked(true);
+                sheet.protectSheet("learnweb");
+                watermark.delete();
             }
-
-            //Set owner details
-
-            //set top-left corner of the picture,
-            //subsequent call of Picture#resize() will operate relative to it
-            int row1 = (sheet.getLastRowNum() / 4);
-            int row2 = ((sheet.getLastRowNum() / 4) * 3);
-            anchor.setCol1(3);
-            anchor.setRow1(row1);
-            anchor.setCol2(10);
-            anchor.setRow2(row2);
-
-            //Picture pict =
-            drawing.createPicture(anchor, pictureIdx);
-            HSSFCellStyle copyrightStyle = wb.createCellStyle();
-            copyrightStyle.setLocked(true);
-            sheet.protectSheet("learnweb");
-            watermark.delete();
-
         }
         catch(Exception e)
         {
@@ -527,6 +548,11 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public boolean isPaginator()
     {
         return paginator;
+    }
+
+    public boolean isOptionMandatoryDescription()
+    {
+        return optionMandatoryDescription;
     }
 
 }
