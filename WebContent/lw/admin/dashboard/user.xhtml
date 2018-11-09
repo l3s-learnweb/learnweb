@@ -6,8 +6,8 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="userId" value="#{dashboardUserBean.paramUserId}"/>
-            <f:viewAction action="#{dashboardUserBean.onLoad}"/>
+            <f:viewParam name="userId" value="#{glossaryDashboardUsersBean.paramUserId}"/>
+            <f:viewAction action="#{glossaryDashboardUsersBean.onLoad}"/>
         </f:metadata>
     </ui:define>
 
@@ -37,7 +37,7 @@
             <div class="ui-g-12 ui-g-nopad" style="padding: .5em;">
                 <div class="center-header user-activities" id="group_header">
                     <h2>Users' Activities</h2>
-                    <span class="header_detail"><h:outputText value="#{dashboardUserBean.selectedUser.getRealUsername()}"/></span>
+                    <span class="header_detail"><h:outputText value="#{glossaryDashboardUsersBean.selectedUser.getRealUsername()}"/></span>
                 </div>
 
                 <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
@@ -49,7 +49,7 @@
                                     <p:tooltip for="totalConcepts" value="Concept - a general notion" />
                                 </f:facet>
                                 <div class="count">
-                                    <h:outputText value="#{dashboardUserBean.totalConcepts}"/>
+                                    <h:outputText value="#{glossaryDashboardUsersBean.totalConcepts}"/>
                                 </div>
                             </p:panel>
                         </div>
@@ -60,7 +60,7 @@
                                     <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept" />
                                 </f:facet>
                                 <div class="count">
-                                    <h:outputText value="#{dashboardUserBean.totalTerms}"/>
+                                    <h:outputText value="#{glossaryDashboardUsersBean.totalTerms}"/>
                                 </div>
                             </p:panel>
                         </div>
@@ -71,14 +71,14 @@
                                     <p:tooltip for="totalSources" value="??" />
                                 </f:facet>
                                 <div class="count">
-                                    <h:outputText value="#{dashboardUserBean.totalSources}"/>
+                                    <h:outputText value="#{glossaryDashboardUsersBean.totalSources}"/>
                                 </div>
                             </p:panel>
                         </div>
                         <div class="ui-g-3">
                             <p:panel header="Ratio terms/concept">
                                 <div class="count">
-                                    <h:outputText value="#{dashboardUserBean.ratioTermConcept}"/>
+                                    <h:outputText value="#{glossaryDashboardUsersBean.ratioTermConcept}"/>
                                 </div>
                             </p:panel>
                         </div>
@@ -90,7 +90,7 @@
                                     <div class="ui-g-12 ui-md-4">
                                         <div class="ui-inputgroup">
                                             <p:outputLabel for="dateStart"/>
-                                            <p:calendar id="dateStart" value="#{dashboardUserBean.startDate}"
+                                            <p:calendar id="dateStart" value="#{glossaryDashboardUsersBean.startDate}"
                                                         showOn="button"/>
                                         </div>
                                     </div>
@@ -98,14 +98,14 @@
                                     <div class="ui-g-12 ui-md-4">
                                         <div class="ui-inputgroup">
                                             <p:outputLabel for="dateEnd"/>
-                                            <p:calendar id="dateEnd" value="#{dashboardUserBean.endDate}" showOn="button"/>
+                                            <p:calendar id="dateEnd" value="#{glossaryDashboardUsersBean.endDate}" showOn="button"/>
                                         </div>
                                     </div>
 
                                     <div class="ui-g-12 ui-md-4">
                                         <div class="ui-inputgroup">
                                             <p:commandButton value="Update" update=":dashboardMain :growl"
-                                                             actionListener="#{dashboardUserBean.cleanAndUpdateStoredData}"
+                                                             actionListener="#{glossaryDashboardUsersBean.cleanAndUpdateStoredData}"
                                                              icon="ui-icon-check"/>
                                         </div>
                                     </div>
@@ -121,7 +121,7 @@
                                     <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                     <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
                                 </f:facet>
-                                <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;" responsive="true"/>
+                                <p:chart type="line" model="#{glossaryDashboardUsersBean.interactionsChart}" style="height:300px;" responsive="true"/>
                             </p:panel>
                         </div>
                         <div class="ui-g-3">
@@ -131,7 +131,7 @@
                                     <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                     <p:tooltip for="userActivityTypes" value="Total number of interactions grouped by categories" />
                                 </f:facet>
-                                <p:chart type="bar" model="#{dashboardUserBean.usersActivityTypesChart}" xaxisAngle="60"
+                                <p:chart type="bar" model="#{glossaryDashboardUsersBean.usersActivityTypesChart}" xaxisAngle="60"
                                          style="height:300px" responsive="true"/>
                             </p:panel>
                         </div>
@@ -149,7 +149,7 @@
                                             <p:button id="fieldsChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                             <p:tooltip for="fieldsChart" value="??" />
                                         </f:facet>
-                                        <p:chart type="bar" model="#{dashboardUserBean.userFieldsChart}" xaxisAngle="60"
+                                        <p:chart type="bar" model="#{glossaryDashboardUsersBean.userFieldsChart}" xaxisAngle="60"
                                                  style="height:300px" responsive="true"/>
                                     </p:panel>
                                 </h:form>
@@ -158,7 +158,7 @@
                                 <p:panel id="table_descriptions"
                                          header="Descriptions of entries from class-mates" stickyHeader="true"
                                          style="height:361px; overflow-y: scroll;">
-                                    <p:dataTable value="#{dashboardUserBean.usersGlossaryDescriptions}" var="descr"
+                                    <p:dataTable value="#{glossaryDashboardUsersBean.usersGlossaryDescriptions}" var="descr"
                                                  styleClass="countries_list">
                                         <p:column headerText="Description">
                                             <h:outputText value="#{descr}"/>
@@ -177,7 +177,7 @@
 								<h:form>
 
 
-									<p:dataTable var="glossary" value="#{dashboardUserBean.glossaryResources}">
+									<p:dataTable var="glossary" value="#{glossaryDashboardUsersBean.glossaryResources}">
 										<f:facet name="header">
         									Glossaries
         									<p:button id="glossariesTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help"
@@ -217,7 +217,7 @@
                                         <p:button id="sourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
                                         <p:tooltip for="sourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
                                     </f:facet>
-                                    <p:chart type="pie" model="#{dashboardUserBean.usersSourcesChart}" responsive="true"/>
+                                    <p:chart type="pie" model="#{glossaryDashboardUsersBean.usersSourcesChart}" responsive="true"/>
                                 </p:panel>
                             </div>
                             <div class="ui-g-6">
@@ -229,7 +229,7 @@
                                         <p:tooltip for="sourcesListTable" value="The ratio between how many times user visited the web page" />
                                     </f:facet>
                                     <h:form >
-                                        <p:dataTable var="pll" value="#{dashboardUserBean.usersProxySourcesList}" styleClass="countries_list">
+                                        <p:dataTable var="pll" value="#{glossaryDashboardUsersBean.usersProxySourcesList}" styleClass="countries_list">
                                             <p:column headerText="Web Site">
                                                 <h:outputText value="#{pll.key}"/>
                                             </p:column>
@@ -250,7 +250,7 @@
                                                 <p:tooltip for="eventsNumber" value="Events like mouse movements, clicks, etc." />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.totalEvents}"/>
+                                                <h:outputText value="#{glossaryDashboardUsersBean.singleTrackerStatistics.totalEvents}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -263,7 +263,7 @@
                                                 <p:tooltip for="timeStay" value="Total time when web pages were opened by the user" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.timeStayFormatted}"/>
+                                                <h:outputText value="#{glossaryDashboardUsersBean.singleTrackerStatistics.timeStayFormatted}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -276,7 +276,7 @@
                                                 <p:tooltip for="timeActive" value="Active time on web pages" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.timeActiveFormatted}"/>
+                                                <h:outputText value="#{glossaryDashboardUsersBean.singleTrackerStatistics.timeActiveFormatted}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -289,7 +289,7 @@
                                                 <p:tooltip for="clicks" value="Mouse clicks" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.clicks}"/>
+                                                <h:outputText value="#{glossaryDashboardUsersBean.singleTrackerStatistics.clicks}"/>
                                             </div>
                                         </p:panel>
                                     </div>
@@ -302,7 +302,7 @@
                                                 <p:tooltip for="keyPresses" value="Total number of key presses on the keyboard" />
                                             </f:facet>
                                             <div class="count">
-                                                <h:outputText value="#{dashboardUserBean.singleTrackerStatistics.keyPresses}"/>
+                                                <h:outputText value="#{glossaryDashboardUsersBean.singleTrackerStatistics.keyPresses}"/>
                                             </div>
                                         </p:panel>
                                     </div>

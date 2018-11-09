@@ -14,13 +14,9 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.DescFieldData;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.GlossaryFieldSummery;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.GlossaryStatistic;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.TrackerStatistic;
 import de.l3s.util.StringHelper;
 
-public class GlossaryDashboardManager
+class GlossaryDashboardManager
 {
     private static final Logger log = Logger.getLogger(GlossaryDashboardManager.class);
 
@@ -102,9 +98,9 @@ public class GlossaryDashboardManager
         return result;
     }
 
-    ArrayList<GlossaryFieldSummery> getGlossaryFieldSummeryPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    ArrayList<GlossaryUserTermsSummary> getGlossaryFieldSummeryPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        ArrayList<GlossaryFieldSummery> summeries = new ArrayList<>(userIds.size());
+        ArrayList<GlossaryUserTermsSummary> summeries = new ArrayList<>(userIds.size());
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT ge.user_id, "
@@ -132,7 +128,7 @@ public class GlossaryDashboardManager
 
             while(rs.next())
             {
-                GlossaryFieldSummery fieldSummery = new GlossaryFieldSummery();
+                GlossaryUserTermsSummary fieldSummery = new GlossaryUserTermsSummary();
                 fieldSummery.setUserId(rs.getInt("user_id"));
                 fieldSummery.setEntries(rs.getInt("entries"));
                 fieldSummery.setTerms(rs.getInt("total_terms"));
@@ -296,9 +292,9 @@ public class GlossaryDashboardManager
         return descriptions;
     }
 
-    Map<Integer, GlossaryStatistic> getGlossaryStatisticPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    Map<Integer, GlossaryUserActivity> getGlossaryStatisticPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        Map<Integer, GlossaryStatistic> statPerUser = new TreeMap<>();
+        Map<Integer, GlossaryUserActivity> statPerUser = new TreeMap<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "select r.owner_user_id, count(distinct ge.entry_id) AS totalGlossary " +
@@ -314,7 +310,7 @@ public class GlossaryDashboardManager
 
             while(rs.next())
             {
-                GlossaryStatistic gs = new GlossaryStatistic(rs.getInt("owner_user_id"));
+                GlossaryUserActivity gs = new GlossaryUserActivity(rs.getInt("owner_user_id"));
                 gs.setTotalGlossaries(rs.getInt("totalGlossary"));
                 statPerUser.put(gs.getUserId(), gs);
             }
@@ -335,7 +331,7 @@ public class GlossaryDashboardManager
 
             while(rs.next())
             {
-                GlossaryStatistic gs = statPerUser.get(rs.getInt("owner_user_id"));
+                GlossaryUserActivity gs = statPerUser.get(rs.getInt("owner_user_id"));
                 gs.setTotalTerms(rs.getInt("totalGlossaryTerms"));
                 gs.setTotalReferences(rs.getInt("totalReferences"));
                 statPerUser.put(gs.getUserId(), gs);
@@ -345,9 +341,9 @@ public class GlossaryDashboardManager
         return statPerUser;
     }
 
-    ArrayList<DescFieldData> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    ArrayList<GlossaryEntryDescLang> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        ArrayList<DescFieldData> langDataList = new ArrayList<>();
+        ArrayList<GlossaryEntryDescLang> langDataList = new ArrayList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT ge.description, ge.entry_id, r.language, r.owner_user_id " +
@@ -363,7 +359,7 @@ public class GlossaryDashboardManager
 
             while(rs.next())
             {
-                DescFieldData descFieldData = new DescFieldData();
+                GlossaryEntryDescLang descFieldData = new GlossaryEntryDescLang();
                 descFieldData.setDescription(rs.getString(1));
                 descFieldData.setEntryId(rs.getInt(2));
                 descFieldData.setLang(rs.getString(3));
@@ -406,9 +402,9 @@ public class GlossaryDashboardManager
         return countPerSource;
     }
 
-    LinkedList<TrackerStatistic> getTrackerStatistics(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    LinkedList<TrackerUserActivity> getTrackerStatistics(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        LinkedList<TrackerStatistic> statistic = new LinkedList<>();
+        LinkedList<TrackerUserActivity> statistic = new LinkedList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT external_user_id AS user_id, sum(total_events) AS total_events, sum(time_stay) AS time_stay, sum(time_active) AS time_active, sum(clicks) AS clicks, sum(keypress) AS keypresses "
@@ -424,7 +420,7 @@ public class GlossaryDashboardManager
 
             while(rs.next())
             {
-                TrackerStatistic trackerStatistic = new TrackerStatistic();
+                TrackerUserActivity trackerStatistic = new TrackerUserActivity();
                 trackerStatistic.setUserId(rs.getInt("user_id"));
                 trackerStatistic.setTotalEvents(rs.getInt("total_events"));
                 trackerStatistic.setTimeStay(rs.getInt("time_stay"));

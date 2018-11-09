@@ -36,14 +36,14 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Integer totalConcepts;
     private Integer totalTerms;
     private Integer totalSources;
-    private ArrayList<GlossaryDashboardChartsFactory.GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
+    private ArrayList<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
-    private ArrayList<GlossaryDashboardChartsFactory.DescFieldData> descFieldsStatistic;
+    private ArrayList<GlossaryEntryDescLang> descFieldsStatistic;
     private ArrayList<String> glossaryDescriptions;
     private Map<String, Integer> proxySourcesWithCounters;
-    private LinkedList<GlossaryDashboardChartsFactory.TrackerStatistic> trackerStatistics;
+    private LinkedList<TrackerUserActivity> trackerStatistics;
 
     private LineChartModel interactionsChart;
     private BarChartModel usersActivityTypesChart;
@@ -204,16 +204,16 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         return glossaryDescriptions;
     }
 
-    public LinkedList<TrackerStatistic> getTrackerStatistics()
+    public LinkedList<TrackerUserActivity> getTrackerStatistics()
     {
         return trackerStatistics;
     }
 
-    public TrackerStatistic getSingleTrackerStatistics()
+    public TrackerUserActivity getSingleTrackerStatistics()
     {
         if(trackerStatistics.isEmpty())
         {
-            return new TrackerStatistic();
+            return new TrackerUserActivity();
         }
 
         return trackerStatistics.get(0);

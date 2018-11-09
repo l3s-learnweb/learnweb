@@ -35,14 +35,14 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;
-    private transient ArrayList<GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
-    private transient Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
+    private transient ArrayList<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
+    private transient Map<Integer, GlossaryUserActivity> glossaryStatisticPerUser;
     private transient Map<String, Integer> glossaryConceptsCountPerUser;
     private transient Map<String, Integer> glossarySourcesWithCounters;
     private transient Map<String, Integer> glossaryTermsCountPerUser;
     private transient Map<Integer, Integer> actionsWithCounters;
     private transient Map<String, Integer> actionsCountPerDay;
-    private transient ArrayList<DescFieldData> descFieldsStatistic;
+    private transient ArrayList<GlossaryEntryDescLang> descFieldsStatistic;
 
     private transient LineChartModel interactionsChart;
     private transient BarChartModel usersActivityTypesChart;
@@ -170,17 +170,17 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         return totalTerms;
     }
 
-    public ArrayList<GlossaryFieldSummery> getGlossaryFieldsSummeryPerUser()
+    public ArrayList<GlossaryUserTermsSummary> getGlossaryFieldsSummeryPerUser()
     {
         return glossaryFieldsSummeryPerUser;
     }
 
-    public ArrayList<GlossaryStatistic> getGlossaryStatisticPerUser()
+    public ArrayList<GlossaryUserActivity> getGlossaryStatisticPerUser()
     {
         return new ArrayList<>(glossaryStatisticPerUser.values());
     }
 
-    public ArrayList<DescFieldData> getDescFieldsStatistic()
+    public ArrayList<GlossaryEntryDescLang> getDescFieldsStatistic()
     {
         return descFieldsStatistic;
     }
