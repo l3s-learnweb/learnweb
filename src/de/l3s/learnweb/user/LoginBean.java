@@ -173,6 +173,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(user)) // a moderator logs out from a user account
         {
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
+            userBean.setModeratorUser(null);
             return "/lw/admin/users.xhtml?faces-redirect=true";
         }
         else
@@ -182,7 +183,7 @@ public class LoginBean extends ApplicationBean implements Serializable
             getFacesContext().getExternalContext().invalidateSession(); // end session
         }
 
-        return logoutPage + "faces-redirect=true";
+        return logoutPage + "?faces-redirect=true";
 
         /*
         int organisationId = user.getOrganisationId();
