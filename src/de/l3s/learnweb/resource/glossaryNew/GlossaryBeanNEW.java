@@ -63,30 +63,35 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private String toggleLabel = "Show All";
     private boolean optionMandatoryDescription;
 
-    public void onLoad() throws SQLException
+    public void onLoad()
     {
-
-        User user = getUser();
-        if(user == null)
-            return;
-        glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
-        if(glossaryResource == null)
+        try
         {
-            log.error("Error in loading glossary resource for resource ID:" + resourceId + "on load");
-            addInvalidParameterMessage("resource_id");
-            return;
+            User user = getUser();
+            if(user == null)
+                return;
+            glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
+            if(glossaryResource == null)
+            {
+                log.error("Error in loading glossary resource for resource ID:" + resourceId + "on load");
+                addInvalidParameterMessage("resource_id");
+                return;
+            }
+            availableTopicOne.add(new SelectItem("Environment"));
+            availableTopicOne.add(new SelectItem("European Politics"));
+            availableTopicOne.add(new SelectItem("Medicine"));
+            availableTopicOne.add(new SelectItem("Tourism"));
+            log(Action.glossary_open, glossaryResource);
+            loadGlossaryTable(glossaryResource);
+            setFilteredTableItems(tableItems);
+            setNewFormEntry();
+
+            optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
         }
-        availableTopicOne.add(new SelectItem("Environment"));
-        availableTopicOne.add(new SelectItem("European Politics"));
-        availableTopicOne.add(new SelectItem("Medicine"));
-        availableTopicOne.add(new SelectItem("Tourism"));
-        log(Action.glossary_open, glossaryResource);
-        loadGlossaryTable(glossaryResource);
-        setFilteredTableItems(tableItems);
-        setNewFormEntry();
-
-        optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
-
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     /*    public void setPaste(String item)
@@ -103,50 +108,58 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void setGlossaryForm(GlossaryTableView tableItem)
     {
-        //set form entry
-        formEntry = tableItem.getEntry().clone();
-        //Reset ID to old entry ID as it is not copy action
-        formEntry.setId(tableItem.getEntryId()); //entry ID
-        //Reset original entry ID as it is not a copy action
-        formEntry.setOriginalEntryId(tableItem.getEntry().getOriginalEntryId());
-        //Reset old term ID and original term id as it is not a copy action
-        for(GlossaryTerm term : formEntry.getTerms())
+        try
         {
-            term.setId(term.getOriginalTermId());
-            term.setOriginalTermId(tableItem.getEntry().getTerm(term.getId()).getOriginalTermId());
+            //set form entry
+            formEntry = tableItem.getEntry().clone();
+            //Reset ID to old entry ID as it is not copy action
+            formEntry.setId(tableItem.getEntryId()); //entry ID
+            //Reset original entry ID as it is not a copy action
+            formEntry.setOriginalEntryId(tableItem.getEntry().getOriginalEntryId());
+            //Reset old term ID and original term id as it is not a copy action
+            for(GlossaryTerm term : formEntry.getTerms())
+            {
+                term.setId(term.getOriginalTermId());
+                term.setOriginalTermId(tableItem.getEntry().getTerm(term.getId()).getOriginalTermId());
+            }
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
         }
     }
 
     public String onSave()
     {
-        //logging
-        if(formEntry.getId() > 1)
-            log(Action.glossary_entry_edit, glossaryResource.getGroupId(), formEntry.getId(), "", getUser());
-
-        formEntry.setLastChangedByUserId(getUser().getId());
-
-        //to reset fulltext search
-        formEntry.setFulltext(null);
-
-        //set last changed by user id for terms
-        for(GlossaryTerm term : formEntry.getTerms())
-        {
-            // TODO check if the term was really modified
-
-            term.setLastChangedByUserId(getUser().getId());
-            //log term edit actions
-            if(term.getId() > 0)
-                log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
-        }
-
-        if(formEntry.getTerms().size() == numberOfDeletedTerms())
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
-            setKeepMessages();
-            return null;
-        }
         try
         {
+            //logging
+            if(formEntry.getId() > 1)
+                log(Action.glossary_entry_edit, glossaryResource.getGroupId(), formEntry.getId(), "", getUser());
+
+            formEntry.setLastChangedByUserId(getUser().getId());
+
+            //to reset fulltext search
+            formEntry.setFulltext(null);
+
+            //set last changed by user id for terms
+            for(GlossaryTerm term : formEntry.getTerms())
+            {
+                // TODO check if the term was really modified
+
+                term.setLastChangedByUserId(getUser().getId());
+                //log term edit actions
+                if(term.getId() > 0)
+                    log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
+            }
+
+            if(formEntry.getTerms().size() == numberOfDeletedTerms())
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary.entry_validation"));
+                setKeepMessages();
+                return null;
+            }
+
             formEntry.setLastChangedByUserId(getUser().getId());
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
@@ -162,7 +175,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         setNewFormEntry();
         return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
-
     }
 
     /**
@@ -186,11 +198,12 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public String deleteEntry(GlossaryTableView row)
     {
-        log(Action.glossary_entry_delete, glossaryResource.getGroupId(), row.getEntryId(), "", getUser());
-        row.getEntry().setDeleted(true);
-        row.getEntry().setLastChangedByUserId(getUser().getId());
         try
         {
+            log(Action.glossary_entry_delete, glossaryResource.getGroupId(), row.getEntryId(), "", getUser());
+            row.getEntry().setDeleted(true);
+            row.getEntry().setLastChangedByUserId(getUser().getId());
+
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
             //Remove entry from resource
             glossaryResource.getEntries().remove(row.getEntry());
@@ -210,23 +223,30 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void deleteTerm(GlossaryTerm term)
     {
-        term.setDeleted(true);
-        if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
+        try
         {
-            term.setDeleted(false);//reset deletion
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term_validation"));
-            return;
+            term.setDeleted(true);
+            if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
+            {
+                term.setDeleted(false);//reset deletion
+                addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term_validation"));
+                return;
+            }
+            if(term.getId() <= 0) //Its a new term. Safe to remove here.
+            {
+                formEntry.getTerms().remove(term);
+            }
+            formEntry.setFulltext(null);
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
+            log(Action.glossary_term_delete, glossaryResource.getGroupId(), term.getId(), "", getUser());
         }
-        if(term.getId() <= 0) //Its a new term. Safe to remove here.
+        catch(Exception e)
         {
-            formEntry.getTerms().remove(term);
+            addFatalMessage(e);
         }
-        formEntry.setFulltext(null);
-        addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
-        log(Action.glossary_term_delete, glossaryResource.getGroupId(), term.getId(), "", getUser());
     }
 
-    public int numberOfDeletedTerms()
+    private int numberOfDeletedTerms()
     {
         int deletedTerms = 0;
 
@@ -240,19 +260,26 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void addTerm()
     {
-        GlossaryTerm newTerm = new GlossaryTerm();
-
-        // find a language that is not used yet in this entry
-        List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
-        for(GlossaryTerm term : formEntry.getTerms())
+        try
         {
-            unusedLanguages.remove(term.getLanguage());
-        }
-        if(unusedLanguages.size() == 0) // all languages have been used in this glossary
-            unusedLanguages = glossaryResource.getAllowedLanguages();
+            GlossaryTerm newTerm = new GlossaryTerm();
 
-        newTerm.setLanguage(unusedLanguages.get(0));
-        formEntry.addTerm(newTerm);
+            // find a language that is not used yet in this entry
+            List<Locale> unusedLanguages = new ArrayList<>(glossaryResource.getAllowedLanguages());
+            for(GlossaryTerm term : formEntry.getTerms())
+            {
+                unusedLanguages.remove(term.getLanguage());
+            }
+            if(unusedLanguages.size() == 0) // all languages have been used in this glossary
+                unusedLanguages = glossaryResource.getAllowedLanguages();
+
+            newTerm.setLanguage(unusedLanguages.get(0));
+            formEntry.addTerm(newTerm);
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
@@ -339,9 +366,13 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
     public void postProcessXls(Object document)
     {
+        User user = getUser();
+        if(user == null)
+            return;
+
         try
         {
-            if(getUser().getOrganisation().getOption(Option.Glossary_Add_Watermark))
+            if(user.getOrganisation().getOption(Option.Glossary_Add_Watermark))
             {
                 log.debug("post processing glossary xls");
 
@@ -452,7 +483,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));

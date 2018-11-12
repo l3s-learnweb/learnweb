@@ -45,10 +45,10 @@
 			<h2>#{msg.myResourcesTitle}</h2>
 			<h:form id="center_header_form">
 				<p:commandButton id="add_resource_button" value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton" type="button" />
-			    <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px">
+			    <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px" >
 					<p:submenu label="#{msg.create}" icon="fa fa-plus-square">
 						<p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o"
-							update=":right_pane_wrapper" oncomplete="update_header()"
+							update=":right_pane_wrapper" oncomplete="update_header()" process="@form"
 							actionListener="#{addResourceBean.clearForm()}">
 							<f:setPropertyActionListener
 								target="#{addResourceBean.resource.storageType}" value="1" />

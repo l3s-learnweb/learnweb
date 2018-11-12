@@ -28,8 +28,8 @@ public class LocaleConverter implements Converter<Locale>
     {
         if(null == value)
         {
-            log.error("Locale is null: " + BeanHelper.getRequestSummary());
-            return "en";
+            log.fatal("Locale is null: " + BeanHelper.getRequestSummary());
+            return null;
         }
 
         return value.toLanguageTag();

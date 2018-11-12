@@ -39,7 +39,7 @@ public class GlossaryManager
             delete(resource);
             return;
         }
-        try(PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)"))
+        try(PreparedStatement insertGlossary = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_glossary_resource`(`resource_id`, `allowed_languages`) VALUES (?, ?)"))
         {
             insertGlossary.setInt(1, resource.getId());
             insertGlossary.setString(2, StringHelper.join(resource.getAllowedLanguages()));
