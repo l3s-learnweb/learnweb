@@ -195,7 +195,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
-            Thumbnail dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
+            String serverUrl = Learnweb.getInstance().getServerUrl();
+            Thumbnail dummyImage;
+            if (type.equals(ResourceType.audio)) {
+                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/audio-file.png", 128, 128);
+            } else {
+                dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
+            }
 
             if(null == thumbnail0)
                 setThumbnail0(dummyImage.resize(150, 120));
