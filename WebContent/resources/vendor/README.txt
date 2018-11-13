@@ -10,7 +10,7 @@ responsive-calendar-v1.0.0 - used to show archive timeline
 slick-v1.8.0 - color picker, used on summary overview page
 spectrum-v1.8.0 - used on transcript page
 tooltipster-v3.3.0 - used to create tutorial over website
-video-js-v6.12.0 - an HTML5 video player
+video-js-v7.3.0 - an HTML5 video/audio player
 
 REMOVED:
 js/wanderer_prefixfree.js (StyleFix & PrefixFree) - removed from wanderer page, never used
