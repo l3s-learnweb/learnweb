@@ -1228,6 +1228,10 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     return response;
                 }
             }
+            else if(getType().equals(ResourceType.audio))
+            {
+                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+            }
 
             // if no rule above works
 
