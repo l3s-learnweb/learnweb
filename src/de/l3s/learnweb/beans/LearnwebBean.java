@@ -121,4 +121,9 @@ public class LearnwebBean implements Serializable
         this.maintenanceMode = maintenanceMode;
     }
 
+    public String getTrackerApiKey()
+    {
+        return this.learnweb.getProperties().getProperty("tracker.key");
+    }
+
 }

@@ -292,15 +292,15 @@
 		<ui:fragment rendered="#{userBean.loggedIn}">
 			<ui:insert name="sub_menu_bar"></ui:insert>
 		</ui:fragment>
-		
+
 		<ui:fragment rendered="#{userBean.trackingEnabled}">
 			<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
 			<script type="text/javascript">
                 if (!window.tracker)
                 {
                     window.tracker = new L3STracker({
+                        apiKey: '#{learnwebBean.trackerApiKey}',
                         apiHost: '//learnweb.l3s.uni-hannover.de/tracker',
-                        externalClientId: 1,
                         externalUserId: '#{userBean.getUser().getId()}'
                     });
                 }
