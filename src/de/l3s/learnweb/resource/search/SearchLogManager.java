@@ -17,11 +17,11 @@ import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import de.l3s.learnweb.group.Group;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.WaybackUrlManager.UrlRecord;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.SERVICE;
 import de.l3s.learnweb.resource.Thumbnail;
@@ -67,7 +67,7 @@ public class SearchLogManager
 
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
         File felJarFile = new File(felAnnotatorPath);
-        if(felJarFile.exists())
+        if(felJarFile.exists() && learnweb.getService() == de.l3s.learnweb.Learnweb.SERVICE.LEARNWEB)
         {
             this.searchIdQueue = new LinkedBlockingQueue<>();
             this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
