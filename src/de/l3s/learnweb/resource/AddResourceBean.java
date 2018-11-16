@@ -388,6 +388,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             else
                 resource.save();
 
+            // create temporal thumbnails
+            resource.postConstruct();
+
             // create thumbnails for the resource
             if(!resource.isProcessing() && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0 || resource.getType().equals(Resource.ResourceType.video)))
             {
