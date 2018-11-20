@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -36,8 +35,8 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
     @Size(min = 3, max = 60)
     private String editedGroupTitle;
     private String editedGroupDescription; // Group edit fields (Required for editing group)
-    private String newHypothesisLink;
-    private String newHypothesisToken;
+    private String editedHypothesisLink;
+    private String editedHypothesisToken;
 
     public void onLoad() throws SQLException
     {
@@ -59,10 +58,10 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
         if(group != null)
         {
             editedGroupDescription = group.getDescription();
-            editedGroupLeaderId = group.getLeader() == null ? 0 : group.getLeader().getId();
+            editedGroupLeaderId = group.getLeaderUserId();
             editedGroupTitle = group.getTitle();
-            newHypothesisLink = group.getHypothesisLink();
-            newHypothesisToken = group.getHypothesisToken();
+            editedHypothesisLink = group.getHypothesisLink();
+            editedHypothesisToken = group.getHypothesisToken();
         }
     }
 
@@ -108,14 +107,14 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
-            if(!Objects.equals(newHypothesisLink, group.getHypothesisLink()))
+            if(!editedHypothesisLink.equals(group.getHypothesisLink()))
             {
-                group.setHypothesisLink(newHypothesisLink);
-                log(Action.group_changing_leader, group.getId(), group.getId());
+                log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
+                group.setHypothesisLink(editedHypothesisLink);
             }
-            if(!Objects.equals(newHypothesisToken, group.getHypothesisToken()))
+            if(!editedHypothesisToken.equals(group.getHypothesisToken()))
             {
-                group.setHypothesisToken(newHypothesisToken);
+                group.setHypothesisToken(editedHypothesisToken);
             }
             getLearnweb().getGroupManager().save(group);
             //getLearnweb().getGroupManager().resetCache();
@@ -205,22 +204,22 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
 
     public String getNewHypothesisLink()
     {
-        return newHypothesisLink;
+        return editedHypothesisLink;
     }
 
     public void setNewHypothesisLink(String newHypothesisLink)
     {
-        this.newHypothesisLink = newHypothesisLink;
+        this.editedHypothesisLink = newHypothesisLink;
     }
 
     public String getNewHypothesisToken()
     {
-        return newHypothesisToken;
+        return editedHypothesisToken;
     }
 
     public void setNewHypothesisToken(String newHypothesisToken)
     {
-        this.newHypothesisToken = newHypothesisToken;
+        this.editedHypothesisToken = newHypothesisToken;
     }
 
     public int getSelectedResourceTargetGroupId()

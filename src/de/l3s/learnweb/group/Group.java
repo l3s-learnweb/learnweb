@@ -131,7 +131,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
         folders = null;
         resourceCount = -1;
         memberCount = -1;
-        hypothesisLink = null;
     }
 
     public Group()

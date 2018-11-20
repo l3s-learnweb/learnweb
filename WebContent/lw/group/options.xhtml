@@ -68,7 +68,7 @@
 	                     [?]
 	                </h:outputLink>
 
-					<c:if test="#{not empty groupOptionsBean.newHypothesisLink}">
+					<c:if test="#{false and not empty groupOptionsBean.newHypothesisLink}">
 		               	<h:outputLabel value="#{msg.hypothesis_token}:" for="set_hypothesis_token"/>
 						<p:inputText value="#{groupOptionsBean.newHypothesisToken}" id="set_hypothesis_token" style="width:39rem;"/>
 
