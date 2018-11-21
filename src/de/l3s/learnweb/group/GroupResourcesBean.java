@@ -17,6 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -32,15 +33,8 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.AbstractPaginator;
-import de.l3s.learnweb.resource.AbstractResource;
-import de.l3s.learnweb.resource.AddFolderBean;
-import de.l3s.learnweb.resource.AddResourceBean;
-import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager.Order;
-import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -91,6 +85,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private String[] selectedLanguages;
     private String[] selectedLevels;
     private String selectedCatNode;
+
+    private int searchLogId = -1;
 
     //extended metadata search/filters - authors and media sources from resources belonging to selected group only
     private List<String> authors;
@@ -313,7 +309,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             this.query = query;
             log(Action.group_resource_search, groupId, 0, query);
-            logQuery(query, ""); //  searchFilters.toString()
         }
     }
 
@@ -349,6 +344,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
             //TODO: remove it
             //            RequestContext.getCurrentInstance().update(":filters");
+
+            if (!StringHelper.empty(query)){
+                logQuery(query, ""); //  searchFilters.toString()
+                logResources(paginator.getCurrentPage(), paginator.getPageIndex());
+            }
         }
         catch(SQLException | IOException | SolrServerException e)
         {
@@ -1375,7 +1375,18 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void logQuery(String query, String searchFilters)
     {
-        getSearchLogger().logGroupQuery(group, query, searchFilters, UtilBean.getUserBean().getLocaleCode(), getUser());
+        searchLogId = getSearchLogger().logGroupQuery(group, query, searchFilters, UtilBean.getUserBean().getLocaleCode(), getUser());
+    }
+
+    private void logResources(List<ResourceDecorator> resources, int pageId)
+    {
+        /*if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
+            getSearchLogger().logResources(searchId, resources);*/
+
+        //call the method to fetch the html of the logged resources
+        //only if search_mode='text' and userId is admin/specificUser
+        if(searchLogId > 0)
+            getSearchLogger().logResources(searchLogId, resources, false, pageId);
     }
 
     private SearchLogManager getSearchLogger() // TODO remove just use getLearnweb().getSearchLogManager() which is already cached

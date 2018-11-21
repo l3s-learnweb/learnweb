@@ -34,7 +34,7 @@ public class SearchLogManager
 {
     private static final Logger log = Logger.getLogger(SearchLogManager.class);
     private static final String QUERY_COLUMNS = "`query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`";
-    private static final String QUERY_COLUMNS_FOR_GROUP = "`group_id`, `query`, `language`, `filters`, `user_id`, `timestamp`";
+    private static final String QUERY_COLUMNS_FOR_GROUP = "`group_id`, `query`, `mode`, `service`, `language`, `filters`, `user_id`, `timestamp`";
     private static final String RESOURCE_COLUMNS = "`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`";
     private static final String ACTION_COLUMNS = "`search_id`, `rank`, `user_id`, `action`, `timestamp`";
     private static final String LAST_ENTRY = "last_entry"; // this element indicates that the consumer thread should stop
@@ -79,7 +79,7 @@ public class SearchLogManager
 
     }
 
-    protected int logQuery(String query, MODE searchMode, SERVICE searchService, String language, String searchFilters, User user)
+    public int logQuery(String query, MODE searchMode, SERVICE searchService, String language, String searchFilters, User user)
     {
         int userId = user == null ? 0 : user.getId();
 
@@ -123,13 +123,15 @@ public class SearchLogManager
         else if(searchFilters.length() > 1000)
             searchFilters = searchFilters.substring(0, 1000);
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ") VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ") VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
         {
             insert.setInt(1, group.getId());
             insert.setString(2, query);
-            insert.setString(3, language);
-            insert.setString(4, searchFilters);
-            insert.setInt(5, userId);
+            insert.setString(3, MODE.group.name());
+            insert.setString(4, SERVICE.learnweb.name());
+            insert.setString(5, language);
+            insert.setString(6, searchFilters);
+            insert.setInt(7, userId);
             insert.executeUpdate();
 
             ResultSet rs = insert.getGeneratedKeys();
@@ -148,7 +150,7 @@ public class SearchLogManager
         return -1;
     }
 
-    protected void logResources(int searchId, List<ResourceDecorator> resources, boolean logHTML, int pageId)
+    public void logResources(int searchId, List<ResourceDecorator> resources, boolean logHTML, int pageId)
     {
         if(resources.size() == 0)
         {
