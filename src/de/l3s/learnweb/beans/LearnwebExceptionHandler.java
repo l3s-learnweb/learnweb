@@ -60,6 +60,8 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
             else
             {
                 log.fatal("Fatal unhandled error on " + description, exception);
+
+                log.error(exception.getStackTrace());
             }
 
         }

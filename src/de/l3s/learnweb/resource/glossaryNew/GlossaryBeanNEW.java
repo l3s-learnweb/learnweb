@@ -43,6 +43,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.BeanHelper;
 
 @Named
 @ViewScoped
@@ -73,7 +74,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             glossaryResource = getLearnweb().getGlossaryManager().getGlossaryResource(resourceId);
             if(glossaryResource == null)
             {
-                log.error("Error in loading glossary resource for resource ID:" + resourceId + "on load");
+                log.error("Error in loading glossary resource for resource ID: " + resourceId + "\n" + BeanHelper.getRequestSummary());
                 addInvalidParameterMessage("resource_id");
                 return;
             }
@@ -483,7 +484,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
