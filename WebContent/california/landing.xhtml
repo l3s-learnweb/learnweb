@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+      <f:facet name="first">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+      </f:facet>
+      <title>PrimeFaces California</title>
+    </h:head>
+
+    <h:body styleClass="landing-body">
+        <div class="landing-wrapper">
+            <div id="header">
+                <div class="header-top clearfix">
+                    <h:link outcome="california//dashboard" styleClass="logo">
+                      <p:graphicImage name="images/logo-black.png" library="california-layout" />
+                    </h:link>
+                    <ul class="header-menu">
+                        <li><a href="#"><span>Home</span></a></li>
+                        <li><a href="#features"><span>Features</span></a></li>
+                        <li><a href="#premium"><span>Demo</span></a></li>
+                        <li><a href="#news"><span>News</span></a></li>
+                        <li><a href="#pricing"><span>Pricing</span></a></li>
+                        <li><a href="#multimedia"><span>Media</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="header-content clearfix">
+                    <div class="header-content-panel">
+                        <h1>PrimeFaces Presents California</h1>
+                        <p>Modern and elegant responsive application template with a premium look for PrimeFaces components.</p>
+                        <p:commandButton type="button" value="Learn More" styleClass="alt-btn" style="margin-bottom:10px;" />
+                    </div>
+                </div>
+            </div>
+
+            <div id="features" class="features">
+                <h2>Features</h2>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-12 ui-lg-3">
+                            <p:graphicImage name="images/icon-responsive.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12 ui-lg-9">
+                            <h3>Responsive Layout</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in mauris ac purus ullamcorper pharetra quis non nulla. </p>
+                            <span class="learn-more">Learn More</span>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-12 ui-lg-3">
+                            <p:graphicImage name="images/icon-welldocumented.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12 ui-lg-9">
+                            <h3>Well Documented</h3>
+                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                            <span class="learn-more">Learn More</span>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-12 ui-lg-3">
+                            <p:graphicImage name="images/icon-moderndesign.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12 ui-lg-9">
+                            <h3>Modern Design</h3>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <span class="learn-more">Learn More</span>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-12 ui-lg-3">
+                            <p:graphicImage name="images/icon-cleancode.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12 ui-lg-9">
+                            <h3>Clean Code</h3>
+                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <span class="learn-more">Learn More</span>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="premium" class="clearfix premium">
+                <div class="premium-content">
+                      <h1>PrimeFaces California</h1>
+                      <p>Take advantage of media's most prominent business trend, and empowers your internal advertising teams.</p>
+                      <p:commandButton type="button" value="Learn More" styleClass="alt-btn" style="margin-bottom:10px;" />
+                  </div>
+            </div>
+
+            <div id="news" class="news">
+                <h2>News</h2>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <div class="ui-g-12 news-icon">
+                            <p:graphicImage name="images/news-rooms.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12">
+                            <h3>Dummy News Title</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut in mauris ac purus ullamcorper pharetra quis non nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. </p>
+                            <a href="#">
+                              <span class="learn-more">Learn More</span>
+                            </a>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <div class="ui-g-12 news-icon">
+                            <p:graphicImage name="images/news-roof.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12">
+                            <h3>Dummy News Title</h3>
+                            <p>Maecenas diam ante, vehicula nec interdum fermentum, fermentum eu ex. Donec scelerisque fermentum porttitor. Curabitur mollis dictum enim nec faucibus. Aliquam vel orci vel ante feugiat.</p>
+                            <a href="#">
+                              <span class="learn-more">Learn More</span>
+                            </a>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <div class="ui-g-12 news-icon">
+                            <p:graphicImage name="images/news-city.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12">
+                            <h3>Dummy News Title</h3>
+                            <p>Donec magna nunc, pellentesque in tempus ut, tempor id metus. Nunc est lacus, hendrerit ornare porttitor at, bibendum eget dui. Vestibulum accumsan lorem sit amet massa auctor.</p>
+                            <a href="#">
+                              <span class="learn-more">Learn More</span>
+                            </a>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <div class="ui-g-12 news-icon">
+                            <p:graphicImage name="images/news-building.png" library="california-layout" />
+                        </div>
+                        <div class="ui-g-12">
+                            <h3>Dummy News Title</h3>
+                            <p>Duis nec lobortis massa, sed facilisis lorem. In hac habitasse platea dictumst. Etiam semper at neque ut viverra. In in placerat justo, ut tincidunt nibh. Mauris sit amet porttitor enim.</p>
+                            <a href="#">
+                              <span class="learn-more">Learn More</span>
+                            </a>
+                            <i class="fa fa-arrow-right" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pricing" class="pricing">
+                <h2>Pricing</h2>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-3 pricing-box pricing-basic">
+                        <div class="ui-g-12 pricing-header">BASIC</div>
+                        <div class="ui-g-12 pricing-subheader">
+                            <span class="price">Free</span>
+                            <span class="duration">LIFETIME</span>
+                        </div>
+                        <div class="ui-g-12 pricing-content">
+                            <span>All Basic Features</span>
+                            <span>Responsive</span>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Try Free" styleClass="alt-btn"/>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3 pricing-box pricing-beginner">
+                        <div class="ui-g-12 pricing-header">BEGINNER</div>
+                        <div class="ui-g-12 pricing-subheader">
+                            <span class="price">$9</span>
+                            <span class="duration">PER MONTH</span>
+                        </div>
+                        <div class="ui-g-12 pricing-content">
+                            <span>All Basic Features</span>
+                            <span>Responsive</span>
+                            <span>Push Messages</span>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Buy Now" />
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3 pricing-box pricing-professional">
+                        <div class="ui-g-12 pricing-header">PROFESSIONAL</div>
+                        <div class="ui-g-12 pricing-subheader">
+                            <span class="price">$19</span>
+                            <span class="duration">PER MONTH</span>
+                        </div>
+                        <div class="ui-g-12 pricing-content">
+                            <span>All Basic Features</span>
+                            <span>Responsive</span>
+                            <span>Push Messages</span>
+                            <span>Free Shipping</span>
+                            <span>Unlimited Bandwidth</span>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Buy Now"/>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3 pricing-box pricing-enterprise">
+                        <div class="ui-g-12 pricing-header">ENTERPRISE
+                        </div>
+                        <div class="ui-g-12 pricing-subheader">
+                            <span class="price">$29</span>
+                            <span class="duration">CUSTOM</span>
+                        </div>
+                        <div class="ui-g-12 pricing-content">
+                            <span>All Basic Features</span>
+                            <span>Responsive</span>
+                            <span>Push Messages</span>
+                            <span>Free Shipping</span>
+                            <span>Unlimited Bandwidth</span>
+                            <span>7/24 Support</span>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton type="button" value="Get a Quote" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="media" class="media">
+                <h2>Multimedia</h2>
+                <p>Take advantage of media's most prominent business trend, and empowers your internal advertising teams.</p>
+                <div class="video-container">
+                     <iframe width="560" height="315" src="https://www.youtube.com/embed/lHje9w7Ev4U" frameborder="0" gesture="media" allow="encrypted-media"></iframe>
+                </div>
+             </div>
+
+            <div id="footer" class="footer">
+                <div class="ui-g">
+                     <div class="ui-g-12 ui-lg-4">
+                         <h3 class="appname">California</h3>
+                         <p>PrimeFaces California Premium Application Template</p>
+                     </div>
+                     <div class="ui-g-12 ui-lg-2">
+                         <span class="header">OVERVIEW</span>
+                         <a href="#">Why PrimeFaces</a>
+                         <a href="#">Who Uses PrimeFaces</a>
+                         <a href="#">Testimonials</a>
+                         <a href="#">License</a>
+                     </div>
+                     <div class="ui-g-12 ui-lg-2">
+                         <span class="header">DEMOS</span>
+                         <a href="#">PrimeFaces</a>
+                         <a href="#">PrimeNG</a>
+                         <a href="#">PrimeReact</a>
+                         <a href="#">PrimeUI</a>
+                     </div>
+                     <div class="ui-g-12 ui-lg-2">
+                         <span class="header">SUPPORT</span>
+                         <a href="#">Support Options</a>
+                         <a href="#">PrimeFaces PRO</a>
+                         <a href="#">PrimeFaces Elite</a>
+                         <a href="#">Forum</a>
+                     </div>
+                     <div class="ui-g-12 ui-lg-2 footer-social">
+                         <span class="header">SOCIAL</span>
+                         <a href="#"><i class="fa fa-twitter"></i></a>
+                         <a href="#"><i class="fa fa-facebook"></i></a>
+                         <a href="#"><i class="fa fa-github"></i></a>
+                     </div>
+                 </div>
+           </div>
+        </div>
+
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="california-layout" />
+    </h:body>
+
+</html>
