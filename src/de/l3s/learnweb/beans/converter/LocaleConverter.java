@@ -20,6 +20,11 @@ public class LocaleConverter implements Converter<Locale>
     @Override
     public Locale getAsObject(FacesContext arg0, UIComponent arg1, String value) throws ConverterException
     {
+        if(null == value)
+        {
+            log.fatal("value is null" + BeanHelper.getRequestSummary());
+            return Locale.ENGLISH;
+        }
         return Locale.forLanguageTag(value);
     }
 

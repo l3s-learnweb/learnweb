@@ -15,6 +15,12 @@ body {
 }
 iframe { border:none }
 
+/* fix for combination with california theme */
+body .ui-datatable thead th {
+    font-size: 14px;
+    padding: 3px;
+}
+
 .p-grid, .p-grid > div {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;

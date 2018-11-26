@@ -17,7 +17,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -33,8 +32,16 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.AbstractPaginator;
+import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.AddFolderBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceManager.Order;
+import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
@@ -45,6 +52,7 @@ import de.l3s.learnweb.resource.yellMetadata.CategoryTree;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
 
 @Named
@@ -345,7 +353,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             //TODO: remove it
             //            RequestContext.getCurrentInstance().update(":filters");
 
-            if (!StringHelper.empty(query)){
+            if(!StringHelper.empty(query))
+            {
                 logQuery(query, ""); //  searchFilters.toString()
                 logResources(paginator.getCurrentPage(), paginator.getPageIndex());
             }
@@ -822,15 +831,21 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
             if(dest != null)
             {
-                try {
+                try
+                {
                     targetGroupId = Integer.parseInt(dest.getString("groupId"));
-                } catch(JSONException | NumberFormatException e) {
+                }
+                catch(JSONException | NumberFormatException e)
+                {
                     targetGroupId = groupId;
                 }
 
-                try {
+                try
+                {
                     targetFolderId = Integer.parseInt(dest.getString("folderId"));
-                } catch(JSONException | NumberFormatException e) {
+                }
+                catch(JSONException | NumberFormatException e)
+                {
                     targetFolderId = 0;
                 }
             }
@@ -1209,6 +1224,12 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         //get the list of unique authors from database
         try
         {
+            if(null == this.group)
+            {
+                log.fatal("group must not be null; " + BeanHelper.getRequestSummary());
+                return null;
+            }
+
             authors = new ArrayList<>();
             List<Resource> resources = this.group.getResources();
 
@@ -1236,7 +1257,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            log.debug(e);
+            addFatalMessage(e);
         }
 
         return authors;
