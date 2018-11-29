@@ -15,6 +15,9 @@
         <title><ui:insert name="title">PrimeFaces California</ui:insert></title>
         <h:outputScript name="js/nanoscroller.js" library="california-layout" />
         <h:outputScript name="js/layout.js" library="california-layout" />
+
+        <h:outputStylesheet name="california-layout/css/nanoscroller.css" />
+        <h:outputStylesheet name="california-layout/css/layout-green.css" />
         <ui:insert name="head"/>
     </h:head>
 
@@ -53,9 +56,6 @@
                <h:outputText value="" />
            </f:facet>
        </p:ajaxStatus>
-
-        <h:outputStylesheet name="css/nanoscroller.css" library="california-layout" />
-        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="california-layout" />
     </h:body>
 
 </html>
