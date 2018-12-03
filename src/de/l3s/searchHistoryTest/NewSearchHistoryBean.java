@@ -1,5 +1,6 @@
 package de.l3s.searchHistoryTest;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,10 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -161,6 +162,33 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return edgesArr.toString();
     }
 
+    //extract categories given entities in a session as input
+    public String getCategoriesAsJson()
+    {
+        Set<String> entities = this.getEntities();
+        StringBuilder builder = new StringBuilder();
+        for(String entity : entities)
+        {
+            builder.append(entity).append(",");
+        }
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/x-www-form-urlencoded");
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("text", builder.toString());
+        parameters.put("language", "en");
+        parameters.put("normalize", "false");
+        parameters.put("depth", "0");
+        try
+        {
+            return HttpUtils.GetContentByPost("http://tagtheweb.com.br/wiki/getFingerPrint.php", headers, parameters);
+        }
+        catch(IOException e)
+        {
+            log.error("Error while creating json object for edge: ", e);
+            return null;
+        }
+    }
+
     /**
      * Get all entities in a selected session.
      *
@@ -185,7 +213,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         if(this.showGroupHistory)
         {
-            if (sessions == null && selectedGroupId > 0) {
+            if(sessions == null && selectedGroupId > 0)
+            {
                 if(!SessionCache.Instance().existsGroupId(selectedGroupId))
                 {
                     SessionCache.Instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
@@ -229,6 +258,9 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return searchResults;
     }
 
+    /*
+     * actions in entityRelationship.jsp
+     */
     public void actionUpdateKGData()
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -323,7 +355,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public void setSelectedGroupId(int selectedGroupId)
     {
-        if (selectedGroupId != this.selectedGroupId) {
+        if(selectedGroupId != this.selectedGroupId)
+        {
             showGroupHistory = true;
             searchQuery = null;
             sessions = null;
@@ -341,12 +374,14 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     private void filterSessionsByQuery(String filterQuery) throws SQLException
     {
-        if (StringUtils.isEmpty(filterQuery)) {
+        if(StringUtils.isEmpty(filterQuery))
+        {
             return;
         }
 
         boolean isSearchUser = false;
-        if (filterQuery.startsWith("user:") || filterQuery.startsWith("u:")) {
+        if(filterQuery.startsWith("user:") || filterQuery.startsWith("u:"))
+        {
             isSearchUser = true;
             filterQuery = filterQuery.replace("user:", "").replace("u:", "").trim();
         }
@@ -354,7 +389,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         final boolean finalIsSearchUser = isSearchUser;
         final String finalQuery = filterQuery;
         sessions = getSessions().stream().filter(session -> {
-            if (finalIsSearchUser) {
+            if(finalIsSearchUser)
+            {
                 return StringUtils.containsIgnoreCase(session.getUserName(), finalQuery);
             }
 
