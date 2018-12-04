@@ -23,7 +23,7 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
-    private static final String TRACKER_CLIENT_ID = "1";
+    private static final int TRACKER_CLIENT_ID = 2;
 
     private Integer paramUserId;
 

@@ -371,25 +371,25 @@ class GlossaryDashboardManager
         return langDataList;
     }
 
-    Map<String, Integer> getProxySourcesWithCounters(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    Map<String, Integer> getProxySourcesWithCounters(int trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
         Map<String, Integer> countPerSource = new TreeMap<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT REPLACE(REPLACE(website_domain, '.secure.waps.io', ''), '.waps.io', '') AS domain, COUNT(*) AS total_records "
+                "SELECT url_domain, COUNT(*) AS total_records "
                         + "FROM tracker.track "
-                        + "WHERE status = 'PROCESSED' AND external_client_id = ? "
+                        + "WHERE status = 'PROCESSED' AND client_id = ? "
                         + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
-                        + "AND created_at BETWEEN ? AND ? group by (domain) order by total_records desc"))
+                        + "AND created_at BETWEEN ? AND ? group by url_domain order by total_records desc"))
         {
-            select.setString(1, trackerClientId);
+            select.setInt(1, trackerClientId);
             select.setTimestamp(2, new Timestamp(startDate.getTime()));
             select.setTimestamp(3, new Timestamp(endDate.getTime()));
             ResultSet rs = select.executeQuery();
 
             while(rs.next())
             {
-                String domain = rs.getString("domain");
+                String domain = rs.getString("url_domain");
                 if(domain == null)
                 {
                     log.warn("skip null domain");
@@ -402,18 +402,18 @@ class GlossaryDashboardManager
         return countPerSource;
     }
 
-    LinkedList<TrackerUserActivity> getTrackerStatistics(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    LinkedList<TrackerUserActivity> getTrackerStatistics(int trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
         LinkedList<TrackerUserActivity> statistic = new LinkedList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT external_user_id AS user_id, sum(total_events) AS total_events, sum(time_stay) AS time_stay, sum(time_active) AS time_active, sum(clicks) AS clicks, sum(keypress) AS keypresses "
                         + "FROM tracker.track "
-                        + "WHERE status = 'PROCESSED' AND external_client_id = ? "
+                        + "WHERE status = 'PROCESSED' AND client_id = ? "
                         + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
                         + "AND created_at BETWEEN ? AND ? group by external_user_id"))
         {
-            select.setString(1, trackerClientId);
+            select.setInt(1, trackerClientId);
             select.setTimestamp(2, new Timestamp(startDate.getTime()));
             select.setTimestamp(3, new Timestamp(endDate.getTime()));
             ResultSet rs = select.executeQuery();
