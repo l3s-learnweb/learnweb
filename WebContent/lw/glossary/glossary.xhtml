@@ -23,7 +23,7 @@
 				
 				<h:form id= "form" prependId="false">
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
-						paginator="#{glossaryBeanNEW.paginator}" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
+						paginator="false" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
 						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						draggableColumns="false"
@@ -34,7 +34,12 @@
 						<p:ajax event="page" oncomplete="groupRow()" />
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
-						<f:facet name="header">
+						<f:facet name="header">							
+							<p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="pi pi-align-justify" />
+        					<p:columnToggler datasource="my_gloss_table" trigger="toggler">
+        						<p:ajax event="toggle" onstart="alert('start');" onsuccess="alert('fertig')"/>
+        					</p:columnToggler>
+        					
 							<p:outputPanel>
 								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
@@ -42,10 +47,8 @@
 									placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
 						</f:facet>
-						<p:column headerText="glossary ID" style="display:none" exportable="false">
-							<h:outputText value="#{item.entryId}"></h:outputText>
-						</p:column>
-						<p:column style=" width:20px;" exportable="false" >
+						
+						<p:column style=" width:20px;" exportable="false" toggleable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />
 							</p:commandLink>
@@ -56,15 +59,15 @@
 							</p:commandLink>
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains" toggleable="false"
 							filterStyle="width: 90%;" sortBy="#{item.topicOne}">
 							<h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains" toggleable="false"
 							filterStyle="width: 90%;" sortBy="#{item.topicTwo}">
 							<h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains" toggleable="false"
 							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
 							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
@@ -95,7 +98,7 @@
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.phraseology}" />
 						</p:column>
-						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
+						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" toggleable="false" style="display:none">
 							<h:outputText value="#{item.fulltext}" />
 						</p:column>
 					</p:dataTable>
@@ -303,6 +306,7 @@
 				}
 			};
 
+			
 			$(document).ready(function() {
 				groupRow();
 			});
