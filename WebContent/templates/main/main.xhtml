@@ -20,6 +20,9 @@
         <title>#{pageTitle} - #{msg['application.name']}</title>
         <link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico"/>
 
+
+ <h:outputStylesheet library="primefaces-omega" name="theme.css"/>
+ 
         <h:outputStylesheet library="main-template" name="main.css"/>
         <h:outputStylesheet library="main-template" name="responsive_design.css" />
 
@@ -28,6 +31,7 @@
         <h:outputScript library="main-template" name="default2.js"/>
 
         <ui:decorate template="/templates/main/tooltips.xhtml"/>
+		
 
         <base href="#{request.contextPath}/lw/"/>
     </h:head>

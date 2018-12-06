@@ -34,12 +34,15 @@
 						<p:ajax event="page" oncomplete="groupRow()" />
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
-						<f:facet name="header">							
+
+						<f:facet name="header">	
+						<!-- 						
 							<p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="pi pi-align-justify" />
         					<p:columnToggler datasource="my_gloss_table" trigger="toggler">
         						<p:ajax event="toggle" onstart="alert('start');" onsuccess="alert('fertig')"/>
         					</p:columnToggler>
-        					
+        					 -->
+        					 
 							<p:outputPanel>
 								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
@@ -48,7 +51,7 @@
 							</p:outputPanel>
 						</f:facet>
 						
-						<p:column style=" width:20px;" exportable="false" toggleable="false">
+						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBeanNEW.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />
 							</p:commandLink>
@@ -59,15 +62,15 @@
 							</p:commandLink>
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains" toggleable="false"
+						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicOne}">
 							<h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains" toggleable="false"
+						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicTwo}">
 							<h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains" toggleable="false"
+						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
 							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
@@ -80,7 +83,16 @@
 							filterStyle="width: 90%;" sortBy="#{item.topicOne}#{item.topicTwo}#{item.entryId}#{item.term}">
 							<h:outputText value="#{item.term}" />
 						</p:column>
-						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}">
+						<p:column headerText="#{msg.language}" filterBy="#{item.getLanguage()}" filterMatchMode ="in">
+							<f:facet name="filter">
+								<p:selectCheckboxMenu value="#{glossaryBeanNEW.tableLanguageFilter}" onchange="PF('glossTable').filter()"  styleClass="custom-filter" converter="#{localeConverter}" label="#{msg.filter}">
+									<f:selectItems value="#{glossaryBeanNEW.allowedTermLanguages}" />
+									<p:ajax event="toggleSelect" process="@this" oncomplete="PF('glossTable').filter()" />
+									
+								</p:selectCheckboxMenu>								
+								
+							</f:facet>
+
 							<h:outputText value="#{msg['language_' += item.languageTag]}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}">
@@ -98,7 +110,15 @@
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.phraseology}" />
 						</p:column>
-						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" toggleable="false" style="display:none">
+
+						<p:columns rendered="false" value="#{glossaryBeanNEW.columns}" var="column" sortBy="#{item[column.property]}" filterBy="#{item[column.property]}">
+							<f:facet name="header">
+								<h:outputText value="#{column.header}" />
+							</f:facet>
+							<h:outputText value="#{item[column.property]}" />
+						</p:columns>
+
+						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
 							<h:outputText value="#{item.fulltext}" />
 						</p:column>
 					</p:dataTable>
@@ -235,7 +255,7 @@
 							</p:column>
 						</p:dataTable>
 						<br />
-						<p:commandButton value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBeanNEW.addTerm()}" style="float:left;" styleClass="greenbutton"
+						<p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBeanNEW.addTerm()}" style="float:left;" styleClass="greenbutton"
 							update=":glossary_add :lang_terms">
 							<f:ajax execute="@this lang_terms" />
 						</p:commandButton>
