@@ -82,7 +82,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable
 
     public List<User> getMembers() throws SQLException
     {
-        if(null == members)
+        if(null == members && group != null)
         {
             members = group.getMembers();
         }
