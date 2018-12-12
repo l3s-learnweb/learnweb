@@ -7,7 +7,7 @@
 	<f:view contentType="text/html">
 		<h:head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-			<title>Hello world!</title>
+			<title>My resources</title>
 
 			<link type="text/css" rel="stylesheet" href="#{request.contextPath}/design/assets/normalize.css" />
 			<link type="text/css" rel="stylesheet" href="#{request.contextPath}/design/assets/primeflex.css" />
@@ -16,39 +16,637 @@
 			<script src="#{request.contextPath}/design/assets/main.js"></script>
 
 			<base href="#{request.contextPath}/" />
+
+			<style>
+				html,body{
+					margin: 0;
+					padding: 0;
+				}
+
+				.page-container{
+					width: 99%;
+				}
+
+				.navigation-container{
+					background-color: white;
+					padding: 0;
+					margin-bottom: 1%;
+				}
+
+				.logo-container{
+					padding:0;
+					margin-top: 2%;
+					margin-left: 2%;
+				}
+
+				.search-container{
+					margin-top: 1%;
+				}
+
+				.icons-container{
+					margin-left: 6%;
+					padding-left: 7%;
+					padding-right: 0;
+				}
+
+				.nav-button{
+					width: 25%;
+					margin-top: 8%;
+					margin-left: 5%;
+				}
+
+				.horisontal-line{
+					margin: 0;
+					color: deepskyblue;
+					size: 5px;
+					width: 100%;
+				}
+
+				.main-container{
+					height: 100%;
+				}
+
+				.left-menu-container{
+					margin-top: 0.5%;
+					background-color: white;
+				}
+
+				.panel-menu{
+					width: 100%;
+					margin-left: 2%;
+				}
+
+				.menu{
+					width: 99%;
+				}
+
+				.content-container{
+					height: 100%;
+				}
+
+				.content-navigation{
+
+				}
+
+				.content-header{
+					font-family: monospace;
+					color: #44b9e7;
+					margin: 0;
+					margin-top: 1%;
+				}
+
+				.change-view-button{
+					margin-top: 8%;
+					margin-left: 100%;
+					width: 50%;
+				}
+
+				.add-resource-button{
+					margin-top: 8%;
+					margin-left: 40%;
+					width: 50%;
+				}
+
+                .scroll-panel{
+                    width: 100%;
+                }
+
+				.grid-view{
+					width: 98%;
+					margin: 0.5%;
+					height: 100%;
+					/*display: none;*/
+				}
+				.list-view{
+					width: 98%;
+					margin: 0.5%;
+					height: 100%;
+					display: none;
+				}
+
+			</style>
 		</h:head>
 
 		<h:body>
+			<div class="p-grid p-dir-col page-container">
 
-			<div class="p-grid vertical-container" style="height: 200px; background: gray;">
-				<div class="p-col p-col-align-start" style="background: red;">
-					<div class="box">4</div>
+				<div class="p-grid navigation-container">
+					<div class="p-col-2 logo-container">
+						<h:graphicImage value="design/resources/images/logoLW.jpg" />
+					</div>
+					<div class="p-col-7 search-container">
+						<p:inputText  placeholder="Search"/>
+					</div>
+					<div class="p-col-2 icons-container">
+						<h:form>
+							<p:button class="nav-button" icon="ui-icon-info" title="Information"/>
+							<p:button class="nav-button" icon="ui-icon-mail-closed" title="Notifications"/>
+							<p:commandButton class="nav-button" id="profileMenuButton" type="button" icon="ui-icon-person" title="Profile"/>
+							<p:menu overlay="true" trigger="profileMenuButton" my="right top" at="right bottom">
+								<p:menuitem value="Profile" icon="ui-icon-person"/>
+								<p:menuitem value="Settings" icon="ui-icon-gear"/>
+								<p:menuitem value="Log out" icon="ui-icon-arrowreturnthick-1-e"/>
+							</p:menu>
+						</h:form>
+					</div>
 				</div>
-				<div class="p-col p-col-align-center" style="background: blue;">
-					<div class="box">4</div>
+
+				<hr class = "horisontal-line"/>
+
+				<div class="p-grid main-container">
+
+					<div class="p-col-3 left-menu-container">
+						<h:form>
+							<p:growl>
+								<p:autoUpdate />
+							</p:growl>
+
+							<p:panelMenu styleClass="panel-menu">
+								<p:submenu styleClass="panel-menu" label="My resources">
+									<p:menuitem styleClass="menu-item" value="My comments"  icon=" ui-icon-comment" />
+									<p:menuitem value="My tags"   icon="ui-icon-tag" />
+								</p:submenu>
+								<p:submenu label="My groups" >
+									<p:submenu label="TED" icon="ui-icon-folder-collapsed">
+										<p:menuitem value="Folder 1" icon="ui-icon-folder-open" />
+										<p:menuitem value="Folder 2" icon="ui-icon-folder-open" />
+									</p:submenu>
+									<p:menuitem value="Fashion"  icon="ui-icon-folder-collapsed" />
+									<p:menuitem value="Make-up" icon="ui-icon-folder-collapsed" />
+								</p:submenu>
+
+							</p:panelMenu>
+							<p:menu styleClass="menu">
+								<p:menuitem value="My submissions" icon="ui-icon-clipboard"/>
+								<p:menuitem value="My dashboard" icon="ui-icon-calculator"/>
+								<p:menuitem value="Search history" icon=" ui-icon-search"/>
+							</p:menu>
+						</h:form>
+					</div>
+
+					<div class="p-col-9 content-container">
+						<div class="p-grid content-navigation">
+							<div class="p-col-8">
+								<h2 class="content-header">My resources</h2>
+							</div>
+							<div class="p-col-1 p-offset-2">
+								<h:form>
+									<p:commandButton class="change-view-button" id="changeViewButton" type="button" icon="ui-icon-calculator" title="Change view" action="#{buttonView.buttonAction}" update="growl"/>
+								</h:form>
+							</div>
+							<div class="p-col-1">
+								<h:form>
+									<p:commandButton class="add-resource-button" id="addResourceButton" type="button" icon="ui-icon-plus" title="Add"/>
+									<p:tieredMenu overlay="true" trigger="addResourceButton" my="right top" at="right bottom" style="width:200px">
+										<p:submenu  label="Add file">
+											<p:menuitem value="Document"  icon=" ui-icon-plus" />
+											<p:menuitem value="Spreadsheet"   icon="ui-icon-plus" />
+											<p:menuitem value="Presentation"   icon="ui-icon-plus" />
+										</p:submenu>
+										<p:menuitem value="Create folder" icon="ui-icon-folder-collapsed" onclick="PF('dlg2').show();"/>
+										<p:menuitem value="Upload file"  icon="ui-icon-arrowreturnthick-1-n"/>
+										<p:menuitem value="Add Website"  icon="ui-icon-plus"/>
+										<p:menuitem value="Add glossary"  icon="ui-icon-plus"/>
+									</p:tieredMenu>
+								</h:form>
+							</div>
+						</div>
+
+						<p:dialog header="Create folder" widgetVar="dlg2" modal="true" height="100">
+							<p:outputLabel value="Input name:" for="acSimple" />
+							<p:autoComplete id="acSimple" value="#{autoCompleteView.txt1}" completeMethod="#{autoCompleteView.completeText}" />
+						</p:dialog>
+
+						<p:scrollPanel class="scroll-panel" mode="native">
+							<div class="p-grid grid-view">
+								<div class="p-col-2 resource-grid-container">
+									<p:panel header="Folder 1 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0;padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0;padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="Folder 2 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:90%;"/>
+												<h:form>
+													<div class="p-grid">
+
+														<div class="p-col-8" style="padding: 0; padding-top: 5%">
+															<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+														</div>
+														<div class="p-col-1" style="padding: 0; padding-top: 6%">
+															<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+														</div>
+														<div class="p-col-1" style="padding: 0; padding-top: 6%">
+															<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+														</div>
+														<div class="p-col-1" style="padding: 0; padding-top: 6%">
+															<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+														</div>
+													</div>
+												</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="Folder 3 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="Folder 4 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 1 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 2 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 3 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 4 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 5 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 6 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 7 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 8 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<!---->
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 8 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+								<div class="p-col-2 resource-container">
+									<p:panel header="File 8 name" style="text-align:center">
+										<h:panelGrid columns="1" style="width:100%; padding: 0">
+											<h:graphicImage value="design/resources/images/file.png" style="width:90%;"/>
+											<h:form>
+												<div class="p-grid">
+
+													<div class="p-col-8" style="padding: 0; padding-top: 5%">
+														<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: x-small;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+													</div>
+													<div class="p-col-1" style="padding: 0; padding-top: 6%">
+														<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+													</div>
+												</div>
+											</h:form>
+										</h:panelGrid>
+									</p:panel>
+								</div>
+
+							</div>
+
+							<div class="p-grid list-view">
+								<div class="p-col-12 resource-container" style="border-bottom-width: medium; border-bottom-color: black">
+									<div class="p-grid resource-grid">
+										<div class="p-col-1">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:50%;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="Folder name 1" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-3" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0;padding-top: 2%">
+											<div class="p-grid">
+												<div class="p-col-1 p-offset-9">
+													<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<hr class = "horisontal-line"/>
+								<div class="p-col-12 resource-container" style="border-bottom-width: medium; border-bottom-color: black">
+									<div class="p-grid resource-grid">
+										<div class="p-col-1">
+											<h:graphicImage value="design/resources/images/folder.png" style="width:50%;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="Folder name 2" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-3" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0;padding-top: 2%">
+											<div class="p-grid">
+												<div class="p-col-1 p-offset-9">
+													<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<hr class = "horisontal-line"/>
+								<div class="p-col-12 resource-container">
+									<div class="p-grid resource-grid">
+										<div class="p-col-1">
+											<h:graphicImage value="design/resources/images/file.png" style="width:50%;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="File name 1" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-3" style="padding: 0; padding-top: 2%">
+											<h:outputLabel value="Created by petukhova" style="text-align:left; font-size: medium;"/>
+										</div>
+										<div class="p-col-4" style="padding: 0;padding-top: 2%">
+											<div class="p-grid">
+												<div class="p-col-1 p-offset-9">
+													<p:commandLink title="Duplicate" styleClass="ui-icon ui-icon-copy" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Edit" styleClass="ui-icon ui-icon-pencil" style="margin: 0;"/>
+												</div>
+												<div class="p-col-1">
+													<p:commandLink title="Delete" styleClass="ui-icon ui-icon-trash" style="margin: 0;"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+                        </p:scrollPanel>
+                    </div>
+
 				</div>
-				<div class="p-col p-col-align-end" style="background: green;">
-					<div class="box">4</div>
-				</div>
+
 			</div>
-
-			<div class="p-grid vertical-container" style="height: 200px;">
-				<div class="p-col p-col-align-center" style="text-align: center">
-					<h:form>
-						<p:growl id="message" showDetail="true" />
-
-						<p:commandButton value="Destroy the World" update="message">
-							<p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
-						</p:commandButton>
-
-						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-							<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-							<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-						</p:confirmDialog>
-					</h:form>
-				</div>
-			</div>
-	
 		</h:body>
 	</f:view>
 </html>
