@@ -101,9 +101,9 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
     text-align: center;
     color:#4F4F4F;
     background-color: #fff;
-    padding: 1rem 3rem;
+    padding: 1rem;
     opacity: .9;
-    max-width: 92rem;
+    max-width: 96rem;
     margin: 0 auto;
     box-shadow: 1px 3px 5px 0 rgba(0, 0, 0, 0.5);
 }

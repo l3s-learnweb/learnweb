@@ -136,7 +136,16 @@
                     <pc:menu widgetVar="me">
             
                         <p:menuitem id="om_buy" value="Buy Now" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california"/>
-                    </pc:menu>
+
+						<p:submenu>
+							<f:facet name="label">
+								<p:menuitem value="Quit" url="http://www.primefaces.org" />
+							</f:facet>
+							<p:menuitem value="Buy Now1" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california" />
+							<p:menuitem value="Buy Now2" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california" />
+
+						</p:submenu>
+					</pc:menu>
                 </h:form>
             </div>
         </div>

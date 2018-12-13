@@ -246,7 +246,7 @@
 
 								<p:inputTextarea id="phras" value="#{term.phraseology}" style="width: 90% !important" autoResize="false" pt:onpaste="setPasteStatus(this, 'phraseology');"/>
 							</p:column>
-							<p:column width="10" rendered="#{not term.deleted}">
+							<p:column width="20" rendered="#{not term.deleted}">
 								<p:commandLink id="delete_term" actionListener="#{glossaryBeanNEW.deleteTerm(term)}" update=":glossgrowl :lang_terms :growl">
 									<f:ajax execute="@this lang_terms" />
 									<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />

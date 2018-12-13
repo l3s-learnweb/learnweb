@@ -37,6 +37,11 @@
 		<from>/lw/survey/surveyResult.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
 	</rule>
+	
+	<rule>
+		<from>/lw/showGlossary.jsf(.*)</from>
+		<to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
+	</rule>
 <!--         
     
     <rule>
