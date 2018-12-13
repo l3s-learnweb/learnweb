@@ -25,7 +25,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>california-peak</param-value>
+        <param-value>california-green</param-value>
     </context-param>
     <context-param>
         <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>

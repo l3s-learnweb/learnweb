@@ -29,6 +29,7 @@
 		<to type="redirect">http://alexandria-project.eu/archivesearch/$1</to>
 	</rule>
 	
+	<!-- redirect old to new survey and glossary page -->
 	<rule>
 		<from>/templates/resources/survey.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
@@ -36,8 +37,7 @@
 	<rule>
 		<from>/lw/survey/surveyResult.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/survey/results.jsf$1</to>
-	</rule>
-	
+	</rule>	
 	<rule>
 		<from>/lw/showGlossary.jsf(.*)</from>
 		<to type="redirect">%{context-path}/lw/glossary/glossary.jsf$1</to>
