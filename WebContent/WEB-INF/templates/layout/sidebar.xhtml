@@ -134,18 +134,32 @@
 
                 <h:form id="menuform">
                     <pc:menu widgetVar="me">
-            
-                        <p:menuitem id="om_buy" value="Buy Now" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california"/>
 
-						<p:submenu>
-							<f:facet name="label">
-								<p:menuitem value="Quit" url="http://www.primefaces.org" />
-							</f:facet>
-							<p:menuitem value="Buy Now1" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california" />
-							<p:menuitem value="Buy Now2" icon="fa fa-fw fa-credit-card-alt" url="https://www.primefaces.org/layouts/california" />
 
-						</p:submenu>
-					</pc:menu>
+                        <p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="#{request.contextPath}/lw/myhome/resourses.jsf"/>
+                        <p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+
+                        <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+                        <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+                        <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+                        <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+
+                        <p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button">
+                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="#{request.contextPath}/lw/admin/notification.jsf"/>
+                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="#{request.contextPath}/lw/admin/users.jsf"/>
+                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="#{request.contextPath}/lw/admin/courses.jsf"/>
+                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="#{request.contextPath}/lw/admin/organisation.jsf"/>
+                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="#{request.contextPath}/lw/admin/text_analysis.jsf"/>
+                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="#{request.contextPath}/lw/admin/statistics.jsf"/>
+                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/detailed_transcript_log.jsf"/>
+                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/simple_transcript_log.jsf"/>
+                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="#{request.contextPath}/lw/admin/transcript_summary.jsf"/>
+                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="#{request.contextPath}/lw/admin/dashboard/glossary.jsf"/>
+                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="#{request.contextPath}/lw/admin/dashboard/activity.jsf"/>
+                        </p:submenu>
+
+                    </pc:menu>
                 </h:form>
             </div>
         </div>

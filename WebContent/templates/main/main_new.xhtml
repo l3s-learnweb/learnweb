@@ -4,6 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:pp="http://primefaces.org/california"
       lang="#{userBean.localeCode}">
 
 <!--@elvariable id="pageTitle" type="java.lang.String"-->
@@ -21,8 +22,13 @@
         <link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico"/>
 
         <h:outputStylesheet library="main-template" name="main_new.css"/>
+        <h:outputStylesheet library="primeflex-master" name="primeflex.css"/>
+        <h:outputStylesheet library="california-layout" name="css/layout-green.css"/>
+        <h:outputStylesheet library="california-layout" name="css/nanoscroller.css"/>
 
         <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+        <h:outputScript library="california-layout" name="js/layout.js" target="head"/>
+        <h:outputScript library="california-layout" name="js/nanoscroller.js" target="head"/>
         <h:outputScript library="main-template" name="default2.js"/>
 
         <ui:decorate template="/templates/main/tooltips.xhtml"/>
@@ -111,3 +117,135 @@
 </f:view>
 
 </html>
+
+
+        <!--<div class="layout-wrapper layout-wrapper-sidebar-inactive">
+                        <div class="layout-main">
+                            <div class="layout-main-content">
+                                <h:form id="editwelcomeform">
+
+                                    <div class="p-grid">
+                                        <div class="p-col-12">
+                                            <h1>#{adminOrganisationsBean.selectedOrganisation.title}</h1>
+                                        </div>
+
+                                    <div class="p-col-12">
+                                        <div class="p-grid">
+                                            <div class="p-col">
+                                                <div class="card card-w-title">
+                                                    <h2>Common settings</h2>
+                                                    <div>
+                                                        <p>
+                                                            <h:outputText value="#{msg.title}:" />
+                                                        </p>
+                                                        <p:inputText value="#{adminOrganisationsBean.selectedOrganisation.title}" />
+
+                                                        <p>
+                                                            <h:outputText value="Banner image:" />
+                                                        </p>
+                                                        <p:fileUpload fileUploadListener="#{adminOrganisationsBean.handleFileUpload}" id="imageupload" mode="advanced" update="bannerimage" auto="true" sizeLimit="1000000"
+                                                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+                                                        <h:panelGroup id="bannerimage">
+                                                            <img src="#{adminOrganisationsBean.selectedOrganisation.bannerImage}" />
+                                                        </h:panelGroup>
+
+                                                        <p>
+                                                            <h:outputText value="Welcome Page: " />
+                                                        </p>
+                                                        <p:selectOneMenu id="welcomePage" value="#{adminOrganisationsBean.selectedOrganisation.welcomePage}" editable="true">
+                                                            <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
+                                                            <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
+                                                        </p:selectOneMenu>
+
+                                                        <p>
+                                                            <h:outputText value="Logout Page: " />
+                                                        </p>
+                                                        <p:selectOneMenu value="#{adminOrganisationsBean.selectedOrganisation.logoutPage}" editable="true">
+                                                            <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
+                                                            <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
+                                                            <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page" />
+                                                        </p:selectOneMenu>
+
+                                                        <p>
+                                                            <h:outputText value="Default language: " />
+                                                        </p>
+                                                        <p:selectOneMenu value="#{adminOrganisationsBean.selectedOrganisation.defaultLanguage}">
+                                                            <f:selectItem itemLabel="No default" itemValue="#{null}" />
+                                                            <f:selectItem itemLabel="#{msg.language_de}" itemValue="de" />
+                                                            <f:selectItem itemLabel="#{msg.language_en}" itemValue="en" />
+                                                            <f:selectItem itemLabel="#{msg.language_it}" itemValue="it" />
+                                                            <f:selectItem itemLabel="#{msg.language_pt}" itemValue="pt" />
+                                                        </p:selectOneMenu>
+
+                                                        <p>
+                                                            <h:outputText value="Language variant: " />
+                                                        </p>
+                                                        <p:selectOneMenu value="#{adminOrganisationsBean.selectedOrganisation.languageVariant}" editable="false">
+                                                            <f:selectItem itemValue="" itemLabel="No variant" />
+                                                            <f:selectItem itemValue="AMA" itemLabel="AMA" />
+                                                            <f:selectItem itemValue="Archive" itemLabel="Archive"/>
+                                                        </p:selectOneMenu>
+
+                                                        <p>
+                                                            <h:outputText value="Glossary languages: " />
+                                                        </p>
+                                                        <p:selectCheckboxMenu value="#{adminOrganisationsBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
+                                                                              label="#{msg.language}" multiple="true" converter="#{localeConverter}">
+                                                            <f:selectItems value="#{adminOrganisationsBean.availableGlossaryLanguages}"></f:selectItems>
+                                                        </p:selectCheckboxMenu>
+
+                                                        <p>
+                                                            <p:commandButton action="#{adminOrganisationsBean.onSave}" value="#{msg.save}" ajax="false" />
+
+                                                            <p:button rendered="#{userBean.admin}" outcome="organisations" value="Back to Organisations" />
+                                                        </p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="p-col">
+                                                <div class="p-grid">
+                                                    <div class="p-col-12">
+                                                        <div class="card card-w-title">
+                                                            <h2>Welcome</h2>
+                                                            <div>
+                                                                <p>
+                                                                    <h:outputText value="#{msg.welcome_message}:" />
+                                                                </p>
+                                                                <p:editor value="#{adminOrganisationsBean.selectedOrganisation.welcomeMessage}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-col-12">
+                                                        <div class="card card-w-title">
+                                                            <h2>Additional settings</h2>
+                                                            <p:accordionPanel autoHeight="false" id="courseoptions">
+                                                                <c:forEach items="#{adminOrganisationsBean.optionGroups}" var="group" varStatus="status">
+
+                                                                    <p:tab title="#{adminOrganisationsBean.optionGroups[status.index].title}">
+                                                                        <h:dataTable value="#{adminOrganisationsBean.optionGroups[status.index].options}" var="option">
+                                                                            <h:column>
+                                                                                <h:selectBooleanCheckbox value="#{option.value}" id="checkbox" />
+                                                                            </h:column>
+                                                                            <h:column>
+                                                                                <h:outputLabel value="#{option.name}" for="checkbox" />
+                                                                            </h:column>
+                                                                        </h:dataTable>
+                                                                    </p:tab>
+
+                                                                </c:forEach>
+                                                            </p:accordionPanel>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                </h:form>
+                            </div>
+                        </div>
+                    </div> -->

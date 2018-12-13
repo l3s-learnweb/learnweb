@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:po="http://primefaces.org/california">
+
+    <div class="layout-topbar ui-g-12">
+        <div class="ui-g-2 mat-extd-layout-topbar-normalizer mat-extd-adapt-1024-hidder">
+            <div outcome="/dashboard" class="logo">
+
+                <img src="../../../resources/image/logo.svg" />
+
+            </div>
+        </div>
+        <div class="ui-g-1 mat-extd-layout-topbar-normalizer">
+            <a id="menu-button" href="#">
+                <i class="fa fa-align-left" />
+            </a>
+        </div>
+
+        <div class="ui-lg-9 ui-md-11 mat-extd-layout-topbar-normalizer mat-extd-layout-topbar-right-menu-normalizer">
+            <div class="ui-g-4 ui-md-9 mat-extd-layout-topbar-item-normalizer mat-extd-adapt-640-hidder">
+                <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
+
+                    <input type="hidden" name="action" value="#{searchBean.queryMode}" />
+                    <input type="search" class="mat-extd-layout-topbar-search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
+
+
+                    <button id="searchbutton" title="#{msg.searchLabel}" class="mat-extd-layout-topbar-search-button" type="submit">
+
+
+                        <svg fill="currentColor" viewBox="5 6 292 290" version="1.1">
+                            <path d="m37.939 39.086c-43.273 43.272-43.379 114.16-0.10599 157.43 36.663 36.663 93.202 42.25 135.92 16.766l76.344 74.235c10.507 10.198 27.085 9.821 37.117-0.84399 10.033-10.665 9.77-27.446-0.73798-37.644l-75.183-72.864c26.361-42.847 21.008-100.04-16.028-137.08-43.273-43.273-114.06-43.273-157.33 0h0.000008zm31.739 31.739c26.102-26.102 67.746-26.102 93.848 0s26.102 67.746 0 93.848-67.746 26.102-93.848 0-26.102-67.746 0-93.848z"></path>
+                        </svg>
+
+
+                    </button>
+
+                </form>
+            </div>
+
+            <div class="ui-g-8 ui-sm-12 ui-md-3 mat-extd-layout-topbar-item-normalizer">
+                <div class="ui-g-7 mat-extd-adapt-1024-hidder">
+                </div>
+
+
+                <div class="ui-g-5 ui-sm-12 ui-md-12  mat-extd-layout-topbar-item-normalizer mat-extd-layout-topbar-menu">
+                    <h:form styleClass="mat-extd-layout-topbar-menu-form-button mat-extd-adapt-640-apearer" >
+                        <p:button value="" href="#{request.contextPath}/lw/myhome/notification.jsf" icon="fa fa-search" styleClass=" mat-extd-layout-topbar-menu-button mat-extd-layout-topbar-icon"/>
+                    </h:form>
+                    <!--<h:form styleClass="mat-extd-layout-topbar-menu-form-button" >
+                        <p:button value="" href="#{request.contextPath}/lw/myhome/notification.jsf" icon="fa fa-question" styleClass=" mat-extd-layout-topbar-menu-button mat-extd-layout-topbar-icon"/>
+                    </h:form>-->
+
+
+                    <h:form styleClass="mat-extd-layout-topbar-menu-form-button" >
+                        <p:button value="" href="#{request.contextPath}/lw/myhome/notification.jsf" icon="fa fa-envelope" styleClass=" mat-extd-layout-topbar-menu-button mat-extd-layout-topbar-icon"/>
+                    </h:form>
+
+                    <h:form>
+                        <p:menuButton style="background: url(${learnwebBean.getProfileImage(user)});" styleClass="mat-extd-layout-topbar-menu-button mat-extd-layout-topbar-profile">
+                            <p:menuitem value="My profile" url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-user"/>
+                            <p:menuitem value="Settings" url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-cog"/>
+                            <p:separator />
+                            <p:menuitem value="Logout" action="#{loginBean.logout}" icon="fa fa-sign-out"/>
+                        </p:menuButton>
+                    </h:form>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</ui:composition>

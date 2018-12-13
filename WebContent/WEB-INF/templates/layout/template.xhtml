@@ -18,16 +18,17 @@
 
         <h:outputStylesheet name="california-layout/css/nanoscroller.css" />
         <h:outputStylesheet name="california-layout/css/layout-green.css" />
+        <h:outputStylesheet name="california-layout/css/matviei-extd.css" />
         <ui:insert name="head"/>
     </h:head>
 
     <h:body styleClass="main-body">
 
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
-            <ui:include src="./megamenu.xhtml" />
-            <ui:include src="./topbar.xhtml" />
-            <ui:include src="./sidebar.xhtml" />
-            <ui:include src="./right-sidebar.xhtml" />
+            <ui:include src="megamenu.xhtml" />
+            <ui:include src="topbar.xhtml" />
+            <ui:include src="sidebar.xhtml" />
+            <ui:include src="right-sidebar.xhtml" />
 
             <div class="layout-main">
                 <div class="route-bar">
@@ -36,14 +37,14 @@
                         <ui:insert name="viewname" />
                     </div>
 
-                    <ui:include src="./route-bar-menu.xhtml" />
+                    <ui:include src="route-bar-menu.xhtml" />
                 </div>
 
                 <div class="layout-main-content">
                     <ui:insert name="content"/>
                 </div>
 
-                <ui:include src="./footer.xhtml" />
+                <ui:include src="footer.xhtml" />
             </div>
         </div>
 

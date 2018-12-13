@@ -1,5 +1,5 @@
-<ui:composition 
-	template="/templates/main/main.xhtml" 
+<ui:composition
+		template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,7 +9,7 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.courses}"/>
 
-	<ui:define name="center_layout">
+	<ui:define name="content">
 	
 	<style type="text/css">
 		.ui-state-hover, .ui-state-focus, .ui-state-active{
@@ -26,11 +26,7 @@
 		#courses_form {padding:5px;}
 	</style>
 	
-		<div class="page_header">
-			<span>
-				#{msg.courses}
-			</span>
-		</div>
+
 
 		
 		<h:form id="courses_form">
@@ -43,7 +39,8 @@
 					<div></div>
 				</div>
 			</p:blockUI>	
-				
+
+			<p:panel header="#{msg.courses}">
 			<p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">					
 				<p:column headerText="#{msg.title}" sortBy="#{course.title}">
 					<h:outputText value="#{course.title}" />						
@@ -86,7 +83,8 @@
 						 <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
 					</h:outputLink>					
 				</p:column>
-			</p:dataTable>	
+			</p:dataTable>
+			</p:panel>
 		</h:form>
 	
 		<br/>

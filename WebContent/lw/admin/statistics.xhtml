@@ -1,5 +1,5 @@
-<ui:composition 
-	template="/templates/main/main.xhtml" 
+<ui:composition
+		template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,7 +9,7 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
 
-	<ui:define name="center_layout">
+	<ui:define name="content">
 
 		<style type="text/css">
 			.ui-state-hover, .ui-state-focus, .ui-state-active{

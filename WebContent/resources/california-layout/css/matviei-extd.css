@@ -1,0 +1,158 @@
+.mat-extd-layout-topbar-normalizer{
+    padding: 0!important;
+    margin: -0.5em;
+    height: inherit;
+    display: inline-flex;
+}
+
+.mat-extd-layout-topbar-item-normalizer{
+    height: inherit;
+    display: inherit;
+    align-items: center;
+}
+
+.mat-extd-layout-topbar-menu-button button{
+    background: none!important;
+}
+
+.mat-extd-layout-topbar-menu-button{
+    background-size: cover!important;
+}
+
+.mat-extd-layout-topbar-menu-button button span:before{
+    content: none;
+}
+
+.mat-extd-layout-topbar-profile button,.mat-extd-layout-topbar-profile{
+   /* background: url("/javax.faces.resource/images/avatar1.png.jsf?ln=california-layout");*/
+    border-radius: 100%;
+    height: 45px;
+    width: 45px;
+}
+.mat-extd-layout-topbar-icon{
+    background: none!important;
+    border: none!important;
+    margin-top: 5px;
+}
+.mat-extd-layout-topbar-icon .fa{
+    width: inherit;
+    height: inherit;
+    font-size: 30px!important;
+    padding: 0!important;
+    margin: 0!important;
+    position: initial!important;
+}
+
+.mat-extd-layout-topbar-menu{
+    justify-content: flex-end;
+}
+.mat-extd-layout-topbar-menu form{
+    margin: 0 5px;
+
+}
+
+
+
+.mat-extd-layout-topbar-menu-form-button{
+    width: 60px!important;
+    height: 60px!important;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin:0!important;
+}
+
+.mat-extd-layout-topbar-menu-form-button:hover{
+
+    background-color: #2E8540 !important;
+}
+
+.mat-extd-layout-topbar-search{
+    border: none !important;
+    height: 40px;
+    font-size: 22px !important;
+    width: 400px;
+    background: white;
+    padding: 0 .5rem;
+}
+
+.mat-extd-layout-topbar-search-button{
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: white;
+    border-radius: 0 2px 2px 0;
+    cursor: pointer;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.mat-extd-layout-topbar-search-button svg{
+    width: 20px;
+    height: 20px;
+
+}
+#searchform{
+    display:flex;
+}
+
+.mat-extd-layout-topbar-search-button:hover{
+    background: #2E8540;
+    color:white;
+}
+
+
+.mat-extd-adapt-1024-apearer,.mat-extd-adapt-640-apearer{
+    display: none;
+}
+
+.mat-extd-layout-topbar-right-menu-normalizer{
+    position: absolute;
+    right: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+    .mat-extd-layout-topbar-right-menu-normalizer{
+        position: absolute;
+        right: 0;
+    }
+    .layout-wrapper .layout-topbar {
+        height: 60px;
+    }
+    .layout-wrapper .layout-main {
+        margin-left: 0;
+        padding-top: 60px; }
+    #layout-right-sidebar,.layout-wrapper .layout-sidebar {
+        top: 60px; }
+    .mat-extd-adapt-1024-hidder{
+        display: none;
+    }
+    .mat-extd-adapt-1024-apearer{
+        display: block;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .layout-wrapper .layout-topbar {
+        height: 60px;
+    }
+    .layout-wrapper .layout-main {
+        margin-left: 0;
+        padding-top: 60px; }
+    #layout-right-sidebar,.layout-wrapper .layout-sidebar {
+        top: 60px; }
+    .mat-extd-adapt-640-hidder{
+        display: none;
+    }
+    .mat-extd-adapt-640-apearer{
+        display: flex;
+    }
+}
+
+.mat-logo{
+    color:white;
+}
+
+.logo img path { fill:red}
+
