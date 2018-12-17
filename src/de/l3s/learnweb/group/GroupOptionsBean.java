@@ -11,6 +11,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -107,12 +108,12 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
-            if(!editedHypothesisLink.equals(group.getHypothesisLink()))
+            if(!StringUtils.equals(editedHypothesisLink, group.getHypothesisLink()))
             {
                 log(Action.group_changing_hypothesis_link, group.getId(), group.getId(), group.getHypothesisLink());
                 group.setHypothesisLink(editedHypothesisLink);
             }
-            if(!editedHypothesisToken.equals(group.getHypothesisToken()))
+            if(!StringUtils.equals(editedHypothesisToken, group.getHypothesisToken()))
             {
                 group.setHypothesisToken(editedHypothesisToken);
             }
