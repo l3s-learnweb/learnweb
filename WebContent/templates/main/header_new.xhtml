@@ -24,7 +24,8 @@
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 			</form>
 
-			<ui:fragment rendered="#{userBean.loggedIn}">
+			<ui:fragment rendered="#{userBean.loggedIn and userBean.user.id != 12476}">
+			<!-- menue hidden for user EUMADE4ALL; can be removed in 2020  -->
 				<div class="userbar">
 					<ul>
 						<li>
