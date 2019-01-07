@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -23,6 +23,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,8 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
     private static final Pattern datePattern = Pattern.compile("(\\d+\\D\\d+\\D\\d+).(\\d+\\D\\d+\\D\\d+)");
     private static final Pattern usernamePattern = Pattern.compile("acct:(.+)@");
     private static final Pattern groupIDPattern = Pattern.compile("hypothes.is/groups/(\\w*)");
+
+    private static final Logger log = Logger.getLogger(AdminGroupDiscussionActivityBean.class);
 
     private int groupID;
 
@@ -78,7 +81,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
                 return;
             }
 
-            String token = group.getHypothesisToken();
+            String token = "***REMOVED***"; // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypthoesis group
 
             URIBuilder builder = new URIBuilder("https://hypothes.is/api/search");
             builder.setParameter("limit", "200").setParameter("group", hypothesisGroupID);
@@ -111,6 +114,8 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
     private AnnotationEntity processJson(JSONObject row) throws JSONException, ParseException
     {
+        log.debug(row.toString());
+
         String name = row.getString("user");
         Matcher matcher = usernamePattern.matcher(name);
         if(matcher.find())
@@ -136,7 +141,6 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
         JSONArray target = row.getJSONArray("target");
         String snippet;
-        System.out.print("Target length: " + target.length());
 
         if(target.length() > 1)
         {

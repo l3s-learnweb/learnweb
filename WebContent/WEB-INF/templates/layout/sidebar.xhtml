@@ -145,7 +145,10 @@
                         <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="#{request.contextPath}/lw/myhome/groups.jsf"/>
                         <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
 
-                        <p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button">
+						
+                        <p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button" 
+                        	rendered="#{userBean.user.id != 12476}">
+                        	<!-- menue hidden for user EUMADE4ALL; can be removed in 2020 -->
                             <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="#{request.contextPath}/lw/admin/notification.jsf"/>
                             <p:menuitem value="Users" icon="fa fa-fw fa-users " url="#{request.contextPath}/lw/admin/users.jsf"/>
                             <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="#{request.contextPath}/lw/admin/courses.jsf"/>
@@ -158,7 +161,6 @@
                             <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="#{request.contextPath}/lw/admin/dashboard/glossary.jsf"/>
                             <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="#{request.contextPath}/lw/admin/dashboard/activity.jsf"/>
                         </p:submenu>
-
                     </pc:menu>
                 </h:form>
             </div>

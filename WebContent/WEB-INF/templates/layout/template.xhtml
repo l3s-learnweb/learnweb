@@ -23,6 +23,8 @@
     </h:head>
 
     <h:body styleClass="main-body">
+    	
+        <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
             <ui:include src="megamenu.xhtml" />

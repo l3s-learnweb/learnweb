@@ -159,7 +159,9 @@
 										</a>
 									</li>
 								</ui:fragment>
-								<ui:fragment rendered="#{userBean.moderator}">
+                        	
+								<ui:fragment rendered="#{userBean.moderator and userBean.user.id != 12476}">
+									<!-- menue hidden for user EUMADE4ALL; can be removed in 2020 -->
 									<li class="menupoint">
 										<h:outputText value="#{msg.moderator}" />
 									</li>

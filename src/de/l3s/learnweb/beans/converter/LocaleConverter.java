@@ -22,7 +22,7 @@ public class LocaleConverter implements Converter<Locale>
     {
         if(null == value)
         {
-            log.fatal("value is null: " + BeanHelper.getRequestSummary());
+            log.warn("value is null: " + BeanHelper.getRequestSummary());
             return Locale.ENGLISH;
         }
         return Locale.forLanguageTag(value);
@@ -33,7 +33,7 @@ public class LocaleConverter implements Converter<Locale>
     {
         if(null == value)
         {
-            log.fatal("Locale is null: " + BeanHelper.getRequestSummary());
+            log.warn("Locale is null: " + BeanHelper.getRequestSummary());
             return null;
         }
 
