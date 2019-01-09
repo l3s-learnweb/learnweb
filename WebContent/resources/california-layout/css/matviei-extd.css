@@ -86,6 +86,7 @@
     align-items: center;
     display: flex;
     justify-content: center;
+    fill: grey;
 }
 
 .mat-extd-layout-topbar-search-button svg{
@@ -99,9 +100,8 @@
 
 .mat-extd-layout-topbar-search-button:hover{
     background: #2E8540;
-    color:white;
+    fill:white!important;
 }
-
 
 .mat-extd-adapt-1024-apearer,.mat-extd-adapt-640-apearer{
     display: none;
@@ -156,3 +156,36 @@
 
 .logo img path { fill:red}
 
+.mat-save-button{
+    padding: 0px!important;
+    background: none;
+    display: block!important;
+    margin: 0 auto!important;
+}
+
+.mat-save-button p{
+    /*float: left;*/
+}
+
+.mat-save-button button{
+    width: 200px;
+    font-size: 20px;
+    display: block!important;
+    margin: 0 auto!important;
+}
+
+.layout-topbar{
+    align-items: center!important;
+    display: grid!important;
+}
+
+.mat-content-normilizer h2{
+    margin: 0!important;
+}
+
+.mat-no-margin{
+    margin: 0!important;
+}
+.mat-no-margin-top{
+    margin-top: 0!important;
+}
