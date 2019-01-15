@@ -179,8 +179,17 @@
     display: grid!important;
 }
 
+.mat-content-normilizer{
+    contain: content;
+}
+
 .mat-content-normilizer h2{
     margin: 0!important;
+}
+
+.mat-no-padding, .mat-content-normilizer .p-col-12{
+    padding: .3rem 3px !important;
+    width: 99.5%;
 }
 
 .mat-no-margin{
