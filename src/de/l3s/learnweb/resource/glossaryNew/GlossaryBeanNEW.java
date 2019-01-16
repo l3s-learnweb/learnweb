@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -31,6 +29,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -366,6 +365,78 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public String getToggleLabel()
     {
         return toggleLabel;
+    }
+
+    public void parseXls(File file)
+    {
+        User user = getUser();
+        if(user == null)
+            return;
+
+        try
+        {
+            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+            HSSFWorkbook wb = new HSSFWorkbook(fs);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row;
+            HSSFCell cell;
+
+            int amount_of_rows;
+            amount_of_rows = sheet.getPhysicalNumberOfRows()-1;
+
+            // int amount_of_columns = 11;
+
+            setNewFormEntry();
+            //i=1 because of header
+            for(int r = 1; r < amount_of_rows; r++)
+            {
+                row = sheet.getRow(r);
+                if(row != null) {
+                    formEntry.setTopicOne(row.getCell(0).getStringCellValue());
+                    formEntry.setTopicTwo(row.getCell(1).getStringCellValue());
+                    formEntry.setTopicThree(row.getCell(2).getStringCellValue());
+                    formEntry.setDescription(row.getCell(3).getStringCellValue());
+
+                    List<GlossaryTerm> terms = new LinkedList<>();
+                    for(int i = 1; i < amount_of_rows; i++)
+                    {
+                        String topic1 = row.getCell(0).getStringCellValue();
+                        String topic2 = row.getCell(1).getStringCellValue();
+                        String topic3 = row.getCell(2).getStringCellValue();
+                        String description = row.getCell(3).getStringCellValue();
+                        if(topic1 == formEntry.getTopicOne() & topic2 == formEntry.getTopicTwo() &
+                                topic3 == formEntry.getTopicThree() & description == formEntry.getDescription()){
+                            //add Term to the current Entry terms
+                            GlossaryTerm newTerm = new GlossaryTerm();
+
+                            newTerm.setTerm(row.getCell(4).getStringCellValue());
+                            //TODO: check Language
+                            //newTerm.setLanguage();
+                            //parse uses
+                            String usesString = row.getCell(5).getStringCellValue();
+                            List<String> uses = Arrays.asList(usesString.split("\\s*,\\s*"));;
+                            newTerm.setUses(uses);
+                            newTerm.setPronounciation(row.getCell(7).getStringCellValue());
+                            newTerm.setAcronym(row.getCell(8).getStringCellValue());
+                            newTerm.setSource(row.getCell(9).getStringCellValue());
+                            newTerm.setPhraseology(row.getCell(10).getStringCellValue());
+
+                            terms.add(newTerm);
+                        }
+                    }
+
+                }
+                getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
+                addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+                setKeepMessages();
+                setNewFormEntry();
+            }
+        }
+        catch(Exception e)
+        {
+            log.error("Error during parsing glossary xls", e);
+            addFatalMessage(e);
+        }
     }
 
     public void postProcessXls(Object document)
