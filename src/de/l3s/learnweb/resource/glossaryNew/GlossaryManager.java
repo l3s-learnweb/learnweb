@@ -83,9 +83,6 @@ public class GlossaryManager
         }
         else
         {
-            //Discuss with @Philipp
-            // TODO Rishita: use INSERT INTO ON DUPLICATE UPDATE see Learnweb code mail from 04.05.2018 and SQL.getCreateStatement
-
             if(entryCloned.getId() < 0) // new entry
             {
                 insertEntry(entryCloned);
@@ -112,9 +109,7 @@ public class GlossaryManager
             //Replace or Add the entry corresponding to cloned entry
             glossaryResource.getEntries().removeIf(entry -> entry.getId() == entryCloned.getId());
             glossaryResource.getEntries().add(entryCloned);
-
         }
-
     }
 
     private void deleteEntry(GlossaryEntry entryCloned) throws SQLException
@@ -200,10 +195,8 @@ public class GlossaryManager
 
     public void saveTerms(GlossaryEntry entry, int groupId) throws SQLException
     {
-
         for(GlossaryTerm term : entry.getTerms())
         {
-
             if(term.getId() < 0)
             {
                 insertTerms(term, entry, groupId);
@@ -212,9 +205,7 @@ public class GlossaryManager
             {
                 updateTerms(term, entry);
             }
-
         }
-
     }
 
     private void updateTerms(GlossaryTerm term, GlossaryEntry entry) throws SQLException
@@ -256,7 +247,7 @@ public class GlossaryManager
             termInsert.setInt(4, entry.getUserId());
             termInsert.setString(5, term.getTerm());
             termInsert.setString(6, term.getLanguage().toLanguageTag());
-            termInsert.setString(7, String.join(",", term.getUses()));
+            termInsert.setString(7, term.getUses() == null ? "" : String.join(",", term.getUses()));
             termInsert.setString(8, term.getPronounciation());
             termInsert.setString(9, term.getAcronym());
             termInsert.setString(10, term.getSource());
@@ -399,7 +390,7 @@ public class GlossaryManager
         //Glossary Entries details
         List<GlossaryEntry> entries = getGlossaryEntries(glossaryResource.getId());
         glossaryResource.setEntries(entries);
-
+        glossaryResource.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + glossaryResource.getId());
     }
 
     public GlossaryResource getGlossaryResource(int resourceId) throws SQLException

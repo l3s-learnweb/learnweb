@@ -94,7 +94,7 @@ public class ResourceManager
 
     public List<Resource> getGlossaryResourcesByUserId(int userId) throws SQLException
     {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0 AND type = 'glossary'", null, userId);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0 AND type = 'glossary2'", null, userId);
     }
 
     public List<Resource> getResourcesByTagId(int tagId) throws SQLException
@@ -741,23 +741,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-    
+
         return new GroupPaginator(results, groupId, order);
     }
-    
+
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-    
+
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-    
+
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -789,7 +789,7 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-    
+
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -799,12 +799,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-    
+
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-    
+
     return resources;
     }
     */

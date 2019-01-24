@@ -85,7 +85,9 @@ public class GlossaryResource extends Resource implements Serializable
         this.setThumbnail3(iconResource.getThumbnail3());
         this.setThumbnail4(iconResource.getThumbnail4());
         this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + this.getId());
-        this.setUser(getUser());
+
+        this.setUser(getUser()); // added by rishita to fix copy bug; does this make sense? TODO: test
+
         // save normal resource fields
         super.save();
 

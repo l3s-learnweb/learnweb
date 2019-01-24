@@ -26,8 +26,6 @@
 						paginator="false" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
 						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
 						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-						draggableColumns="false"
-						resizableColumns="false"
 						>
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
@@ -35,14 +33,7 @@
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
 
-						<f:facet name="header">	
-						<!-- 						
-							<p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="pi pi-align-justify" />
-        					<p:columnToggler datasource="my_gloss_table" trigger="toggler">
-        						<p:ajax event="toggle" onstart="alert('start');" onsuccess="alert('fertig')"/>
-        					</p:columnToggler>
-        					 -->
-        					 
+						<f:facet name="header">	        					 
 							<p:outputPanel>
 								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
@@ -109,14 +100,7 @@
 						</p:column>
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.phraseology}" />
-						</p:column>
-
-						<p:columns rendered="false" value="#{glossaryBeanNEW.columns}" var="column" sortBy="#{item[column.property]}" filterBy="#{item[column.property]}">
-							<f:facet name="header">
-								<h:outputText value="#{column.header}" />
-							</f:facet>
-							<h:outputText value="#{item[column.property]}" />
-						</p:columns>
+						</p:column>					
 
 						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
 							<h:outputText value="#{item.fulltext}" />
@@ -294,7 +278,7 @@
 					var columns = [];
 					var column = row.children('td').eq(colIndex);
 
-					for (var j = 0; j < 6; j++)
+					for (var j = 0; j < 5; j++) // merge the first 5 rows
 						columns.push(row.children('td').eq(j));
 
 					columnData = column.find("span").first().data("itemid");
