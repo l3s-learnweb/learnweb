@@ -11,26 +11,11 @@
 	<ui:param name="pageTitle" value="#{msg.courses}"/>
 
 	<ui:define name="content">
-	
-        <style type="text/css">
-            .ui-state-hover, .ui-state-focus, .ui-state-active{
-                box-shadow:0 0 0px 0px #fff !important;
-                background-color:#d1d1d1 !important;
-                background-image:none !important;
-                border:1px solid #a8a8a8 !important;
-            }
-            .page_header {margin:5px 5px 0px 5px;}
-
-            .options_column img { margin-right:0.2rem; vertical-align: bottom;}
-            .options_column a { white-space: nowrap; line-height:16px; display:inline-block; margin:0.3rem 0.6rem 0.3rem 0; }
-
-            #courses_form {padding:5px;}
-        </style>
 		
 		<h:form id="courses_form">
 		
 			<p:blockUI block="courses_table" widgetVar="courses_form_blocker">
-				<div class="float-left" style="height: 25px; line-height: 25px;">#{msg.please_wait}. This action may take several minutes for big courses.</div>
+				<div class="float-left">#{msg.please_wait}. This action may take several minutes for big courses.</div>
 				<div class="loading-animation small float-left">
 					<div></div>
 					<div></div>
@@ -39,29 +24,30 @@
 			</p:blockUI>	
 
 			<p:panel header="#{msg.courses}">
-			<p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">					
-				<p:column headerText="#{msg.title}" sortBy="#{course.title}">
-					<h:outputText value="#{course.title}" />						
-				</p:column>	
+			    <p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+				    <p:column headerText="#{msg.title}" sortBy="#{course.title}">
+					    <h:outputText value="#{course.title}" />
+				    </p:column>
 						
-				<p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
-					<h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />						
-				</p:column>	
+				    <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
+					    <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />
+				    </p:column>
 					
-				<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-					<h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>								
-				</p:column>
+				    <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+					    <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
+				    </p:column>
 						
-				<p:column headerText="#{msg.options}" styleClass="options_column">
-					<f:facet name="header">
-						#{msg.options}
-					</f:facet>
-					<h:outputLink value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
-						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-						<h:outputText value="#{msg.edit}" /> 
-					</h:outputLink>	
+				    <p:column headerText="#{msg.options}" styleClass="options_column">
+					    <f:facet name="header">
+						    #{msg.options}
+					    </f:facet>
+
+					    <h:outputLink value="course.jsf?course_id=#{course.id}" title="#{msg.edit}">
+						    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+						    <!--<h:outputText value="#{msg.edit}" />-->
+					    </h:outputLink>
 							
-					<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
+					    <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
 						update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}"	title="#{msg.delete}"
 						onclick="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">															
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
@@ -69,7 +55,7 @@
 						<p:confirm message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses." />
 					</p:commandLink>
 					
-					<p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this" 
+					    <p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
 						update="@form :growl" rendered="#{userBean.admin}"	
 						onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">																					
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
@@ -77,35 +63,37 @@
 						<p:confirm message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected." />
 					</p:commandLink>
 					
-					<h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
-						 <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
-					</h:outputLink>					
-				</p:column>
-			</p:dataTable>
+					    <h:outputLink value="users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
+                            <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
+					    </h:outputLink>
+				    </p:column>
+			    </p:dataTable>
 			</p:panel>
 		</h:form>
 	
 		<br/>
 		
-		<p:panel header="#{msg.add_new_course}" style="margin:5px;">
+		<p:panel header="#{msg.add_new_course}" >
 			<h:form id="addcourse">
 				#{msg.course_title}: 
 				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" style="margin-top:10px;"/>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" styleClass="mat-margin-top"/>
 			</h:form>
 		</p:panel>
 		
 		<br/>
 			
-		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}" style="margin:5px 5px 15px 5px;;">
+		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
 			<h:form id="addorganisation">
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" style="margin-top:10px;"/>
+				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" styleClass="mat-margin-top"/>
 			</h:form>
 		</p:panel>
+
+
 		
 	</ui:define>
 </ui:composition>

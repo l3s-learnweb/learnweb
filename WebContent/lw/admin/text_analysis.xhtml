@@ -11,13 +11,12 @@
 
 	<ui:define name="content">
 		
-		<div class="page_header" style="margin:5px;">
-			<span>
-				#{msg.text_analysis}
-			</span>
+		<div class="page_header">
+
+			<h1>#{msg.text_analysis}</h1>
 		</div>
 		
-		<h:form id="anlyse_form" style="margin:5px;">
+		<h:form id="anlyse_form" >
 			<p:panel header="#{msg.select_users}">
 				<ui:include src="/templates/user/user_select_form.xhtml" />	
 				<br/>

@@ -10,13 +10,11 @@
 	<ui:param name="pageTitle" value="#{msg.users}"/>
 
 	<ui:define name="content">
-		<div class="page_header" style="margin:5px;">
-			<span>
-				#{msg.users}
-			</span>
+		<div class="p-col-12">
+			<h1>#{msg.users}</h1>
 		</div>
 	
-		<h:form style="margin:5px;">
+		<h:form>
 			<p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                rendered="#{userBean.user.organisationId ne 1249}">
@@ -34,20 +32,20 @@
 					<h:outputText value="#{user.email}" />			
 				</p:column>
 						
-				<p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains">
+				<p:column sortBy="#{user.organisation.title}"  filterBy="#{user.organisation.title}" filterMatchMode="contains">
 					<f:facet name="header">
 						#{msg.organization}
 					</f:facet>
 					<h:outputText value="#{user.organisation.title}" />			
 				</p:column>
 				
-				<p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 8%;">
+				<p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 10%;">
 					<p:selectBooleanCheckbox value="#{user.moderator}">
 						<p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 						
-				<p:column style="width: 7%;">
+				<p:column style="width: 10%;">
 					<f:facet name="header">
 						#{msg.options}
 					</f:facet>
@@ -56,7 +54,7 @@
 					</h:commandLink>
 				</p:column>
 				
-				<p:column headerText="Logs" style="width: 8%;">
+				<p:column headerText="Logs" style="width: 10%;">
 					<h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}" target="_blank">Mouse tracker</h:outputLink>
 				</p:column>
 					

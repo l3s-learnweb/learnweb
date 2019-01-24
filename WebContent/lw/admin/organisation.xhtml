@@ -14,13 +14,13 @@
     <ui:define name="content">
         <ui:fragment rendered="#{null ne adminOrganisationsBean.selectedOrganisation}">
             <h:form id="editwelcomeform">
-                <div class="p-grid mat-content-normilizer">
+                <div class="p-grid">
                     <div class="p-col-12">
-                        <h1 class="mat-no-margin">#{adminOrganisationsBean.selectedOrganisation.title}</h1>
+                        <h1>#{adminOrganisationsBean.selectedOrganisation.title}</h1>
                     </div>
 
                     <div class="p-col-12">
-                        <div class="p-col mat-no-padding">
+                        <div class="p-col">
                             <div class="card card-w-title">
                                 <h2 style="margin-bottom: 14px!important;"><h:outputText value="#{msg.welcome_message}:" /></h2>
                                 <div>
@@ -127,7 +127,7 @@
 
 
                     <div class="p-col-12">
-                        <div class="card card-w-title mat-save-button" >
+                        <div class="card card-w-title" id="organization-save-button" >
                             <p>
                                 <p:commandButton action="#{adminOrganisationsBean.onSave}" value="#{msg.save}" ajax="false" />
                                 <p:button rendered="#{userBean.admin}" outcome="organisations" value="Back to Organisations" />
