@@ -23,6 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
@@ -819,4 +820,13 @@ public class User implements Comparable<User>, Serializable, HasId
         this.deleted = deleted;
     }
 
+    /**
+     *
+     * @return All forum posts this user created
+     * @throws SQLException
+     */
+    public List<ForumPost> getForumPosts() throws SQLException
+    {
+        return Learnweb.getInstance().getForumManager().getPostsByUser(getId());
+    }
 }
