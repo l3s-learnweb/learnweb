@@ -29,7 +29,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value> <!-- To use it, we need to remove defining JS variables in <script> blocks of xhtml -->
     </context-param>
     <context-param>
         <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
