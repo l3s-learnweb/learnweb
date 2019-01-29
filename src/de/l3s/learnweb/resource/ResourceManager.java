@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -85,6 +87,11 @@ public class ResourceManager
     {
         Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0");
         return count.intValue();
+    }
+
+    public List<Resource> getResourcesByTagthewebCategory(String category, int maxResults) throws SQLException
+    {
+        return learnweb.getResourceManager().getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category_tagtheweb USING ( resource_id ) WHERE category = ? AND deleted = 0 LIMIT ? ", category, maxResults);
     }
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException
@@ -613,6 +620,41 @@ public class ResourceManager
         replace.close();
     }
 
+    public void addCategory(Resource resource, String category, Double precision) throws SQLException
+    {
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category_tagtheweb` (`resource_id`, `category`, `precision`) VALUES (?, ?, ?)");
+        replace.setInt(1, null == resource ? 0 : resource.getId());
+        replace.setString(2, category);
+        replace.setDouble(3, precision);
+        replace.executeUpdate();
+        replace.close();
+    }
+
+    protected void deleteCategory(Resource resource, String category) throws SQLException
+    {
+        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_category_tagtheweb WHERE resource_id = ? AND category = ?");
+        delete.setInt(1, resource.getId());
+        delete.setString(2, category);
+        delete.executeUpdate();
+        delete.close();
+    }
+
+    public Map<String, Double> getCategoriesByResource(int resourceId) throws SQLException
+    {
+        Map<String, Double> categories = new HashMap<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT category, `precision` FROM lw_resource_category_tagtheweb WHERE `resource_id` = ?"))
+        {
+            select.setInt(1, resourceId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                categories.put(rs.getString("category"), rs.getDouble("precision"));
+            }
+        }
+        return categories;
+
+    }
+
     protected Comment commentResource(String text, User user, Resource resource) throws SQLException
     {
         Comment c = new Comment(text, new Date(), resource, user);
@@ -772,6 +814,26 @@ public class ResourceManager
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? and deleted = 0");
         select.setInt(1, groupId);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            Resource resource = createResource(rs);
+
+            if(null != resource)
+                resources.add(resource);
+        }
+        select.close();
+
+        return resources;
+    }
+
+    public List<Resource> getResourcesByCourseId(int courseId) throws SQLException
+    {
+        List<Resource> resources = new LinkedList<>();
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` IN (SELECT group_id FROM lw_group WHERE course_id = ?) and deleted = 0");
+        select.setInt(1, courseId);
+
         ResultSet rs = select.executeQuery();
         while(rs.next())
         {
