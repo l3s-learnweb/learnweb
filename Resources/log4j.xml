@@ -59,6 +59,9 @@
     	<level value="INFO" />
     </logger>
 
+	<logger name="de.l3s.learnweb.resource.ResourceMetadataExtractor">
+		<level value="WARN" />
+	</logger>
 
 	<root>
 		<level value="DEBUG" />
