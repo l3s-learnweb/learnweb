@@ -116,6 +116,11 @@ public class SubmissionManager
                 builder.append("?,");
             }
 
+            if (courses.isEmpty())
+            {
+                return submissions;
+            }
+
             String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime";
 
             PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
