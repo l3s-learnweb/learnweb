@@ -276,14 +276,23 @@ public class GlossaryTerm implements Serializable
 
     public Locale stringToLocaleLanguage(String languageString){
         Locale languageLocale;
-        //TODO: check language
-        // switch(languageString){
-        //     case "English": languageLocale = Locale.ENGLISH;
-        //             break;
-        // ...
-        // }
-        // return languageLocale;
-        return null;
+         switch(languageString){
+             case "English": languageLocale = Locale.ENGLISH;
+                     break;
+             case "French": languageLocale = Locale.FRENCH;
+                 break;
+             case "German": languageLocale = Locale.GERMAN;
+                 break;
+             case "Italian": languageLocale = Locale.ITALIAN;
+                 break;
+             case "Korean": languageLocale = Locale.KOREAN;
+                 break;
+             case "Chinese": languageLocale = Locale.CHINESE;
+                 break;
+             default: languageLocale = null;
+                 break;
+         }
+         return languageLocale;
     }
 
 }

@@ -405,7 +405,6 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                                 topic3 == formEntry.getTopicThree() & description == formEntry.getDescription())
                         {
                             GlossaryTerm newTerm = new GlossaryTerm();
-
                             newTerm.setTerm(row.getCell(4).getStringCellValue());
                             newTerm.setLanguage(newTerm.stringToLocaleLanguage(row.getCell(4).getStringCellValue()));
                             String usesString = row.getCell(6).getStringCellValue();
