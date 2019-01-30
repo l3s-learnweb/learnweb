@@ -12,7 +12,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title><ui:insert name="title">PrimeFaces California</ui:insert></title>
+        <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
         <h:outputScript name="js/nanoscroller.js" library="california-layout" />
         <h:outputScript name="js/layout.js" library="california-layout" />
 
@@ -30,26 +30,29 @@
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
             <ui:include src="megamenu.xhtml" />
             <ui:include src="topbar.xhtml" />
-            <ui:include src="sidebar.xhtml" />
-            <ui:include src="right-sidebar.xhtml" />
-
-            <div class="layout-main">
-                <div class="route-bar">
-                    <div class="route-bar-breadcrumb">
-                        <i class="fa fa-home"></i> <span>/ </span>
-                        <ui:insert name="viewname" />
-                    </div>
-
-                    <ui:include src="route-bar-menu.xhtml" />
-                </div>
-
-                <div class="layout-main-content">
-                    <ui:insert name="content"/>
-                </div>
-
-                <ui:include src="footer.xhtml" />
-            </div>
-        </div>
+			<ui:fragment rendered="#{userBean.loggedIn}">
+				<ui:include src="sidebar.xhtml" />
+				<ui:include src="right-sidebar.xhtml" />
+			</ui:fragment>
+			
+			<div class="layout-main">
+				<div class="layout-main-content">
+					<ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
+						<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+						<ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
+							<ui:include src="/templates/user/login.xhtml" />
+						</ui:fragment>
+						<ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
+							<ui:insert name="content" />
+						</ui:fragment>
+					</ui:fragment>
+					<ui:fragment rendered="#{learnwebBean.maintenanceMode}">
+						<div class="error" style="font-size: 1.4rem">#{msg.service_unavailable}</div>
+					</ui:fragment>
+				</div>
+				<ui:include src="footer.xhtml" />
+			</div>
+		</div>
 
         <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
            <f:facet name="start">

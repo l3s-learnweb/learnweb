@@ -8,183 +8,53 @@
 
     <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''} #{guestPreferences.gradientMenu ? 'layout-sidebar-gradient': ''}">
         <div id="nano-container" class="nano">
-            <div class="nano-content sidebar-scroll-content">
-                <ui:fragment rendered="#{guestPreferences.profileMode == 'inline'}">
-                    <div class="user-profile">
-                        <a id="sidebar-profile-button" href="#">
-                            <p:graphicImage name="images/avatar.png" library="california-layout" />
-                            <span class="sidebar-profile-name">Pauline Harrell</span>
-                            <span class="sidebar-profile-role">Administrator</span>
-                        </a>
-                        <ul id="sidebar-usermenu" class="usermenu">
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-fw fa-user"></i>
-                                    <span class="topbar-item-name">Profile</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-fw fa-cog"></i>
-                                    <span class="topbar-item-name">Settings</span>
-                                    <i class="layout-menuitem-toggler fa fa-fw fa-angle-down"></i>
-                                </a>
-                                <ul>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-paint-brush"></i>
-                                            <span>Change</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-star-o"></i>
-                                            <span>Favorites</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-lock"></i>
-                                            <span>Lock Screen</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-picture-o"></i>
-                                            <span>Wallpaper</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-fw fa-envelope-o"></i>
-                                    <span class="topbar-item-name">Messages</span>
-                                    <i class="layout-menuitem-toggler fa fa-fw fa-angle-down"></i>
-                                </a>
-                                <ul>
-                                    <li role="menuitem">
-                                        <a href="#" class="topbar-message">
-                                            <p:graphicImage name="images/avatar1.png" library="california-layout" width="25"/>
-                                            <span>Give me a call</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#" class="topbar-message">
-                                            <p:graphicImage name="images/avatar2.png" library="california-layout" width="25"/>
-                                            <span>Reports attached</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#" class="topbar-message">
-                                            <p:graphicImage name="images/avatar3.png" library="california-layout" width="25"/>
-                                            <span>About your invoice</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#" class="topbar-message">
-                                            <p:graphicImage name="images/avatar2.png" library="california-layout" width="25"/>
-                                            <span>Meeting today</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#" class="topbar-message">
-                                            <p:graphicImage name="images/avatar4.png" library="california-layout" width="25"/>
-                                            <span>Out of office</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-fw fa-bell-o"></i>
-                                    <span class="topbar-item-name">Notifications</span>
-                                    <i class="layout-menuitem-toggler fa fa-fw fa-angle-down"></i>
-                                </a>
-                                <ul>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-tasks"></i>
-                                            <span>Pending tasks</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-calendar-check-o"></i>
-                                            <span>Meeting today</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-download"></i>
-                                            <span>Download</span>
-                                        </a>
-                                    </li>
-                                    <li role="menuitem">
-                                        <a href="#">
-                                            <i class="fa fa-fw fa-plane"></i>
-                                            <span>Book flight</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </ui:fragment>
+            <div class="nano-content sidebar-scroll-content">    
 
                 <h:form id="menuform">
                     <pc:menu widgetVar="me">
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="#{request.contextPath}/lw/myhome/resources.jsf"/>
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="#{request.contextPath}/lw/myhome/groups.jsf"/>
+                        <p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
+                        <p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="/lw/myhome/groups.jsf"/>
 
-                        <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="#{request.contextPath}/lw/myhome/comments.jsf"/>
-                        <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="#{request.contextPath}/lw/myhome/tags.jsf"/>
-                        <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="#{request.contextPath}/lw/myhome/submission_overview.jsf"/>
-                        <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="#{request.contextPath}/lw/admin/dashboard/user.jsf"/>
-                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="#{request.contextPath}/lw/searchHistory/search_history.jsf?user_id=#{userBean.user.id}"/>
+                        <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="/lw/myhome/comments.jsf"/>
+                        <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>
+                        <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="/lw/myhome/submission_overview.jsf"/>
+                        <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="/lw/admin/dashboard/user.jsf"/>
+                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/search_history.jsf?user_id=#{userBean.user.id}"/>
 
-                        <p:submenu label="Moderator" rendered="#{userBean.user.id != 12476}">
-                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="#{request.contextPath}/lw/admin/notification.jsf"/>
-                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="#{request.contextPath}/lw/admin/users.jsf"/>
-                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="#{request.contextPath}/lw/admin/courses.jsf"/>
-                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="#{request.contextPath}/lw/admin/organisation.jsf"/>
-                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="#{request.contextPath}/lw/admin/text_analysis.jsf"/>
-                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="#{request.contextPath}/lw/admin/statistics.jsf"/>
-                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/detailed_transcript_log.jsf"/>
-                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/simple_transcript_log.jsf"/>
-                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="#{request.contextPath}/lw/admin/transcript_summary.jsf"/>
-                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="#{request.contextPath}/lw/admin/dashboard/glossary.jsf"/>
-                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="#{request.contextPath}/lw/admin/dashboard/activity.jsf"/>
+                        <p:submenu label="Moderator" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
+                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
+                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
+                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
+                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
+                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
+                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
+                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
+                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
+                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
+                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
+                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
                         </p:submenu>
 
                     </pc:menu>
                     <!--<pc:menu widgetVar="me">-->
 
 
-                        <!--<p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="#{request.contextPath}/lw/myhome/resources.jsf"/>-->
-                        <!--<p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="#{request.contextPath}/lw/myhome/groups.jsf"/>-->
-
-                        <!--<p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="#{request.contextPath}/lw/myhome/comments.jsf"/>-->
-                        <!--<p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="#{request.contextPath}/lw/myhome/tags.jsf"/>-->
-                        <!--<p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="#{request.contextPath}/lw/myhome/submission_overview.jsf"/>-->
-                        <!--<p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="#{request.contextPath}/lw/admin/dashboard/user.jsf"/>-->
-                        <!--<p:menuitem value="Search history" icon="fa fa-fw fa-history" url="#{request.contextPath}/lw/searchHistory/search_history.jsf?user_id=#{userBean.user.id}"/>-->
-
+        
 
                         <!--<p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button"-->
                         	<!--rendered="#{userBean.user.id != 12476}">-->
                         	<!--&lt;!&ndash; menue hidden for user EUMADE4ALL; can be removed in 2020 &ndash;&gt;-->
-                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="#{request.contextPath}/lw/admin/notification.jsf"/>
-                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="#{request.contextPath}/lw/admin/users.jsf"/>
-                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="#{request.contextPath}/lw/admin/courses.jsf"/>
-                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="#{request.contextPath}/lw/admin/organisation.jsf"/>
-                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="#{request.contextPath}/lw/admin/text_analysis.jsf"/>
-                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="#{request.contextPath}/lw/admin/statistics.jsf"/>
-                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/detailed_transcript_log.jsf"/>
-                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="#{request.contextPath}/lw/admin/simple_transcript_log.jsf"/>
-                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="#{request.contextPath}/lw/admin/transcript_summary.jsf"/>
-                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="#{request.contextPath}/lw/admin/dashboard/glossary.jsf"/>
-                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="#{request.contextPath}/lw/admin/dashboard/activity.jsf"/>
+                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
+                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
+                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
+                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
+                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
+                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
+                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
+                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
+                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
+                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
+                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
                         <!--</p:submenu>-->
                     <!--</pc:menu>-->
                 </h:form>
