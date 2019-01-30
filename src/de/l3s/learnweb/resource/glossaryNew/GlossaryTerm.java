@@ -274,4 +274,16 @@ public class GlossaryTerm implements Serializable
         this.originalTermId = originalTermId;
     }
 
+    public Locale stringToLocaleLanguage(String languageString){
+        Locale languageLocale;
+        //TODO: check language
+        // switch(languageString){
+        //     case "English": languageLocale = Locale.ENGLISH;
+        //             break;
+        // ...
+        // }
+        // return languageLocale;
+        return null;
+    }
+
 }

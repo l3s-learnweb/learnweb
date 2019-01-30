@@ -377,14 +377,14 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             HSSFRow row;
             HSSFCell cell;
 
-            int amount_of_rows;
-            amount_of_rows = sheet.getPhysicalNumberOfRows() - 1;
+            int amountOfRows;
+            amountOfRows = sheet.getPhysicalNumberOfRows() - 1;
 
-            // int amount_of_columns = 11;
+            // int amountOfColumns = 11;
 
             setNewFormEntry();
-            //i=1 because of header
-            for(int r = 1; r < amount_of_rows; r++)
+
+            for(int r = 1; r < amountOfRows; r++)
             {
                 row = sheet.getRow(r);
                 if(row != null)
@@ -395,7 +395,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                     formEntry.setDescription(row.getCell(3).getStringCellValue());
 
                     List<GlossaryTerm> terms = new LinkedList<>();
-                    for(int i = 1; i < amount_of_rows; i++)
+                    for(int i = 1; i < amountOfRows; i++)
                     {
                         String topic1 = row.getCell(0).getStringCellValue();
                         String topic2 = row.getCell(1).getStringCellValue();
@@ -404,16 +404,12 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                         if(topic1 == formEntry.getTopicOne() & topic2 == formEntry.getTopicTwo() &
                                 topic3 == formEntry.getTopicThree() & description == formEntry.getDescription())
                         {
-                            //add Term to the current Entry terms
                             GlossaryTerm newTerm = new GlossaryTerm();
 
                             newTerm.setTerm(row.getCell(4).getStringCellValue());
-                            //TODO: check Language
-                            //newTerm.setLanguage();
-                            //parse uses
-                            String usesString = row.getCell(5).getStringCellValue();
-                            List<String> uses = Arrays.asList(usesString.split("\\s*,\\s*"));
-                            ;
+                            newTerm.setLanguage(newTerm.stringToLocaleLanguage(row.getCell(4).getStringCellValue()));
+                            String usesString = row.getCell(6).getStringCellValue();
+                            List<String> uses = Arrays.asList(usesString.split("\\s*,\\s*"));;
                             newTerm.setUses(uses);
                             newTerm.setPronounciation(row.getCell(7).getStringCellValue());
                             newTerm.setAcronym(row.getCell(8).getStringCellValue());
@@ -423,7 +419,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                             terms.add(newTerm);
                         }
                     }
-
+                    formEntry.setTerms(terms);
                 }
                 getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
                 addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
@@ -696,24 +692,24 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         //update columns
         createDynamicColumns();
     }
-    
+
     static public class ColumnModel implements Serializable
     {
-    
+
         private String header;
         private String property;
-    
+
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-    
+
         public String getHeader()
         {
             return header;
         }
-    
+
         public String getProperty()
         {
             return property;
