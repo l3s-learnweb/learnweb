@@ -14,11 +14,13 @@
         <div class="users-submissions">
 
 
-            <div class="p-col-12">
-                <h1 class="mat-no-margin">#{msg.users}</h1>
+            <div class="page-header">
+                <h1>
+                    #{msg.transcript_logs}
+                </h1>
             </div>
 
-            <h:form>
+            <h:form styleClass="mat-margin-top">
                 <p:dataTable var="user" value="#{submissionBean.getUsers()}" rows="50" paginator="true" rowsPerPageTemplate="50,100,500"
                              paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 

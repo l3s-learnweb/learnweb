@@ -14,6 +14,22 @@
 
 }
 
+.main-body .page-header{
+    color: #4AA564;
+    margin: 0;
+    background: rgba(255,255,255,0.9);
+    /*text-align: center;*/
+    border-radius: 2px;
+    padding: 5px 16px;
+    border: 1px solid #4AA564;
+    border-right: none;
+    border-left: none;
+}
+
+.main-body .page-header h1{
+    margin: 0;
+}
+
 
 .main-body .layout-topbar .content{
     display: flex;
@@ -204,7 +220,7 @@
 }
 
 .main-body .mat-margin-top{
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 
