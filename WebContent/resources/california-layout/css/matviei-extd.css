@@ -7,6 +7,11 @@
 }
 
 .main-body .layout-topbar .logo{
+    max-width: 200px;
+    max-height: 60px;
+}
+
+.main-body .layout-topbar .logo > div{
     box-sizing: border-box;
     width: 100%;
     padding: 0;
@@ -34,23 +39,26 @@
 .main-body .layout-topbar .content{
     display: flex;
     align-items: center;
+
 }
 
 .main-body .layout-topbar .right-menu{
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-end;
 }
 
 .main-body .layout-topbar #searchform{
-    display:flex;
+    display: flex;
+    width: inherit;
+    justify-content: center;
 }
 
 .main-body .layout-topbar #searchform input[type='search']{
     border: none;
     height: 40px;
     font-size: 22px;
-    width: 400px;
+    width: inherit;
     background: white;
     padding: 0 .5rem;
 }
@@ -72,9 +80,6 @@
     width: 20px;
     height: 20px;
 
-}
-.main-body .layout-topbar #searchform{
-    display:flex;
 }
 
 
@@ -130,7 +135,7 @@
     display: flex;
     align-content: center;
     justify-content: center;
-    margin:0;
+    margin: 0 4%;
 }
 
 .main-body .layout-topbar .topbar-menu-form-button:hover{
@@ -151,11 +156,29 @@
         padding-top: 60px; }
     .main-body #layout-right-sidebar, .main-body .layout-wrapper .layout-sidebar {
         top: 60px; }
-    .main-body .layout-topbar .adapt-1024-hidder{  /* TODO why include .layout-topbar . This way the class is not appiled outside the topbar */
+    .main-body .adapt-1024-hidder{  /* */
         display: none;
     }
     .main-body .adapt-1024-apearer{
         display: block;
+    }
+    .main-body .layout-wrapper .layout-topbar #menu-button {
+        left: 230px;
+    }
+    .main-body .layout-wrapper .layout-topbar .logo {
+        margin-left: 0px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .main-body .adapt-800-hidder{
+        display: none!important;
+    }
+    .main-body .adapt-800-apearer{
+        display: flex;
+    }
+    .main-body .layout-wrapper .layout-topbar #menu-button {
+        left: 0px;
     }
 }
 
@@ -169,11 +192,16 @@
     .main-body #layout-right-sidebar, .main-body .layout-wrapper .layout-sidebar {
         top: 60px; }
     .main-body .adapt-640-hidder{ 
-        display: none;
+        display: none!important;
     }
     .main-body .adapt-640-apearer{
-        display: flex;
+        display: flex!important;
     }
+
+    .main-body .main-menu{
+        width: 100%;
+    }
+
 }
 
 
@@ -212,20 +240,24 @@
 
 .main-body #editwelcomeform > div .p-col-12, .main-body #editwelcomeform > div .p-col-12 > div{
     padding: .3rem 3px;
-    width: 99.5%; /** where does this magic number come from? looks bad*/
+    /*width: 99.5%; !** where does this magic number come from? looks bad*!*/
 }
 
 /******************** helper classes **********************************/
-.mat-no-margin-top{ /**  it is not necessary to prepend your own classes with .main-body */ 
+.main-body .no-margin-top{ /**  it is not necessary to prepend your own classes with .main-body */
     margin-top: 0;
 }
 
-.mat-margin-top{
+.main-body .margin-top{
     margin-top: 15px;
 }
 
-.display-none {
+.main-body .display-none {
 	display: none;
 }
 
-
+.main-body .flex-center{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}

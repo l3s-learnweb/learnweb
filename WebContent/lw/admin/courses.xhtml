@@ -78,7 +78,7 @@
 				#{msg.course_title}: 
 				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" styleClass="mat-margin-top"/>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" styleClass="margin-top"/>
 			</h:form>
 		</p:panel>
 		
@@ -89,7 +89,7 @@
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" styleClass="mat-margin-top"/>
+				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" styleClass="margin-top"/>
 			</h:form>
 		</p:panel>
 
