@@ -47,6 +47,8 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
@@ -363,7 +365,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return toggleLabel;
     }
 
-    public void parseXls(File file)
+    public void parseXls(FileUploadEvent fileUploadEvent)
     {
         User user = getUser();
         if(user == null)
@@ -371,7 +373,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         try
         {
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+            UploadedFile uploadedFile = fileUploadEvent.getFile();
+            POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputstream());
             HSSFWorkbook wb = new HSSFWorkbook(fs);
             HSSFSheet sheet = wb.getSheetAt(0);
             HSSFRow row;

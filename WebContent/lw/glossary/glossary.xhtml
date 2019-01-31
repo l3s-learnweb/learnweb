@@ -25,8 +25,7 @@
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBeanNEW.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
 						paginator="false" rows="#{glossaryBeanNEW.paginator ? 100 : 0}" paginatorPosition="bottom"
 						filteredValue="#{glossaryBeanNEW.filteredTableItems}" sortBy="#{item.getTimestamp()}" sortOrder="descending"
-						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-						>
+						paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
@@ -110,33 +109,6 @@
 					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
 						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.entryCount}" style="text-align:center;"
 							styleClass="glossary_footer_text"></h:outputText>
-
-						<!--excel import button-->
-						<p:commandLink styleClass="excel_import" style="text-align:center;" ajax="false"  onclick="PF('excel_import_dialog').show();">
-							<p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
-											style="position:relative; text-alignt:center; display: block; " />
-						</p:commandLink>
-
-						<p:dialog header="Import glossary from excel" widgetVar="excel_import_dialog" height="300">
-							<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-								<p:outputLabel for="console" value="Do you want to override table?" />
-								<!--edit value-->
-								<p:selectOneRadio id="console">
-									<f:selectItem itemLabel="Yes" itemValue="true" />
-									<f:selectItem itemLabel="No" itemValue="false" />
-								</p:selectOneRadio>
-							</h:panelGrid>
-
-							<!--edit layout-->
-							<h:form enctype="multipart/form-data">
-									<p:growl id="messages" showDetail="true" />
-									<!--edit value-->
-									<p:fileUpload mode="simple" skinSimple="true"/>
-									<!--edit action-->
-									<p:commandButton value="Submit" ajax="false" disabled="true" />
-							</h:form>
-						</p:dialog>
-
 						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
 							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
 								style="position:relative; text-alignt:center; display: block; " />
@@ -150,7 +122,31 @@
 							rendered="#{glossaryBeanNEW.entryCount >= 100}">
 							<h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();" />
 						</p:commandLink>
+						<!--excel import button-->
+						<p:commandLink styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show();">
+							<p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
+											style="position:relative; text-alignt:center; display: block; " />
+						</p:commandLink>
 					</p:panelGrid>
+
+					<p:dialog header="Import glossary from excel file" widgetVar="excel_import_dialog" min-height="120"
+							  closable="true" responsive="true">
+						<div class="p-grid">
+							<div class="p-col-5">
+								<p:outputLabel for="console" value="Do you want to override table?" />
+							</div>
+							<div class="p-col-5">
+								<p:selectOneRadio id="console">
+									<f:selectItem itemLabel="Yes" itemValue="true" />
+									<f:selectItem itemLabel="No" itemValue="false" />
+								</p:selectOneRadio>
+							</div>
+							<div class="p-col-12">
+								<p:fileUpload mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBeanNEW.parseXls}"
+											  allowTypes="/(\.|\/)(xls?x)$/" multiple="false"/>
+							</div>
+						</div>
+					</p:dialog>
 
 					<br />
 					<br />
