@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +39,8 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
@@ -47,8 +50,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
@@ -371,6 +372,33 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         if(user == null)
             return;
 
+        // map term language name to locale
+        HashMap<String, Locale> languageMap = new HashMap<>();
+        for(Locale locale : glossaryResource.getAllowedLanguages()) // English mapping
+        {
+            languageMap.put(locale.toLanguageTag(), locale);
+        }
+        for(SelectItem item : getAllowedTermLanguages()) // translated mapping
+        {
+            languageMap.put(item.getLabel(), (Locale) item.getValue());
+        }
+
+        GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), languageMap);
+
+        if(parser.isValid())
+        {
+            // append parsed entries to glossary
+            glossaryResource.getEntries().addAll(parser.getEntries());
+
+            // maybe later add option to replace old entries
+        }
+        else
+        {
+            parser.getErrorMessages();
+            // TODO display
+        }
+
+        // TODO move to parser class
         try
         {
             UploadedFile uploadedFile = fileUploadEvent.getFile();
@@ -411,7 +439,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                             newTerm.setTerm(row.getCell(4).getStringCellValue());
                             newTerm.setLanguage(newTerm.stringToLocaleLanguage(row.getCell(4).getStringCellValue()));
                             String usesString = row.getCell(6).getStringCellValue();
-                            List<String> uses = Arrays.asList(usesString.split("\\s*,\\s*"));;
+                            List<String> uses = Arrays.asList(usesString.split("\\s*,\\s*"));
+                            ;
                             newTerm.setUses(uses);
                             newTerm.setPronounciation(row.getCell(7).getStringCellValue());
                             newTerm.setAcronym(row.getCell(8).getStringCellValue());
@@ -423,7 +452,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
                     }
                     formEntry.setTerms(terms);
                 }
-                getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
+                // don't save anything until we are sure that the parser works as expected getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
                 addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
                 setKeepMessages();
                 setNewFormEntry();
