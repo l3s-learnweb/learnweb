@@ -12,7 +12,7 @@
 	<ui:define name="content">
 		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
 
-		<div class="page-header" style="margin:5px;">
+		<div class="page-header">
 			<h1>
 				#{msg.notification}
 			</h1>

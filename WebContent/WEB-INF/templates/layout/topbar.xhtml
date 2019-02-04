@@ -44,7 +44,7 @@
             <div class="ui-g-8 ui-sm-12 ui-md-3 right-menu ">
 
                 <div class="content">
-                    <h:form styleClass="topbar-menu-form-button adapt-640-apearer" >
+                    <h:form styleClass="topbar-menu-form-button adapt-640-appearer" >
                         <p:button value="" href="#{request.contextPath}/lw/myhome/notification.jsf" icon="fa fa-search" styleClass="topbar-menu-button topbar-icon"/>
                     </h:form>
 
@@ -55,7 +55,7 @@
 
 
                     <h:form>
-                        <p:menuButton style="background: url(${learnwebBean.getProfileImage(user)});" styleClass="menu-button topbar-profile">
+                        <p:menuButton style="background-image: url(${learnwebBean.getProfileImage(user)});" styleClass="menu-button topbar-profile">
                             <p:menuitem value="My profile" url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-user"/>
                             <p:menuitem value="Settings" url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-cog"/>
                             <p:separator />
