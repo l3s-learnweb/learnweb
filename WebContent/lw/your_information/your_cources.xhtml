@@ -1,0 +1,63 @@
+<ui:composition
+        template="/WEB-INF/templates/layout/template.xhtml"
+
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<ui:define name="content">
+    <h:form>
+        <p:dataTable id="tbl" value="#{coursesBean.userCourses}" var="course"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     paginator="true" rows="10" style="margin-bottom:20px">
+
+            <f:facet name="{Exporters}">
+                <div style="float:right;">
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" />
+                        <p:dataExporter type="pdf" target="tbl" fileName="cources" pageOnly="true" />
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" />
+                        <p:dataExporter type="csv" target="tbl" fileName="cources" pageOnly="true" />
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" />
+                        <p:dataExporter type="xml" target="tbl" fileName="cources" pageOnly="true" />
+                    </h:commandLink>
+                </div>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">ID</f:facet>
+                #{course.id}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Name</f:facet>
+                #{course.title}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Member count</f:facet>
+                #{course.memberCount}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Organisation</f:facet>
+                #{course.organisation.title}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Welcome message</f:facet>
+                #{course.welcomeMessage}
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+</ui:define>
+</ui:composition>

@@ -1,0 +1,79 @@
+<ui:composition
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="title">Your Resources</ui:define>
+
+<ui:define name="content">
+    <h:form id="yourinformationform">
+        <p:dataTable value="#{resoursesBean.userResourses}" var="resourse">
+
+            <f:facet name="header">
+                List of resources
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">ID</f:facet>
+                #{resourse.id}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Name</f:facet>
+                #{resourse.title}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">User</f:facet>
+                #{resourse.user.realUsername}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Language</f:facet>
+                #{resourse.language}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Description</f:facet>
+                #{resourse.description}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Author</f:facet>
+                #{resourse.author}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">File name</f:facet>
+                #{resourse.fileName}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">File URL</f:facet>
+                #{resourse.fileUrl}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Path</f:facet>
+                #{resourse.path}
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Type</f:facet>
+                #{resourse.type}
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <nav>
+        <ul>
+            <li>Back to <a href="/lw/your_information/index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="/lw/your_information/your_messages.jsf"> your messages</a>.</li>
+        </ul>
+    </nav>
+
+</ui:define>
+</ui:composition>
