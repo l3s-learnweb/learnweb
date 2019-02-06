@@ -1,19 +1,21 @@
 package de.l3s.learnweb.yourinformation;
 
-import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
 
 /*
 * PersonalInfoBean is responsible for displaying detailed information about user.
 * */
-@Named
-public class DetailedInfoBean extends GeneralinfoBean {
+@ManagedBean(name = "yourDetailedInfoBean", eager = true)
+@SessionScoped
+public class YourDetailedInfoBean extends YourGeneralInfoBean {
     private String fullName;
     private String address;
     private String email;
     private String dateOfBirth;
     private String studentId;
 
-    public DetailedInfoBean() {
+    public YourDetailedInfoBean() {
         this.fullName = user.getFullName();
         if (null == this.fullName){
             this.fullName = "N/A";

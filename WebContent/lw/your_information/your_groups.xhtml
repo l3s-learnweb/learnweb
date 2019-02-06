@@ -10,64 +10,87 @@
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable value="#{personalGroupsBean.userGroups}" var="group">
-
+        <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 List of groups
             </f:facet>
 
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="groups_tbl" fileName="groups"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="groups_tbl" fileName="groups"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="groups_tbl" fileName="groups"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
             <p:column>
                 <f:facet name="header">ID</f:facet>
-                #{group.id}
+                <h:outputText value="#{group.id}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Name</f:facet>
-                #{group.title}
+                <h:outputText value="#{group.title}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Member count</f:facet>
-                #{group.memberCount}
+                <h:outputText value="#{group.memberCount}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Category</f:facet>
-                #{group.categoryTitle}
+                <h:outputText value="#{group.categoryTitle}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Description</f:facet>
-                #{group.description}
+                <h:outputText value="#{group.description}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Leader</f:facet>
-                #{group.leader.fullName}
+                <h:outputText value="#{group.leader.fullName}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Resources count</f:facet>
-                #{group.resourcesCount}
+                <h:outputText value="#{group.resourcesCount}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Language</f:facet>
-                #{group.language}
+                <h:outputText value="#{group.language}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Metadata</f:facet>
-                #{group.metadata1}
+                <h:outputText value="#{group.metadata1}"/>
             </p:column>
 
+            <p:column>
+                <f:facet name="header">Group home</f:facet>
+                <a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{group.id}">Visit group page</a>
+            </p:column>
         </p:dataTable>
     </h:form>
 
     <nav>
         <ul>
-            <li>Back to <a href="/lw/your_information/index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="/lw/your_information/your_posts.jsf"> your posts</a>.</li>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
         </ul>
     </nav>
 

@@ -2,16 +2,18 @@ package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.resource.Resource;
 
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Named
-public class ResoursesBean extends GeneralinfoBean {
+@ManagedBean(name = "yourResourcesBean", eager = true)
+@SessionScoped
+public class YourResourcesBean extends YourGeneralInfoBean {
     private List<Resource> userResourses;
 
-    public ResoursesBean() {
+    public YourResourcesBean() {
         try{
             userResourses = user.getResources();
         } catch(SQLException sqlException){

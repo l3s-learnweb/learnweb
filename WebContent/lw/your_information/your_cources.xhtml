@@ -1,63 +1,78 @@
-<ui:composition
-        template="/WEB-INF/templates/layout/template.xhtml"
-
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+        xmlns:p="http://primefaces.org/ui">
 
+<ui:define name="title">Your Cources</ui:define>
+
+<style type="text/css">
+    .ui-paginator a {
+        margin-right: 5px;
+    }
+</style>
 
 <ui:define name="content">
     <h:form>
-        <p:dataTable id="tbl" value="#{coursesBean.userCourses}" var="course"
+        <p:dataTable id="cources_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="10" paginator="true"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     paginator="true" rows="10" style="margin-bottom:20px">
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                List of cources
+            </f:facet>
 
             <f:facet name="{Exporters}">
-                <div style="float:right;">
+                <h:panelGroup>
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/pdf.png" />
-                        <p:dataExporter type="pdf" target="tbl" fileName="cources" pageOnly="true" />
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="cources_tbl" fileName="cources"/>
                     </h:commandLink>
 
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/csv.png" />
-                        <p:dataExporter type="csv" target="tbl" fileName="cources" pageOnly="true" />
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="cources_tbl" fileName="cources"/>
                     </h:commandLink>
 
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/xml.png" />
-                        <p:dataExporter type="xml" target="tbl" fileName="cources" pageOnly="true" />
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="cources_tbl" fileName="cources"/>
                     </h:commandLink>
-                </div>
+                </h:panelGroup>
             </f:facet>
 
             <p:column>
                 <f:facet name="header">ID</f:facet>
-                #{course.id}
+                <h:outputText value="#{course.id}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Name</f:facet>
-                #{course.title}
+                <h:outputText value="#{course.title}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Member count</f:facet>
-                #{course.memberCount}
+                <h:outputText value="#{course.memberCount}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Organisation</f:facet>
-                #{course.organisation.title}
+                <h:outputText value="#{course.organisation.title}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Welcome message</f:facet>
-                #{course.welcomeMessage}
+                <h:outputText value="#{course.welcomeMessage}"/>
             </p:column>
         </p:dataTable>
     </h:form>
+
+    <nav>
+        <ul>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
+        </ul>
+    </nav>
 
 </ui:define>
 </ui:composition>

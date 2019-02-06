@@ -1,0 +1,135 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="title">Your Cources</ui:define>
+
+<ui:define name="content">
+    <h:form>
+        <p:dataTable id="received_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="10" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                Received messages
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="received_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="received_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="received_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">ID</f:facet>
+                <h:outputText value="#{message.id}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Title</f:facet>
+                <h:outputText value="#{message.title}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{message.text}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Received from</f:facet>
+                <h:outputText value="#{message.fromUser.realUsername}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Seen</f:facet>
+                <h:outputText value="#{message.seen}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{message.time}"/>
+            </p:column>
+        </p:dataTable>
+
+
+        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="10" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                Received messages
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="sent_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="sent_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="sent_messages_tbl" fileName="received messages"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">ID</f:facet>
+                <h:outputText value="#{message.id}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Title</f:facet>
+                <h:outputText value="#{message.title}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{message.text}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Sent to</f:facet>
+                <h:outputText value="#{message.toUser.realUsername}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Seen</f:facet>
+                <h:outputText value="#{message.seen}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{message.time}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <nav>
+        <ul>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
+        </ul>
+    </nav>
+
+</ui:define>
+</ui:composition>

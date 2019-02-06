@@ -3,7 +3,8 @@ package de.l3s.learnweb.yourinformation;
 import de.l3s.learnweb.forum.ForumPost;
 import org.jsoup.Jsoup;
 
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,12 @@ import java.util.List;
 /*
 * PostsBean is responsible for displaying user courses.
 * */
-@Named
-public class PostsBean extends GeneralinfoBean {
+@ManagedBean(name = "yourPostsBean", eager = true)
+@SessionScoped
+public class YourPostsBean extends YourGeneralInfoBean {
     private List<ForumPost> userPosts;
 
-    public PostsBean(){
+    public YourPostsBean(){
         try{
             userPosts = user.getForumPosts();
 

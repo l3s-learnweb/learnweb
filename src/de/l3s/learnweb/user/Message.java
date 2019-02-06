@@ -78,6 +78,43 @@ public class Message implements Comparable<Message>
         return messageList;
     }
 
+    public static ArrayList<Message> getAllMessagesFromUser(User user) throws SQLException{
+        ArrayList<Message> messageList = new ArrayList<>();
+        if(user == null)
+            return messageList;
+
+        PreparedStatement stmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE from_user = ? order by m_time desc");
+
+        stmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = stmtGetUsers.executeQuery();
+        Message message = null;
+
+        User toUser = null;
+        while(rs.next())
+        {
+            message = new Message();
+            message.setId(rs.getInt("message_id"));
+            UserManager um = Learnweb.getInstance().getUserManager();
+            User fromUser = um.getUser(rs.getInt("from_user"));
+            message.setFromUser(fromUser);
+            if(toUser == null)
+            {
+                toUser = um.getUser(rs.getInt("to_user"));
+            }
+            message.setToUser(toUser);
+            message.setTitle(rs.getString("m_title"));
+            message.setText(rs.getString("m_text"));
+            message.setSeen(rs.getBoolean("m_seen"));
+            message.setRead(rs.getBoolean("m_read"));
+            message.setTime(rs.getTimestamp("m_time"));
+
+            messageList.add(message);
+        }
+        stmtGetUsers.close();
+
+        return messageList;
+    }
+
     public void save() throws SQLException
     {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

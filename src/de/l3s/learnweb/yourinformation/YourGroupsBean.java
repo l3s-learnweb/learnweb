@@ -2,16 +2,18 @@ package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.group.Group;
 
-import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Named
-public class PersonalGroupsBean extends GeneralinfoBean {
+@ManagedBean(name = "yourGroupsBean", eager = true)
+@SessionScoped
+public class YourGroupsBean extends YourGeneralInfoBean {
     private List<Group> userGroups;
 
-    public PersonalGroupsBean() {
+    public YourGroupsBean() {
         try{
             this.userGroups = this.getUser().getGroups();
         } catch(SQLException sqlException){

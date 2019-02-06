@@ -10,68 +10,87 @@
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable value="#{resoursesBean.userResourses}" var="resourse">
-
+        <p:dataTable id="resources_tbl" value="#{yourResourcesBean.userResourses}" var="resourse" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 List of resources
             </f:facet>
 
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
             <p:column>
                 <f:facet name="header">ID</f:facet>
-                #{resourse.id}
+                <h:outputText value="#{resourse.id}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Name</f:facet>
-                #{resourse.title}
+                <h:outputText value="#{resourse.title}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">User</f:facet>
-                #{resourse.user.realUsername}
+                <h:outputText value="#{resourse.user.realUsername}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Language</f:facet>
-                #{resourse.language}
+                <h:outputText value="#{resourse.language}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Description</f:facet>
-                #{resourse.description}
+                <h:outputText value="#{resourse.description}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Author</f:facet>
-                #{resourse.author}
+                <h:outputText value="#{resourse.author}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">File name</f:facet>
-                #{resourse.fileName}
+                <h:outputText value="#{resourse.fileName}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">File URL</f:facet>
-                #{resourse.fileUrl}
+                <a href="#{resourse.fileUrl}">visit resource</a>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Path</f:facet>
-                #{resourse.path}
+                <f:facet name="header">Creation Date</f:facet>
+                <h:outputText value="#{resourse.creationDate}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Type</f:facet>
-                #{resourse.type}
+                <h:outputText value="#{resourse.type}"/>
             </p:column>
         </p:dataTable>
     </h:form>
 
     <nav>
         <ul>
-            <li>Back to <a href="/lw/your_information/index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="/lw/your_information/your_messages.jsf"> your messages</a>.</li>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_messages.jsf"> your messages</a>.</li>
         </ul>
     </nav>
 

@@ -10,43 +10,67 @@
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable value="#{postsBean.userPosts}" var="post">
-
+        <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 List of posts
             </f:facet>
 
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="posts_tbl" fileName="posts"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="posts_tbl" fileName="posts"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="posts_tbl" fileName="posts"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
             <p:column>
                 <f:facet name="header">ID</f:facet>
-                #{post.id}
+                <h:outputText value="#{post.id}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Text</f:facet>
-                #{post.text}
+                <h:outputText value="#{post.text}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Category</f:facet>
-                #{post.category}
+                <h:outputText value="#{post.category}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Date posted</f:facet>
-                #{post.date}
+                <h:outputText value="#{post.date}"/>
             </p:column>
 
             <p:column>
                 <f:facet name="header">Date last edited</f:facet>
-                #{post.lastEditDate}
+                <h:outputText value="#{post.lastEditDate}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Post URL</f:facet>
+                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}">Visit post thread</a>
             </p:column>
         </p:dataTable>
     </h:form>
 
     <nav>
         <ul>
-            <li>Back to <a href="/lw/your_information/index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="/lw/your_information/your_resources.jsf"> your resources</a>.</li>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_resources.jsf"> your resources</a>.</li>
         </ul>
     </nav>
 

@@ -10,41 +10,41 @@
 <ui:define name="content">
     <h:form id="yourinformationform">
         <h:outputText>
-            Here is more detailed information about you, <h:outputText value="#{generalinfoBean.username}" />.
+            Here is more detailed information about you, <h:outputText value="#{yourGeneralinfoBean.username}" />.
         </h:outputText>
         <h3>Personal data</h3>
         <div>
-            Full name: <h:outputText value="#{detailedInfoBean.fullName}" />
+            Full name: <h:outputText value="#{yourDetailedInfoBean.fullName}" />
         </div>
         <div>
-            Date of birth: <h:outputText value="#{detailedInfoBean.dateOfBirth}" />
+            Date of birth: <h:outputText value="#{yourDetailedInfoBean.dateOfBirth}" />
         </div>
         <div>
-            Address: <h:outputText value="#{detailedInfoBean.address}" />
+            Address: <h:outputText value="#{yourDetailedInfoBean.address}" />
         </div>
         <hr/>
 
         <h3>Account data</h3>
         <div>
-            Username: <h:outputText value="#{detailedInfoBean.username}" />
+            Username: <h:outputText value="#{yourDetailedInfoBean.username}" />
         </div>
 
         <div>
-            Email: <h:outputText value="#{detailedInfoBean.email}" />
+            Email: <h:outputText value="#{yourDetailedInfoBean.email}" />
         </div>
         <hr/>
 
         <h3>Student data</h3>
         <div>
-            Student ID: <h:outputText value="#{detailedInfoBean.studentId}" />
+            Student ID: <h:outputText value="#{yourDetailedInfoBean.studentId}" />
         </div>
 
         <div>
-            Cources amount: <h:outputText value="#{detailedInfoBean.userCoursesNum}" />
+            Cources amount: <h:outputText value="#{yourDetailedInfoBean.userCoursesNum}" />
         </div>
 
         <div>
-            Groups amount: <h:outputText value="#{detailedInfoBean.userGroupsNum}" />
+            Groups amount: <h:outputText value="#{yourDetailedInfoBean.userGroupsNum}" />
         </div>
 
 
@@ -53,8 +53,8 @@
 
     <nav>
         <ul>
-            <li>Back to <a href="/lw/your_information/index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="/lw/your_information/your_cources.jsf"> your cources</a>.</li>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_cources.jsf"> your cources</a>.</li>
         </ul>
     </nav>
 

@@ -1,30 +1,36 @@
 package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-
+import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
 
-import javax.inject.Named;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /*
 * GeneralinfoBean is responsible for displaying user statistics on index page, e.g. amount of groups, in which user is a
 * member.
 * */
-@Named
-public class GeneralinfoBean extends ApplicationBean {
-    protected static final Logger logger = Logger.getLogger(GeneralinfoBean.class);
+@ManagedBean(name = "yourGeneralInfoBean", eager = true)
+@SessionScoped
+public class YourGeneralInfoBean extends ApplicationBean implements Serializable {
+    protected static final Logger logger = Logger.getLogger(YourGeneralInfoBean.class);
 
     private String username;
     private int userCoursesNum;
     private int userGroupsNum;
     private int userPostsNum;
     private int userResourcesNum;
+    private int receivedMessagesNum;
+    private int sentMessagesNum;
 
     protected User user;
 
-    public GeneralinfoBean(){
+    public YourGeneralInfoBean(){
         this.user = this.getUser();
 
         this.username = user.getUsername();
@@ -51,6 +57,18 @@ public class GeneralinfoBean extends ApplicationBean {
         } catch(SQLException sqlException) {
             this.userResourcesNum = 0;
             logger.error("Can't retrieve amount of user resources properly " + sqlException);
+        }
+        try {
+            receivedMessagesNum = Message.getAllMessagesToUser(this.user).size();
+        } catch(SQLException sqlException){
+            receivedMessagesNum = 0;
+            logger.error("Problem with fetching messages of user" + sqlException);
+        }
+        try {
+            sentMessagesNum = Message.getAllMessagesFromUser(this.user).size();
+        } catch(SQLException sqlException){
+            sentMessagesNum = 0;
+            logger.error("Problem with fetching messages of user" + sqlException);
         }
     }
 
@@ -102,5 +120,25 @@ public class GeneralinfoBean extends ApplicationBean {
     public void setUserResourcesNum(final int userResourcesNum)
     {
         this.userResourcesNum = userResourcesNum;
+    }
+
+    public int getReceivedMessagesNum()
+    {
+        return receivedMessagesNum;
+    }
+
+    public void setReceivedMessagesNum(final int receivedMessagesNum)
+    {
+        this.receivedMessagesNum = receivedMessagesNum;
+    }
+
+    public int getSentMessagesNum()
+    {
+        return sentMessagesNum;
+    }
+
+    public void setSentMessagesNum(final int sentMessagesNum)
+    {
+        this.sentMessagesNum = sentMessagesNum;
     }
 }
