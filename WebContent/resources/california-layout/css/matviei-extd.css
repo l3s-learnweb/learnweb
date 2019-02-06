@@ -159,10 +159,10 @@
         padding-top: 60px; }
     .main-body #layout-right-sidebar, .main-body .layout-wrapper .layout-sidebar {
         top: 60px; }
-    .main-body .adapt-1024-hidder{  /* */
+    .adapt-1024-hidder{  /* */
         visibility: hidden;
     }
-    .main-body .adapt-1024-appearer{
+    .adapt-1024-appearer{
         visibility: visible;
     }
     .main-body .layout-wrapper .layout-topbar #menu-button {
@@ -174,10 +174,10 @@
 }
 
 @media screen and (max-width: 800px) {
-    .main-body .adapt-800-hidder{
+    .adapt-800-hidder{
         visibility: hidden;
     }
-    .main-body .adapt-800-appearer{
+    .adapt-800-appearer{
         visibility: visible;
     }
     .main-body .layout-wrapper .layout-topbar #menu-button {
@@ -194,10 +194,10 @@
         padding-top: 60px; }
     .main-body #layout-right-sidebar, .main-body .layout-wrapper .layout-sidebar {
         top: 60px; }
-    .main-body .adapt-640-hidder{ 
+    .adapt-640-hidder{
         visibility: hidden;
     }
-    .main-body .adapt-640-appearer{
+    .adapt-640-appearer{
         visibility: visible;
     }
 
@@ -207,18 +207,28 @@
 
 }
 
-.main-body #organization-save-button{
+#organization-save-button, #notification-save-button{
     padding: 0px;
     background: none;
     display: block;
     margin: 0 auto;
 }
 
-.main-body #organization-save-button button{
+#organization-save-button button, #notification-save-button button{
     width: 200px;
     font-size: 20px;
     display: block;
     margin: 0 auto;
+}
+
+#notification-save-button {
+    display: flex;
+    justify-content: center;
+}
+
+#notification-save-button p {
+    display: flex;
+    width: 40%;
 }
 
 .main-body .layout-topbar{
@@ -240,7 +250,7 @@
     display: inline-block;
 }
 
-.main-body #editwelcomeform > div .p-col-12{
+.form > div .p-col-12{
     box-sizing: border-box;
 }
 
@@ -256,6 +266,8 @@
 .main-body .ui-fileupload-content{
     width: 100%;
 }
+
+
 
 
 
@@ -281,10 +293,19 @@
 	display: none;
 }
 
-.main-body .flex-center{
+.flex-center{
     display: flex;
     justify-content: center;
     align-content: center;
+}
+
+.flex-label{
+    display: flex;
+    align-content: center;
+}
+
+.flex-label label{
+    margin-left: var(--main-margin);
 }
 
 .grid{

@@ -4,6 +4,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+		xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true" />
@@ -14,50 +15,70 @@
 
 		<div class="page-header">
 			<h1>#{msg.notification}</h1>
-		</div>			
-		
-		<p:panel rendered="#{userBean.admin || userBean.moderator}">
+		</div>
 
-			<h:form id="us_form">
-				<h:panelGrid id="grid" columns="1">
-	
-					<h:panelGroup>
-						<h:outputText style="font-weight:bold" value="#{msg.title}" />
-						<p:message showSummary="true" showDetail="false" styleClass="error" for="msg_title" />					
-					</h:panelGroup>					
-					<p:inputText value="#{adminNotificationBean.title}" style="width:100%" id="msg_title" />
+		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+			<h:form id="us_form" styleClass="form">
+				<div class="p-grid">
+					<div class="p-col-12 grid">
+						<div class="card card-w-title grid">
+							<h2><h:outputText value="#{msg.notification}" /></h2>
+							<h:panelGroup>
+								<p class="no-margin-top"><h:outputText value="#{msg.title}:" /></p>
+								<p:message showSummary="true" showDetail="false"  for="msg_title" />
+							</h:panelGroup>
+							<p:inputText value="#{adminNotificationBean.title}" id="msg_title" />
 
-					<p:spacer width="100" height="20" />
-					
-					<h:panelGroup>
-						<h:outputText style="font-weight:bold" value="#{msg.description}" />
-						<p:message showSummary="true" showDetail="false" styleClass="error" for="msg_description" />					
-					</h:panelGroup>	
-					<p:editor value="#{adminNotificationBean.text}" widgetVar="editor" width="600" id="msg_description" />
-					
-					<p:spacer width="100" height="20" />
 
-					<h:outputText style="font-weight:bold" value="#{msg.select_users}" />
-				</h:panelGrid>
-					
-				<ui:include src="/templates/user/user_select_form.xhtml" />	
-				
-				<h:panelGrid columns="2" style="margin-top:10px" rendered="#{adminNotificationBean.moderatorCanSendMail}">	
-					<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />					
-					<p:outputLabel for="send_notification_also_per_mail">#{msg.send_notification_also_per_mail}</p:outputLabel>
-				</h:panelGrid>
-				
-				<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
-					<h4>You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
-				</ui:fragment>
-				
-				<h:panelGrid columns="2" style="margin-top:10px">
-					<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
-					<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
-				</h:panelGrid>
-				
+							<h:panelGroup>
+								<p><h:outputText value="#{msg.description}:" /></p>
+								<p:message showSummary="true" showDetail="false" for="msg_description" />
+							</h:panelGroup>
+
+							<p:textEditor height="184" value="#{adminNotificationBean.text}" id="msg_description" />
+						</div>
+					</div>
+
+					<div class="p-col-12 grid">
+						<div class="card card-w-title grid">
+							<h2><h:outputText value="#{msg.select_users}" /></h2>
+							<ui:include src="/templates/user/user_select_form.xhtml" />
+
+							<div class="flex-label">
+								<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />
+								<p:outputLabel for="send_notification_also_per_mail">#{msg.send_notification_also_per_mail}</p:outputLabel>
+							</div>
+
+
+
+							<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
+								<h4>You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
+							</ui:fragment>
+
+						</div>
+					</div>
+
+					<div class="p-col-12">
+						<div class="card card-w-title" id="notification-save-button" >
+							<p>
+								<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
+								<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
+							</p>
+						</div>
+
+					</div>
+
+				</div>
+
 			</h:form>
-		</p:panel>
+		</ui:fragment>
+
+
+
+
+
+
+
 
 	</ui:define>
 
