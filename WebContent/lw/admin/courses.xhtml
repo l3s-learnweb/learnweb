@@ -11,20 +11,22 @@
 	<ui:param name="pageTitle" value="#{msg.courses}"/>
 
 	<ui:define name="content">
+		<div class="page-header">
+			<h1>#{msg.courses}</h1>
+		</div>
 		
-		<h:form id="courses_form">
-		
-			<p:blockUI block="courses_table" widgetVar="courses_form_blocker">
+		<h:form id="courses_form" styleClass="form">
+			<div class="p-grid">
+				<div class="p-col-12">
+					<p:blockUI block="courses_table" widgetVar="courses_form_blocker">
 				<div class="float-left">#{msg.please_wait}. This action may take several minutes for big courses.</div>
 				<div class="loading-animation small float-left">
 					<div></div>
 					<div></div>
 					<div></div>
 				</div>
-			</p:blockUI>	
-
-			<p:panel header="#{msg.courses}">
-			    <p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+			</p:blockUI>
+					<p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">
 				    <p:column headerText="#{msg.title}" sortBy="#{course.title}">
 					    <h:outputText value="#{course.title}" />
 				    </p:column>
@@ -68,28 +70,41 @@
 					    </h:outputLink>
 				    </p:column>
 			    </p:dataTable>
-			</p:panel>
+				</div>
+			</div>
 		</h:form>
-	
-		<br/>
-		
-		<p:panel header="#{msg.add_new_course}" >
-			<h:form id="addcourse">
-				#{msg.course_title}: 
-				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
-				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" styleClass="margin-top"/>
+
+			<h:form id="addcourse" styleClass="form margin-top no-padding-top">
+				<div class="p-grid">
+					<div class="p-col-12">
+						<div class="card card-w-title grid">
+							<h2><h:outputText value="#{msg.add_new_course}"/></h2>
+							<p class="no-margin-top">
+								#{msg.course_title}:
+							</p>
+							<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
+							<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+						</div>
+					</div>
+					<div class="p-col-12">
+						<div class="card card-w-title" id="notification-save-button" >
+							<p>
+								<p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"/>
+							</p>
+						</div>
+
+					</div>
+
+
+				</div>
 			</h:form>
-		</p:panel>
-		
-		<br/>
-			
+
 		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
 			<h:form id="addorganisation">
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" styleClass="margin-top"/>
+				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="button" process="@form" styleClass="margin-top"/>
 			</h:form>
 		</p:panel>
 
