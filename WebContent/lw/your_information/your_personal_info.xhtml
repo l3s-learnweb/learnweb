@@ -10,7 +10,7 @@
 <ui:define name="content">
     <h:form id="yourinformationform">
         <h:outputText>
-            Here is more detailed information about you, <h:outputText value="#{yourGeneralinfoBean.username}" />.
+            Here is more detailed information about you, <h:outputText value="#{yourGeneralInfoBean.username}" />.
         </h:outputText>
         <h3>Personal data</h3>
         <div>
@@ -26,7 +26,7 @@
 
         <h3>Account data</h3>
         <div>
-            Username: <h:outputText value="#{yourDetailedInfoBean.username}" />
+            Username: <h:outputText value="#{yourGeneralInfoBean.username}" />
         </div>
 
         <div>
@@ -38,16 +38,6 @@
         <div>
             Student ID: <h:outputText value="#{yourDetailedInfoBean.studentId}" />
         </div>
-
-        <div>
-            Cources amount: <h:outputText value="#{yourDetailedInfoBean.userCoursesNum}" />
-        </div>
-
-        <div>
-            Groups amount: <h:outputText value="#{yourDetailedInfoBean.userGroupsNum}" />
-        </div>
-
-
         <hr/>
     </h:form>
 

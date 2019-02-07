@@ -1,9 +1,12 @@
 package de.l3s.learnweb.yourinformation;
 
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Course;
+import org.apache.log4j.Logger;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,28 +14,20 @@ import java.util.List;
 /*
 * CoursesBean is responsible for displaying user courses.
 * */
-@ManagedBean(name = "yourCoursesBean", eager = true)
-@SessionScoped
-public class YourCoursesBean extends YourGeneralInfoBean
-{
-    private List<Course> userCourses;
+@Named
+@ViewScoped
+public class YourCoursesBean extends ApplicationBean implements Serializable {
+    private static final Logger logger = Logger.getLogger(YourCoursesBean.class);
 
-    public YourCoursesBean(){
-        try{
-            this.userCourses = this.getUser().getCourses();
-        } catch(SQLException sqlException){
-            this.userCourses = new ArrayList<>();
-            logger.error("Could not properly retrieve user courses." + sqlException);
+    public YourCoursesBean() { }
+
+    public List<Course> getUserCourses() {
+        try {
+            return this.getUser().getCourses();
         }
-    }
-
-    public List<Course> getUserCourses()
-    {
-        return userCourses;
-    }
-
-    public void setUserCourses(final List<Course> userCourses)
-    {
-        this.userCourses = userCourses;
+        catch(SQLException sqlException) {
+            logger.error("Could not properly retrieve user courses." + sqlException);
+            return new ArrayList<>();
+        }
     }
 }

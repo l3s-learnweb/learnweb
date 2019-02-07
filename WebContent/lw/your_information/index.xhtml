@@ -1,40 +1,76 @@
 <ui:composition
-		template="/WEB-INF/templates/layout/template.xhtml"
-		xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-		xmlns:h="http://xmlns.jcp.org/jsf/html">
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html">
 
-	<ui:define name="title">Your Information</ui:define>
-	
-	<ui:define name="content">
-		<h:form id="yourinformationform">
-			Hello <h:outputText value="#{yourGeneralInfoBean.username}" />
+<ui:define name="title">Your Information</ui:define>
 
-			<div>
-				This is a short summary of all data, that LearnWeb has about you.
-			</div>
-
-			<div>
-				Your <a href="your_personal_info.jsf"> personal data.</a>
-			</div>
-			<div>
-				You take part in <a href="your_cources.jsf"> <h:outputText value="#{yourGeneralInfoBean.userCoursesNum}" /> cources.</a>
-			</div>
-			<div>
-				You are a member of <a href="your_groups.jsf"> <h:outputText value="#{yourGeneralInfoBean.userGroupsNum}" /> groups.</a>
-			</div>
-			<div>
-				You left <a href="your_posts.jsf"> <h:outputText value="#{yourGeneralInfoBean.userPostsNum}" /> posts.</a>
-			</div>
-			<div>
-				You have <a href="your_resources.jsf"> <h:outputText value="#{yourGeneralInfoBean.userResourcesNum}" /> resources.</a>
-			</div>
-			<div>
-				You have sent <a href="your_messages.jsf"> <h:outputText value="#{yourMessagesBean.sentMessagesNum}" /> messages.</a>
-			</div>
-			<div>
-				You have received <a href="your_messages.jsf"> <h:outputText value="#{yourMessagesBean.receivedMessagesNum}" /> messages.</a>
-			</div>
-        </h:form>
-	</ui:define>
+<ui:define name="content">
+    <h:form id="yourinformationform">
+        <div class="ui-g-12">
+            <div class="ui-panel ui-widget ui-widget-content ui-corner-all">
+                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                    <span class="ui-panel-title">
+                        Hello <h:outputText value="#{yourGeneralInfoBean.username}"/>
+                    </span>
+                </div>
+                <div class="ui-panel-content ui-widget-content">
+                    Here is a list of your LearnWeb information that you can access at any time.
+                    We've categorized this information by type so you can easily find what you're looking for.
+                </div>
+                <div class="ui-g ui-fluid">
+                    <div class="card">
+                        <div class="ui-menu ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" role="menu">
+                            <ul class="ui-menu-list ui-helper-reset">
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_personal_info.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">Your  personal data</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_cources.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You take part in  <h:outputText value="#{yourGeneralInfoBean.userCoursesNum}"/> cources</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_groups.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You are a member of  <h:outputText value="#{yourGeneralInfoBean.userGroupsNum}"/> groups</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_posts.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You left <h:outputText value="#{yourGeneralInfoBean.userPostsNum}"/> posts</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_resources.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You have <h:outputText value="#{yourGeneralInfoBean.userResourcesNum}"/> resources</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_messages.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You have sent <h:outputText value="#{yourGeneralInfoBean.sentMessagesNum}"/> messages</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_messages.jsf">
+                                        <span class="ui-menuitem-icon fa fa-android"></span>
+                                        <span class="ui-menuitem-text">You have received <h:outputText value="#{yourGeneralInfoBean.receivedMessagesNum}"/> messages</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:define>
 </ui:composition>

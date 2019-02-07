@@ -1,9 +1,11 @@
 package de.l3s.learnweb.yourinformation;
 
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
+import org.apache.log4j.Logger;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,44 +14,30 @@ import java.util.List;
 /*
  * MessagesBean is responsible for displaying user messages.
  * */
-@ManagedBean(name = "yourMessagesBean", eager = true)
-@SessionScoped
-public class YourMessagesBean extends YourGeneralInfoBean implements Serializable {
-    private List<Message> messagesToUser;
-    private List<Message> messagesFromUser;
+@Named
+@ViewScoped
+public class YourMessagesBean extends ApplicationBean implements Serializable {
+    private static final Logger logger = Logger.getLogger(YourMessagesBean.class);
 
-    public YourMessagesBean(){
+    public YourMessagesBean() { }
+
+    public List<Message> getMessagesToUser() {
         try {
-            messagesToUser = Message.getAllMessagesToUser(this.user);
-        } catch(SQLException sqlException){
-            messagesToUser = new ArrayList<>();
-            logger.error("Problem with fetching messages of user" + sqlException);
+            return Message.getAllMessagesToUser(this.getUser());
         }
-        try {
-            messagesFromUser = Message.getAllMessagesFromUser(this.user);
-        } catch(SQLException sqlException){
-            messagesFromUser = new ArrayList<>();
+        catch(SQLException sqlException) {
             logger.error("Problem with fetching messages of user" + sqlException);
+            return new ArrayList<>();
         }
     }
 
-    public List<Message> getMessagesToUser()
-    {
-        return messagesToUser;
-    }
-
-    public void setMessagesToUser(final List<Message> messagesToUser)
-    {
-        this.messagesToUser = messagesToUser;
-    }
-
-    public List<Message> getMessagesFromUser()
-    {
-        return messagesFromUser;
-    }
-
-    public void setMessagesFromUser(final List<Message> messagesFromUser)
-    {
-        this.messagesFromUser = messagesFromUser;
+    public List<Message> getMessagesFromUser() {
+        try {
+            return Message.getAllMessagesFromUser(this.getUser());
+        }
+        catch(SQLException sqlException) {
+            logger.error("Problem with fetching messages of user" + sqlException);
+            return new ArrayList<>();
+        }
     }
 }
