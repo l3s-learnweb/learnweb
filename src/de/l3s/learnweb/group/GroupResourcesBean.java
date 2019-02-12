@@ -883,6 +883,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             return;
                         }
 
+                        log(Action.move_folder, sourceFolder.getGroupId(), itemId, sourceFolder.getTitle());
                         sourceFolder.moveTo(targetGroupId, targetFolderId);
                         numFolders++;
                     }
@@ -910,6 +911,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                             return;
                         }
 
+                        log(Action.move_resource, sourceResource.getGroupId(), itemId, sourceResource.getTitle());
                         sourceResource.moveTo(targetGroupId, targetFolderId);
                         numResources++;
                     }

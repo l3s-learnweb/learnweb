@@ -15,6 +15,7 @@ public class Folder extends AbstractResource implements Serializable
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);
 
+    // TODO: use soft deleting for folders
     private int folderId = -1;
     private int groupId = -1;
     private int parentFolderId;

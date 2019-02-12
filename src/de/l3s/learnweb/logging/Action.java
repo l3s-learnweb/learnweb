@@ -79,6 +79,8 @@ public enum Action
     lock_interrupted_returned_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
     deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
     deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
+    move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // target_id = folder_id, param = folder name;
+    move_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // target_id = resource_id, param = resource name;
     ;
     private final ActionTargetId targetId;
     private final ActionCategory category;
