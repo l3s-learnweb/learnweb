@@ -187,6 +187,15 @@ public class LogEntry implements Serializable
             String topic = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
             description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
             break;
+
+        case deleting_folder:
+            description = usernameLink + UtilBean.getLocaleMessage("log_deleting_folder", params);
+            break;
+
+        case add_folder:
+            description = usernameLink + UtilBean.getLocaleMessage("log_add_folder", params);
+            break;
+
         default:
             description = "no message for action " + action.name(); // should never happen;
         }

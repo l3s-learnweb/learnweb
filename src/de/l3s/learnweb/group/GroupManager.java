@@ -22,9 +22,9 @@ import de.l3s.learnweb.group.Group.POLICY_ANNOTATE;
 import de.l3s.learnweb.group.Group.POLICY_EDIT;
 import de.l3s.learnweb.group.Group.POLICY_JOIN;
 import de.l3s.learnweb.group.Group.POLICY_VIEW;
+import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -646,17 +646,17 @@ public class GroupManager
 
     public AbstractResource getAbstractResource(String resourceType, int resourceId) throws SQLException
     {
-        if (resourceId == -1)
+        if(resourceId == -1)
             return null;
 
-        if (resourceType == null || resourceType.isEmpty())
+        if(resourceType == null || resourceType.isEmpty())
             throw new NullPointerException("resourceType is null or empty");
 
-        if (resourceType.equals("folder"))
+        if(resourceType.equals("folder"))
         {
             return getFolder(resourceId);
         }
-        else if (resourceType.equals("resource"))
+        else if(resourceType.equals("resource"))
         {
             return learnweb.getResourceManager().getResource(resourceId);
         }
@@ -697,12 +697,13 @@ public class GroupManager
             resource.delete();
         }
 
-        Folder parentFolder = folder.getParentFolder();
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");)
+        {
+            delete.setInt(1, folder.getId());
+            delete.execute();
+        }
 
-        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");
-        delete.setInt(1, folder.getId());
-        delete.execute();
-        delete.close();
+        Folder parentFolder = folder.getParentFolder();
 
         folderCache.remove(folder.getId());
 

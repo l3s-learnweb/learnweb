@@ -197,23 +197,40 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         {
             String serverUrl = Learnweb.getInstance().getServerUrl();
             Thumbnail dummyImage;
-            if (type.equals(ResourceType.audio)) {
+            if(type.equals(ResourceType.audio))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/audio-file.png", 128, 128);
-            } else if (type.equals(ResourceType.document)) {
+            }
+            else if(type.equals(ResourceType.document))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/document-file.png", 128, 128);
-            } else if (type.equals(ResourceType.image)) {
+            }
+            else if(type.equals(ResourceType.image))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/image-file.png", 128, 128);
-            } else if (type.equals(ResourceType.presentation)) {
+            }
+            else if(type.equals(ResourceType.presentation))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/presentation-file.png", 128, 128);
-            } else if (type.equals(ResourceType.spreadsheet)) {
+            }
+            else if(type.equals(ResourceType.spreadsheet))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/spreadsheet-file.png", 128, 128);
-            } else if (type.equals(ResourceType.text)) {
+            }
+            else if(type.equals(ResourceType.text))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/text-file.png", 128, 128);
-            } else if (type.equals(ResourceType.video)) {
+            }
+            else if(type.equals(ResourceType.video))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/video-file.png", 128, 128);
-            } else if (type.equals(ResourceType.website)) {
+            }
+            else if(type.equals(ResourceType.website))
+            {
                 dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/website-file.png", 128, 128);
-            } else {
+            }
+            else
+            {
                 dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
             }
 
@@ -637,7 +654,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -1484,8 +1501,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     @Override
     public void delete() throws SQLException
     {
-        //this.setGroupId(0);
-        //this.setFolderId(0);
         setDeleted(true);
         this.save();
     }
@@ -2039,7 +2054,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-
+    
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();
