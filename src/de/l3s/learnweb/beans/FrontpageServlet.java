@@ -57,6 +57,15 @@ public class FrontpageServlet extends HttpServlet
 
         boolean archiveWebRequest = isArchiveWebRequest(request);
 
+        String folder;//request.getContextPath();
+
+        if(service == SERVICE.AMA)
+            folder = "/ama/";
+        else if(archiveWebRequest)
+            folder = "/aw/";
+        else
+            folder = "/lw/";
+
         // redirect to HTTPS; this is only a temporary solution until we redirect all requests to https
         if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
         {
@@ -70,22 +79,13 @@ public class FrontpageServlet extends HttpServlet
                 server = "https://learnweb.l3s.uni-hannover.de";
             }
 
-            response.sendRedirect(server);
+            response.sendRedirect(server + folder);
             return;
         }
 
-        String url;//request.getContextPath();
-
-        if(service == SERVICE.AMA)
-            url = "/ama/";
-        else if(archiveWebRequest)
-            url = "/aw/";
-        else
-            url = "/lw/";
-
         try
         {
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(folder);
             dispatcher.forward(request, response);
         }
         catch(Exception e)
