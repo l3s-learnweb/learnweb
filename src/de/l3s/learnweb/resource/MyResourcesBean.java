@@ -391,10 +391,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                         newResource.setFolderId(targetFolderId);
                         resource = getUser().addResource(newResource);
 
-                        if(resource.getType().equals(Resource.ResourceType.glossary))
-                        {
-                            getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
-                        }
                         numResources++;
                         log(Action.adding_resource, targetGroupId, resource.getId());
                     }

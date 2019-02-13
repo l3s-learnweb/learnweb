@@ -57,12 +57,11 @@ public class FrontpageServlet extends HttpServlet
 
         boolean archiveWebRequest = isArchiveWebRequest(request);
 
-        /*
-        // redirect to HTTPS
+        // redirect to HTTPS; this is only a temporary solution until we redirect all requests to https
         if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
         {
             String server;
-        
+
             switch(service)
             {
             case AMA:
@@ -70,10 +69,10 @@ public class FrontpageServlet extends HttpServlet
             default:
                 server = "https://learnweb.l3s.uni-hannover.de";
             }
-        
+
             response.sendRedirect(server);
             return;
-        }*/
+        }
 
         String url;//request.getContextPath();
 

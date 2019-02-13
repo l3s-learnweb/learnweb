@@ -64,8 +64,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     private List<GlossaryTableView> filteredTableItems;
     private GlossaryEntry formEntry;
     private final List<SelectItem> availableTopicOne = new ArrayList<>();
-    private List<SelectItem> availableTopicTwo = new ArrayList<>();
-    private List<SelectItem> availableTopicThree = new ArrayList<>();
+    private final List<SelectItem> availableTopicTwo = new ArrayList<>();
+    private final List<SelectItem> availableTopicThree = new ArrayList<>();
     private boolean paginator = true;
     private String toggleLabel = "Show All";
     private boolean optionMandatoryDescription;

@@ -1,36 +1,28 @@
 package de.l3s.learnweb.resource.speechRepository;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.ResourceMetadataExtractor;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
-import de.l3s.util.Misc;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import de.l3s.learnweb.Learnweb;
 
 public class SpeechRepositoryCrawlerSimple implements Runnable
 {
     private static final Logger log = Logger.getLogger(SpeechRepositoryCrawlerSimple.class);
 
-
     private Learnweb learnweb;
-    private ResourcePreviewMaker rpm;
-    private ResourceMetadataExtractor rme;
+    //    private ResourcePreviewMaker rpm;
+    //    private ResourceMetadataExtractor rme;
 
     public SpeechRepositoryCrawlerSimple()
     {
@@ -40,8 +32,8 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
     public void initialize()
     {
         learnweb = Learnweb.getInstance();
-        rpm = learnweb.getResourcePreviewMaker();
-        rme = learnweb.getResourceMetadataExtractor();
+        //        rpm = learnweb.getResourcePreviewMaker();
+        //        rme = learnweb.getResourceMetadataExtractor();
     }
 
     public void start()
@@ -51,7 +43,8 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
             String nextUrl = "https://webgate.ec.europa.eu/sr/search-speeches?language=All&level=All&use=All&domain=All&type=All&combine=&combine_1=&video_reference=&entity%5B0%5D=";
 
             int pageNumber = 0;
-            while(nextUrl != null) {
+            while(nextUrl != null)
+            {
                 log.info("Getting page " + pageNumber++);
                 nextUrl = visitCategoryPage(nextUrl);
             }
@@ -83,10 +76,13 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
                 Integer pageId = Integer.parseInt(tableRow.select(".views-field-nid").text());
                 String pageUrl = tableRow.select(".views-field-title a").attr("href");
 
-                try {
+                try
+                {
                     visitPage(pageId, pageUrl);
                     TimeUnit.SECONDS.sleep(5);
-                } catch(Exception e) {
+                }
+                catch(Exception e)
+                {
                     log.error("Error while fetching speech repository page: " + pageUrl, e);
                 }
             }
@@ -126,7 +122,8 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
             log.error("Error while checking if speech repository video exists: " + pageId, e);
         }
 
-        if (resourceId > 0) return;
+        if(resourceId > 0)
+            return;
 
         Document doc = Jsoup.connect(pageUrl).get();
         Element content = doc.select("#content > .content-inner").first();
@@ -189,11 +186,13 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
                 JSONObject jsonObject = new JSONObject(scriptData);
                 JSONObject mediaPlayer = jsonObject.getJSONObject("ecspTranscodingPlayers").getJSONObject("ecsp-media-player");
 
-                if (mediaPlayer.has("image")) {
+                if(mediaPlayer.has("image"))
+                {
                     speechEntity.setImageLink(mediaPlayer.getString("image"));
                 }
 
-                if (mediaPlayer.has("entity_id")) {
+                if(mediaPlayer.has("entity_id"))
+                {
                     speechEntity.setId(mediaPlayer.getString("entity_id"));
                 }
 
@@ -209,7 +208,8 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
             }
         }
 
-        PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, video_link, duration, language, level, `use`, type, domains, terminology) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        PreparedStatement preparedStatement = learnweb.getConnection()
+                .prepareStatement("INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, video_link, duration, language, level, `use`, type, domains, terminology) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
         preparedStatement.setInt(1, speechEntity.getId());
         preparedStatement.setString(2, speechEntity.getTitle());
         preparedStatement.setString(3, speechEntity.getUrl());

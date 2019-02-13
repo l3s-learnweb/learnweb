@@ -92,7 +92,6 @@ public class GlossaryManager
                     HttpSession session;
                     String sessionId = (session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)) != null ? session.getId() : null;
                     learnweb.getLogManager().log(learnweb.getUserManager().getUser(entryCloned.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(), glossaryResource.getId(), Integer.toString(entryCloned.getId()), sessionId);
-
                 }
                 catch(Exception e)
                 {

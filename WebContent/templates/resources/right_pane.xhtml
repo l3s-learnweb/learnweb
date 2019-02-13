@@ -133,30 +133,7 @@
                                                  id="title_input"/>
                                 </p:column>
                             </p:row>
-                            <p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
-                                <p:column>
-                                    <h:outputText value="Language One: "/>
-                                </p:column>
-                                <p:column rendered="#{addResourceBean.formStep == 1}">
-                                    <p:selectOneMenu id="langOne" value="#{addResourceBean.resource.languageOne}" required="true" requiredMessage="#{msg.mandatory_field}">
-                                        <f:selectItem itemLabel="-Select-" itemDisabled="true"/>
-                                        <!--@elvariable id="lang" type="de.l3s.glossary.LanguageItem.LANGUAGE"-->
-                                        <f:selectItems value="#{addResourceBean.glossaryLanguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
-                                    </p:selectOneMenu>
-                                </p:column>
-                            </p:row>
-                            <p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
-                                <p:column>
-                                    <h:outputText value="Language Two: "/>
-                                </p:column>
-                                <p:column rendered="#{addResourceBean.formStep == 1}">
-                                    <p:selectOneMenu id="langTwo" value="#{addResourceBean.resource.languageTwo}" required="true" requiredMessage="#{msg.mandatory_field}">
-                                        <f:selectItem itemLabel="-Select-" itemDisabled="true"/>
-                                        <f:selectItems value="#{addResourceBean.glossaryLanguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
-                                    </p:selectOneMenu>
-                                </p:column>
-                            </p:row>
-                            <p:row rendered="#{addResourceBean.resource.type eq 'glossary2'}">
+                                 <p:row rendered="#{addResourceBean.resource.type eq 'glossary2'}">
                                 <p:column>
                                     <h:outputText value="Allowed languages: "/>
                                 </p:column>
@@ -234,13 +211,6 @@
                                      rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary2'}">
                         <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                         <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
-                    </p:commandButton>
-					
-                    <p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" ajax="true"
-                                     action="#{addResourceBean.addGlossary}" update=":growl :right_pane_wrapper" oncomplete="update_header();resourceAddedHook();"
-                                     rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
-                        <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
-                        <f:setPropertyActionListener target="#{rightPaneBean.clickedAbstractResource}" value="#{addResourceBean.resource}"/>
                     </p:commandButton>
 
                     <p:commandButton id="create_survey_button" value="Create survey" styleClass="greenbutton float-right" ajax="true"
