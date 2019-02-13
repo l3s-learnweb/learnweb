@@ -1,12 +1,38 @@
-//function to execute on page load
-$(document).ready(function(){
-	$('.hideIcon').on('click',function(){
-        hideSnippet();
-	});
+/* global queriesJsonArr, edgesJsonArr, selectedGroupId */
+/* global updateKG, setSelectedSearchId, setSelectedSearchIds, setSelectedGroupId */
 
-	bindClickToSessionBlock();
+// function to execute on page load
+$(document).on('click', '.session_block', function(e){
+    hideSnippet();
 
-	$('#query_path_button').hide();
+    var element = e.currentTarget;
+    var sessionId = element.getAttribute("data-sessionid");
+    var userId = element.getAttribute("data-userid");
+
+    if (selectedGroupId == undefined) {
+        $('.box ul li').css("background", "#489a83");
+    } else {
+        $('.box1 ul li').css("background", "#848484");
+    }
+
+    $(element).parent().css("background", "darkgrey");
+    updateKG([
+        {name: "session-id", value: sessionId},
+        {name: "user-id", value: userId}
+    ]);
+});
+
+$(document).on('click', '#filterByCategories', function(){
+    window.categories = [];
+    var selectedCategories = document.querySelectorAll('[name="categoriesList"]:checked');
+    selectedCategories.forEach(function (c) {
+        window.categories.push(c.value);
+    });
+    recoverNodes();
+});
+
+$(window).on('resize', function(){
+    resizeGraph();
 });
 
 function showSnippet()
@@ -16,6 +42,7 @@ function showSnippet()
 
 	$graph.removeClass('ui-g-12 ui-md-12 ui-lg-12').addClass('ui-g-9 ui-md-9 ui-lg-9');
     $snippet.show();
+    resizeGraph();
 }
 
 function hideSnippet()
@@ -25,6 +52,7 @@ function hideSnippet()
 
     $snippet.hide();
     $graph.removeClass('ui-g-9 ui-md-9 ui-lg-9').addClass('ui-g-12 ui-md-12 ui-lg-12');
+    resizeGraph();
 }
 
 function selectGroupId()
@@ -33,36 +61,6 @@ function selectGroupId()
 		// the group id is temporary hard coded.
 	    {name: "group-id", value: 419 }
 	]);
-}
-
-function groupChange(data)
-{
-	var status = data.status;
-	if(status == "success")
-	{
-		bindClickToSessionBlock(selectedGroupId);
-	}
-}
-
-function bindClickToSessionBlock (selectedGroupId)
-{
-	var sessioncolor =  (selectedGroupId == undefined) ? "#489a83" : "#848484";
-	$('.session_block').on('click', function(e){
-        hideSnippet();
-
-        var element = e.currentTarget;
-		var sessionId = element.getAttribute("data-sessionid");
-		var userId = element.getAttribute("data-userid");
-		if(selectedGroupId == undefined){
-			$('.box ul li').css("background",sessioncolor);
-		}
-		else $('.box1 ul li').css("background",sessioncolor);
-		$(element).parent().css("background","darkgrey");
-		updateKG([
-		    {name: "session-id", value: sessionId },
-		    {name: "user-id", value: userId}
-		]);
-	});
 }
 
 //function to highlight selected snippets for particular entity
@@ -80,7 +78,7 @@ function filterSnippets()
 	/*searchRanks.forEach(function(value, key){
 		value.reverse();
 		for(var i = 0; i < value.length; i++)
-		{	
+		{
 			$('.snippet[data-searchid="' + key + '"][data-rank="'+ value[i] + '"]').addClass('selected_snippet');//.css('background-color', 'rgba(72, 154, 131, 0.22)');
 			var detachedSnippet = $('.snippet[data-searchid="' + key + '"][data-rank="'+ value[i] + '"]').detach();
 			$('#snippets div:first-child').after(detachedSnippet);
@@ -96,7 +94,7 @@ var tip = d3.tip()
 			.offset([-10, 0])
 			.html(function(d) {
 				var string1 = "<ul>";
-			
+
 				for(var i = 0; i < d.data.entities.length; i++){
 					string1 += "<li>" + d.data.entities[i].entity_name + "</li>";
 				}
@@ -114,7 +112,7 @@ function draw()
 	console.log("height: " + height + " width: " + width);
 	var i, j;
 	var G = new jsnx.Graph();
-	
+
     var entities = new Set();
     var entityRanksMap = new Map();
     for (i = 0; i < queriesJsonArr.length; i++)
@@ -132,27 +130,30 @@ function draw()
     			entityRanksMap.set(entity.entity_name, new Map([[queryObj.search_id, entity.ranks]]));//[{search_id: queryObj.search_id, ranks: entity.ranks}]);
     	}
     }
-    
+
 	//add node entities
 	entities.forEach(function(entity){
 		G.addNode(entity, {count: width/150, color: '#84cccc', type: 'entity', entity_name: entity});
 	});
-		
-	
+
 	//queries
-	for(i = 0; i < queriesJsonArr.length; i++){
-		//var node = queriesJsonArr[i];
-		G.addNode(queriesJsonArr[i].query, {count: width/75, color: (selectedGroupId ==0) ? "#489a83" : "#919191", type: 'query', search_id: queriesJsonArr[i].search_id});
+	for(i = 0; i < queriesJsonArr.length; i++) {
+		var singleQuery = queriesJsonArr[i];
+		G.addNode(singleQuery.query, {
+			count: width/75,
+			color: i === 0 ? 'yellowgreen' : (selectedGroupId === 0 ? "#489a83" : "#919191"),
+			type: 'query',
+			search_id: singleQuery.search_id,
+			categories: singleQuery.categories
+		});
 	}
-	G.addNode(queriesJsonArr[0].query, {count: width/75, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[0].search_id});
-	
+
 	//add edge relationshipss
 	for(i = 0; i < edgesJsonArr.length; i++){
 		var edge = edgesJsonArr[i];
 		G.addEdge(edge.source, edge.target, {color: '#d2dde0', score: edge.score});
 	}
-	console.log(edgesJsonArr.length);
-	
+
 	//edges between queries and entities
 	for(i = 0; i < queriesJsonArr.length; i++){
 		var related_entities = queriesJsonArr[i].related_entities;
@@ -161,12 +162,12 @@ function draw()
 			G.addEdge(query, related_entities[j].entity_name, {color:'#99c2ff'});
 		}
 	}
-	
+
 	//step edges between query nodes
 	for(i=0; i < queriesJsonArr.length - 1; i++){
 		G.addEdge(queriesJsonArr[i].query, queriesJsonArr[i + 1].query, {color: "black"});
 	}
-	
+
 	jsnx.draw(G,{
 		element: "#canvas",
 		layoutAttr:{
@@ -185,7 +186,7 @@ function draw()
 		},
 		edgeAttr:{
 			id: function(d){
-				return d.data.score == undefined ? 'related-edge' : 'score-edge';
+				return d.data.score ? 'score-edge' : 'related-edge';
 			}
 		},
 		nodeStyle:{
@@ -203,7 +204,7 @@ function draw()
 				//return d.data.color;
 				//console.log(d.edge + ": " + d.data.score + ": " + d3.interpolateGreys(d.data.score));
 				//return d.data.score == undefined ? d.data.color : d3.interpolateGreys(colorScale(d.data.score));
-				return d.data.score == undefined ? d.data.color : d3.interpolateGreens(colorScale(d.data.score));
+				return d.data.score ? d3.interpolateGreens(colorScale(d.data.score)) : d.data.color;
 			}
 			/*stroke: function(d){
 				console.log(d.edge + ": " + d.data.score);
@@ -212,24 +213,23 @@ function draw()
 		},
 		stickyDrag: true
 	});
-	
+
 	//Adding opacity of 0.5 to score edges which have green color scale
 	d3.selectAll('#score-edge').style("opacity", 0.5);
 
 	d3.selectAll('.node').on('dblclick', function(d) {
-	    if(d.data.type == 'query')
-	    {
+	    if(d.data.type === 'query') {
 	    	setSelectedSearchId([
 	    	 	{name: "search-id", value: d.data.search_id },
 	    	 	{name: "entity-name", value: d.node}
 	    	]);
-	    }else if(d.data.type == 'entity'){
+	    } else if(d.data.type === 'entity') {
 	    	searchRanks = entityRanksMap.get(d.data.entity_name);
 	    	var search_ids = "";
 	    	searchRanks.forEach(function(value, key){
 	    		search_ids += key + ",";
 	    	});
-	    	
+
 	    	setSelectedSearchIds([
 	    		{name: "search-ids", value: search_ids },
 	    		{name: "entity-name", value: d.data.entity_name}
@@ -238,41 +238,59 @@ function draw()
 	})
 	.on('mouseover', connectedNodes)
 	.on('mouseout', recoverNodes);
+
+    $('#tagging-panel').show();
+}
+
+function resizeGraph() {
+    var canvas = $('#canvas');
+    $('svg.jsnx').attr("width", canvas.width()).attr("height", canvas.height());
 }
 
 //change opacity of those aren't in the map
 var toggle = 0;
-function changeEdgeOpacity(e, selectedNode){
-	return selectedNode == e.source.node || selectedNode == e.target.node ? 1 : 0.1;
-}
 
 function connectedNodes(d){
-	var node = d3.selectAll('.node');
-	//var edge = d3.selectAll('.edge');
-	var scoreEdge = d3.selectAll('#score-edge');
-	var relatedEdge = d3.selectAll('#related-edge');
-	if(toggle == 0){
-		var sj = d.node;
-		var nodes = d.G.neighbors(d.node).concat(d.node);
-		node.style("opacity", function(o){
-			var ob = o.node;
-			return nodes.includes(ob) ? 1:0.1;
-		});
-		/*edge.style("opacity", function(e){
-			return sj == e.source.node| sj ==e.target.node ? 1:0.1;
-		});*/
-		scoreEdge.style("opacity", function(e){return changeEdgeOpacity(e, sj);});
-		relatedEdge.style("opacity",function(e){return changeEdgeOpacity(e, sj);});
+	if(toggle === 0) {
+        var nodes = d3.selectAll('.node');
+        var edges = d3.selectAll('.edge');
+
+		var selectedNode = d.node;
+		var neighbors = d.G.neighbors(selectedNode).concat(selectedNode);
+		nodes.style("opacity", function(o){return neighbors.includes(o.node) ? 1 : 0.1;});
+        edges.style("opacity", function(o){return selectedNode === o.source.node || selectedNode === o.target.node ? 1 : 0.1;});
 		toggle = 1;
 	}
 }
 
 //reset when mouse out
 function recoverNodes(){
-	d3.selectAll('.node').style("opacity", 1);
-	//d3.selectAll('.edge').style("opacity", 1);
-	d3.selectAll('#score-edge').style("opacity", 0.5);
-	d3.selectAll('#related-edge').style("opacity", 1);
+    if (window.categories === undefined || window.categories.length === 0) {
+        d3.selectAll('.node').style("opacity", 1);
+        // d3.selectAll('.edge').style("opacity", 1);
+        // d3.selectAll('.edge #score-edge').style("opacity", 0.5);
+        // d3.selectAll('.edge #related-edge').style("opacity", 1);
+        d3.selectAll('.edge').style("opacity", function (e) {
+            return this.childNodes[0].id === 'related-edge' ? 1 : 0.5;
+        });
+        toggle = 0;
+        return;
+    }
+
+    var nodes = d3.selectAll('.node');
+    var edges = d3.selectAll('.edge');
+
+    var activeNodes = [];
+    nodes.style("opacity", function(e){
+        var isIncludes = Object.keys(e.data.categories).some(function (cat) { return window.categories.includes(cat) });
+        if (isIncludes) activeNodes.push(e.node);
+        return isIncludes ? 1 : 0.25;
+    });
+
+    edges.style("opacity", function(e){
+        return activeNodes.includes(e.source.node) && activeNodes.includes(e.target.node) ? 1 : 0.25;
+    });
+
 	toggle = 0;
 }
 
@@ -280,10 +298,10 @@ function drawQueryPath()
 {
 	var i;
 	var G = new jsnx.DiGraph();
-	
-	//add query nodes		
+
+	//add query nodes
 	for(i = 0; i < queriesJsonArr.length; i++){
-		G.addNode(queriesJsonArr[i].query, {count:20, color: '#489a83', entities: queriesJsonArr[i].related_entities});
+		G.addNode(queriesJsonArr[i].query, {count: 20, color: '#489a83', entities: queriesJsonArr[i].related_entities});
 	}
 
 	//add query edges
@@ -318,5 +336,4 @@ function drawQueryPath()
 	d3.select('svg').call(tip);
 	d3.selectAll('.node').on('dblclick',tip.show);
 	d3.selectAll('.node').on('mouseout', tip.hide);
-
 }

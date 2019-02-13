@@ -177,7 +177,13 @@ public class SearchHistoryManager
     {
         List<Session> sessions = new ArrayList<>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-                "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
+        "SELECT t2.session_id " +
+            "FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 " +
+            "WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? " +
+            "GROUP BY t2.session_id " +
+            "ORDER BY t1.timestamp DESC"
+        );
+
         pStmt.setInt(1, userId);
         ResultSet rs = pStmt.executeQuery();
 
@@ -272,10 +278,16 @@ public class SearchHistoryManager
             return SessionCache.Instance().getByGroupId(groupId);
         }
 
-        PreparedStatement pstmt = learnweb.getConnection()
-                .prepareStatement(
-                        "SELECT t1.user_id, t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type NOT IN ('image','video') ORDER BY t1.timestamp DESC");
+        PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
+            "SELECT t1.user_id, t1.session_id, t1.params " +
+            "FROM learnweb_main.lw_user_log t1 " +
+            "JOIN learnweb_main.lw_resource t2 ON (t1.target_id = t2.resource_id) " +
+            "WHERE ((t1.action = 15 AND t2.group_id = ?) OR (t1.action = 24 AND t1.group_id = ?)) AND t2.type NOT IN ('image', 'video') " +
+            "ORDER BY t1.timestamp DESC"
+        );
+
         pstmt.setInt(1, groupId);
+        pstmt.setInt(2, groupId);
         ResultSet rs = pstmt.executeQuery();
         while(rs.next())
         {

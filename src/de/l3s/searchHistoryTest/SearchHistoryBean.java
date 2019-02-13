@@ -3,12 +3,7 @@ package de.l3s.searchHistoryTest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.faces.context.FacesContext;
@@ -16,6 +11,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import de.l3s.learnweb.resource.tagtheweb.TagthewebClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -31,18 +27,14 @@ import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 
 @Named
 @ViewScoped
-public class NewSearchHistoryBean extends ApplicationBean implements Serializable
+public class SearchHistoryBean extends ApplicationBean implements Serializable
 {
-    private final static Logger log = Logger.getLogger(NewSearchHistoryBean.class);
+    private final static Logger log = Logger.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
     private int userId;
 
     private String searchQuery = "";
-
-    // for graph
-    private List<String> queries;
-    private Set<String> entities;
 
     private List<Session> sessions;
     private boolean showGroupHistory = false;
@@ -51,6 +43,14 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private int selectedGroupId;
     private String selectedSessionId;
     private String selectedEntity;
+    private String[] selectedCategories;
+
+    // for graph
+    private transient List<Query> queries;
+    private transient Set<String> entities;
+    private transient String queriesGraphData = "[]";
+    private transient String edgesGraphData = "[]";
+    private transient HashSet<String> entitiesCategories;
 
     private Map<Integer, List<SearchResult>> searchIdSnippets;
     private List<Integer> selectedSearchIds;
@@ -59,7 +59,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     /**
      * Load the variables that needs values before the view is rendered
      */
-    public void preRenderView()
+    public void onLoad()
     {
         if(getUser() == null)
             return;
@@ -74,35 +74,33 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         }
     }
 
-    public NewSearchHistoryBean()
+    public SearchHistoryBean()
     {
+        // graph data
         queries = new ArrayList<>();
         entities = new HashSet<>();
+        entitiesCategories = new HashSet<>();
+
         searchIdSnippets = new HashMap<>();
         selectedSearchIds = new ArrayList<>();
         searchIdQueryMap = new HashMap<>();
     }
 
-    /**
-     * Get all queries in a selected session.
-     *
-     * @return
-     */
-    public List<String> getQueries()
+    public List<Query> getQueries()
     {
         return queries;
     }
 
-    public String getQueriesAsJson()
+    public synchronized void collectQueriesAndEntities()
     {
-        List<Query> queries = null;
+        if ((selectedUserId == 0 && selectedGroupId == 0) || !queries.isEmpty()) {
+            return;
+        }
+
         if(!showGroupHistory)
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedUserId, selectedSessionId);
         else
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedGroupId, selectedSessionId);
-
-        //log.info(queries.size() + " queries got for user (" + selectedUserId + ") and session id (" + selectedSessionId + ")");
-        entities.clear();
 
         JSONArray queriesArr = new JSONArray();
         for(Query q : queries)
@@ -110,9 +108,13 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             entities.add(q.getQuery());
             try
             {
+                Map<String, Double> categories = TagthewebClient.getTopCategories(q.getQuery(), "en");
+                entitiesCategories.addAll(categories.keySet());
+
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("search_id", q.getSearchId());
                 queryObj.put("query", q.getQuery());
+                queryObj.put("categories", categories);
                 searchIdQueryMap.put(q.getSearchId(), q.getQuery());
 
                 List<Entity> relatedEntities = getLearnweb().getSearchHistoryManager().getRelatedEntitiesForSearchId(q.getSearchId());
@@ -123,25 +125,20 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
                     JSONObject entityObj = new JSONObject();
                     entityObj.put("entity_name", entity.getEntityName());
                     entityObj.put("score", entity.getScore());
-
-                    JSONArray ranks = new JSONArray(entity.getRanks());
-                    entityObj.put("ranks", ranks);
+                    entityObj.put("ranks", new JSONArray(entity.getRanks()));
                     relatedEntitiesArr.put(entityObj);
                 }
 
                 queryObj.put("related_entities", relatedEntitiesArr);
                 queriesArr.put(queryObj);
             }
-            catch(JSONException e)
+            catch(JSONException | IOException e)
             {
                 log.error("Error while creating json object for query: " + q.getSearchId(), e);
             }
         }
-        return queriesArr.toString();
-    }
+        queriesGraphData = queriesArr.toString();
 
-    public String getEdgesAsJson()
-    {
         Set<Edge> edges = getLearnweb().getSearchHistoryManager().getAllEdges(entities);
         JSONArray edgesArr = new JSONArray();
         for(Edge edge : edges)
@@ -159,34 +156,25 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
                 log.error("Error while creating json object for edge: " + edge, e);
             }
         }
-        return edgesArr.toString();
+        edgesGraphData = edgesArr.toString();
     }
 
-    //extract categories given entities in a session as input
-    public String getCategoriesAsJson()
+    public String getQueriesAsJson()
     {
-        Set<String> entities = this.getEntities();
-        StringBuilder builder = new StringBuilder();
-        for(String entity : entities)
-        {
-            builder.append(entity).append(",");
-        }
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Content-Type", "application/x-www-form-urlencoded");
-        Map<String, String> parameters = new HashMap<String, String>();
-        parameters.put("text", builder.toString());
-        parameters.put("language", "en");
-        parameters.put("normalize", "false");
-        parameters.put("depth", "0");
-        try
-        {
-            return HttpUtils.GetContentByPost("http://tagtheweb.com.br/wiki/getFingerPrint.php", headers, parameters);
-        }
-        catch(IOException e)
-        {
-            log.error("Error while creating json object for edge: ", e);
-            return null;
-        }
+        collectQueriesAndEntities();
+        return queriesGraphData;
+    }
+
+    public String getEdgesAsJson()
+    {
+        collectQueriesAndEntities();
+        return edgesGraphData;
+    }
+
+    public List<String> getCategories()
+    {
+        collectQueriesAndEntities();
+        return new ArrayList<>(entitiesCategories);
     }
 
     /**
@@ -202,6 +190,16 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public String getSelectedEntity()
     {
         return selectedEntity;
+    }
+
+    public String[] getSelectedCategories()
+    {
+        return selectedCategories;
+    }
+
+    public void setSelectedCategories(final String[] selectedCategories)
+    {
+        this.selectedCategories = selectedCategories;
     }
 
     public String getQuery(int searchId)
@@ -268,6 +266,10 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         int userId = Integer.parseInt(params.get("user-id"));
         selectedSessionId = sessionId;
         selectedUserId = userId;
+
+        queries.clear();
+        entities.clear();
+        entitiesCategories.clear();
         //log.info("session id: " + sessionId + "user id: " + userId);
     }
 
@@ -370,6 +372,12 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         sessions = null;
         filterSessionsByQuery(searchQuery);
+    }
+
+    public void reset() throws SQLException
+    {
+        sessions = null;
+        searchQuery = null;
     }
 
     private void filterSessionsByQuery(String filterQuery) throws SQLException

@@ -19,7 +19,6 @@ js/tipped.js - never imported
 css/tipped.css - never imported
 js/viewresultset.js - old alternative to search/search.js
 ted_transcript/log4javascript_stub.js - never imported
-search-history/entity-relationship.js - replaced by entity-relationship2.js
 archiveit-search/archiveit_search.css - never used
 js/jquery.mousewheel.min.js - we don't use it anymore, as this event already present in most of browsers
 js/ntc.js - removed, never used
