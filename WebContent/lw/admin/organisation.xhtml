@@ -14,7 +14,7 @@
     <ui:define name="content">
 
         <div class="page-header">
-            <h1>#{adminOrganisationsBean.selectedOrganisation.title}</h1>
+            <h1>#{msg.organization}: #{adminOrganisationsBean.selectedOrganisation.title}</h1>
         </div>
 
         <ui:fragment rendered="#{null ne adminOrganisationsBean.selectedOrganisation}">

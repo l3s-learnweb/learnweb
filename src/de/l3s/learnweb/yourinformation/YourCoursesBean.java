@@ -1,33 +1,45 @@
 package de.l3s.learnweb.yourinformation;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.Course;
-import org.apache.log4j.Logger;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-/*
-* CoursesBean is responsible for displaying user courses.
-* */
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.User;
+
+/**
+ * CoursesBean is responsible for displaying user courses.
+ */
 @Named
 @ViewScoped
-public class YourCoursesBean extends ApplicationBean implements Serializable {
-    private static final Logger logger = Logger.getLogger(YourCoursesBean.class);
+public class YourCoursesBean extends ApplicationBean implements Serializable
+{
+    private static final long serialVersionUID = 2345329598608998027L;
+    //private static final Logger log = Logger.getLogger(YourCoursesBean.class);
+    private List<Course> courses;
 
-    public YourCoursesBean() { }
+    public YourCoursesBean()
+    {
+        User user = getUser();
+        if(null == user)
+            return; // not logged in
 
-    public List<Course> getUserCourses() {
-        try {
-            return this.getUser().getCourses();
+        try
+        {
+            courses = user.getCourses();
         }
-        catch(SQLException sqlException) {
-            logger.error("Could not properly retrieve user courses." + sqlException);
-            return new ArrayList<>();
+        catch(SQLException sqlException)
+        {
+            addFatalMessage("Could not properly retrieve user courses.", sqlException);
         }
+    }
+
+    public List<Course> getUserCourses()
+    {
+        return courses;
     }
 }

@@ -207,6 +207,7 @@
 
 }
 
+/* TODO add a class for this kind of button instead of using the ids */
 #organization-save-button, #notification-save-button{
     padding: 0px;
     background: none;
