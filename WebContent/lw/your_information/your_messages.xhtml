@@ -66,11 +66,11 @@
         </p:dataTable>
 
 
-        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="10" paginator="true"
+        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesFromUser}" var="message" rows="10" paginator="true"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      style="margin-bottom:20px">
             <f:facet name="header">
-                Received messages
+                Sent messages
             </f:facet>
 
             <f:facet name="{Exporters}">

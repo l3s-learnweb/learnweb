@@ -10,6 +10,7 @@ import javax.inject.Named;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
+import org.apache.log4j.Logger;
 
 /**
  * CoursesBean is responsible for displaying user courses.
@@ -19,22 +20,23 @@ import de.l3s.learnweb.user.User;
 public class YourCoursesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 2345329598608998027L;
-    //private static final Logger log = Logger.getLogger(YourCoursesBean.class);
+    private static final Logger log = Logger.getLogger(YourCoursesBean.class);
+
     private List<Course> courses;
 
     public YourCoursesBean()
     {
         User user = getUser();
         if(null == user)
-            return; // not logged in
-
+            // when not logged in
+            return;
         try
         {
             courses = user.getCourses();
         }
         catch(SQLException sqlException)
         {
-            addFatalMessage("Could not properly retrieve user courses.", sqlException);
+            log.error("Could not properly retrieve user courses.", sqlException);
         }
     }
 

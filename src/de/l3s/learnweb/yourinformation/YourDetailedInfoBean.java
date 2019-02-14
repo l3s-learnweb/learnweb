@@ -1,57 +1,88 @@
 package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
+import org.apache.log4j.Logger;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Date;
 
-/*
-* PersonalInfoBean is responsible for displaying detailed information about user.
-* */
+/**
+ * PersonalInfoBean is responsible for displaying detailed information about user.
+ */
 @Named
 @ViewScoped
-public class YourDetailedInfoBean extends ApplicationBean implements Serializable {
+public class YourDetailedInfoBean extends ApplicationBean implements Serializable
+{
+    private static final long serialVersionUID = 6016324259224515500L;
+    private static final Logger log = Logger.getLogger(YourCoursesBean.class);
 
-    public YourDetailedInfoBean() { }
 
-    public String getFullName() {
-        String fullName = this.getUser().getFullName();
-        if(null == fullName) {
-            fullName = "N/A";
+    private String fullName;
+    private String address;
+    private String dateOfBirth;
+    private String studentId;
+
+    public YourDetailedInfoBean()
+    {
+        User user = getUser();
+        if(null == user)
+            // when not logged in
+            return;
+
+        this.fullName = this.getUser().getFullName();
+        if(null == fullName)
+        {
+            this.fullName = "N/A";
         }
-        return fullName;
+
+        this.address = this.getUser().getAddress();
+        if(null == address)
+        {
+            this.address = "N/A";
+        }
+
+        Date birthDate = this.getUser().getDateOfBirth();
+        if(null != birthDate)
+        {
+            this.dateOfBirth = this.getUser().getDateOfBirth().toString();
+        }
+        else
+        {
+            this.dateOfBirth = "N/A";
+        }
+
+        this.studentId = this.getUser().getStudentId();
+        if(null == studentId)
+        {
+            this.studentId = "N/A";
+        }
     }
 
-    public String getAddress() {
-        String address = this.getUser().getAddress();
-        if(null == address) {
-            address = "N/A";
-        }
-        return address;
+    public String getFullName()
+    {
+        return this.fullName;
     }
 
-    public String getEmail() {
+    public String getAddress()
+    {
+        return this.address;
+    }
+
+    public String getEmail()
+    {
         return this.getUser().getEmail();
     }
 
-    public String getDateOfBirth() {
-        Date birthDate = this.getUser().getDateOfBirth();
-        String dateOfBirth;
-        if (null != birthDate){
-            dateOfBirth = this.getUser().getDateOfBirth().toString();
-        } else {
-            dateOfBirth = "N/A";
-        }
-        return dateOfBirth;
+    public String getDateOfBirth()
+    {
+        return this.dateOfBirth;
     }
 
-    public String getStudentId() {
-        String studentId = this.getUser().getStudentId();
-        if(null == studentId) {
-            studentId = "N/A";
-        }
-        return studentId;
+    public String getStudentId()
+    {
+        return this.studentId;
     }
 }
