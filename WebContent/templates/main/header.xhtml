@@ -296,16 +296,16 @@
 		</ui:fragment>
 
 		<ui:fragment rendered="#{userBean.trackingEnabled}">
-			<script src="//learnweb.l3s.uni-hannover.de/tracker/js/client.min.js"></script>
 			<script type="text/javascript">
-                if (!window.tracker)
-                {
-                    window.tracker = new L3STracker({
-                        apiKey: '#{learnwebBean.trackerApiKey}',
-                        apiHost: '//learnweb.l3s.uni-hannover.de/tracker',
-                        externalUserId: '#{userBean.getUser().getId()}'
-                    });
-                }
+				(function (d, s) {
+					window.WAPSTrackerInit = {
+						apiKey: '#{learnwebBean.trackerApiKey}',
+						externalUserId: '#{userBean.getUser().getId()}'
+					};
+					var js = d.createElement(s);
+					js.src = '//learnweb.l3s.uni-hannover.de/tracker/js/init.js';
+					document.getElementsByTagName('head')[0].appendChild(js);
+				}(document, 'script'));
 			</script>
 		</ui:fragment>
 
