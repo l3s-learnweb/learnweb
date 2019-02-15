@@ -5,14 +5,13 @@ import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 
 /**
- * GeneralinfoBean is responsible for displaying user statistics on index page, e.g. amount of groups, in which user is a
+ * GeneralInfoBean is responsible for displaying user statistics on index page, e.g. amount of groups, in which user is a
  * member.
  */
 @Named
@@ -46,7 +45,6 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             try
             {
                 this.userCoursesCount = this.getUser().getCourses().size();
-                getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("No courses list found ", null), null));
             }
             catch(NullPointerException npe)
             {

@@ -1,0 +1,88 @@
+<ui:composition template="your_information_template.xhtml"
+                xmlns:ui = "http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:define name="user_data_table">
+    <h:form>
+        <p:dataTable id="resources_tbl" value="#{listOfResources}" var="item" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+            <f:facet name="header">
+                List of resources
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">ID</f:facet>
+                <h:outputText value="#{item.id}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{item.title}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">User</f:facet>
+                <h:outputText value="#{item.user.realUsername}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Language</f:facet>
+                <h:outputText value="#{item.language}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{item.description}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Author</f:facet>
+                <h:outputText value="#{item.author}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">File name</f:facet>
+                <h:outputText value="#{item.fileName}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">File URL</f:facet>
+                <a href="#{item.fileUrl}">visit resource</a>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Creation Date</f:facet>
+                <h:outputText value="#{item.creationDate}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Type</f:facet>
+                <h:outputText value="#{item.type}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

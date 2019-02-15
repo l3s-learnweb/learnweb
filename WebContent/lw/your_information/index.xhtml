@@ -1,10 +1,7 @@
-<ui:composition
-        template="/WEB-INF/templates/layout/template.xhtml"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:h="http://xmlns.jcp.org/jsf/html">
-
-<ui:define name="title">Your Information</ui:define>
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <ui:define name="content">
     <h:form id="yourinformationform">
@@ -63,6 +60,12 @@
                                     <a class="ui-menuitem-link ui-corner-all" href="your_messages.jsf">
                                         <span class="ui-menuitem-icon fa fa-mail-forward"></span>
                                         <span class="ui-menuitem-text">You have received <h:outputText value="#{yourGeneralInfoBean.receivedMessagesCount}"/> messages</span>
+                                    </a>
+                                </li>
+                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+                                    <a class="ui-menuitem-link ui-corner-all" href="your_submissions.jsf">
+                                        <span class="ui-menuitem-icon fa fa-download"></span>
+                                        <span class="ui-menuitem-text">You have <h:outputText value="#{yourGeneralInfoBean.receivedMessagesCount}"/> submissions</span>
                                     </a>
                                 </li>
                             </ul>
