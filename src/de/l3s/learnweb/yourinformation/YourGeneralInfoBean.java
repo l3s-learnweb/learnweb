@@ -28,6 +28,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
     private int userResourcesCount;
     private int receivedMessagesCount;
     private int sentMessagesCount;
+    private int submissionsCount;
 
 
     public YourGeneralInfoBean()
@@ -117,6 +118,24 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
         {
             log.error("Problem with fetching messages of user", sqlException);
         }
+
+        try
+        {
+            try
+            {
+                this.submissionsCount = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(this.getUser()).size();
+            }
+            catch(NullPointerException npe)
+            {
+                // when user haven't sent any messages
+                this.addErrorMessage("No submissions list found ", npe);
+            }
+        }
+        catch(SQLException sqlException)
+        {
+            log.error("Problem with fetching submissions of user", sqlException);
+        }
+
     }
 
     public String getUsername()
@@ -193,6 +212,18 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
         else
         {
             return String.valueOf(this.sentMessagesCount);
+        }
+    }
+
+    public String getSubmissionsCount()
+    {
+        if(0 == this.submissionsCount)
+        {
+            return "no";
+        }
+        else
+        {
+            return String.valueOf(this.submissionsCount);
         }
     }
 }

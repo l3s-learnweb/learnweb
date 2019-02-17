@@ -1,0 +1,65 @@
+<ui:composition
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="title">Your Groups</ui:define>
+
+<ui:define name="content">
+    <h:form id="yourinformationform">
+        <p:dataTable id="activities_tbl" value="#{yourActivityBean.userActions}" var="action" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+            <f:facet name="header">
+                List of activity
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="activities_tbl" fileName="activities"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="activities_tbl" fileName="activities"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="activities_tbl" fileName="activities"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">Action type</f:facet>
+                <h:outputText value="#{action.action}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">Action description</f:facet>
+                <h:outputText value="#{action.description}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">Resource used</f:facet>
+                <h:outputText value="#{action.resourceId}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">Action date</f:facet>
+                <h:outputText value="#{action.date}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <nav>
+        <ul>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
+        </ul>
+    </nav>
+
+</ui:define>
+</ui:composition>

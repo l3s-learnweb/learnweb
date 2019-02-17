@@ -1,0 +1,70 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="title">Your Cources</ui:define>
+
+<style type="text/css">
+    .ui-paginator a {
+        margin-right: 5px;
+    }
+</style>
+
+<ui:define name="content">
+    <h:form>
+        <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+            <f:facet name="header">
+                Search history
+            </f:facet>
+
+            <f:facet name="{Exporters}">
+                <h:panelGroup>
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:dataExporter type="pdf" target="query_tbl" fileName="queries"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:dataExporter type="xml" target="query_tbl" fileName="queries"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:dataExporter type="csv" target="query_tbl" fileName="queries"/>
+                    </h:commandLink>
+                </h:panelGroup>
+            </f:facet>
+
+            <p:column>
+                <f:facet name="header">Search ID</f:facet>
+                <h:outputText value="#{query.searchId}"/>
+            </p:column>
+
+            <p:column>
+                <f:facet name="header">Query text</f:facet>
+                <h:outputText value="#{query.query}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">Service</f:facet>
+                <h:outputText value="#{query.service}"/>
+            </p:column>
+            <p:column>
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{query.timestamp}"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <nav>
+        <ul>
+            <li>Back to <a href="index.jsf"> main page</a>.</li>
+            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
+        </ul>
+    </nav>
+
+</ui:define>
+</ui:composition>

@@ -23,6 +23,12 @@ public class LogEntry implements Serializable
     private Date date;
     private String params;
     private String username;
+
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
+
     private String description;
     private int resourceId;
     private int groupId;
