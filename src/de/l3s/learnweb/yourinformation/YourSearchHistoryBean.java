@@ -1,6 +1,7 @@
 package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
 import org.apache.log4j.Logger;
 
@@ -25,6 +26,11 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
 
     public YourSearchHistoryBean()
     {
+        User user = getUser();
+        if(null == user)
+            // when not logged in
+            return;
+
         List<SearchHistoryManager.Session> userSessions;
         this.userQueries = new LinkedList<>();
         try

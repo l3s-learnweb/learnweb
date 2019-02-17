@@ -3,6 +3,7 @@ package de.l3s.learnweb.yourinformation;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
+import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 
@@ -32,6 +33,11 @@ public class YourActivityBean extends ApplicationBean implements Serializable
 
     public YourActivityBean()
     {
+        User user = getUser();
+        if(null == user)
+            // when not logged in
+            return;
+
         try
         {
             this.userActions = getLearnweb().getLogManager().getLogsByUser(this.getUser().getId(), filter, 1000);
