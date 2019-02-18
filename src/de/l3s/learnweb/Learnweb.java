@@ -217,7 +217,7 @@ public class Learnweb
             propertiesFileName = "lw_local_rishita";
         else if((new File("C:\\Users\\Tetiana").exists()))
             propertiesFileName = "lw_local_tetiana";
-        else if((new File("C:\\Users\\astappev").exists()))
+        else if((new File("C:\\Users\\astappiev").exists()))
             propertiesFileName = "lw_local_oleh";
         else if((new File("/Users/user").exists()))
             propertiesFileName = "lw_local_luyan";
