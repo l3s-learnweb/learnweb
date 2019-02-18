@@ -297,15 +297,15 @@
 
 		<ui:fragment rendered="#{userBean.trackingEnabled}">
 			<script type="text/javascript">
-				(function (d, s) {
-					window.WAPSTrackerInit = {
-						apiKey: '#{learnwebBean.trackerApiKey}',
-						externalUserId: '#{userBean.getUser().getId()}'
-					};
-					var js = d.createElement(s);
-					js.src = '//learnweb.l3s.uni-hannover.de/tracker/js/init.js';
-					document.getElementsByTagName('head')[0].appendChild(js);
-				}(document, 'script'));
+				window.wapsTrackerData = {
+					start: new Date(),
+					apiKey: '#{learnwebBean.trackerApiKey}',
+					externalUserId: '#{userBean.getUser().getId()}'
+				};
+
+				(function(d,s,u,e,n){e=d.createElement(s);
+				n=d.getElementsByTagName(s)[0];e.async=1;e.src=u;n.parentNode.insertBefore(e, n)
+				}(document,'script','https://learnweb.l3s.uni-hannover.de/tracker/js/init.js'));
 			</script>
 		</ui:fragment>
 
