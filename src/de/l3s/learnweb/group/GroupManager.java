@@ -44,7 +44,8 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
+    private final static String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
+    private final static String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
@@ -97,7 +98,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserId(int userId) throws SQLException
     {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
         return getGroups(query, userId);
     }
 
@@ -114,7 +115,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(int courseId) throws SQLException
     {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
         return getGroups(query, courseId);
     }
 
@@ -123,7 +124,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(List<Course> list, Date newerThan) throws SQLException
     {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
         return getGroups(query, (int) (newerThan.getTime() / 1000));
     }
 
@@ -134,13 +135,13 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserIdFilteredByCourseId(int userId, int courseId) throws SQLException
     {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
         return getGroups(query, userId, courseId);
     }
 
     public Group getGroupByTitleFilteredByOrganisation(String title, int organisationId) throws SQLException
     {
-        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
+        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
         pstmtGetGroup.setString(1, title);
         pstmtGetGroup.setInt(2, organisationId);
         ResultSet rs = pstmtGetGroup.executeQuery();
@@ -216,7 +217,7 @@ public class GroupManager
             sb.append(",").append(group.getId());
         String groupsIn = sb.substring(1);
 
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause
                 + ") ORDER BY title";
 
         return getGroups(query);
@@ -241,7 +242,7 @@ public class GroupManager
         if(null != group)
             return group;
 
-        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE group_id = ?");
+        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE group_id = ?");
         pstmtGetGroup.setInt(1, id);
         ResultSet rs = pstmtGetGroup.executeQuery();
 
@@ -385,6 +386,7 @@ public class GroupManager
             folder.setTitle(rs.getString("name"));
             folder.setDescription(rs.getString("description"));
             folder.setUserId(rs.getInt("user_id"));
+            folder.setDeleted(rs.getInt("deleted") == 1);
 
             folder = folderCache.put(folder);
         }
@@ -397,7 +399,7 @@ public class GroupManager
 
         if(folder == null)
         {
-            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `folder_id` = ?");
+            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `folder_id` = ?");
             select.setInt(1, folderId);
             ResultSet rs = select.executeQuery();
 
@@ -418,7 +420,7 @@ public class GroupManager
     {
         List<Folder> folders = new ArrayList<>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ?");
         select.setInt(1, groupId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -443,7 +445,7 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ?");
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         ResultSet rs = select.executeQuery();
@@ -469,7 +471,7 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FOLDER_COLUMNS + " FROM `lw_group_folder` f WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         select.setInt(3, userId);
@@ -521,7 +523,7 @@ public class GroupManager
         }
 
         int numberOfRows = 0;
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_group_folder` WHERE `deleted` = 0 AND `group_id` = ? AND `parent_folder_id` = ?");
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         ResultSet rs = select.executeQuery();
@@ -612,7 +614,7 @@ public class GroupManager
 
     public Folder saveFolder(Folder folder) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, description, user_id) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, description, user_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
         if(folder.getId() < 0) // the folder is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
@@ -623,6 +625,7 @@ public class GroupManager
         replace.setString(4, folder.getTitle());
         replace.setString(5, folder.getDescription());
         replace.setInt(6, folder.getUserId());
+        replace.setInt(7, folder.isDeleted() ? 1 : 0);
         replace.executeUpdate();
 
         if(folder.getId() < 0) // get the assigned id
@@ -678,39 +681,6 @@ public class GroupManager
     public int getFolderCacheSize()
     {
         return folderCache.size();
-    }
-
-    public void deleteFolder(Folder folder) throws SQLException
-    {
-        List<Folder> subFolders = folder.getSubFolders();
-
-        if(!subFolders.isEmpty())
-        {
-            for(Folder subFolder : subFolders)
-            {
-                this.deleteFolder(subFolder);
-            }
-        }
-
-        for(Resource resource : folder.getResources())
-        {
-            resource.delete();
-        }
-
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");)
-        {
-            delete.setInt(1, folder.getId());
-            delete.execute();
-        }
-
-        Folder parentFolder = folder.getParentFolder();
-
-        folderCache.remove(folder.getId());
-
-        if(parentFolder != null)
-        {
-            parentFolder.clearCaches();
-        }
     }
 
     /**

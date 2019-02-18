@@ -15,13 +15,13 @@ public class Folder extends AbstractResource implements Serializable
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);
 
-    // TODO: use soft deleting for folders
     private int folderId = -1;
     private int groupId = -1;
     private int parentFolderId;
     private String name;
     private String description;
     private int userId = -1;
+    private boolean deleted = false; // indicates whether this folder has been deleted
 
     // cache
     private transient String path;
@@ -169,6 +169,16 @@ public class Folder extends AbstractResource implements Serializable
         this.userId = userId;
     }
 
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
     @Override
     public User getUser() throws SQLException
     {
@@ -266,7 +276,25 @@ public class Folder extends AbstractResource implements Serializable
     @Override
     public void delete() throws SQLException
     {
-        Learnweb.getInstance().getGroupManager().deleteFolder(this);
+        for(Folder folder : this.getSubFolders())
+        {
+            folder.delete();
+        }
+
+        for(Resource resource : this.getResources())
+        {
+            resource.delete();
+        }
+
+        setDeleted(true);
+        this.save();
+
+        Folder parentFolder = this.getParentFolder();
+
+        if(parentFolder != null)
+        {
+            parentFolder.clearCaches();
+        }
     }
 
     public int getCountResources() throws SQLException
