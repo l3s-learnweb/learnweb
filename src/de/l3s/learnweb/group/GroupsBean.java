@@ -47,7 +47,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -80,7 +80,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -101,7 +101,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -134,7 +134,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return null;
     }
@@ -171,7 +171,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return null;
     }

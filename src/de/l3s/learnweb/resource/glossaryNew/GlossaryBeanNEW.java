@@ -104,7 +104,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -127,7 +127,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -170,7 +170,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             log.error("Unable to save entry for resource " + formEntry.getResourceId() + ", entry ID: " + formEntry.getId(), e);
-            addFatalMessage(e);
+            addErrorMessage(e);
             setKeepMessages();
             return null;
 
@@ -216,7 +216,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             log.error("Unable to delete entry for resource " + row.getEntry().getResourceId() + ", entry ID: " + row.getEntry().getId(), e);
-            addFatalMessage(e);
+            addErrorMessage(e);
             setKeepMessages();
             return null;
         }
@@ -244,7 +244,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -280,7 +280,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -461,7 +461,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             log.error("Error during parsing glossary xls", e);
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -554,7 +554,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
     }

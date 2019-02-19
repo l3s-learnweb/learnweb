@@ -159,7 +159,7 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
         }
         catch(Throwable t)
         {
-            addFatalMessage(t);
+            addErrorMessage(t);
         }
     }
 
@@ -180,7 +180,7 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
     }

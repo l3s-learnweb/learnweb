@@ -107,7 +107,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
         addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");

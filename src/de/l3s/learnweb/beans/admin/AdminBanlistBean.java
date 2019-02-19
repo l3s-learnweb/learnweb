@@ -49,7 +49,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -140,7 +140,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         }
         catch(MessagingException | IOException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return suspiciousActivityList;
 

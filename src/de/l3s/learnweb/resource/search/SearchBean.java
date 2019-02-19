@@ -265,7 +265,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
     }

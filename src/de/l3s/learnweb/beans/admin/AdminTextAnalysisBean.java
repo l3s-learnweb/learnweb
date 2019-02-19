@@ -93,7 +93,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 }

@@ -79,7 +79,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't received any messages
-                this.addFatalMessage("No messages list found ", npe);
+                this.addErrorMessage("No messages list found ", npe);
             }
         }
         catch(SQLException sqlException)
@@ -96,7 +96,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't sent any messages
-                this.addFatalMessage("No messages list found ", npe);
+                this.addErrorMessage("No messages list found ", npe);
             }
         }
         catch(SQLException sqlException)
@@ -113,7 +113,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't sent any messages
-                this.addFatalMessage("No submissions list found ", npe);
+                this.addErrorMessage("No submissions list found ", npe);
             }
         }
         catch(SQLException sqlException)

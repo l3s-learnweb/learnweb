@@ -48,7 +48,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
     }

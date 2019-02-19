@@ -49,7 +49,7 @@ public class NewsFeedBean extends ApplicationBean
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
         return newsList;

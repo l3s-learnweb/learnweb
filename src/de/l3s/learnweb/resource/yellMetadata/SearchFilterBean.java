@@ -69,7 +69,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
         cattops = new ArrayList<>();
@@ -85,7 +85,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e1)
         {
-            addFatalMessage(e1);
+            addErrorMessage(e1);
         }
 
         catmids = new ArrayList<>();
@@ -136,7 +136,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
         /*

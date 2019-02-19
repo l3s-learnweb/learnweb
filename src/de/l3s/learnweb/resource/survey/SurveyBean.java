@@ -157,7 +157,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage("Can't save answers for User: " + surveyUserId + " for survey: " + surveyResourceId, e);
+            addErrorMessage("Can't save answers for User: " + surveyUserId + " for survey: " + surveyResourceId, e);
         }
         return false;
     }

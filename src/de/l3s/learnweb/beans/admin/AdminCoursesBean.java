@@ -71,7 +71,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -89,7 +89,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -107,7 +107,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -130,7 +130,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

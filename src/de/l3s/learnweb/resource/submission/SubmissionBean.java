@@ -126,7 +126,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return null;
     }
@@ -281,7 +281,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             log.error("Exception while submitting resources", e);
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -471,7 +471,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -507,7 +507,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return null;
     }

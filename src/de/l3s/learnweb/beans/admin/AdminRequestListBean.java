@@ -51,7 +51,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

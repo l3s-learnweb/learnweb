@@ -280,12 +280,12 @@ public class ApplicationBean
         log(action, resource.getGroupId(), resource.getId(), null, getUser());
     }
 
-    protected void addFatalMessage(Throwable exception)
+    protected void addErrorMessage(Throwable exception)
     {
-        addFatalMessage(null, exception);
+        addErrorMessage(null, exception);
     }
 
-    protected void addFatalMessage(String desc, Throwable exception)
+    protected void addErrorMessage(String desc, Throwable exception)
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 

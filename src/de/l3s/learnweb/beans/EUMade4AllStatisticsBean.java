@@ -174,7 +174,7 @@ public class EUMade4AllStatisticsBean extends ApplicationBean implements Seriali
                 assessmentSurveyId = 16;// about
                 break;
             default:
-                addFatalMessage(new RuntimeException("invalid type " + assessmentType));
+                addErrorMessage(new RuntimeException("invalid type " + assessmentType));
                 return;
             }
 

@@ -83,7 +83,7 @@ public class MetadataBean extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             log.error("can't load resource: " + id, e);
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

@@ -37,7 +37,7 @@ public class AdminPeerAssessmentPairBeen extends ApplicationBean implements Seri
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

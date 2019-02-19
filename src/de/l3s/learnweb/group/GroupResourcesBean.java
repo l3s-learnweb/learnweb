@@ -361,7 +361,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(SQLException | IOException | SolrServerException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -584,7 +584,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -622,7 +622,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -646,7 +646,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -738,7 +738,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(JSONException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -815,7 +815,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -938,7 +938,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -1050,7 +1050,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -1108,7 +1108,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -1255,7 +1255,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
         return authors;

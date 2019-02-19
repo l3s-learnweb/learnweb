@@ -89,7 +89,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -123,7 +123,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return null;
     }
@@ -160,7 +160,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -245,7 +245,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -259,7 +259,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -274,7 +274,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -316,7 +316,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -482,7 +482,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
 
@@ -503,7 +503,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
 
         }
@@ -525,7 +525,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
 
@@ -554,7 +554,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
                 return;
             }
         }

@@ -104,7 +104,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

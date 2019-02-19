@@ -107,7 +107,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
         }
         catch(IOException | URISyntaxException | JSONException | ParseException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
     }

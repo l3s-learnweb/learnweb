@@ -77,7 +77,7 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

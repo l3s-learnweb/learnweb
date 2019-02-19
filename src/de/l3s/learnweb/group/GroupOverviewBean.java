@@ -91,7 +91,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -125,7 +125,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             return null;
         }
     }

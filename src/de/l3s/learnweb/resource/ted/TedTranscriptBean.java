@@ -119,7 +119,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while retrieving TED video id", e);
         }
 
@@ -165,7 +165,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while retrieving summaries for particular TED resource: " + resourceId, e);
         }
     }
@@ -181,7 +181,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while fetching transcript for ted video id: " + videoResourceId + "; language: " + transcriptLanguage, e);
         }
     }
@@ -203,7 +203,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while saving transcript changes for ted resource: " + tedResource.getId(), e);
         }
         getUser().clearCaches();
@@ -229,7 +229,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while submitting TED resource: " + tedResource.getId(), e);
         }
         getUser().clearCaches();
@@ -254,7 +254,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
             log.error("Error while storing transcription action", e);
         }
     }
@@ -355,7 +355,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
 
@@ -371,7 +371,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
     }
@@ -386,7 +386,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                addFatalMessage(e);
+                addErrorMessage(e);
             }
         }
     }
@@ -435,7 +435,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException | RuntimeException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
         return languageList;
     }
@@ -485,7 +485,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

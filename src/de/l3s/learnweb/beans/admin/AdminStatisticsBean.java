@@ -196,7 +196,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
 
     }

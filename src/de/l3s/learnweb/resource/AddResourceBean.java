@@ -122,7 +122,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -187,7 +187,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -223,7 +223,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(InterruptedException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -268,7 +268,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -383,7 +383,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -515,7 +515,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -528,7 +528,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

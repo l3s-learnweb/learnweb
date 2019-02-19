@@ -96,7 +96,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
         }
         catch(MessagingException mex)
         {
-            addFatalMessage(mex);
+            addErrorMessage(mex);
         }
 
     }

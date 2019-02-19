@@ -123,7 +123,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -195,7 +195,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -238,7 +238,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -274,7 +274,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(JSONException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -326,7 +326,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -357,7 +357,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -419,7 +419,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 
@@ -478,7 +478,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
         catch(NullPointerException | JSONException | SQLException e)
         {
-            addFatalMessage(e);
+            addErrorMessage(e);
         }
     }
 

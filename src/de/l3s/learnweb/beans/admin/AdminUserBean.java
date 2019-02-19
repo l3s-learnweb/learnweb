@@ -53,7 +53,7 @@ public class AdminUserBean extends ApplicationBean implements Serializable
     {
         if(!canLoginToAccount(user))
         {
-            addFatalMessage(new IllegalAccessError(getUser() + " tried to hijack account"));
+            addErrorMessage(new IllegalAccessError(getUser() + " tried to hijack account"));
             return "";
         }
         UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user

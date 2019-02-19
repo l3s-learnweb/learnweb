@@ -652,7 +652,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e1)
         {
-            addFatalMessage(e1);
+            addErrorMessage(e1);
         }
     }
 
