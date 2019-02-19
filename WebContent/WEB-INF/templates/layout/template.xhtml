@@ -64,18 +64,30 @@
 			</div>
 		</div>
 
-        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
-           <f:facet name="start">
-               <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
-           </f:facet>
+		<p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+			<f:facet name="start">
+				<i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+			</f:facet>
 
-           <f:facet name="complete">
-               <h:outputText value="" />
-           </f:facet>
-       </p:ajaxStatus>
-       
-       <p:growl id="growl" rendered="#{not disableGrowl}"/>
-       
-    </h:body>
+			<f:facet name="complete">
+				<h:outputText value="" />
+			</f:facet>
+		</p:ajaxStatus>
+
+		<p:growl id="growl" rendered="#{not disableGrowl}" />
+
+		<h:form styleClass="display-none">
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this" partialSubmit="true" global="false" />
+		</h:form>
+
+		<h:form class="display-none">
+			<p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false" />
+		</h:form>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">
+			<p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+	</h:body>
 </f:view>
 </html>

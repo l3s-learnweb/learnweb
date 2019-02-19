@@ -70,8 +70,12 @@
         </h:panelGroup>
 
         <h:form styleClass="display-none">
-            <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true"/>
+            <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this" partialSubmit="true" global="false"/>
         </h:form>
+
+		<script type="text/javascript">
+			var market = '#{userBean.localeCode}';
+		</script>
 
     </h:body>
 </f:view>
