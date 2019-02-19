@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      lang="#{userBean.localeCode}">
 
+<!--@elvariable id="pageTitle" type="java.lang.String"-->
+<!--@elvariable id="helpText" type="java.lang.String"-->
+<!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
+<!--@elvariable id="smallPage" type="java.lang.Boolean"-->
+<!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
+
+<f:view locale="#{userBean.locale}" contentType="text/html">
+    <ui:insert name="metadata"/>
+    
     <h:head>
         <f:facet name="first">
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -19,14 +29,14 @@
         <h:outputStylesheet name="california-layout/css/nanoscroller.css" />
         <h:outputStylesheet name="california-layout/css/layout-green.css" />
         <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css" />
-        <h:outputStylesheet name="california-layout/css/matviei-extd.css" />
+        <h:outputStylesheet name="california-layout/css/matviei-extd.css" />        
+        
+        <base href="#{request.contextPath}/lw/"/>
+        
         <ui:insert name="head"/>
     </h:head>
 
-    <h:body styleClass="main-body">
-
-        <p:growl id="growl" rendered="#{not disableGrowl}"/>
-
+    <h:body styleClass="main-body">        
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
             <ui:include src="megamenu.xhtml" />
             <ui:include src="topbar.xhtml" />
@@ -36,12 +46,6 @@
 			</ui:fragment>
 			
 			<div class="layout-main">
-                <div class="route-bar">
-                    <div class="route-bar-breadcrumb">
-                        <i class="fa fa-home"></i>
-                        <span>/</span>
-                    </div>
-                </div>
 				<div class="layout-main-content">
 					<ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
 						<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
@@ -69,6 +73,9 @@
                <h:outputText value="" />
            </f:facet>
        </p:ajaxStatus>
+       
+       <p:growl id="growl" rendered="#{not disableGrowl}"/>
+       
     </h:body>
-
+</f:view>
 </html>

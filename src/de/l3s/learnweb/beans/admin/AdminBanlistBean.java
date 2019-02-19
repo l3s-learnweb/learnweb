@@ -140,8 +140,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         }
         catch(MessagingException | IOException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            addFatalMessage(e);
         }
         return suspiciousActivityList;
 

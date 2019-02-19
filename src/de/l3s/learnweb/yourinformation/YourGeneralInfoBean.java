@@ -1,14 +1,17 @@
 package de.l3s.learnweb.yourinformation;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.Message;
-import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.Message;
+import de.l3s.learnweb.user.User;
 
 /**
  * GeneralInfoBean is responsible for displaying user statistics on index page, e.g. amount of groups, in which user is a
@@ -30,33 +33,15 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
     private int sentMessagesCount;
     private int submissionsCount;
 
-
-    public YourGeneralInfoBean()
+    public YourGeneralInfoBean() throws SQLException
     {
         User user = getUser();
-        if(null == user)
-            // when not logged in
+        if(null == user) // when not logged in
             return;
-
 
         this.username = this.getUser().getUsername();
 
-        try
-        {
-            try
-            {
-                this.userCoursesCount = this.getUser().getCourses().size();
-            }
-            catch(NullPointerException npe)
-            {
-                // when for some reason user exists out of course
-                this.addErrorMessage("No courses list found ", npe);
-            }
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Can't retrieve amount of user courses properly ", sqlException);
-        }
+        this.userCoursesCount = CollectionUtils.size(this.getUser().getCourses());
 
         try
         {
@@ -94,7 +79,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't received any messages
-                this.addErrorMessage("No messages list found ", npe);
+                this.addFatalMessage("No messages list found ", npe);
             }
         }
         catch(SQLException sqlException)
@@ -111,7 +96,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't sent any messages
-                this.addErrorMessage("No messages list found ", npe);
+                this.addFatalMessage("No messages list found ", npe);
             }
         }
         catch(SQLException sqlException)
@@ -128,7 +113,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
             catch(NullPointerException npe)
             {
                 // when user haven't sent any messages
-                this.addErrorMessage("No submissions list found ", npe);
+                this.addFatalMessage("No submissions list found ", npe);
             }
         }
         catch(SQLException sqlException)

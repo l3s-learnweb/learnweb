@@ -44,6 +44,7 @@ import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
+import de.l3s.util.Misc;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.email.BounceManager;
 
@@ -282,7 +283,7 @@ public class Learnweb
         else
         {
             setServerUrl("https://learnweb.l3s.uni-hannover.de");
-            log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
+            log.error("We could not guess the server name. Will use by default: " + this.serverUrl + "; on Machine: " + Misc.getSystemDescription());
         }
 
         Class.forName("org.mariadb.jdbc.Driver");

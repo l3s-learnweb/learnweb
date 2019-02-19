@@ -189,32 +189,28 @@ public class UserManager
     {
         if(userId == 0)
             return null;
-        else if(userId < 1)
-            new IllegalArgumentException("invalid user id was requested: " + userId).printStackTrace();
 
         User user = cache.get(userId);
 
         if(null != user)
         {
-            //	    log.debug("Get user " + user.getUsername() + " from cache");
             return user;
         }
 
-        PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");
-        stmtGetUser.setInt(1, userId);
-        ResultSet rs = stmtGetUser.executeQuery();
-
-        if(!rs.next())
+        try(PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");)
         {
-            new IllegalArgumentException("invalid user id was requested: " + userId).printStackTrace();
-            return null; //throw new IllegalArgumentException("invalid user id");
+            stmtGetUser.setInt(1, userId);
+            ResultSet rs = stmtGetUser.executeQuery();
+
+            if(!rs.next())
+            {
+                log.error("invalid user id was requested: " + userId, new IllegalArgumentException());
+                return null;
+            }
+            user = createUser(rs);
         }
-        user = createUser(rs);
-        stmtGetUser.close();
 
         user = cache.put(user);
-
-        //log.debug("Get user " + user.getUsername() + " from db");
 
         return user;
     }

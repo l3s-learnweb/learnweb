@@ -289,14 +289,7 @@ public class ApplicationBean
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-        Logger.getLogger(ApplicationBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
-    }
-
-    protected void addErrorMessage(String desc, Throwable exception)
-    {
-        addMessage(FacesMessage.SEVERITY_ERROR, "error_error");
-
-        Logger.getLogger(ApplicationBean.class).error((desc != null ? desc : "Error level error") + "; " + BeanHelper.getRequestSummary(), exception);
+        Logger.getLogger(ApplicationBean.class).error((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
     /**

@@ -1,44 +1,46 @@
-<ui:composition template="your_information_template.xhtml"
+<ui:composition
                 xmlns:ui = "http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
-
-<ui:define name="user_data_table">
+		
     <h:form>
-        <p:dataTable id="resources_tbl" value="#{listOfResources}" var="item" paginator="true"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
-            <f:facet name="header">
-                List of resources
+        <p:dataTable id="resources_tbl" value="#{resources}" var="item" rows="30" paginator="true" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     tableStyle="table-layout: auto">
+            <f:facet name="header">                
+                <ui:insert name="header">List of resources</ui:insert>
             </f:facet>
 
             <f:facet name="{Exporters}">
                 <h:panelGroup>
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/pdf.png" width="24" style="float:right"/>
+                        <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
                         <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/xml.png" width="24" style="float:right"/>
+                        <p:graphicImage library="your_information" name="xml.png" width="24" style="float:right"/>
                         <p:dataExporter type="xml" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
 
                     <h:commandLink>
-                        <p:graphicImage value="../../resources/your_information/csv.png" width="24" style="float:right"/>
+                        <p:graphicImage library="your_information" name="csv.png" width="24" style="float:right"/>
                         <p:dataExporter type="csv" target="resources_tbl" fileName="resources"/>
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
 
-            <p:column>
-                <f:facet name="header">ID</f:facet>
-                <h:outputText value="#{item.id}"/>
+            <p:column exportFunction="#{item.getTitle()}">
+                <f:facet name="header"><h:outputText value="#{msg.title}"/></f:facet>
+                <a href="#{item.url}">
+                	<h:outputText value="#{item.title}"/>
+                </a>
             </p:column>
-
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{item.title}"/>
+            
+            <p:column styleClass="display-none">
+                <f:facet name="header"><h:outputText value="#{msg.url}"/></f:facet>
+                <h:outputText value="#{item.url}"/>
             </p:column>
 
             <p:column>
@@ -53,7 +55,7 @@
 
             <p:column>
                 <f:facet name="header">Description</f:facet>
-                <h:outputText value="#{item.description}"/>
+                <h:outputText value="#{item.shortDescription}"/>
             </p:column>
 
             <p:column>
@@ -67,13 +69,10 @@
             </p:column>
 
             <p:column>
-                <f:facet name="header">File URL</f:facet>
-                <a href="#{item.fileUrl}">visit resource</a>
-            </p:column>
-
-            <p:column>
                 <f:facet name="header">Creation Date</f:facet>
-                <h:outputText value="#{item.creationDate}"/>
+                <h:outputText value="#{item.creationDate}">
+                	<f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
 
             <p:column>
@@ -82,7 +81,4 @@
             </p:column>
         </p:dataTable>
     </h:form>
-
-</ui:define>
-
 </ui:composition>

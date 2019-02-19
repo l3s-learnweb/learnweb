@@ -2,10 +2,16 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets">
 
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg['your_information.title']} - #{msg.resources}" />
+	
 <ui:define name="content">
-    <ui:include src="templates/resources_table_skeletton.xhtml">
-        <ui:param name="listOfResources" value="#{yourResourcesBean.userResources}"/>
-    </ui:include>
+    <ui:decorate template="templates/resources_table_skeletton.xhtml">
+        <ui:param name="resources" value="#{yourResourcesBean.userResources}"/>
+        <ui:define name="header">
+        	<a href="your_information/">#{msg['your_information.title']}</a> / #{msg.resources} 
+        </ui:define>
+    </ui:decorate>
 </ui:define>
 
 </ui:composition>
