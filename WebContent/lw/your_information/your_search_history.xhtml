@@ -4,18 +4,14 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="title">Your Cources</ui:define>
-
-<style type="text/css">
-    .ui-paginator a {
-        margin-right: 5px;
-    }
-</style>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Your Search History" />
 
 <ui:define name="content">
     <h:form>
-        <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     tableStyle="table-layout: auto">
             <f:facet name="header">
                 Search history
             </f:facet>
@@ -39,12 +35,7 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column>
-                <f:facet name="header">Search ID</f:facet>
-                <h:outputText value="#{query.searchId}"/>
-            </p:column>
-
-            <p:column>
+             <p:column>
                 <f:facet name="header">Query text</f:facet>
                 <h:outputText value="#{query.query}"/>
             </p:column>
@@ -58,13 +49,5 @@
             </p:column>
         </p:dataTable>
     </h:form>
-
-    <nav>
-        <ul>
-            <li>Back to <a href="index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
-        </ul>
-    </nav>
-
 </ui:define>
 </ui:composition>

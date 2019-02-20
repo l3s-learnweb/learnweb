@@ -40,8 +40,6 @@ public class YourCoursesBean extends ApplicationBean implements Serializable
         {
             log.error("Could not properly retrieve user courses.", sqlException);
         }
-
-        addMessage(FacesMessage.SEVERITY_INFO, "a test message");
     }
 
     public List<Course> getUserCourses()

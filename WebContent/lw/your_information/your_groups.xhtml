@@ -6,12 +6,14 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="title">Your Groups</ui:define>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Your Groups" />
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     tableStyle="table-layout: auto">
             <f:facet name="header">
                 List of groups
             </f:facet>
@@ -36,13 +38,8 @@
             </f:facet>
 
             <p:column>
-                <f:facet name="header">ID</f:facet>
-                <h:outputText value="#{group.id}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{group.title}"/>
+                <f:facet name="header">#{msg.title}</f:facet>
+                <a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{group.id}" title="Visit group"><h:outputText value="#{group.title}"/></a>
             </p:column>
 
             <p:column>
@@ -79,20 +76,7 @@
                 <f:facet name="header">Metadata</f:facet>
                 <h:outputText value="#{group.metadata1}"/>
             </p:column>
-
-            <p:column>
-                <f:facet name="header">Group home</f:facet>
-                <a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{group.id}">Visit group page</a>
-            </p:column>
         </p:dataTable>
     </h:form>
-
-    <nav>
-        <ul>
-            <li>Back to <a href="index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
-        </ul>
-    </nav>
-
 </ui:define>
 </ui:composition>

@@ -11,7 +11,7 @@
 	    <h:form>
 	        <p:dataTable id="cources_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-	                     style="margin-bottom:20px">
+	                     style="margin-bottom:20px" tableStyle="table-layout: auto">
 	            <f:facet name="header">
 	                List of cources
 	            </f:facet>
@@ -61,13 +61,5 @@
 	            </p:column>
 	        </p:dataTable>
 	    </h:form>
-	
-	    <nav>
-	        <ul>
-	            <li>Back to <a href="index.jsf"> main page</a>.</li>
-	            <li>To next section: <a href="your_posts.jsf"> your posts</a>.</li>
-	        </ul>
-	    </nav>
-	
 	</ui:define>
 </ui:composition>

@@ -6,14 +6,16 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="title">Your Groups</ui:define>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Your Activity" />
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable id="activities_tbl" value="#{yourActivityBean.userActions}" var="action" paginator="true"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:dataTable id="activities_tbl" value="#{yourActivityBean.userActions}" var="action" paginator="true" paginatorPosition="bottom" rows="30"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     tableStyle="table-layout: auto">
             <f:facet name="header">
-                List of activity
+                List of activities
             </f:facet>
 
             <f:facet name="{Exporters}">
@@ -53,13 +55,5 @@
             </p:column>
         </p:dataTable>
     </h:form>
-
-    <nav>
-        <ul>
-            <li>Back to <a href="index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
-        </ul>
-    </nav>
-
 </ui:define>
 </ui:composition>

@@ -72,15 +72,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
         try
         {
-            try
-            {
-                this.receivedMessagesCount = Message.getAllMessagesToUser(this.getUser()).size();
-            }
-            catch(NullPointerException npe)
-            {
-                // when user haven't received any messages
-                this.addErrorMessage("No messages list found ", npe);
-            }
+            this.receivedMessagesCount = CollectionUtils.size(Message.getAllMessagesToUser(this.getUser()));
         }
         catch(SQLException sqlException)
         {
@@ -89,15 +81,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
         try
         {
-            try
-            {
-                this.sentMessagesCount = Message.getAllMessagesFromUser(this.getUser()).size();
-            }
-            catch(NullPointerException npe)
-            {
-                // when user haven't sent any messages
-                this.addErrorMessage("No messages list found ", npe);
-            }
+            this.sentMessagesCount = CollectionUtils.size(Message.getAllMessagesFromUser(this.getUser()));
         }
         catch(SQLException sqlException)
         {
@@ -106,15 +90,7 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
 
         try
         {
-            try
-            {
-                this.submissionsCount = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(this.getUser()).size();
-            }
-            catch(NullPointerException npe)
-            {
-                // when user haven't sent any messages
-                this.addErrorMessage("No submissions list found ", npe);
-            }
+            this.submissionsCount = CollectionUtils.size(this.getLearnweb().getSubmissionManager().getSubmissionsByUser(this.getUser()));
         }
         catch(SQLException sqlException)
         {

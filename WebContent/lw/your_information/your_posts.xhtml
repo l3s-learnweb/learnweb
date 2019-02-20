@@ -6,12 +6,14 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="title">Your Posts</ui:define>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Your Posts" />
 
 <ui:define name="content">
     <h:form id="yourinformationform">
-        <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true" paginatorPosition="bottom" rows="30"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                     tableStyle="table-layout: auto">
             <f:facet name="header">
                 List of posts
             </f:facet>
@@ -35,14 +37,14 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column>
-                <f:facet name="header">ID</f:facet>
-                <h:outputText value="#{post.id}"/>
+            <p:column exportFunction="#{post.getText()}">
+                <f:facet name="header">Text</f:facet>
+                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{post.text}"/></a>
             </p:column>
 
-            <p:column>
-                <f:facet name="header">Text</f:facet>
-                <h:outputText value="#{post.text}"/>
+            <p:column styleClass="display-none">
+                <f:facet name="header"><h:outputText value="#{msg.url}"/></f:facet>
+                <h:outputText value="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}"/>
             </p:column>
 
             <p:column>
@@ -59,20 +61,7 @@
                 <f:facet name="header">Date last edited</f:facet>
                 <h:outputText value="#{post.lastEditDate}"/>
             </p:column>
-
-            <p:column>
-                <f:facet name="header">Post URL</f:facet>
-                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}">Visit post thread</a>
-            </p:column>
         </p:dataTable>
     </h:form>
-
-    <nav>
-        <ul>
-            <li>Back to <a href="index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="your_resources.jsf"> your resources</a>.</li>
-        </ul>
-    </nav>
-
 </ui:define>
 </ui:composition>

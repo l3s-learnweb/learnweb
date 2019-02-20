@@ -4,13 +4,14 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<ui:define name="title">Your Cources</ui:define>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Your Messages" />
 
 <ui:define name="content">
     <h:form>
-        <p:dataTable id="received_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="10" paginator="true"
+        <p:dataTable id="received_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     style="margin-bottom:20px">
+                     style="margin-bottom:20px" tableStyle="table-layout: auto">
             <f:facet name="header">
                 Received messages
             </f:facet>
@@ -33,11 +34,6 @@
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
-
-            <p:column>
-                <f:facet name="header">ID</f:facet>
-                <h:outputText value="#{message.id}"/>
-            </p:column>
 
             <p:column>
                 <f:facet name="header">Title</f:facet>
@@ -66,7 +62,7 @@
         </p:dataTable>
 
 
-        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesFromUser}" var="message" rows="10" paginator="true"
+        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesFromUser}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      style="margin-bottom:20px">
             <f:facet name="header">
@@ -91,11 +87,6 @@
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>
-
-            <p:column>
-                <f:facet name="header">ID</f:facet>
-                <h:outputText value="#{message.id}"/>
-            </p:column>
 
             <p:column>
                 <f:facet name="header">Title</f:facet>
@@ -123,13 +114,5 @@
             </p:column>
         </p:dataTable>
     </h:form>
-
-    <nav>
-        <ul>
-            <li>Back to <a href="index.jsf"> main page</a>.</li>
-            <li>To next sectoion: <a href="your_posts.jsf"> your posts</a>.</li>
-        </ul>
-    </nav>
-
 </ui:define>
 </ui:composition>
