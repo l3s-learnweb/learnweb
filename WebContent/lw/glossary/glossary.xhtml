@@ -109,6 +109,11 @@
 					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
 						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBeanNEW.entryCount}" style="text-align:center;"
 							styleClass="glossary_footer_text"></h:outputText>
+                        <!--excel import button-->
+                        <p:commandLink styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
+                            <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
+                                            style="position:relative; text-alignt:center; display: block; " />
+                        </p:commandLink>
 						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
 							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
 								style="position:relative; text-alignt:center; display: block; " />
@@ -118,41 +123,36 @@
 							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
 							<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBeanNEW.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
-						<p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this"
-							rendered="#{glossaryBeanNEW.entryCount >= 100}">
-							<h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();" />
-						</p:commandLink>
-						<!--excel import button-->
-						<p:commandLink styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show();">
-							<p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
-											style="position:relative; text-alignt:center; display: block; " />
-						</p:commandLink>
+                        <p:commandLink id="show_all" actionListener="#{glossaryBeanNEW.togglePaginator()}" update=":my_gloss_table @this"
+                                       rendered="#{glossaryBeanNEW.entryCount >= 100}">
+                            <h:outputText value="#{glossaryBeanNEW.toggleLabel}" oncomplete="groupRow();" />
+                        </p:commandLink>
 					</p:panelGrid>
 
-					<p:dialog header="Import glossary from excel file" widgetVar="excel_import_dialog" min-height="120"
-							  closable="true" responsive="true">
-						<div class="p-grid">
-							<div class="p-col-5">
-								<p:outputLabel for="console" value="Do you want to override table?" />
-							</div>
-							<div class="p-col-5">
-								<p:selectOneRadio id="console">
-									<f:selectItem itemLabel="Yes" itemValue="true" />
-									<f:selectItem itemLabel="No" itemValue="false" />
-								</p:selectOneRadio>
-							</div>
-							<div class="p-col-12">
-								<p:fileUpload mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBeanNEW.parseXls}"
-											  allowTypes="/(\.|\/)(xls?x)$/" multiple="false"/>
-							</div>
-						</div>
-					</p:dialog>
+                    <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"
+                              min-width="400" closable="true" responsive="true">
+                        <div class="p-grid">
+                            <div class="p-col-5">
+                                <p:outputLabel for="console" value="Do you want to override table?" />
+                            </div>
+                            <div class="p-col-5">
+                                <p:selectOneRadio id="console">
+                                    <f:selectItem itemLabel="Yes" itemValue="true" />
+                                    <f:selectItem itemLabel="No" itemValue="false" />
+                                </p:selectOneRadio>
+                            </div>
+                            <div class="p-col-12">
+                                <p:fileUpload mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBeanNEW.parseXls}"
+                                              allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false"/>
+                            </div>
+                        </div>
+                    </p:dialog>
 
 					<br />
 					<br />
 					<br />
 				</h:form>
-				
+
 				<button type="button" onclick="openGlossForm()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton">
 					<h:outputText value="#{msg['Glossary.add_new_entry']}"></h:outputText>
 				</button>
