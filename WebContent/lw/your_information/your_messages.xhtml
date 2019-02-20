@@ -1,118 +1,25 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Messages" />
 
 <ui:define name="content">
-    <h:form>
-        <p:dataTable id="received_messages_tbl" value="#{yourMessagesBean.messagesToUser}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     style="margin-bottom:20px" tableStyle="table-layout: auto">
-            <f:facet name="header">
-                Received messages
-            </f:facet>
+    <ui:decorate template="templates/messages_table_skeletton.xhtml">
+        <ui:param name="messages" value="#{yourMessagesBean.messagesToUser}"/>
+        <ui:param name="name_for_file" value="received_messages"/>
+        <ui:define name="header">
+            <a href="your_information/">#{msg['your_information.title']}</a>/<h:outputText value="Received messages" />
+        </ui:define>
+    </ui:decorate>
 
-            <f:facet name="{Exporters}">
-                <h:panelGroup>
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
-                        <p:dataExporter type="pdf" target="received_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="xml.png" width="24" style="float:right"/>
-                        <p:dataExporter type="xml" target="received_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="csv.png" width="24" style="float:right"/>
-                        <p:dataExporter type="csv" target="received_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-                </h:panelGroup>
-            </f:facet>
-
-            <p:column>
-                <f:facet name="header">Title</f:facet>
-                <h:outputText value="#{message.title}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{message.text}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Received from</f:facet>
-                <h:outputText value="#{message.fromUser.realUsername}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Seen</f:facet>
-                <h:outputText value="#{message.seen}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Date</f:facet>
-                <h:outputText value="#{message.time}"/>
-            </p:column>
-        </p:dataTable>
-
-
-        <p:dataTable id="sent_messages_tbl" value="#{yourMessagesBean.messagesFromUser}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     style="margin-bottom:20px">
-            <f:facet name="header">
-                Sent messages
-            </f:facet>
-
-            <f:facet name="{Exporters}">
-                <h:panelGroup>
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
-                        <p:dataExporter type="pdf" target="sent_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="xml.png" width="24" style="float:right"/>
-                        <p:dataExporter type="xml" target="sent_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="csv.png" width="24" style="float:right"/>
-                        <p:dataExporter type="csv" target="sent_messages_tbl" fileName="received messages"/>
-                    </h:commandLink>
-                </h:panelGroup>
-            </f:facet>
-
-            <p:column>
-                <f:facet name="header">Title</f:facet>
-                <h:outputText value="#{message.title}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Name</f:facet>
-                <h:outputText value="#{message.text}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Sent to</f:facet>
-                <h:outputText value="#{message.toUser.realUsername}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Seen</f:facet>
-                <h:outputText value="#{message.seen}"/>
-            </p:column>
-
-            <p:column>
-                <f:facet name="header">Date</f:facet>
-                <h:outputText value="#{message.time}"/>
-            </p:column>
-        </p:dataTable>
-    </h:form>
+    <ui:decorate template="templates/messages_table_skeletton.xhtml">
+        <ui:param name="messages" value="#{yourMessagesBean.messagesFromUser}"/>
+        <ui:param name="name_for_file" value="sent_messages"/>
+        <ui:define name="header">
+            <a href="your_information/">#{msg['your_information.title']}</a>/<h:outputText value="Sent messages" />
+        </ui:define>
+    </ui:decorate>
 </ui:define>
 </ui:composition>
