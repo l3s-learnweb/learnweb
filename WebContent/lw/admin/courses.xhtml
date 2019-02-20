@@ -17,7 +17,7 @@
 		
 		<h:form id="courses_form" styleClass="form">
 			<div class="p-grid">
-				<div class="p-col-12">
+				<div class="p-col-12 no-padding-bottom">
 					<p:blockUI block="courses_table" widgetVar="courses_form_blocker">
 				<div class="float-left">#{msg.please_wait}. This action may take several minutes for big courses.</div>
 				<div class="loading-animation small float-left">
@@ -76,7 +76,7 @@
 
 			<h:form id="addcourse" styleClass="form margin-top no-padding-top">
 				<div class="p-grid">
-					<div class="p-col-12">
+					<div class="p-col-12 no-padding-bottom">
 						<div class="card card-w-title grid">
 							<h2><h:outputText value="#{msg.add_new_course}"/></h2>
 							<p class="no-margin-top">
@@ -84,29 +84,32 @@
 							</p>
 							<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 							<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-						</div>
-					</div>
-					<div class="p-col-12">
-						<div class="card card-w-title" id="notification-save-button" >
 							<p>
 								<p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"/>
 							</p>
 						</div>
-
 					</div>
-
-
 				</div>
 			</h:form>
 
-		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
-			<h:form id="addorganisation">
-				#{msg.organization_title}: 
-				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
-				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:button action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="button" process="@form" styleClass="margin-top"/>
-			</h:form>
-		</p:panel>
+		<h:form id="addorganisation" rendered="#{userBean.admin}" styleClass="form margin-top no-padding-top">
+			<div class="p-grid">
+				<div class="p-col-12 no-padding-bottom">
+					<div class="card card-w-title grid">
+						<h2><h:outputText value="#{msg.add_new_organization}"/></h2>
+						<p class="no-margin-top">
+							#{msg.organization_title}:
+						</p>
+						<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
+						<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
+						<p>
+							<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form" styleClass="margin-top"/>
+						</p>
+					</div>
+				</div>
+			</div>
+		</h:form>
+
 
 
 		

@@ -15,12 +15,19 @@
 			</h1>
 		</div>
 
-		<h:form id="us_form" style="padding:0px 5px;" prependId="false">
-				<ui:include src="/templates/user/user_select_form.xhtml" />
-				<p:commandButton style="margin-top:5px;" actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users" 
-					process="@form" update=":transcript_table"/>
+		<h:form id="us_form" prependId="false" styleClass="form">
+			<div class="p-grid">
+				<div class="p-col-12 grid">
+					<div class="card card-w-title grid">
+						<h2><h:outputText value="#{msg.select_users}" /></h2>
+						<ui:include src="/templates/user/user_select_form.xhtml" />
+						<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
+										 process="@form" styleClass="in-form-button" update=":transcript_table"/>
+					</div>
+				</div>
+			</div>
 		</h:form>
-		<h:form style="padding:5px" prependId="false">
+		<h:form styleClass="margin-top" prependId="false">
 			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30">

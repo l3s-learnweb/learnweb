@@ -2,6 +2,7 @@
 
 :root{
     --main-margin:15px;
+    --main-dark-green-color-hover: #378D4F;
 }
 
 /*Classes*/
@@ -208,28 +209,62 @@
 }
 
 /* TODO add a class for this kind of button instead of using the ids */
-#organization-save-button, #notification-save-button{
+.main-body .control-buttons,.main-body .boolean-buttons{
     padding: 0px;
     background: none;
-    display: block;
     margin: 0 auto;
-}
-
-#organization-save-button button, #notification-save-button button{
-    width: 200px;
-    font-size: 20px;
-    display: block;
-    margin: 0 auto;
-}
-
-#notification-save-button {
     display: flex;
     justify-content: center;
 }
 
-#notification-save-button p {
+.main-body .auto-button button{
+    width: auto;
+    padding: 0 8px;
+}
+
+.main-body .control-buttons button{
+    width: auto;
+    font-size: 20px;
+    display: block;
+    margin: 0 auto;
+    padding: 0 8px;
+}
+
+.main-body .control-buttons p {
     display: flex;
     width: 40%;
+}
+
+
+.main-body .boolean-buttons div{
+    width: auto;
+    font-size: 20px;
+    display: block;
+    margin: 0 5px;
+    padding: 0 8px;
+}
+
+.main-body .ui-column-title{
+    font-size: 14px;
+}
+
+.main-body table > th{
+    padding: 8px 4px!important;
+}
+
+.main-body .in-form-button{
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.main-body .in-form-link-to-button{
+    padding: 4px 12px 4px 12px;
+    color: white;
+}
+
+.main-body .in-form-link-to-button:hover{
+    background-color: var(--main-dark-green-color-hover);
 }
 
 .main-body .layout-topbar{
@@ -268,9 +303,26 @@
     width: 100%;
 }
 
+.main-body .card.card-w-title{
+    padding-bottom: 16px;
+}
+
+.main-body .ui-panel-titlebar{
+    padding: 8px 8px!important;
+}
+
+.main-body tr > .ui-state-default{
+    padding: 8px 4px!important;
+}
 
 
+.main-body .optimized-table span{
+    font-size: 10px;
+}
 
+.main-body .optimized-table thead tr th{
+    padding: 3px!important;
+}
 
 
 /******************** helper classes **********************************/
@@ -286,12 +338,24 @@
     margin-top: var(--main-margin);
 }
 
+.no-margin-top{
+    margin-top: 0;
+}
+
 .no-margin{
     margin: 0;
 }
 
+.no-padding{
+    padding: 0;
+}
+
 .no-padding-top{
     padding-top: 0;
+}
+
+.no-padding-bottom{
+    padding-bottom: 0;
 }
 
 .display-none {

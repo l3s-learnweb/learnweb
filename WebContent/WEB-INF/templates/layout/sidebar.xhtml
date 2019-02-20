@@ -35,6 +35,15 @@
                             <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
                         </p:submenu>
 
+                        <p:submenu label="Admin" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
+                            <p:menuitem value="Organisations" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisations.jsf"/>
+                            <p:menuitem value="Banlist" icon="fa fa-fw fa-area-chart " url="/lw/admin/banlist.jsf"/>
+                            <p:menuitem value="IP Requests" icon="fa fa-line-chart " url="/lw/admin/requests.jsf"/>
+                            <p:menuitem value="System Tools" icon="fa fa-fw fa-language " url="/lw/admin/systemtools.jsf"/>
+                            <p:menuitem value="Admin Messages" icon="fa fa-fw fa-language " url="/lw/admin/adminmsg.jsf"/>
+                            <p:menuitem value="Change Log" icon="fa fa-fw fa-language" url="/lw/admin/adminchangelog.jsf"/>
+                        </p:submenu>
+
                     </pc:menu>
                     <!--<pc:menu widgetVar="me">-->
 

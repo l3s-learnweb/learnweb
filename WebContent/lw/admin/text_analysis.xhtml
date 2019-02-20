@@ -21,7 +21,7 @@
 					<div class="card card-w-title grid">
 						<h2><h:outputText value="#{msg.select_users}" /></h2>
 						<ui:include src="/templates/user/user_select_form.xhtml" />
-						<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
+						<p:commandButton styleClass="in-form-button" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
 										 process="@form" update=":growl output"/>
 					</div>
 				</div>
@@ -30,7 +30,7 @@
 					<div class="card card-w-title grid">
 						<h2><h:outputText value="#{msg.comments}" /></h2>
 						<p>#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}" /></p>
-						<h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank" style="padding:5px 10px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+						<h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank"  styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-button in-form-link-to-button " />
 						<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
 					</div>
 				</div>

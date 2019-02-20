@@ -20,7 +20,7 @@
 		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
 			<h:form id="us_form" styleClass="form">
 				<div class="p-grid">
-					<div class="p-col-12 grid">
+					<div class="p-col-12 grid no-padding-bottom">
 						<div class="card card-w-title grid">
 							<h2><h:outputText value="#{msg.notification}" /></h2>
 							<h:panelGroup>
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 
-					<div class="p-col-12 grid">
+					<div class="p-col-12 grid no-padding-top margin-top">
 						<div class="card card-w-title grid">
 							<h2><h:outputText value="#{msg.select_users}" /></h2>
 							<ui:include src="/templates/user/user_select_form.xhtml" />
@@ -59,7 +59,7 @@
 					</div>
 
 					<div class="p-col-12">
-						<div class="card card-w-title" id="notification-save-button" >
+						<div class="card card-w-title control-buttons"  >
 							<p>
 								<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
 								<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
