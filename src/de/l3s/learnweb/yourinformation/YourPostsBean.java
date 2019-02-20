@@ -26,25 +26,17 @@ public class YourPostsBean extends ApplicationBean implements Serializable
 
     private List<ForumPost> userPosts;
 
-    public YourPostsBean()
+    public YourPostsBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try
+        this.userPosts = user.getForumPosts();
+        for(ForumPost post : userPosts)
         {
-            this.userPosts = this.getUser().getForumPosts();
-
-            for(ForumPost post : userPosts)
-            {
-                post.setText(Jsoup.parse(post.getText()).text());
-            }
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Could not properly retrieve user posts.", sqlException);
+            post.setText(Jsoup.parse(post.getText()).text());
         }
     }
 

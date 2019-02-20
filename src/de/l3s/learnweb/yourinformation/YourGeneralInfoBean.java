@@ -36,67 +36,18 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
     public YourGeneralInfoBean() throws SQLException
     {
         User user = getUser();
-        if(null == user) // when not logged in
+        // when not logged in
+        if(null == user)
             return;
 
-        this.username = this.getUser().getUsername();
-
-        this.userCoursesCount = CollectionUtils.size(this.getUser().getCourses());
-
-        try
-        {
-            this.userGroupsCount = this.getUser().getGroupCount();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Can't retrieve amount of user groups properly ", sqlException);
-        }
-
-        try
-        {
-            this.userPostsCount = this.getUser().getForumPostCount();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Can't retrieve amount of user posts properly ", sqlException);
-        }
-
-        try
-        {
-            this.userResourcesCount = this.getUser().getResourceCount();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Can't retrieve amount of user resources properly ", sqlException);
-        }
-
-        try
-        {
-            this.receivedMessagesCount = CollectionUtils.size(Message.getAllMessagesToUser(this.getUser()));
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Problem with fetching messages of user", sqlException);
-        }
-
-        try
-        {
-            this.sentMessagesCount = CollectionUtils.size(Message.getAllMessagesFromUser(this.getUser()));
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Problem with fetching messages of user", sqlException);
-        }
-
-        try
-        {
-            this.submissionsCount = CollectionUtils.size(this.getLearnweb().getSubmissionManager().getSubmissionsByUser(this.getUser()));
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Problem with fetching submissions of user", sqlException);
-        }
-
+        this.username = user.getUsername();
+        this.userCoursesCount = CollectionUtils.size(user.getCourses());
+        this.userGroupsCount = user.getGroupCount();
+        this.userPostsCount = user.getForumPostCount();
+        this.userResourcesCount = user.getResourceCount();
+        this.receivedMessagesCount = CollectionUtils.size(Message.getAllMessagesToUser(user));
+        this.sentMessagesCount = CollectionUtils.size(Message.getAllMessagesFromUser(user));
+        this.submissionsCount = CollectionUtils.size(this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user));
     }
 
     public String getUsername()

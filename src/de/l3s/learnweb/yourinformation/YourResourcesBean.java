@@ -23,21 +23,14 @@ public class YourResourcesBean extends ApplicationBean implements Serializable
 
     private List<Resource> userResources;
 
-    public YourResourcesBean()
+    public YourResourcesBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try
-        {
-            this.userResources = this.getUser().getResources();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Could not properly retrieve user resources.", sqlException);
-        }
+        this.userResources = user.getResources();
     }
 
     public List<Resource> getUserResources()

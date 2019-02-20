@@ -31,23 +31,16 @@ public class YourActivityBean extends ApplicationBean implements Serializable
             Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.changing_office_resource,
             Action.group_removing_resource };
 
-    public YourActivityBean()
+    public YourActivityBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try
-        {
-            this.userActions = getLearnweb().getLogManager().getLogsByUser(this.getUser().getId(), filter, 1000);
-            for(LogEntry action: userActions){
-                action.setDescription(Jsoup.parse(action.getDescription()).text());
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving activity log", e);
+        this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), filter, 1000);
+        for(LogEntry action: userActions){
+            action.setDescription(Jsoup.parse(action.getDescription()).text());
         }
     }
 

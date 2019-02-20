@@ -26,20 +26,14 @@ public class YourCoursesBean extends ApplicationBean implements Serializable
 
     private List<Course> courses;
 
-    public YourCoursesBean()
+    public YourCoursesBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
-        try
-        {
-            courses = user.getCourses();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Could not properly retrieve user courses.", sqlException);
-        }
+
+        courses = user.getCourses();
     }
 
     public List<Course> getUserCourses()

@@ -26,21 +26,14 @@ public class YourGroupsBean extends ApplicationBean implements Serializable
 
     private List<Group> userGroups;
 
-    public YourGroupsBean()
+    public YourGroupsBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try
-        {
-            this.userGroups = this.getUser().getGroups();
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Could not properly retrieve user groups.", sqlException);
-        }
+        this.userGroups = user.getGroups();
     }
 
     public List<Group> getUserGroups()

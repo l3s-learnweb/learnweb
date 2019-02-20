@@ -23,18 +23,14 @@ public class YourSubmissionsBean extends ApplicationBean implements Serializable
 
     private List<Submission> userSubmissions;
 
-    public YourSubmissionsBean()
+    public YourSubmissionsBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try{
-            this.userSubmissions = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(this.getUser());
-        } catch(SQLException sqlException){
-            log.error("Can't properly retrieve user submissions", sqlException);
-        }
+        this.userSubmissions = this.getLearnweb().getSubmissionManager().getSubmissionsByUser(user);
     }
 
     public List<Submission> getUserSubmissions()

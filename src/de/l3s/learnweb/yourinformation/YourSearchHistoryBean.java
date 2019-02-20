@@ -24,7 +24,7 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
 
     private List<SearchHistoryManager.Query> userQueries;
 
-    public YourSearchHistoryBean()
+    public YourSearchHistoryBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
@@ -33,17 +33,10 @@ public class YourSearchHistoryBean extends ApplicationBean implements Serializab
 
         List<SearchHistoryManager.Session> userSessions;
         this.userQueries = new LinkedList<>();
-        try
-        {
-            userSessions = this.getLearnweb().getSearchHistoryManager().getSessionsForUser(this.getUser().getId());
+        userSessions = this.getLearnweb().getSearchHistoryManager().getSessionsForUser(user.getId());
 
-            for (SearchHistoryManager.Session session : userSessions){
-                userQueries.addAll(session.getQueries());
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Can't properly retrieve user sessions", e);
+        for (SearchHistoryManager.Session session : userSessions){
+            userQueries.addAll(session.getQueries());
         }
     }
 

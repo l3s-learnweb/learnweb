@@ -24,30 +24,15 @@ public class YourMessagesBean extends ApplicationBean implements Serializable
     private List<Message> receivedMessages;
     private List<Message> sentMessages;
 
-    public YourMessagesBean()
+    public YourMessagesBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
             // when not logged in
             return;
 
-        try
-        {
-            this.receivedMessages = Message.getAllMessagesToUser(this.getUser());
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Problem with fetching messages of user", sqlException);
-        }
-
-        try
-        {
-            this.sentMessages = Message.getAllMessagesFromUser(this.getUser());
-        }
-        catch(SQLException sqlException)
-        {
-            log.error("Problem with fetching messages of user", sqlException);
-        }
+        this.receivedMessages = Message.getAllMessagesToUser(user);
+        this.sentMessages = Message.getAllMessagesFromUser(user);
     }
 
     public List<Message> getMessagesToUser()
