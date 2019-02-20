@@ -11,10 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -777,37 +777,6 @@ public class ResourceManager
         }
     }
 
-    /*
-     * not used
-     *
-    public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
-    {
-        int results = getResourceCountByGroupId(groupId);
-
-        return new GroupPaginator(results, groupId, order);
-    }
-
-    private static class GroupPaginator extends AbstractPaginator
-    {
-        private static final long serialVersionUID = 399863025926697377L;
-        private final int groupId;
-        private final Order order;
-
-        public GroupPaginator(int totalResults, int groupId, Order order)
-        {
-            super(totalResults);
-            this.groupId = groupId;
-            this.order = order;
-        }
-
-        @Override
-        public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
-        {
-            return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex(), PAGE_SIZE, order);
-        }
-    }
-    */
-
     public List<Resource> getResourcesByGroupId(int groupId) throws SQLException
     {
         List<Resource> resources = new LinkedList<>();
@@ -846,30 +815,6 @@ public class ResourceManager
 
         return resources;
     }
-
-    /*
-    public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
-    {
-    OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-
-    PreparedStatement select = learnweb.getConnection().prepareStatement(
-    	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
-    select.setInt(1, groupId);
-    select.setInt(2, pageSize);
-    select.setInt(3, page * pageSize);
-    ResultSet rs = select.executeQuery();
-    while(rs.next())
-    {
-        Resource resource = createResource(rs);
-
-        if(null != resource)
-    	resources.add(resource.getOwnerUser(), resource.getCreationDate());
-    }
-    select.close();
-
-    return resources;
-    }
-    */
 
     public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
@@ -998,10 +943,6 @@ public class ResourceManager
 
             // This must be set manually because we stored some external sources in Learnweb/Solr
             resource.setLocation(getLocation(resource));
-
-            // TODO move to glossaryResource class
-            if(resource.getType() != null && resource.getType().equals(ResourceType.glossary))
-                resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
             if(resource.isDeleted())
                 log.debug("resource " + resource.getId() + " was requested but is deleted");

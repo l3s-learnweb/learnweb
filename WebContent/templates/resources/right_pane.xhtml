@@ -95,12 +95,12 @@
                                     <h:outputText value="#{addResourceBean.currentPath}"/>
                                 </p:column>
                             </p:row>
-                            <p:row rendered="#{addResourceBean.resource.storageType == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey') }">
+                            <p:row rendered="#{addResourceBean.resource.storageType == 1 and not (addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey') }">
                                 <p:column>
                                     <h:outputText value="#{msg.file}:"/>
                                 </p:column>
                                 <p:column
-                                        rendered="#{addResourceBean.formStep == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey') }">
+                                        rendered="#{addResourceBean.formStep == 1 and not (addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey') }">
                                     <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}"
                                                   mode="advanced" auto="true" sizeLimit="10000000000" fileLimit="1"
                                                   label="#{msg.choose_file}" update=":growl :add_resource_section"/>
@@ -123,7 +123,7 @@
                                     <h:outputText value="#{addResourceBean.resource.url}"/>
                                 </p:column>
                             </p:row>
-                            <p:row rendered="#{addResourceBean.resource.storageType == 1 and (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'glossary2')}">
+                            <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'glossary2'}">
                                 <p:column>
                                     <h:outputText value="#{msg.title}:"/>
                                 </p:column>
@@ -271,7 +271,7 @@
 
                 <ui:fragment rendered="#{rightPaneBean.clickedAbstractResource.canViewResource(userBean.user)}">
 
-                    <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or rightPaneBean.clickedResource.type eq 'presentation' or rightPaneBean.clickedResource.type eq 'document' or rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'audio' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'glossary' or rightPaneBean.clickedResource.type eq 'glossary2' or rightPaneBean.clickedResource.type eq 'survey'}">
+                    <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or rightPaneBean.clickedResource.type eq 'presentation' or rightPaneBean.clickedResource.type eq 'document' or rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'audio' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'glossary2' or rightPaneBean.clickedResource.type eq 'survey'}">
                         <div class="align-center" style="margin-top: 5px;">
                             <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
                                 <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
@@ -298,12 +298,6 @@
                             <h:outputLink value="glossary/glossary.jsf"
                                           styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
                                           rendered="#{rightPaneBean.clickedResource.type eq 'glossary2'}">
-                                <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-                                #{msg["Glossary.open"]}
-                            </h:outputLink>
-                            <h:outputLink value="showGlossary.jsf"
-                                          styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
-                                          rendered="#{rightPaneBean.clickedResource.type eq 'glossary'}">
                                 <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
                                 #{msg["Glossary.open"]}
                             </h:outputLink>

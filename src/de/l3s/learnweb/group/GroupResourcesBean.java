@@ -683,10 +683,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
             addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
             break;
-        case "glossary":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.glossary);
-            break;
         case "glossary2":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
             addResourceBean.setResourceAsGlossary();

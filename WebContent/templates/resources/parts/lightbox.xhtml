@@ -24,7 +24,7 @@
                 <ui:fragment rendered="#{res.type eq 'pdf'}">
                     <iframe src="#{res.url}" style="width:100%; height:100%; "/>
                 </ui:fragment>
-                <ui:fragment rendered="#{res.type eq 'image' or res.type eq 'glossary' or res.type eq 'survey'}">
+                <ui:fragment rendered="#{res.type eq 'image' or res.type eq 'survey'}">
                     <img src="#{res.thumbnail4.url}" height="#{res.thumbnail4.height}" width="#{res.thumbnail4.width}"
                          style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%); -o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>
                 </ui:fragment>

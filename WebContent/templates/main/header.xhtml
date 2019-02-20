@@ -316,12 +316,13 @@
 
 		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
 
-		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
-	        #{msg.message}: #{pfExceptionHandler.message}
-	        <br />
-	        StackTrace:
-	        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
-			<br />
+		<p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog" resizable="true">		
+			<p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
+			
+			<div id="stacktrace" class="display-none">
+				<h:outputText value="Message:#{pfExceptionHandler.message}" />
+				<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+			</div>					
 		</p:dialog>
 
 		<p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog" modal="true">

@@ -229,10 +229,6 @@
                              update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this"
                              partialSubmit="true"/>
 
-            <p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" immediate="true" ignoreAutoUpdate="true"
-                             onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this"
-                             partialSubmit="true"/>
-
             <p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true"
                              name="setSelectedResource" update=":resource_form" process="@this"
                              partialSubmit="true"/>

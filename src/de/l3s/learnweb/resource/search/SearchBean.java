@@ -15,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,6 @@ import org.primefaces.model.TreeNode;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.facts2.FactSheet;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AddResourceBean.CreateThumbnailThread;
@@ -71,7 +70,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int selectedResourceTargetGroupId = 0;
     private int selectedResourceTargetFolderId = 0;
 
-    private FactSheet graph = new FactSheet();
     private Search images;
     private MODE searchMode;
     private SERVICE searchService;
@@ -543,11 +541,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         this.view = view;
     }
 
-    public FactSheet getGraph()
-    {
-        return graph;
-    }
-
     public boolean isGraphLoaded()
     {
         return graphLoaded;
@@ -563,27 +556,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         return counter++;
     }
 
-    /*public HashSet<String> getHistoryResources()
-    {
-        return historyResources;
-    }
-    
-    public int getResultsetId()
-    {
-        return resultsetId;
-    }
-    
-    public void setResultsetId(int resultsetId)
-    {
-        this.resultsetViewId = resultsetId;
-        this.resultsetId = resultsetId;
-    }
-    
-    public int getResultsetViewId()
-    {
-        return resultsetViewId;
-    }*/
-
     /**
      * Used by old search result history
      */
@@ -598,41 +570,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException
     {
         inputStream.defaultReadObject();
-    }
-
-    public void generateKnowledgeGraph()
-    {
-        try
-        {
-            if(query == null || query.length() < 2)
-                return;
-
-            /*
-            graph = new FactSheet(query);
-            if(graph.getEntities().size() == 0)
-            {
-                log.info("No DBPedia entry found for: " + query);
-                return;
-            }
-            String label = graph.getEntities().get(0).getLabel();
-
-            SearchFilters filter = new SearchFilters();
-            images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
-            images.setMode(MODE.image);
-            filter.setFilter(FILTERS.service, SERVICE.bing);
-
-            //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
-            images.setResultsPerService(10);
-            images.getResourcesByPage(1);
-
-
-            graphLoaded = true;
-            */
-        }
-        catch(Exception e)
-        {
-            log.error("Can't create FactSheet", e);
-        }
     }
 
     /**
