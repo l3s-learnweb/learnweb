@@ -3,6 +3,8 @@
 :root{
     --main-margin:15px;
     --main-dark-green-color-hover: #378D4F;
+    --second-grey: #e4e2e0;
+    --second-grey-hover: #bbbbbb;
 }
 
 /*Classes*/
@@ -324,6 +326,36 @@
     padding: 3px!important;
 }
 
+.basepath{
+    margin-top: -15px;
+    background-color: white;
+    padding: 7px 15px;
+    width: 100%;
+    margin-left: -15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--second-grey);
+    border-top: 1px solid var(--second-grey);
+}
+
+.basepath a{
+    font-size: 16px;
+}
+
+.basepath span{
+    margin: 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--second-grey-hover);
+}
+
+.organizations-column{
+    width:13%;
+    border: none;
+}
+
+.organizations-column button{
+    width:100%;
+}
 
 /******************** helper classes **********************************/
 .no-margin-top{
