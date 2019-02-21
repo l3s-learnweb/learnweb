@@ -391,7 +391,7 @@ public class UserBean implements Serializable
     public String getBannerLink() throws SQLException
     {
 
-        return Learnweb.getInstance().getServerUrl() + getActiveOrganisation().getWelcomePage();
+        return Learnweb.getInstance().getSecureServerUrl() + getActiveOrganisation().getWelcomePage();
     }
 
     /**

@@ -25,12 +25,12 @@
 		<h:form id="editwelcomeform"  prependId="false" styleClass="form">
 			<div class="p-grid">
 
-
-
 				<div class="p-col-12">
 					<div class="card card-w-title">
 						<h2><h:outputText value="#{msg.welcome_message}" /></h2>
-						<p:textEditor height="184" value="#{adminOrganisationsBean.selectedOrganisation.welcomeMessage}" />
+						<p:textEditor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{not adminCourseBean.course.welcomeMessage.contains('table')}" />
+						
+						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{adminCourseBean.course.welcomeMessage.contains('table')}" />
 					</div>
 				</div>
 
