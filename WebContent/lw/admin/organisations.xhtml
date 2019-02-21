@@ -1,5 +1,5 @@
 <ui:composition 
-	template="/templates/main/main.xhtml" 
+	template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -11,27 +11,14 @@
 	
 	
 
-	<ui:define name="center_layout">
-	
-	<style type="text/css">
-		.ui-state-hover, .ui-state-focus, .ui-state-active{
-			box-shadow:0 0 0px 0px #fff !important;
-			background-color:#d1d1d1 !important;
-			background-image:none !important;
-			border:1px solid #a8a8a8 !important;
-		}
-		.page_header{margin:5px 5px 5px 5px;}
-		#courseform{padding:5px;}
-	</style>
-	
-		<div class="page_header">
-			<span>
-				#{msg.organization}
-			</span>
-		</div>		
+	<ui:define name="content">
+
+        <div class="page-header">
+            <h1>#{msg.organization}</h1>
+        </div>
 	
 		<h:form id="organisationform">
-			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" style="margin: 0px 0px 0px 5px;text-align: center; min-width:122rem"  >					
+			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}"  >
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
 					<h:outputText value="#{organisation.title}" />		
 				</p:column>	

@@ -1,5 +1,5 @@
 <ui:composition 
-	template="/templates/main/main.xhtml" 
+	template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,13 +9,13 @@
 <ui:param name="loginRequired" value="true" />
 <ui:param name="pageTitle" value="System Tools" />
 
-<ui:define name="center_layout">
+<ui:define name="content">
 	<h:outputText value="Missing authentication" rendered="#{not userBean.admin}" />
 	<ui:fragment rendered="#{userBean.admin}">
-		<div class="page_header" >
-			<span>
+		<div class="page-header" >
+			<h1>
 				Database connections
-			</span>
+			</h1>
 		</div>
 
 
