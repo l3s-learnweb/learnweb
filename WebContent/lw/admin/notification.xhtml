@@ -22,9 +22,8 @@
 				<div class="p-grid">
 					<div class="p-col-12 grid no-padding-bottom">
 						<div class="card card-w-title grid">
-							<h2><h:outputText value="#{msg.notification}" /></h2>
 							<h:panelGroup>
-								<p class="no-margin-top"><h:outputText value="#{msg.title}:" /></p>
+								<p><h:outputText value="#{msg.title}:" /></p>
 								<p:message showSummary="true" showDetail="false"  for="msg_title" />
 							</h:panelGroup>
 							<p:inputText value="#{adminNotificationBean.title}" id="msg_title" />

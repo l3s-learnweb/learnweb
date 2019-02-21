@@ -44,7 +44,7 @@
 						    #{msg.options}
 					    </f:facet>
 
-					    <h:outputLink value="course.jsf?course_id=#{course.id}" title="#{msg.edit}">
+					    <h:outputLink value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
 						    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						    <!--<h:outputText value="#{msg.edit}" />-->
 					    </h:outputLink>
@@ -65,7 +65,7 @@
 						<p:confirm message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected." />
 					</p:commandLink>
 					
-					    <h:outputLink value="users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
+					    <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
                             <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
 					    </h:outputLink>
 				    </p:column>

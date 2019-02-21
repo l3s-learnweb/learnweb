@@ -28,7 +28,7 @@
 		</h:form>
 	
 		<h:form prependId="false" styleClass="margin-top">
-			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
+			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
 				

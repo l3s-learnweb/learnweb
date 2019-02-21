@@ -18,7 +18,7 @@
                 <h:form styleClass="form">
                     <div class="p-grid">
                         <div class="p-col-12">
-                            <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
+                            <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  rendered="#{userBean.user.organisationId ne 1249}">
                         <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">

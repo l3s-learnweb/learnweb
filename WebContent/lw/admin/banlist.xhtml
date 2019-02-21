@@ -16,7 +16,7 @@
 	<h:outputScript library="admin" name="banlist.js" target="head" />
 		<p:panel header="#{msg.suspicious_activity}" style="margin:5px;" rendered="#{not empty adminBanlistBean.suspiciousActivityList}">
 
-		<p style="color: #c94132;">#{msg.suspicious_activity_message}</p> <br/>
+		<p>#{msg.suspicious_activity_message}</p> <br/>
 
 			<p:dialog header="Ban" widgetVar="bandialog" modal="true" height="100">
 				<h:form class="banform" id="banformdialog">
@@ -47,7 +47,7 @@
 			</p:dialog>
 
 			<h:form id="suspiciouslistform" >
-			<p:dataTable var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
+			<p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" rows="50" paginator="true"
 						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
 					<p:column headerText="IP" sortBy="#{aggrReqData.IP}" >
