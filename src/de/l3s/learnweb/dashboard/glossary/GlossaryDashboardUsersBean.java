@@ -1,18 +1,25 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
+import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.MapHelper;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Named
 @SessionScoped
@@ -30,6 +37,8 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date startDate;
     private Date endDate;
     private User selectedUser;
+    private List<User> selectedUsers;
+    private List<User> defaultUsersList;
     private List<Integer> selectedUsersIds;
     private GlossaryDashboardManager dashboardManager;
 
@@ -78,11 +87,26 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
         selectedUsersIds = Collections.singletonList(selectedUser.getId());
-
+        selectedUsers=getUsersList();
         dashboardManager = new GlossaryDashboardManager();
 
         fetchDataFromManager();
     }
+
+
+
+    public List<User> getDefaultUsersList(){
+        return defaultUsersList;
+    }
+    public void setDefaultUsersList(List<User> DefaultUsersList){
+        this.defaultUsersList=DefaultUsersList;
+    }
+
+    public List<Group> getGroups() throws SQLException
+    {
+        return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(485);
+    }
+
 
     public void cleanAndUpdateStoredData() throws SQLException
     {
@@ -126,7 +150,6 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
-
     public Date getEndDate()
     {
         return endDate;

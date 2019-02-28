@@ -3,6 +3,7 @@ package de.l3s.learnweb.dashboard.glossary;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
 import de.l3s.learnweb.user.User;
+import org.apache.jena.base.Sys;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
@@ -68,12 +69,10 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
             endDate = new Date(new Date().getTime());
 
             dashboardManager = new GlossaryDashboardManager();
-            if(glossaryDashboardUsersBean.getSelectedUsersIds() == null)
-            {
-                glossaryDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
-            }
+            glossaryDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
 
             fetchDataFromManager();
+            glossaryDashboardUsersBean.setDefaultUsersList(glossaryDashboardUsersBean.getUsersList());
         }
         catch(SQLException e)
         {
