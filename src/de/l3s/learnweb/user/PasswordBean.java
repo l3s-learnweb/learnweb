@@ -59,7 +59,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
 
             for(User user : users)
             {
-                String link = url + user.getId() + "_" + createHash(user);
+                String link = url + user.getId() + "_" + createPasswordChangeHash(user);
                 String text = "Hi " + user.getRealUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getRealUsername() + "' by clicking on this link:\n" + link
                         + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards,\nLearnweb Team";
 
@@ -77,7 +77,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
         }
     }
 
-    public static String createHash(User user)
+    public static String createPasswordChangeHash(User user)
     {
         return MD5.hash(Learnweb.salt1 + user.getId() + user.getPassword() + Learnweb.salt2);
     }

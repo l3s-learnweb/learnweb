@@ -135,27 +135,33 @@ public class UserManager
     }
 
     /**
-     * get a user by username and password
+     * Get a user by username and password
      *
      * @param username
      * @param password
      * @return null if user not found
      * @throws SQLException
      */
-
     public User getUser(String username, String password) throws SQLException
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ? AND password = MD5(?)"))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ?"))
         {
             select.setString(1, username);
-            select.setString(2, password);
             ResultSet rs = select.executeQuery();
 
-            if(!rs.next())
-                return null;
+            if(rs.next()) {
+                User user = createUser(rs);
+                if (user.validatePassword(password)) {
+                    if (!user.getHashing().equals(User.PasswordHashing.PBKDF2)) {
+                        user.setPassword(password);
+                        save(user);
+                    }
 
-            User user = createUser(rs);
-            return user;
+                    return user;
+                }
+            }
+
+            return null;
         }
     }
 
@@ -278,7 +284,7 @@ public class UserManager
         user.setEmail(""); // set something to make sure that
         user.setEmail(email); // the mail confirmation token is created now
         user.setOrganisationId(course.getOrganisationId());
-        user.setPassword(password, false);
+        user.setPassword(password);
         user.setPreferences(new HashMap<>());
         user = save(user);
 
@@ -336,14 +342,13 @@ public class UserManager
      * Saves the User to the database.
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
      */
-
     private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, active_group_id, image_file_id, "
-            + "gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, registration_date, password, preferences, "
+            + "gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, registration_date, password, hashing, preferences, "
             + "credits, fullname, affiliation, accept_terms_and_conditions, deleted";
 
     public User save(User user) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
         if(user.getId() < 0) // the User is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
@@ -367,14 +372,15 @@ public class UserManager
         replace.setInt(17, user.isModerator() ? 1 : 0);
         replace.setTimestamp(18, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
         replace.setString(19, user.getPassword());
+        replace.setString(20, user.getHashing().name());
 
-        Sql.setSerializedObject(replace, 20, user.getPreferences());
+        Sql.setSerializedObject(replace, 21, user.getPreferences());
 
-        replace.setString(21, user.getCredits());
-        replace.setString(22, user.getFullName());
-        replace.setString(23, user.getAffiliation());
-        replace.setBoolean(24, user.isAcceptTermsAndConditions());
-        replace.setBoolean(25, user.isDeleted());
+        replace.setString(22, user.getCredits());
+        replace.setString(23, user.getFullName());
+        replace.setString(24, user.getAffiliation());
+        replace.setBoolean(25, user.isAcceptTermsAndConditions());
+        replace.setBoolean(26, user.isDeleted());
         replace.executeUpdate();
 
         if(user.getId() < 0) // get the assigned id
@@ -408,7 +414,8 @@ public class UserManager
         user.setEmail(rs.getString("email"));
         user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
         user.setEmailConfirmed(rs.getBoolean("is_email_confirmed"));
-        user.setPassword(rs.getString("password"), true);
+        user.setPasswordRaw(rs.getString("password"));
+        user.setHashing(rs.getString("hashing"));
         user.setOrganisationId(rs.getInt("organisation_id"));
         user.setActiveGroup(rs.getInt("active_group_id"));
         user.setImageFileId(rs.getInt("image_file_id"));
@@ -582,7 +589,7 @@ public class UserManager
         user.setDeleted(true);
         user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
         user.setEmailConfirmed(true); // disable mail validation
-        user.setPassword("deleted user", true);
+        user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();
     }

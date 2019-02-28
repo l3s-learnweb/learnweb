@@ -51,9 +51,8 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
         String hash = splits[1];
 
         user = getLearnweb().getUserManager().getUser(userId);
-        log.debug(hash + " - " + PasswordBean.createHash(user));
 
-        if(null == user || !hash.equals(PasswordBean.createHash(user)))
+        if(null == user || !hash.equals(PasswordBean.createPasswordChangeHash(user)))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
             user = null;
@@ -72,7 +71,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
         UserManager um = getLearnweb().getUserManager();
         try
         {
-            user.setPassword(password, false);
+            user.setPassword(password);
             um.save(user);
             //um.setPassword(getUser().getId(), password);
             addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
@@ -138,7 +137,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     		String hash = splits[1];
     		
     		user = getLearnweb().getUserManager().getUser(userId);
-    		if(null == user || !hash.equals(PasswordBean.createHash(user)))
+    		if(null == user || !hash.equals(PasswordBean.createPasswordChangeHash(user)))
     		{
     			addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
     			return;

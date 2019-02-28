@@ -16,6 +16,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.Size;
 
+import de.l3s.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,16 +34,17 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.util.HasId;
-import de.l3s.util.Image;
-import de.l3s.util.MD5;
-import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
     private static final Logger log = Logger.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
+
+    public enum PasswordHashing {
+        MD5,
+        PBKDF2
+    }
 
     public static final int GENDER_MALE = 1;
     public static final int GENDER_FEMALE = 2;
@@ -57,7 +59,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private String email = null; // it is important to set null instead of empty string
     private String emailConfirmationToken;
     private boolean emailConfirmed = true;
-    private String password; // md5 hash
+    private String password;
+    private PasswordHashing hashing;
 
     private int gender;
     private Date dateOfBirth;
@@ -652,11 +655,6 @@ public class User implements Comparable<User>, Serializable, HasId
         this.registrationDate = registrationDate;
     }
 
-    public String getPassword()
-    {
-        return password;
-    }
-
     public HashMap<String, String> getPreferences()
     {
         return preferences;
@@ -667,17 +665,41 @@ public class User implements Comparable<User>, Serializable, HasId
         this.preferences = preferences;
     }
 
-    /**
-     * If the password is not encrypted (plain text) set isEncrypted to false
-     *
-     * @param password
-     * @param isEncrypted
-     */
-    public void setPassword(String password, boolean isEncrypted)
+    public String getPassword()
     {
-        if(!isEncrypted)
-            password = MD5.hash(password);
+        return password;
+    }
+
+    public void setPasswordRaw(String password)
+    {
         this.password = password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = PBKDF2.hashPassword(password);
+        this.hashing = PasswordHashing.PBKDF2;
+    }
+
+    public boolean validatePassword(String password)
+    {
+        if (hashing.equals(PasswordHashing.MD5)) {
+            return this.password.equals(MD5.hash(password));
+        } else if (hashing.equals(PasswordHashing.PBKDF2)) {
+            return PBKDF2.validatePassword(password, this.password);
+        }
+
+        return false;
+    }
+
+    public PasswordHashing getHashing()
+    {
+        return hashing;
+    }
+
+    public void setHashing(final String hashing)
+    {
+        this.hashing = PasswordHashing.valueOf(hashing);
     }
 
     public TimeZone getTimeZone()

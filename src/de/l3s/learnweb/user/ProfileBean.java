@@ -216,7 +216,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         UserManager um = getLearnweb().getUserManager();
         try
         {
-            getSelectedUser().setPassword(password, false);
+            getSelectedUser().setPassword(password);
             um.save(getSelectedUser());
 
             addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
