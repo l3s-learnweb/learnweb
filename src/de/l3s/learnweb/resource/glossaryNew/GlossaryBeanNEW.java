@@ -387,6 +387,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         if(parser.isValid())
         {
+            parser.parseGlossaryEntries();
             // append parsed entries to glossary
             glossaryResource.getEntries().addAll(parser.getEntries());
 

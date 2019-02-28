@@ -11,12 +11,13 @@ import org.primefaces.model.UploadedFile;
 
 import javax.faces.application.FacesMessage;
 
-public class GlossaryXLSParser
+public class GlossaryXLSParser extends GlossaryBeanNEW
 {
 
     private List<GlossaryEntry> glossaryEntries;
     private UploadedFile uploadedFile;
     private HashMap<String, Locale> languageMap;
+    private List<String> errorMessages;
 
     public GlossaryXLSParser(UploadedFile uploadedFile, HashMap<String, Locale> languageMap)
     {
@@ -30,10 +31,46 @@ public class GlossaryXLSParser
      */
     public boolean isValid()
     {
-        // TODO Auto-generated method stub
-        //check amount of columns?
-        //check languages?
-        return false;
+        boolean isValid = false;
+        try
+        {
+            POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputstream());
+            HSSFWorkbook wb = new HSSFWorkbook(fs);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row;
+            if(sheet.getRow(0).getPhysicalNumberOfCells() == 11)
+            {
+                for(int r = 1; r < sheet.getPhysicalNumberOfRows() - 1; r++)
+                {
+                    row = sheet.getRow(r);
+                    if(row != null)
+                    {
+                        if(languageMap.containsKey(row.getCell(0).getStringCellValue()))
+                        {
+                            isValid = true;
+                        }
+                        else
+                        {
+                            errorMessages.add("There are incorrect languages in the file");
+                            isValid = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                errorMessages.add("Amount of columns does not correspond to the table");
+                isValid = false;
+            }
+        } catch(Exception e){
+            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary xls is not v"));
+            setKeepMessages();
+            //log.error("Error during parsing glossary xls", e);
+            //addErrorMessage(e);
+        }
+
+        return isValid;
     }
 
     public void parseGlossaryEntries(){
@@ -60,8 +97,8 @@ public class GlossaryXLSParser
                     String topic3 = row.getCell(2).getStringCellValue();
                     String description = row.getCell(3).getStringCellValue();
 
-                    if(topic1 == currentGlossaryEntry.getTopicOne() & topic2 == currentGlossaryEntry.getTopicTwo() &
-                            topic3 == currentGlossaryEntry.getTopicThree() & description == currentGlossaryEntry.getDescription())
+                    if(topic1.equals(currentGlossaryEntry.getTopicOne()) && topic2.equals(currentGlossaryEntry.getTopicTwo()) &&
+                            topic3.equals(currentGlossaryEntry.getTopicThree()) && description.equals(currentGlossaryEntry.getDescription()))
                     {
                         GlossaryTerm newTerm = new GlossaryTerm();
                         newTerm.setTerm(row.getCell(4).getStringCellValue());
@@ -79,7 +116,7 @@ public class GlossaryXLSParser
                     }
                     else
                     {
-                        //here we should save currentGlossaryTerm
+                        //TODO: save currentGlossaryTerm
 
                         currentGlossaryEntry.setTopicOne(topic1);
                         currentGlossaryEntry.setTopicTwo(topic2);
@@ -102,17 +139,17 @@ public class GlossaryXLSParser
                         currentGlossaryEntry.setTerms(terms);
                     }
                     // don't save anything until we are sure that the parser works as expected getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
-
-                    // addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
-                    // setKeepMessages();
-                    // setNewFormEntry();
                 }
+                addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+                setKeepMessages();
             }
         }
         catch(Exception e)
         {
-            // log.error("Error during parsing glossary xls", e);
-            // addErrorMessage(e);
+            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Error during parsing glossary xls"));
+            setKeepMessages();
+            //log.error("Error during parsing glossary xls", e);
+            //addErrorMessage(e);
         }
     }
 
@@ -127,8 +164,7 @@ public class GlossaryXLSParser
 
     public List<String> getErrorMessages()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return errorMessages;
     }
 
 }
