@@ -14,9 +14,93 @@
 
 
 	<h:outputScript library="admin" name="banlist.js" target="head" />
-		<p:panel header="#{msg.suspicious_activity}" style="margin:5px;" rendered="#{not empty adminBanlistBean.suspiciousActivityList}">
 
-		<p>#{msg.suspicious_activity_message}</p> <br/>
+        <div class="page-header">
+            <h1>Banlist</h1>
+        </div>
+
+        <ui:fragment>
+            <div class="p-grid" >
+                <div class="p-col-12 border-box no-padding-bottom">
+                    <div class="card card-w-title">
+                        <h2><h:outputText value="#{msg.manual_ban}" /></h2>
+                        <div class="panel-as-block">
+                            <p:panel>
+                                <h:form class="banform" id="banformreg">
+                                <h:panelGrid columns="3">
+                                    <h:outputText value="#{msg.name_or_ip}:" />
+                                    <p:inputText value="#{adminBanlistBean.name}" id="name" required="true" />
+                                    <p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
+                                        <f:selectItem itemValue="user" itemLabel="User" />
+                                        <f:selectItem itemValue="ip" itemLabel="IP" />
+                                    </p:selectOneRadio>
+
+                                    <h:outputText value="#{msg.ban_for}:" />
+                                    <ui:fragment>
+                                        <h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput" style="width:50px" />
+                                        <h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput" style="width:50px;     margin: 0 9px;" />
+                                        <h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput" style="width:50px" />
+                                    </ui:fragment>
+
+                                    <ui:fragment>
+                                        <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;" id="permabancheckbox"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
+                                    </ui:fragment>
+
+                                    <p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;" ajax="false" />
+                                    <h:outputText />
+                                    <h:outputText />
+
+                                </h:panelGrid>
+                            </h:form>
+                        </p:panel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h:form styleClass="no-padding margin-top" id="banlistform" >
+                <p:dataTable var="accessData" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                    <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
+                        <h:outputText value="#{accessData.name}" />
+                    </p:column>
+
+                    <p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
+                        <h:outputText value="#{accessData.banDate}">
+                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
+                        <h:outputText value="#{accessData.bannedOn}">
+                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="#{msg.attempts}" sortBy="#{accessData.attempts}">
+                        <h:outputText value="#{accessData.attempts}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.options}">
+                        <f:facet name="header">
+                            #{msg.options}
+                        </f:facet>
+                        <p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
+                                       update=":banlistform :growl"
+                                       style="text-decoration:none;" title="#{msg.unban}">
+                            <p:confirm message="#{msg.unban} #{accessData.name}?" />
+                            <h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.unban}" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:fragment>
+
+
+
+		<p:panel header="#{msg.suspicious_activity}" rendered="#{not empty adminBanlistBean.suspiciousActivityList}">
+
+		<p>#{msg.suspicious_activity_message}</p>
 
 			<p:dialog header="Ban" widgetVar="bandialog" modal="true" height="100">
 				<h:form class="banform" id="banformdialog">
@@ -92,79 +176,10 @@
 					</p:column>
 			</p:dataTable>
 		</h:form>
+
 		</p:panel>
 
-		<br/>
-		<p:panel header="#{msg.manual_ban}" style="margin:5px;">
-			<h:form class="banform" id="banformreg">
-				<h:panelGrid columns="3">
-					<h:outputText value="#{msg.name_or_ip}:" />
-					<p:inputText value="#{adminBanlistBean.name}" id="name" required="true" />
-					<p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
-						<f:selectItem itemValue="user" itemLabel="User" />
-						<f:selectItem itemValue="ip" itemLabel="IP" />
-					</p:selectOneRadio>
-					
-					<h:outputText value="#{msg.ban_for}:" />
-					<ui:fragment>
-						<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput" style="width:50px" />
-						<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput" style="width:50px" />
-						<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput" style="width:50px" />
-					</ui:fragment>
-
-					<ui:fragment>
-						<p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" style="margin-right: 5px;" id="permabancheckbox"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
-					</ui:fragment>
-
-					<p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;" ajax="false" />
-					<h:outputText />		
-					<h:outputText />		
-
-				</h:panelGrid>
-			</h:form>
-		</p:panel>
-
-		<br/>
-
-		<p:panel header="#{msg.banlist}">
-		<h:form id="banlistform" >
-			<p:dataTable var="accessData" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
-						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
-				<p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
-					<h:outputText value="#{accessData.name}" />
-				</p:column>
-
-				<p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
-					<h:outputText value="#{accessData.banDate}">
-					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
-					<h:outputText value="#{accessData.bannedOn}">
-					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{msg.attempts}" sortBy="#{accessData.attempts}">
-					<h:outputText value="#{accessData.attempts}"/>
-				</p:column>
-
-				<p:column headerText="#{msg.options}">
-					<f:facet name="header">
-						#{msg.options}
-					</f:facet>
-					<p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-								   update=":banlistform :growl"
-								   style="text-decoration:none;" title="#{msg.unban}">
-						<p:confirm message="#{msg.unban} #{accessData.name}?" />
-						<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.unban}" />
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
-		</h:form>
-	</p:panel>
+		<!--<p:panel header="#{msg.banlist}"></p:panel>-->
 
 	</ui:define>
 </ui:composition>

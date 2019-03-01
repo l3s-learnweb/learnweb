@@ -21,9 +21,8 @@
 
 		<h:form>		
 			<p:dataTable id="processTable" var="process"
-					style="margin: 2rem;text-align: right;"
 					value="#{adminSystemBean.databaseProcessList}"
-					tableStyle="width: 96%;table-layout:auto"
+					tableStyle="table-layout:auto"
 					emptyMessage="no open connection">
 
 					<p:column headerText="id" sortBy="#{process.id}">
@@ -63,19 +62,16 @@
 						<h:outputText value="#{process.progress}" />
 					</p:column>
 
-					<p:column headerText="Terminate">
-						<p:commandButton value="terminate"
+					<p:column  headerText="Terminate">
+						<p:commandButton styleClass="btn-as-link" value="terminate"
 							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable"/>
 					</p:column>
 
 				</p:dataTable>
 			</h:form>
-		
-		<div class="page_header" style="margin:5px;">
-			<span>Caches</span>
-		</div>
+
 		<h:form styleClass="grey_border" >
-			<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" value="Clear caches" />
+			<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="margin-top" value="Clear caches" />
 		</h:form>
 	</ui:fragment>
 </ui:define>

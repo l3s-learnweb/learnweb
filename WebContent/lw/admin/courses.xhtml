@@ -46,7 +46,7 @@
 
 					    <h:outputLink value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
 						    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-						    <!--<h:outputText value="#{msg.edit}" />-->
+						    <h:outputText value="#{msg.edit}" />
 					    </h:outputLink>
 							
 					    <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
@@ -73,8 +73,8 @@
 				</div>
 			</div>
 		</h:form>
-
-			<h:form id="addcourse" styleClass="form margin-top no-padding-top">
+		<div class="p-grid">
+			<h:form id="addcourse" styleClass="p-col form margin-top">
 				<div class="p-grid">
 					<div class="p-col-12 no-padding-bottom">
 						<div class="card card-w-title grid">
@@ -92,7 +92,7 @@
 				</div>
 			</h:form>
 
-		<h:form id="addorganisation" rendered="#{userBean.admin}" styleClass="form margin-top no-padding-top">
+		<h:form id="addorganisation" rendered="#{userBean.admin}" styleClass="p-col form margin-top">
 			<div class="p-grid">
 				<div class="p-col-12 no-padding-bottom">
 					<div class="card card-w-title grid">
@@ -103,13 +103,13 @@
 						<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 						<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
 						<p>
-							<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form" styleClass="margin-top"/>
+							<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form"/>
 						</p>
 					</div>
 				</div>
 			</div>
 		</h:form>
-
+		</div>
 
 
 		

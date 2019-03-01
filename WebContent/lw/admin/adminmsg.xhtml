@@ -19,14 +19,24 @@
 				#{msg.admin_message}
 			</h1>
 		</div>
+
+
 		
-		<h:form id="msgform" styleClass="grey_border" >
-			<h:outputText value="#{msg.message}:" />
-			<br style="margin-bottom:10px;"/>
-			<p:editor value="#{adminMessageBean.message}" widgetVar="editor" style="width:600px;" />
-			<br style="margin-bottom:15px;"/>
-			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;"/>
-			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"/>
+		<h:form id="msgform" styleClass="grey_border form" >
+			<div class="p-grid">
+				<div class="p-col-12">
+					<div class="card card-w-title">
+						<h2><h:outputText value="#{msg.message}:" /></h2>
+						<p:textEditor height="184" value="#{adminMessageBean.message}" />
+						<div class="margin-top">
+							<h:commandButton class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;"/>
+							<h:commandButton class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"/>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
 		</h:form>
 	
 	</ui:define>

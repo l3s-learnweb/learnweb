@@ -29,8 +29,8 @@
 					<div class="card card-w-title">
 						<h2><h:outputText value="#{msg.welcome_message}" /></h2>
 						<p:textEditor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{not adminCourseBean.course.welcomeMessage.contains('table')}" />
-						
-						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{adminCourseBean.course.welcomeMessage.contains('table')}" />
+						<!--
+						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{adminCourseBean.course.welcomeMessage.contains('table')}" />-->
 					</div>
 				</div>
 
@@ -39,7 +39,7 @@
 						<div class="p-col">
 							<div class="card card-w-title">
 								<h2 class="no-margin-bottom">Common settings</h2>
-								<div class="grid">
+								<div class="grid padding-bottom">
 
 										<p>
 											<h:outputText value="#{msg.title}:" />

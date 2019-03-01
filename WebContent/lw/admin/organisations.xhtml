@@ -33,9 +33,14 @@
 				</p:column>	
 				
 				<p:column style="width: 13%;" styleClass="organizations-column" headerText="#{msg.edit}">
-					<p:commandButton action="organisation" value="#{msg.edit}" ajax="false">
-						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />				
-					</p:commandButton>			
+					<p:commandButton styleClass="btn-as-link" action="organisation" value="#{msg.edit}" ajax="false">
+                        <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />
+					</p:commandButton>
+                    <!--<h:outputLink action="organisation" target="#{adminOrganisationsBean.selectedOrganisation}" title="#{msg.edit}">
+                        <h:graphicImage target="#{adminOrganisationsBean.selectedOrganisation}" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+                        <h:outputText value="#{msg.edit}" target="#{adminOrganisationsBean.selectedOrganisation}" />
+                    </h:outputLink>-->
 				</p:column>	
 				
 			</p:dataTable>	
