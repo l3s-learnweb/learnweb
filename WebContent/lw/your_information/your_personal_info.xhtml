@@ -2,7 +2,8 @@
         template="/WEB-INF/templates/layout/template.xhtml"
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:h="http://xmlns.jcp.org/jsf/html">
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Personal Information" />
@@ -18,45 +19,49 @@
                         <span class="profile-name"><h:outputText value="#{yourDetailedInfoBean.fullName}" /></span>
                         <span class="profile-role"><h:outputText value="#{yourGeneralInfoBean.username}" /></span>
                         <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"
-                                role="button" aria-disabled="false"><span class="ui-button-text ui-c">Go to Profile</span></a>
+                                role="button" aria-disabled="false"><span class="ui-button-text ui-c"><h:outputText value="#{msg.go_to_profile}"/></span></a>
                         <div class="ui-g-12">
                             <div class="profile-statistics-panel ui-g-4" style="">
                                 <span class="profile-statistics" >Personal data</span>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Date of birth</div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.dateOfBirth}" /></div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.dateofbirth}"/></div>
+                                    <div class="stats-title" style="margin: 10px;">
+                                        <h:outputText value="#{yourDetailedInfoBean.dateOfBirth}">
+                                            <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                                        </h:outputText>
+                                    </div>
                                 </div>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Address</div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.address}"/></div>
                                     <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.address}" /></div>
                                 </div>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Profession</div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.profession}"/></div>
                                     <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.userProfession}" /></div>
                                 </div>
                             </div>
                             <div class="profile-statistics-panel ui-g-4">
-                                <span class="profile-statistics">Account data</span>
+                                <span class="profile-statistics"><h:outputText value="#{msg.account} #{msg.data}"/></span>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Email</div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.email_address}"/></div>
                                     <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.email}" /></div>
                                 </div>
                             </div>
 
                             <div class="profile-statistics-panel ui-g-4">
-                                <span class="profile-statistics">Student data</span>
+                                <span class="profile-statistics"><h:outputText value="#{msg.student} #{msg.data}"/></span>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Student ID</div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.student_id}"/></div>
                                     <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.studentId}" /></div>
                                 </div>
 
                                 <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;">Organisation</div>
+                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.organization}"/></div>
                                     <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourDetailedInfoBean.userOrganisation}" /></div>
                                 </div>
                             </div>

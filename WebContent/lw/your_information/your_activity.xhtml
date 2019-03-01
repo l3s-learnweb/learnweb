@@ -38,20 +38,22 @@
             </f:facet>
 
             <p:column>
-                <f:facet name="header">Action type</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.action} #{msg.type}"/></f:facet>
                 <h:outputText value="#{action.action}"/>
             </p:column>
             <p:column>
-                <f:facet name="header">Action description</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.action} #{msg.description}"/></f:facet>
                 <h:outputText escape="false" value="#{action.description}"/>
             </p:column>
             <p:column>
-                <f:facet name="header">Group</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.group}"/></f:facet>
                 <a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{action.groupId}"><h:outputText value="#{yourActivityBean.groupTitles[action.groupId]}"/></a>
             </p:column>
             <p:column>
-                <f:facet name="header">Action date</f:facet>
-                <h:outputText value="#{action.date}"/>
+                <f:facet name="header"><h:outputText value="#{msg.action} #{msg.date}"/></f:facet>
+                <h:outputText value="#{action.date}">
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
         </p:dataTable>
     </h:form>

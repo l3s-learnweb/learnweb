@@ -6,7 +6,6 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -41,7 +40,6 @@ public class YourActivityBean extends ApplicationBean implements Serializable
 
         this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
         for(LogEntry action: userActions){
-            //action.setDescription(Jsoup.parse(action.getDescription()).text());
             switch(action.getGroupId()){
                 // general action which has no group assigned
                 case 0:

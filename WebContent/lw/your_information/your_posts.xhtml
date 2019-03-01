@@ -43,7 +43,7 @@
             </p:column>
 
             <p:column exportFunction="#{post.getText()}">
-                <f:facet name="header">Text</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.text}"/></f:facet>
                 <h:outputText value="#{post.text}"/>
             </p:column>
 
@@ -53,18 +53,22 @@
             </p:column>
 
             <p:column>
-                <f:facet name="header">Category</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.category}"/></f:facet>
                 <h:outputText value="#{post.category}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Date posted</f:facet>
-                <h:outputText value="#{post.date}"/>
+                <f:facet name="header"><h:outputText value="#{msg.posted_on}"/></f:facet>
+                <h:outputText value="#{post.date}">
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Date last edited</f:facet>
-                <h:outputText value="#{post.lastEditDate}"/>
+                <f:facet name="header"><h:outputText value="#{msg.last_edited}"/></f:facet>
+                <h:outputText value="#{post.lastEditDate}">
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
         </p:dataTable>
     </h:form>

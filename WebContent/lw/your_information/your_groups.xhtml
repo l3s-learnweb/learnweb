@@ -48,37 +48,37 @@
             </p:column>
 
             <p:column>
-                <f:facet name="header">Member count</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.members} #{msg.count}"/></f:facet>
                 <h:outputText value="#{group.memberCount}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Category</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.category}"/></f:facet>
                 <h:outputText value="#{group.categoryTitle}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Description</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.description}"/></f:facet>
                 <h:outputText value="#{group.description}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Leader</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.leader}"/></f:facet>
                 <h:outputText value="#{group.leader.fullName}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Resources count</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.resources} #{msg.count}"/></f:facet>
                 <h:outputText value="#{group.resourcesCount}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Language</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.language}"/></f:facet>
                 <h:outputText value="#{group.language}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Metadata</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.metadata}"/></f:facet>
                 <h:outputText value="#{group.metadata1}"/>
             </p:column>
         </p:dataTable>

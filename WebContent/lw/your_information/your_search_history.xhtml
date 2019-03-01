@@ -13,7 +13,7 @@
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      tableStyle="table-layout: auto">
             <f:facet name="header">
-                Search history
+                <h:outputText value="#{msg.search_history}"/>
             </f:facet>
 
             <f:facet name="{Exporters}">
@@ -36,16 +36,18 @@
             </f:facet>
 
              <p:column>
-                <f:facet name="header">Query text</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.query} #{msg.text}"/></f:facet>
                 <h:outputText value="#{query.query}"/>
             </p:column>
             <p:column>
-                <f:facet name="header">Service</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.service}"/></f:facet>
                 <h:outputText value="#{query.service}"/>
             </p:column>
             <p:column>
-                <f:facet name="header">Date</f:facet>
-                <h:outputText value="#{query.timestamp}"/>
+                <f:facet name="header"><h:outputText value="#{msg.date}"/></f:facet>
+                <h:outputText value="#{query.timestamp}">
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
         </p:dataTable>
     </h:form>

@@ -30,28 +30,30 @@
             </f:facet>
 
             <p:column>
-                <f:facet name="header">Title</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.title}"/></f:facet>
                 <h:outputText value="#{message.title}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Name</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.name}"/></f:facet>
                 <h:outputText value="#{message.text}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Received from</f:facet>
-                <h:outputText value="#{message.fromUser.realUsername}"/>
+                <f:facet name="header"><h:outputText value="#{target_user_category_msg}"/></f:facet>
+                <h:outputText value="#{which_messages}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Seen</f:facet>
+                <f:facet name="header"><h:outputText value="#{msg.seen}"/></f:facet>
                 <h:outputText value="#{message.seen}"/>
             </p:column>
 
             <p:column>
-                <f:facet name="header">Date</f:facet>
-                <h:outputText value="#{message.time}"/>
+                <f:facet name="header"><h:outputText value="#{msg.date}"/></f:facet>
+                <h:outputText value="#{message.time}">
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                </h:outputText>
             </p:column>
         </p:dataTable>
     </h:form>

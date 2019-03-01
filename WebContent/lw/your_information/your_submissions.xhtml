@@ -1,7 +1,8 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Submissions" />
@@ -15,10 +16,12 @@
                     <span class="ui-panel-title"><h:outputText value="#{submission.title}"/></span>
                 </div>
                 <div id="basic_content" class="ui-panel-content ui-widget-content" style="">
-                    <div>Description: <h:outputText value="#{submission.description}"/></div>
-                    <div>Open date: <h:outputText value="#{submission.openDatetime}"/></div>
-                    <div>Close date: <h:outputText value="#{submission.closeDatetime}"/></div>
+                    <div>Description: <h:outputText value="#{submission.description}"></h:outputText></div>
+                    <div>Open date: <h:outputText value="#{submission.openDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" /></h:outputText></div>
+                    <div>Close date: <h:outputText value="#{submission.closeDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" /></h:outputText></div>
                     <div>Course: <h:outputText value="#{submission.course.title}"/></div>
+
+                    <br/>
 
                     <ui:decorate template="templates/resources_table_skeletton.xhtml">
                         <ui:param name="resources" value="#{submission.submittedResources}"></ui:param>

@@ -36,22 +36,22 @@
 	            </f:facet>
 	
 	            <p:column>
-	                <f:facet name="header">Name</f:facet>
+	                <f:facet name="header"><h:outputText value="#{msg.name}"/></f:facet>
 	                <h:outputText value="#{course.title}"/>
 	            </p:column>
 	
 	            <p:column>
-	                <f:facet name="header">Member count</f:facet>
+	                <f:facet name="header"><h:outputText value="#{msg.members} #{msg.count}"/></f:facet>
 	                <h:outputText value="#{course.memberCount}"/>
 	            </p:column>
 	
 	            <p:column>
-	                <f:facet name="header">Organisation</f:facet>
+	                <f:facet name="header"><h:outputText value="#{msg.organization}"/></f:facet>
 	                <h:outputText value="#{course.organisation.title}"/>
 	            </p:column>
 	
 	            <p:column>
-	                <f:facet name="header">Welcome message</f:facet>
+	                <f:facet name="header"><h:outputText value="#{msg.welcome_message}"/></f:facet>
 	                <h:outputText value="#{course.welcomeMessage}"/>
 	            </p:column>
 	        </p:dataTable>
