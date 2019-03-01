@@ -64,7 +64,7 @@ public class GlossaryXLSParser extends GlossaryBeanNEW
                 isValid = false;
             }
         } catch(Exception e){
-            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Glossary xls is not v"));
+            addMessage(FacesMessage.SEVERITY_ERROR, getLocaleMessage("Error during parsing glossary xls"));
             setKeepMessages();
             //log.error("Error during parsing glossary xls", e);
             //addErrorMessage(e);
@@ -116,8 +116,9 @@ public class GlossaryXLSParser extends GlossaryBeanNEW
                     }
                     else
                     {
-                        //TODO: save currentGlossaryTerm
+                        glossaryEntries.add(currentGlossaryEntry);
 
+                        currentGlossaryEntry = new GlossaryEntry();
                         currentGlossaryEntry.setTopicOne(topic1);
                         currentGlossaryEntry.setTopicTwo(topic2);
                         currentGlossaryEntry.setTopicThree(topic3);
@@ -140,9 +141,10 @@ public class GlossaryXLSParser extends GlossaryBeanNEW
                     }
                     // don't save anything until we are sure that the parser works as expected getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
                 }
-                addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
-                setKeepMessages();
             }
+            glossaryEntries.add(currentGlossaryEntry);
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
+            setKeepMessages();
         }
         catch(Exception e)
         {
