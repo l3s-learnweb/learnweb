@@ -37,9 +37,14 @@
                 </h:panelGroup>
             </f:facet>
 
+            <p:column>
+                <f:facet name="header">Forum thread</f:facet>
+                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{yourPostsBean.postThreadTopics[post.topicId]}"/></a>
+            </p:column>
+
             <p:column exportFunction="#{post.getText()}">
                 <f:facet name="header">Text</f:facet>
-                <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{post.text}"/></a>
+                <h:outputText value="#{post.text}"/>
             </p:column>
 
             <p:column styleClass="display-none">

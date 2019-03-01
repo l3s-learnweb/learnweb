@@ -1,6 +1,8 @@
 package de.l3s.learnweb.yourinformation;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.User;
@@ -11,7 +13,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * YourActivityBean is responsible for displaying user activity on site.
@@ -24,12 +28,7 @@ public class YourActivityBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(YourActivityBean.class);
 
     private List<LogEntry> userActions;
-    private final static Action[] filter = new Action[] {
-            Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document,
-            Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader, Action.group_changing_restriction,
-            Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving,
-            Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.changing_office_resource,
-            Action.group_removing_resource };
+    private Map<Integer, String> groupTitles;
 
     public YourActivityBean() throws SQLException
     {
@@ -38,14 +37,31 @@ public class YourActivityBean extends ApplicationBean implements Serializable
             // when not logged in
             return;
 
-        this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), filter, 1000);
+        final GroupManager groupManager = this.getLearnweb().getGroupManager();
+        groupTitles = new HashMap<>();
+
+        this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
         for(LogEntry action: userActions){
             action.setDescription(Jsoup.parse(action.getDescription()).text());
+            switch(action.getGroupId()){
+                // general action which has no group assigned
+                case 0:
+                    groupTitles.put(action.getGroupId(),"");
+                    break;
+                default:
+                    groupTitles.put(action.getGroupId(), groupManager.getGroupById(action.getGroupId()).getTitle());
+                    break;
+            }
         }
     }
 
     public List<LogEntry> getUserActions()
     {
         return userActions;
+    }
+
+    public Map<Integer, String> getGroupTitles()
+    {
+        return groupTitles;
     }
 }

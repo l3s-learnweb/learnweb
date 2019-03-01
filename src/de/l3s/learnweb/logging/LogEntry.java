@@ -202,6 +202,38 @@ public class LogEntry implements Serializable
             description = usernameLink + UtilBean.getLocaleMessage("log_add_folder", params);
             break;
 
+        case adding_resource_metadata:
+           description = usernameLink + UtilBean.getLocaleMessage("log_add_resource_metadata", params) + resourceTitle;
+           break;
+
+        case login:
+           description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
+           break;
+
+        case changing_profile:
+            description = usernameLink + UtilBean.getLocaleMessage("log_change_profile", params);
+            break;
+
+        case submission_view_resource:
+            description = usernameLink + UtilBean.getLocaleMessage("log_submission_view_resource", params);
+            break;
+
+        case submission_submitted:
+            description = usernameLink + UtilBean.getLocaleMessage("log_submission_submit", params);
+            break;
+
+        case opening_folder:
+            description = usernameLink + UtilBean.getLocaleMessage("log_open_folder", params);
+            break;
+
+        case register:
+            description = usernameLink + UtilBean.getLocaleMessage("log_register", params);
+            break;
+
+        case logout:
+            description = usernameLink + UtilBean.getLocaleMessage("log_logout", params);
+           break;
+
         default:
             description = "no message for action " + action.name(); // should never happen;
         }

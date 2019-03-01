@@ -1,4 +1,5 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html">
 
@@ -6,32 +7,25 @@
 <ui:param name="pageTitle" value="Your Submissions" />
 
 <ui:define name="content">
-    <h:form>
-        <ui:repeat value="#{yourSubmissionsBean.userSubmissions}" var="submission">
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Open date</th>
-                    <th>Close date</th>
-                    <th>Course</th>
-                </tr>
-                <tr>
-                    <td><h:outputText value="#{submission.title}"/></td>
-                    <td><h:outputText value="#{submission.description}"/></td>
-                    <td><h:outputText value="#{submission.openDatetime}"/></td>
-                    <td><h:outputText value="#{submission.closeDatetime}"/></td>
-                    <td><h:outputText value="#{submission.course.title}"/></td>
-                </tr>
-            </table>
+    <ui:repeat value="#{yourSubmissionsBean.userSubmissions}" var="submission">
 
-            <ui:include src="templates/resources_table_skeletton.xhtml">
-                <ui:param name="listOfResources" value="#{submission.submittedResources}"></ui:param>
-            </ui:include>
 
-            <hr/>
-        </ui:repeat>
-    </h:form>
+            <div class="ui-panel ui-widget ui-widget-content ui-corner-all" data-widget="widget_basic">
+                <div id="basic_header" class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
+                    <span class="ui-panel-title"><h:outputText value="#{submission.title}"/></span>
+                </div>
+                <div id="basic_content" class="ui-panel-content ui-widget-content" style="">
+                    <div>Description: <h:outputText value="#{submission.description}"/></div>
+                    <div>Open date: <h:outputText value="#{submission.openDatetime}"/></div>
+                    <div>Close date: <h:outputText value="#{submission.closeDatetime}"/></div>
+                    <div>Course: <h:outputText value="#{submission.course.title}"/></div>
+
+                    <ui:decorate template="templates/resources_table_skeletton.xhtml">
+                        <ui:param name="resources" value="#{submission.submittedResources}"></ui:param>
+                    </ui:decorate>
+                </div>
+            </div>
+
+    </ui:repeat>
 </ui:define>
 </ui:composition>
