@@ -603,7 +603,10 @@ public class UserBean implements Serializable
         {
             if(url.startsWith("https://waps.io") || url.startsWith("http://waps.io"))
                 return url;
-            return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
+            return "http://waps.io/open?c=2" +
+                    "&u=" + StringHelper.urlEncode(url) +
+                    "&i=" + user.getId() +
+                    "&t=" + Learnweb.getInstance().getProperties().getProperty("tracker.key");
         }
 
     }
