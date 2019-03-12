@@ -7,13 +7,19 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
 import de.l3s.learnweb.user.UserManager;
+import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserManager;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +43,9 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date startDate;
     private Date endDate;
     private User selectedUser;
-    private List<User> selectedUsers;
+    private  boolean rendered;
+    private  boolean multiple;
+    private String radioVal;
     private List<User> defaultUsersList;
     private List<Integer> selectedUsersIds;
     private GlossaryDashboardManager dashboardManager;
@@ -61,8 +69,58 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private BarChartModel proxySourcesChart;
     private List<Resource> glossaryResources;
 
+    public boolean getMultiple(){
+        return  multiple;
+    }
+
+    public void  setMultiple( boolean multiple){
+        this.multiple=multiple;
+    }
+    public  boolean getRendered(){
+        return rendered;
+    }
+
+    public void setRendered(final boolean rendered)
+    {
+        this.rendered = rendered;
+    }
+
+    public void renderCharts() {
+
+        this.setRendered(true);
+    }
+
     public GlossaryDashboardUsersBean()
     {
+    }
+
+
+    public String getRadioVal()
+    {
+        return radioVal;
+    }
+
+    public void setRadioVal(String radioVal)
+    {
+        this.radioVal = radioVal;
+    }
+
+    public void radioValValue()
+    {
+        PrimeFaces.current().ajax().addCallbackParam("radioVal", radioVal);
+    }
+    public  void checkMultiple(){
+        if (this.getSelectedUsersIds().size()<10){
+            if(!this.getMultiple()){
+                this.setMultiple(true);
+            }
+        }
+        if(this.getSelectedUsersIds().size()>10){
+            if(this.getMultiple()){
+                this.setMultiple(false);
+            }
+        }
+        PrimeFaces.current().ajax().addCallbackParam("selectedUsersCount", this.getSelectedUsersIds().size());
     }
 
     public void onLoad() throws SQLException
@@ -87,19 +145,36 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
         selectedUsersIds = Collections.singletonList(selectedUser.getId());
-        selectedUsers=getUsersList();
         dashboardManager = new GlossaryDashboardManager();
 
         fetchDataFromManager();
     }
 
 
-
-    public List<User> getDefaultUsersList(){
+    public List<User> getDefaultUsersList()
+    {
         return defaultUsersList;
     }
-    public void setDefaultUsersList(List<User> DefaultUsersList){
-        this.defaultUsersList=DefaultUsersList;
+
+    public void setDefaultUsersList() throws SQLException
+    {   List<User> users = new ArrayList<>();
+        List<Integer> usersIdsFromOrganisation = null;
+        try
+        {
+            usersIdsFromOrganisation = getUser().getOrganisation().getUserIds();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        if (usersIdsFromOrganisation != null && usersIdsFromOrganisation.size() > 0) {
+            UserManager userManager = getLearnweb().getUserManager();
+            for(int userId : usersIdsFromOrganisation)
+            {
+                users.add(userManager.getUser(userId));
+            }
+        }
+        this.defaultUsersList = users;
     }
 
     public List<Group> getGroups() throws SQLException
@@ -150,6 +225,7 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
+
     public Date getEndDate()
     {
         return endDate;

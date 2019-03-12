@@ -1,339 +1,373 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-    <ui:define name="metadata">
-        <f:metadata>
-            <f:viewAction action="#{glossaryDashboardBean.onLoad}"/>
-        </f:metadata>
-    </ui:define>
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewAction action="#{glossaryDashboardBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="Dashboard"/>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="Dashboard"/>
 
-    <ui:define name="content">
-        <div class="page-header">
-            <h1>
-                Glossary
-            </h1>
-        </div>
+<ui:define name="content">
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
+    <div class="page-header">
+        <h1>
+            Glossary
+        </h1>
+    </div>
+    <p:ajaxStatus>
         <h:panelGroup id="container">
-        <div class="form">
-            <div class="p-grid">
-                <div class="p-col-12 no-padding-bottom">
-                    <div class="p-grid">
+            <div class="form">
+                <div class="p-grid">
+                    <div class="p-col-12 no-padding-bottom">
+                        <div class="p-grid">
+                            <p:blockUI id="block" block="selectedUsers" widgetVar="buiForUsers"/>
+                            <p:blockUI id="block1" block="selectedGroups" widgetVar="buiForGroups"/>
 
 
-                        <div class="p-col no-padding">
+                            <div class="card card-w-title">
+                                <h:panelGroup id="dashboardOptions" styleClass="dashboard"
+                                              layout="block" style="display: flex;flex-direction: row">
+                                    <h:form id="myFormId">
+                                        <p:selectOneRadio layout="grid" columns="1" id="myRadio" required="true"
+                                                          value="#{glossaryDashboardUsersBean.radioVal}">
+                                            <p:ajax id="ajaxRadio" global="false" oncomplete="radioValChanged(xhr, status, args)"
+                                                    event="change"
+                                                    listener="#{glossaryDashboardUsersBean.radioValValue()}"/>
+                                            <f:selectItem itemLabel="Users" itemValue="Users"/>
+                                            <f:selectItem itemLabel="Groups" itemValue="Groups"/>
+                                        </p:selectOneRadio>
+                                    </h:form>
+
+                                    <p:panel id="selectedUsers">
+                                        <h:form styleClass="p-col-6" id="usersForms">
+                                            <p:selectCheckboxMenu panelStyleClass="max-height: 150px; max-widht:100%" id="usersSelect1"
+                                                                  multiple="#{glossaryDashboardUsersBean.multiple}"
+                                                                  value="#{glossaryDashboardUsersBean.selectedUsersIds}" var="user"
+                                                                  itemValue="#{user.id}"
+                                                                  itemLabel="#{user.username}" label="Users"
+                                                                  filter="true" filterMatchMode="startsWith">
+                                                <p:ajax global="false" listener="#{glossaryDashboardUsersBean.checkMultiple()}"/>
+                                                <f:selectItems value="#{glossaryDashboardUsersBean.defaultUsersList}" var="user"
+                                                               itemValue="#{user.id}"
+                                                               itemLabel="#{user.username}"/>
+
+                                            </p:selectCheckboxMenu>
+                                            <div class="p-grid ui-fluid">
+                                                <div class="p-col-12">
+                                                    <div class="ui-inputgroup">
+                                                        <p:outputLabel for="dateStart1"/>
+                                                        <p:calendar id="dateStart1" var="date" value="#{glossaryDashboardBean.startDate}"
+                                                                    showOn="button"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="p-col-12">
+                                                    <div class="ui-inputgroup">
+                                                        <p:outputLabel for="dateEnd1"/>
+                                                        <p:calendar id="dateEnd1" var="date" value="#{glossaryDashboardBean.endDate}"
+                                                                    showOn="button"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="p-col-12 auto-button">
+                                                    <!--ui-inputgroup-->
+                                                    <p:commandButton value="Update" update="container"
+                                                                     action="#{glossaryDashboardBean.cleanAndUpdateStoredData()}"
+                                                                     icon="ui-icon-check">
+                                                        <p:ajax update="conceptsTermsPanel actibityTypesPanel sourcePanel glossaryPanel InteractionsPanel fieldsPanel"
+                                                                listener="#{glossaryDashboardUsersBean.renderCharts}"/>
+                                                    </p:commandButton>
+                                                </div>
+                                            </div>
+                                        </h:form>
+                                    </p:panel>
+                                    <p:panel id="selectedGroups">
+                                        <h:form styleClass="p-col-6" id="dateForm">
+                                            <p:selectCheckboxMenu id="usersSelect" label="Groups"
+                                                                  filter="true"
+                                                                  filterMatchMode="startsWith">
+                                                <f:selectItems
+                                                        value="#{glossaryDashboardUsersBean.getGroups()}"/>
+                                            </p:selectCheckboxMenu>
+                                            <div class="p-grid ui-fluid">
+                                                <div class="p-col-12">
+                                                    <div class="ui-inputgroup">
+                                                        <p:outputLabel for="dateStart"/>
+                                                        <p:calendar id="dateStart"
+                                                                    value="#{glossaryDashboardBean.startDate}"
+                                                                    showOn="button"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="p-col-12">
+                                                    <div class="ui-inputgroup">
+                                                        <p:outputLabel for="dateEnd"/>
+                                                        <p:calendar id="dateEnd"
+                                                                    value="#{glossaryDashboardBean.endDate}"
+                                                                    showOn="button"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="p-col-12 auto-button">
+                                                    <!--ui-inputgroup-->
+                                                    <p:commandButton value="Update"
+                                                                     update="@(growl)"
+                                                                     icon="ui-icon-check"/>
+                                                </div>
+                                            </div>
+                                        </h:form>
+                                    </p:panel>
+
+                                </h:panelGroup>
+                            </div>
+                            <p:outputPanel id="conceptsTermsPanel">
+                                <h:panelGrid style="width:100%"  rendered="#{glossaryDashboardUsersBean.rendered}">
+                                    <div class="p-col no-padding-top">
+                                        <p:panel header="Total Concepts">
+                                            <f:facet name="actions">
+                                                <p:button id="totalConcepts"
+                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                          icon="ui-icon-help" onclick="return false;"/>
+                                                <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
+                                            </f:facet>
+                                            <div class="count">
+                                                <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                    <div class="p-col no-padding-top">
+                                        <p:panel header="Total Terms">
+                                            <f:facet name="actions">
+                                                <p:button id="totalTerms"
+                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                          icon="ui-icon-help" onclick="return false;"/>
+                                                <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
+                                            </f:facet>
+                                            <div class="count">
+                                                <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </h:panelGrid>
+                            </p:outputPanel>
+
+
                             <div class="p-col-12">
                                 <div class="p-grid">
-                                    <div class="p-col-5">
-
-                                        <div class="card card-w-title">
-                                            <div class="center-header user-activities" id="group_header">
-                                                <h2>Users' Activities</h2>
-                                            </div>
-
-                                            <h:panelGroup id="dashboardOptions"  styleClass="dashboard" layout="block">
-
-                                                <div class="p-grid ui-fluid">
-                                                    <p:panelGrid columns="2" layout="grid">
-                                                    <h:form styleClass="p-col-6" id="dateForm1">
-                                                        <p:selectCheckboxMenu id="usersSelect1" value="#{glossaryDashboardUsersBean.selectedUsersIds}" var="user"  itemValue="#{user.id}" itemLabel="#{user.username}"   label="Users"
-                                                                              filter="true" filterMatchMode="startsWith" >
-                                                            <f:selectItems value="#{glossaryDashboardUsersBean.defaultUsersList}" var="user"  itemValue="#{user.id}" itemLabel="#{user.username}" />
-                                                        </p:selectCheckboxMenu>
-                                                        <div class="p-grid ui-fluid">
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateStart1"/>
-                                                                    <p:calendar id="dateStart1" var="date" value="#{glossaryDashboardBean.startDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateEnd1"/>
-                                                                    <p:calendar id="dateEnd1" var="date" value="#{glossaryDashboardBean.endDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="p-col-12 auto-button">
-                                                                <!--ui-inputgroup-->
-                                                                <p:commandButton value="Update" update="container"
-                                                                                 action="#{glossaryDashboardBean.cleanAndUpdateStoredData()}"
-                                                                                 icon="ui-icon-check"/>
-                                                            </div>
-                                                        </div>
-                                                    </h:form>
-                                                    <h:form styleClass="p-col-6" id="dateForm">
-                                                        <p:selectCheckboxMenu id="usersSelect"   label="Groups"
-                                                                              filter="true" filterMatchMode="startsWith">
-                                                            <f:selectItems value="#{glossaryDashboardUsersBean.getGroups()}" />
-                                                        </p:selectCheckboxMenu>
-                                                        <div class="p-grid ui-fluid">
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateStart"/>
-                                                                    <p:calendar id="dateStart" value="#{glossaryDashboardBean.startDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateEnd"/>
-                                                                    <p:calendar id="dateEnd" value="#{glossaryDashboardBean.endDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="p-col-12 auto-button">
-                                                                <!--ui-inputgroup-->
-                                                                <p:commandButton value="Update" update="@(growl)"
-                                                                                 icon="ui-icon-check"/>
-                                                            </div>
-                                                        </div>
-                                                    </h:form>
-                                                    </p:panelGrid>
-                                                </div>
-                                            </h:panelGroup>
-
-
-                                        </div>
-                                        <div class="p-grid margin-top">
-
-                                            <div class="p-col no-padding-top">
-                                                <h:form id="otherform">
-                                                <p:panel header="Total Concepts">
-                                                    <f:facet name="actions">
-                                                        <p:button id="totalConcepts" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                                        <p:tooltip for="totalConcepts" value="Concept - a general notion" />
-                                                    </f:facet>
-                                                    <div class="count">
-                                                        <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
-                                                    </div>
-                                                </p:panel>
-                                                </h:form>
-                                            </div>
-                                            <div class="p-col no-padding-top">
-                                                <h:form id="otherform1">
-                                                <p:panel header="Total Terms">
-                                                    <f:facet name="actions">
-                                                        <p:button id="totalTerms" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                                        <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept" />
-                                                    </f:facet>
-                                                    <div class="count">
-                                                        <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
-                                                    </div>
-                                                </p:panel>
-                                                </h:form>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="p-col">
-
+                                    <div class="p-col" style="width: 100%">
                                         <div>
-                                            <p:panel id="chart_barModel" header="Users' Activity types">
-                                                <f:facet name="actions">
-                                                    <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                                    <p:tooltip for="userActivityTypes">
-                                                        <h:outputText value="Total number of interactions grouped by categories:" escape="false" />
-                                                        <br />
-                                                        <h:outputText value="Glossary - actions in the glossary (create, add, delete, edit)" escape="false" />
-                                                        <br />
-                                                        <h:outputText value="Search - searching in a group resources or categories" escape="false" />
-                                                        <br />
-                                                        <h:outputText value="System - log in and log out" escape="false" />
-                                                        <br />
-                                                        <h:outputText value="Resource - interactions with resources (download, delete, add, tagging, rating, commenting)" escape="false" />
-                                                        <br />
-                                                    </p:tooltip>
-                                                </f:facet>
-                                                <p:chart type="bar" model="#{glossaryDashboardBean.usersActivityTypesChart}"
-                                                         xaxisAngle="60" style="height:350px" responsive="true"/>
-                                            </p:panel>
+                                            <p:outputPanel id="actibityTypesPanel">
+                                                <p:panel id="chart_barModel" header="Users' Activity types"
+                                                         rendered="#{glossaryDashboardUsersBean.rendered}">
+                                                    <f:facet name="actions">
+                                                        <p:button id="userActivityTypes"
+                                                                  styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                                  icon="ui-icon-help" onclick="return false;"/>
+                                                        <p:tooltip for="userActivityTypes">
+                                                            <h:outputText value="Total number of interactions grouped by categories:" escape="false"/>
+                                                            <br/>
+                                                            <h:outputText value="Glossary - actions in the glossary (create, add, delete, edit)"
+                                                                          escape="false"/>
+                                                            <br/>
+                                                            <h:outputText value="Search - searching in a group resources or categories"
+                                                                          escape="false"/>
+                                                            <br/>
+                                                            <h:outputText value="System - log in and log out" escape="false"/>
+                                                            <br/>
+                                                            <h:outputText
+                                                                    value="Resource - interactions with resources (download, delete, add, tagging, rating, commenting)"
+                                                                    escape="false"/>
+                                                            <br/>
+                                                        </p:tooltip>
+                                                    </f:facet>
+                                                    <p:chart type="bar" model="#{glossaryDashboardBean.usersActivityTypesChart}"
+                                                             xaxisAngle="60" style="height:350px" responsive="true"/>
+                                                </p:panel>
+                                            </p:outputPanel>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
+
                             <div class="p-col-12 no-padding-top">
                                 <div class="p-grid">
                                     <div class="p-col-5">
-                                        <h:form>
-                                            <p:panel id="chart_barModel_stSources" header="Users' Source">
+
+                                        <p:outputPanel id="sourcePanel">
+                                            <p:panel id="chart_barModel_stSources" header="Users' Source"
+                                                     rendered="#{glossaryDashboardUsersBean.rendered}">
                                                 <f:facet name="actions">
-                                                    <p:button id="usersSourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                                    <p:tooltip for="usersSourcesChart" value="Percentage ratio of visited pages (grouped by categories) by users" />
+                                                    <p:button id="usersSourcesChart"
+                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                              icon="ui-icon-help" onclick="return false;"/>
+                                                    <p:tooltip for="usersSourcesChart"
+                                                               value="Percentage ratio of visited pages (grouped by categories) by users"/>
                                                 </f:facet>
-                                                <p:chart type="pie" model="#{glossaryDashboardBean.usersSourcesChart}" style="height:400px" responsive="true"/>
+                                                <p:chart type="pie" model="#{glossaryDashboardBean.usersSourcesChart}" style="height:400px"
+                                                         responsive="true"/>
                                             </p:panel>
-                                        </h:form>
+                                        </p:outputPanel>
+
                                     </div>
                                     <div class="p-col">
-                                        <h:form>
-                                            <p:panel id="glossary" header="Users' Glossary">
+                                        <p:outputPanel id="glossaryPanel">
+                                            <p:panel id="glossary" header="Users' Glossary" rendered="#{glossaryDashboardUsersBean.rendered}">
                                                 <f:facet name="actions">
-                                                    <p:button id="usersGlossary" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                                    <p:tooltip for="usersGlossary" value="Number of concepts and terms by a user" />
+                                                    <p:button id="usersGlossary"
+                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                              icon="ui-icon-help" onclick="return false;"/>
+                                                    <p:tooltip for="usersGlossary" value="Number of concepts and terms by a user"/>
                                                 </f:facet>
                                                 <p:chart type="bar" model="#{glossaryDashboardBean.usersGlossaryChart}"
                                                          style="height:400px" responsive="true"/>
                                             </p:panel>
-                                        </h:form>
+                                        </p:outputPanel>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
-                <div class="p-col-12 no-padding-top">
-                    <div class="p-grid">
-                        <div class="p-col-12">
-                            <p:panel id="chart_plot_01" header="Interactions">
-                                <f:facet name="actions">
-                                    <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                    <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
-                                </f:facet>
-                                <p:chart type="line" model="#{glossaryDashboardBean.interactionsChart}"
-                                         style="height:300px;" responsive="true"/>
-                            </p:panel>
-                        </div>
-
-                    </div>
-                    <div class="p-grid">
-                        <div class="p-col-12 no-padding-top margin-top">
-                            <h:form>
-                                <p:panel id="fields" header="Fields">
-                                    <f:facet name="actions">
-                                        <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
-                                        <p:tooltip for="fieldsTable" value="The amount of fields that were filled by users" />
-                                    </f:facet>
-
-                                    <h:outputText value="We started to record the 'was pasted' flag on 5.11.2018." styleClass="red" rendered="#{userBean.moderator}" style="display:block; margin:0 0 0.8rem 0;"/>
-
-                                    <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list" emptyMessage="Nothing was found for the users in the date range that you selected.">
-                                        <p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
-                                                  filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                            <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
-                                        </p:column>
-                                        <p:column styleClass="align-right" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
-                                            #{gfs.entries}
-                                        </p:column>
-                                        <p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
-                                            #{gfs.terms}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Pasted Terms</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Pronunciation</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true">
-                                            <f:facet name="header">Pasted Pronunciation</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Acronym</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
-                                            <f:facet name="header">Pasted Acronym</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Phraseology</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
-                                            <f:facet name="header">Pasted Phraseology</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Uses</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Source</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
-                                            <f:facet name="header">AVG %</f:facet>
-                                            <h:outputText value="#{gfs.avg*100}">
-                                                <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
-                                            </h:outputText>%
-                                        </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.totalPastedPct}" sortable="true">
-                                            <f:facet name="header">Total pasted %</f:facet>
-                                            <h:outputText value="#{gfs.totalPastedPct*100}">
-                                                <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
-                                            </h:outputText>%
-                                        </p:column>
-                                    </p:dataTable>
-                                </p:panel>
-                            </h:form>
-                        </div>
-                    </div>
-                    <div class="p-grid">
-
-
-
-                        <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
-
-
-
-
-                            <!--
-                            <div class="ui-g">
-                                <div class="ui-g-12">
-                                    <h:form>
-                                        <p:panel id="summary" header="Summary" style="margin-bottom:20px">
-                                            <h:panelGrid columns="1">
-                                                <p:dataTable var="gs" value="#{glossaryDashboardBean.glossaryStatisticPerUser}"
-                                                             styleClass="countries_list">
-                                                    <p:column headerText="#{msg.username}" sortable="true"
-                                                              sortBy="#{gs.user.username}" filterable="true"
-                                                              filterBy="#{gs.user.username}" filterMatchMode="contains">
-                                                        #{gs.user.username}
-                                                    </p:column>
-
-                                                    <p:column styleClass="align-right" headerText="Sources"
-                                                              sortBy="#{gs.totalReferences}" sortable="true">
-                                                        #{gs.totalReferences}
-                                                    </p:column>
-
-                                                    <p:column styleClass="align-right" headerText="Terms"
-                                                              sortBy="#{gs.totalTerms}" sortable="true">
-                                                        #{gs.totalTerms}
-                                                    </p:column>
-
-                                                    <p:column styleClass="align-right" headerText="Concepts"
-                                                              sortBy="#{gs.totalGlossaries}" sortable="true">
-                                                        #{gs.totalGlossaries}
-                                                    </p:column>
-                                                </p:dataTable>
-                                            </h:panelGrid>
-                                        </p:panel>
-                                    </h:form>
-                                </div>
+                    <div class="p-col-12 no-padding-top">
+                        <div class="p-grid">
+                            <div class="p-col-12">
+                                <p:outputPanel id="InteractionsPanel">
+                                    <p:panel id="chart_plot_01" header="Interactions" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <f:facet name="actions">
+                                            <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                      icon="ui-icon-help" onclick="return false;"/>
+                                            <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day"/>
+                                        </f:facet>
+                                        <p:chart type="line" model="#{glossaryDashboardBean.interactionsChart}"
+                                                 style="height:300px;" responsive="true"/>
+                                    </p:panel>
+                                </p:outputPanel>
                             </div>
-                             -->
-                        </h:panelGroup>
+
+                        </div>
+                        <div class="p-grid">
+                            <div class="p-col-12 no-padding-top margin-top">
+                                <p:outputPanel id="fieldsPanel">
+                                    <p:panel id="fields" header="Fields" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <f:facet name="actions">
+                                            <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                      icon="ui-icon-help" onclick="return false;"/>
+                                            <p:tooltip for="fieldsTable" value="The amount of fields that were filled by users"/>
+                                        </f:facet>
+
+                                        <h:outputText value="We started to record the 'was pasted' flag on 5.11.2018." styleClass="red"
+                                                      rendered="#{userBean.moderator}" style="display:block; margin:0 0 0.8rem 0;"/>
+
+                                        <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
+                                                     var="gfs" styleClass="countries_list"
+                                                     emptyMessage="Nothing was found for the users in the date range that you selected.">
+                                            <p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
+                                                      filterBy="#{gfs.user.username}" filterMatchMode="contains">
+                                                <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
+                                            </p:column>
+                                            <p:column styleClass="align-right" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
+                                                #{gfs.entries}
+                                            </p:column>
+                                            <p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
+                                                #{gfs.terms}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Pasted Terms</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Pronunciation</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}"
+                                                      sortable="true">
+                                                <f:facet name="header">Pasted Pronunciation</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Acronym</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
+                                                <f:facet name="header">Pasted Acronym</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Phraseology</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
+                                                <f:facet name="header">Pasted Phraseology</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Uses</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.terms}" sortable="true">
+                                                <f:facet name="header">Source</f:facet>
+                                                #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
+                                                <f:facet name="header">AVG %</f:facet>
+                                                <h:outputText value="#{gfs.avg*100}">
+                                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                                </h:outputText>%
+                                            </p:column>
+                                            <p:column styleClass="align-right" sortBy="#{gfs.totalPastedPct}" sortable="true">
+                                                <f:facet name="header">Total pasted %</f:facet>
+                                                <h:outputText value="#{gfs.totalPastedPct*100}">
+                                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                                </h:outputText>%
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:panel>
+                                </p:outputPanel>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </h:panelGroup>
+    </p:ajaxStatus>
+    <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="ajaxStatusSeccess()"/>
+    <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+        <p:graphicImage value="/resources/glossary/ajax-loader.gif"/>
+    </p:dialog>
+    <script>
+        $(document).ready(function () {
+            PF('buiForGroups').show();
 
-    </ui:define>
+        });
+
+        function blockSelectPanel(currentRadioState) {
+            if (currentRadioState == "Users") {
+                PF('buiForGroups').show();
+                PF('buiForUsers').hide();
+            }
+            if (currentRadioState == "Groups") {
+                PF('buiForUsers').show()
+                PF('buiForGroups').hide();
+            }
+        }
+
+        function radioValChanged(xhr, status, args) {
+            blockSelectPanel(args.radioVal);
+        }
+
+        function ajaxStatusSeccess() {
+            PF('statusDialog').hide();
+            blockSelectPanel("#{glossaryDashboardUsersBean.getRadioVal()}");
+
+        }
+    </script>
+</ui:define>
+
+
 </ui:composition>
