@@ -35,25 +35,25 @@
 					    <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />
 				    </p:column>
 					
-				    <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+				    <p:column style="width:10%" headerText="#{msg.members}" sortBy="#{course.memberCount}">
 					    <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
 				    </p:column>
 						
-				    <p:column headerText="#{msg.options}" styleClass="options_column">
+				    <p:column style="width:38%" headerText="#{msg.options}" styleClass="options_column column-button">
 					    <f:facet name="header">
 						    #{msg.options}
 					    </f:facet>
 
 					    <h:outputLink value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
 						    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-						    <h:outputText value="#{msg.edit}" />
+							<span><h:outputText value="#{msg.edit}" /></span>
 					    </h:outputLink>
 							
 					    <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
 						update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}"	title="#{msg.delete}"
 						onclick="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">															
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-						<h:outputText value="#{msg.delete}" /> 
+							<span><h:outputText value="#{msg.delete}" /> </span>
 						<p:confirm message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses." />
 					</p:commandLink>
 					
@@ -61,12 +61,13 @@
 						update="@form :growl" rendered="#{userBean.admin}"	
 						onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">																					
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-						<h:outputText value="Anonymise" /> 
+						<span><h:outputText value="Anonymise" /> </span>
 						<p:confirm message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected." />
 					</p:commandLink>
-					
-					    <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
+
+					    <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" alt="user_submissions" title="#{msg['Submission.view_user_submissions']}">
                             <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
+							<span>user_submissions</span>
 					    </h:outputLink>
 				    </p:column>
 			    </p:dataTable>

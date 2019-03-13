@@ -30,7 +30,7 @@
 					</p:column>
 
 
-					<p:column headerText="#{msg.username}" sortBy="#{process.user}">
+					<p:column headerText="#{msg.username}" style="width: 3%;" sortBy="#{process.user}">
 						<h:outputText value="#{process.user}" />
 					</p:column>
 
@@ -62,9 +62,11 @@
 						<h:outputText value="#{process.progress}" />
 					</p:column>
 
-					<p:column  headerText="Terminate">
+					<p:column class="column-button"  headerText="Terminate">
 						<p:commandButton styleClass="btn-as-link" value="terminate"
-							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable"/>
+							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable">
+							<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.edit}" />
+						</p:commandButton>
 					</p:column>
 
 				</p:dataTable>

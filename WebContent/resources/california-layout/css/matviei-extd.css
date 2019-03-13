@@ -399,7 +399,19 @@
     padding: 0;
 }
 
+.main-body .column-button{
+    width: 9%;
+}
 
+.main-body .column-button .ui-c{
+    top: -14px;
+    position: absolute;
+    margin-left: 2px;
+}
+
+.main-body .column-button img{
+    margin-bottom: -3px;
+}
 
 /******************** helper classes **********************************/
 .no-margin-top{
