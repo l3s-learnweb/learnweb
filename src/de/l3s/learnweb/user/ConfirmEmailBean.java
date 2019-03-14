@@ -57,7 +57,7 @@ public class ConfirmEmailBean extends ApplicationBean implements Serializable
         if(user.equals(getConfirmRequiredBean().getLoggedInUser()))
         {
             LoginBean.loginUser(this, user);
-            return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
+            return user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
         }
         return null;
     }
