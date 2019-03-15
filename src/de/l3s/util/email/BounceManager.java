@@ -155,16 +155,12 @@ public class BounceManager extends Observable
             description = "";
         }
 
-        String originalRecipient;
+        String originalRecipient = null;
         Matcher matcherRecipient = originalRecipientPattern.matcher(text);
 
         if(matcherRecipient.find())
         {
             originalRecipient = matcherRecipient.group(2);
-        }
-        else
-        {
-            originalRecipient = "Unknown";
         }
 
         //Adds message to database
