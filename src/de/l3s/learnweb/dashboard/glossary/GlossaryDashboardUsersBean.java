@@ -18,8 +18,11 @@ import org.primefaces.model.chart.PieChartModel;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
+
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
+import scala.Int;
+
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +46,14 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date startDate;
     private Date endDate;
     private User selectedUser;
-    private  boolean rendered;
-    private  boolean multiple;
+    private boolean rendered;
+    private boolean countRendered;
+    private boolean multiple;
     private String radioVal;
     private List<User> defaultUsersList;
     private List<Integer> selectedUsersIds;
     private GlossaryDashboardManager dashboardManager;
-
+    private Integer selectedUsersCount;
     private Integer totalConcepts;
     private Integer totalTerms;
     private Integer totalSources;
@@ -69,14 +73,25 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private BarChartModel proxySourcesChart;
     private List<Resource> glossaryResources;
 
-    public boolean getMultiple(){
-        return  multiple;
+    public boolean getCountRendered(){
+        return  this.countRendered;
     }
 
-    public void  setMultiple( boolean multiple){
-        this.multiple=multiple;
+    public void  setCountRendered(boolean rendered){
+        this.countRendered=rendered;
     }
-    public  boolean getRendered(){
+    public boolean getMultiple()
+    {
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple)
+    {
+        this.multiple = multiple;
+    }
+
+    public boolean getRendered()
+    {
         return rendered;
     }
 
@@ -85,11 +100,25 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         this.rendered = rendered;
     }
 
-    public void renderCharts() {
+    public void renderCharts()
+    {
 
         this.setRendered(true);
     }
 
+    public Integer getSelectedUsersCount()
+    {
+        return this.selectedUsersCount;
+    }
+
+    public void setSelectedUsersCount(Integer count){
+        this.selectedUsersCount=count;
+    }
+
+    public  void setCount(){
+        this.setCountRendered(true);
+        this.setSelectedUsersCount(this.getSelectedUsersIds().size());
+    }
     public GlossaryDashboardUsersBean()
     {
     }
@@ -109,17 +138,9 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     {
         PrimeFaces.current().ajax().addCallbackParam("radioVal", radioVal);
     }
-    public  void checkMultiple(){
-        if (this.getSelectedUsersIds().size()<10){
-            if(!this.getMultiple()){
-                this.setMultiple(true);
-            }
-        }
-        if(this.getSelectedUsersIds().size()>10){
-            if(this.getMultiple()){
-                this.setMultiple(false);
-            }
-        }
+
+    public void checkMultiple()
+    {
         PrimeFaces.current().ajax().addCallbackParam("selectedUsersCount", this.getSelectedUsersIds().size());
     }
 
@@ -157,7 +178,8 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     }
 
     public void setDefaultUsersList() throws SQLException
-    {   List<User> users = new ArrayList<>();
+    {
+        List<User> users = new ArrayList<>();
         List<Integer> usersIdsFromOrganisation = null;
         try
         {
@@ -167,7 +189,8 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         {
             e.printStackTrace();
         }
-        if (usersIdsFromOrganisation != null && usersIdsFromOrganisation.size() > 0) {
+        if(usersIdsFromOrganisation != null && usersIdsFromOrganisation.size() > 0)
+        {
             UserManager userManager = getLearnweb().getUserManager();
             for(int userId : usersIdsFromOrganisation)
             {

@@ -72,6 +72,7 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
             glossaryDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
             glossaryDashboardUsersBean.setRendered(false);
             glossaryDashboardUsersBean.setMultiple(false);
+            glossaryDashboardUsersBean.setCountRendered(false);
             glossaryDashboardUsersBean.setRadioVal("Users");
             glossaryDashboardUsersBean.setDefaultUsersList();
             fetchDataFromManager();
