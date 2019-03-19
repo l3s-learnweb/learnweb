@@ -47,7 +47,6 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date endDate;
     private User selectedUser;
     private boolean rendered;
-    private boolean countRendered;
     private boolean multiple;
     private String radioVal;
     private List<User> defaultUsersList;
@@ -73,13 +72,7 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private BarChartModel proxySourcesChart;
     private List<Resource> glossaryResources;
 
-    public boolean getCountRendered(){
-        return  this.countRendered;
-    }
 
-    public void  setCountRendered(boolean rendered){
-        this.countRendered=rendered;
-    }
     public boolean getMultiple()
     {
         return multiple;
@@ -116,7 +109,6 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     }
 
     public  void setCount(){
-        this.setCountRendered(true);
         this.setSelectedUsersCount(this.getSelectedUsersIds().size());
     }
     public GlossaryDashboardUsersBean()

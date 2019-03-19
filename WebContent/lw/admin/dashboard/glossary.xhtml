@@ -107,7 +107,7 @@
                                                                 <div class="ui-inputgroup">
                                                                     <h:outputText
                                                                             value="Users selected: #{glossaryDashboardUsersBean.selectedUsersCount}"
-                                                                            rendered="#{glossaryDashboardUsersBean.countRendered}"/>
+                                                                            rendered="#{(glossaryDashboardUsersBean.getSelectedUsersCount()==0) ? false:true}"/>
                                                                 </div>
                                                             </div>
                                                             <div class="p-col-12 auto-button">
