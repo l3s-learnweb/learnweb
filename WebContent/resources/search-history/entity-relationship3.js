@@ -9,13 +9,9 @@ $(document).on('click', '.session_block', function(e){
     var sessionId = element.getAttribute("data-sessionid");
     var userId = element.getAttribute("data-userid");
 
-    if (selectedGroupId == undefined) {
-        $('.box ul li').css("background", "#489a83");
-    } else {
-        $('.box1 ul li').css("background", "#848484");
-    }
+	$('.box ul li').css("background", "");
 
-    $(element).parent().css("background", "darkgrey");
+    $(element).parent().css("background", "#8da73d");
     updateKG([
         {name: "session-id", value: sessionId},
         {name: "user-id", value: userId}
