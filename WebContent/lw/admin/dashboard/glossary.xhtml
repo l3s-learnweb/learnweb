@@ -75,9 +75,9 @@
                                                             <p:selectCheckboxMenu id="groupsSelect" label="Groups"
                                                                                   panelStyleClass="max-height: 150px; max-widht:100%"
                                                                                   filter="true"
-                                                                                  filterMatchMode="startsWith">
+                                                                                  filterMatchMode="startsWith" >
                                                                 <f:selectItems
-                                                                        value="#{glossaryDashboardUsersBean.getGroups()}"/>
+                                                                        value="#{glossaryDashboardUsersBean.getGroups()}" />
                                                             </p:selectCheckboxMenu>
                                                         </p:panel>
                                                     </p:outputPanel>
@@ -106,18 +106,17 @@
                                                             <div class="p-col-12">
                                                                 <div class="ui-inputgroup">
                                                                     <h:outputText
-                                                                            value="#{glossaryDashboardUsersBean.selectedUsersCount} SelectedUsers"
+                                                                            value="Users selected: #{glossaryDashboardUsersBean.selectedUsersCount}"
                                                                             rendered="#{glossaryDashboardUsersBean.countRendered}"/>
                                                                 </div>
                                                             </div>
-                                                            <p:separator/>
                                                             <div class="p-col-12 auto-button">
                                                                 <!--ui-inputgroup-->
                                                                 <p:commandButton value="Update" update="container"
                                                                                  action="#{glossaryDashboardBean.cleanAndUpdateStoredData()}"
-                                                                                 icon="ui-icon-check">
+                                                                                 icon="ui-icon-check" disabled="#{(glossaryDashboardUsersBean.getSelectedUsersCount()==0) ? true:false}">
                                                                     <p:ajax update="conceptsTermsPanel actibityTypesPanel sourcePanel glossaryPanel InteractionsPanel fieldsPanel"
-                                                                            listener="#{glossaryDashboardUsersBean.renderCharts}"/>
+                                                                            listener="#{glossaryDashboardUsersBean.renderCharts}" />
                                                                 </p:commandButton>
                                                             </div>
                                                         </div>
