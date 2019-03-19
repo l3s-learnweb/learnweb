@@ -50,9 +50,11 @@
                                                 <p:outputPanel>
                                                     <p:outputPanel id="usersSelectPanel">
                                                         <p:panel>
-                                                            <p:selectCheckboxMenu panelStyleClass="max-height: 150px; max-widht:100%" id="usersSelect"
+                                                            <p:selectCheckboxMenu panelStyleClass="max-height: 150px; max-widht:100%"
+                                                                                  id="usersSelect"
                                                                                   multiple="#{glossaryDashboardUsersBean.multiple}"
-                                                                                  value="#{glossaryDashboardUsersBean.selectedUsersIds}" var="user"
+                                                                                  value="#{glossaryDashboardUsersBean.selectedUsersIds}"
+                                                                                  var="user"
                                                                                   itemValue="#{user.id}"
                                                                                   itemLabel="#{user.username}" label="Users"
                                                                                   filter="true" filterMatchMode="startsWith">
@@ -79,13 +81,14 @@
 
                                                 </p:outputPanel>
 
-                                                <p:outputPanel id="dateAndSubmitPanel">
+                                                <p:outputPanel id="dateAndSubmitPanel" style="width: 300px">
                                                     <p:panel>
                                                         <div class="p-grid">
                                                             <div class="p-col-12">
                                                                 <div class="ui-inputgroup">
                                                                     <p:outputLabel for="dateStart1"/>
-                                                                    <p:calendar id="dateStart1" var="date" value="#{glossaryDashboardBean.startDate}"
+                                                                    <p:calendar id="dateStart1" var="date"
+                                                                                value="#{glossaryDashboardBean.startDate}"
                                                                                 showOn="button"/>
                                                                 </div>
                                                             </div>
@@ -123,36 +126,40 @@
                                 </p:panelGrid>
 
                             </div>
-                            <p:outputPanel id="conceptsTermsPanel">
-                                <h:panelGrid style="width:100%" rendered="#{glossaryDashboardUsersBean.rendered}">
-                                    <div class="p-col no-padding-top">
-                                        <p:panel header="Total Concepts">
-                                            <f:facet name="actions">
-                                                <p:button id="totalConcepts"
-                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                          icon="ui-icon-help" onclick="return false;"/>
-                                                <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
-                                            </f:facet>
-                                            <div class="count">
-                                                <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
-                                            </div>
-                                        </p:panel>
-                                    </div>
-                                    <div class="p-col no-padding-top">
-                                        <p:panel header="Total Terms">
-                                            <f:facet name="actions">
-                                                <p:button id="totalTerms"
-                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                          icon="ui-icon-help" onclick="return false;"/>
-                                                <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
-                                            </f:facet>
-                                            <div class="count">
-                                                <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
-                                            </div>
-                                        </p:panel>
-                                    </div>
-                                </h:panelGrid>
-                            </p:outputPanel>
+
+                                <p:outputPanel id="conceptsTermsPanel" style="display: flex;flex-direction: column; justify-content: center; align-items: center;align-content: center;"  rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <p:outputPanel style="width: 250px">
+                                        <div class="p-col no-padding-top">
+                                            <p:panel header="Total Concepts">
+                                                <f:facet name="actions">
+                                                    <p:button id="totalConcepts"
+                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                              icon="ui-icon-help" onclick="return false;"/>
+                                                    <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
+                                                </f:facet>
+                                                <div class="count">
+                                                    <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
+                                                </div>
+                                            </p:panel>
+                                        </div>
+                                        </p:outputPanel>
+                                        <p:outputPanel style="width: 250px">
+                                        <div class="p-col no-padding-top">
+                                            <p:panel header="Total Terms">
+                                                <f:facet name="actions">
+                                                    <p:button id="totalTerms"
+                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                              icon="ui-icon-help" onclick="return false;"/>
+                                                    <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
+                                                </f:facet>
+                                                <div class="count">
+                                                    <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
+                                                </div>
+                                            </p:panel>
+                                        </div>
+                                        </p:outputPanel>
+                                </p:outputPanel>
+
 
 
                             <div class="p-col-12">
