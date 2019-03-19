@@ -27,8 +27,8 @@
                 <div class="p-grid">
                     <div class="p-col-12 no-padding-bottom">
                         <div class="p-grid">
-                            <p:blockUI id="block" block="sex:usersSelectPanel" widgetVar="buiForUsers"/>
-                            <p:blockUI id="block1" block="sex:groupsSelectPanel" widgetVar="buiForGroups"/>
+                            <p:blockUI id="block" block="usersSelectForm:usersSelectPanel" widgetVar="buiForUsers"/>
+                            <p:blockUI id="block1" block="usersSelectForm:groupsSelectPanel" widgetVar="buiForGroups"/>
 
                             <div class="card card-w-title">
                                 <p:panelGrid columns="2">
@@ -45,7 +45,7 @@
                                         </h:form>
                                     </p:outputPanel>
                                     <p:outputPanel>
-                                        <h:form id="sex">
+                                        <h:form id="usersSelectForm">
                                             <p:panelGrid columns="2">
                                                 <p:outputPanel>
                                                     <p:outputPanel id="usersSelectPanel">
@@ -59,6 +59,9 @@
                                                                                   itemLabel="#{user.username}" label="Users"
                                                                                   filter="true" filterMatchMode="startsWith">
                                                                 <p:ajax global="false" listener="#{glossaryDashboardUsersBean.setCount()}"
+                                                                        update="dateAndSubmitPanel"/>
+                                                                <p:ajax event="toggleSelect" global="false"
+                                                                        listener="#{glossaryDashboardUsersBean.setCount()}"
                                                                         update="dateAndSubmitPanel"/>
                                                                 <f:selectItems value="#{glossaryDashboardUsersBean.defaultUsersList}" var="user"
                                                                                itemValue="#{user.id}"
@@ -127,48 +130,48 @@
 
                             </div>
 
-                                <p:outputPanel id="conceptsTermsPanel" style="display: flex;flex-direction: column; justify-content: center; align-items: center;align-content: center;"  rendered="#{glossaryDashboardUsersBean.rendered}">
-                                        <p:outputPanel style="width: 250px">
-                                        <div class="p-col no-padding-top">
-                                            <p:panel header="Total Concepts">
-                                                <f:facet name="actions">
-                                                    <p:button id="totalConcepts"
-                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                              icon="ui-icon-help" onclick="return false;"/>
-                                                    <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
-                                                </f:facet>
-                                                <div class="count">
-                                                    <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
-                                                </div>
-                                            </p:panel>
-                                        </div>
-                                        </p:outputPanel>
-                                        <p:outputPanel style="width: 250px">
-                                        <div class="p-col no-padding-top">
-                                            <p:panel header="Total Terms">
-                                                <f:facet name="actions">
-                                                    <p:button id="totalTerms"
-                                                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                              icon="ui-icon-help" onclick="return false;"/>
-                                                    <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
-                                                </f:facet>
-                                                <div class="count">
-                                                    <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
-                                                </div>
-                                            </p:panel>
-                                        </div>
-                                        </p:outputPanel>
+                            <p:outputPanel id="conceptsTermsPanel"
+                                           style="display: flex;flex-direction: column; justify-content: center; align-items: center;align-content: center;"
+                                           rendered="#{glossaryDashboardUsersBean.rendered}">
+                                <p:outputPanel style="width: 250px">
+                                    <div class="p-col no-padding-top">
+                                        <p:panel header="Total Concepts">
+                                            <f:facet name="actions">
+                                                <p:button id="totalConcepts"
+                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                          icon="ui-icon-help" onclick="return false;"/>
+                                                <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
+                                            </f:facet>
+                                            <div class="count">
+                                                <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
                                 </p:outputPanel>
-
+                                <p:outputPanel style="width: 250px">
+                                    <div class="p-col no-padding-top">
+                                        <p:panel header="Total Terms">
+                                            <f:facet name="actions">
+                                                <p:button id="totalTerms"
+                                                          styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                          icon="ui-icon-help" onclick="return false;"/>
+                                                <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
+                                            </f:facet>
+                                            <div class="count">
+                                                <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </p:outputPanel>
+                            </p:outputPanel>
 
 
                             <div class="p-col-12">
                                 <div class="p-grid">
                                     <div class="p-col" style="width: 100%">
                                         <div>
-                                            <p:outputPanel id="actibityTypesPanel">
-                                                <p:panel id="chart_barModel" header="Users' Activity types"
-                                                         rendered="#{glossaryDashboardUsersBean.rendered}">
+                                            <p:outputPanel id="actibityTypesPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                                <p:panel id="chart_barModel" header="Users' Activity types">
                                                     <f:facet name="actions">
                                                         <p:button id="userActivityTypes"
                                                                   styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -203,9 +206,8 @@
                                 <div class="p-grid">
                                     <div class="p-col-5">
 
-                                        <p:outputPanel id="sourcePanel">
-                                            <p:panel id="chart_barModel_stSources" header="Users' Source"
-                                                     rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <p:outputPanel id="sourcePanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                            <p:panel id="chart_barModel_stSources" header="Users' Source">
                                                 <f:facet name="actions">
                                                     <p:button id="usersSourcesChart"
                                                               styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -220,8 +222,8 @@
 
                                     </div>
                                     <div class="p-col">
-                                        <p:outputPanel id="glossaryPanel">
-                                            <p:panel id="glossary" header="Users' Glossary" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <p:outputPanel id="glossaryPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                            <p:panel id="glossary" header="Users' Glossary">
                                                 <f:facet name="actions">
                                                     <p:button id="usersGlossary"
                                                               styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -240,8 +242,8 @@
                     <div class="p-col-12 no-padding-top">
                         <div class="p-grid">
                             <div class="p-col-12">
-                                <p:outputPanel id="InteractionsPanel">
-                                    <p:panel id="chart_plot_01" header="Interactions" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                <p:outputPanel id="InteractionsPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                    <p:panel id="chart_plot_01" header="Interactions">
                                         <f:facet name="actions">
                                             <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                                                       icon="ui-icon-help" onclick="return false;"/>
@@ -256,8 +258,8 @@
                         </div>
                         <div class="p-grid">
                             <div class="p-col-12 no-padding-top margin-top">
-                                <p:outputPanel id="fieldsPanel">
-                                    <p:panel id="fields" header="Fields" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                <p:outputPanel id="fieldsPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                    <p:panel id="fields" header="Fields">
                                         <f:facet name="actions">
                                             <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                                                       icon="ui-icon-help" onclick="return false;"/>
