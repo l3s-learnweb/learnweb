@@ -27,111 +27,22 @@
                 <div class="p-grid">
                     <div class="p-col-12 no-padding-bottom">
                         <div class="p-grid">
-                            <p:blockUI id="block" block="usersSelectForm:usersSelectPanel" widgetVar="buiForUsers"/>
-                            <p:blockUI id="block1" block="usersSelectForm:groupsSelectPanel" widgetVar="buiForGroups"/>
 
-                            <div class="card card-w-title">
-                                <p:panelGrid columns="2">
-                                    <p:outputPanel>
-                                        <h:form id="myFormId">
-                                            <p:selectOneRadio layout="grid" columns="1" id="myRadio" required="true"
-                                                              value="#{glossaryDashboardUsersBean.radioVal}">
-                                                <p:ajax id="ajaxRadio" global="false" oncomplete="radioValChanged(xhr, status, args)"
-                                                        event="change"
-                                                        listener="#{glossaryDashboardUsersBean.radioValValue()}"/>
-                                                <f:selectItem itemLabel="Users" itemValue="Users"/>
-                                                <f:selectItem itemLabel="Groups" itemValue="Groups"/>
-                                            </p:selectOneRadio>
-                                        </h:form>
-                                    </p:outputPanel>
-                                    <p:outputPanel>
-                                        <h:form id="usersSelectForm">
-                                            <p:panelGrid columns="2">
-                                                <p:outputPanel>
-                                                    <p:outputPanel id="usersSelectPanel">
-                                                        <p:panel>
-                                                            <p:selectCheckboxMenu panelStyleClass="max-height: 150px; max-widht:100%"
-                                                                                  id="usersSelect"
-                                                                                  multiple="#{glossaryDashboardUsersBean.multiple}"
-                                                                                  value="#{glossaryDashboardUsersBean.selectedUsersIds}"
-                                                                                  var="user"
-                                                                                  itemValue="#{user.id}"
-                                                                                  itemLabel="#{user.username}" label="Users"
-                                                                                  filter="true" filterMatchMode="startsWith">
-                                                                <p:ajax global="false" listener="#{glossaryDashboardUsersBean.setCount()}"
-                                                                        update="dateAndSubmitPanel"/>
-                                                                <p:ajax event="toggleSelect" global="false"
-                                                                        listener="#{glossaryDashboardUsersBean.setCount()}"
-                                                                        update="dateAndSubmitPanel"/>
-                                                                <f:selectItems value="#{glossaryDashboardUsersBean.defaultUsersList}" var="user"
-                                                                               itemValue="#{user.id}"
-                                                                               itemLabel="#{user.username}"/>
+                            <ui:decorate template="templates/setSelectedUsers.xhtml">
+                                <ui:param name="selectedUsersIds" value="#{glossaryDashboardUsersBean.selectedUsersIds}"/>
+                                <ui:param name="defaultUsersList" value="#{glossaryDashboardUsersBean.defaultUsersList}"/>
+                                <ui:param name="groups" value="#{glossaryDashboardUsersBean.getGroups()}"/>
+                                <ui:param name="startDate" value="#{glossaryDashboardBean.startDate}"/>
+                                <ui:param name="endDate" value="#{glossaryDashboardBean.endDate}"/>
+                                <ui:param name="actionForSubmit" value="#{glossaryDashboardBean.cleanAndUpdateStoredData()}" />
+                                <ui:param name="panelsForUpdate" value="conceptsTermsPanel actibityTypesPanel sourcePanel glossaryPanel InteractionsPanel fieldsPanel" />
+                                <ui:param name="selectedUsersIdsSize" value="#{glossaryDashboardUsersBean.getSelectedUsersIds().size()}" />
+                            </ui:decorate>
 
-                                                            </p:selectCheckboxMenu>
-                                                        </p:panel>
-                                                    </p:outputPanel>
-                                                    <p:outputPanel id="groupsSelectPanel">
-                                                        <p:panel>
-                                                            <p:selectCheckboxMenu id="groupsSelect" label="Groups"
-                                                                                  panelStyleClass="max-height: 150px; max-widht:100%"
-                                                                                  filter="true"
-                                                                                  filterMatchMode="startsWith" >
-                                                                <f:selectItems
-                                                                        value="#{glossaryDashboardUsersBean.getGroups()}" />
-                                                            </p:selectCheckboxMenu>
-                                                        </p:panel>
-                                                    </p:outputPanel>
-
-                                                </p:outputPanel>
-
-                                                <p:outputPanel id="dateAndSubmitPanel" style="width: 300px">
-                                                    <p:panel>
-                                                        <div class="p-grid">
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateStart1"/>
-                                                                    <p:calendar id="dateStart1" var="date"
-                                                                                value="#{glossaryDashboardBean.startDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <p:outputLabel for="dateEnd1"/>
-                                                                    <p:calendar id="dateEnd1" var="date" value="#{glossaryDashboardBean.endDate}"
-                                                                                showOn="button"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="p-col-12">
-                                                                <div class="ui-inputgroup">
-                                                                    <h:outputText
-                                                                            value="Users selected: #{glossaryDashboardUsersBean.selectedUsersCount}"
-                                                                            rendered="#{(glossaryDashboardUsersBean.getSelectedUsersCount()==0) ? false:true}"/>
-                                                                </div>
-                                                            </div>
-                                                            <div class="p-col-12 auto-button">
-                                                                <!--ui-inputgroup-->
-                                                                <p:commandButton value="Update" update="container"
-                                                                                 action="#{glossaryDashboardBean.cleanAndUpdateStoredData()}"
-                                                                                 icon="ui-icon-check" disabled="#{(glossaryDashboardUsersBean.getSelectedUsersCount()==0) ? true:false}">
-                                                                    <p:ajax update="conceptsTermsPanel actibityTypesPanel sourcePanel glossaryPanel InteractionsPanel fieldsPanel"
-                                                                            listener="#{glossaryDashboardUsersBean.renderCharts}" />
-                                                                </p:commandButton>
-                                                            </div>
-                                                        </div>
-                                                    </p:panel>
-                                                </p:outputPanel>
-                                            </p:panelGrid>
-                                        </h:form>
-                                    </p:outputPanel>
-                                </p:panelGrid>
-
-                            </div>
 
                             <p:outputPanel id="conceptsTermsPanel"
                                            style="display: flex;flex-direction: column; justify-content: center; align-items: center;align-content: center;"
-                                           rendered="#{glossaryDashboardUsersBean.rendered}">
+                                           rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                 <p:outputPanel style="width: 250px">
                                     <div class="p-col no-padding-top">
                                         <p:panel header="Total Concepts">
@@ -169,7 +80,8 @@
                                 <div class="p-grid">
                                     <div class="p-col" style="width: 100%">
                                         <div>
-                                            <p:outputPanel id="actibityTypesPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                            <p:outputPanel id="actibityTypesPanel"
+                                                           rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                                 <p:panel id="chart_barModel" header="Users' Activity types">
                                                     <f:facet name="actions">
                                                         <p:button id="userActivityTypes"
@@ -205,7 +117,8 @@
                                 <div class="p-grid">
                                     <div class="p-col-5">
 
-                                        <p:outputPanel id="sourcePanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <p:outputPanel id="sourcePanel"
+                                                       rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                             <p:panel id="chart_barModel_stSources" header="Users' Source">
                                                 <f:facet name="actions">
                                                     <p:button id="usersSourcesChart"
@@ -221,7 +134,8 @@
 
                                     </div>
                                     <div class="p-col">
-                                        <p:outputPanel id="glossaryPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                        <p:outputPanel id="glossaryPanel"
+                                                       rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                             <p:panel id="glossary" header="Users' Glossary">
                                                 <f:facet name="actions">
                                                     <p:button id="usersGlossary"
@@ -241,7 +155,8 @@
                     <div class="p-col-12 no-padding-top">
                         <div class="p-grid">
                             <div class="p-col-12">
-                                <p:outputPanel id="InteractionsPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                <p:outputPanel id="InteractionsPanel"
+                                               rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                     <p:panel id="chart_plot_01" header="Interactions">
                                         <f:facet name="actions">
                                             <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -257,7 +172,8 @@
                         </div>
                         <div class="p-grid">
                             <div class="p-col-12 no-padding-top margin-top">
-                                <p:outputPanel id="fieldsPanel" rendered="#{glossaryDashboardUsersBean.rendered}">
+                                <p:outputPanel id="fieldsPanel"
+                                               rendered="#{(glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0 and glossaryDashboardUsersBean.getSelectedUsersIds()!=null) ? true:false}">
                                     <p:panel id="fields" header="Fields">
                                         <f:facet name="actions">
                                             <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -345,30 +261,9 @@
         <p:graphicImage value="/resources/glossary/ajax-loader.gif"/>
     </p:dialog>
     <script>
-        $(document).ready(function () {
-            PF('buiForGroups').show();
-
-        });
-
-        function blockSelectPanel(currentRadioState) {
-            if (currentRadioState == "Users") {
-                PF('buiForGroups').show();
-                PF('buiForUsers').hide();
-            }
-            if (currentRadioState == "Groups") {
-                PF('buiForUsers').show()
-                PF('buiForGroups').hide();
-            }
-        }
-
-        function radioValChanged(xhr, status, args) {
-            blockSelectPanel(args.radioVal);
-        }
 
         function ajaxStatusSeccess() {
             PF('statusDialog').hide();
-            blockSelectPanel("#{glossaryDashboardUsersBean.getRadioVal()}");
-
         }
     </script>
 </ui:define>

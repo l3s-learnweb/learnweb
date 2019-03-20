@@ -46,13 +46,9 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date startDate;
     private Date endDate;
     private User selectedUser;
-    private boolean rendered;
-    private boolean multiple;
-    private String radioVal;
     private List<User> defaultUsersList;
     private List<Integer> selectedUsersIds;
     private GlossaryDashboardManager dashboardManager;
-    private Integer selectedUsersCount;
     private Integer totalConcepts;
     private Integer totalTerms;
     private Integer totalSources;
@@ -71,70 +67,10 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private BarChartModel userFieldsChart;
     private BarChartModel proxySourcesChart;
     private List<Resource> glossaryResources;
-
-
-    public boolean getMultiple()
-    {
-        return multiple;
-    }
-
-    public void setMultiple(boolean multiple)
-    {
-        this.multiple = multiple;
-    }
-
-    public boolean getRendered()
-    {
-        return rendered;
-    }
-
-    public void setRendered(final boolean rendered)
-    {
-        this.rendered = rendered;
-    }
-
-    public void renderCharts()
-    {
-
-        this.setRendered(true);
-    }
-
-    public Integer getSelectedUsersCount()
-    {
-        return this.selectedUsersCount;
-    }
-
-    public void setSelectedUsersCount(Integer count){
-        this.selectedUsersCount=count;
-    }
-
-    public  void setCount(){
-        this.setSelectedUsersCount(this.getSelectedUsersIds().size());
-    }
     public GlossaryDashboardUsersBean()
     {
     }
 
-
-    public String getRadioVal()
-    {
-        return radioVal;
-    }
-
-    public void setRadioVal(String radioVal)
-    {
-        this.radioVal = radioVal;
-    }
-
-    public void radioValValue()
-    {
-        PrimeFaces.current().ajax().addCallbackParam("radioVal", radioVal);
-    }
-
-    public void checkMultiple()
-    {
-        PrimeFaces.current().ajax().addCallbackParam("selectedUsersCount", this.getSelectedUsersIds().size());
-    }
 
     public void onLoad() throws SQLException
     {

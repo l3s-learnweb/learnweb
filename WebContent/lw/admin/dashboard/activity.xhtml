@@ -56,7 +56,7 @@
 										<p class="header_detail no-margin-top">All user interactions</p>
 									</div>
 
-									<!--<h:panelGroup id="dashboardOptions" styleClass="dashboard"
+									<h:panelGroup id="dashboardOptions" styleClass="dashboard"
 												  layout="block">
 										<div class="p-grid">
 											<div class="p-col-3">
@@ -74,7 +74,7 @@
 																<p:commandButton
 																				 actionListener="#{activityDashboardBean.onSubmitSelectedUsers}"
 																				 value="Gather data of selected users" process="@form"
-																				 update=":dashboardMain1 :usersList :growl"
+																				 update="dashboardMain1"
 																				 oncomplete="PF('dlg2').hide();" />
 															</h:form>
 														</p:dialog>
@@ -82,75 +82,7 @@
 												</div>
 											</div>
 										</div>
-									</h:panelGroup>-->
-<!--
-									<h:panelGroup id="dashboardOptions"  styleClass="dashboard" layout="block">
-
-										<div class="p-grid ui-fluid">
-											<p:panelGrid columns="2" layout="grid">
-												<h:form styleClass="p-col-6" id="dateForm1">
-													<p:selectCheckboxMenu id="usersSelect1" value="#{glossaryDashboardUsersBean.selectedUsersIds}" var="user"  itemValue="#{user.id}" itemLabel="#{user.username}"   label="Users"
-																		  filter="true" filterMatchMode="startsWith" >
-														<f:selectItems value="#{glossaryDashboardUsersBean.defaultUsersList}" var="user"  itemValue="#{user.id}" itemLabel="#{user.username}" />
-													</p:selectCheckboxMenu>
-													<div class="p-grid ui-fluid">
-														<div class="p-col-12">
-															<div class="ui-inputgroup">
-																<p:outputLabel for="dateStart1"/>
-																<p:calendar id="dateStart1" var="date" value="#{glossaryDashboardBean.startDate}"
-																			showOn="button"/>
-															</div>
-														</div>
-
-														<div class="p-col-12">
-															<div class="ui-inputgroup">
-																<p:outputLabel for="dateEnd1"/>
-																<p:calendar id="dateEnd1" var="date" value="#{glossaryDashboardBean.endDate}"
-																			showOn="button"/>
-															</div>
-														</div>
-
-														<div class="p-col-12 auto-button">
-															&lt;!&ndash;ui-inputgroup&ndash;&gt;
-															<p:commandButton value="Update" update="container"
-																			 action="#{glossaryDashboardBean.cleanAndUpdateStoredData()}"
-																			 icon="ui-icon-check"/>
-														</div>
-													</div>
-												</h:form>
-												<h:form styleClass="p-col-6" id="dateForm">
-													<p:selectCheckboxMenu id="usersSelect"   label="Groups"
-																		  filter="true" filterMatchMode="startsWith">
-														<f:selectItems value="#{glossaryDashboardUsersBean.getGroups()}" />
-													</p:selectCheckboxMenu>
-													<div class="p-grid ui-fluid">
-														<div class="p-col-12">
-															<div class="ui-inputgroup">
-																<p:outputLabel for="dateStart"/>
-																<p:calendar id="dateStart" value="#{glossaryDashboardBean.startDate}"
-																			showOn="button"/>
-															</div>
-														</div>
-
-														<div class="p-col-12">
-															<div class="ui-inputgroup">
-																<p:outputLabel for="dateEnd"/>
-																<p:calendar id="dateEnd" value="#{glossaryDashboardBean.endDate}"
-																			showOn="button"/>
-															</div>
-														</div>
-
-														<div class="p-col-12 auto-button">
-															&lt;!&ndash;ui-inputgroup&ndash;&gt;
-															<p:commandButton value="Update" update="@(growl)"
-																			 icon="ui-icon-check"/>
-														</div>
-													</div>
-												</h:form>
-											</p:panelGrid>
-										</div>
-									</h:panelGroup>-->
-
+									</h:panelGroup>
 
 
 
@@ -192,7 +124,6 @@
 								</div>
 
 							</div>
-
 							<div class="p-col-12 no-padding">
 
 									<h:panelGroup id="dashboardMain1" styleClass="dashboard"

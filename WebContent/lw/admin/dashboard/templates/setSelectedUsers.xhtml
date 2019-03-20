@@ -1,0 +1,116 @@
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+<p:blockUI block="usersSelectForm:usersSelectPanel" widgetVar="buiForUsers"/>
+<p:blockUI block="usersSelectForm:groupsSelectPanel" widgetVar="buiForGroups"/>
+<p:panelGrid columns="2" style="margin: 10px;">
+    <p:outputPanel>
+        <p:selectOneRadio widgetVar="widgetSorType" layout="grid" columns="1" required="true"
+                          value="Users"
+                          onchange="blockSelectPanel(PF('widgetSorType').getJQ().find(':checked').val());">
+            <f:selectItem itemLabel="Users" itemValue="Users"/>
+            <f:selectItem itemLabel="Groups" itemValue="Groups"/>
+        </p:selectOneRadio>
+    </p:outputPanel>
+    <p:outputPanel>
+        <h:form id="usersSelectForm">
+            <p:panelGrid columns="2">
+                <p:outputPanel>
+                    <p:outputPanel id="usersSelectPanel">
+                        <p:panel>
+                            <p:selectCheckboxMenu style="width: 75px;"
+                                                  value="#{selectedUsersIds}"
+                                                  var="user"
+                                                  itemValue="#{user.id}"
+                                                  itemLabel="#{user.username}" label="Users"
+                                                  filter="true" filterMatchMode="startsWith">
+                                <p:ajax global="false"
+                                        update="dateAndSubmitPanel"/>
+                                <p:ajax event="toggleSelect" global="false"
+                                        update="dateAndSubmitPanel"/>
+                                <f:selectItems value="#{defaultUsersList}" var="user"
+                                               itemValue="#{user.id}"
+                                               itemLabel="#{user.username}"/>
+                            </p:selectCheckboxMenu>
+                        </p:panel>
+                    </p:outputPanel>
+                    <p:outputPanel id="groupsSelectPanel">
+                        <p:panel>
+                            <p:selectCheckboxMenu label="Groups"
+                                                  style="width: 75px;"
+                                                  filter="true"
+                                                  filterMatchMode="startsWith">
+                                <f:selectItems
+                                        value="#{groups}" var="group"
+                                        itemValue="#{group.id}"/>
+                            </p:selectCheckboxMenu>
+                        </p:panel>
+                    </p:outputPanel>
+
+                </p:outputPanel>
+
+                <p:outputPanel id="dateAndSubmitPanel" style="width: 300px">
+                    <p:panel>
+                        <div class="p-grid">
+                            <div class="p-col-12">
+                                <div class="ui-inputgroup">
+                                    <p:outputLabel for="dateStart1"/>
+                                    <p:calendar id="dateStart1" var="date"
+                                                value="#{startDate}"
+                                                showOn="button"/>
+                                </div>
+                            </div>
+
+                            <div class="p-col-12">
+                                <div class="ui-inputgroup">
+                                    <p:outputLabel for="dateEnd1"/>
+                                    <p:calendar id="dateEnd1" var="date" value="#{endDate}"
+                                                showOn="button"/>
+                                </div>
+                            </div>
+                            <div class="p-col-12">
+                                <div class="ui-inputgroup">
+                                    <h:outputText
+                                            value="Users selected: #{selectedUsersIdsSize}"
+                                            rendered="#{(selectedUsersIdsSize==0 and selectedUsersIdsSize!=null) ? false:true}"/>
+                                </div>
+                            </div>
+                            <div class="p-col-12 auto-button">
+                                <p:commandButton value="Update" update="container"
+                                                 action="#{actionForSubmit}"
+                                                 icon="ui-icon-check"
+                                                 disabled="#{(selectedUsersIdsSize==0 and selectedUsersIdsSize!=null) ? true:false}">
+                                    <p:ajax update="#{panelsForUpdate}"/>
+                                </p:commandButton>
+                            </div>
+                        </div>
+                    </p:panel>
+                </p:outputPanel>
+            </p:panelGrid>
+        </h:form>
+    </p:outputPanel>
+</p:panelGrid>
+
+<script>
+    $(document).ready(function () {
+        PF('buiForGroups').show();
+
+    });
+
+    function blockSelectPanel(currentRadioState) {
+        if (currentRadioState == "Users") {
+            PF('buiForGroups').show();
+            PF('buiForUsers').hide();
+        }
+        if (currentRadioState == "Groups") {
+            PF('buiForUsers').show()
+            PF('buiForGroups').hide();
+        }
+    }
+
+</script>
+</ui:composition>

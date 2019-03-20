@@ -69,12 +69,10 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
             endDate = new Date(new Date().getTime());
 
             dashboardManager = new GlossaryDashboardManager();
-            glossaryDashboardUsersBean.setRendered(false);
-            glossaryDashboardUsersBean.setMultiple(false);
-            glossaryDashboardUsersBean.setRadioVal("Users");
             glossaryDashboardUsersBean.setDefaultUsersList();
-
-
+            if (glossaryDashboardUsersBean.getSelectedUsersIds()!=null && glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0){
+                cleanAndUpdateStoredData();
+            }
         }
         catch(SQLException e)
         {
