@@ -35,7 +35,7 @@
 					<h2>Visualization</h2>
 					<p>
 					<p:selectBooleanButton offLabel="Simplified view" onLabel="Full view" value="#{adminPeerAssessmentPairBeen.fullView}">
-						<p:ajax update="@form"></p:ajax>
+						<p:ajax oncomplete="form.submit()"></p:ajax>
 					</p:selectBooleanButton>					
 					</p>
 					<br/>

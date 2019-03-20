@@ -111,27 +111,20 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void onCreateOrganisation()
+    public void onCreateOrganisation() throws SQLException
     {
-        try
-        {
-            OrganisationManager om = getLearnweb().getOrganisationManager();
+        OrganisationManager om = getLearnweb().getOrganisationManager();
 
-            if(om.getOrganisationByTitle(newOrganisationTitle) != null)
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
-                return;
-            }
-            Organisation org = new Organisation(-1);
-            org.setTitle(newOrganisationTitle);
-            om.save(org);
-            addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
-            load(); // update course list
-        }
-        catch(Exception e)
+        if(om.getOrganisationByTitle(newOrganisationTitle) != null)
         {
-            addErrorMessage(e);
+            addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
+            return;
         }
+        Organisation org = new Organisation(-1);
+        org.setTitle(newOrganisationTitle);
+        om.save(org);
+        addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
+        load(); // update course list
     }
 
     public List<Course> getCourses()

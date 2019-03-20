@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -327,5 +328,17 @@ public class ApplicationBean
         selectItems.sort(Misc.selectItemLabelComparator);
 
         return selectItems;
+    }
+
+    /**
+     * To overcome browser caching problems force revalidation
+     */
+    protected void forceRevalidation()
+    {
+        HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
     }
 }

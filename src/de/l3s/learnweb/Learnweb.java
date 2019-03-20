@@ -10,6 +10,7 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.shared.ConfigException;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
@@ -200,8 +201,6 @@ public class Learnweb
             propertiesFileName = "ama";
             developmentMode = false;
         }
-        else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
-            propertiesFileName = "lw_local_chloe";
         else if((new File("C:\\programmieren\\philipp.ama")).exists())
             propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
@@ -212,10 +211,6 @@ public class Learnweb
             propertiesFileName = "lw_local_trevor_uni";
         else if((new File("/Users/trevor").exists()))
             propertiesFileName = "lw_local_trevor";
-        else if((new File("/home/kalyani").exists()))
-            propertiesFileName = "lw_local_rishita";
-        else if(new File("/Users/Rishita/").exists())
-            propertiesFileName = "lw_local_rishita";
         else if((new File("C:\\Users\\Tetiana").exists()))
             propertiesFileName = "lw_local_tetiana";
         else if((new File("C:\\Users\\astappiev").exists()))
@@ -259,6 +254,10 @@ public class Learnweb
             this.properties = new PropertiesBundle(fallbackProperties);
 
             String propertiesFileName = getPropertiesFileName();
+
+            if(propertiesFileName.equals("lw_local_other"))
+                throw new ConfigException("Create a configuration file for your environment: " + Misc.getSystemDescription());
+
             log.debug("Load config file: " + propertiesFileName);
 
             properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propertiesFileName + ".properties"));

@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
@@ -28,7 +28,7 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.Misc;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class AdminOrganisationsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4815509777068370043L;
