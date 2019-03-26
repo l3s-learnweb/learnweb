@@ -20,9 +20,9 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
 {
     private static final Logger log = Logger.getLogger(SpeechRepositoryCrawlerSimple.class);
 
+    private static final int TIMEOUT = 60 * 1000;
+
     private Learnweb learnweb;
-    //    private ResourcePreviewMaker rpm;
-    //    private ResourceMetadataExtractor rme;
 
     public SpeechRepositoryCrawlerSimple()
     {
@@ -32,15 +32,13 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
     public void initialize()
     {
         learnweb = Learnweb.getInstance();
-        //        rpm = learnweb.getResourcePreviewMaker();
-        //        rme = learnweb.getResourceMetadataExtractor();
     }
 
     public void start()
     {
         try
         {
-            String nextUrl = "https://webgate.ec.europa.eu/sr/search-speeches?language=All&level=All&use=All&domain=All&type=All&combine=&combine_1=&video_reference=&entity%5B0%5D=";
+            String nextUrl = "https://webgate.ec.europa.eu/sr/search-speeches?entity%5B0%5D=&language=All&level=All&use=All&domain=All&type=All&title=&combine=&combine_1=&video_reference=&order=nid&sort=desc";
 
             int pageNumber = 0;
             while(nextUrl != null)
@@ -58,28 +56,31 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
     /**
      * Extract individual speech repository URLs from the menu page
      */
-    public String visitCategoryPage(String categoryPageUrl)
+    private String visitCategoryPage(String categoryPageUrl)
     {
         try
         {
-            Document doc = Jsoup.connect(categoryPageUrl).timeout(10000).get();
+            Document doc = Jsoup.connect(categoryPageUrl).timeout(TIMEOUT).get();
             Element content = doc.select("#block-system-main").first();
             Element paginationElement = content.select(".item-list > .pager").first();
 
-            String nextCategoryPageUrl = paginationElement.select(".pager-next a").first().attr("href");
+            Element nextCategoryPage = paginationElement.select(".pager-next a").first();
+            String nextCategoryPageUrl = nextCategoryPage == null ? null : nextCategoryPage.attr("href");
 
             Element tableElement = content.select(".view-content table").first();
             Elements tableRows = tableElement.select("tbody > tr");
 
             for(Element tableRow : tableRows)
             {
-                Integer pageId = Integer.parseInt(tableRow.select(".views-field-nid").text());
-                String pageUrl = tableRow.select(".views-field-title a").attr("href");
+                final int pageId = Integer.parseInt(tableRow.select(".views-field-nid").text());
+                final String pageUrl = tableRow.select(".views-field-title a").attr("href");
 
                 try
                 {
-                    visitPage(pageId, pageUrl);
-                    TimeUnit.SECONDS.sleep(5);
+                    if (!isPageSaved(pageId)) {
+                        visitPage(pageUrl);
+                        TimeUnit.SECONDS.sleep(5);
+                    }
                 }
                 catch(Exception e)
                 {
@@ -101,31 +102,9 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
      * Extract data about a particular speech repository given the URL
      * Update the data if speech already exists, if not - insert the new speech repository to the database
      */
-    public void visitPage(Integer pageId, String pageUrl) throws IOException, JSONException, SQLException
+    private void visitPage(final String pageUrl) throws IOException, JSONException, SQLException
     {
-        int resourceId = -1;
-        try
-        {
-            // check the database to identify if the video has already been crawled or if any new transcripts are added to the video
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT id FROM speechrepository_video WHERE id = ?");
-            pStmt.setInt(1, pageId);
-            ResultSet rs = pStmt.executeQuery();
-
-            while(rs.next())
-            {
-                resourceId = rs.getInt(1);
-            }
-
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while checking if speech repository video exists: " + pageId, e);
-        }
-
-        if(resourceId > 0)
-            return;
-
-        Document doc = Jsoup.connect(pageUrl).get();
+        Document doc = Jsoup.connect(pageUrl).timeout(TIMEOUT).get();
         Element content = doc.select("#content > .content-inner").first();
         Element speechElement = content.select("#content-area .node-speech").first();
         Element speechDetailsElement = speechElement.select("#node-speech-full-group-speech-details").first();
@@ -208,6 +187,24 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
             }
         }
 
+        savePage(speechEntity);
+    }
+
+    private boolean isPageSaved(final int pageId) throws JSONException, SQLException
+    {
+        // check the database to identify if the video has already been crawled
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT id FROM speechrepository_video WHERE id = ?");
+        pStmt.setInt(1, pageId);
+        ResultSet rs = pStmt.executeQuery();
+        return rs.next();
+    }
+
+    /**
+     * Extract data about a particular speech repository given the URL
+     * Update the data if speech already exists, if not - insert the new speech repository to the database
+     */
+    private void savePage(final SpeechRepositoryEntity speechEntity) throws JSONException, SQLException
+    {
         PreparedStatement preparedStatement = learnweb.getConnection()
                 .prepareStatement("INSERT INTO speechrepository_video (id, title, url, rights, date, description, notes, image_link, video_link, duration, language, level, `use`, type, domains, terminology) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
         preparedStatement.setInt(1, speechEntity.getId());
@@ -230,6 +227,9 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
         int val = preparedStatement.executeUpdate();
         if(val != 1)
             log.error("Inserting speech repository video resource was not successful: " + speechEntity.getId());
+        else {
+            log.info("New Speechrepository video was added: " + speechEntity.getId() + " - " + speechEntity.getTitle());
+        }
     }
 
     @Override
@@ -239,10 +239,13 @@ public class SpeechRepositoryCrawlerSimple implements Runnable
         start();
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws SQLException, ClassNotFoundException
     {
+        @SuppressWarnings("unused") // required for Learnweb.getInstance() to work properly inside .initialize() method
+        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
+
         SpeechRepositoryCrawlerSimple speechRepositoryCrawler = new SpeechRepositoryCrawlerSimple();
-        speechRepositoryCrawler.start();
+        speechRepositoryCrawler.run();
         System.exit(0);
     }
 }
