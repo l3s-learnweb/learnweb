@@ -76,7 +76,6 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     public void cleanAndUpdateStoredData() throws SQLException
     {
-        log.debug("cleanAndUpdateStoredData " + glossaryDashboardUsersBean.getSelectedUsersIds());
 
         interactionsChart = null;
         usersActivityTypesChart = null;
@@ -88,7 +87,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     private void fetchDataFromManager() throws SQLException
     {
-        List<Integer> selectedUsersIds = glossaryDashboardUsersBean.getSelectedUsersIds();
+        List<Integer> selectedUsersIds = getSelectedUsersIds();
         totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
         totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
 
@@ -159,6 +158,13 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return descFieldsStatistic;
     }
 
-
+    @Override
+    public void onSubmitSelectedUsers() throws SQLException
+    {
+        if(getSelectedUsersIds() != null)
+        {
+            cleanAndUpdateStoredData();
+        }
+    }
 
 }

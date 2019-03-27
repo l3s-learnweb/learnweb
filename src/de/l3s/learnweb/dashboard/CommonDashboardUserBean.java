@@ -90,4 +90,8 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     {
         this.endDate = endDate;
     }
+    public void onSubmitSelectedUsers() throws SQLException
+    {
+
+    }
 }

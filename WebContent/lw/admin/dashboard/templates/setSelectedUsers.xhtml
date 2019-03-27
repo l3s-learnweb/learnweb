@@ -23,7 +23,7 @@
                     <p:outputPanel id="usersSelectPanel">
                         <p:panel>
                             <p:selectCheckboxMenu style="width: 75px;"
-                                                  value="#{selectedUsersIds}"
+                                                  value="#{nameOfBean.selectedUsersIds}"
                                                   var="user"
                                                   itemValue="#{user.id}"
                                                   itemLabel="#{user.username}" label="Users"
@@ -32,7 +32,7 @@
                                         update="dateAndSubmitPanel"/>
                                 <p:ajax event="toggleSelect" global="false"
                                         update="dateAndSubmitPanel"/>
-                                <f:selectItems value="#{defaultUsersList}" var="user"
+                                <f:selectItems value="#{nameOfBean.getAllUsers()}" var="user"
                                                itemValue="#{user.id}"
                                                itemLabel="#{user.username}"/>
                             </p:selectCheckboxMenu>
@@ -45,7 +45,7 @@
                                                   filter="true"
                                                   filterMatchMode="startsWith">
                                 <f:selectItems
-                                        value="#{groups}" var="group"
+                                        value="#{nameOfBean.getAllGroups()}" var="group"
                                         itemValue="#{group.id}"/>
                             </p:selectCheckboxMenu>
                         </p:panel>
@@ -54,49 +54,47 @@
                 </p:outputPanel>
 
                 <p:outputPanel id="dateAndSubmitPanel" style="width: 300px; padding-top:6px;">
-                  
-                        <div class="p-grid">
-                            <div class="p-col-12">
-                                <div class="ui-inputgroup">
-                                    <p:outputLabel for="dateStart"/>
-                                    <p:calendar id="dateStart" var="date"
-                                                value="#{startDate}"
-                                                showOn="button"/>
-                                </div>
-                            </div>
 
-                            <div class="p-col-12">
-                                <div class="ui-inputgroup">
-                                    <p:outputLabel for="dateEnd"/>
-                                    <p:calendar id="dateEnd" var="date" value="#{endDate}"
-                                                showOn="button"/>
-                                </div>
-                            </div>
-                            <div class="p-col-12">
-                                <div class="ui-inputgroup">
-                                    <h:outputText
-                                            value="Users selected: #{selectedUsersIdsSize}"
-                                            rendered="#{(selectedUsersIdsSize!=null and selectedUsersIdsSize!=0) ? true:false}"/>
-                                </div>
-                            </div>
-                            <div class="p-col-12 auto-button">
-                                <p:ajaxStatus>
-                                    <p:commandButton value="Update"
-                                                     action="#{actionForSubmit}"
-                                                     icon="ui-icon-check"
-                                                     update="#{panelsForUpdate}"
-                                                     disabled="#{(selectedUsersIdsSize!=null and selectedUsersIdsSize!=0) ? false:true}">
-
-                                    </p:commandButton>
-                                </p:ajaxStatus>
-                                <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
-                                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
-                                          showHeader="false">
-                                    <p:graphicImage value="/resources/glossary/ajax-loader.gif"/>
-                                </p:dialog>
+                    <div class="p-grid">
+                        <div class="p-col-12">
+                            <div class="ui-inputgroup">
+                                <p:outputLabel for="dateStart"/>
+                                <p:calendar id="dateStart" var="date"
+                                            value="#{nameOfBean.startDate}"
+                                            showOn="button"/>
                             </div>
                         </div>
-                  
+
+                        <div class="p-col-12">
+                            <div class="ui-inputgroup">
+                                <p:outputLabel for="dateEnd"/>
+                                <p:calendar id="dateEnd" var="date" value="#{nameOfBean.endDate}"
+                                            showOn="button"/>
+                            </div>
+                        </div>
+                        <div class="p-col-12">
+                            <div class="ui-inputgroup">
+                                <h:outputText
+                                        value="Users selected: #{nameOfBean.getSelectedUsersIds().size()}"
+                                        rendered="#{!empty(nameOfBean.getSelectedUsersIds())}"/>
+                            </div>
+                        </div>
+                        <div class="p-col-12 auto-button">
+                            <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()">
+                                <p:commandButton value="Update"
+                                                 icon="ui-icon-check"
+                                                 update=":content"
+                                                 disabled="#{empty(nameOfBean.getSelectedUsersIds())}"
+                                                 action="#{nameOfBean.cleanAndUpdateStoredData()}">
+                                </p:commandButton>
+                            </p:ajaxStatus>
+                            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
+                                      showHeader="false">
+                                <p:graphicImage value="/resources/glossary/ajax-loader.gif"/>
+                            </p:dialog>
+                        </div>
+                    </div>
+
                 </p:outputPanel>
             </p:panelGrid>
         </h:form>
