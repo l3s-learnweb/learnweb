@@ -17,7 +17,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -126,11 +125,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
         getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
         // stop caching (back button problem)
-        HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
-
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        response.setDateHeader("Expires", 0); // Proxies.
+        forceRevalidation();
     }
 
     // -------------------------------------------------------------------------

@@ -14,9 +14,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,13 +32,11 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
@@ -87,10 +83,19 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             }
             log(Action.glossary_open, glossaryResource);
 
+            // for labint francesca.bianchi@unisalento.it
             availableTopicOne.add(new SelectItem("Environment"));
             availableTopicOne.add(new SelectItem("European Politics"));
             availableTopicOne.add(new SelectItem("Medicine"));
             availableTopicOne.add(new SelectItem("Tourism"));
+
+            // for iryna.shylnikova@unisalento.it
+            availableTopicOne.add(new SelectItem("Business"));
+            availableTopicOne.add(new SelectItem("Migration"));
+            availableTopicOne.add(new SelectItem("Energy resources"));
+            availableTopicOne.add(new SelectItem("International relations"));
+            availableTopicOne.add(new SelectItem("Globalization"));
+            availableTopicOne.add(new SelectItem("Ecology"));
 
             // convert tree like glossary structure to flat table
             tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource);
@@ -519,7 +524,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -626,56 +631,56 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-
+    
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-
+    
         return columns;
     }
-
-
+    
+    
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-
+    
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-
+    
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-
+    
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-
+    
         //update columns
         createDynamicColumns();
     }
-
+    
     static public class ColumnModel implements Serializable
     {
-
+    
         private String header;
         private String property;
-
+    
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-
+    
         public String getHeader()
         {
             return header;
         }
-
+    
         public String getProperty()
         {
             return property;

@@ -13,12 +13,6 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-/**
- * sdfsdf
- *
- * @author Philipp
- *
- */
 public class AdminPeerAssessmentPairBeen extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073496345L;
