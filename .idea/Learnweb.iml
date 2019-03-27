@@ -25,5 +25,6 @@
     <orderEntry type="library" scope="PROVIDED" name="tomcatLibs" level="project" />
     <orderEntry type="library" name="localLibs" level="project" />
     <orderEntry type="library" name="tomcatLibs" level="project" />
+    <orderEntry type="library" name="tomcatLibs" level="project" />
   </component>
 </module>

@@ -18,6 +18,7 @@ import javax.faces.model.SelectItemGroup;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import org.primefaces.model.chart.LineChartModel;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -28,7 +29,7 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @SessionScoped
-public class ActivityDashboardBean extends ApplicationBean implements Serializable
+public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     @Deprecated
     @Inject
@@ -117,8 +118,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
             startDate = new Date(cal.getTimeInMillis());
             endDate = new Date(new Date().getTime());
             activityDashboardManager = new ActivityDashboardManager();
-            activityDashboardUsersBean.setDefaultUsersList();
-            if(activityDashboardUsersBean.getSelectedUsersIds() != null && activityDashboardUsersBean.getSelectedUsersIds().size() != 0)
+            if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
             {
                 cleanAndUpdateStoredData();
             }
@@ -171,8 +171,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
 
     public void onSubmitSelectedUsers() throws SQLException
     {
-        activityDashboardUsersBean.onSubmitSelectedUsers();
-        if(activityDashboardUsersBean.getSelectedUsersIds() != null)
+        if(getSelectedUsersIds() != null)
         {
             cleanAndUpdateStoredData();
         }
@@ -184,15 +183,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
         return interactionsChart;
     }
 
-    public ActivityDashboardUsersBean getActivityDashboardUsersBean()
-    {
-        return activityDashboardUsersBean;
-    }
 
-    public void setActivityDashboardUsersBean(ActivityDashboardUsersBean activityDashboardUsersBean)
-    {
-        this.activityDashboardUsersBean = activityDashboardUsersBean;
-    }
 
     public Date getStartDate()
     {

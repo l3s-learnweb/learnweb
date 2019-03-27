@@ -63,8 +63,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
             dashboardManager = new GlossaryDashboardManager();
 
             getSelectedUsersIds(); // TODO
-            glossaryDashboardUsersBean.setDefaultUsersList();
-            if(glossaryDashboardUsersBean.getSelectedUsersIds() != null && glossaryDashboardUsersBean.getSelectedUsersIds().size() != 0)
+            if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
             {
                 cleanAndUpdateStoredData();
             }
@@ -160,14 +159,6 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return descFieldsStatistic;
     }
 
-    @Override
-    public void onSubmitSelectedUsers() throws SQLException
-    {
-        glossaryDashboardUsersBean.onSubmitSelectedUsers();
-        if(glossaryDashboardUsersBean.getSelectedUsersIds() != null)
-        {
-            cleanAndUpdateStoredData();
-        }
-    }
+
 
 }
