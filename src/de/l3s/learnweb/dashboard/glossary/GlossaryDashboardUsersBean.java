@@ -46,7 +46,6 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Date startDate;
     private Date endDate;
     private User selectedUser;
-    private List<User> defaultUsersList;
     private List<Integer> selectedUsersIds;
     private GlossaryDashboardManager dashboardManager;
     private Integer totalConcepts;
@@ -95,43 +94,10 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
         selectedUsersIds = Collections.singletonList(selectedUser.getId());
         dashboardManager = new GlossaryDashboardManager();
-
         fetchDataFromManager();
     }
 
 
-    public List<User> getDefaultUsersList()
-    {
-        return defaultUsersList;
-    }
-
-    public void setDefaultUsersList() throws SQLException
-    {
-        List<User> users = new ArrayList<>();
-        List<Integer> usersIdsFromOrganisation = null;
-        try
-        {
-            usersIdsFromOrganisation = getUser().getOrganisation().getUserIds();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        if(usersIdsFromOrganisation != null && usersIdsFromOrganisation.size() > 0)
-        {
-            UserManager userManager = getLearnweb().getUserManager();
-            for(int userId : usersIdsFromOrganisation)
-            {
-                users.add(userManager.getUser(userId));
-            }
-        }
-        this.defaultUsersList = users;
-    }
-
-    public List<Group> getGroups() throws SQLException
-    {
-        return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(485);
-    }
 
 
     public void cleanAndUpdateStoredData() throws SQLException
@@ -164,7 +130,10 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         glossaryResources = getLearnweb().getResourceManager().getGlossaryResourcesByUserId(selectedUser.getId());
     }
-
+    public List<Group> getGroups() throws SQLException
+    {
+        return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(485);
+    }
     public Date getStartDate()
     {
         return startDate;

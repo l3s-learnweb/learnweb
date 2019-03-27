@@ -111,17 +111,15 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
         try
         {
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, -1);
+            cal.add(Calendar.MONTH, -3); // load data from last 3 month until now
 
-            String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
-            String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
-            startDate = new Date(Long.parseLong(savedStartDate));
-            endDate = new Date(Long.parseLong(savedEndDate));
-
+            startDate = new Date(cal.getTimeInMillis());
+            endDate = new Date(new Date().getTime());
             activityDashboardManager = new ActivityDashboardManager();
-            if(activityDashboardUsersBean.getSelectedUsersIds() == null)
+            activityDashboardUsersBean.setDefaultUsersList();
+            if(activityDashboardUsersBean.getSelectedUsersIds() != null && activityDashboardUsersBean.getSelectedUsersIds().size()!=0)
             {
-                activityDashboardUsersBean.setSelectedUsersIds(getUser().getOrganisation().getUserIds());
+                cleanAndUpdateStoredData();
             }
         }
         catch(SQLException e)
@@ -139,8 +137,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     private void fetchDataFromManager() throws SQLException
     {
         List<Integer> selectedUsersIds = activityDashboardUsersBean.getSelectedUsersIds();
-
-        if(selectedActionItems != null && selectedActionItems.length != 0)
+        if(selectedActionItems != null )
         {
             List<ActivityGraphData> data = new ArrayList<>();
             for(String activityGroupName : selectedActionItems)
@@ -151,9 +148,11 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
                 data.add(activityData);
             }
             interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            System.out.println(1);
+            System.out.println(getInteractionsChart());
 
         }
-        else if(selectedGroupedActions != null && selectedGroupedActions.length != 0)
+        else if(selectedGroupedActions != null )
         {
             List<ActivityGraphData> data = new ArrayList<>();
             for(String activityGroupName : selectedGroupedActions)
@@ -164,6 +163,8 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
                 data.add(activityData);
             }
             interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            System.out.println(2);
+            System.out.println(getInteractionsChart());
         }
     }
 
@@ -200,6 +201,8 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     public void setStartDate(Date startDate)
     {
         this.startDate = startDate;
+
+        setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
 
     public Date getEndDate()
@@ -210,6 +213,8 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
+
+        setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 
     public Map<String, String> getActions()
@@ -225,6 +230,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     public void setSelectedActionItems(String[] selectedActionItems)
     {
         this.selectedActionItems = selectedActionItems;
+        System.out.println(this.selectedActionItems);
     }
 
     public List<SelectItem> getGroupedActions()

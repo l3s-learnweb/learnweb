@@ -9,8 +9,8 @@
 <p:blockUI block="usersSelectForm:groupsSelectPanel" widgetVar="buiForGroups"/>
 <p:panelGrid columns="2" style="margin: 10px;">
     <p:outputPanel>
-        <p:selectOneRadio widgetVar="widgetSorType" layout="grid" columns="1" required="true"
-                          value="Users"
+        <p:selectOneRadio widgetVar="widgetSorType" layout="grid" columns="1"
+                          value="Users" required="true"
                           onchange="blockSelectPanel(PF('widgetSorType').getJQ().find(':checked').val());">
             <f:selectItem itemLabel="Users" itemValue="Users"/>
             <f:selectItem itemLabel="Groups" itemValue="Groups"/>
@@ -58,8 +58,8 @@
                         <div class="p-grid">
                             <div class="p-col-12">
                                 <div class="ui-inputgroup">
-                                    <p:outputLabel for="dateStart1"/>
-                                    <p:calendar id="dateStart1" var="date"
+                                    <p:outputLabel for="dateStart"/>
+                                    <p:calendar id="dateStart" var="date"
                                                 value="#{startDate}"
                                                 showOn="button"/>
                                 </div>
@@ -67,8 +67,8 @@
 
                             <div class="p-col-12">
                                 <div class="ui-inputgroup">
-                                    <p:outputLabel for="dateEnd1"/>
-                                    <p:calendar id="dateEnd1" var="date" value="#{endDate}"
+                                    <p:outputLabel for="dateEnd"/>
+                                    <p:calendar id="dateEnd" var="date" value="#{endDate}"
                                                 showOn="button"/>
                                 </div>
                             </div>
@@ -76,16 +76,24 @@
                                 <div class="ui-inputgroup">
                                     <h:outputText
                                             value="Users selected: #{selectedUsersIdsSize}"
-                                            rendered="#{(selectedUsersIdsSize==0 and selectedUsersIdsSize!=null) ? false:true}"/>
+                                            rendered="#{(selectedUsersIdsSize!=null and selectedUsersIdsSize!=0) ? true:false}"/>
                                 </div>
                             </div>
                             <div class="p-col-12 auto-button">
-                                <p:commandButton value="Update" update="container"
-                                                 action="#{actionForSubmit}"
-                                                 icon="ui-icon-check"
-                                                 disabled="#{(selectedUsersIdsSize==0 and selectedUsersIdsSize!=null) ? true:false}">
-                                    <p:ajax update="#{panelsForUpdate}"/>
-                                </p:commandButton>
+                                <p:ajaxStatus>
+                                    <p:commandButton value="Update"
+                                                     action="#{actionForSubmit}"
+                                                     icon="ui-icon-check"
+                                                     update="#{panelsForUpdate}"
+                                                     disabled="#{(selectedUsersIdsSize!=null and selectedUsersIdsSize!=0) ? false:true}">
+
+                                    </p:commandButton>
+                                </p:ajaxStatus>
+                                <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"/>
+                                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
+                                          showHeader="false">
+                                    <p:graphicImage value="/resources/glossary/ajax-loader.gif"/>
+                                </p:dialog>
                             </div>
                         </div>
                     </p:panel>
