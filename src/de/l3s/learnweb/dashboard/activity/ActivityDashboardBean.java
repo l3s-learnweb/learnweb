@@ -20,8 +20,8 @@ import javax.inject.Named;
 
 import org.primefaces.model.chart.LineChartModel;
 
-import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.learnweb.user.User;
@@ -30,6 +30,7 @@ import de.l3s.learnweb.user.User;
 @SessionScoped
 public class ActivityDashboardBean extends ApplicationBean implements Serializable
 {
+    @Deprecated
     @Inject
     private ActivityDashboardUsersBean activityDashboardUsersBean;
     private static final long serialVersionUID = 3326736281893564706L;
@@ -117,7 +118,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
             endDate = new Date(new Date().getTime());
             activityDashboardManager = new ActivityDashboardManager();
             activityDashboardUsersBean.setDefaultUsersList();
-            if(activityDashboardUsersBean.getSelectedUsersIds() != null && activityDashboardUsersBean.getSelectedUsersIds().size()!=0)
+            if(activityDashboardUsersBean.getSelectedUsersIds() != null && activityDashboardUsersBean.getSelectedUsersIds().size() != 0)
             {
                 cleanAndUpdateStoredData();
             }
@@ -137,7 +138,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
     private void fetchDataFromManager() throws SQLException
     {
         List<Integer> selectedUsersIds = activityDashboardUsersBean.getSelectedUsersIds();
-        if(selectedActionItems != null )
+        if(selectedActionItems != null)
         {
             List<ActivityGraphData> data = new ArrayList<>();
             for(String activityGroupName : selectedActionItems)
@@ -152,7 +153,7 @@ public class ActivityDashboardBean extends ApplicationBean implements Serializab
             System.out.println(getInteractionsChart());
 
         }
-        else if(selectedGroupedActions != null )
+        else if(selectedGroupedActions != null)
         {
             List<ActivityGraphData> data = new ArrayList<>();
             for(String activityGroupName : selectedGroupedActions)

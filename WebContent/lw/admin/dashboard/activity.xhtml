@@ -39,7 +39,7 @@
                                 <ui:decorate template="templates/setSelectedUsers.xhtml">
                                     <ui:param name="selectedUsersIds" value="#{activityDashboardUsersBean.selectedUsersIds}"/>
                                     <ui:param name="defaultUsersList" value="#{activityDashboardUsersBean.defaultUsersList}"/>
-                                    <ui:param name="groups" value="#{activityDashboardUsersBean.getGroups()}"/>
+                                    <ui:param name="groups" value="#{activityDashboardUsersBean.allGroups}"/>
                                     <ui:param name="startDate" value="#{activityDashboardBean.startDate}"/>
                                     <ui:param name="endDate" value="#{activityDashboardBean.endDate}"/>
                                     <ui:param name="actionForSubmit" value="#{activityDashboardBean.cleanAndUpdateStoredData()}"/>

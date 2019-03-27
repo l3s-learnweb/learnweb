@@ -1,36 +1,33 @@
 package de.l3s.learnweb.dashboard.glossary;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
-import de.l3s.learnweb.user.User;
-import org.apache.jena.base.Sys;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.*;
+import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
+import de.l3s.learnweb.user.User;
 
 @Named
 @SessionScoped
-public class GlossaryDashboardBean extends ApplicationBean implements Serializable
+public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
     private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
 
-    private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
-    private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
-
-    private Date startDate = null;
-    private Date endDate = null;
-
     private GlossaryDashboardManager dashboardManager = null;
 
+    @Deprecated
     @Inject
     private GlossaryDashboardUsersBean glossaryDashboardUsersBean;
 
@@ -62,13 +59,13 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
 
         try
         {
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, -3); // load data from last 3 month until now
-            startDate = new Date(cal.getTimeInMillis());
-            endDate = new Date(new Date().getTime());
+
             dashboardManager = new GlossaryDashboardManager();
+
+            getSelectedUsersIds(); // TODO
             glossaryDashboardUsersBean.setDefaultUsersList();
-            if (glossaryDashboardUsersBean.getSelectedUsersIds()!=null && glossaryDashboardUsersBean.getSelectedUsersIds().size()!=0){
+            if(glossaryDashboardUsersBean.getSelectedUsersIds() != null && glossaryDashboardUsersBean.getSelectedUsersIds().size() != 0)
+            {
                 cleanAndUpdateStoredData();
             }
         }
@@ -80,6 +77,8 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
 
     public void cleanAndUpdateStoredData() throws SQLException
     {
+        log.debug("cleanAndUpdateStoredData " + glossaryDashboardUsersBean.getSelectedUsersIds());
+
         interactionsChart = null;
         usersActivityTypesChart = null;
         usersGlossaryChart = null;
@@ -101,32 +100,11 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
         glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(selectedUsersIds, startDate, endDate);
         actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
+        if(actionsWithCounters == null)
+            throw new NullPointerException("should not happen");
+
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
         glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(selectedUsersIds, startDate, endDate);
-    }
-
-    public Date getStartDate()
-    {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate)
-    {
-        this.startDate = startDate;
-
-        setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
-    }
-
-    public Date getEndDate()
-    {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate)
-    {
-        this.endDate = endDate;
-
-        setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 
     public LineChartModel getInteractionsChart()
@@ -182,6 +160,7 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         return descFieldsStatistic;
     }
 
+    @Override
     public void onSubmitSelectedUsers() throws SQLException
     {
         glossaryDashboardUsersBean.onSubmitSelectedUsers();
@@ -189,16 +168,6 @@ public class GlossaryDashboardBean extends ApplicationBean implements Serializab
         {
             cleanAndUpdateStoredData();
         }
-    }
-
-    public GlossaryDashboardUsersBean getGlossaryDashboardUsersBean()
-    {
-        return glossaryDashboardUsersBean;
-    }
-
-    public void setGlossaryDashboardUsersBean(GlossaryDashboardUsersBean glossaryDashboardUsersBean)
-    {
-        this.glossaryDashboardUsersBean = glossaryDashboardUsersBean;
     }
 
 }

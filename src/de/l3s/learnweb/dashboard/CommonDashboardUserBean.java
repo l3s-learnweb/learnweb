@@ -2,18 +2,16 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
 
 @Named
 @SessionScoped
@@ -22,71 +20,21 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
 
     private static final long serialVersionUID = 9047964884484786815L;
 
-    private List<Integer> selectedUsersIds = null;
-    private List<User> defaultUsersList = null;
+    private List<Integer> selectedUsersIds;
+
+    protected Date startDate = null;
+    protected Date endDate = null;
+
+    // caches:
+    private transient List<Group> allGroups;
+    private transient List<User> allUsers;
 
     public CommonDashboardUserBean()
     {
-    }
-
-    public void onSubmitSelectedUsers()
-    {
-        List<Integer> newSelectedUsers = getSelectedUsers();
-        if(newSelectedUsers != null)
-        {
-            selectedUsersIds = newSelectedUsers;
-        }
-    }
-
-    private ArrayList<Integer> getSelectedUsers()
-    {
-        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-        String[] tempSelectedUsers = request.getParameterValues("selected_users");
-
-        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "select_user");
-            return null;
-        }
-
-        ArrayList<Integer> selectedUsersSet = new ArrayList<>();
-        for(String userId : tempSelectedUsers)
-            selectedUsersSet.add(Integer.parseInt(userId));
-
-        return selectedUsersSet;
-    }
-
-    public List<User> getSelectedUsersList() throws SQLException
-    {
-        return getUsersList(selectedUsersIds);
-    }
-
-    public List<User> getUsersList (List<Integer> usersIds) throws SQLException
-    {
-        List<User> users = new ArrayList<>();
-        if(usersIds != null && usersIds.size() > 0)
-        {
-            UserManager userManager = getLearnweb().getUserManager();
-            for(int userId : usersIds)
-            {
-                users.add(userManager.getUser(userId));
-            }
-        }
-        return users;
-    }
-
-    public List<User> getDefaultUsersList()
-    {
-        return defaultUsersList;
-    }
-
-    public void setDefaultUsersList () throws SQLException
-    {
-        this.defaultUsersList= getUsersList(getUser().getOrganisation().getUserIds());
-    }
-    public List<Integer> getSelectedUsersIds()
-    {
-        return selectedUsersIds;
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -6); // load data from last 3 month until now
+        startDate = new Date(cal.getTimeInMillis());
+        endDate = new Date(new Date().getTime());
     }
 
     public void setSelectedUsersIds(List<Integer> selectedUsersIds)
@@ -94,4 +42,52 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
         this.selectedUsersIds = selectedUsersIds;
     }
 
+    public List<Integer> getSelectedUsersIds()
+    {
+        return selectedUsersIds;
+    }
+
+    /**
+     *
+     * @return all groups the current user can moderate
+     * @throws SQLException
+     */
+    public List<Group> getAllGroups() throws SQLException
+    {
+        if(null == allGroups)
+            allGroups = getUser().getOrganisation().getGroups();
+        return allGroups;
+    }
+
+    /**
+     *
+     * @return all users the current user can moderate
+     * @throws SQLException
+     */
+    public List<User> getAllUsers() throws SQLException
+    {
+        if(null == allUsers)
+            allUsers = getUser().getOrganisation().getUsers();
+        return allUsers;
+    }
+
+    public Date getStartDate()
+    {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate)
+    {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate()
+    {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate)
+    {
+        this.endDate = endDate;
+    }
 }

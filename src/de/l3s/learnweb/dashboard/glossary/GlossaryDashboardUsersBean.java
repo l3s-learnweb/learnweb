@@ -1,34 +1,27 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.PieChartModel;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.dashboard.glossary.GlossaryDashboardChartsFactory.*;
-import de.l3s.learnweb.user.UserManager;
-import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
-import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.PieChartModel;
-
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-
-import de.l3s.learnweb.user.User;
-import de.l3s.learnweb.user.UserManager;
-import scala.Int;
-
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Named
 @SessionScoped
@@ -66,10 +59,10 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private BarChartModel userFieldsChart;
     private BarChartModel proxySourcesChart;
     private List<Resource> glossaryResources;
+
     public GlossaryDashboardUsersBean()
     {
     }
-
 
     public void onLoad() throws SQLException
     {
@@ -96,9 +89,6 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         dashboardManager = new GlossaryDashboardManager();
         fetchDataFromManager();
     }
-
-
-
 
     public void cleanAndUpdateStoredData() throws SQLException
     {
@@ -130,10 +120,12 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 
         glossaryResources = getLearnweb().getResourceManager().getGlossaryResourcesByUserId(selectedUser.getId());
     }
+
     public List<Group> getGroups() throws SQLException
     {
         return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(485);
     }
+
     public Date getStartDate()
     {
         return startDate;
