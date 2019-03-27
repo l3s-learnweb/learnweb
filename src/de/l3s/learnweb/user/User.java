@@ -16,7 +16,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.validation.constraints.Size;
 
-import de.l3s.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,6 +33,11 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.HasId;
+import de.l3s.util.Image;
+import de.l3s.util.MD5;
+import de.l3s.util.PBKDF2;
+import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
 
 public class User implements Comparable<User>, Serializable, HasId
@@ -41,7 +45,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private static final Logger log = Logger.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
-    public enum PasswordHashing {
+    public enum PasswordHashing
+    {
         MD5,
         PBKDF2
     }
@@ -88,7 +93,6 @@ public class User implements Comparable<User>, Serializable, HasId
     // caches
     private transient List<Course> courses;
     private transient List<Group> groups;
-    private transient LinkedList<Group> writeAbleGroups;
     private String imageUrl;
     private transient Date lastLoginDate = null;
     private transient Date currentLoginDate = null;
@@ -103,7 +107,6 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         courses = null;
         groups = null;
-        writeAbleGroups = null;
         organisation = null;
         imageUrl = null;
     }
@@ -144,7 +147,8 @@ public class User implements Comparable<User>, Serializable, HasId
         return courses;
     }
 
-    public int getCourceCount() {
+    public int getCourceCount()
+    {
         return Learnweb.getInstance().getCourseManager().getCoursesAll().size();
     }
 
@@ -394,16 +398,13 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public List<Group> getWriteAbleGroups() throws SQLException
     {
-        //if(null == writeAbleGroups)
-        //{
-        writeAbleGroups = new LinkedList<>();
+        LinkedList<Group> writeAbleGroups = new LinkedList<>();
         List<Group> groups = getGroups();
         for(Group group : groups)
         {
             if(group.canAddResources(this))
                 writeAbleGroups.add(group);
         }
-        //}
         return writeAbleGroups;
     }
 
@@ -417,7 +418,6 @@ public class User implements Comparable<User>, Serializable, HasId
         Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
 
         groups = null; // force reload
-        writeAbleGroups = null; // force reload
 
         group.clearCaches();
 
@@ -429,7 +429,6 @@ public class User implements Comparable<User>, Serializable, HasId
         Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
 
         groups = null; // force reload
-        writeAbleGroups = null;
 
         group.clearCaches(); // removeMember(this);
 
@@ -683,9 +682,12 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public boolean validatePassword(String password)
     {
-        if (hashing.equals(PasswordHashing.MD5)) {
+        if(hashing.equals(PasswordHashing.MD5))
+        {
             return this.password.equals(MD5.hash(password));
-        } else if (hashing.equals(PasswordHashing.PBKDF2)) {
+        }
+        else if(hashing.equals(PasswordHashing.PBKDF2))
+        {
             return PBKDF2.validatePassword(password, this.password);
         }
 

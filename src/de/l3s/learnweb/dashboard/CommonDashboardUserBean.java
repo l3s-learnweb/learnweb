@@ -23,20 +23,18 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     private static final long serialVersionUID = 9047964884484786815L;
 
     private List<Integer> selectedUsersIds = null;
+
     public CommonDashboardUserBean()
     {
     }
 
     public void onSubmitSelectedUsers()
     {
-
         List<Integer> newSelectedUsers = getSelectedUsers();
         if(newSelectedUsers != null)
         {
             selectedUsersIds = newSelectedUsers;
-
         }
-
     }
 
     private ArrayList<Integer> getSelectedUsers()
@@ -60,7 +58,8 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     public List<User> getUsersList() throws SQLException
     {
         List<User> users = new ArrayList<>();
-        if (selectedUsersIds != null && selectedUsersIds.size() > 0) {
+        if(selectedUsersIds != null && selectedUsersIds.size() > 0)
+        {
             UserManager userManager = getLearnweb().getUserManager();
             for(int userId : selectedUsersIds)
             {

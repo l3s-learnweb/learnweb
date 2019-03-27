@@ -71,14 +71,15 @@ public class UserManager
     public List<User> getUsersByCourseId(int courseId) throws SQLException
     {
         List<User> users = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username");
-        select.setInt(1, courseId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username"))
         {
-            users.add(createUser(rs));
+            select.setInt(1, courseId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
         }
-        select.close();
 
         return users;
     }
@@ -93,13 +94,14 @@ public class UserManager
     public List<User> getUsers() throws SQLException
     {
         List<User> users = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE deleted = 0 ORDER BY username");
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE deleted = 0 ORDER BY username"))
         {
-            users.add(createUser(rs));
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
         }
-        select.close();
 
         return users;
     }
@@ -107,14 +109,15 @@ public class UserManager
     public List<User> getUsersByOrganisationId(int organisationId) throws SQLException
     {
         List<User> users = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username");
-        select.setInt(1, organisationId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username"))
         {
-            users.add(createUser(rs));
+            select.setInt(1, organisationId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
         }
-        select.close();
 
         return users;
     }
@@ -122,14 +125,15 @@ public class UserManager
     public List<User> getUsersByGroupId(int groupId) throws SQLException
     {
         List<User> users = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username"))
         {
-            users.add(createUser(rs));
+            select.setInt(1, groupId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
         }
-        select.close();
 
         return users;
     }
@@ -149,10 +153,13 @@ public class UserManager
             select.setString(1, username);
             ResultSet rs = select.executeQuery();
 
-            if(rs.next()) {
+            if(rs.next())
+            {
                 User user = createUser(rs);
-                if (user.validatePassword(password)) {
-                    if (!user.getHashing().equals(User.PasswordHashing.PBKDF2)) {
+                if(user.validatePassword(password))
+                {
+                    if(!user.getHashing().equals(User.PasswordHashing.PBKDF2))
+                    {
                         user.setPassword(password);
                         save(user);
                     }
@@ -168,16 +175,16 @@ public class UserManager
     public List<User> getUser(String email) throws SQLException
     {
         List<User> users = new LinkedList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ?");
-        select.setString(1, email);
-        ResultSet rs = select.executeQuery();
-
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ?"))
         {
-            users.add(createUser(rs));
-        }
+            select.setString(1, email);
+            ResultSet rs = select.executeQuery();
 
-        select.close();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
+        }
 
         return users;
     }
@@ -325,17 +332,15 @@ public class UserManager
 
     public Date getLastLoginDate(int userId) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1");
-        select.setInt(1, userId);
-        ResultSet rs = select.executeQuery();
-        if(!rs.next())
-            return new Date(0);
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1"))
+        {
+            select.setInt(1, userId);
+            ResultSet rs = select.executeQuery();
+            if(!rs.next())
+                return new Date(0);
 
-        Date loginDate = new Date(rs.getTimestamp(1).getTime());
-
-        select.close();
-
-        return loginDate;
+            return new Date(rs.getTimestamp(1).getTime());
+        }
     }
 
     /**
@@ -348,51 +353,51 @@ public class UserManager
 
     public User save(User user) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-
-        if(user.getId() < 0) // the User is not yet stored at the database
-            replace.setNull(1, java.sql.Types.INTEGER);
-        else
-            replace.setInt(1, user.getId());
-        replace.setString(2, user.getRealUsername());
-        replace.setString(3, user.getEmail());
-        replace.setString(4, user.getEmailConfirmationToken());
-        replace.setBoolean(5, user.isEmailConfirmed());
-        replace.setInt(6, user.getOrganisationId());
-        replace.setInt(7, user.getActiveGroupId());
-        replace.setInt(8, user.getImageFileId());
-        replace.setInt(9, user.getGender());
-        replace.setDate(10, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
-        replace.setString(11, user.getAddress());
-        replace.setString(12, user.getProfession());
-        replace.setString(13, user.getAdditionalInformation());
-        replace.setString(14, user.getInterest());
-        replace.setString(15, user.getStudentId());
-        replace.setInt(16, user.isAdmin() ? 1 : 0);
-        replace.setInt(17, user.isModerator() ? 1 : 0);
-        replace.setTimestamp(18, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
-        replace.setString(19, user.getPassword());
-        replace.setString(20, user.getHashing().name());
-
-        Sql.setSerializedObject(replace, 21, user.getPreferences());
-
-        replace.setString(22, user.getCredits());
-        replace.setString(23, user.getFullName());
-        replace.setString(24, user.getAffiliation());
-        replace.setBoolean(25, user.isAcceptTermsAndConditions());
-        replace.setBoolean(26, user.isDeleted());
-        replace.executeUpdate();
-
-        if(user.getId() < 0) // get the assigned id
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
         {
-            ResultSet rs = replace.getGeneratedKeys();
-            if(!rs.next())
-                throw new SQLException("database error: no id generated");
-            user.setId(rs.getInt(1));
+            if(user.getId() < 0) // the User is not yet stored at the database
+                replace.setNull(1, java.sql.Types.INTEGER);
+            else
+                replace.setInt(1, user.getId());
+            replace.setString(2, user.getRealUsername());
+            replace.setString(3, user.getEmail());
+            replace.setString(4, user.getEmailConfirmationToken());
+            replace.setBoolean(5, user.isEmailConfirmed());
+            replace.setInt(6, user.getOrganisationId());
+            replace.setInt(7, user.getActiveGroupId());
+            replace.setInt(8, user.getImageFileId());
+            replace.setInt(9, user.getGender());
+            replace.setDate(10, user.getDateOfBirth() == null ? null : new java.sql.Date(user.getDateOfBirth().getTime()));
+            replace.setString(11, user.getAddress());
+            replace.setString(12, user.getProfession());
+            replace.setString(13, user.getAdditionalInformation());
+            replace.setString(14, user.getInterest());
+            replace.setString(15, user.getStudentId());
+            replace.setInt(16, user.isAdmin() ? 1 : 0);
+            replace.setInt(17, user.isModerator() ? 1 : 0);
+            replace.setTimestamp(18, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
+            replace.setString(19, user.getPassword());
+            replace.setString(20, user.getHashing().name());
 
-            cache.put(user); // add the createUser to the cache
+            Sql.setSerializedObject(replace, 21, user.getPreferences());
+
+            replace.setString(22, user.getCredits());
+            replace.setString(23, user.getFullName());
+            replace.setString(24, user.getAffiliation());
+            replace.setBoolean(25, user.isAcceptTermsAndConditions());
+            replace.setBoolean(26, user.isDeleted());
+            replace.executeUpdate();
+
+            if(user.getId() < 0) // get the assigned id
+            {
+                ResultSet rs = replace.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                user.setId(rs.getInt(1));
+
+                cache.put(user); // add the createUser to the cache
+            }
         }
-        replace.close();
 
         return user;
     }

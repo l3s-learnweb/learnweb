@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceMetadataField;
@@ -517,4 +519,30 @@ public class Organisation implements Serializable, Comparable<Organisation>
         this.metadataFields = metadataFields;
     }
 
+    /**
+     *
+     * @return All groups belonging to courses of this organization (sorted by title)
+     * @throws SQLException
+     */
+    public List<Group> getGroups() throws SQLException
+    {
+        List<Group> groups = new LinkedList<>();
+        for(Course course : getCourses())
+        {
+            groups.addAll(course.getGroups());
+        }
+
+        Collections.sort(groups);
+        return groups;
+    }
+
+    /**
+     *
+     * @return all users that are registered to this organization
+     * @throws SQLException
+     */
+    public List<User> getUsers() throws SQLException
+    {
+        return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(getId());
+    }
 }
