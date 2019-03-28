@@ -107,6 +107,7 @@ public class Learnweb
     private final ConverterService serviceConverter;
     private final LogManager logManager;
     private final PeerAssessmentManager peerAssessmentManager;
+    private final NewsManager newsManager;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -114,8 +115,6 @@ public class Learnweb
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LangLevelManager langLevelManager;
     private final PurposeManager purposeManager;
-
-    private NewsManager newsManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -326,6 +325,7 @@ public class Learnweb
         peerAssessmentManager = new PeerAssessmentManager(this);
         glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
         logManager = LogManager.getInstance(this);
+        newsManager = new NewsManager(this);
 
         learnwebIsLoading = false;
 
