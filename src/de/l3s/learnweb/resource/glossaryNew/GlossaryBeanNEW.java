@@ -1,22 +1,20 @@
 package de.l3s.learnweb.resource.glossaryNew;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.learnweb.user.User;
+import de.l3s.util.BeanHelper;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.primefaces.event.FileUploadEvent;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -24,28 +22,14 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Named;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.primefaces.event.FileUploadEvent;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
+import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -98,8 +82,7 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
             availableTopicOne.add(new SelectItem("Ecology"));
 
             // convert tree like glossary structure to flat table
-            tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource);
-            setFilteredTableItems(tableItems);
+            repaintTable();
 
             setNewFormEntry();
 
@@ -110,6 +93,15 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             addErrorMessage(e);
+        }
+    }
+
+    private void repaintTable()
+    {
+        if(glossaryResource != null)
+        {
+            tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource);
+            setFilteredTableItems(tableItems);
         }
     }
 
@@ -371,12 +363,8 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         return toggleLabel;
     }
 
-    public void parseXls(FileUploadEvent fileUploadEvent)
+    private Map<String, Locale> getLanguageMap()
     {
-        User user = getUser();
-        if(user == null)
-            return;
-
         // map term language name to locale
         HashMap<String, Locale> languageMap = new HashMap<>();
         for(Locale locale : glossaryResource.getAllowedLanguages()) // English mapping
@@ -387,22 +375,29 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         {
             languageMap.put(item.getLabel(), (Locale) item.getValue());
         }
+        return languageMap;
+    }
 
-        GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), languageMap);
+    public void parseXls(FileUploadEvent fileUploadEvent)
+    {
+        User user = getUser();
+        if(user == null)
+            return;
 
-        if(parser.isValid())
+        GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
+
+        try
         {
             parser.parseGlossaryEntries();
-            // append parsed entries to glossary
-            glossaryResource.getEntries().addAll(parser.getEntries());
-
-            // maybe later add option to replace old entries
         }
-        else
+        catch(IOException | IllegalArgumentException e)
         {
-            parser.getErrorMessages();
-            // TODO display
+            //TODO DISPLAY FILE CANNOT BE READ
         }
+        // append parsed entries to glossary
+        glossaryResource.getEntries().addAll(parser.getEntries());
+        repaintTable();
+
     }
 
     public void postProcessXls(Object document)
