@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import de.l3s.learnweb.user.NewsManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.shared.ConfigException;
 import org.apache.log4j.Logger;
@@ -62,6 +63,8 @@ public class Learnweb
     private String serverUrl;
     private String secureServerUrl;
 
+
+
     // list of Learnweb installations
     public enum SERVICE
     {
@@ -111,6 +114,8 @@ public class Learnweb
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LangLevelManager langLevelManager;
     private final PurposeManager purposeManager;
+
+    private NewsManager newsManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -696,5 +701,10 @@ public class Learnweb
     public LogManager getLogManager()
     {
         return logManager;
+    }
+
+    public NewsManager getNewsManager()
+    {
+        return newsManager;
     }
 }

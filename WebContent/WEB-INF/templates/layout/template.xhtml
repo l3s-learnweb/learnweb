@@ -36,7 +36,7 @@
         <ui:insert name="head"/>
     </h:head>
 
-    <h:body styleClass="main-body">        
+    <h:body styleClass="main-body" onload="setHeightWindow()" onresize="setHeightWindow()">
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
             <ui:include src="megamenu.xhtml" />
             <ui:include src="topbar.xhtml" />
@@ -90,4 +90,18 @@
 		</p:confirmDialog>
 	</h:body>
 </f:view>
+	<script type="text/javascript">
+		function setHeightWindow(){
+			screenSize = document.body.clientHeight;
+			footerSize = document.body.getElementsByClassName("layout-footer")[0].clientHeight;
+			topbarSize = document.body.getElementsByClassName("layout-topbar")[0].clientHeight;
+			if(document.body.clientHeight>1300)
+				totalSize = screenSize - footerSize - topbarSize+15;
+			else{
+				totalSize = screenSize - footerSize - topbarSize - 30;
+			}
+			document.body.getElementsByClassName("layout-main-content")[0].setAttribute("style","height:"+totalSize+"px");
+
+		}
+	</script>
 </html>
