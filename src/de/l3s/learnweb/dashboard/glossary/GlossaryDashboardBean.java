@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -98,38 +99,68 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
         glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(selectedUsersIds, startDate, endDate);
         actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
-        if(actionsWithCounters == null)
-            throw new NullPointerException("should not happen");
-
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
         glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(selectedUsersIds, startDate, endDate);
     }
 
-    public LineChartModel getInteractionsChart()
+    public LineChartModel getInteractionsChart() throws SQLException
     {
         if(interactionsChart == null)
-            interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+        {
+            if(actionsCountPerDay == null)
+            {
+                actionsCountPerDay = dashboardManager.getActionsCountPerDay(getSelectedUsersIds(), startDate, endDate);
+                interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+            }
+            else
+                interactionsChart = GlossaryDashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+        }
         return interactionsChart;
     }
 
-    public BarChartModel getUsersActivityTypesChart()
+    public BarChartModel getUsersActivityTypesChart() throws SQLException
     {
         if(usersActivityTypesChart == null)
-            usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        {
+            if(actionsWithCounters == null)
+            {
+                actionsWithCounters = dashboardManager.getActionsWithCounters(getSelectedUsersIds(), startDate, endDate);
+                usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+            }
+            else
+                usersActivityTypesChart = GlossaryDashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        }
         return usersActivityTypesChart;
     }
 
-    public BarChartModel getUsersGlossaryChart()
+    public BarChartModel getUsersGlossaryChart() throws SQLException
     {
         if(usersGlossaryChart == null)
-            usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+        {
+            if(glossaryConceptsCountPerUser == null)
+            {
+                glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(getSelectedUsersIds(), startDate, endDate);
+                glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(getSelectedUsersIds(), startDate, endDate);
+                usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+            }
+            else
+                usersGlossaryChart = GlossaryDashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+        }
         return usersGlossaryChart;
     }
 
-    public PieChartModel getUsersSourcesChart()
+    public PieChartModel getUsersSourcesChart() throws SQLException
     {
         if(usersSourcesChart == null)
-            usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+        {
+            if(glossarySourcesWithCounters == null)
+            {
+                glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(getSelectedUsersIds(), startDate, endDate);
+                usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+            }
+            else
+                usersSourcesChart = GlossaryDashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+        }
         return usersSourcesChart;
     }
 

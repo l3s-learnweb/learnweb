@@ -84,6 +84,7 @@
                                 <p:commandButton value="Update"
                                                  icon="ui-icon-check"
                                                  update=":content"
+                                                 process="@this,content"
                                                  disabled="#{empty(nameOfBean.getSelectedUsersIds())}"
                                                  action="#{nameOfBean.cleanAndUpdateStoredData()}">
                                 </p:commandButton>
