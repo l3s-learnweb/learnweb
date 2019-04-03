@@ -1,6 +1,6 @@
-package de.l3s.learnweb.resource.glossaryNew;
+package de.l3s.learnweb.resource.glossary;
 
-import de.l3s.learnweb.resource.glossaryNew.builders.GlossaryEntryGlossaryRowBuilder;
+import de.l3s.learnweb.resource.glossary.builders.GlossaryEntryGlossaryRowBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

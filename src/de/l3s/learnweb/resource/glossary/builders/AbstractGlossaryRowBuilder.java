@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossaryNew.builders;
+package de.l3s.learnweb.resource.glossary.builders;
 
 import org.apache.poi.ss.usermodel.Row;
 

@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossaryNew;
+package de.l3s.learnweb.resource.glossary;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
@@ -33,10 +33,10 @@ import java.util.*;
 
 @Named
 @ViewScoped
-public class GlossaryBeanNEW extends ApplicationBean implements Serializable
+public class GlossaryBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 7104637880221636543L;
-    private static final Logger log = Logger.getLogger(GlossaryBeanNEW.class);
+    private static final Logger log = Logger.getLogger(GlossaryBean.class);
 
     private int resourceId;
     private GlossaryResource glossaryResource;
@@ -390,14 +390,21 @@ public class GlossaryBeanNEW extends ApplicationBean implements Serializable
         {
             parser.parseGlossaryEntries();
         }
-        catch(IOException | IllegalArgumentException e)
+        catch(IOException  e)
         {
             //TODO DISPLAY FILE CANNOT BE READ
+            System.out.println("There is IOException error");
+            System.out.println(e);
+        }
+        catch(IllegalArgumentException e)
+        {
+            //TODO DISPLAY FILE CANNOT BE READ
+            System.out.println("There is IllegalArgumentException error");
+            System.out.println(e);
         }
         // append parsed entries to glossary
         glossaryResource.getEntries().addAll(parser.getEntries());
         repaintTable();
-
     }
 
     public void postProcessXls(Object document)

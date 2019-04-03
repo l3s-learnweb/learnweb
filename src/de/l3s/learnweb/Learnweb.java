@@ -24,7 +24,7 @@ import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
-import de.l3s.learnweb.resource.glossaryNew.GlossaryManager;
+import de.l3s.learnweb.resource.glossary.GlossaryManager;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.office.HistoryManager;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentManager;
@@ -323,7 +323,7 @@ public class Learnweb
         submissionManager = new SubmissionManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         peerAssessmentManager = new PeerAssessmentManager(this);
-        glossaryManager = new de.l3s.learnweb.resource.glossaryNew.GlossaryManager(this);
+        glossaryManager = new de.l3s.learnweb.resource.glossary.GlossaryManager(this);
         logManager = LogManager.getInstance(this);
         newsManager = new NewsManager(this);
 
@@ -693,7 +693,7 @@ public class Learnweb
         return peerAssessmentManager;
     }
 
-    public de.l3s.learnweb.resource.glossaryNew.GlossaryManager getGlossaryManager()
+    public de.l3s.learnweb.resource.glossary.GlossaryManager getGlossaryManager()
     {
         return glossaryManager;
     }

@@ -25,7 +25,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.ResourceType;
-import de.l3s.learnweb.resource.glossaryNew.GlossaryResource;
+import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
 import de.l3s.learnweb.resource.yellMetadata.Category;

@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.glossaryNew;
+package de.l3s.learnweb.resource.glossary;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

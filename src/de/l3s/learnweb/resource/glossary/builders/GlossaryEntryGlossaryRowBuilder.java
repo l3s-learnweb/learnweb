@@ -1,7 +1,7 @@
-package de.l3s.learnweb.resource.glossaryNew.builders;
+package de.l3s.learnweb.resource.glossary.builders;
 
-import de.l3s.learnweb.resource.glossaryNew.GlossaryEntry;
-import de.l3s.learnweb.resource.glossaryNew.GlossaryTerm;
+import de.l3s.learnweb.resource.glossary.GlossaryEntry;
+import de.l3s.learnweb.resource.glossary.GlossaryTerm;
 import org.apache.poi.ss.usermodel.Row;
 
 import java.util.Arrays;

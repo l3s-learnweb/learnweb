@@ -33,7 +33,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.Resource.ResourceType;
-import de.l3s.learnweb.resource.glossaryNew.GlossaryResource;
+import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
