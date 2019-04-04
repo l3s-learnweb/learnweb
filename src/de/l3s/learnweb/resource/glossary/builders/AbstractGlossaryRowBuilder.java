@@ -1,9 +1,11 @@
 package de.l3s.learnweb.resource.glossary.builders;
 
-import org.apache.poi.ss.usermodel.Row;
-
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Row;
+
+import de.l3s.learnweb.beans.UtilBean;
 
 public abstract class AbstractGlossaryRowBuilder<T>
 {
@@ -23,6 +25,14 @@ public abstract class AbstractGlossaryRowBuilder<T>
 
     //Workaround for language (change to Language utils, properties or enums...)
     protected Map<String, Locale> languageMap;
+
+    public static void main(String[] args)
+    {
+        Locale[] locales = { Locale.GERMAN, Locale.ENGLISH, Locale.ITALIAN, new Locale("pt") };
+
+        for(Locale locale : locales)
+            System.out.println(UtilBean.getLocaleMessage(locale, "Glossary.topic"));
+    }
 
     public void headerInit(Row header, Map<String, Locale> languageMap)
     {
