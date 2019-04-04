@@ -14,6 +14,8 @@
 
             <f:facet name="{Exporters}">
                 <h:panelGroup>
+                    <h:commandButton value="Request All Data" action="#{dataExporterBean.requestInformation()}" style="float:right;"></h:commandButton>
+
                     <h:commandLink>
                         <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
                         <p:dataExporter type="pdf" target="resources_tbl" fileName="resources"/>
@@ -55,7 +57,7 @@
 
             <p:column style="max-width: 30%;">
                 <f:facet name="header"><h:outputText value="#{msg.description}"/></f:facet>
-                <h:outputText value="#{item.shortDescription}"/>
+                <h:outputText escape="false" value="#{item.shortDescription}"/>
             </p:column>
 
             <p:column style="max-width: 30%;">
@@ -64,8 +66,11 @@
             </p:column>
 
             <p:column style="max-width: 30%;">
-                <f:facet name="header"><h:outputText value="#{msg.file_name}"/></f:facet>
-                <h:outputText value="#{item.fileName}"/>
+                <f:facet name="header"><h:outputText value="#{msg.file}"/></f:facet>
+
+                <a href="#{item.url}">
+                    <h:outputText value="#{item.fileName}" rendered="#{item.storageType eq 1}"/>
+                </a>
             </p:column>
 
             <p:column style="max-width: 10%;">
