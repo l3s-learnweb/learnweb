@@ -1,0 +1,190 @@
+@import '../variables';
+
+$focusOutlineColor:#0071bc;
+
+/* Headers */
+$headerPadding:8px 16px;
+$inputListHeaderPadding:8px;
+$headerFontSize:16px;
+$headerBgColor:$primaryColor;
+$headerTextColor:$primaryTextColor;
+$headerLightBgColor:#f1f1f1;
+$headerLightTextColor:#212121;
+$headerLightHoverBgColor:#d6d7d9;
+$headerLightBorderColor:#d6d7d9;
+
+/* Contents */
+$contentPadding:16px;
+$contentBgColor:#ffffff;
+$contentBorderColor:#d6d7d9;
+$contentLighterBorderColor:#f1f1f1;
+
+/* Forms */
+$buttonBorderRadius:3px;
+$inputPadding:4px;
+$inputBgColor:#ffffff;
+$inputBorderColor:#aeb0b5;
+$inputHoverBorderColor:#5b616b;
+$inputInvalidBorderColor:#cd2026;
+$inputHeaderBgColor:#e4e2e0;
+$inputSwitchOffBgColor:#a8acb1;
+$inputSwitchOffTextColor:#ffffff;
+$iconActiveColor:#ffffff;
+$iconCloseColor:#212121;
+$inputTextHighlightColor:#ffffff;
+$ratingCancelIconColor:#000000;
+$ratingStarColor:#aeb0b5;
+$ratingStarHoverColor:#5b616b;
+$splitbuttonTextColor:#ffffff;
+$datepickerButtonTextColor:#ffffff;
+$keypadBgColor:#000000;
+
+/*groups*/
+$inputGroupBorderColor:#aeb0b5;
+$inputGroupBgColor:#ffffff;
+$inputGroupTextColor:$textColor;
+$inputGroupIconColor:$textSecondaryColor;
+$inputGroupAddonMinWidth:2*$fontSize;
+$checkboxWidth:20px;
+$checkboxHeight:20px;
+
+/* Buttons */
+$buttonPadding:4px;
+
+$secondaryButtonBgColor: #5b616b;
+$secondaryButtonHoverBgColor:#323a44;
+$secondaryButtonActiveBgColor:#212121;
+$secondaryButtonFocusBgColor:#5b616b;
+$secondaryButtonTextColor:#ffffff;
+
+$blueButtonBgColor:#0071bc;
+$blueButtonHoverBgColor:#205493;
+$blueButtonActiveBgColor:#122e51;
+$blueButtonFocusBgColor:#aeb0b5;
+$blueButtonTextColor:#ffffff;
+
+$cyanButtonBgColor:#00bfe7;
+$cyanButtonHoverBgColor:#00a6d2;
+$cyanButtonActiveBgColor:#046b99;
+$cyanButtonFocusBgColor:#aeb0b5;
+$cyanButtonTextColor:#ffffff;
+
+$greenButtonBgColor:#4AA564;
+$greenButtonHoverBgColor:#378D4F;
+$greenButtonActiveBgColor:#1D6833;
+$greenButtonFocusBgColor:#aeb0b5;
+$greenButtonTextColor:#ffffff;
+
+$yellowButtonBgColor:#F9C642;
+$yellowButtonHoverBgColor:#FDB81E;
+$yellowButtonActiveBgColor:#EAA200;
+$yellowButtonFocusBgColor:#aeb0b5;
+$yellowButtonTextColor:#ffffff;
+
+$purpleButtonBgColor:#6A4AA5;
+$purpleButtonHoverBgColor:#4B2F7F;
+$purpleButtonActiveBgColor:#36215D;
+$purpleButtonFocusBgColor:#aeb0b5;
+$purpleButtonTextColor:#ffffff;
+
+$pinkButtonBgColor:#9f4488;
+$pinkButtonHoverBgColor:#8d3c79;
+$pinkButtonActiveBgColor:#692d5a;
+$pinkButtonFocusBgColor:#aeb0b5;
+$pinkButtonTextColor:#ffffff;
+
+$bluegreyButtonBgColor: #4B6D7E;
+$bluegreyButtonHoverBgColor:#365361;
+$bluegreyButtonActiveBgColor:#233944;
+$bluegreyButtonFocusBgColor:#aeb0b5;
+$bluegreyButtonTextColor:#ffffff;
+
+$tealButtonBgColor: #07A089;
+$tealButtonHoverBgColor:#067E6C;
+$tealButtonActiveBgColor:#04493F;
+$tealButtonFocusBgColor:#aeb0b5;
+$tealButtonTextColor:#ffffff;
+
+$orangeButtonBgColor: #fe875d;
+$orangeButtonHoverBgColor:#E26134;
+$orangeButtonActiveBgColor:#B34621;
+$orangeButtonFocusBgColor:#aeb0b5;
+$orangeButtonTextColor:#ffffff;
+
+$greyButtonBgColor: #5B616B;
+$greyButtonHoverBgColor:#43474E;
+$greyButtonActiveBgColor:#1B1E22;
+$greyButtonFocusBgColor:#aeb0b5;
+$greyButtonTextColor:#ffffff;
+
+/* List Items */
+$listItemPadding:4px 8px;
+$listItemHoverBgColor:#f1f1f1;
+$listItemHoverTextColor:$textColor;
+
+/* Messages */
+$infoMessageBgColor:#e1f3f8;
+$infoMessageTextColor:#212121;
+$warnMessageBgColor:#fff1d2;
+$warnMessageTextColor:#212121;
+$errorMessageBgColor:#f9dede;
+$errorMessageTextColor:#212121;
+$fatalMessageBgColor:#d6d7d9;
+$fatalMessageTextColor:#212121;
+$messageCloseIconColor:#5b616b;
+
+/* TabView */
+$headerTabBgColor:#ffffff;
+
+/* PanelGrid */
+$panelGridHeaderBorderColor:#ffffff;
+$panelGridCellBorderColor:#aeb0b5;
+$toolbarBorderColor:#dddddd;
+$tabsBgColor:#ffffff;
+$scrollpanelDragBgColor:#a8acb1;
+$scrollpanelTrackBgColor:#f0f3f5;
+$tooltipTextBgColor:#2d353c;
+$wizardBgColor:#ffffff;
+
+/*Overlay*/
+$dialogTitlebarIconHover:#aeb0b5;
+$overlayIconColor:#ffffff;
+$overlayIconHoverColor:#d6d7d9;
+
+/*misc*/
+$progressbarTextColor:#ffffff;
+$progressbarBgColor:#aeb0b5;
+
+/*Data*/
+$datatableCellPadding: 4px 8px 5px 8px;
+$paginatorBgColor:#ffffff;
+$panelHeaderTextColor:#999999;
+$paginatorTextColor:#999999;
+$tableHoverColor:#f1f1f1;
+$datatableEvenColor:#f8f8f8;
+$panelTitlebarBgColor:#f5f5f5;
+$carouselBorderColor:#aeb0b5;
+$carouselTextColor:#ffffff;
+$treeTextColor:#5b616a;
+$treetableActiveTextColor:#ffffff;
+$panelButtonBgColor:#ffffff;
+$scheduleHeaderButtonHoverColor:#5b616b;
+$scheduleHeaderButtonActiveColor:#122e51;
+$tableColumnHeaderBgFocus:#f0f3f5;
+$buttonHoverBorderColor:#ffffff;
+$tableColumnHeaderBgColor:#f0f3f5;
+
+/*Menu*/
+$menuitemPadding: 6px 8px;
+$menuListPadding: 6px 0;
+$breadcrumbBgColor:#ffffff;
+$breadcrumbTextColor:#5b616a;
+$breadcrumbBorderColor:#d6d7d9;
+$stepsItemHighlightBgColor:#e1f3f8;
+$stepsItemHighlightTextColor:#0071bb;
+$stepsItemDisabledBgColor:#ffffff;
+$stepsItemDisabledTextColor:#212121;
+$stepsItemBgColor:#e7f4e4;
+$stepsItemColor:#2e8540;
+$menuitemIconColor:#5b616a;
+$menuBgColor:#ffffff;

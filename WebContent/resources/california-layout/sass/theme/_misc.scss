@@ -1,0 +1,68 @@
+body {
+    .ui-progressbar {
+      border-radius: 6px;
+      background-color: $progressbarBgColor;
+        .ui-progressbar-value {
+            border-radius: 6px;
+            background-color: $primaryColor;
+            margin: 0;
+        }
+
+        .ui-progressbar-label {
+            margin-top: -1px;
+            color: $progressbarTextColor;
+        }
+    }
+
+    .ui-clock {
+      padding: 8px 12px;
+    }
+
+    .ui-galleria {
+        .ui-galleria-nav-prev {
+            @include icon_override("\f053");
+            font-size: 18px;
+        }
+
+        .ui-galleria-nav-next {
+            @include icon_override("\f054");
+            font-size: 18px;
+        }
+    }
+
+    .ui-log {
+        @include overlay-shadow();
+
+        .ui-log-header {
+            padding: $headerPadding;
+
+            .ui-log-button {
+                display: inline-block;
+                position: static;
+                margin-right: 4px;
+                color: $progressbarTextColor;
+                padding: 0;
+                @include transition(color $transitionDuration);
+
+                &.ui-state-hover {
+                    color: $overlayIconHoverColor;
+                }
+
+                &.ui-log-clear,
+                &.ui-log-all,
+                &.ui-log-info,
+                &.ui-log-warn,
+                &.ui-log-debug,
+                &.ui-log-error {
+                    top: auto;
+                    left: auto;
+                }
+            }
+        }
+
+        .ui-log-content {
+            padding: $contentPadding;
+            max-height: 250px;
+        }
+    }
+}

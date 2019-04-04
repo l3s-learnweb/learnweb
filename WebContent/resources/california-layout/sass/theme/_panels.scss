@@ -1,0 +1,295 @@
+body {
+    .ui-panel {
+        padding: 0;
+        .ui-panel-titlebar {
+            border: 0 none;
+            padding: $headerPadding;
+            font-weight: 700;
+            font-size: $headerFontSize;
+            @include border-radius-top($borderRadius);
+            @include border-radius-bottom(0px);
+            .ui-panel-titlebar-icon {
+                position: relative;
+                top: 2px;
+                color: $headerTextColor;
+                margin: 0 0 0 4px;
+                @include transition(color .3s);
+                &.ui-state-hover {
+                    color: $dialogTitlebarIconHover;
+                }
+            }
+        }
+        .ui-panel-content {
+            height: 100%;
+            box-sizing: border-box;
+            padding: $contentPadding;
+        }
+        .ui-panel-footer {
+            padding: $headerPadding;
+            border: 0 none;
+            margin: 0;
+            border-top: 1px solid $contentBorderColor;
+        }
+        &.ui-panel-collapsed-h {
+            .ui-panel-titlebar {
+                padding-left: 40px;
+            }
+        }
+    }
+    .ui-fieldset {
+        padding: 0;
+        padding-bottom: 12px;
+        .ui-fieldset-legend {
+            color: $headerLightTextColor;
+            background-color: $headerLightBgColor;
+            margin-left: -1px;
+            font-weight: 700;
+            @include transition(background-color .3s);
+            .ui-fieldset-toggler {
+                float: none;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+            &.ui-state-hover {
+                background-color: $headerLightHoverBgColor;
+            }
+            &.ui-state-focus {}
+        }
+        .ui-fieldset-content {
+            padding: $contentPadding;
+        }
+    }
+    .ui-notificationbar {
+        background-color: $primaryColor;
+        color: $primaryTextColor;
+    }
+    .ui-accordion {
+        .ui-accordion-header {
+            background-color: $headerLightBgColor;
+            padding: $headerPadding;
+            margin-bottom: 8px;
+            color: $headerLightTextColor;
+            font-weight: 700;
+            @include transition(background-color $transitionDuration);
+            &.ui-state-hover,
+            &.ui-tabs-outline {
+                background-color: $headerLightHoverBgColor;
+                color: $headerLightTextColor;
+                outline: 0 none;
+            }
+            &.ui-state-active {
+                background-color: $primaryColor;
+                color: $primaryTextColor;
+                &.ui-tabs-outline {
+                    background-color: $primaryColorDarker;
+                }
+            }
+            .ui-icon {
+                right: 16px;
+                left: auto;
+                @include transition(color $transitionDuration);
+                @include icon_override("\f067");
+                &.ui-icon-triangle-1-s {
+                    @include icon_override("\f068");
+                }
+            }
+        }
+        .ui-accordion-content {
+            padding: $contentPadding;
+            border: 0 none;
+        }
+    }
+    .ui-tabs {
+        padding: 0;
+        border: 0;
+        &.ui-tabs-bottom,
+        &.ui-tabs-left,
+        &.ui-tabs-right,
+        &.ui-tabs-top {
+            .ui-tabs-nav {
+                padding: 0;
+                background-color: $headerTabBgColor;
+                li {
+                    position: relative;
+                    @include transition(background-color $transitionDuration);
+                    @include border-radius(0);
+                    @include border-box();
+                    margin: 0;
+                    border: 1px solid $headerLightBorderColor;
+                    border-right: 0 none;
+                    border-bottom: 0 none;
+                    &:last-child {
+                        border-right: 1px solid $headerLightBorderColor;
+                    }
+                    a {
+                        padding: $headerPadding;
+                        color: $headerLightTextColor;
+                        font-weight: bold;
+                    }
+                    .ui-icon-close {
+                        color: $headerLightTextColor;
+                        float: right;
+                        margin: 10px 4px 0 0;
+                        &:hover {
+                            color: $primaryColor;
+                        }
+                    }
+                    &.ui-state-hover,
+                    &.ui-tabs-outline {
+                        a {
+                            color: $primaryColor;
+                        }
+                    }
+                    &.ui-state-active {
+                        background-color: $headerTabBgColor;
+                        border-bottom: none;
+                        border-top: 4px solid $primaryColor;
+                        a {
+                            color: $primaryColor;
+                            padding-top: 5px;
+                            &:hover {
+                                color: $primaryColor;
+                            }
+                        }
+                        .ui-icon-close {
+                            margin-top: 7px;
+                        }
+                        &.ui-tabs-outline {
+                            background-color: lighten($headerTabBgColor, 5%);
+                        }
+                    }
+                }
+            }
+            .ui-tabs-navscroller-btn {
+                background-color: $tabsBgColor;
+                &.ui-state-hover {
+                    background-color: $headerTabBgColor;
+                    color: $primaryColor;
+                }
+                &.ui-tabs-navscroller-btn-left {
+                    left: 0;
+                    height: 33px;
+                }
+                &.ui-tabs-navscroller-btn-right {
+                    right: 0;
+                    height: 34px;
+                }
+                .ui-icon {
+                    margin-top: 8px;
+                }
+            }
+        }
+        &.ui-tabs-left,
+        &.ui-tabs-right {
+            .ui-tabs-nav {
+                li {
+                    width: 100%;
+                    background-color: $headerTabBgColor;
+                }
+            }
+        }
+        .ui-tabs-panel {
+            padding: $contentPadding;
+            border: 1px solid $headerLightBorderColor;
+        }
+    }
+    .ui-panelgrid {
+        .ui-panelgrid-header,
+        .ui-panelgrid-footer {
+            .ui-panelgrid-cell {
+                color: $headerLightTextColor;
+                background-color: $headerLightBgColor;
+            }
+        }
+        .ui-widget-header {
+            color: $headerLightTextColor;
+            background-color: $headerLightBgColor;
+            border-color: $headerLightBorderColor;
+        }
+        .ui-panelgrid-cell {
+            padding: 8px 12px;
+        }
+    }
+    .ui-scrollpanel {
+        .ui-scrollpanel-drag {
+            background-color: $scrollpanelDragBgColor;
+        }
+        .ui-scrollpanel-track {
+            background-color: $scrollpanelTrackBgColor;
+        }
+        .ui-scrollpanel-corner {
+            background-color: $scrollpanelTrackBgColor;
+        }
+    }
+    .ui-toolbar {
+        padding: $headerPadding;
+        background-color: $contentBgColor;
+        color: $textColor;
+        border: solid 2px $toolbarBorderColor;
+        .ui-button {
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+        .ui-button-text-icon-left {
+            .ui-icon {
+                margin-left: 10px;
+                margin-top: -10px;
+            }
+        }
+        .ui-button-text {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .ui-button-icon-only {
+            border-radius: 50%;
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+        }
+    }
+    .ui-tooltip {
+        .ui-tooltip-arrow {
+            color: $tooltipTextBgColor;
+        }
+        .ui-tooltip-text {
+            background-color: $tooltipTextBgColor;
+        }
+    }
+    .ui-wizard {
+        .ui-wizard-step-titles {
+            .ui-wizard-step-title {
+                background-color: $wizardBgColor;
+                border-left: 1px solid $contentBorderColor;
+                margin: 0;
+                padding: $headerPadding;
+                @include border-radius(0);
+                &:first-child {
+                    @include border-radius-left($borderRadius);
+                    border-right: 1px solid $contentBorderColor;
+                }
+                &:last-child {
+                    @include border-radius-right($borderRadius);
+                    border-right: 1px solid $contentBorderColor;
+                }
+                &.ui-state-highlight {
+                    border-color: $primaryColor;
+                    background-color: $primaryColor;
+                    color: $wizardBgColor;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        .ui-panelgrid {
+            .ui-grid-responsive {
+                .ui-grid-row {
+                    border: 0 none;
+                }
+            }
+        }
+    }
+}

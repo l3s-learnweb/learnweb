@@ -13,7 +13,7 @@
             </div>
         </ui:fragment>
         <ui:fragment rendered="#{res.type eq 'website' and not empty res.thumbnail3}">
-            <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
+            <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
         </ui:fragment>
         <ui:fragment rendered="#{res.isOfficeResource() and not (res.isOffline())}">
             <div class="preview_box_wrapper editor_preview">
@@ -30,7 +30,7 @@
             <div class="preview_box_wrapper">
                 <img src="#{res.thumbnail3.url}" onmouseup="lightbox_open();"
                      height="#{res.thumbnail3.height}" width="#{res.thumbnail3.width}"
-                     style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
+                     style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
             </div>
         </ui:fragment>
     </h:panelGroup>

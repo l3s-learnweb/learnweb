@@ -30,7 +30,7 @@
 /* source-sans-pro-700 - latin-ext_latin */
 @font-face {
   font-family: 'Source Sans Pro';
-  font-style: bold;
+  font-style: normal;
   font-weight: 700;
   src: url("#{resource['california-layout:fonts/source-sans-pro-v11-latin-ext_latin-700.eot']}");
   /* IE9 Compat Modes */

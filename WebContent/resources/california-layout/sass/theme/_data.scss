@@ -1,0 +1,987 @@
+body {
+    .ui-paginator {
+        background-color: $paginatorBgColor;
+        border: 1px solid $headerLightBorderColor;
+        padding: $headerPadding;
+
+        a {
+            color: $headerLightTextColor;
+        }
+
+        .ui-paginator-first,
+        .ui-paginator-last,
+        .ui-paginator-next,
+        .ui-paginator-prev {
+            height: 20px;
+            border-top: 4px solid transparent;
+            @include transition(color $transitionDuration);
+
+            span {
+                display: none;
+            }
+
+            &.ui-state-hover {
+                color: $primaryColor;
+            }
+        }
+
+        .ui-paginator-current {
+          color: $headerLightTextColor;
+        }
+
+        .ui-paginator-first {
+            @include icon-override("\f048");
+        }
+
+        .ui-paginator-prev {
+            @include icon-override("\f04a");
+        }
+
+        .ui-paginator-next {
+            @include icon-override("\f04e");
+        }
+
+        .ui-paginator-last {
+            @include icon-override("\f051");
+        }
+
+        .ui-paginator-pages {
+            padding: 0 0 4px 0;
+
+            .ui-paginator-page {
+                color: $headerLightTextColor;
+                padding-right: 10px;
+                padding-left: 10px;
+                @include transition(color .3s);
+
+                &.ui-state-hover {
+                    color: $primaryColor;
+                }
+
+                &.ui-state-active {
+                    background-color: $paginatorBgColor;
+                    color: $primaryColor;
+                    font-weight: 700;
+                }
+            }
+        }
+
+        &.ui-paginator-top {
+           .ui-paginator-page.ui-state-active {
+                border-top: 4px solid $primaryColor;
+           }
+        }
+
+        &.ui-paginator-bottom {
+           .ui-paginator-page.ui-state-active {
+                border-bottom: 4px solid $primaryColor;
+           }
+        }
+    }
+
+    .ui-datatable {
+        .ui-datatable-footer,
+        .ui-datatable-header {
+            padding: $headerPadding;
+            text-align: left;
+            font-weight: 700;
+            font-size: $fontSize+2;
+        }
+
+        .ui-datatable-header {
+            & + .ui-paginator-top {
+                border-top: 0 none;
+            }
+        }
+
+        .ui-paginator {
+            padding: 0;
+
+            &.ui-paginator-top {
+                border-bottom: 0 none;
+            }
+    
+            &.ui-paginator-bottom {
+                padding-top: 0;
+    
+                .ui-paginator-pages {
+                    padding: 4px 0 0 0;
+                }
+            }
+        }
+
+        thead {
+            th {
+                background-color: $paginatorBgColor;
+                padding: $headerPadding;
+                border-color: $dividerColor;
+                color: $textColor;
+                font-size: $fontSize + 2;
+
+                &.ui-state-hover {
+                    @include list-item-hover();
+                }
+
+                &.ui-state-active {
+                    background-color: $primaryColor;
+                    border-color: darken($primaryColor,5%);
+
+                    .ui-button {
+                        background: $primaryTextColor;
+                        color: $primaryColor;
+                    }
+
+                    .ui-column-title, .ui-sortable-column-icon {
+                        color: $primaryTextColor;
+                    }
+                }
+
+                &:focus {
+                    outline: 0 none;
+                    background-color: $tableColumnHeaderBgFocus;
+
+                    &.ui-state-active {
+                        background-color: lighten($primaryColor,5%);
+                    }
+                }
+            }
+        }
+
+        tfoot {
+            td {
+                font-weight: 700;
+                background-color: $paginatorBgColor;
+                padding: $headerPadding;
+                border-color: $dividerColor;
+                color: $textColor;
+                font-size: $fontSize + 2;
+            }
+        }
+
+        .ui-datatable-data {
+            tr {
+                &.ui-datatable-even {
+                    background-color: $datatableEvenColor;
+
+                    &.ui-state-highlight {
+                        background-color: $primaryColor;
+                        color: $primaryTextColor;
+                        border-color: darken($primaryColor,5%);
+                    }
+                }
+
+                &.ui-state-hover {
+                    background-color: $tableHoverColor;
+                    border-color: darken($tableHoverColor,5%);
+                }
+
+                &.ui-state-highlight {
+                    border-color: darken($primaryColor,5%);
+                    background-color: $primaryColor;
+                    color: $primaryTextColor;
+                }
+
+                &.ui-row-editing {
+                    &.ui-datatable-even,
+                    &.ui-datatable-odd {
+                        border-color: $contentBorderColor;
+                        border-bottom-color: $primaryColor;
+                    }
+                }
+
+                td {
+                    padding: $datatableCellPadding;
+
+                    &.ui-editable-column {
+                        input {
+                            width: 100%;
+                            box-sizing: border-box;
+                            border: 0 none;
+                            @include border-radius(0);
+                        }
+                    }
+
+                    a.ui-rowgroup-toggler {
+                        padding-right: 2em;
+
+                        .ui-rowgroup-toggler-icon {
+                            width: 17px;
+                            height: 17px;
+                            color: $primaryTextColor;
+                            font-size: $fontSize + 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        > .ui-icon-arrowthick-1-s {
+            color: $primaryColorDarker;
+            font-size: 16px;
+            padding-top: 0;
+
+            &:before {
+                margin-left: 2px;
+            }
+        }
+
+        > .ui-icon-arrowthick-1-n {
+            color: $primaryColorDarker;
+            font-size: 16px;
+            padding-top: 10px;
+
+            &:before {
+                margin-left: 2px;
+            }
+        }
+
+        .ui-datatable-scrollable-footer,
+        .ui-datatable-scrollable-header {
+            background-color: $tableColumnHeaderBgFocus;
+
+            .ui-datatable-scrollable-header-box {
+                td {
+                    color: $textColor;
+                }
+            }
+        }
+
+        .ui-datatable-scrollable-body::-webkit-scrollbar {
+            background-color: $tableColumnHeaderBgFocus;
+        }
+    }
+
+    .ui-datagrid {
+        .ui-datagrid-header {
+            padding: $headerPadding;
+            text-align: left;
+            font-weight: 700;
+            font-size: $fontSize + 2;
+
+            & + .ui-paginator-top {
+                border-top: 0 none;
+            }
+        }
+
+        .ui-paginator {
+            padding: 0;
+
+            &.ui-paginator-top {
+                border-bottom: 0 none;
+            }
+    
+            &.ui-paginator-bottom {
+                padding-top: 0;
+    
+                .ui-paginator-pages {
+                    padding: 4px 0 0 0;
+                }
+            }
+        }
+
+        .ui-datagrid-content {
+            padding: $contentPadding;
+        }
+
+        .ui-panel {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .ui-panel-titlebar {
+            background-color: $panelTitlebarBgColor;
+            color: $textColor;
+            border-bottom: 1px solid $contentBorderColor;
+        }
+
+        .ui-panel-content {
+            tr {
+                color: $headerLightTextColor;
+
+                td {
+                    span {
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            td {
+                .ui-button {
+                    background-color: $panelButtonBgColor;
+                    border: 0;
+
+                    span {
+                        color:$panelHeaderTextColor;
+                        font-size: 16px;
+
+                        &:hover {
+                            color: $primaryColor;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .ui-datalist {
+
+        .ui-datalist-header {
+            padding: $headerPadding;
+            font-weight: 700;
+            font-size: $fontSize + 2;
+            text-align: left;
+
+            & + .ui-paginator-top {
+                border-top: 0 none;
+            }
+        }
+
+        .ui-paginator {
+            padding: 0;
+
+            &.ui-paginator-top {
+                border-bottom: 0 none;
+            }
+    
+            &.ui-paginator-bottom {
+                padding-top: 0;
+    
+                .ui-paginator-pages {
+                    padding: 4px 0 0 0;
+                }
+            }
+        }
+    }
+
+    .ui-datascroller {
+        .ui-datascroller-header {
+            padding: $headerPadding;
+        }
+    }
+
+    .ui-picklist {
+        .ui-picklist-buttons {
+            .ui-icon-arrow-1-n {
+                @include icon-override("\f106");
+            }
+
+            .ui-icon-arrowstop-1-n {
+                @include icon-override("\f102");
+            }
+
+            .ui-icon-arrow-1-s {
+                @include icon-override("\f107");
+            }
+
+            .ui-icon-arrowstop-1-s {
+                @include icon-override("\f103");
+            }
+
+            .ui-icon-arrow-1-e {
+                @include icon-override("\f105");
+            }
+
+            .ui-icon-arrowstop-1-e {
+                @include icon-override("\f101");
+            }
+
+            .ui-icon-arrow-1-w {
+                @include icon-override("\f104");
+            }
+
+            .ui-icon-arrowstop-1-w {
+                @include icon-override("\f100");
+            }
+        }
+
+        .ui-picklist-caption {
+            padding: $headerPadding;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .ui-picklist-filter-container {
+            display: none;
+        }
+
+        .ui-picklist-list {
+            .ui-picklist-item {
+                padding: $listItemPadding;
+                margin: 0;
+                @include border-radius(0);
+
+                &.ui-state-hover {
+                    @include list-item-hover();
+                }
+            }
+        }
+
+    }
+
+    @media (max-width: 40em) {
+        .ui-picklist {
+            .ui-picklist-buttons {
+                .ui-button {
+                    margin-right: 8px;
+
+                    &:last-child {
+                        margin-right: 0;
+                    } 
+                }
+
+                .ui-icon-arrow-1-e {
+                    @include icon-override("\f107");
+                }
+
+                .ui-icon-arrowstop-1-e {
+                    @include icon-override("\f103");
+                }
+
+                .ui-icon-arrow-1-w {
+                    @include icon-override("\f106");
+                }
+
+                .ui-icon-arrowstop-1-w {
+                    @include icon-override("\f102");
+                }
+            }
+        }
+    }
+
+    .ui-orderlist {
+        .ui-orderlist-controls {
+            .ui-icon-arrow-1-n {
+                @include icon-override("\f106");
+            }
+
+            .ui-icon-arrowstop-1-n {
+                @include icon-override("\f102");
+            }
+
+            .ui-icon-arrow-1-s {
+                @include icon-override("\f107");
+            }
+
+            .ui-icon-arrowstop-1-s {
+                @include icon-override("\f103");
+            }
+        }
+
+        .ui-orderlist-caption {
+            padding: $headerPadding;
+            box-sizing: border-box;
+            width: 200px;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .ui-orderlist-list {
+            box-sizing: border-box;
+
+            .ui-orderlist-item {
+                padding: $listItemPadding;
+                margin: 0;
+                @include border-radius(0);
+
+                &.ui-state-hover {
+                    @include list-item-hover();
+                }
+            }
+        }
+
+        &.ui-grid-responsive {
+            .ui-grid-row {
+                .ui-orderlist-controls {
+                    margin-right: 0;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 40em) {
+        .ui-orderlist {
+            .ui-orderlist-controls {
+                .ui-button {
+                    margin-right: 8px;
+
+                    &:last-child {
+                        margin-right: 0;
+                    } 
+                }
+            }
+        }
+    }
+
+    .ui-carousel {
+        padding: 0;
+
+        .ui-carousel-header {
+            padding: $headerPadding;
+            margin: 0;
+            font-weight: 700;
+            text-align: left;
+            font-size: $fontSize+2;
+            @include border-radius-bottom(0);
+
+            .ui-carousel-header-title {
+                padding: 0;
+            }
+
+            .ui-carousel-dropdown, .ui-carousel-mobile-dropdown {
+                margin-top: 2px;  
+            }
+        }
+
+        .ui-carousel-footer {
+            padding: $headerPadding;
+            background-color: $headerLightBgColor;
+            margin: 0;
+            color: $headerLightTextColor;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .ui-carousel-button {
+            margin: 4px 2px 0;
+            @include transition(color .3s);
+
+            &.ui-carousel-next-button {
+                @include icon-override("\f101");
+                margin-left: 4px;
+            }
+
+            &.ui-carousel-prev-button {
+                @include icon-override("\f100");
+                margin-left: 4px;
+            }
+
+            &:hover {
+                color: $carouselButtonHoverColor;
+            }
+
+            &.ui-state-disabled:hover {
+                color: $primaryTextColor;
+            }
+        }
+
+        .ui-carousel-page-links {
+            margin-top: 4px;
+
+            .ui-carousel-page-link {
+                padding-right: 3px;
+                color: $carouselTextColor;
+                font-size: 12px;
+                @include icon-override("\f111");
+
+                &:hover {
+                    color: $carouselButtonHoverColor;
+                }
+
+                &.ui-icon-radio-on {
+                    color: $carouselPageLinksActiveColor;
+                }
+            }
+        }
+
+        .ui-carousel-viewport {
+            border: 1px solid $headerLightBgColor;
+
+            .ui-carousel-items {
+                .ui-carousel-item {
+                    border: 1px solid $headerLightBgColor;
+                    margin: -1px;
+                }
+            }
+        }
+    }
+
+    .ui-treetable {
+        .ui-treetable-header {
+            padding: $headerPadding;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .ui-treetable-footer {
+            padding: $headerPadding;
+        }
+
+        .ui-paginator {
+            padding: $headerPadding;
+        }
+
+        thead {
+            th {
+                background-color: $paginatorBgColor;
+                padding: $headerPadding;
+                border-color: $dividerColor;
+                color: $textColor;
+
+                &.ui-state-hover {
+                    @include list-item-hover();
+                }
+
+                &.ui-state-active {
+                    background-color: $primaryColor;
+                    border-color: darken($primaryColor,5%);
+                    color:$treetableActiveTextColor;
+                }
+
+                .ui-sortable-column-icon {
+                    margin-left: 7px;
+
+                    &.ui-state-active {
+                        color: $treetableActiveTextColor;
+                    }
+                }
+
+                .ui-treetable-resizer {
+                    margin: -8px -16px 0 0;
+                    height: 24px;
+                }
+            }
+        }
+
+        tfoot {
+            td {
+                font-weight: 700;
+                background-color: $paginatorBgColor;
+                padding: $headerPadding;
+                border-color: $dividerColor;
+                font-size: $fontSize + 2;
+            }
+        }
+
+        .ui-treetable-data {
+            tr {
+                &.ui-state-hover {
+                    background-color: $listItemHoverBgColor;
+                    border-color: darken($contentBorderColor,5%);
+                }
+
+                &.ui-state-highlight {
+                    border-color: darken($primaryColor,5%);
+                }
+
+                td {
+                    padding: 6px 12px;
+
+                    .ui-treetable-toggler {
+                        font-size: $fontSize + 2;
+                        vertical-align: middle;
+                        display: inline-block;
+                        float: none;
+                        margin: 0 6px 0 0;
+                        position: relative;
+                        top: -1px;
+
+                        &.ui-icon-triangle-1-s {
+                            margin-top: -4px;
+                        }
+                    }
+
+                    .ui-chkbox {
+                        vertical-align: middle;
+                        display: inline-block;
+                        float: none;
+                        margin: 0 8px 0 0;
+                        position: relative;
+                        top: -1px;
+
+                        .ui-chkbox-icon {
+                            color: $primaryColor;
+
+                            &.ui-icon-minus {
+                                @include icon_override("\f00c");
+                                color: $textSecondaryColor;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .ui-treetable-scrollable-footer,
+        .ui-treetable-scrollable-header {
+            background-color: $tableColumnHeaderBgFocus;
+
+            .ui-treetable-scrollable-header-box {
+                td {
+                    color: $textColor;
+                }
+            }
+        }
+
+        .ui-treetable-scrollable-body::-webkit-scrollbar {
+            background-color: $tableColumnHeaderBgFocus;
+        }
+    }
+
+    .ui-tree {
+        padding: 6px 12px;
+        color: $treeTextColor;
+        @include border-box();
+
+        .ui-treenode {
+            padding: 2px 0;
+
+            .ui-treenode-content {
+                .ui-tree-toggler {
+                    font-size: $fontSize + 2;
+                    vertical-align: middle;
+                    display: inline-block;
+                    float: none;
+                    margin: 0 4px 0 0;
+                    height: auto;
+                    @include icon_override("\f067");
+
+                    &.ui-icon-triangle-1-s {
+                        @include icon_override("\f068");
+                    }
+
+                    &.ui-icon-minus {
+                        @include icon_override("\f068");
+                    }
+                }
+
+                &.ui-state-highlight {
+                    color: $treeTextColor;
+                }
+
+                .ui-treenode-leaf-icon {
+                    margin: 0 4px 0 0;
+                }
+
+                .ui-treenode-icon {
+                    vertical-align: middle;
+                    display: inline-block;
+                    margin: 0 6px 0 0;
+                    font-size: $fontSize + 2;
+                }
+
+                .ui-treenode-label {
+                    margin: 0;
+                    vertical-align: middle;
+                    display: inline-block;
+                    padding: 0;
+
+                    &.ui-state-highlight {
+                        background-color: transparent;
+                        color: $primaryColor;
+                        font-weight: 600;
+                    }
+
+                    &.ui-treenode-outline {
+                        outline: 0 none;
+                    }
+
+                    &.ui-state-hover {
+                        color: $primaryColor;
+                    }
+                }
+
+                .ui-chkbox {
+                    margin: 0 8px 0 0;
+
+                    .ui-icon-minus {
+                        @include icon_override("\f00c");
+                        color: $textSecondaryColor;
+                    }
+                }
+
+                &[aria-selected="true"] {
+                    :before {
+                        @include icon_override("\f1b1");
+                    }
+
+                    :after {
+                        @include icon_override("\f1b1");
+                    }
+
+                    > .ui-tree-selectable {
+                        color: $primaryColor;
+                    }
+                }
+            }
+        }
+
+        .ui-tree-droppoint {
+            &.ui-state-hover {
+                background-color: $primaryColor;
+            }
+        }
+
+        &.ui-tree-horizontal {
+            padding: 12px 0;
+
+            .ui-treenode-content {
+                padding: 6px 12px;
+                background-color: $panelButtonBgColor;
+                border: 1px solid $contentBorderColor;
+
+                &.ui-state-hover {
+                    @include list-item-hover();
+                }
+
+                &.ui-state-highlight {
+                    background: $primaryColor;
+                    color: $primaryTextColor;
+                }
+
+                .ui-treenode-icon {
+                    margin-top: -2px;
+                }                    
+
+                .ui-chkbox {
+                    .ui-icon {
+                        color: $primaryColor;
+                    }
+                }
+            }
+        }
+
+        .ui-tree-filter-container .ui-icon {
+            top: 7px;
+            right: 7px;
+        }
+    }
+
+    .ui-tree-rtl {
+        .ui-treenode {
+            .ui-treenode-content {
+                .ui-treenode-label {
+                    margin-right: 6px;
+                }
+            }
+        }
+    } 
+
+    .ui-tree-draghelper {
+        border: 1px solid $primaryColor;
+    }
+
+    .timeline-frame {
+        .timeline-event-box {
+            background-color: $contentBgColor;
+
+            &.ui-state-active {
+                background-color: $primaryColor;
+                color: $primaryTextColor;
+            }
+        }
+
+        .timeline-event-dot {
+            &.ui-state-active {
+                color: $primaryColor;
+            }
+        }
+
+        .timeline-event-line {
+            &.ui-state-active {
+                color: $primaryColor;
+            }
+        }
+    }
+
+    .fc {
+        .fc-event {
+          background-color: $primaryDarkest;
+          border: 1px solid $primaryDarkest;
+        }
+
+        .fc-toolbar {
+            background-color: $primaryColor;
+            color: $primaryTextColor;
+            font-size: $fontSize+2;
+            padding: 12px 12px 0 12px;
+            margin: 0;
+
+            .fc-left {
+                .fc-button-group {
+                    font-size: 18px;
+
+                    .fc-prev-button {
+                        margin-right: 10px;
+                        outline-color: transparent;
+                    }
+
+                    .fc-prev-button {
+                        outline-color: transparent;
+                    }
+
+                    .ui-icon-circle-triangle-w {
+                        @include icon_override("\f100");
+                        position: relative;
+                        top: 2px;
+                    }
+
+                    .ui-icon-circle-triangle-e {
+                        @include icon_override("\f101");
+                        position: relative;
+                        top: 2px;
+                    }
+                }
+
+                .fc-today-button {
+                    margin-top: 2px;
+                }
+            }
+
+            h2 {
+                margin-top: 3px;
+            }
+
+            .fc-right {
+                .fc-button-group {
+                    .ui-button {
+                      border-radius: 0;
+                      outline-color: transparent;
+                    }
+
+                    button {
+                        font-weight: 400;
+                        background-color: $primaryColor;
+                        border: 0;
+                        padding: 12px 10px 35px 10px;
+
+                        &.ui-state-hover {
+                          border-bottom: 4px solid $buttonHoverBorderColor;
+                        }
+
+                        &.ui-state-active {
+                            border-bottom: 4px solid $buttonHoverBorderColor;
+                            font-weight: 600;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        .fc-head-container {
+            border: 1px solid $primaryColor;
+            border-top-color: $headerLightBorderColor;
+
+            .ui-widget-header {
+                background-color: $primaryColor;
+                color: $primaryTextColor;
+                font-weight: 600;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid $headerLightBorderColor;
+                margin-bottom: -1px;
+                
+                &.fc-axis {
+                    border-color: $primaryColor;
+                }
+            }
+
+            .fc-day-header {
+                border: 0;
+                text-align: center;
+                text-transform: uppercase;
+            }
+        }
+    }
+}

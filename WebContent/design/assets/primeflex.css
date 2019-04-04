@@ -66,12 +66,15 @@
 }
 
 .p-justify-around {
+    /*noinspection CssInvalidPropertyValue*/
     -ms-flex-pack: distribute;
     justify-content: space-around;
 }
 
 .p-justify-even {
+    /*noinspection CssInvalidPropertyValue*/
     -webkit-box-pack: space-evenly;
+    /*noinspection CssInvalidPropertyValue*/
     -ms-flex-pack: space-evenly;
     justify-content: space-evenly;
 }

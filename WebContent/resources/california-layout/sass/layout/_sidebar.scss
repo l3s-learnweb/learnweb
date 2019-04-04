@@ -1,0 +1,372 @@
+.layout-wrapper {
+    .layout-sidebar {
+        width: 230px;
+        background-color: $sidebarBgColor;
+        border-right: solid 1px $sidebarBorderColor;
+        position: fixed;
+        z-index: 999;
+        top: 60px;
+        left: 0;
+        height: 100%;
+        @include border-box();
+        @include transition(left $transitionDuration);
+        @if variable-exists(menuBgImage) {
+            background-image: url("\#{resource['california-layout:images/special/#{$menuBgImage}']}");
+            background-size: 240px 100%;
+            background-repeat: no-repeat;
+        }
+        .user-profile {
+            text-align: center;
+            color: $textColor;
+            #sidebar-profile-button {
+                padding: 12px 0;
+                img {
+                    display: block;
+                    margin-left: 70px;
+                }
+            }
+            a {
+                color: $textColor;
+                display: block;
+                position: relative;
+                .sidebar-profile-name {
+                    display: inline-block;
+                    font-weight: 700;
+                }
+                .sidebar-profile-role {
+                    display: block;
+                    color: darken($textSecondaryColor, 25%);
+                }
+                &:hover {
+                    background-color: $sidebarMenuitemHoverBgColor;
+                }
+                .layout-menuitem-toggler {
+                    position: absolute;
+                    right: 12px;
+                    top: 11px;
+                }
+            }
+        }
+        .layout-menu {
+            list-style-type: none;
+            padding: 0 0 120px 0;
+            margin: 0;
+            .text-badge {
+                .menuitem-badge {
+                    width: 40px;
+                    margin-right: 22px;
+                }
+            }
+            li {
+                >a {
+                    display: block;
+                    padding: 8px 12px;
+                    color: $sidebarMenuitemTextColor;
+                    position: relative;
+                    .menuitem-badge {
+                        margin-right: 25px;
+                        float: right;
+                        color: $badgeTextColor;
+                        background-color: $badgeBgColor;
+                        width: 20px;
+                        height: 20px;
+                        text-align: center;
+                        margin-left: 0;
+                        border-radius: 50px;
+                    }
+                    i {
+                        color: $sidebarMenuitemIconColor;
+                        font-weight: 700;
+                        &.layout-menuitem-toggler {
+                            position: absolute;
+                            right: 12px;
+                            top: 11px;
+                            @include transition(transform $transitionDuration);
+                        }
+                    }
+                    span {
+                        margin-left: 12px;
+                    }
+                    &:hover {
+                        background-color: $sidebarMenuitemHoverBgColor;
+                    }
+                }
+                >ul {
+                    list-style-type: none;
+                    padding: 0 0 0 0;
+                    margin: 0;
+                    display: none;
+                    li {
+                        >a {
+                            padding: 8px 24px;
+                        }
+                        ul {
+                            li {
+                                >a {
+                                    padding: 8px 36px;
+                                }
+                                ul {
+                                    li {
+                                        >a {
+                                            padding: 8px 48px;
+                                        }
+                                        ul {
+                                            li {
+                                                >a {
+                                                    padding: 8px 60px;
+                                                }
+                                                ul {
+                                                    li {
+                                                        >a {
+                                                            padding: 8px 72px;
+                                                        }
+                                                        ul {
+                                                            li {
+                                                                >a {
+                                                                    padding: 8px 84px;
+                                                                }
+                                                                ul {
+                                                                    li {
+                                                                        >a {
+                                                                            padding: 8px 96px;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                &.active-menuitem {
+                    >a {
+                        color: $sidebarMenuitemActiveTextColor;
+                        i {
+                            color: $sidebarMenuitemActiveTextColor;
+                        }
+                        i.layout-menuitem-toggler {
+                            @include rotate(-180deg);
+                        }
+                    }
+                }
+            }
+            >li {
+                >a {
+                    border-bottom: 1px solid $sidebarMenuitemDividerColor;
+                }
+                &.active-menuitem {
+                    >a {
+                        border-left: 4px solid $sidebarMenuitemActiveBorderLeftColor;
+                        padding-left: 8px;
+                        i {
+                            color: $sidebarMenuitemActiveIconColor;
+                        }
+                    }
+                    >ul {
+                        border-bottom: 1px solid $sidebarMenuitemDividerColor;
+                    }
+                }
+                &:first-child {
+                    >a {
+                        border-top: 1px solid $sidebarMenuitemDividerColor;
+                    }
+                }
+                &.ui-menuitem-submenu {
+                    &.active-menuitem {
+                        >a {
+                            border-bottom-color: transparent;
+                        }
+                    }
+                }
+            }
+        }
+        .sidebar-scroll-content {
+            display: block;
+            height: 100%;
+            position: relative;
+        }
+        .nano {
+            .nano-pane {
+                .nano-slider {
+                    background: #e0e0e0;
+                }
+            }
+        }
+        &.layout-sidebar-dark {
+            background-color: $darkSidebarBgColor;
+            border-right-color: $darkSidebarBgColor;
+            @if variable-exists(darkMenuBgImage) {
+                background-image: url("\#{resource['california-layout:images/special/#{$darkMenuBgImage}']}");
+                background-size: 240px 100%;
+                background-repeat: no-repeat;
+            }
+            .user-profile {
+                color: $darkSidebarMenuitemTextColor;
+                a {
+                    color: $darkSidebarMenuitemTextColor;
+                    &:hover {
+                        background-color: $darkSidebarMenuitemHoverBgColor;
+                    }
+                    .sidebar-profile-role {
+                        color: $darkSidebarMenuitemTextColor;
+                    }
+                }
+                li.menuitem-active {
+                    >a {
+                        color: $darkSidebarMenuitemActiveTextColor;
+                        i {
+                            color: $darkSidebarMenuitemActiveIconColor;
+                        }
+                    }
+                }
+            }
+            .layout-menu {
+                li {
+                    >a {
+                        color: $darkSidebarMenuitemTextColor;
+                        i {
+                            color: $darkSidebarMenuitemIconColor;
+                        }
+                        &:hover {
+                            background-color: $darkSidebarMenuitemHoverBgColor;
+                        }
+                    }
+                    &.active-menuitem {
+                        >a {
+                            color: $darkSidebarMenuitemActiveTextColor;
+                            i {
+                                color: $darkSidebarMenuitemActiveIconColor;
+                            }
+                        }
+                    }
+                }
+                >li {
+                    >a {
+                        border-bottom: 1px solid $darkSidebarMenuitemDividerColor;
+                    }
+                    &.active-menuitem {
+                        >a {
+                            border-left: 4px solid $darkSidebarMenuitemActiveBorderLeftColor;
+                            padding-left: 8px;
+                            color: $darkSidebarMenuitemActiveTextColor;
+                            i {
+                                color: $darkSidebarMenuitemActiveIconColor;
+                            }
+                        }
+                        >ul {
+                            border-bottom: 1px solid $darkSidebarMenuitemDividerColor;
+                        }
+                    }
+                    &:first-child {
+                        >a {
+                            border-top: 1px solid $darkSidebarMenuitemDividerColor;
+                        }
+                    }
+                }
+            }
+            .nano {
+                .nano-pane {
+                    .nano-slider {
+                        background: rgba(255, 255, 255, 0.1);
+                    }
+                }
+            }
+        }
+        &.layout-sidebar-gradient {
+            border-right-color: transparent;
+            @if variable-exists(gradientMenuBgImage) {
+                background-image: url("\#{resource['california-layout:images/special/#{$gradientMenuBgImage}']}");
+                background-size: 240px 100%;
+                background-repeat: no-repeat;
+            }
+            @else {
+                @include background-gradient-top2bottom($gradientSidebarTopBgColor,
+                $gradientSidebarBottomBgColor);
+                border-right-color: $gradientSidebarTopBgColor;
+            }
+            .layout-menu {
+                li {
+                    >a {
+                        color: $gradientSidebarMenuitemTextColor;
+                        i {
+                            color: $gradientSidebarMenuitemIconColor;
+                        }
+                        &:hover {
+                            background-color: $gradientSidebarMenuitemHoverBgColor;
+                        }
+                    }
+                    &.active-menuitem {
+                        >a {
+                            color: $gradientSidebarMenuitemActiveTextColor;
+                            i {
+                                color: $gradientSidebarMenuitemActiveIconColor;
+                            }
+                        }
+                    }
+                }
+                >li {
+                    >a {
+                        border-bottom: 1px solid $gradientSidebarMenuitemDividerColor;
+                    }
+                    &.active-menuitem {
+                        >a {
+                            border-left: 4px solid $gradientSidebarMenuitemActiveBorderLeftColor;
+                            padding-left: 8px;
+                            color: $gradientSidebarMenuitemActiveTextColor;
+                            i {
+                                color: $gradientSidebarMenuitemActiveIconColor;
+                            }
+                        }
+                        >ul {
+                            border-bottom: 1px solid $gradientSidebarMenuitemDividerColor;
+                        }
+                    }
+                    &:first-child {
+                        >a {
+                            border-top: 1px solid $gradientSidebarMenuitemDividerColor;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &.layout-wrapper-sidebar-inactive {
+        .layout-sidebar {
+            left: -230px;
+        }
+    }
+    &.layout-wrapper-overlay-sidebar {
+        .layout-sidebar {
+            left: -230px;
+        }
+        &.layout-wrapper-overlay-sidebar-active {
+            .layout-sidebar {
+                left: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: $mobileBreakPoint) {
+    .layout-wrapper {
+        .layout-sidebar {
+            left: -230px;
+            top: 105px;
+            @include shadow(2px 0 1px 0 rgba(0,
+            0,
+            0,
+            0.16));
+        }
+        &.layout-wrapper-sidebar-mobile-active {
+            .layout-sidebar {
+                left: 0;
+            }
+        }
+    }
+}
