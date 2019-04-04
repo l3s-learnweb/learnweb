@@ -45,7 +45,8 @@
 								</f:facet>
 							</p:textEditor>
 							<div class="margin-top">
-								<h:commandButton action="#{adminNewsBean.onCreateNews()}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.update}" />
+								<h:commandButton action="#{adminNewsBean.onCreateNews()}" process="@this"
+												 update="@form :growl" rendered="#{userBean.admin}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.add}" />
 							</div>
 						</div>
 					</div>
@@ -53,7 +54,7 @@
 			</h:form>
 			<h:form id="news_form" styleClass="form">
 				<div class="p-grid">
-					<div class="p-col-12">
+					<div class="p-col-12 no-padding-top margin-top">
 						<p:blockUI block="news_table" widgetVar="news_form_blocker">
 							<div class="float-left">#{msg.please_wait}. This action may take several minutes for big news.</div>
 							<div class="loading-animation small float-left">

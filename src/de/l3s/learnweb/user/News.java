@@ -69,6 +69,5 @@ public class News
         this.text = text;
     }
 
-    /*news page, newsBean, newsBeanManenger, таблица, футер присобачить к днищу*/
 
 }

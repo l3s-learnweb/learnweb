@@ -32,6 +32,11 @@ public class AdminNewsBean extends ApplicationBean
 
 
 
+    private int newsId;
+    private News news;
+
+
+
 
 
     public AdminNewsBean() throws SQLException
@@ -41,26 +46,61 @@ public class AdminNewsBean extends ApplicationBean
 
     private void load() throws SQLException
     {
+
         if(getUser().isAdmin())
-            try{
+        {
+            try
+            {
                 newsList = new ArrayList<>(getLearnweb().getNewsManager().getNewsAll());
-            }catch(Exception e){
+            }
+            catch(Exception e)
+            {
                 log.error(e);
             }
+
+
+                try
+                {
+                    newsId = Integer.parseInt(getFacesContext().getExternalContext().getRequestParameterMap().get("news_id"));
+
+                }
+                catch(Exception e)
+                {
+                    return;
+                }
+
+            news = getLearnweb().getNewsManager().getNewsByNewsId(newsId);
+            log.debug(news.getText());
+            if(null == news)
+            {
+                addGrowl(FacesMessage.SEVERITY_FATAL, "invalid news_id parameter");
+                return;
+            }
+        }
         else
             return;
     }
 
+    private  void loadNewsById() throws SQLException{
+        if(getUser() == null) // not logged in
+            return;
+
+
+    }
+
+
     public void onCreateNews() throws  SQLException{
         try{
-            News news = new News();
-            news.setTitle(title);
-            news.setText(text);
-            news.setUser_id(getUser().getId());
-            log.debug(news.getTitle()+" - "+news.getText()+" -byUser- "+news.getUser_id());
-            getLearnweb().getNewsManager().save(news);
+            News news_save = new News();
+            news_save.setTitle(title);
+            news_save.setText(text);
+            news_save.setUser_id(getUser().getId());
+            log.debug(news_save.getTitle()+" - "+news_save.getText()+" -byUser- "+news_save.getUser_id());
+            getLearnweb().getNewsManager().save(news_save);
+            addGrowl(FacesMessage.SEVERITY_INFO, "News was added !" );
         }catch(Exception e){
             addErrorMessage(e);
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Fatal error !");
         }
 
     }
@@ -73,28 +113,22 @@ public class AdminNewsBean extends ApplicationBean
         }
     }
 
-    public void CreateChangeLog() throws SQLException{
-        log.debug("AdminChangeLog starts");
-        if(isCanSend()){
-            log.debug("start to send");
-
-            try{
-                ChangeLog changeLog = new ChangeLog();
-                changeLog.setTitle(getTitle());
-                changeLog.setText(getText());
-                changeLog.setId(getUser().getId());
-                changeLog.save();
-                log.debug("changelog was saved into db");
-            }catch(Exception e){
-                log.error(e);
-                addErrorMessage(e);
-            }
-
-            log.debug("AdminChangeLog finished");
-
+    public void onUpdateNews(int newsId) throws  SQLException{
+        try{
+            News news_up = new News();
+            news_up.setTitle(news.getTitle());
+            news_up.setText(news.getText());
+            news_up.setUser_id(getUser().getId());
+            log.debug(news_up.getTitle()+" - "+news_up.getText()+" -byUser- "+news_up.getUser_id());
+            getLearnweb().getNewsManager().update(news);
+            addGrowl(FacesMessage.SEVERITY_INFO, "News was updated !" );
+        }catch(Exception e){
+            addErrorMessage(e);
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Fatal error !");
         }
 
     }
+
 
     public String getText()
     {
@@ -121,19 +155,15 @@ public class AdminNewsBean extends ApplicationBean
         return newsList;
     }
 
-    public boolean isCanSend(){
-        if(getTitle().isEmpty()){
-            addMessage(FacesMessage.SEVERITY_ERROR, "Please type a title.");
-            log.debug("title is Empty");
-            return false;
-        }
-        if(getText().isEmpty()){
-            addMessage(FacesMessage.SEVERITY_ERROR, "Please type a message.");
-            log.debug("text is Empty");
-            return false;
-        }
-        log.debug("title and text are fitted");
-        return true;
+    public News getNews()
+    {
+        return news;
     }
+
+    public int getNewsId()
+    {
+        return newsId;
+    }
+
 
 }

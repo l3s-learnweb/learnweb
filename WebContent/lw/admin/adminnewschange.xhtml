@@ -7,13 +7,13 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.admin_changelog}"/>
+	<ui:param name="pageTitle" value="Admin news editor"/>
 		
 	<ui:define name="content">
 		
 		<div class="page-header">
 			<h1>
-				#{msg.admin_changelog}
+				#{"Admin news editor"}
 			</h1>
 		</div>
 
@@ -27,8 +27,10 @@
 								<h:outputText value="#{msg.title}:" />
 							</p>
 
-							<p:inputText value="#{adminChangeLogBean.title}" style="width: 100%;box-sizing: border-box;" />
-							<p:textEditor styleClass="margin-top" height="184" value="#{adminChangeLogBean.text}">
+							<p:inputText id="news_title" value="#{adminNewsBean.news.title}" style="width: 100%;box-sizing: border-box;">
+
+							</p:inputText>
+							<p:textEditor styleClass="margin-top" height="184" value="#{adminNewsBean.news.text}">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
@@ -45,7 +47,9 @@
 								</f:facet>
 							</p:textEditor>
 							<div class="margin-top">
-								<h:commandButton action="#{adminChangeLogBean.CreateChangeLog()}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.update}" />
+								<h:commandButton action="#{adminNewsBean.onUpdateNews(adminNewsBean.news.id)}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.update}" >
+									<f:param name="news_id" value="#{adminNewsBean.newsId}" />
+								</h:commandButton>
 							</div>
 						</div>
 					</div>

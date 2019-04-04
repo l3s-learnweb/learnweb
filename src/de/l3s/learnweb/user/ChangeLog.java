@@ -18,7 +18,7 @@ public class ChangeLog
     private String text;
 
     public void save() throws SQLException{
-        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO admin_changelog (title, message, user_id) " + "VALUES (?,?,?)");
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id) " + "VALUES (?,?,?)");
         stmt.setString(1, title);
         stmt.setString(2, text);
         stmt.setInt(3, id);

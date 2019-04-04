@@ -63,10 +63,11 @@ public class NewsManager
     public synchronized News save(News news) throws SQLException{
 
         try{
-            PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id) " + "VALUES (?,?,?)");
+            PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (`title`, `message`, `user_id`) VALUES (?, ?, ?)");
             stmt.setString(1, news.getTitle());
             stmt.setString(2, news.getText());
             stmt.setInt(3, news.getUser_id());
+            log.debug(stmt.toString());
             stmt.executeUpdate();
             stmt.close();
         }catch(Exception e){
@@ -84,9 +85,28 @@ public class NewsManager
         cache.remove(news.getId());
     }
 
+    public synchronized void update(News news) throws SQLException{
+
+        try{
+            log.debug(news.getTitle() + " -- "+ news.getText() + news.getUser_id() + news.getDate());
+            PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_news SET title = ?, message = ? WHERE news_id = ?");
+            stmt.setString(1, news.getTitle());
+            stmt.setString(2, news.getText());
+            stmt.setInt(3, news.getId());
+            log.debug(stmt.toString());
+            stmt.executeUpdate();
+            stmt.close();
+        }catch(Exception e){
+            log.error(e);
+        }
+    }
+
+
     public Collection<News> getNewsAll()
     {
         return Collections.unmodifiableCollection(cache.values());
     }
+
+    public News getNewsByNewsId(int newsId){ return  cache.get(newsId);}
 
 }
