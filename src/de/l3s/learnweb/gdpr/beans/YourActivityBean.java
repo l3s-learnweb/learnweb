@@ -1,4 +1,4 @@
-package de.l3s.learnweb.gdpr;
+package de.l3s.learnweb.gdpr.beans;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.GroupManager;
