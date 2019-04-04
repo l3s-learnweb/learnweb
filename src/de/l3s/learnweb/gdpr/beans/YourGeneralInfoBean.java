@@ -1,4 +1,4 @@
-package de.l3s.learnweb.yourinformation;
+package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package de.l3s.learnweb.yourinformation;
+package de.l3s.learnweb.gdpr;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.User;
@@ -18,7 +18,7 @@ import java.util.Date;
 public class YourDetailedInfoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6016324259224515500L;
-    private static final Logger log = Logger.getLogger(YourCoursesBean.class);
+    private static final Logger log = Logger.getLogger(YourDetailedInfoBean.class);
 
     private String fullName;
     private String address;

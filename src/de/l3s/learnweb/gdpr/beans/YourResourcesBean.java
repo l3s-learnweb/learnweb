@@ -1,4 +1,4 @@
-package de.l3s.learnweb.yourinformation;
+package de.l3s.learnweb.gdpr;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Resource;
