@@ -542,15 +542,13 @@ public class TedManager
 
         JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
 
-        String dbStmt = "REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)";
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
+        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)");
         pStmt2.setString(1, langCode);
         pStmt2.setString(2, langName);
         pStmt2.executeUpdate();
         pStmt2.close();
 
-        dbStmt = "REPLACE INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)";
-        PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement(dbStmt);
+        PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("REPLACE INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
         pStmt3.setInt(1, resourceId);
         pStmt3.setString(2, langCode);
 
