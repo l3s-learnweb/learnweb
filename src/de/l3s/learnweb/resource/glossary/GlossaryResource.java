@@ -36,7 +36,7 @@ public class GlossaryResource extends Resource implements Serializable
     /**
      * copy constructor
      *
-     * @param glossaryResource
+     * @param otherGlossaryResource
      */
     public GlossaryResource(GlossaryResource otherGlossaryResource)
     {

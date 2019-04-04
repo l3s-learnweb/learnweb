@@ -242,8 +242,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * @see de.l3s.learnweb.user.UserManager.deleteUserSoft
-     * @see de.l3s.learnweb.user.UserManager.deleteUserHard
+     * @see de.l3s.learnweb.user.UserManager#deleteUserSoft
+     * @see de.l3s.learnweb.user.UserManager#deleteUserHard
      * @param hardDelete
      * @return
      */

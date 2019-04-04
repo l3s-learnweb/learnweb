@@ -582,14 +582,11 @@ public class PeerAssessmentManager
         return listB;
     }
 
-    /**
-     *
-     *
+    /*
      * create submission for new course but copy old descriptions
      * insert into lw_submit (`course_id`,`title`,`description`, `open_datetime`, `close_datetime`,`number_of_resources`,`survey_resource_id`)
      * SELECT 1338 as `course_id`,`title`,`description`,'2018-03-26 00:00:00' as `open_datetime`,'2018-05-22 23:59:59' as
      * `close_datetime`,`number_of_resources`,`survey_resource_id` FROM `lw_submit` WHERE `deleted` = 0 AND `course_id` = 1301
-     *
      */
 
 }
