@@ -83,8 +83,7 @@
 								</h:outputLink>
 
 								<p:commandLink actionListener="#{adminNewsBean.onDeleteNews(news)}" process="@this"
-											   update="@form :growl" rendered="#{userBean.admin}"	title="#{msg.delete}"
-											   onclick="PF('news_form_blocker').show()" oncomplete="PF('news_form_blocker').hide()">
+											   update="@form :growl" rendered="#{userBean.admin}"	title="#{msg.delete}">
 									<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 									<span><h:outputText value="#{msg.delete}" /> </span>
 									<p:confirm message="Do you really want to delete '#{news.title}' ?" />

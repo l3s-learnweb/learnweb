@@ -36,7 +36,7 @@ public class NewsManager
     {
         cache.clear();
 
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_news ORDER BY created_at");)
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_news ORDER BY created_at DESC");)
         {
             while(rs.next())
             {
@@ -63,7 +63,7 @@ public class NewsManager
     public synchronized News save(News news) throws SQLException{
 
         try{
-            PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (`title`, `message`, `user_id`) VALUES (?, ?, ?)");
+            PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id) VALUES (?, ?, ?)");
             stmt.setString(1, news.getTitle());
             stmt.setString(2, news.getText());
             stmt.setInt(3, news.getUser_id());
@@ -88,7 +88,6 @@ public class NewsManager
     public synchronized void update(News news) throws SQLException{
 
         try{
-            log.debug(news.getTitle() + " -- "+ news.getText() + news.getUser_id() + news.getDate());
             PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_news SET title = ?, message = ? WHERE news_id = ?");
             stmt.setString(1, news.getTitle());
             stmt.setString(2, news.getText());
@@ -104,6 +103,18 @@ public class NewsManager
 
     public Collection<News> getNewsAll()
     {
+        cache.clear();
+
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_news ORDER BY created_at DESC");)
+        {
+            while(rs.next())
+            {
+                News news = createNews(rs);
+                cache.put(news.getId(), news);
+            }
+        }catch(Exception e){
+            log.error(e);
+        }
         return Collections.unmodifiableCollection(cache.values());
     }
 

@@ -30,8 +30,6 @@ public class AdminNewsBean extends ApplicationBean
     private String title;
     private User user;
 
-
-
     private int newsId;
     private News news;
 
@@ -70,7 +68,7 @@ public class AdminNewsBean extends ApplicationBean
                 }
 
             news = getLearnweb().getNewsManager().getNewsByNewsId(newsId);
-            log.debug(news.getText());
+            log.debug(news.getId()+news.getText()+news.getTitle()+news.getUser_id()+news.getDate());
             if(null == news)
             {
                 addGrowl(FacesMessage.SEVERITY_FATAL, "invalid news_id parameter");
@@ -98,6 +96,7 @@ public class AdminNewsBean extends ApplicationBean
             log.debug(news_save.getTitle()+" - "+news_save.getText()+" -byUser- "+news_save.getUser_id());
             getLearnweb().getNewsManager().save(news_save);
             addGrowl(FacesMessage.SEVERITY_INFO, "News was added !" );
+            load();
         }catch(Exception e){
             addErrorMessage(e);
             addGrowl(FacesMessage.SEVERITY_ERROR, "Fatal error !");
@@ -108,6 +107,8 @@ public class AdminNewsBean extends ApplicationBean
     public void onDeleteNews(News news) throws SQLException{
         try{
             getLearnweb().getNewsManager().delete(news);
+            addGrowl(FacesMessage.SEVERITY_INFO, "News was deleted !" );
+            load();
         }catch(Exception e){
             addErrorMessage(e);
         }
@@ -121,6 +122,7 @@ public class AdminNewsBean extends ApplicationBean
             news_up.setUser_id(getUser().getId());
             log.debug(news_up.getTitle()+" - "+news_up.getText()+" -byUser- "+news_up.getUser_id());
             getLearnweb().getNewsManager().update(news);
+
             addGrowl(FacesMessage.SEVERITY_INFO, "News was updated !" );
         }catch(Exception e){
             addErrorMessage(e);
