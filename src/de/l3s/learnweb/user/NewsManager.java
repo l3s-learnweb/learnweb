@@ -36,7 +36,7 @@ public class NewsManager
     {
         cache.clear();
 
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_news ORDER BY created_at DESC");)
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC");)
         {
             while(rs.next())
             {
@@ -54,6 +54,8 @@ public class NewsManager
         News news = new News();
         news.setId(rs.getInt("news_id"));
         news.setTitle(rs.getString("title"));
+        news.setText(rs.getString("message"));
+        news.setUser_id(rs.getInt("user_id"));
         news.setDate(rs.getDate("created_at"));
 
         return news;
@@ -80,6 +82,7 @@ public class NewsManager
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_news` WHERE news_id = ?"))
         {
             delete.setInt(1, news.getId());
+            log.debug(delete.toString());
             delete.executeUpdate();
         }
         cache.remove(news.getId());
@@ -105,7 +108,7 @@ public class NewsManager
     {
         cache.clear();
 
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_news ORDER BY created_at DESC");)
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC");)
         {
             while(rs.next())
             {
