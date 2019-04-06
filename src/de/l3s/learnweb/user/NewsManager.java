@@ -16,9 +16,6 @@ import de.l3s.learnweb.user.User;
 
 public class NewsManager
 {
-    private final static String[] COLUMNS = { "news_id", "title", "message", "user_id", "created_at" };
-    private final static String SELECT = String.join(", ", COLUMNS);
-    private final static String SAVE = Sql.getCreateStatement("lw_news", COLUMNS);
     private final static Logger log = Logger.getLogger(NewsManager.class);
 
     private Learnweb learnweb;
@@ -84,6 +81,8 @@ public class NewsManager
             delete.setInt(1, news.getId());
             log.debug(delete.toString());
             delete.executeUpdate();
+        }catch(Exception e){
+            log.error(e);
         }
         cache.remove(news.getId());
     }
@@ -104,20 +103,9 @@ public class NewsManager
     }
 
 
-    public Collection<News> getNewsAll()
+    public Collection<News> getNewsAll() throws SQLException
     {
-        cache.clear();
-
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC");)
-        {
-            while(rs.next())
-            {
-                News news = createNews(rs);
-                cache.put(news.getId(), news);
-            }
-        }catch(Exception e){
-            log.error(e);
-        }
+        resetCache();
         return Collections.unmodifiableCollection(cache.values());
     }
 

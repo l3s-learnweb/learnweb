@@ -69,5 +69,15 @@ public class News
         this.text = text;
     }
 
+    @Override
+    public String toString()
+    {
+        return "News [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", user_id=" + user_id + "]";
+    }
+
+    public String onSaveString()
+    {
+        return "News [title=" + title + ", message=" + text + ", user_id=" + user_id + "]";
+    }
 
 }

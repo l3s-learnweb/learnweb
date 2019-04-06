@@ -1,11 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.ChangeLog;
 import de.l3s.learnweb.user.News;
-import de.l3s.learnweb.user.NewsManager;
-import de.l3s.learnweb.user.User;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -14,7 +10,6 @@ import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Named
@@ -28,81 +23,60 @@ public class AdminNewsBean extends ApplicationBean
     private String text;
     @NotEmpty
     private String title;
-    private User user;
-
     private int newsId;
     private News news;
 
 
 
-
-
-    public AdminNewsBean() throws SQLException
-    {
+    public AdminNewsBean() throws SQLException {
         load();
     }
 
-    private void load() throws SQLException
-    {
 
-        if(getUser().isAdmin())
-        {
-            try
-            {
+    private void load() throws SQLException {
+
+        if(getUser().isAdmin()){
+            try{
                 newsList = new ArrayList<>(getLearnweb().getNewsManager().getNewsAll());
             }
-            catch(Exception e)
-            {
+            catch(Exception e){
                 log.error(e);
             }
-
-
-                try
-                {
-                    newsId = Integer.parseInt(getFacesContext().getExternalContext().getRequestParameterMap().get("news_id"));
-
-                }
-                catch(Exception e)
-                {
-                    return;
-                }
+            try {
+                newsId = Integer.parseInt(getFacesContext().getExternalContext().getRequestParameterMap().get("news_id"));
+            }catch(Exception e){
+                return;
+            }
 
             news = getLearnweb().getNewsManager().getNewsByNewsId(newsId);
-            log.debug(news.getId()+news.getText()+news.getTitle()+news.getUser_id()+news.getDate());
-            if(null == news)
-            {
+            log.debug(news.toString());
+            if(news == null){
                 addGrowl(FacesMessage.SEVERITY_FATAL, "invalid news_id parameter");
                 return;
             }
-        }
-        else
+        }else
             return;
-    }
-
-    private  void loadNewsById() throws SQLException{
-        if(getUser() == null) // not logged in
-            return;
-
-
     }
 
 
     public void onCreateNews() throws  SQLException{
-        try{
-            News news_save = new News();
-            news_save.setTitle(title);
-            news_save.setText(text);
-            news_save.setUser_id(getUser().getId());
-            log.debug(news_save.getTitle()+" - "+news_save.getText()+" -byUser- "+news_save.getUser_id());
-            getLearnweb().getNewsManager().save(news_save);
-            addGrowl(FacesMessage.SEVERITY_INFO, "News was added !" );
-            load();
-        }catch(Exception e){
-            addErrorMessage(e);
-            addGrowl(FacesMessage.SEVERITY_ERROR, "Fatal error !");
-        }
+        if(isCanSend())
+            try{
+                News news = new News();
+                news.setTitle(title);
+                news.setText(text);
+                news.setUser_id(getUser().getId());
+                log.debug(news.onSaveString());
+                getLearnweb().getNewsManager().save(news);
+                addGrowl(FacesMessage.SEVERITY_INFO, "News was added !" );
+                load();
+            }catch(Exception e){
+                addErrorMessage(e);
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Fatal error !");
+            }
 
     }
+
 
     public void onDeleteNews(News news) throws SQLException{
         try{
@@ -114,15 +88,15 @@ public class AdminNewsBean extends ApplicationBean
         }
     }
 
+
     public void onUpdateNews(int newsId) throws  SQLException{
         try{
-            News news_up = new News();
-            news_up.setTitle(news.getTitle());
-            news_up.setText(news.getText());
-            news_up.setUser_id(getUser().getId());
-            log.debug(news_up.getTitle()+" - "+news_up.getText()+" -byUser- "+news_up.getUser_id());
+            News news = new News();
+            news.setTitle(this.news.getTitle());
+            news.setText(this.news.getText());
+            news.setId(newsId);
+            log.debug(news.onSaveString());
             getLearnweb().getNewsManager().update(news);
-
             addGrowl(FacesMessage.SEVERITY_INFO, "News was updated !" );
         }catch(Exception e){
             addErrorMessage(e);
@@ -167,5 +141,16 @@ public class AdminNewsBean extends ApplicationBean
         return newsId;
     }
 
+    private boolean isCanSend(){
+        if(getTitle() == null){
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Please, add the title !");
+            return false;
+        }
+        if(getText() == null){
+            addGrowl(FacesMessage.SEVERITY_ERROR, "Please, fill the text area !");
+            return false;
+        }
+        return true;
+    }
 
 }
