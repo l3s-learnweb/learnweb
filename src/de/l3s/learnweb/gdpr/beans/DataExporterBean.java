@@ -51,6 +51,9 @@ public class DataExporterBean extends ApplicationBean implements Serializable
         tableStyle.appendText("#resources {\n" + "  font-family: \"Trebuchet MS\", Arial, Helvetica, sans-serif;\n" + "  border-collapse: collapse;\n" + "  width: 100%;\n" + "}\n" + "\n" + "#resources td, #resources th {\n" + "  border: 1px solid #ddd;\n" + "  padding: 8px;\n" + "}\n" + "\n" + "#resources tr:nth-child(even){background-color: #f2f2f2;}\n" + "\n" + "#resources tr:hover {background-color: #ddd;}\n" + "\n" + "#resources th {\n" + "  padding-top: 12px;\n" + "  padding-bottom: 12px;\n" + "  text-align: left;\n" + "  background-color: #4CAF50;\n" + "  color: white;\n" + "}");
         indexFile.head.appendChild(tableStyle);
 
+        Meta charset = new Meta("text/html;charset=UTF-8");
+        indexFile.head.appendChild(charset);
+
         Table resourcesTable = new Table();
         resourcesTable.setId("resources");
 
@@ -75,21 +78,14 @@ public class DataExporterBean extends ApplicationBean implements Serializable
             metadata.add(lwResource.getUser().getRealUsername());
 
             switch(lwResource.getStorageType()){
-                // internal resources
-                case 1:
+                case Resource.LEARNWEB_RESOURCE:
                     A internalLink = new A("resources/" + lwResource.getFileName(), "", lwResource.getFileName());
-
                     appendRow(composeRow(internalLink, metadata), resourcesTable);
-
                     getMainFile(resourceThumbnails, filesToZip);
-
                     break;
-                // external resources
-                case 2:
-                    A externalLink = new A(lwResource.getUrl(), "", lwResource.getTitle());
-
+                case Resource.WEB_RESOURCE:
+                    A externalLink = new A(lwResource.getUrl(), "_blank", lwResource.getTitle());
                     appendRow(composeRow(externalLink, metadata), resourcesTable);
-
                     break;
                 default:
                     throw new UnknownResourceTypeException(lwResource.getStringStorageType());
@@ -126,7 +122,7 @@ public class DataExporterBean extends ApplicationBean implements Serializable
                     zipOutputStream.write(b);
                 }
             } catch(Throwable t){
-                //throw new ResourcesFileNotFoundException(resourceFile.toString());
+                throw new ResourcesFileNotFoundException(resourceFile.toString());
             }
         }
 

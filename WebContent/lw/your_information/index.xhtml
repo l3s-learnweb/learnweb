@@ -7,8 +7,14 @@
 	<ui:param name="pageTitle" value="Your information" />
 	
 	<ui:define name="content">
+		<ui:insert>
+			<div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
+				<a href="your_information/index.jsf#"><h:outputText value="#{msg.your} #{msg.information}"/></a>
+			</div>
+		</ui:insert>
+
 	    <h:form id="yourinformationform">
-	        <div class="ui-g-12">
+	        <div class="ui-g-12" style="padding: 0px 0px">
 	            <div class="ui-panel ui-widget ui-widget-content ui-corner-all">
 	                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
 	                    <span class="ui-panel-title">
@@ -26,7 +32,7 @@
 	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_personal_info.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-android"></span>
-	                                        <span class="ui-menuitem-text">Your personal data</span>
+	                                        <span class="ui-menuitem-text">Your personal info</span>
 	                                    </a>
 	                                </li>
 	                                <li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">

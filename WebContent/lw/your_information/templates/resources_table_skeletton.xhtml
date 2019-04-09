@@ -14,7 +14,7 @@
 
             <f:facet name="{Exporters}">
                 <h:panelGroup>
-                    <h:commandButton value="Request All Data" action="#{dataExporterBean.requestInformation()}" style="float:right;"></h:commandButton>
+                    <h:commandButton rendered="#{exportable}" value="Request All Data" action="#{dataExporterBean.requestInformation()}" style="float:right;" />
 
                     <h:commandLink>
                         <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>

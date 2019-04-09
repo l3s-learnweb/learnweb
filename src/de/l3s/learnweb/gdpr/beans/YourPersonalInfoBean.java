@@ -15,10 +15,10 @@ import java.util.Date;
  */
 @Named
 @ViewScoped
-public class YourDetailedInfoBean extends ApplicationBean implements Serializable
+public class YourPersonalInfoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6016324259224515500L;
-    private static final Logger log = Logger.getLogger(YourDetailedInfoBean.class);
+    private static final Logger log = Logger.getLogger(YourPersonalInfoBean.class);
 
     private String fullName;
     private String address;
@@ -28,7 +28,7 @@ public class YourDetailedInfoBean extends ApplicationBean implements Serializabl
     private String userOrganisation;
     private String userProfession;
 
-    public YourDetailedInfoBean() throws SQLException
+    public YourPersonalInfoBean() throws SQLException
     {
         User user = getUser();
         if(null == user)
@@ -64,9 +64,6 @@ public class YourDetailedInfoBean extends ApplicationBean implements Serializabl
         }
 
         this.userImage = user.getImage();
-        if(null == userImage){
-            this.userImage = "no_profile.jpg";
-        }
 
         this.userOrganisation = user.getOrganisation().getTitle();
         if(null == userOrganisation)

@@ -9,7 +9,7 @@
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      style="margin-bottom:20px" tableStyle="table-layout: auto">
 
-            <f:facet name="header"><ui:insert name="header"></ui:insert> </f:facet>
+            <f:facet name="header">#{table_name}</f:facet>
             <f:facet name="{Exporters}">
                 <h:panelGroup>
                     <h:commandLink>

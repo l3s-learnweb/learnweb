@@ -41,7 +41,7 @@ public class YourActivityBean extends ApplicationBean implements Serializable
         this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
         for(LogEntry action: userActions){
             switch(action.getGroupId()){
-                // general action which has no group assigned
+                // general action, which has no group assigned
                 case 0:
                     groupTitles.put(action.getGroupId(),"");
                     break;
@@ -60,5 +60,13 @@ public class YourActivityBean extends ApplicationBean implements Serializable
     public Map<Integer, String> getGroupTitles()
     {
         return groupTitles;
+    }
+
+    /**
+     * Omit underscores for frontend without modifying Action class.
+     */
+    public String getAction(String action)
+    {
+        return action.replace("_", " ");
     }
 }

@@ -6,14 +6,20 @@
 <ui:param name="pageTitle" value="Your Messages" />
 
 <ui:define name="content">
+    <ui:insert>
+        <div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
+            <a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
+            <span> ► </span>
+            <a href="your_information/your_messages.jsf#"><h:outputText value="#{msg.messages}"/></a>
+        </div>
+    </ui:insert>
+
     <ui:decorate template="templates/messages_table_skeletton.xhtml">
         <ui:param name="messages" value="#{yourMessagesBean.messagesToUser}"/>
         <ui:param name="name_for_file" value="received_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.received_from_msg}"></ui:param>
         <ui:param name="which_messages" value="message.fromUser.realUsername"></ui:param>
-        <ui:define name="header">
-            <a href="your_information/">#{msg['your_information.title']}</a>/<h:outputText value="Received messages" />
-        </ui:define>
+        <ui:param name="table_name" value="Received Messages"></ui:param>
     </ui:decorate>
 
     <ui:decorate template="templates/messages_table_skeletton.xhtml">
@@ -21,9 +27,7 @@
         <ui:param name="name_for_file" value="sent_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.sent_to_msg}"></ui:param>
         <ui:param name="which_messages" value="message.toUser.realUsername"></ui:param>
-        <ui:define name="header">
-            <a href="your_information/">#{msg['your_information.title']}</a>/<h:outputText value="Sent messages" />
-        </ui:define>
+        <ui:param name="table_name" value="Sent Messages"></ui:param>
     </ui:decorate>
 </ui:define>
 </ui:composition>

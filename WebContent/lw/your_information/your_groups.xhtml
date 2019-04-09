@@ -10,12 +10,20 @@
 <ui:param name="pageTitle" value="Your Groups" />
 
 <ui:define name="content">
+    <ui:insert>
+        <div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
+            <a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
+            <span> ► </span>
+            <a href="your_information/your_groups.jsf#"><h:outputText value="#{msg.groups}"/></a>
+        </div>
+    </ui:insert>
+
     <h:form id="yourinformationform">
         <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      tableStyle="table-layout: auto">
             <f:facet name="header">
-                List of groups
+                <h:outputText value="#{msg.groupsTitle}"/>
             </f:facet>
 
             <f:facet name="{Exporters}">
