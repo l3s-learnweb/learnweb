@@ -36,55 +36,51 @@
                                     <h2>Users' Activities</h2>
                                     <p class="header_detail no-margin-top">All user interactions</p>
                                 </div>
+
                                 <ui:decorate template="templates/setSelectedUsers.xhtml">
-                                    <ui:param name="selectedUsersIds" value="#{activityDashboardUsersBean.selectedUsersIds}"/>
-                                    <ui:param name="defaultUsersList" value="#{activityDashboardUsersBean.defaultUsersList}"/>
-                                    <ui:param name="groups" value="#{activityDashboardUsersBean.allGroups}"/>
-                                    <ui:param name="startDate" value="#{activityDashboardBean.startDate}"/>
-                                    <ui:param name="endDate" value="#{activityDashboardBean.endDate}"/>
-                                    <ui:param name="actionForSubmit" value="#{activityDashboardBean.cleanAndUpdateStoredData()}"/>
-                                    <ui:param name="panelsForUpdate" value="activityPanel"/>
-                                    <ui:param name="selectedUsersIdsSize" value="#{activityDashboardUsersBean.getSelectedUsersIds().size()}"/>
+                                    <ui:param name="nameOfBean" value="#{activityDashboardBean}"/>
                                 </ui:decorate>
                                 <div class="p-col-9 no-padding">
-                                    <div id="grouped_activities" class="p-col-12">
+                                    <h:form>
+                                        <div id="grouped_activities" class="p-col-12">
 
-                                        <p:selectManyCheckbox id="grid1" widgetVar="grid1"
-                                                              value="#{activityDashboardBean.selectedActionItems}"
-                                                              layout="responsive" columns="3" multiple="true"
-                                                              onchange="unselectAllCheckBoxes(PF('grid2'))">
+                                            <p:selectManyCheckbox id="grid1" widgetVar="grid1"
+                                                                  value="#{activityDashboardBean.selectedActionItems}"
+                                                                  layout="responsive" columns="3"
+                                                                  var="action" itemLabel="#{action}" itemValue="#{action}"
+                                                                  onchange="unselectAllCheckBoxes(PF('grid2'))">
+                                                <f:selectItems
+                                                        value="#{activityDashboardBean.actions.keySet()}"
+                                                        var="action" itemLabel="#{action}" itemValue="#{action}"/>
+                                                <p:ajax event="valueChange" global="false" process="@this"/>
+                                            </p:selectManyCheckbox>
 
-                                            <f:selectItems
-                                                    value="#{activityDashboardBean.actions.keySet()}"
-                                                    var="action" itemLabel="#{action}" itemValue="#{action}"/>
-
-                                        </p:selectManyCheckbox>
-                                    </div>
-
-                                    <div class="p-col-4 no-padding-bottom">
-                                        <div id="advanced_options">
-                                            <span><h:outputText value="Advanced options"/></span> <i
-                                                class="fa fa-angle-double-up"/>
                                         </div>
-                                    </div>
-                                    <div id="all_activities" class="p-col-12">
-                                        <p:selectManyCheckbox id="grid2" widgetVar="grid2"
-                                                              value="#{activityDashboardBean.selectedGroupedActions}"
-                                                              layout="responsive" columns="3"
-                                                              onchange="unselectAllCheckBoxes(PF('grid1'))">
 
-                                            <f:selectItems value="#{activityDashboardBean.groupedActions}"
-                                                           var="groupedAction" itemLabel="#{groupedAction}"
-                                                           itemValue="#{groupedAction}"/>
-                                        </p:selectManyCheckbox>
+                                        <div class="p-col-4 no-padding-bottom">
+                                            <div id="advanced_options">
+                                                <span><h:outputText value="Advanced options"/></span> <i
+                                                    class="fa fa-angle-double-up"/>
+                                            </div>
+                                        </div>
+                                        <div id="all_activities" class="p-col-12">
+                                            <p:selectManyCheckbox id="grid2" widgetVar="grid2"
+                                                                  value="#{activityDashboardBean.selectedGroupedActions}"
+                                                                  layout="responsive" columns="3"
+                                                                  onchange="unselectAllCheckBoxes(PF('grid1'))">
+                                                <p:ajax event="valueChange" global="false" process="@this"/>
+                                                <f:selectItems value="#{activityDashboardBean.groupedActions}"
+                                                               var="groupedAction" itemLabel="#{groupedAction}"
+                                                               itemValue="#{groupedAction}"/>
+                                            </p:selectManyCheckbox>
 
-                                    </div>
+                                        </div>
+                                    </h:form>
                                 </div>
 
                             </div>
-
                         </div>
-
+                        <h:panelGroup id="content">
                             <p:outputPanel id="activityPanel" styleClass="dashboard">
                                 <p:panel
                                         rendered="#{(activityDashboardBean.getInteractionsChart()!=null)? true:false}"
@@ -101,8 +97,7 @@
                                              style="height:300px;" responsive="true"/>
                                 </p:panel>
                             </p:outputPanel>
-
-
+                        </h:panelGroup>
                     </div>
 
                 </div>

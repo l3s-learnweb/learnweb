@@ -12,6 +12,7 @@ import javax.inject.Named;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
+import org.apache.jena.base.Sys;
 
 @Named
 @SessionScoped

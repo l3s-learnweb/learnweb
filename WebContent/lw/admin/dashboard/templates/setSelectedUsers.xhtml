@@ -52,7 +52,6 @@
                     </p:outputPanel>
 
                 </p:outputPanel>
-
                 <p:outputPanel id="dateAndSubmitPanel" style="width: 300px; padding-top:6px;">
 
                     <div class="p-grid">
@@ -84,7 +83,7 @@
                                 <p:commandButton value="Update"
                                                  icon="ui-icon-check"
                                                  update=":content"
-                                                 process="@this,content"
+                                                 process="@this,content, dateAndSubmitPanel"
                                                  disabled="#{empty(nameOfBean.getSelectedUsersIds())}"
                                                  action="#{nameOfBean.cleanAndUpdateStoredData()}">
                                 </p:commandButton>
