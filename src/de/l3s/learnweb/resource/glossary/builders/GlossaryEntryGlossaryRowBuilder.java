@@ -14,13 +14,13 @@ public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<
         GlossaryEntry result = new GlossaryEntry();
 
         if (topicOneHeaderPosition >= 0) {
-            result.setTopicOne(row.getCell(topicOneHeaderPosition).getStringCellValue());
+            result.setTopicOne(getStringValueForCell(row.getCell(topicOneHeaderPosition)));
         } else {
             throw new IllegalArgumentException("Topic 1 column absent in Excel file");
         }
-        result.setTopicTwo(row.getCell(topicTwoHeaderPosition).getStringCellValue());
-        result.setTopicThree(row.getCell(topicThreeHeaderPosition).getStringCellValue());
-        result.setDescription(row.getCell(descriptionHeaderPosition).getStringCellValue());
+        result.setTopicTwo(getStringValueForCell(row.getCell(topicTwoHeaderPosition)));
+        result.setTopicThree(getStringValueForCell(row.getCell(topicThreeHeaderPosition)));
+        result.setDescription(getStringValueForCell(row.getCell(descriptionHeaderPosition)));
 
         result.addTerm(buildTerm(row));
 
@@ -30,21 +30,21 @@ public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<
     private GlossaryTerm buildTerm(Row row) {
         GlossaryTerm term = new GlossaryTerm();
 
-        term.setTerm(row.getCell(termHeaderPosition).getStringCellValue());
+        term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
 
-        if (!languageMap.containsKey(row.getCell(languageHeaderPosition).getStringCellValue())) {
-            throw new IllegalArgumentException("Language " + row.getCell(languageHeaderPosition).getStringCellValue() + " does not support yet" + ". Row " + row.getRowNum());
+        if (!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
+            throw new IllegalArgumentException("Language " + getStringValueForCell(row.getCell(languageHeaderPosition)) + " does not support yet" + ". Row " + row.getRowNum());
         }
-        term.setLanguage(languageMap.get(row.getCell(languageHeaderPosition).getStringCellValue()));
+        term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
 
-        String usesString = row.getCell(usesHeaderPosition).getStringCellValue();
+        String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));
         List<String> uses = Arrays.asList(usesString.split(","));
         term.setUses(uses);
 
-        term.setPronounciation(row.getCell(pronunciationHeaderPosition).getStringCellValue());
-        term.setAcronym(row.getCell(acronymHeaderPosition).getStringCellValue());
-        term.setSource(row.getCell(sourceHeaderPosition).getStringCellValue());
-        term.setPhraseology(row.getCell(phraseologyHeaderPosition).getStringCellValue());
+        term.setPronounciation(getStringValueForCell(row.getCell(pronunciationHeaderPosition)));
+        term.setAcronym(getStringValueForCell(row.getCell(acronymHeaderPosition)));
+        term.setSource(getStringValueForCell(row.getCell(sourceHeaderPosition)));
+        term.setPhraseology(getStringValueForCell(row.getCell(phraseologyHeaderPosition)));
 
         return term;
     }

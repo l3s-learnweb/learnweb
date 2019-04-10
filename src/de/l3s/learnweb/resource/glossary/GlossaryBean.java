@@ -8,12 +8,15 @@ import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.primefaces.PrimeFaces;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import javax.faces.application.FacesMessage;
@@ -50,6 +53,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private String toggleLabel = "Show All";
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
+    private String errorsDuringXmlParsing = StringUtils.EMPTY;
 
     public void onLoad()
     {
@@ -380,31 +384,39 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void parseXls(FileUploadEvent fileUploadEvent)
     {
+        errorsDuringXmlParsing = StringUtils.EMPTY;
+
+
         User user = getUser();
         if(user == null)
             return;
 
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
-
+        StringBuilder formattedErrorsDuringParsing = new StringBuilder();
         try
         {
             parser.parseGlossaryEntries();
+            if(!parser.getErrorsDuringProcessing().isEmpty())
+            {
+                log.error("Found some errors during Glossary xml parsing (see additional info on UI)");
+                parser.getErrorsDuringProcessing().forEach(e -> formattedErrorsDuringParsing.append(e.getMessage()).append(".<br/> "));
+                errorsDuringXmlParsing = formattedErrorsDuringParsing.toString();
+
+                log.error(errorsDuringXmlParsing);
+            }
+            else
+            {
+                // append parsed entries to glossary
+                glossaryResource.getEntries().addAll(parser.getEntries());
+                repaintTable();
+            }
         }
-        catch(IOException  e)
+        catch(IOException e)
         {
             //TODO DISPLAY FILE CANNOT BE READ
             System.out.println("There is IOException error");
             System.out.println(e);
         }
-        catch(IllegalArgumentException e)
-        {
-            //TODO DISPLAY FILE CANNOT BE READ
-            System.out.println("There is IllegalArgumentException error");
-            System.out.println(e);
-        }
-        // append parsed entries to glossary
-        glossaryResource.getEntries().addAll(parser.getEntries());
-        repaintTable();
     }
 
     public void postProcessXls(Object document)
@@ -617,6 +629,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             allowedTermLanguages = localesToSelectitems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
+    }
+
+    public String getErrorsDuringXmlParsing()
+    {
+        return errorsDuringXmlParsing;
     }
 
     public boolean isPaginator()
