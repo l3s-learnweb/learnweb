@@ -53,6 +53,12 @@
 							<ui:include src="/templates/user/login.xhtml" />
 						</ui:fragment>
 						<ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
+							<ui:insert name="breadcrumb_bar">
+								<p:breadCrumb>
+									<p:menuitem value="" url="#{userBean.bannerLink}"/>
+									<ui:insert name="sub_breadcrumb" />
+								</p:breadCrumb>
+							</ui:insert>
 							<ui:insert name="content" />
 						</ui:fragment>
 					</ui:fragment>

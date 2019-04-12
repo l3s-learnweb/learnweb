@@ -2,20 +2,18 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Submissions" />
 
-<ui:define name="content">
-    <ui:insert>
-        <div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
-            <a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
-            <span> ► </span>
-            <a href="your_information/your_submissions.jsf#"><h:outputText value="#{msg.submissions}"/></a>
-        </div>
-    </ui:insert>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.submissions}" url="your_information/your_submissions.jsf#"/>
+</ui:define>
 
+<ui:define name="content">
     <ui:repeat value="#{yourSubmissionsBean.userSubmissions}" var="submission">
             <div class="ui-panel ui-widget ui-widget-content ui-corner-all" data-widget="widget_basic">
                 <div id="basic_header" class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">

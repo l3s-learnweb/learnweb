@@ -9,15 +9,12 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Posts" />
 
-<ui:define name="content">
-    <ui:insert>
-        <div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
-            <a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
-            <span> ► </span>
-            <a href="your_information/your_posts.jsf#"><h:outputText value="#{msg.posts}"/></a>
-        </div>
-    </ui:insert>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.posts}" url="your_information/your_posts.jsf#"/>
+</ui:define>
 
+<ui:define name="content">
     <h:form id="yourinformationform">
         <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"

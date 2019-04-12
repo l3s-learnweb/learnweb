@@ -506,3 +506,42 @@
 .no-border{
     border: none;
 }
+
+/* Breadcrumb */
+
+body .ui-menuitem-link .ui-corner-all .ui-icon .ui-icon-home {
+    vertical-align: middle;
+}
+
+body .ui-breadcrumb {
+
+    border: 1px solid #4AA564;
+    border-left: none;
+    border-right: none;
+    background: rgba(255,255,255,0.9);
+    font-weight: 700;
+    font-size: 20px;
+
+    margin-bottom: 15px;
+}
+
+body .ui-icon {
+    height: 20px;
+}
+
+body .ui-breadcrumb ul li:first-child {
+    font-size: 20px;
+}
+
+body .ui-breadcrumb ul li .ui-menuitem-link {
+    top: 0px;
+}
+
+body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
+    content: "\f105 ";
+}

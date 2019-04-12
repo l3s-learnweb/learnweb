@@ -7,15 +7,12 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Search History" />
 
-<ui:define name="content">
-    <ui:insert>
-        <div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
-            <a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
-            <span> ► </span>
-            <a href="your_information/your_search_history.jsf#"><h:outputText value="#{msg.search_history}"/></a>
-        </div>
-    </ui:insert>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.search_history}" url="your_information/your_search_history.jsf#"/>
+</ui:define>
 
+<ui:define name="content">
     <h:form>
         <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"

@@ -6,16 +6,13 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Your Cources" />
-	
-	<ui:define name="content">
-		<ui:insert>
-			<div class="philpath" style="margin-top: 5px; margin-left: 0px; width: auto;">
-				<a href="your_information/index.jsf"><h:outputText value="#{msg.your} #{msg.information}"/></a>
-				<span> ► </span>
-				<a href="your_information/your_cources.jsf#"><h:outputText value="#{msg.courses}"/></a>
-			</div>
-		</ui:insert>
 
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="Your Information" url="your_information/index.jsf"/>
+		<p:menuitem value="#{msg.courses}" url="your_information/your_cources.jsf#"/>
+	</ui:define>
+
+	<ui:define name="content">
 	    <h:form>
 	        <p:dataTable id="cources_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
