@@ -8,7 +8,7 @@
 	<ui:param name="pageTitle" value="Your Cources" />
 
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="Your Information" url="your_information/index.jsf"/>
+		<p:menuitem value="#{msg.your } #{msg.information}" url="your_information/index.jsf"/>
 		<p:menuitem value="#{msg.courses}" url="your_information/your_cources.jsf#"/>
 	</ui:define>
 
@@ -18,7 +18,7 @@
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
 	                     style="margin-bottom:20px" tableStyle="table-layout: auto">
 	            <f:facet name="header">
-	                List of cources
+					<h:outputText value="#{msg['your_info.list_of_cources']}"/>
 	            </f:facet>
 	
 	            <f:facet name="{Exporters}">

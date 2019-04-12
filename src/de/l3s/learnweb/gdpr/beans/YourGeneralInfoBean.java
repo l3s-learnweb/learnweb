@@ -55,87 +55,38 @@ public class YourGeneralInfoBean extends ApplicationBean implements Serializable
         return this.username;
     }
 
-    public String getUserCoursesCount()
+    public int getUserCoursesCount()
     {
-        if(0 == this.userCoursesCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.userCoursesCount);
-        }
+        return this.userCoursesCount;
     }
 
-    public String getUserGroupsCount()
+    public int getUserGroupsCount()
     {
-        if(0 == this.userGroupsCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.userGroupsCount);
-        }
+        return this.userGroupsCount;
     }
 
-    public String getUserPostsCount()
+    public int getUserPostsCount()
     {
-        if(0 == this.userPostsCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.userPostsCount);
-        }
+        return this.userPostsCount;
     }
 
-    public String getUserResourcesCount()
+    public int getUserResourcesCount()
     {
-        if(0 == this.userResourcesCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.userResourcesCount);
-        }
+        return this.userResourcesCount;
     }
 
-    public String getReceivedMessagesCount()
+    public int getReceivedMessagesCount()
     {
-        if(0 == this.receivedMessagesCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.receivedMessagesCount);
-        }
+        return this.receivedMessagesCount;
     }
 
-    public String getSentMessagesCount()
+    public int getSentMessagesCount()
     {
-        if(0 == this.sentMessagesCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.sentMessagesCount);
-        }
+        return this.sentMessagesCount;
     }
 
-    public String getSubmissionsCount()
+    public int getSubmissionsCount()
     {
-        if(0 == this.submissionsCount)
-        {
-            return "no";
-        }
-        else
-        {
-            return String.valueOf(this.submissionsCount);
-        }
+        return this.submissionsCount;
     }
 }

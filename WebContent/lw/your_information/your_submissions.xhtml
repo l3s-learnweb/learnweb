@@ -9,7 +9,7 @@
 <ui:param name="pageTitle" value="Your Submissions" />
 
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.your } #{msg.information}" url="your_information/index.jsf"/>
     <p:menuitem value="#{msg.submissions}" url="your_information/your_submissions.jsf#"/>
 </ui:define>
 
@@ -31,7 +31,7 @@
                         <ui:param name="resources" value="#{submission.submittedResources}"></ui:param>
                         <ui:param name="exportable" value="false" />
                         <ui:define name="header">
-                            #{submission.title} Resources
+                            #{submission.title} #{msg.resources}
                         </ui:define>
                     </ui:decorate>
                 </div>

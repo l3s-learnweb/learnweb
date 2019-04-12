@@ -1,13 +1,12 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Messages" />
 
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.your } #{msg.information}" url="your_information/index.jsf"/>
     <p:menuitem value="#{msg.messages}" url="your_information/your_messages.jsf#"/>
 </ui:define>
 
@@ -17,7 +16,7 @@
         <ui:param name="name_for_file" value="received_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.received_from_msg}"></ui:param>
         <ui:param name="which_messages" value="message.fromUser.realUsername"></ui:param>
-        <ui:param name="table_name" value="Received Messages"></ui:param>
+        <ui:param name="table_name" value="#{msg['your_info.received_msgs']}"></ui:param>
     </ui:decorate>
 
     <ui:decorate template="templates/messages_table_skeletton.xhtml">
@@ -25,7 +24,7 @@
         <ui:param name="name_for_file" value="sent_messages"/>
         <ui:param name="target_user_category_msg" value="#{msg.sent_to_msg}"></ui:param>
         <ui:param name="which_messages" value="message.toUser.realUsername"></ui:param>
-        <ui:param name="table_name" value="Sent Messages"></ui:param>
+        <ui:param name="table_name" value="#{msg['your_info.sent_msgs']}"></ui:param>
     </ui:decorate>
 </ui:define>
 </ui:composition>

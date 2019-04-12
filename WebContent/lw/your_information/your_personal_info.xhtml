@@ -10,8 +10,8 @@
 <ui:param name="pageTitle" value="Your Personal Information" />
 
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="Your Information" url="your_information/index.jsf"/>
-    <p:menuitem value="Personal Info" url="your_information/your_personal_info.jsf#"/>
+    <p:menuitem value="#{msg.your } #{msg.information}" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.personal_info}" url="your_information/your_personal_info.jsf#"/>
 </ui:define>
 
 <ui:define name="content">
