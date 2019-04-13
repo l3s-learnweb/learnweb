@@ -27,7 +27,7 @@ public class TagthewebClient
 {
     private final static Logger log = Logger.getLogger(TagthewebClient.class);
 
-    private static String requestCategories(String text, String language) throws IOException
+    private static String requestCategories(final String text, final String language) throws IOException
     {
         try(CloseableHttpClient httpClient = HttpClientBuilder.create().useSystemProperties().build())
         {
@@ -54,7 +54,7 @@ public class TagthewebClient
         }
     }
 
-    public static Map<String, Double> getCategories(String text, String language) throws IOException
+    public static Map<String, Double> getCategories(final String text, final String language) throws IOException
     {
         Map<String, Double> categories = new HashMap<>();
         String jsonResults = requestCategories(text, language);
@@ -62,42 +62,28 @@ public class TagthewebClient
             JSONObject resultsJson = new JSONObject(jsonResults);
             for (String key : resultsJson.keySet()) {
                 Double value = resultsJson.getDouble(key);
-                categories.put(key, value);
+                if (value > 0d) {
+                    categories.put(key, value);
+                }
             }
-            log.info("TagTheWeb returned " + categories.size() + " categories for text: " + text);
+            log.info("TagTheWeb returned " + resultsJson.length() + " categories (" + categories.size() + " non-zero) for text: " + text);
         }
         return categories;
     }
 
-    public static Map<String, Double> getTopCategories(String text, String language) throws IOException
+    public static Map<String, Double> getTopCategories(final String text, final String language) throws IOException
+    {
+        return getTopCategories(text, language, 5);
+    }
+
+    public static Map<String, Double> getTopCategories(final String text, final String language, final int limit) throws IOException
     {
         Map<String, Double> categories = getCategories(text, language);
-
-        if (categories.size() <= 5) {
-            return categories;
-        }
-
-        Map<String, Double> selCategories = categories.entrySet().stream()
-                .filter(a -> a.getValue() > .5d)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        if (selCategories.size() > 5) {
-            return selCategories;
-        }
+        if (categories.size() <= 5) return categories;
 
         List<Map.Entry<String, Double>> entryList = new ArrayList<>(categories.entrySet());
         entryList.sort(Comparator.comparingDouble(Map.Entry::getValue));
-
-        return entryList.subList(0, 5).stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    public static Map<String, Double> getNonZeroCategories(String text, String language) throws IOException
-    {
-        Map<String, Double> categories = getCategories(text, language);
-
-        return categories.entrySet().stream()
-                .filter(a -> a.getValue() > .0D)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return entryList.subList(0, limit).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static void main(String args[]) throws SQLException, ClassNotFoundException
@@ -129,7 +115,7 @@ public class TagthewebClient
                         String text = StringHelper.shortnString(resource.getMachineDescription(), 1000);
 
                         log.info("Retrieving categories from TagTheWeb");
-                        Map<String, Double> categories = TagthewebClient.getNonZeroCategories(text, "en");
+                        Map<String, Double> categories = TagthewebClient.getCategories(text, "en");
                         log.info("Retrieved " + categories.size() + " categories.");
                         for (Map.Entry<String, Double> category : categories.entrySet()) {
                             rm.addCategory(resource, category.getKey(), category.getValue());
