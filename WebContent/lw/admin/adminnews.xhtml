@@ -22,8 +22,7 @@
 				<div class="p-grid">
 					<div class="p-col-12">
 						<div class="card card-w-title">
-							<h2><h:outputText value="#{msg.info}" /></h2>
-							<p class="no-margin-top">
+							<p>
 								<h:outputText value="#{msg.title}:" />
 							</p>
 
@@ -68,7 +67,7 @@
 								<h:outputText value="#{news.title}" />
 							</p:column>
 
-							<p:column style="width:10%" headerText="date" sortBy="#{news.date}">
+							<p:column style="width:10%" headerText="#{msg.date}" sortBy="#{news.date}">
 								<h:outputText value="#{news.date}" />
 							</p:column>
 

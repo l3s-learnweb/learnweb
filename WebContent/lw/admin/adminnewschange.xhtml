@@ -13,16 +13,20 @@
 		
 		<div class="page-header">
 			<h1>
-				#{"Admin news editor"}
+				Admin news editor
 			</h1>
 		</div>
-
+standart to playground
+		найти картинку с Катей бэк
+		Сделать новости
+	формат даты
+		красиво все оформить
 		<ui:fragment>
 			<h:form id="editwelcomeform" styleClass="form">
 				<div class="p-grid">
 					<div class="p-col-12">
 						<div class="card card-w-title">
-							<h2><h:outputText value="#{msg.info}" /></h2>
+
 							<p class="no-margin-top">
 								<h:outputText value="#{msg.title}:" />
 							</p>
@@ -30,7 +34,7 @@
 							<p:inputText id="news_title" value="#{adminNewsBean.news.title}" style="width: 100%;box-sizing: border-box;">
 
 							</p:inputText>
-							<p:textEditor styleClass="margin-top" height="184" value="#{adminNewsBean.news.text}">
+							<p:textEditor styleClass="margin-top" height="400" value="#{adminNewsBean.news.text}">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>

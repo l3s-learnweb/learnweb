@@ -443,6 +443,96 @@
     margin-bottom: -3px;
 }
 
+#newsform{
+    background: none;
+}
+
+#newsform .ui-carousel{
+    padding: 0;
+    border: none;
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+}
+
+#newsform .ui-carousel-header{
+    background: rgba(0,0,0,0.1);
+}
+
+#newsform .ui-carousel-viewport{
+    border: none;
+    height: 300px;
+}
+
+#newsform .ui-carousel-item{
+    background: none;
+    border: none;
+    color: white;
+    padding: 0 20px;
+    max-height: 260px;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+#newsform2{
+    background: none;
+    margin-top: -35px;
+}
+
+#newsform2 .ui-carousel{
+    padding: 0;
+    border: none;
+    background: rgba(0,0,0,0);
+    border-radius: 5px;
+}
+
+#newsform2 .ui-carousel-header{
+    background: rgba(0,0,0,0);
+}
+
+#newsform2 .ui-carousel-viewport{
+    border: none;
+    height: 200px;
+}
+
+#newsform2 .ui-carousel-item{
+    background: none;
+    border: none;
+    color:  var(--main-dark-green-color);
+    padding: 0 20px;
+    max-height: 160px;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#newsform2 .ui-carousel-item p{
+    max-width: 100%!important;
+}
+
+#newsform2 .ui-carousel-page-links{
+    display: none;
+}
+
+#newsform2 .ui-carousel-button{
+    color:  var(--main-dark-green-color);
+}
+
+.more-link{
+    position: absolute;
+    top: 525px;
+    font-size: 18px;
+    right: 9%;
+}
+
+.more-link2{
+    position: absolute;
+    top: 896px;
+    font-size: 18px;
+    right: 9%;
+}
+
 /******************** helper classes **********************************/
 .no-margin-top{
     margin-top: 0;
