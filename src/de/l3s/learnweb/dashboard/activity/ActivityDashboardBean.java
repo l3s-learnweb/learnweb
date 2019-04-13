@@ -7,18 +7,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.jsonldjava.utils.Obj;
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
-import org.apache.jena.base.Sys;
 import org.primefaces.model.chart.LineChartModel;
 
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
@@ -28,47 +24,21 @@ import de.l3s.learnweb.user.User;
 @SessionScoped
 public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
 {
+    private static final long serialVersionUID = 3326736281893564706L;
+
     @Deprecated
     @Inject
     private ActivityDashboardUsersBean activityDashboardUsersBean;
-    private static final long serialVersionUID = 3326736281893564706L;
-
-    private transient LineChartModel interactionsChart = null;
 
     private ActivityDashboardManager activityDashboardManager;
 
     private Map<String, String> actions;
-
     private List<String> selectedActionItems;
-
     private List<SelectItemGroup> groupedActions;
-
     private List<Integer> selectedGroupedActions;
 
-    public List<ActivityGraphData> getData()
-    {
-        return data;
-    }
-
-    public void setData(final List<ActivityGraphData> data)
-    {
-        this.data = data;
-    }
-
-    private List<ActivityGraphData> data;
-
-    public List<ActivityGraphData> getSelectedData()
-    {
-        return selectedData;
-    }
-
-    public void setSelectedData(final List<ActivityGraphData> selectedData)
-    {
-        this.selectedData = selectedData;
-    }
-
-    private List<ActivityGraphData> selectedData = new ArrayList<>();
-
+    private transient LineChartModel interactionsChart = null;
+    private transient List<Map<String, Object>> interactionsTable = null;
 
     public ActivityDashboardBean()
     {
@@ -77,14 +47,14 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     @PostConstruct
     public void init()
     {
-        actions = new TreeMap<String, String>();
+        actions = new TreeMap<>();
         actions.put("Resource actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.RESOURCE)));
         actions.put("Folder actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.FOLDER)));
         actions.put("Glossary actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GLOSSARY)));
         actions.put("Login/Logout actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.USER)));
         actions.put("Search actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.SEARCH)));
         actions.put("Group actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GROUP)));
-        groupedActions = new ArrayList<SelectItemGroup>();
+        groupedActions = new ArrayList<>();
         groupedActions.add(createGroupCheckboxes("Resource actions", Action.getActionsByCategory(ActionCategory.RESOURCE)));
         groupedActions.add(createGroupCheckboxes("Folder actions", Action.getActionsByCategory(ActionCategory.FOLDER)));
         groupedActions.add(createGroupCheckboxes("Glossary actions", Action.getActionsByCategory(ActionCategory.GLOSSARY)));
@@ -140,6 +110,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
+        interactionsTable = null;
         fetchDataFromManager();
     }
 
@@ -148,7 +119,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         List<Integer> selectedUsersIds = getSelectedUsersIds();
         if(selectedActionItems != null)
         {
-            data = new ArrayList<>();
+            List<ActivityGraphData> data = new ArrayList<>();
             for(String activityGroupName : selectedActionItems)
             {
                 ActivityGraphData activityData = new ActivityGraphData();
@@ -157,6 +128,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 data.add(activityData);
             }
             interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
         }
         else if(selectedGroupedActions != null)
         {
@@ -164,11 +136,12 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
             for(Integer activityGroupName : selectedGroupedActions)
             {
                 ActivityGraphData activityData = new ActivityGraphData();
-                activityData.setName(Action.values()[Integer.valueOf(activityGroupName)].name());
+                activityData.setName(Action.values()[activityGroupName].name());
                 activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
                 data.add(activityData);
             }
             interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+            interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
         }
     }
 
@@ -183,10 +156,19 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     public LineChartModel getInteractionsChart()
     {
-
         return interactionsChart;
     }
 
+    public List<Map<String, Object>> getInteractionsTable()
+    {
+        return interactionsTable;
+    }
+
+    public Set<String> getInteractionsTableColumnNames()
+    {
+        if (interactionsTable == null) return null;
+        return interactionsTable.size() > 0 ? interactionsTable.get(0).keySet() : new HashSet<>();
+    }
 
     public Map<String, String> getActions()
     {
