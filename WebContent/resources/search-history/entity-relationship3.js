@@ -278,7 +278,7 @@ function recoverNodes(){
 
     var activeNodes = [];
     nodes.style("opacity", function(e){
-        var isIncludes = Object.keys(e.data.categories).some(function (cat) { return window.categories.includes(cat) });
+        var isIncludes = e.data.categories ? Object.keys(e.data.categories).some(function (cat) { return window.categories.includes(cat) }) : false;
         if (isIncludes) activeNodes.push(e.node);
         return isIncludes ? 1 : 0.25;
     });
