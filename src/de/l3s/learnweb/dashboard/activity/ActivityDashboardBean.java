@@ -41,9 +41,34 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     private List<String> selectedActionItems;
 
-    private List<SelectItem> groupedActions;
+    private List<SelectItemGroup> groupedActions;
 
-    private List<String> selectedGroupedActions;
+    private List<Integer> selectedGroupedActions;
+
+    public List<ActivityGraphData> getData()
+    {
+        return data;
+    }
+
+    public void setData(final List<ActivityGraphData> data)
+    {
+        this.data = data;
+    }
+
+    private List<ActivityGraphData> data;
+
+    public List<ActivityGraphData> getSelectedData()
+    {
+        return selectedData;
+    }
+
+    public void setSelectedData(final List<ActivityGraphData> selectedData)
+    {
+        this.selectedData = selectedData;
+    }
+
+    private List<ActivityGraphData> selectedData = new ArrayList<>();
+
 
     public ActivityDashboardBean()
     {
@@ -58,9 +83,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         actions.put("Glossary actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GLOSSARY)));
         actions.put("Login/Logout actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.USER)));
         actions.put("Search actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.SEARCH)));
-        actions.put("Other actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.OTHER)));
         actions.put("Group actions", getStringOfActions(Action.getActionsByCategory(ActionCategory.GROUP)));
-        groupedActions = new ArrayList<SelectItem>();
+        groupedActions = new ArrayList<SelectItemGroup>();
         groupedActions.add(createGroupCheckboxes("Resource actions", Action.getActionsByCategory(ActionCategory.RESOURCE)));
         groupedActions.add(createGroupCheckboxes("Folder actions", Action.getActionsByCategory(ActionCategory.FOLDER)));
         groupedActions.add(createGroupCheckboxes("Glossary actions", Action.getActionsByCategory(ActionCategory.GLOSSARY)));
@@ -124,7 +148,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         List<Integer> selectedUsersIds = getSelectedUsersIds();
         if(selectedActionItems != null)
         {
-            List<ActivityGraphData> data = new ArrayList<>();
+            data = new ArrayList<>();
             for(String activityGroupName : selectedActionItems)
             {
                 ActivityGraphData activityData = new ActivityGraphData();
@@ -137,11 +161,11 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         else if(selectedGroupedActions != null)
         {
             List<ActivityGraphData> data = new ArrayList<>();
-            for(String activityGroupName : selectedGroupedActions)
+            for(Integer activityGroupName : selectedGroupedActions)
             {
                 ActivityGraphData activityData = new ActivityGraphData();
                 activityData.setName(Action.values()[Integer.valueOf(activityGroupName)].name());
-                activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName));
+                activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
                 data.add(activityData);
             }
             interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
@@ -179,22 +203,22 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         this.selectedActionItems = selectedActionItems;
     }
 
-    public List<SelectItem> getGroupedActions()
+    public List<SelectItemGroup> getGroupedActions()
     {
         return groupedActions;
     }
 
-    public void setGroupedActions(List<SelectItem> groupedActions)
+    public void setGroupedActions(List<SelectItemGroup> groupedActions)
     {
         this.groupedActions = groupedActions;
     }
 
-    public List<String> getSelectedGroupedActions()
+    public List<Integer> getSelectedGroupedActions()
     {
         return selectedGroupedActions;
     }
 
-    public void setSelectedGroupedActions(List<String> selectedGroupedActions)
+    public void setSelectedGroupedActions(List<Integer> selectedGroupedActions)
     {
         this.selectedGroupedActions = selectedGroupedActions;
     }

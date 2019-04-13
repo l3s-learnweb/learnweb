@@ -2,7 +2,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:define name="metadata">
@@ -70,7 +71,7 @@
                                                                   onchange="unselectAllCheckBoxes(PF('grid1'))">
                                                 <p:ajax event="valueChange" global="false" process="@this"/>
                                                 <f:selectItems value="#{activityDashboardBean.groupedActions}"
-                                                               var="groupedAction" itemLabel="#{groupedAction}"
+                                                               var="SelectItemGroup" itemLabel="#{groupedAction}"
                                                                itemValue="#{groupedAction}"/>
                                             </p:selectManyCheckbox>
 
@@ -97,6 +98,21 @@
                                              style="height:300px;" responsive="true"/>
                                 </p:panel>
                             </p:outputPanel>
+                            <p:outputLabel>
+                                <p:panel rendered="#{(activityDashboardBean.getInteractionsChart()!=null)? true:false}" header="Activities Table">
+                                    <p:dataTable var="serie" value="#{activityDashboardBean.interactionsChart.series}">
+                                        <p:column headerText="Activity">
+                                            <h:outputText value="#{serie.label}" />
+                                        </p:column>
+
+                                        <c:forEach items="#{serie.data.entrySet}" var="date">
+                                            <p:column headerText="#{date.key}">
+                                                <h:outputText value="#{date.value}" />
+                                            </p:column>
+                                        </c:forEach>
+                                    </p:dataTable>
+                                </p:panel>
+                            </p:outputLabel>
                         </h:panelGroup>
                     </div>
 
