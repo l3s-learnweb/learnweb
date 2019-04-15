@@ -12,7 +12,7 @@ public enum DocumentStatus
 
     private long status;
 
-    private DocumentStatus(long status)
+    DocumentStatus(long status)
     {
         this.status = status;
     }

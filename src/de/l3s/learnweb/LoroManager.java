@@ -119,10 +119,10 @@ public class LoroManager
         if(rs.getString("tags") != null)
             description += "\nKeyWords: " + rs.getString("tags");
 
-        description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+        description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
 
         resource.setDescription(description);
-        resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+        resource.setUrl("http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/");
         resource.setSource(SERVICE.loro);
         resource.setLocation("LORO");
 
@@ -152,8 +152,8 @@ public class LoroManager
             HttpURLConnection con = (HttpURLConnection) new URL(doc_url).openConnection();
             con.setRequestMethod("HEAD");
 
-            // TODO: this looks like infinite loop
-            for(int i = 1; i < 6;)
+            // make 5 attempts
+            for(int i = 1; i < 6; i++)
             {
                 if(con.getResponseCode() == 404)
                     return true;

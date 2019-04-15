@@ -139,7 +139,7 @@ public class StringHelper
         {
             if(out.length() != 0)
                 out.append(delimiter);
-            out.append(Integer.toString(item));
+            out.append(item);
         }
         return out.toString();
     }

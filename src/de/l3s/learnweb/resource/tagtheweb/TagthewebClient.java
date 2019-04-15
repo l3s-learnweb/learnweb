@@ -86,7 +86,7 @@ public class TagthewebClient
         return entryList.subList(0, limit).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static void main(String args[]) throws SQLException, ClassNotFoundException
+    public static void main(String[] args) throws SQLException, ClassNotFoundException
     {
         Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
         ResourceManager rm = new ResourceManager(learnweb);

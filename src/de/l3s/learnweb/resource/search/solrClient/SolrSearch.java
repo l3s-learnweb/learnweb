@@ -39,8 +39,8 @@ public class SolrSearch implements Serializable
 
     private Integer resultsPerPage = 8;
     private Integer resultsPerGroup = 2;
-    private String facetFields[] = null;
-    private String facetQueries[] = null;
+    private String[] facetFields = null;
+    private String[] facetQueries = null;
     private String filterLanguage = ""; // for example en_US
     private String filterType = ""; // image, video or web
     private String filterSource = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Desktop ...

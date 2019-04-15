@@ -41,8 +41,8 @@ public class AdvancedSearchBean implements Serializable
     private String city;
     private Map<String, String> countries;
     private Map<String, String> cities;
-    private String facetFields[] = null;
-    private String facetQueries[] = null;
+    private String[] facetFields = null;
+    private String[] facetQueries = null;
     private QueryResponse result;
 
     private SolrQuery solrQuery;

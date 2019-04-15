@@ -234,7 +234,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setDeleted(false);
             resource.setSource(SERVICE.learnweb);
             resource.setType(Resource.ResourceType.survey);
-            resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + Integer.toString(resource.getId()));
+            resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + resource.getId());
 
             Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
 
