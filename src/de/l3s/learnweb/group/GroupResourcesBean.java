@@ -86,8 +86,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     //extended metadata search/filters (Chloe)
     private ExtendedMetadataSearchFilters emFilters;
     private String[] selectedAuthors;
-    private String[] selectedMtypes;
-    private String[] selectedSources;
     private String[] selectedTargets;
     private String[] selectedPurposes;
     private String[] selectedLanguages;
@@ -98,7 +96,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     //extended metadata search/filters - authors and media sources from resources belonging to selected group only
     private List<String> authors;
-    private List<String> msources;
 
     //Grid or List view of group resources
     private boolean gridView = false;
@@ -1142,26 +1139,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.selectedAuthors = selectedAuthors;
     }
 
-    public String[] getSelectedMtypes()
-    {
-        return selectedMtypes;
-    }
-
-    public void setSelectedMtypes(String[] selectedMtypes)
-    {
-        this.selectedMtypes = selectedMtypes;
-    }
-
-    public String[] getSelectedSources()
-    {
-        return selectedSources;
-    }
-
-    public void setSelectedSources(String[] selectedSources)
-    {
-        this.selectedSources = selectedSources;
-    }
-
     public String[] getSelectedTargets()
     {
         return selectedTargets;
@@ -1263,49 +1240,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     }
 
-    public List<String> getMsources()
-    {
-        //get the list of unique media sources from database
-        try
-        {
-            msources = new ArrayList<>();
-            List<Resource> resources = this.group.getResources();
-
-            for(Resource resource : resources)
-            {
-                String exist = "false";
-
-                if((resource.getMsource() != null) && (resource.getMsource().length() != 0))
-                {
-
-                    for(String msource : msources)
-                    {
-                        if(msource.equalsIgnoreCase(resource.getMsource().trim()))
-                        {
-                            exist = "true";
-                        }
-                    }
-
-                    if(exist.equals("false"))
-                    {
-                        msources.add(resource.getMsource().trim());
-                    }
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            log.debug(e);
-        }
-
-        return msources;
-    }
-
-    public void setMsources(List<String> msources)
-    {
-        this.msources = msources;
-    }
-
     public CategoryTree getGroupCatTree() throws SQLException
     {
         if(groupCatTree == null)
@@ -1374,10 +1308,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         emFilters.setFilterAuthors(selectedAuthors);
         emFilters.setFilterLangs(selectedLanguages);
         emFilters.setFilterLevels(selectedLevels);
-        emFilters.setFilterMtypes(selectedMtypes);
         emFilters.setFilterPurposes(selectedPurposes);
         emFilters.setFilterTargets(selectedTargets);
-        emFilters.setFilterSources(selectedSources);
 
         int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
 

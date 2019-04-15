@@ -38,8 +38,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     private String selectedCatbot = "";
 
     private List<String> authors;
-    private List<String> mtypes;
-    private List<String> sources;
     private List<String> targets;
     private List<String> purposes;
     private List<String> langs;
@@ -103,21 +101,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         authors.add("Brian C.");
         authors.add("Chloe H.");
         authors.add("Thomas Hardy");
-
-        //mtype filter values (fixed values)
-        mtypes = new ArrayList<>();
-        mtypes.add("Text");
-        mtypes.add("Video");
-        mtypes.add("Image");
-        mtypes.add("Game");
-        mtypes.add("App");
-
-        //source filter values (must get it from db)
-        sources = new ArrayList<>();
-        sources.add("BBC");
-        sources.add("Cambridge");
-        sources.add("TED");
-        sources.add("Guardian");
 
         //target learner values (fixed values)
         targets = new ArrayList<>();
@@ -186,12 +169,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         return results;
     }
 
-    //mtypes getter and setter
-    public List<String> getMtypes()
-    {
-        return mtypes;
-    }
-
     public void setSelectedMtypes(String[] selectedMtypes)
     {
         this.selectedMtypes = selectedMtypes;
@@ -227,11 +204,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public void setSelectedSources(String[] selectedSources)
     {
         this.selectedSources = selectedSources;
-    }
-
-    public List<String> getSources()
-    {
-        return sources;
     }
 
     //targets getter and setter

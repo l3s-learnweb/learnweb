@@ -271,28 +271,6 @@
                                                 </h:panelGroup>
 
                                                 <h:panelGroup>
-                                                    <h:outputLabel for="mtlist" value="Media Type:  "/>
-                                                    <p:selectCheckboxMenu id="mtlist"
-                                                                          value="#{groupResourcesBean.selectedMtypes}"
-                                                                          label="Media Types" multiple="true" filter="true"
-                                                                          filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{searchFilterBean.mtypes}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="slist" value="Media Source:  "/>
-                                                    <p:selectCheckboxMenu id="slist"
-                                                                          value="#{groupResourcesBean.selectedSources}"
-                                                                          label="Sources" multiple="true" filter="true"
-                                                                          filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{groupResourcesBean.msources}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
                                                     <h:outputLabel for="llist" value="Language:"/>
                                                     <p:selectCheckboxMenu id="llist"
                                                                           value="#{groupResourcesBean.selectedLanguages}"

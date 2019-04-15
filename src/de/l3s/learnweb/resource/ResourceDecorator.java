@@ -34,12 +34,6 @@ public class ResourceDecorator implements Serializable
     private User addedToGroupBy; // only set if the resource is loaded in a group context
     private Date addedToGroupOn; // only set if the resource is loaded in a group context
 
-    //new variables for extended metadata
-    private String mtype;
-    private String msource;
-    private String language;
-    private ExtendedMetadata eMetadata;
-
     public ResourceDecorator(Resource resource)
     {
         this.resource = resource;
@@ -268,16 +262,6 @@ public class ResourceDecorator implements Serializable
 
     //getters for new variables for extended metadata (Chloe)
 
-    public String getMtype()
-    {
-        return resource.getMtype();
-    }
-
-    public String getMsource()
-    {
-        return resource.getMsource();
-    }
-
     public String getLanguage()
     {
         return resource.getLanguage();
@@ -296,8 +280,7 @@ public class ResourceDecorator implements Serializable
     @Override
     public String toString()
     {
-        return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", language=" + language + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + ", mtype="
-                + mtype + ", msource=" + msource + ", eMetadata=" + eMetadata + "]";
+        return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + "]";
     }
 
 }

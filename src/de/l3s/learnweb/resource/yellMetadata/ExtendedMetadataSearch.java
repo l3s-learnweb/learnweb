@@ -193,35 +193,6 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             }
         }
 
-        //filter by media source if not null
-        if((emFilters.getFilterSources().length > 0) && (emFilters.getFilterSources() != null))
-        {
-            filterResults = filterResultsByMsources(emFilters.getFilterSources(), filterResults);
-
-            String smSources = "";
-            for(int i = 0; i < emFilters.getFilterSources().length; i++)
-            {
-                smSources += emFilters.getFilterSources()[i] + ";";
-            }
-
-            log(Action.group_metadata_search, groupId, 0, "filterByMediaSources: " + smSources);
-        }
-
-        //filter by media type if not null
-        if(emFilters.getFilterMtypes().length > 0)
-
-        {
-            filterResults = filterResultsByMtypes(emFilters.getFilterMtypes(), filterResults);
-
-            String smTypes = "";
-            for(int i = 0; i < emFilters.getFilterMtypes().length; i++)
-            {
-                smTypes += emFilters.getFilterMtypes()[i] + ";";
-            }
-
-            log(Action.group_metadata_search, groupId, 0, "filterByMediaTypes: " + smTypes);
-        }
-
         //filter by audience if not null
         if(emFilters.getFilterTargets().length > 0)
         {
@@ -344,50 +315,6 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             }
         }
 
-        return fResults;
-    }
-
-    public List<Resource> filterResultsByMsources(String[] msources, List<Resource> workingCopy)
-    {
-        List<Resource> fResults = new ArrayList<>();
-
-        for(Resource r : workingCopy)
-        {
-            for(final String msource : msources)
-            {
-                if(r.getMsource() != null)
-                {
-                    if(r.getMsource().equalsIgnoreCase(msource.toLowerCase()))
-                    {
-                        fResults.add(r);
-                    }
-                }
-            }
-        }
-        return fResults;
-    }
-
-    public List<Resource> filterResultsByMtypes(String[] mtypes, List<Resource> workingCopy)
-    {
-        List<Resource> fResults = new ArrayList<>();
-
-        for(Resource r : workingCopy)
-        {
-            for(final String mtype : mtypes)
-            {
-                if(r.getMtype() != null)
-                {
-                    String[] rtypes = r.getMtype().split(",");
-                    for(int k = 0; k < rtypes.length; k++)
-                    {
-                        if(rtypes[k].trim().equalsIgnoreCase(mtype.toLowerCase()))
-                        {
-                            fResults.add(r);
-                        }
-                    }
-                }
-            }
-        }
         return fResults;
     }
 

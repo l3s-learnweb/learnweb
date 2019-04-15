@@ -2,7 +2,6 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 	<table id="resources_informations_table" class="full-width">
@@ -127,23 +126,6 @@
 				<td><span class="resource_field">#{msg.author}:</span></td>
 				<td><h:outputText
 						value="#{rightPaneBean.clickedResource.author}" /></td>
-			</tr>
-		</ui:fragment>
-
-		<ui:fragment
-			rendered="#{not empty rightPaneBean.clickedResource.msource}">
-			<tr>
-				<td><span class="resource_field"> Media Source: </span></td>
-				<td><h:outputText
-						value="#{rightPaneBean.clickedResource.msource}" /></td>
-			</tr>
-		</ui:fragment>
-		<ui:fragment
-			rendered="#{not empty rightPaneBean.clickedResource.mtype}">
-			<tr>
-				<td><span class="resource_field"> Contains: </span></td>
-				<td><h:outputText
-						value="#{rightPaneBean.clickedResource.mtype}" /></td>
 			</tr>
 		</ui:fragment>
 

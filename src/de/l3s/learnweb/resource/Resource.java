@@ -165,9 +165,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     //extended metadata (Chloe)
     private transient ExtendedMetadata extendedMetadata = null;
-    private String mtype;
-    private String msource;
-    private String[] selectedMtypes;
 
     /**
      * Do nothing constructor
@@ -177,10 +174,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     }
 
     /**
-     * Called by the ResorceManager after all setters have been called.
-     *
-     * @throws SQLException
-     *
+     * Called by the ResourceManager after all setters have been called.
      */
     protected void postConstruct() throws SQLException
     {
@@ -581,8 +575,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     /**
      * Copy constructor
-     *
-     * @param old
      */
     public Resource(Resource old)
     {
@@ -1887,27 +1879,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         }
     }
 
-    //setter and getter for new resource columns mtype and msource
-    public String getMtype()
-    {
-        return mtype;
-    }
-
-    public void setMtype(String mtype)
-    {
-        this.mtype = mtype;
-    }
-
-    public String getMsource()
-    {
-        return msource;
-    }
-
-    public void setMsource(String msource)
-    {
-        this.msource = msource;
-    }
-
     //extended metadata setter and getter (chloe)
     public ExtendedMetadata getExtendedMetadata() throws SQLException
     {
@@ -1922,37 +1893,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public void setExtendedMetadata(ExtendedMetadata extendedMetadata)
     {
         this.extendedMetadata = extendedMetadata;
-    }
-
-    //
-    public String[] getSelectedMtypes()
-    {
-        return selectedMtypes;
-    }
-
-    /**
-     * the setter will convert selectedMtypes to mtype
-     *
-     * @param selectedMtypes
-     */
-    public void setSelectedMtypes(String[] selectedMtypes)
-    {
-        String mt = "";
-        this.selectedMtypes = selectedMtypes;
-        for(int i = 0; i < selectedMtypes.length; i++)
-        {
-            if(i < selectedMtypes.length - 1)
-            {
-                mt += selectedMtypes[i] + ", ";
-            }
-            else
-            {
-                mt += selectedMtypes[i];
-            }
-        }
-        this.mtype = mt;
-
-        this.selectedMtypes = null; //once setting value for mtype, reset selectedMtypes
     }
 
     //new methods to add new metadata to given resource

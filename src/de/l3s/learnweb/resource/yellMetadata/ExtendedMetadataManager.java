@@ -78,8 +78,6 @@ public class ExtendedMetadataManager
         ExtendedMetadata eMetadata = new ExtendedMetadata();
 
         //get author? (not necessary) res.author
-        //get mtype (maybe not necessary if added directly to resource) res.mtype
-        //get msource (maybe not necessary if added directly to resource) res.msource
         //get language (maybe not necessary) res.language
 
         //get target learners

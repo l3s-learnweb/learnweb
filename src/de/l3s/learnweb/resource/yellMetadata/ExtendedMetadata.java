@@ -10,7 +10,7 @@ public class ExtendedMetadata implements Serializable
     private static final long serialVersionUID = 8459836784341456001L;
     private int resourceId;
 
-    //extended metadata for a single resource: author, msource, mtype, language are already included in the main resource class
+    //extended metadata for a single resource: author, language are already included in the main resource class
     private List<String> categories;
     private List<String> targets;
     private List<String> purposes;
@@ -26,8 +26,6 @@ public class ExtendedMetadata implements Serializable
 
     //aggregated list for search filters
     private List<String> authors;
-    private List<String> mtypes;
-    private List<String> sources;
     private List<String> langs;
 
     public ExtendedMetadata()
@@ -53,26 +51,6 @@ public class ExtendedMetadata implements Serializable
     public void setAuthors(List<String> authors)
     {
         this.authors = authors;
-    }
-
-    public List<String> getMtypes()
-    {
-        return mtypes;
-    }
-
-    public void setMtypes(List<String> mtypes)
-    {
-        this.mtypes = mtypes;
-    }
-
-    public List<String> getSources()
-    {
-        return sources;
-    }
-
-    public void setSources(List<String> sources)
-    {
-        this.sources = sources;
     }
 
     public List<String> getTargets()

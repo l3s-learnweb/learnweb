@@ -12,8 +12,6 @@ public class ExtendedMetadataSearchFilters implements Serializable
     private Integer resultsPerPage = 8;
     private Integer resultsPerGroup = 2;
     private String[] filterAuthors;
-    private String[] filterMtypes;
-    private String[] filterSources;
     private String[] filterTargets;
     private String[] filterPurposes;
     private String[] filterLangs;
@@ -54,26 +52,6 @@ public class ExtendedMetadataSearchFilters implements Serializable
     public void setFilterAuthors(String[] filterAuthors)
     {
         this.filterAuthors = filterAuthors;
-    }
-
-    public String[] getFilterMtypes()
-    {
-        return filterMtypes;
-    }
-
-    public void setFilterMtypes(String[] filterMtypes)
-    {
-        this.filterMtypes = filterMtypes;
-    }
-
-    public String[] getFilterSources()
-    {
-        return filterSources;
-    }
-
-    public void setFilterSources(String[] filterSources)
-    {
-        this.filterSources = filterSources;
     }
 
     public String[] getFilterTargets()
@@ -121,8 +99,6 @@ public class ExtendedMetadataSearchFilters implements Serializable
     public void resetFilters()
     {
         this.filterAuthors = null;
-        this.filterMtypes = null;
-        this.filterSources = null;
         this.filterTargets = null;
         this.filterPurposes = null;
         this.filterLangs = null;
