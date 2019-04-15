@@ -105,11 +105,6 @@ public class ExtendedMetadataManager
         }
 
         eMetadata.setlCount(lc);
-
-        //get categories
-        List<String> categories = learnweb.getCategoryManager().getCategoryNamesByResourceId(resourceId);
-        eMetadata.setCategories(categories);
-
         return eMetadata;
     }
 

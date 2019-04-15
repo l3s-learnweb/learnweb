@@ -35,7 +35,6 @@ import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.survey.SurveyManager;
 import de.l3s.learnweb.resource.ted.TedManager;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
-import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
 import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
@@ -63,17 +62,14 @@ public class Learnweb
     private String serverUrl;
     private String secureServerUrl;
 
-
-
     // list of Learnweb installations
     public enum SERVICE
     {
         LEARNWEB,
         AMA
-    };
+    }
 
     // Manager (Data Access Objects):
-
     private final ForumManager forumManager;
     private final ResourceManager resourceManager;
     private final OrganisationManager organisationManager;
@@ -111,7 +107,6 @@ public class Learnweb
 
     //added by Chloe
     private final AudienceManager audienceManager;
-    private final CategoryManager categoryManager;
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LangLevelManager langLevelManager;
     private final PurposeManager purposeManager;
@@ -335,7 +330,6 @@ public class Learnweb
 
         //new managers added by Chloe
         audienceManager = new AudienceManager(this);
-        categoryManager = new CategoryManager(this);
         extendedMetadataManager = new ExtendedMetadataManager(this);
         langLevelManager = new LangLevelManager(this);
         purposeManager = new PurposeManager(this);
@@ -416,11 +410,6 @@ public class Learnweb
     public AudienceManager getAudienceManager()
     {
         return audienceManager;
-    }
-
-    public CategoryManager getCategoryManager()
-    {
-        return categoryManager;
     }
 
     public ExtendedMetadataManager getExtendedMetadataManager()

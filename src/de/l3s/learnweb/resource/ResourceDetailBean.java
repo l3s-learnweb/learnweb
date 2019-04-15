@@ -39,13 +39,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private String newComment;
 
     //added by Chloe: to allow addition of new extended metadata
-    private String selectedTopcat;
-    private String selectedMidcat;
-    private String selectedBotcat;
     private String[] selectedLevels;
     private String[] selectedTargets;
     private String[] selectedPurposes;
-    private String newBotcat = "";
 
     @Inject
     private RightPaneBean rightPaneBean;
@@ -529,69 +525,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
         }
 
-        //adding category if any; allow users to add category only when at least top category is valid
-        if(!(selectedTopcat.equalsIgnoreCase("Select Category Level 1")))
-        {
-
-            if(selectedMidcat.equalsIgnoreCase("Select Category Level 2"))
-            {
-                selectedMidcat = "x";
-                selectedBotcat = "x";
-            }
-
-            if((selectedBotcat.equalsIgnoreCase("")) || (selectedBotcat == null))
-            {
-                selectedBotcat = "x";
-            }
-
-            try
-            {
-                rightPaneBean.getClickedResource().addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
-
-                String sCat = selectedTopcat + "/" + selectedMidcat + "/" + selectedBotcat;
-                log(Action.adding_yourown_metadata, rightPaneBean.getClickedResource().getGroupId(), rightPaneBean.getClickedResource().getId(), "category: " + sCat);
-
-            }
-            catch(SQLException e)
-            {
-                addErrorMessage(e);
-                return;
-            }
-        }
-
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     //getter and setter for extended metadata variables
-    public String getSelectedTopcat()
-    {
-        return selectedTopcat;
-    }
-
-    public void setSelectedTopcat(String selectedTopcat)
-    {
-        this.selectedTopcat = selectedTopcat;
-    }
-
-    public String getSelectedMidcat()
-    {
-        return selectedMidcat;
-    }
-
-    public void setSelectedMidcat(String selectedMidcat)
-    {
-        this.selectedMidcat = selectedMidcat;
-    }
-
-    public String getSelectedBotcat()
-    {
-        return selectedBotcat;
-    }
-
-    public void setSelectedBotcat(String selectedBotcat)
-    {
-        this.selectedBotcat = selectedBotcat;
-    }
 
     public String[] getSelectedLevels()
     {
@@ -626,16 +563,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             this.selectedPurposes = new String[0];
         else
             this.selectedPurposes = selectedPurposes.toArray(new String[0]);
-    }
-
-    public String getNewBotcat()
-    {
-        return newBotcat;
-    }
-
-    public void setNewBotcat(String newBotcat)
-    {
-        this.newBotcat = newBotcat;
     }
 
     public void onOpenExtendedMetadataDialog()

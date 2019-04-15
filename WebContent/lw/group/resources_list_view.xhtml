@@ -68,13 +68,6 @@
                         <div class="metadata-block">
                             <label class="rlabel"><b>Title:
                             </b></label> <span class="text-ellipses">#{res.title}</span><br/>
-                            <ui:fragment rendered="#{not empty res.extendedMetadata.categories[0]}">
-                                <label class="rlabel"><b>Category:
-                                </b></label>
-                                <h:outputText value="#{res.extendedMetadata.categories[0]}"
-                                              rendered="#{not empty res.extendedMetadata.categories[0]}"/>
-                                <br/>
-                            </ui:fragment>
                             <ui:fragment rendered="#{not empty res.language}">
                                 <label class="rlabel"><b>Language: </b></label>
                                 #{res.language}

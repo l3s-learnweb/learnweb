@@ -1932,17 +1932,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             addTag(tag.getName(), tags.getElementOwner(tag));
     }
 
-    public void addNewCategory(String selectedTopcat, String selectedMidcat, String selectedBotcat, User user) throws SQLException
-    {
-
-        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-
-        rsm.saveCategoryResource(this, selectedTopcat, selectedMidcat, selectedBotcat, user);
-
-        extendedMetadata = null;
-
-    }
-
     @Deprecated
     public String getLanguageOne()
     {

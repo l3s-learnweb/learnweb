@@ -2,20 +2,11 @@
 
 /** css rules for the new group resource search interface */
 
-#cattree{
-	display:block;
-	height: 500px;
-	overflow-y: auto;
-	overflow-x: auto;
-}
-
 #sresult, #cresults {
 	display:block;
 	overflow-y: auto;
 	height: 645px;
 }
-
- 
 
 #rlist {
   list-style-type: none;

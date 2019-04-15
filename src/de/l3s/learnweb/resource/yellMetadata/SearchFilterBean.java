@@ -25,30 +25,18 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(SearchFilterBean.class);
 
     private String[] selectedAuthors;
-    private String[] selectedMtypes;
-    private String[] selectedSources;
     private String[] selectedTargets;
     private String[] selectedPurposes;
     private String[] selectedLanguages;
     private String[] selectedLevels;
 
     private String selectedLang = "";
-    private String selectedCattop = "";
-    private String selectedCatmid = "";
-    private String selectedCatbot = "";
 
     private List<String> authors;
     private List<String> targets;
     private List<String> purposes;
     private List<String> langs;
     private List<String> levels;
-    private List<CategoryTop> catTops;
-    private List<CategoryMiddle> catMids;
-    private List<CategoryBottom> catBots;
-    private List<String> cattops;
-    private List<String> catmids;
-    private List<String> catbots;
-    private int topDefaultId = 1;
 
     public SearchFilterBean()
     {
@@ -59,41 +47,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public void init()
     {
         //media sources and authors from database
-
-        //get all top categories
-        try
-        {
-            catTops = getLearnweb().getCategoryManager().getAllTopCategories();
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-
-        cattops = new ArrayList<>();
-        for(CategoryTop catTop : catTops)
-        {
-            cattops.add(catTop.getCatName());
-        }
-
-        //middle categories
-        try
-        {
-            catMids = getLearnweb().getCategoryManager().getAllMiddleCategoriesByCattopID(topDefaultId);
-        }
-        catch(SQLException e1)
-        {
-            addErrorMessage(e1);
-        }
-
-        catmids = new ArrayList<>();
-        for(CategoryMiddle catMid : catMids)
-        {
-            if(!(catMid.getCatName().equalsIgnoreCase("x")))
-            {
-                catmids.add(catMid.getCatName());
-            }
-        }
 
         //author filter values (must get it from db)
         authors = new ArrayList<>();
@@ -115,7 +68,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         {
             // convert purpose list to string list of purpose names
             Stream<Purpose> purposesStream = getLearnweb().getPurposeManager().getPurposes(getUser()).stream();
-            purposes = purposesStream.map(p -> p.getName()).collect(Collectors.toList());
+            purposes = purposesStream.map(Purpose::getName).collect(Collectors.toList());
         }
         catch(SQLException e)
         {
@@ -169,16 +122,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         return results;
     }
 
-    public void setSelectedMtypes(String[] selectedMtypes)
-    {
-        this.selectedMtypes = selectedMtypes;
-    }
-
-    public String[] getSelectedMtypes()
-    {
-        return selectedMtypes;
-    }
-
     //authors getter and setter
     public String[] getSelectedAuthors()
     {
@@ -193,17 +136,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public List<String> getAuthors()
     {
         return authors;
-    }
-
-    //sources getter and setter
-    public String[] getSelectedSources()
-    {
-        return selectedSources;
-    }
-
-    public void setSelectedSources(String[] selectedSources)
-    {
-        this.selectedSources = selectedSources;
     }
 
     //targets getter and setter
@@ -279,176 +211,5 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public void setSelectedLanguages(String[] selectedLanguages)
     {
         this.selectedLanguages = selectedLanguages;
-    }
-
-    //categories setter and getter
-    public String getSelectedCattop()
-    {
-        return selectedCattop;
-    }
-
-    public void setSelectedCattop(String selectedCattop)
-    {
-        this.selectedCattop = selectedCattop;
-    }
-
-    public String getSelectedCatmid()
-    {
-        return selectedCatmid;
-    }
-
-    public void setSelectedCatmid(String selectedCatmid)
-    {
-        this.selectedCatmid = selectedCatmid;
-    }
-
-    public String getSelectedCatbot()
-    {
-        return selectedCatbot;
-    }
-
-    public void setSelectedCatbot(String selectedCatbot)
-    {
-        this.selectedCatbot = selectedCatbot;
-    }
-
-    public List<String> getCattops()
-    {
-        return cattops;
-    }
-
-    public void setCattops(List<String> cattops)
-    {
-        this.cattops = cattops;
-    }
-
-    public List<String> getCatmids()
-    {
-        return catmids;
-    }
-
-    public void setCatmids(List<String> catmids)
-    {
-        this.catmids = catmids;
-    }
-
-    public List<String> getCatbots()
-    {
-        return catbots;
-    }
-
-    public List<String> showCatbots(String query)
-    {
-        return catbots;
-    }
-
-    public void setCatbots(List<String> catbots)
-    {
-        this.catbots = catbots;
-    }
-
-    //populate middle category list when top category is selected
-    public void topCatChanged(ValueChangeEvent e)
-    { //reset catMids and catmids
-        catMids = null;
-        catmids = null;
-
-        String topcat = (String) e.getNewValue();
-        int cattopId = 0;
-        try
-        {
-            cattopId = getLearnweb().getCategoryManager().getCategoryTopByName(topcat);
-        }
-        catch(SQLException e1)
-        {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-        if(cattopId > 0)
-        {
-            try
-            {
-                catMids = getLearnweb().getCategoryManager().getAllMiddleCategoriesByCattopID(cattopId);
-            }
-            catch(SQLException e1)
-            {
-
-                e1.printStackTrace();
-            }
-
-            catmids = new ArrayList<>();
-            for(CategoryMiddle catMid : catMids)
-            {
-                if(!(catMid.getCatName().equalsIgnoreCase("x")))
-                {
-                    catmids.add(catMid.getCatName());
-                }
-            }
-        }
-        else //if top category name returned with invalid id number < 1
-        {
-            log.warn("invalid top category Id was given: " + selectedCattop);
-        }
-
-    }
-
-    //populate bottom category when middle category is selected! attention: user need to be able to add a new bottom cat so adding "add a new category" in the string
-    public void midCatChanged(ValueChangeEvent e)
-    { //reset catBots and catbots
-        catBots = null;
-        catbots = null;
-
-        String midcat = (String) e.getNewValue();
-        log.info("midcat value is " + midcat);
-
-        int catmidId = 0;
-        try
-        {
-            catmidId = getLearnweb().getCategoryManager().getCategoryMiddleByName(midcat);
-        }
-        catch(SQLException e1)
-        {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-
-        log.info("catmidId is " + catmidId);
-
-        if(catmidId > 0)
-        {
-            try
-            {
-                catBots = getLearnweb().getCategoryManager().getAllBottomCategoriesByCatmidID(catmidId);
-            }
-            catch(SQLException e1)
-            {
-
-                e1.printStackTrace();
-            }
-
-            catbots = new ArrayList<>();
-            for(CategoryBottom catBot : catBots)
-            {
-                if(!(catBot.getCatName().equalsIgnoreCase("x")))
-                {
-                    catbots.add(catBot.getCatName());
-                }
-            }
-        }
-        else //if middle category name returned with invalid id number < 1
-        {
-            log.warn("invalid mid category Id was given: " + selectedCatmid);
-        }
-        //log.info("catbots length is " + catbots.size());
-    }
-
-    public void botCatChanged(ValueChangeEvent e)
-    {
-        String botcat = (String) e.getNewValue();
-        if(botcat.equalsIgnoreCase("add a new category"))
-        {
-            log.info("adding a new category has been chosen!");
-        }
     }
 }

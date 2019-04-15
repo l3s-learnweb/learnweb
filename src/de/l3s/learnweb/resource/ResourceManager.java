@@ -28,8 +28,6 @@ import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
 import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
-import de.l3s.learnweb.resource.yellMetadata.Category;
-import de.l3s.learnweb.resource.yellMetadata.CategoryManager;
 import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
 import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.User;
@@ -1187,52 +1185,6 @@ public class ResourceManager
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_purpose USING ( resource_id ) WHERE purpose_id = ? AND deleted = 0 LIMIT ? ", null, purposeId, maxResults);
     }
 
-    //queries regarding table: lw_rm_catbot and lw_resource_category
-    public List<Resource> getResourcesByCatbotId(int catbotId) throws SQLException
-    {
-        return getResourcesByCatbotId(catbotId, 1000);
-    }
-
-    public List<Resource> getResourcesByCatbotId(int catbotId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_bot_id = ? AND deleted = 0 LIMIT ? ", null, catbotId, maxResults);
-    }
-
-    //queries regarding table: lw_rm_catmid and lw_resource_category
-    public List<Resource> getResourcesByCatmidId(int catmidId) throws SQLException
-    {
-        return getResourcesByCatmidId(catmidId, 1000);
-    }
-
-    public List<Resource> getResourcesByCatmidId(int catmidId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_mid_id = ? AND deleted = 0 LIMIT ? ", null, catmidId, maxResults);
-    }
-
-    //queries regarding table: lw_rm_cattop and lw_resource_category
-    public List<Resource> getResourcesByCattopId(int cattopId) throws SQLException
-    {
-        return getResourcesByCattopId(cattopId, 1000);
-    }
-
-    public List<Resource> getResourcesByCattopId(int cattopId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_top_id = ? AND deleted = 0 LIMIT ? ", null, cattopId, maxResults);
-    }
-
-    //save new resource_category
-    protected void saveCategoryResource(Resource resource, Category category, User user) throws SQLException
-    {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
-        replace.setInt(1, null == resource ? 0 : resource.getId());
-        replace.setInt(2, null == user ? 0 : user.getId());
-        replace.setInt(3, null == category ? 0 : category.getCatTop().getId());
-        replace.setInt(4, null == category ? 0 : category.getCatMid().getId());
-        replace.setInt(5, null == category ? 0 : category.getCatBot().getId());
-        replace.executeUpdate();
-        replace.close();
-    }
-
     //save new resource_langlevel
     protected void saveLangLevelResource(Resource resource, String[] langLevels, User user) throws SQLException
     {
@@ -1295,43 +1247,6 @@ public class ResourceManager
                 replace.close();
             }
         }
-    }
-
-    //save new resource_category
-    protected void saveCategoryResource(Resource resource, String topcat, String midcat, String botcat, User user) throws SQLException
-    {
-        int topcatId = 0;
-        int midcatId = 0;
-        int botcatId = 0;
-        //need cat_top_id, cat_mid_id, cat_bot_id to save
-        //need to save bottom cat if it does not exist yet (need midcat id to save)
-        CategoryManager cm = Learnweb.getInstance().getCategoryManager();
-        topcatId = cm.getCategoryTopByName(topcat);
-        if(topcatId > 0)
-        {
-            midcatId = cm.getCategoryMiddleByNameAndTopcatId(midcat, topcatId);
-            if(midcatId > 0)
-            {
-                botcat = botcat.toLowerCase(); //to avoid creating a duplicate bottom category
-                botcatId = cm.getCategoryBottomByNameAndMidcatId(botcat, midcatId);
-                if(botcatId <= 0)
-                {
-                    botcatId = cm.saveNewBottomCategory(botcat, midcatId);
-                }
-
-                //save new resource_category entry
-                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
-                replace.setInt(1, null == resource ? 0 : resource.getId());
-                replace.setInt(2, null == user ? 0 : user.getId());
-                replace.setInt(3, topcatId);
-                replace.setInt(4, midcatId);
-                replace.setInt(5, botcatId);
-                replace.executeUpdate();
-                replace.close();
-
-            }
-        }
-
     }
 
     /**

@@ -323,14 +323,6 @@
                             <div id="eMetaDetail">
                                 <hr/>
                                 <div id="detailList">
-                                    <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.categories}">
-                                        <label class="rdlabel"><b>Category: </b></label>#{rightPaneBean.clickedResource.extendedMetadata.categories[0]}
-                                        <br/>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.categories}">
-                                        <label class="rdlabel"><b>Category: </b></label><i>(Not available. Click the button below to add)</i>
-                                        <br/>
-                                    </ui:fragment>
                                     <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.lCount}">
                                         <label class="rdlabel"><b>Level (stats): </b></label>#{rightPaneBean.clickedResource.extendedMetadata.lCount}
                                         <br/>
@@ -436,34 +428,6 @@
                             <br/>
                             <br/>
                             <h:form id="add_metadata_form">
-
-                                <b><p:outputLabel for="toplist" value="Category:"/></b>
-                                <h:panelGrid columns="6" cellpadding="10" id="catlist">
-                                    <h:outputLabel for="toplist" value="Level 1:"/>
-                                    <p:selectOneMenu id="toplist" value="#{resourceDetailBean.selectedTopcat}"
-                                                     panelStyle="width:150px"
-                                                     valueChangeListener="#{searchFilterBean.topCatChanged}">
-                                        <f:selectItem itemLabel="Select Category Level 1" itemValue="-1"/>
-                                        <f:selectItems value="#{searchFilterBean.cattops}"/>
-                                        <p:ajax update="middlelist" process="@this"/>
-                                    </p:selectOneMenu>
-
-                                    <p:outputLabel for="middlelist" value="Level 2:"/>
-                                    <p:selectOneMenu id="middlelist" value="#{resourceDetailBean.selectedMidcat}"
-                                                     panelStyle="width:150px"
-                                                     valueChangeListener="#{searchFilterBean.midCatChanged}">
-                                        <f:selectItem itemLabel="Select Category Level 2" itemValue="-1"/>
-                                        <f:selectItems value="#{searchFilterBean.catmids}"/>
-                                        <p:ajax update="bottomlist" process="@this"/>
-                                    </p:selectOneMenu>
-
-                                    <p:outputLabel for="bottomlist" value="Level 3: (Choose or type a new one)"/>
-                                    <p:autoComplete id="bottomlist" panelStyle="width:150px" dropdown="true"
-                                                    value="#{resourceDetailBean.selectedBotcat}"
-                                                    completeMethod="#{searchFilterBean.showCatbots}"/>
-
-                                </h:panelGrid>
-
                                 <h:panelGrid columns="4" cellpadding="10">
                                     <p:outputLabel for="levlist" value="Language Level: "/>
                                     <p:selectCheckboxMenu id="levlist" value="#{resourceDetailBean.selectedLevels}"

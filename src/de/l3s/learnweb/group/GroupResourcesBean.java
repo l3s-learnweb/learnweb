@@ -48,7 +48,6 @@ import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
-import de.l3s.learnweb.resource.yellMetadata.CategoryTree;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.user.User;
@@ -90,7 +89,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private String[] selectedPurposes;
     private String[] selectedLanguages;
     private String[] selectedLevels;
-    private String selectedCatNode;
 
     private int searchLogId = -1;
 
@@ -102,10 +100,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     //for extended Metadata filter search
     private ExtendedMetadataSearch extendedMetadataSearch;
-
-    //for category filter search
-    private CategoryTree groupCatTree;
-    private String groupCatJson; //JSONified groupCatTree for javascript function
 
     private transient SearchLogManager searchLogger;
 
@@ -1179,16 +1173,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.selectedLevels = selectedLevels;
     }
 
-    public String getSelectedCatNode()
-    {
-        return selectedCatNode;
-    }
-
-    public void setSelectedCatNode(String selectedCatNode)
-    {
-        this.selectedCatNode = selectedCatNode;
-    }
-
     public List<String> getAuthors()
     {
 
@@ -1238,65 +1222,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     {
         this.authors = authors;
 
-    }
-
-    public CategoryTree getGroupCatTree() throws SQLException
-    {
-        if(groupCatTree == null)
-        {
-            groupCatTree = createGroupCatTree(this.group.getResources());
-        }
-        return groupCatTree;
-    }
-
-    private CategoryTree createGroupCatTree(List<Resource> resources) throws SQLException
-    {
-        CategoryTree cattree;
-
-        cattree = new CategoryTree(resources);
-
-        return cattree;
-    }
-
-    public String getGroupCatJson() throws SQLException
-    {
-        if(groupCatJson == null)
-        {
-            this.groupCatTree = getGroupCatTree();
-        }
-
-        Gson gson = new Gson();
-        this.groupCatJson = gson.toJson(this.groupCatTree);
-
-        return groupCatJson;
-    }
-
-    public void setGroupCatJson(String groupCatJson)
-    {
-        this.groupCatJson = groupCatJson;
-    }
-
-    public void setGroupCatTree(CategoryTree groupCatTree)
-    {
-        this.groupCatTree = groupCatTree;
-    }
-
-    //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand
-    public void onCategoryFilterClick() throws SQLException
-    {
-        extendedMetadataSearch = new ExtendedMetadataSearch(getUser());
-        extendedMetadataSearch.setResultsPerPage(8);
-
-        String catname = getParameter("catname");
-        String catlevel = getParameter("catlevel");
-
-        this.selectedCatNode = catname;
-
-        List<Resource> gResources = group.getResources();
-
-        paginator = extendedMetadataSearch.getCatFilterResults(gResources, catname, catlevel);
-
-        log(Action.group_category_search, groupId, 0, catname);
     }
 
     //extended metadata filtering methods and returns filter results (paginator)

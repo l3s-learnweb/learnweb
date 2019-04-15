@@ -22,7 +22,6 @@ public class MetadataBean extends ApplicationBean implements Serializable
     private int id = 203447;
     private Resource resource;
     private ExtendedMetadata em;
-    private String category = "empty";
 
     public MetadataBean()
     {
@@ -42,7 +41,6 @@ public class MetadataBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_FATAL, "failed to get extended metadata for given resource id");
                 return;
             }
-            category = em.getCategories().get(0);
             return;
         }
 
@@ -72,7 +70,6 @@ public class MetadataBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_FATAL, "failed to get extended metadata for given resource id");
                 return;
             }
-            category = em.getCategories().get(0);
 
             if(null == resource)
             {
@@ -110,16 +107,6 @@ public class MetadataBean extends ApplicationBean implements Serializable
     public void setEm(ExtendedMetadata em)
     {
         this.em = em;
-    }
-
-    public String getCategory()
-    {
-        return category;
-    }
-
-    public void setCategory(String category)
-    {
-        this.category = category;
     }
 
 }

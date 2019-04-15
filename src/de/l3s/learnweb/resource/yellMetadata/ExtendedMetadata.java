@@ -123,16 +123,6 @@ public class ExtendedMetadata implements Serializable
         this.levelCount = levelCount;
     }
 
-    public List<String> getCategories()
-    {
-        return categories;
-    }
-
-    public void setCategories(List<String> categories)
-    {
-        this.categories = categories;
-    }
-
     public String getlCount()
     {
         return lCount;
@@ -166,7 +156,7 @@ public class ExtendedMetadata implements Serializable
     @Override
     public String toString()
     {
-        return "ExtendedMetadata [categories=" + categories + ", levels=" + levels + ", targets=" + targets + ", purposes=" + purposes + ", levelCount=" + levelCount + ", targetCount=" + targetCount + "]";
+        return "ExtendedMetadata [levels=" + levels + ", targets=" + targets + ", purposes=" + purposes + ", levelCount=" + levelCount + ", targetCount=" + targetCount + "]";
     }
 
 }
