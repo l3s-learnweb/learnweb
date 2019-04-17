@@ -640,7 +640,7 @@ public class SolrSearch implements Serializable
             int end = matcher.end();
             if(start != 0)
                 newQuery = query.substring(0, start);
-            newQuery = newQuery.concat(query.substring(end, query.length()));
+            newQuery = newQuery.concat(query.substring(end));
             return newQuery;
         }
         else

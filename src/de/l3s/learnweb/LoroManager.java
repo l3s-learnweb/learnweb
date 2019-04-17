@@ -215,7 +215,7 @@ public class LoroManager
             //Variable to keep track for resourceId of a particular file belonging to type "text" and under same loro_resource_id group
             boolean textTest = true;
 
-            innerloop: while(rs.next())
+            while(rs.next())
             {
 
                 int learnwebResourceId = rs.getInt("resource_id");
@@ -239,7 +239,7 @@ public class LoroManager
                     update.setInt(2, rs.getInt("loro_resource_id"));
                     update.setString(3, rs.getString("doc_url"));
                     update.executeUpdate();
-                    continue innerloop; //Updates the resource_id in LORO table and continues the innerloop
+                    continue; //Updates the resource_id in LORO table and continues
                 }
 
                 int loroId = Integer.parseInt(loroResource.getIdAtService());

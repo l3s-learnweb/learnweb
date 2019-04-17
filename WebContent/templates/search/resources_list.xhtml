@@ -24,7 +24,7 @@
 
             <div style="margin:0.2rem 0 0.2rem 0;">
                 <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{msg['application.name']}
-                    <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+                    <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
                 <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id == -1}" target="_blank">#{res.url}</h:outputLink>
                 <ui:fragment rendered="${res.archived}">
                     <div>#{msg['Archive.captured_between']}

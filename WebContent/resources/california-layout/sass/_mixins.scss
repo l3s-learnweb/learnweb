@@ -47,13 +47,6 @@
     transition:         $transition;
 }
 
-@mixin focused-input() {
-    outline: 0;
-    border-color: $focusOutlineColor;
-    background-color: white;
-    @include shadow(0 0 5px rgba(0,112,210,.35));
-}
-
 @mixin rotate($deg) {
     -webkit-transform: rotate($deg);
     -moz-transform: rotate($deg);
@@ -89,6 +82,13 @@
     box-shadow: $value;
     -webkit-box-shadow: $value;
     -moz-box-shadow: $value;
+}
+
+@mixin focused-input() {
+    outline: 0;
+    border-color: $focusOutlineColor;
+    background-color: white;
+    @include shadow(0 0 5px rgba(0,112,210,.35));
 }
 
 @mixin border-box() {

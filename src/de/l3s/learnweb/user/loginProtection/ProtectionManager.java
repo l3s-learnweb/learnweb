@@ -333,6 +333,7 @@ public class ProtectionManager
     {
         accessMap.clear();
 
+        //noinspection SqlWithoutWhere
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans"))
         {
             delete.execute();
@@ -352,7 +353,7 @@ public class ProtectionManager
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -7);
 
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?");)
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?"))
         {
             delete.setTimestamp(1, new java.sql.Timestamp(cal.getTimeInMillis()));
             delete.execute();
@@ -376,7 +377,7 @@ public class ProtectionManager
 
     public void ban(String name, int banDays, int banHours, int banMinutes, boolean isIP)
     {
-        AccessData accData = accessMap.computeIfAbsent(name, n -> new AccessData(n));
+        AccessData accData = accessMap.computeIfAbsent(name, AccessData::new);
 
         accData.setBan(banDays, banHours, banMinutes);
 
@@ -422,7 +423,7 @@ public class ProtectionManager
 
     public void permaban(String name, boolean isIP)
     {
-        AccessData accData = accessMap.computeIfAbsent(name, n -> new AccessData(n));
+        AccessData accData = accessMap.computeIfAbsent(name, AccessData::new);
 
         accData.permaban();
 

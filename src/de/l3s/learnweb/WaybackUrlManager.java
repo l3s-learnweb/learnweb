@@ -172,8 +172,8 @@ public class WaybackUrlManager
 
     public boolean updateRecord(UrlRecord record, Date minAcceptableCrawlTime, Date minAcceptableStatusTime) throws SQLException
     {
-        boolean capturesUpdated = minAcceptableCrawlTime == null ? false : updateRecordCaptures(record, minAcceptableCrawlTime.getTime());
-        boolean statusUpdated = minAcceptableStatusTime == null ? false : updateStatusCode(record, minAcceptableStatusTime.getTime());
+        boolean capturesUpdated = minAcceptableCrawlTime != null && updateRecordCaptures(record, minAcceptableCrawlTime.getTime());
+        boolean statusUpdated = minAcceptableStatusTime != null && updateStatusCode(record, minAcceptableStatusTime.getTime());
         if(capturesUpdated || statusUpdated)
         {
             saveUrlRecord(record);
@@ -893,7 +893,7 @@ public class WaybackUrlManager
         }
 
         @Override
-        public Socket createSocket(String host, int port) throws IOException, UnknownHostException
+        public Socket createSocket(String host, int port) throws IOException
         {
             return factory.createSocket(host, port);
         }
@@ -905,7 +905,7 @@ public class WaybackUrlManager
         }
 
         @Override
-        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException
+        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException
         {
             return factory.createSocket(host, port, localHost, localPort);
         }

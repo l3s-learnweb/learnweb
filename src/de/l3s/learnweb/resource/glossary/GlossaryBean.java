@@ -15,8 +15,6 @@ import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import javax.faces.application.FacesMessage;
@@ -415,7 +413,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             //TODO DISPLAY FILE CANNOT BE READ
             System.out.println("There is IOException error");
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
@@ -626,7 +624,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         if(null == allowedTermLanguages && glossaryResource != null)
         {
-            allowedTermLanguages = localesToSelectitems(glossaryResource.getAllowedLanguages());
+            allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
     }

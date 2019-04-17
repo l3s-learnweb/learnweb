@@ -76,7 +76,7 @@ public class Search implements Serializable
         this.solrSearch = new SolrSearch(query, user);
 
         String logHTMLPreference = (null == user) ? null : user.getPreference("SEARCH_LOG_HTML");
-        this.logHTML = (logHTMLPreference == null) ? false : Boolean.parseBoolean(logHTMLPreference);
+        this.logHTML = Boolean.parseBoolean(logHTMLPreference);
 
         if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
         {

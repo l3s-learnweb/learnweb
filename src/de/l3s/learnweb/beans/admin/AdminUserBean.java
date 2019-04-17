@@ -96,6 +96,6 @@ public class AdminUserBean extends ApplicationBean implements Serializable
 
     public String concatGroups(List<Group> groups)
     {
-        return groups.stream().sorted().map(g -> g.getTitle()).collect(Collectors.joining(", "));
+        return groups.stream().sorted().map(Group::getTitle).collect(Collectors.joining(", "));
     }
 }

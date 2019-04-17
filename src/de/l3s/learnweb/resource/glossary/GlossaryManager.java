@@ -104,7 +104,7 @@ public class GlossaryManager
                 updateEntry(entryCloned);
             }
             saveTerms(entryCloned, glossaryResource.getGroupId());
-            entryCloned.getTerms().removeIf(term -> term.isDeleted());
+            entryCloned.getTerms().removeIf(GlossaryTerm::isDeleted);
             //Replace or Add the entry corresponding to cloned entry
             glossaryResource.getEntries().removeIf(entry -> entry.getId() == entryCloned.getId());
             glossaryResource.getEntries().add(entryCloned);
@@ -113,14 +113,14 @@ public class GlossaryManager
 
     private void deleteEntry(GlossaryEntry entryCloned) throws SQLException
     {
-        try(PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+        try(PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
             deleteEntry.setBoolean(1, true);
             deleteEntry.setInt(2, entryCloned.getLastChangedByUserId());
             deleteEntry.setInt(3, entryCloned.getId());
             deleteEntry.executeQuery();
         }
-        try(PreparedStatement deleteTerms = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_term` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+        try(PreparedStatement deleteTerms = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_term` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
             deleteTerms.setBoolean(1, true);
             deleteTerms.setInt(2, entryCloned.getLastChangedByUserId());
@@ -136,7 +136,7 @@ public class GlossaryManager
         //String ins = "INSERT INTO `lw_glossary_entry`(`entry_id`, `resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_changed_by_user_id`=VALUES(`last_changed_by_user_id`), `topic_one`=VALUES(`topic_one`), `topic_two`=VALUES(`topic_two`), `topic_three`=VALUES(`topic_three`), `description`=VALUES(`description`), `description_pasted`=VALUES(`description_pasted`)";
         try(PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
                 "INSERT INTO `lw_glossary_entry`(`resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS);)
+                PreparedStatement.RETURN_GENERATED_KEYS))
         {
             //PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
             //ins, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -179,7 +179,7 @@ public class GlossaryManager
 
     private void updateEntry(GlossaryEntry entryCloned) throws SQLException
     {
-        try(PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?");)
+        try(PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
             updateEntry.setString(1, entryCloned.getTopicOne());
             updateEntry.setString(2, entryCloned.getTopicTwo());
@@ -210,7 +210,7 @@ public class GlossaryManager
     private void updateTerms(GlossaryTerm term, GlossaryEntry entry) throws SQLException
     {
         try(PreparedStatement termUpdate = learnweb.getConnection().prepareStatement(
-                "UPDATE `lw_glossary_term` SET `entry_id`=?, `deleted`=?, `term`=?, `language`=?, `uses`=?, `pronounciation`=?, `acronym`=?, `source`=?, `phraseology`=?, `term_pasted`=?, `pronounciation_pasted`=?, `acronym_pasted`=?, `phraseology_pasted`=?, `last_changed_by_user_id`=? WHERE `term_id`=?");)
+                "UPDATE `lw_glossary_term` SET `entry_id`=?, `deleted`=?, `term`=?, `language`=?, `uses`=?, `pronounciation`=?, `acronym`=?, `source`=?, `phraseology`=?, `term_pasted`=?, `pronounciation_pasted`=?, `acronym_pasted`=?, `phraseology_pasted`=?, `last_changed_by_user_id`=? WHERE `term_id`=?"))
         {
             termUpdate.setInt(1, term.getEntryId());
             termUpdate.setBoolean(2, term.isDeleted());
@@ -238,7 +238,7 @@ public class GlossaryManager
     {
         try(PreparedStatement termInsert = learnweb.getConnection().prepareStatement(
                 "INSERT INTO `lw_glossary_term`(`entry_id`, `original_term_id`, `last_changed_by_user_id`, `user_id`, `term`, `language`, `uses`, `pronounciation`, `acronym`, `source`, `phraseology`, `term_pasted`, `pronounciation_pasted`, `acronym_pasted`, `phraseology_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS);)
+                PreparedStatement.RETURN_GENERATED_KEYS))
         {
             termInsert.setInt(1, entry.getId());
             termInsert.setInt(2, term.getOriginalTermId());
@@ -273,7 +273,7 @@ public class GlossaryManager
     {
         List<GlossaryEntry> entries = new LinkedList<>();
 
-        try(PreparedStatement getEntries = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `resource_id`=? and deleted = ?");)
+        try(PreparedStatement getEntries = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_entry` WHERE `resource_id`=? and deleted = ?"))
         {
             getEntries.setInt(1, resourceId);
             getEntries.setBoolean(2, false);
@@ -304,7 +304,7 @@ public class GlossaryManager
     public List<GlossaryTerm> getGlossaryTerms(GlossaryEntry entry) throws SQLException
     {
         List<GlossaryTerm> entryTerms = new LinkedList<>();
-        try(PreparedStatement getTerms = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_term` WHERE `entry_id`=? and `deleted`=?");)
+        try(PreparedStatement getTerms = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_term` WHERE `entry_id`=? and `deleted`=?"))
         {
             StringBuilder fulltext = new StringBuilder();
             getTerms.setInt(1, entry.getId());
@@ -318,7 +318,7 @@ public class GlossaryManager
                 term.setUserId(terms.getInt("user_id"));
                 term.setTerm(terms.getString("term"));
                 term.setLanguage(Locale.forLanguageTag(terms.getString("language")));
-                term.setUses(terms.getString("uses").isEmpty() ? new ArrayList<String>() : Arrays.asList(terms.getString("uses").split(",")));
+                term.setUses(terms.getString("uses").isEmpty() ? new ArrayList<>() : Arrays.asList(terms.getString("uses").split(",")));
                 term.setPronounciation(terms.getString("pronounciation"));
                 term.setAcronym(terms.getString("acronym"));
                 term.setSource(terms.getString("source"));
@@ -342,7 +342,7 @@ public class GlossaryManager
 
     public ArrayList<GlossaryTableView> convertToGlossaryTableView(GlossaryResource glossaryResource2)
     {
-        ArrayList<GlossaryTableView> tableView = new ArrayList<GlossaryTableView>();
+        ArrayList<GlossaryTableView> tableView = new ArrayList<>();
         for(GlossaryEntry entry : glossaryResource2.getEntries())
         {
             for(GlossaryTerm term : entry.getTerms())

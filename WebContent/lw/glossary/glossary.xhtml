@@ -106,21 +106,21 @@
 						</p:column>
 					</p:dataTable>
 					
-					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; cell-padding:none;">
+					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; padding:none;">
 						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBean.entryCount}" style="text-align:center;"
                                       styleClass="glossary_footer_text"></h:outputText>
                         <!--excel import button-->
                         <p:commandLink rendered="#{userBean.moderator}" styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
                             <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
-                                            style="position:relative; text-alignt:center; display: block; " />
+                                            style="position:relative; text-align:center; display: block; " />
                         </p:commandLink>
 						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
 							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
-								style="position:relative; text-alignt:center; display: block; " />
+								style="position:relative; text-align:center; display: block; " />
 							<p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
 						</p:commandLink>
 						<p:commandLink style="text-align:center;" ajax="false">
-							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-alignt:center;" />
+							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-align:center;" />
 							<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
                         <p:commandLink id="show_all" actionListener="#{glossaryBean.togglePaginator()}" update=":my_gloss_table @this"

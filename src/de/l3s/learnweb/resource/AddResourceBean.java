@@ -556,7 +556,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         if(null == availableGlossaryLanguages)
         {
-            availableGlossaryLanguages = localesToSelectitems(getUser().getOrganisation().getGlossaryLanguages());
+            availableGlossaryLanguages = localesToSelectItems(getUser().getOrganisation().getGlossaryLanguages());
         }
         return availableGlossaryLanguages;
     }

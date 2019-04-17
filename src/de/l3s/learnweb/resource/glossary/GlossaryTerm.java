@@ -67,7 +67,7 @@ public class GlossaryTerm implements Serializable
         setAcronymPasted(oldTerm.acronymPasted);
         setPhraseologyPasted(oldTerm.phraseologyPasted);
 
-        setUses(new ArrayList<String>(oldTerm.uses.size()));
+        setUses(new ArrayList<>(oldTerm.uses.size()));
         for(int i = 0; i < oldTerm.uses.size(); i++)
         {
             this.uses.add(i, oldTerm.uses.get(i));

@@ -64,7 +64,7 @@ public class SearchHistoryManager
         List<SearchResult> searchResults = new ArrayList<>();
         try
         {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_resource WHERE search_id = ? ORDER BY rank LIMIT ?");
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_resource WHERE search_id = ? ORDER BY `rank` LIMIT ?");
             pStmt.setInt(1, searchId);
             pStmt.setInt(2, limit);
 
@@ -314,7 +314,7 @@ public class SearchHistoryManager
     public Set<Integer> getGroupIds() throws SQLException
     {
         Set<Integer> groupIds = new HashSet<>();
-        PreparedStatement pstmt1 = learnweb.getConnection().prepareStatement("SELECT search_id, rank FROM learnweb_large.sl_action JOIN learnweb_large.sl_query USING(search_id) WHERE action='resource_saved' AND mode='text'");
+        PreparedStatement pstmt1 = learnweb.getConnection().prepareStatement("SELECT `search_id`, `rank` FROM learnweb_large.sl_action JOIN learnweb_large.sl_query USING(search_id) WHERE action='resource_saved' AND mode='text'");
         ResultSet rs = pstmt1.executeQuery();
         while(rs.next())
         {

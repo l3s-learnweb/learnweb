@@ -183,7 +183,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     private static boolean isValidSubmissionDate(SurveyResource surveyResource)
     {
-        Long currentDate = new Date().getTime();
+        long currentDate = new Date().getTime();
 
         if(surveyResource.getStart() != null && surveyResource.getStart().getTime() > currentDate)
             return false;

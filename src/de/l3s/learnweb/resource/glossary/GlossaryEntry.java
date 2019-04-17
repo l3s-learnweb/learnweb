@@ -62,6 +62,7 @@ public class GlossaryEntry implements Serializable
         setTopicTwo(oldEntry.topicTwo);
         setTopicThree(oldEntry.topicThree);
         setFulltext(oldEntry.fulltext);
+        // setTimestamp(oldEntry.timestamp); TODO: timestamp was missing. Should we clone it?
 
         for(GlossaryTerm oldTerm : oldEntry.terms)
         {

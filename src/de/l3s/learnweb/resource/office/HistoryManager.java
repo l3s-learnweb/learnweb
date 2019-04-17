@@ -39,7 +39,7 @@ public class HistoryManager
     {
         List<History> histories = new ArrayList<>();
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT history_id, last_save_date, doc_key, server_version, u.user_id as userId, u.username as username, @curRank := @curRank + 1 as history_version FROM lw_resource_history h left join lw_user u on u.user_id = h.user_id, (SELECT @curRank := 0) r WHERE resource_id = ?");)
+                "SELECT history_id, last_save_date, doc_key, server_version, u.user_id as userId, u.username as username, @curRank := @curRank + 1 as history_version FROM lw_resource_history h left join lw_user u on u.user_id = h.user_id, (SELECT @curRank := 0) r WHERE resource_id = ?"))
         {
             select.setInt(1, resourceId);
             ResultSet rs = select.executeQuery();

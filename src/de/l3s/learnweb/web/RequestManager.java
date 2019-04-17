@@ -221,6 +221,7 @@ public class RequestManager
      */
     public void clearRequestsDB()
     {
+        //noinspection SqlWithoutWhere
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_requests"))
         {
             delete.execute();

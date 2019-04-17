@@ -435,7 +435,7 @@ public class PeerAssessmentManager
             {
                 // check if user is part of aarhus course
                 Stream<Course> courses = pair.getAssessedUser().getCourses().stream();
-                boolean aarhusUser = 1 == courses.filter(course -> course.getTitle().equals("EU-Aarhus")).collect(Collectors.counting());
+                boolean aarhusUser = 1 == courses.filter(course -> course.getTitle().equals("EU-Aarhus")).count();
 
                 if(!aarhusUser)
                 {

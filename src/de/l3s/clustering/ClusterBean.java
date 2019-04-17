@@ -206,8 +206,8 @@ public class ClusterBean extends ApplicationBean implements Serializable
     {
         String[] list = new String[3];
 
-        Long valueX = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=" + String.valueOf(codAc1));
-        Long valueY = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=" + String.valueOf(codAc2));
+        Long valueX = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=" + codAc1);
+        Long valueY = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=" + codAc2);
         list[0] = String.valueOf(userId);
         list[1] = String.valueOf(valueX);
         list[2] = String.valueOf(valueY);
@@ -422,47 +422,47 @@ public class ClusterBean extends ApplicationBean implements Serializable
 
         if(this.groupId.compareTo("0") == 0)
         {
-            searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=5");
-            addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=15");
-            delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=14");
-            openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=3");
-            createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=7");
-            groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=6");
-            groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=8");
+            searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=5");
+            addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=15");
+            delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=14");
+            openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=3");
+            createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=7");
+            groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=6");
+            groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=8");
 
-            rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=1");
-            tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=0");
-            editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=19");
-            commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=2");
-            deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=17");
+            rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=1");
+            tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=0");
+            editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=19");
+            commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=2");
+            deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + userId + " AND A1.action=17");
         }
         else
         {
             searching = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=5");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=5");
             addResource = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=15");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=15");
             delResource = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=14");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=14");
             openResource = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=3");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=3");
             createGroup = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=7");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=7");
             groupJoining = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=6");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=6");
             groupLeaving = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=8");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=8");
 
             rating = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=1");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=1");
             tagging = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=0");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=0");
             editResource = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=19");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=19");
             commenting = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=2");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=2");
             deleteComments = (Long) Sql.getSingleResult(
-                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId) + " AND A1.action=17");
+                    "SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + userId + " AND A1.action=17");
 
         }
         listActUsers.put("Searching", searching);

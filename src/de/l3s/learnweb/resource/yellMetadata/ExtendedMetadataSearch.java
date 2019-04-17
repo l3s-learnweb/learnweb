@@ -56,10 +56,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
         {
             filterResults = filterResultsByAuthors(emFilters.getFilterAuthors(), filterResults);
 
-            String sAuthors = "";
+            StringBuilder sAuthors = new StringBuilder();
             for(int i = 0; i < emFilters.getFilterAuthors().length; i++)
             {
-                sAuthors += emFilters.getFilterAuthors()[i] + ";";
+                sAuthors.append(emFilters.getFilterAuthors()[i]).append(";");
             }
 
             log(Action.group_metadata_search, groupId, 0, "filterByAuthors: " + sAuthors);
@@ -70,10 +70,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
         {
             filterResults = filterResultsByLanguages(emFilters.getFilterLangs(), filterResults);
 
-            String sLangs = "";
+            StringBuilder sLangs = new StringBuilder();
             for(int i = 0; i < emFilters.getFilterLangs().length; i++)
             {
-                sLangs += emFilters.getFilterLangs()[i] + ";";
+                sLangs.append(emFilters.getFilterLangs()[i]).append(";");
             }
 
             log(Action.group_metadata_search, groupId, 0, "filterByLangs: " + sLangs);
@@ -86,10 +86,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             {
                 filterResults = filterResultsByLevels(emFilters.getFilterLevels(), filterResults);
 
-                String sLevels = "";
+                StringBuilder sLevels = new StringBuilder();
                 for(int i = 0; i < emFilters.getFilterLevels().length; i++)
                 {
-                    sLevels += emFilters.getFilterLevels()[i] + ";";
+                    sLevels.append(emFilters.getFilterLevels()[i]).append(";");
                 }
 
                 log(Action.group_metadata_search, groupId, 0, "filterByLangLevels: " + sLevels);
@@ -108,10 +108,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             {
                 filterResults = filterResultsByTargets(emFilters.getFilterTargets(), filterResults);
 
-                String sTargets = "";
+                StringBuilder sTargets = new StringBuilder();
                 for(int i = 0; i < emFilters.getFilterTargets().length; i++)
                 {
-                    sTargets += emFilters.getFilterTargets()[i] + ";";
+                    sTargets.append(emFilters.getFilterTargets()[i]).append(";");
                 }
 
                 log(Action.group_metadata_search, groupId, 0, "filterByAudiences: " + sTargets);
@@ -130,10 +130,10 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
             {
                 filterResults = filterResultsByPurposes(emFilters.getFilterPurposes(), filterResults);
 
-                String sPurposes = "";
+                StringBuilder sPurposes = new StringBuilder();
                 for(int i = 0; i < emFilters.getFilterPurposes().length; i++)
                 {
-                    sPurposes += emFilters.getFilterPurposes()[i] + ";";
+                    sPurposes.append(emFilters.getFilterPurposes()[i]).append(";");
                 }
 
                 log(Action.group_metadata_search, groupId, 0, "filterByPurposes: " + sPurposes);
@@ -230,19 +230,17 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     {
         List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < levels.length; j++)
+            for(final String level : levels)
             {
                 List<String> rlevels;
                 if(r.getExtendedMetadata().getLevels() != null)
                 {
                     rlevels = r.getExtendedMetadata().getLevels();
-                    for(int k = 0; k < rlevels.size(); k++)
+                    for(String rlevel : rlevels)
                     {
-                        if(rlevels.get(k).equalsIgnoreCase(levels[j]))
+                        if(rlevel.equalsIgnoreCase(level))
                         {
                             fResults.add(r);
                         }
@@ -257,19 +255,17 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     {
         List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < targets.length; j++)
+            for(final String target : targets)
             {
                 List<String> rtargets;
                 if(r.getExtendedMetadata().getTargets() != null)
                 {
                     rtargets = r.getExtendedMetadata().getTargets();
-                    for(int k = 0; k < rtargets.size(); k++)
+                    for(String rtarget : rtargets)
                     {
-                        if(rtargets.get(k).equalsIgnoreCase(targets[j].toLowerCase()))
+                        if(rtarget.equalsIgnoreCase(target.toLowerCase()))
                         {
                             fResults.add(r);
                         }
@@ -284,19 +280,17 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
     {
         List<Resource> fResults = new ArrayList<>();
 
-        for(int i = 0; i < workingCopy.size(); i++)
+        for(Resource r : workingCopy)
         {
-            Resource r = workingCopy.get(i);
-
-            for(int j = 0; j < purposes.length; j++)
+            for(final String purpose : purposes)
             {
                 List<String> rpurposes;
                 if(r.getExtendedMetadata().getPurposes() != null)
                 {
                     rpurposes = r.getExtendedMetadata().getPurposes();
-                    for(int k = 0; k < rpurposes.size(); k++)
+                    for(String rpurpose : rpurposes)
                     {
-                        if(rpurposes.get(k).equalsIgnoreCase(purposes[j].toLowerCase()))
+                        if(rpurpose.equalsIgnoreCase(purpose.toLowerCase()))
                         {
                             fResults.add(r);
                         }

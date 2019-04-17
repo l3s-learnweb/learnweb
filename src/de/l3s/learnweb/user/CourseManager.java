@@ -49,7 +49,7 @@ public class CourseManager
         cache.clear();
 
         // load all courses into cache
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_course ORDER BY title");)
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT " + SELECT + " FROM lw_course ORDER BY title"))
         {
             while(rs.next())
             {

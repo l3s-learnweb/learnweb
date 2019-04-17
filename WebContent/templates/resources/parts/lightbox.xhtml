@@ -18,11 +18,11 @@
             </div>
             <div id="lightbox_content">
                 <ui:fragment rendered="#{res.isOfficeResource()}">
-                    <div id="lightbox_editor"/>
+                    <div id="lightbox_editor"></div>
                     <script type="text/javascript"> load_editor();</script>
                 </ui:fragment>
                 <ui:fragment rendered="#{res.type eq 'pdf'}">
-                    <iframe src="#{res.url}" style="width:100%; height:100%; "/>
+                    <iframe src="#{res.url}" style="width:100%; height:100%;"></iframe>
                 </ui:fragment>
                 <ui:fragment rendered="#{res.type eq 'image' or res.type eq 'survey'}">
                     <img src="#{res.thumbnail4.url}" height="#{res.thumbnail4.height}" width="#{res.thumbnail4.width}"
@@ -69,7 +69,7 @@
                         </ui:fragment>
                     </div>
                     <div id="archive_iframe_div">
-                        <iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
+                        <iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"></iframe>
                     </div>
                     <div id="archive_timestamp_overlay">
                         <span class="archive_timestamp_overlay_text">

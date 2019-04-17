@@ -515,11 +515,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
         return this.title;
     }
 
-    public String resourceLink()
-    {
-        return "/group/resources.jsf";
-    }
-
     public String getTooltip() throws SQLException
     {
         String tooltip = "<ul style='list-style: none; max-width:50rem; margin: 0px; padding: 0px;'><h2>" + getTitle() + "</h2>";
