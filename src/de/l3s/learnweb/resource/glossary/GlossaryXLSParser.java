@@ -16,7 +16,7 @@ public class GlossaryXLSParser
 {
     private static final Logger log = Logger.getLogger(GlossaryXLSParser.class);
 
-    private List<GlossaryEntry> sortedGlossaryEntries;
+    private List<GlossaryEntry> sortedGlossaryEntries = new ArrayList<>();
     private UploadedFile uploadedFile;
     private Map<String, Locale> languageMap;
     private List<Exception> errorsDuringProcessing = new ArrayList<>();

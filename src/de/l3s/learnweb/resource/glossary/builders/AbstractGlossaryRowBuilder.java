@@ -91,7 +91,7 @@ public abstract class AbstractGlossaryRowBuilder<T>
             }
             else
             {
-                errors.add(new IllegalArgumentException("Unknown column: " + getStringValueForCell(header.getCell(cellPosition)) + " at position " + cellPosition));
+                errors.add(new IllegalArgumentException("Unknown column: '" + getStringValueForCell(header.getCell(cellPosition)) + "' at position " + cellPosition));
             }
         }
         return errors;
