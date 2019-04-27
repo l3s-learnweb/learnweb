@@ -116,7 +116,7 @@ public abstract class AbstractGlossaryRowBuilder<T>
     protected String getStringValueForCell(Cell cell)
     {
         String result;
-        switch(cell.getCellTypeEnum())
+        switch(cell.getCellType())
         {
             case STRING:
                 result = cell.getStringCellValue();

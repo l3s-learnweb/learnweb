@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
 
 import javax.faces.application.FacesMessage;
@@ -398,21 +399,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             formattedResultOfProcess.append("Imported entry count - ").append(parser.getEntries().size()).append(" errors count - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
             if(!parser.getErrorsDuringProcessing().isEmpty())
             {
-                formattedResultOfProcess.append("Errors:<br/>");
                 log.error("Found some errors during Glossary xml parsing (see additional info on UI)");
+                formattedResultOfProcess.append("Errors:<br/>");
                 parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
-                resultOfXmlParsing = formattedResultOfProcess.toString();
 
                 log.error(resultOfXmlParsing);
 
-                PrimeFaces.current().ajax().update("glossary_dialog");
             }
             else
             {
-                // append parsed entries to glossary
                 glossaryResource.getEntries().addAll(parser.getEntries());
                 repaintTable();
             }
+            resultOfXmlParsing = formattedResultOfProcess.toString();
+            PrimeFaces.current().ajax().update("glossary_dialog");
+            PrimeFaces.current().executeScript("PF('glossTable').filter();");
         }
         catch(IOException e)
         {

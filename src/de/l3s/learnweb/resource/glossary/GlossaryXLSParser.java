@@ -11,6 +11,7 @@ import org.primefaces.model.UploadedFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GlossaryXLSParser
 {
@@ -84,8 +85,31 @@ public class GlossaryXLSParser
 
     private List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
     {
-        //TODO IMPLEMENT ME, after xhtml fixing
-        return glossaryEntries;
+        List<GlossaryEntry> result = new ArrayList<>();
+        Iterator<GlossaryEntry> glossEntryIterator = glossaryEntries.iterator();
+        while(glossEntryIterator.hasNext())
+        {
+            GlossaryEntry entry = glossEntryIterator.next();
+            final AtomicBoolean alreadyExist = new AtomicBoolean(false);
+            result.forEach(resultGlossary ->
+            {
+                if(StringUtils.equals(resultGlossary.getTopicOne(), entry.getTopicOne())
+                        && StringUtils.equals(resultGlossary.getTopicTwo(), entry.getTopicTwo())
+                        && StringUtils.equals(resultGlossary.getTopicThree(), entry.getTopicThree())
+                        && StringUtils.equals(resultGlossary.getDescription(), entry.getDescription()))
+                {
+                    resultGlossary.getTerms().addAll(entry.getTerms());
+                    alreadyExist.set(true);
+                }
+            });
+            if(!alreadyExist.get())
+            {
+                result.add(entry);
+            }
+            glossEntryIterator.remove();
+        }
+        ;
+        return result;
     }
 
     /**
