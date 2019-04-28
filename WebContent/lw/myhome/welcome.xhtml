@@ -5,12 +5,12 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">	
 	
-	<ui:composition template="/templates/main/main_old.xhtml">
+	<ui:composition template="/WEB-INF/templates/layout/template.xhtml">
 
 		<ui:param name="loginRequired" value="true"/>
 		<ui:param name="pageTitle" value="#{msg.welcome}"/>	
 
-		<ui:define name="center_layout">
+		<ui:define name="content">
 
 		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
 			<div style="width: 28rem;">
