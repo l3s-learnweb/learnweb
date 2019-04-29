@@ -16,7 +16,6 @@
 
     <h:outputStylesheet name="california-layout/css/layout-teal.css" />
     <h:outputStylesheet name="design/css/landing.css" />
-    <h:outputStylesheet name="california-layout/css/matviei-extd.css" />
 </h:head>
 
 <h:body styleClass="landing-body">
@@ -71,32 +70,14 @@
 
         <div id="about" class="clearfix premium">
             <div class="premium-content">
-                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                <div class="ui-g-12 ui-md-6 ui-lg-6">
                     <h1>About us</h1>
                     <p><h:outputText value="#{msg.homepage}" />
                         <h:outputText value="#{msg.homepage}" /></p>
                 </div>
-                <div class="ui-g-12 ui-md-8 ui-lg-8">
-                    <h:form id="newsform2" >
-                        <p:carousel styleClass="carousel" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" responsive="true"  headerText="" style="margin-bottom:0">
-                            <p:tab>
-                                <h2><h:outputText value="#{adminNewsBean.newsList.get(0).title}" /></h2>
-                                <p><h:outputText value="#{adminNewsBean.newsList.get(0).text}" /></p>
-
-
-                            </p:tab>
-                            <p:tab>
-                                <h2><h:outputText value="#{adminNewsBean.newsList.get(1).title}" /></h2>
-                                <p><h:outputText value="#{adminNewsBean.newsList.get(1).text}" /></p>
-                            </p:tab>
-                            <p:tab>
-                                <h2><h:outputText value="#{adminNewsBean.newsList.get(2).title}" /></h2>
-                                <p><h:outputText value="#{adminNewsBean.newsList.get(2).text}" /></p>
-                            </p:tab>
-
-                        </p:carousel>
-                        <a class="more-link2" href="landing3.jsf">more...</a>
-                    </h:form>
+                <div class="ui-g-12 ui-md-6 ui-lg-6">
+                    <!--<ui:include src="/templates/user/guide.xhtml"/>-->
+                    <!--<iframe width="560" height="315" src="resources/templates/user/guide.xhtml" frameborder="0"></iframe>-->
                 </div>
             </div>
         </div>

@@ -460,63 +460,45 @@
 
 #newsform .ui-carousel-viewport{
     border: none;
-    height: 300px;
+    height: 400px;
 }
 
 #newsform .ui-carousel-item{
     background: none;
     border: none;
     color: white;
-    padding: 0 20px;
-    max-height: 260px;
+    padding: 0 18px;
+    max-height: 365px;
     word-break: break-all;
     text-overflow: ellipsis;
-    overflow: hidden;
+    overflow-y: auto;
+    margin: 0 2px;
 }
 
-
-#newsform2{
-    background: none;
-    margin-top: -35px;
+#newsform .ui-carousel-item::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    background-color: rgba(0,0,0,.2);
 }
 
-#newsform2 .ui-carousel{
-    padding: 0;
-    border: none;
-    background: rgba(0,0,0,0);
-    border-radius: 5px;
+#newsform .ui-carousel-item::-webkit-scrollbar
+{
+    width: 8px;
+    background-color: rgba(0,0,0,.2);
 }
 
-#newsform2 .ui-carousel-header{
-    background: rgba(0,0,0,0);
+#newsform .ui-carousel-item::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #fff;
 }
 
-#newsform2 .ui-carousel-viewport{
-    border: none;
-    height: 200px;
-}
-
-#newsform2 .ui-carousel-item{
-    background: none;
-    border: none;
-    color:  var(--main-dark-green-color);
-    padding: 0 20px;
-    max-height: 160px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-#newsform2 .ui-carousel-item p{
-    max-width: 100%!important;
-}
-
-#newsform2 .ui-carousel-page-links{
-    display: none;
-}
-
-#newsform2 .ui-carousel-button{
-    color:  var(--main-dark-green-color);
+#newsform span{
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
 }
 
 .more-link{
@@ -532,6 +514,74 @@
     font-size: 18px;
     right: 9%;
 }
+
+.landing-body .news-panel{
+    display: flex;
+    width: 100%;
+}
+
+.news-panel > div{
+    width: 100%;
+    align-items: center
+}
+
+#newsfeed{
+    width: 100%;
+}
+
+#newsfeed #newsfeed_content{
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+#newsfeed .ui-datagrid-column{
+    width: 33%;
+}
+
+#newsfeed .ui-datagrid-column > div{
+    width: 100%;
+}
+
+#newsfeed .newsfeed_body{
+    text-align: initial;
+    max-height: 239px;
+    overflow: hidden;
+    padding: 0 12px;
+    height: inherit;
+}
+
+ #newsfeed h2, #newsbody h2{
+    color: initial;
+}
+
+ #newsfeed .pricing-header{
+     max-width: 512px;
+     width: 100%;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     padding: 12px 5px;
+ }
+
+ #newsfeed .pricing-content{
+     height: 300px;
+     max-width: 512px;
+ }
+
+ #newsbody{
+     padding: 0 20px 20px;
+ }
+
+ .playground{
+     display: flex;
+ }
+
+ .playground img {
+     width: 85px;
+     height: 85px;
+     margin: 0 7px 0px 0px;
+ }
 
 /******************** helper classes **********************************/
 .no-margin-top{
@@ -558,12 +608,16 @@
     padding-bottom: var(--main-margin);
 }
 
+.padding-top{
+    padding-top: var(--main-margin);
+}
+
 .no-padding{
     padding: 0;
 }
 
 .no-padding-top{
-    padding-top: 0;
+    padding-top: 0!important;
 }
 
 .no-padding-bottom{

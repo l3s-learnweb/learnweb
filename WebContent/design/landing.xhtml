@@ -16,6 +16,7 @@
 
     <h:outputStylesheet name="california-layout/css/layout-teal.css" />
     <h:outputStylesheet name="design/css/landing.css" />
+    <h:outputStylesheet name="california-layout/css/matviei-extd.css" />
 </h:head>
 
 <h:body styleClass="landing-body">
@@ -23,7 +24,7 @@
         <div id="header">
             <div class="header-top clearfix">
                 <h:link outcome="california/dashboard" styleClass="logo">
-                    <h:graphicImage value="resources/images/logo.svg"/>
+                    <a href="landing.jsf"><h:graphicImage value="resources/images/logo.svg"/></a>
                 </h:link>
                 <ul class="header-menu">
                     <li><a href="#"><span>Log in</span></a></li>
@@ -32,15 +33,9 @@
                 </ul>
             </div>
 
-            <div class="header-content clearfix">
+            <div class="header-content clearfix news-panel no-padding-top">
                 <div class="ui-g">
-                    <div class="ui-g-12 ui-lg-9 ui-md-12">
-                        <div class="header-content-panel">
-                            <h1>Learn Web</h1>
-                            <p>​<h:outputText value="#{msg.homepage}" /></p>
-                        </div>
-                    </div>
-                    <div class="ui-g-12 ui-lg-3 ui-md-12">
+                    <div class="ui-g-12 ui-lg-4 ui-md-12">
                         <div class="header-content-panel">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-lg-12 ui-md-12">
@@ -64,6 +59,28 @@
                             </div>
                         </div>
                     </div>
+                    <div class="ui-g-12 ui-lg-8 ui-md-12 ui-sm-12">
+
+                        <h:form id="newsform" styleClass="newsform">
+                            <p:carousel styleClass="carousel" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" headerText="What's news?" style="margin-bottom:0">
+                                <p:tab >
+                                    <h2><h:outputText value="#{adminNewsBean.newsList.get(0).title}" /><span>#{adminNewsBean.newsList.get(0).date}</span></h2>
+                                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(0).text}" /></p>
+                                </p:tab>
+                                <p:tab>
+                                    <h2><h:outputText value="#{adminNewsBean.newsList.get(1).title}" /><span>#{adminNewsBean.newsList.get(1).date}</span></h2>
+                                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(1).text}" /></p>
+                                </p:tab>
+                                <p:tab>
+                                    <h2><h:outputText value="#{adminNewsBean.newsList.get(2).title}" /><span>#{adminNewsBean.newsList.get(2).date}</span></h2>
+                                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(2).text}" /></p>
+                                </p:tab>
+
+                            </p:carousel>
+                            <a class="more-link" href="newsfeed.jsf">more...</a>
+                        </h:form>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -84,8 +101,21 @@
 
         <div id="subscribe" class="pricing">
             <h2>Subscribe</h2>
-            <div class="ui-g">
+            <div class="ui-g" style="justify-content: center;">
                 <div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-beginner">
+                    <div class="ui-g-12 pricing-header">#{msg.public_courses}</div>
+                    <div class="ui-g-12 pricing-subheader">
+                        <span class="duration">Playground</span>
+                    </div>
+                    <div class="ui-g-12 pricing-content playground">
+                        <h:graphicImage value="/resources/image/interactive_puzzle.png"/>
+                        <span>​<h:outputText value="#{msg.standard_version_description}" /></span>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:commandButton type="button" value="Join" />
+                    </div>
+                </div>
+                <!--<div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-beginner">
                     <div class="ui-g-12 pricing-header">#{msg.public_courses}</div>
                     <div class="ui-g-12 pricing-subheader">
                         <span class="duration">#{msg.standard_version}</span>
@@ -124,7 +154,7 @@
                     <div class="ui-g-12">
                         <p:commandButton type="button" value="Join" />
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
 
@@ -136,6 +166,6 @@
             </div>
         </div>
     </div>
-</h:body>
 
+</h:body>
 </html>

@@ -35,7 +35,6 @@ public class AdminNewsBean extends ApplicationBean
 
     private void load() throws SQLException {
 
-        if(getUser().isAdmin()){
             try{
                 newsList = new ArrayList<>(getLearnweb().getNewsManager().getNewsAll());
             }
@@ -54,8 +53,7 @@ public class AdminNewsBean extends ApplicationBean
                 addGrowl(FacesMessage.SEVERITY_FATAL, "invalid news_id parameter");
                 return;
             }
-        }else
-            return;
+
     }
 
 

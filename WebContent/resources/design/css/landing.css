@@ -123,7 +123,7 @@
 /*.landing-wrapper .news .news-icon img {*/
     /*width: 100%; }*/
 .landing-wrapper .pricing {
-    padding: 75px 150px;
+    padding: 20px 150px;
     background-color: var(--main-teal-color); }
 .landing-wrapper .pricing h2 {
     color: #ffffff;

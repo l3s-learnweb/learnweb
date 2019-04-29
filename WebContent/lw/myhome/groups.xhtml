@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -10,18 +10,18 @@
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
-	
-		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" 
+
+		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false"
 			collapsible="false" style="border: none;" id="right_pane">
 			<h:panelGroup style= "left: 5%; position:relative;">
 				<h:form id="addgroupform" style="width: 90%;" prependId="false">
-					
+
 					<div class="page_header">
 						<span>
 							#{msg.createGroup}
 						</span>
 					</div>
-			
+
 					<style type="text/css">
 						.ui-state-hover, .ui-state-focus, .ui-state-active{
 							box-shadow:0 0 0px 0px #fff !important;
@@ -30,24 +30,24 @@
 							border:1px solid #a8a8a8 !important;
 						}
 						.other_groups_course_title > input { max-width:100%; box-sizing: border-box; }
-						
+
 					</style>
 					<div class="grey_border">
-						
-						<h:panelGrid columns="3" columnClasses="medium-width">						
-						
+
+						<h:panelGrid columns="3" columnClasses="medium-width">
+
 							<h:outputText value="#{msg.title}*:" />
-							<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
+							<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}"
 								style="width:21rem" label="#{msg.title}"/>
 							<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
-												 
+
 							<h:outputText value="#{msg.course}*:" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">	
+							<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">
 								<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 							</h:selectOneMenu>
 							<h:outputText value="" />
-															
-							<h:outputText value="#{msg.description}:" />					
+
+							<h:outputText value="#{msg.description}:" />
 							<p:textEditor  id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" style="width:22rem;">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
@@ -65,24 +65,24 @@
 								<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem" />
 								<p:message for="new_language" showSummary="true" showDetail="false" />
 							</ui:fragment>
-						</h:panelGrid>	
+						</h:panelGrid>
 							<br/>
-							
+
 						<span>
 							* #{msg.mandatory_field}
-						</span> 
-					</div> 
+						</span>
+					</div>
 					<br/>
-						
+
 					<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" oncomplete="applyTooltip()"
-						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />	
-					
+						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
+
 				</h:form>
 			</h:panelGroup>
 		</p:layoutUnit>
 	</ui:define>
 	
-	<ui:define name="center_layout">
+	<ui:define name="content">
 		<h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
 		<h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 	    
@@ -90,22 +90,22 @@
 	    	function applyTooltip()
 	    	{
 	    		$('.tooltip').tooltipster({
-	            	 
+
 	                contentAsHTML:true,
 	                //maxWidth: 400,
 	                position:'top',
 	                //hideOnClick: true;,
 	                interactive:true,
 	                interactiveTolerance:150 // increase to debug
-	                //theme:'tooltipster-custom-theme'	
+	                //theme:'tooltipster-custom-theme'
 	                //theme:'tooltipster-custom-b'
 	            });
 	    	}
 	        $(document).ready(function() {
 	        	applyTooltip();
-	        	
+
 	        });
-	    </script>	
+	    </script>
 
 		<div class="page_header">
 			<span>
@@ -148,12 +148,12 @@
 				</p:column>		
 				
 				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="60">					
-					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" 
+					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this"
 						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}" oncomplete="applyTooltip()">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
 						<p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}" />
-				    </p:commandLink>			 
+				    </p:commandLink>
 			    
 					<h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
 							<f:param name="group_id" value="#{group.id}" />
@@ -215,7 +215,7 @@
 									#{msg.options}
 								</span>
 						</f:facet>	
-						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  
+						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"
 							process="@this" styleClass="optionIcon" title="#{msg.join}" oncomplete="applyTooltip()">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
