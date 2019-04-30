@@ -32,7 +32,7 @@
 .landing-wrapper #header .header-top .header-menu li a:hover {
     border-color: var(--main-teal-color); }
 .landing-wrapper #header .header-content {
-    background: url("#{resource['design:images/minimalistic-wallpaper.png']}");
+    background: url("#{resource['design:images/landing-background.jpg']}");
     height: 550px;
     background-size: cover;
     padding: 150px 150px 0 150px; }
@@ -85,11 +85,9 @@
     /*padding-left: 10px; }*/
 .landing-wrapper .premium {
     background-color: white;
-    /*background-size: cover;*/
-    /*background-repeat: no-repeat;*/
     height: 350px; }
 .landing-wrapper .premium .premium-content {
-    padding: 75px 150px; }
+    padding: 60px 150px; }
 .landing-wrapper .premium .premium-content h1 {
     color: var(--main-dark-green-color);
     margin: 0;
@@ -157,7 +155,7 @@
 .landing-wrapper .pricing .pricing-box .pricing-content span {
     text-align: center;
     display: block;
-    padding: 2px 0;
+    padding: 5px 0;
     color: var(--main-dark-green-color);}
 .landing-wrapper .pricing .pricing-box .ui-button {
     position: relative;
