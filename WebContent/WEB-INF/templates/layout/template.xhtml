@@ -25,12 +25,11 @@
         <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
         <h:outputScript name="js/nanoscroller.js" library="california-layout" />
         <h:outputScript name="js/layout.js" library="california-layout" />
-
         <h:outputStylesheet name="california-layout/css/nanoscroller.css" />
         <h:outputStylesheet name="california-layout/css/layout-green.css" />
         <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css" />
-        <h:outputStylesheet name="california-layout/css/matviei-extd.css" />        
-        
+        <h:outputStylesheet name="california-layout/css/matviei-extd.css" />
+
         <base href="#{request.contextPath}/lw/"/>
         
         <ui:insert name="head"/>
@@ -44,7 +43,6 @@
 				<ui:include src="sidebar.xhtml" />
 				<ui:include src="right-sidebar.xhtml" />
 			</ui:fragment>
-			
 			<div class="layout-main">
 				<div class="layout-main-content">
 					<ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
@@ -53,12 +51,15 @@
 							<ui:include src="/templates/user/login.xhtml" />
 						</ui:fragment>
 						<ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
+							<!--
 							<ui:insert name="breadcrumb_bar">
 								<p:breadCrumb>
 									<p:menuitem value="" url="#{userBean.bannerLink}"/>
 									<ui:insert name="sub_breadcrumb" />
 								</p:breadCrumb>
 							</ui:insert>
+							 -->
+							<ui:insert name="sub_menu_bar" />
 							<ui:insert name="content" />
 						</ui:fragment>
 					</ui:fragment>
