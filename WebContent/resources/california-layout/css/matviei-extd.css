@@ -444,7 +444,7 @@
 }
 
 #newsform{
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.9);
 }
 
 #newsform .ui-carousel{
@@ -473,6 +473,7 @@
     text-overflow: ellipsis;
     overflow-y: auto;
     margin: 0 2px;
+    font-size: larger;
 }
 
 #newsform .ui-carousel-item::-webkit-scrollbar-track
@@ -517,53 +518,7 @@
     align-items: center
 }
 
-#newsfeed{
-    width: 100%;
-}
 
-#newsfeed #newsfeed_content{
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-#newsfeed .ui-datagrid-column{
-    width: 33%;
-}
-
-#newsfeed .ui-datagrid-column > div{
-    width: 100%;
-}
-
-#newsfeed .newsfeed_body{
-    text-align: initial;
-    max-height: 239px;
-    overflow: hidden;
-    padding: 0 12px;
-    height: inherit;
-}
-
- #newsfeed h2, #newsbody h2{
-    color: initial;
-}
-
- #newsfeed .pricing-header{
-     max-width: 512px;
-     width: 100%;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     padding: 12px 5px;
- }
-
- #newsfeed .pricing-content{
-     height: 300px;
-     max-width: 512px;
- }
-
- #newsbody{
-     padding: 0 20px 20px;
- }
 
  .playground{
      display: flex;
@@ -574,6 +529,33 @@
      height: 70px;
      margin: 0 7px 0px 4px;
  }
+
+
+#hidden_news{
+    padding: 20px;
+}
+
+#hidden_news > h2{
+    font-size: 30px;
+    text-align: center;
+}
+
+#hidden_news > div{
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    padding-bottom: var(--main-margin);
+}
+
+#hidden_news > div> h2{
+    display: flex;
+    flex-direction: column;
+}
+
+#hidden_news > div> h2> span{
+    font-size: 12px;
+    color: grey;
+    text-align: end;
+}
+
 
 /******************** helper classes **********************************/
 .no-margin-top{
@@ -597,7 +579,7 @@
 }
 
 .padding-bottom{
-    padding-bottom: var(--main-margin);
+    padding-bottom: var(--main-margin)!important;
 }
 
 .padding-top{
@@ -658,7 +640,7 @@ body .ui-breadcrumb {
     font-weight: 700;
     font-size: 20px;
 
-    margin-bottom: 15px;
+    margin-bottom: var(--main-margin);
 }
 
 body .ui-icon {
@@ -681,3 +663,6 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
 body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
     content: "\f105 ";
 }
+
+
+

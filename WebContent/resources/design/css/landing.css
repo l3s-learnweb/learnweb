@@ -3,6 +3,14 @@
     --main-teal-color: #067E6C;
 }
 
+.landing-wrapper{
+    background: white;
+}
+
+#hidden_news{
+    display: none;
+}
+
 .landing-wrapper * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -85,9 +93,10 @@
     /*padding-left: 10px; }*/
 .landing-wrapper .premium {
     background-color: white;
-    height: 350px; }
+    padding: 32px 0;
+}
 .landing-wrapper .premium .premium-content {
-    padding: 60px 150px; }
+    padding: 20px 150px; }
 .landing-wrapper .premium .premium-content h1 {
     color: var(--main-dark-green-color);
     margin: 0;
@@ -129,7 +138,11 @@
     font-weight: 100;
     font-size: 28px; }
 .landing-wrapper .pricing .pricing-box {
-    text-align: center;}
+    text-align: center;
+    background-color: #ffffff;
+    padding: 0;
+    margin: .5em;
+    height: fit-content;}
 .landing-wrapper .pricing .pricing-box .pricing-header {
     color: #ffffff;
     background-color: var(--main-dark-green-color);
@@ -150,16 +163,16 @@
     color: var(--main-dark-green-color); }
 .landing-wrapper .pricing .pricing-box .pricing-content {
     background-color: #ffffff;
-    min-height: 250px;
+    /*min-height: 175px;*/
     padding-top: 20px; }
 .landing-wrapper .pricing .pricing-box .pricing-content span {
-    text-align: center;
+    text-align: left;
     display: block;
     padding: 5px 0;
     color: var(--main-dark-green-color);}
 .landing-wrapper .pricing .pricing-box .ui-button {
     position: relative;
-    top: -55px; }
+}
 .landing-wrapper .pricing .pricing-box.pricing-basic .pricing-header {
     background-color: var(--main-dark-green-color); }
 .landing-wrapper .pricing .pricing-box.pricing-basic .price {
@@ -215,6 +228,9 @@
 .landing-wrapper .footer .footer-social a {
     display: inline-block; }
 
+
+
+
 @media (max-width: 1025px) {
     .landing-wrapper #header .header-top {
         padding: 0;
@@ -259,11 +275,11 @@
         padding: 5px 50px;
         text-align: center;}
     .landing-wrapper .pricing .pricing-box .pricing-content {
-        min-height: 315px;}
+        /*min-height: 315px;*/
+    }
     .landing-wrapper .pricing h2{
         text-align: center; }
-    .landing-wrapper .pricing .ui-g > .ui-g-12 {
-        padding-top: 32px; }
+
     .landing-wrapper .media {
         padding: 75px 50px; }
     .landing-wrapper .media .video-container iframe {
@@ -274,4 +290,24 @@
     .landing-wrapper .footer .appname {
         text-align: center; }
     .landing-wrapper .footer .ui-g > .ui-g-12 {
-        padding-top: 32px; } }
+        padding-top: 32px; }
+
+
+
+    #newsform{
+        display: none;
+    }
+    #hidden_news{
+        display: block;
+    }
+
+    .landing-wrapper #header .header-content{
+        height: auto;
+        padding: 0;
+    }
+
+    .news-panel > div {
+        padding: 15px 0 0;
+    }
+
+}

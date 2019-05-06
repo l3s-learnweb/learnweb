@@ -62,7 +62,7 @@
                     <div class="ui-g-12 ui-lg-8 ui-md-12 ui-sm-12">
 
                         <h:form id="newsform" styleClass="newsform">
-                            <p:carousel styleClass="carousel" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" headerText="What's news?" style="margin-bottom:0">
+                            <p:carousel styleClass="carousel" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" headerText="What's new?" style="margin-bottom:0">
                                 <p:tab >
                                     <h2><h:outputText value="#{adminNewsBean.newsList.get(0).title}" /><span>#{adminNewsBean.newsList.get(0).date}</span></h2>
                                     <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(0).text}" /></p>
@@ -77,12 +77,30 @@
                                 </p:tab>
 
                             </p:carousel>
-                            <a class="more-link" href="newsfeed.jsf">more...</a>
                         </h:form>
                     </div>
 
                 </div>
             </div>
+        </div>
+
+
+        <div id="hidden_news">
+
+              <h2>What's new ?</h2>
+                <div>
+                    <h2><h:outputText value="#{adminNewsBean.newsList.get(0).title}" /><span>#{adminNewsBean.newsList.get(0).date}</span></h2>
+                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(0).text}" /></p>
+                </div>
+                <div>
+                    <h2><h:outputText value="#{adminNewsBean.newsList.get(1).title}" /><span>#{adminNewsBean.newsList.get(1).date}</span></h2>
+                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(1).text}" /></p>
+                </div>
+                <div>
+                    <h2><h:outputText value="#{adminNewsBean.newsList.get(2).title}" /><span>#{adminNewsBean.newsList.get(2).date}</span></h2>
+                    <p><h:outputText escape="false" value="#{adminNewsBean.newsList.get(2).text}" /></p>
+                </div>
+
         </div>
 
         <div id="about" class="clearfix premium">
@@ -111,10 +129,12 @@
                         <h:graphicImage value="/resources/image/icons8-playground-96.png"/>
                         <span>​<h:outputText value="#{msg.standard_version_description}" /></span>
                     </div>
-                    <div class="ui-g-12">
+                    <div class="ui-g-12 padding-bottom">
                         <p:commandButton type="button" value="Join" />
                     </div>
                 </div>
+
+
                 <div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-professional">
                     <div class="ui-g-12 pricing-header">#{msg.specific_courses}</div>
                     <div class="ui-g-12 pricing-subheader">
@@ -124,50 +144,11 @@
                         <h:graphicImage value="/resources/image/interactive_puzzle.png"/>
                         <span><h:outputText value="#{msg.yell_description}"/></span>
                     </div>
-                    <div class="ui-g-12">
+                    <div class="ui-g-12 padding-bottom">
                         <p:commandButton type="button" value="Join"/>
                     </div>
                 </div>
-                <!--<div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-beginner">
-                    <div class="ui-g-12 pricing-header">#{msg.public_courses}</div>
-                    <div class="ui-g-12 pricing-subheader">
-                        <span class="duration">#{msg.standard_version}</span>
-                    </div>
-                    <div class="ui-g-12 pricing-content">
-                        <span>​<h:outputText value="#{msg.standard_version_description}" /></span>
-                    </div>
-                    <div class="ui-g-12">
-                        <p:commandButton type="button" value="Join" />
-                    </div>
-                </div>
-                <div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-professional">
-                    <div class="ui-g-12 pricing-header">#{msg.specific_courses}</div>
-                    <div class="ui-g-12 pricing-subheader">
-                        <span class="duration">YELL</span>
-                    </div>
-                    <div class="ui-g-12 pricing-content">
-                        <span><h:outputText value="#{msg.yell_description}"/></span>
-                    </div>
-                    <div class="ui-g-12">
-                        <p:commandButton type="button" value="Join"/>
-                    </div>
-                </div>
-                <div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-enterprise">
-                    <div class="ui-g-12 pricing-header">Additional cources
-                    </div>
-                    <div class="ui-g-12 pricing-subheader">
-                        <span class="duration">New cource</span>
-                    </div>
-                    <div class="ui-g-12 pricing-content">
-                       <span>​Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                           laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                           voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>
-                    </div>
-                    <div class="ui-g-12">
-                        <p:commandButton type="button" value="Join" />
-                    </div>
-                </div>-->
+
             </div>
         </div>
 
