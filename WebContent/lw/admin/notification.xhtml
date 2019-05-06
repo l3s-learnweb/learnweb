@@ -13,9 +13,9 @@
 	<ui:define name="content">
 		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
 
-		<div class="page-header">
+		<!--<div class="page-header">
 			<h1>#{msg.notification}</h1>
-		</div>
+		</div>-->
 
 		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
 			<h:form id="us_form" styleClass="form">
