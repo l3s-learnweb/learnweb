@@ -10,7 +10,9 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
-
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
+</ui:define>
 
 <ui:define name="sub_menu_bar">
 
@@ -243,7 +245,7 @@
 </ui:define>
 
 
-<ui:define name="content">
+<ui:define name="center_layout">
 
     <div class="page_header">
 				<span>

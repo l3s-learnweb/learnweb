@@ -9,7 +9,9 @@
 	
 		<ui:param name="loginRequired" value="true" />
 		<ui:param name="pageTitle" value="#{msg.notification}" />
-	
+		<ui:define name="sub_breadcrumb">
+			<p:menuitem value="#{msg.notification}" url="myhome/notification.jsf#"/>
+		</ui:define>
 		<ui:define name="right_layout">
 			<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" 
 				id="right_pane" rendered="#{userBean.loggedIn}">
@@ -17,7 +19,7 @@
 			</p:layoutUnit>
 		</ui:define>
 	
-		<ui:define name="content" >
+		<ui:define name="center_layout" >
 		
 			<h:panelGroup layout="block" rendered="#{userBean.moderator}" style="border:1px solid #ccc; padding:0.5em 1rem; margin:0 4px;">
 				<h:outputText value="#{msg.moderator}: " style="font-weight:bold;" />

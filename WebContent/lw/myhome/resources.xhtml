@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template_new.html"
 				xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -21,9 +21,12 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="center_layout">
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.myResourcesTitle}" url="myhome/resources.jsf#"/>
+	</ui:define>
+	<ui:define name="center_layout" >
 
-		<h:form>
+		<h:form >
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
 
@@ -41,8 +44,8 @@
                              update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
 		</h:form>
 
-		<div class="center-header" id="group_header">
-			<h2>#{msg.myResourcesTitle}</h2>
+		<div class="center-header" id="group_header" style="" >
+			<div style="display: flex; justify-content: flex-start;">
 			<h:form id="center_header_form">
 				<p:commandButton id="add_resource_button" value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton" type="button" />
 			    <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px" >
@@ -96,15 +99,15 @@
 			    </p:tieredMenu>
 			
 			</h:form>
-			<h:form styleClass="layout_button" id="folder_layout_options" prependId="false">
-				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":resourcesView :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
+			<h:form styleClass="resource_button greenbutton resourcetoolbutton" id="folder_layout_options" style="display: flex;" prependId="false">
+				<p:commandButton  value="#{msg.list_view}" icon="ui-icon-mylist" update=":resourcesView :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
 					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="list"/>
 				</p:commandButton>
 				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":resourcesView :folder_layout_options" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
 					<f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="grid"/>
 				</p:commandButton>
 			</h:form>
-
+			</div>
 			<h:panelGroup id="breadcrumb" styleClass="breadcrumbs" layout="block">
 				<h:form rendered="#{not empty myResourcesBean.breadcrumb}">
 					<ul>
@@ -118,7 +121,7 @@
 									<f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false"/>
 								</p:commandLink>
-								
+
 								<h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
 							</li>
 						</p:repeat>
@@ -384,11 +387,11 @@
 			</div>
 		</h:panelGroup>
 
-		<script type="text/javascript">
-            $("#center_pane").prepend($("#group_header"));
-            update_header();
-		</script>
 
+		<script type="text/javascript">
+			$("#center_pane").prepend($("#group_header"));
+			update_header();
+		</script>
 	</ui:define>
 	<ui:define name="right_layout">
 		<ui:decorate  template="/templates/resources/right_pane.xhtml">

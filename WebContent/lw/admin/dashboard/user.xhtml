@@ -19,8 +19,10 @@
             list-style: none;
         }
     </style>
-
-    <ui:define name="content">
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="Dashboard" url="admin/dashboard/user.jsf#"/>
+    </ui:define>
+    <ui:define name="center_layout">
         <div class="ui-g" style="margin: 5px;">
             <!--<div class="ui-g-12 ui-md-2">
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
@@ -35,10 +37,6 @@
                 </div>
             </div>-->
             <div class="ui-g-12 ui-g-nopad" style="padding: .5em;">
-                <div class="center-header user-activities" id="group_header">
-                    <h2>Users' Activities</h2>
-                    <span class="header_detail"><h:outputText value="#{glossaryDashboardUsersBean.selectedUser.getRealUsername()}"/></span>
-                </div>
 
                 <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
                     <div class="ui-g">
@@ -136,11 +134,6 @@
                             </p:panel>
                         </div>
                     </div>
-
-                    <div class="page_header" style="margin:5px;">
-                        <span>Glossary</span>
-                    </div>
-                    <p:panel style="min-width:628px; margin:5px;">
                     <!-- 
                         <div class="ui-g">
                             <div class="ui-g-4">
@@ -205,12 +198,9 @@
 								</h:form>
 							</div>
 						</div>
-                    </p:panel>
-                    
-                    <div class="page_header" style="margin:5px; margin-top: 1.5em;">
-                        <span>Tracker</span>
-                    </div>
-                    <p:panel style="min-width:628px; margin:5px;">
+
+
+
                         <div class="ui-g">
                             <div class="ui-g-4">
                                 <p:panel id="pie_chart_sources" header="Sources" style="margin-bottom:20px">
@@ -310,7 +300,7 @@
                                 </div>
                             </div>
                         </div>
-                    </p:panel>
+
                 </h:panelGroup>
             </div>
 
