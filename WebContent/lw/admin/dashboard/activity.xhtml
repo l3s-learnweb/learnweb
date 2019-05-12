@@ -12,17 +12,12 @@
 </ui:define>
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Activity Dashboard"/>
-
-<ui:define name="content">
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="Activity Dashboard" url="admin/statistics.jsf#"/>
+</ui:define>
+<ui:define name="center_layout">
     <h:outputStylesheet library="admin-dashboard" name="activity.css"/>
     <h:outputScript library="admin-dashboard" name="activity.js" target="body"/>
-
-    <div class="page-header">
-        <h1>
-            Activity Dashboard
-        </h1>
-    </div>
-
     <div class="form">
         <div class="p-grid">
             <div class="p-col-12">
@@ -98,7 +93,7 @@
                                 <p:panel rendered="#{!empty activityDashboardBean.interactionsTable}" header="Activities Table">
                                     <p:dataTable var="row" value="#{activityDashboardBean.interactionsTable}">
                                         <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                                            <h:outputText value="#{row[key]}" />
+                                            <h:outputText value="#{row[key]}"/>
                                         </p:columns>
                                     </p:dataTable>
                                 </p:panel>

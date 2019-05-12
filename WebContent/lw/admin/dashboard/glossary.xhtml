@@ -12,15 +12,11 @@
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Dashboard"/>
-
-<ui:define name="content">
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="Dashboard" url="admin/statistics.jsf#"/>
+</ui:define>
+<ui:define name="center_layout">
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-
-    <div class="page-header">
-        <h1>
-            Glossary
-        </h1>
-    </div>
     <p:outputPanel
             style="display: flex;flex-direction: column; justify-content: center; align-items: center; align-content: center; width: 100%; margin-bottom: 20px;">
         <ui:decorate template="templates/setSelectedUsers.xhtml">

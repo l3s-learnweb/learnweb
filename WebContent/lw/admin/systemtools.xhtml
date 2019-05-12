@@ -9,7 +9,7 @@
 <ui:param name="loginRequired" value="true" />
 <ui:param name="pageTitle" value="System Tools" />
 
-<ui:define name="content">
+<ui:define name="center_layout">
 	<h:outputText value="Missing authentication" rendered="#{not userBean.admin}" />
 	<ui:fragment rendered="#{userBean.admin}">
 		<div class="page-header" >

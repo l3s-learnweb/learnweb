@@ -10,18 +10,10 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
-
-	<ui:define name="content">
-
-		
-		<div class="page-header">
-			<h1>
-				#{msg.admin_message}
-			</h1>
-		</div>
-
-
-		
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/adminmsg.jsf#"/>
+	</ui:define>
+	<ui:define name="center_layout">
 		<h:form id="msgform" styleClass="grey_border form" >
 			<div class="p-grid">
 				<div class="p-col-12">

@@ -1,98 +1,95 @@
-<ui:composition 
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.admin_changelog}"/>
-		
-	<ui:define name="content">
-		
-		<div class="page-header">
-			<h1>
-				#{msg.admin_changelog}
-			</h1>
-		</div>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.admin_changelog}"/>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.admin_changelog}" url="admin/adminnews.jsf#"/>
+</ui:define>
+<ui:define name="center_layout">
+    <ui:fragment>
+        <h:form id="addnews_form" styleClass="form">
+            <div class="p-grid">
+                <div class="p-col-12">
+                    <div class="card card-w-title">
+                        <p>
+                            <h:outputText value="#{msg.title}:"/>
+                        </p>
 
-		<ui:fragment>
-			<h:form id="addnews_form" styleClass="form">
-				<div class="p-grid">
-					<div class="p-col-12">
-						<div class="card card-w-title">
-							<p>
-								<h:outputText value="#{msg.title}:" />
-							</p>
-
-							<p:inputText value="#{adminNewsBean.title}" style="width: 100%;box-sizing: border-box;" />
-							<p:textEditor styleClass="margin-top" height="184" value="#{adminNewsBean.text}">
-								<f:facet name="toolbar">
+                        <p:inputText value="#{adminNewsBean.title}" style="width: 100%;box-sizing: border-box;"/>
+                        <p:textEditor styleClass="margin-top" height="184" value="#{adminNewsBean.text}">
+                            <f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
 										<select class="ql-size"></select>
 									</span>
 
-									 <span class="ql-formats">
+                                <span class="ql-formats">
 										<button class="ql-bold"></button>
 										<button class="ql-italic"></button>
 										<button class="ql-underline"></button>
 										<button class="ql-strike"></button>
                                          <button class="ql-link"></button>
 									</span>
-								</f:facet>
-							</p:textEditor>
-							<div class="margin-top">
-								<h:commandButton action="#{adminNewsBean.onCreateNews()}" process="@this"
-												 update="@form :growl" rendered="#{userBean.admin}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.add}" />
-							</div>
-						</div>
-					</div>
-				</div>
-			</h:form>
-			<h:form id="news_form" styleClass="form">
-				<div class="p-grid">
-					<div class="p-col-12 no-padding-top margin-top">
-						<p:blockUI block="news_table" widgetVar="news_form_blocker">
-							<div class="float-left">#{msg.please_wait}. This action may take several minutes for big news.</div>
-							<div class="loading-animation small float-left">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</p:blockUI>
-						<p:dataTable id="news_table" var="news" value="#{adminNewsBean.newsList}">
-							<p:column headerText="#{msg.title}" sortBy="#{news.title}">
-								<h:outputText value="#{news.title}" />
-							</p:column>
+                            </f:facet>
+                        </p:textEditor>
+                        <div class="margin-top">
+                            <h:commandButton action="#{adminNewsBean.onCreateNews()}" process="@this"
+                                             update="@form :growl" rendered="#{userBean.admin}"
+                                             class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button"
+                                             value="#{msg.add}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <h:form id="news_form" styleClass="form">
+            <div class="p-grid">
+                <div class="p-col-12 no-padding-top margin-top">
+                    <p:blockUI block="news_table" widgetVar="news_form_blocker">
+                        <div class="float-left">#{msg.please_wait}. This action may take several minutes for big news.</div>
+                        <div class="loading-animation small float-left">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </p:blockUI>
+                    <p:dataTable id="news_table" var="news" value="#{adminNewsBean.newsList}">
+                        <p:column headerText="#{msg.title}" sortBy="#{news.title}">
+                            <h:outputText value="#{news.title}"/>
+                        </p:column>
 
-							<p:column style="width:10%" headerText="#{msg.date}" sortBy="#{news.date}">
-								<h:outputText value="#{news.date}" />
-							</p:column>
+                        <p:column style="width:10%" headerText="#{msg.date}" sortBy="#{news.date}">
+                            <h:outputText value="#{news.date}"/>
+                        </p:column>
 
-							<p:column style="width:20%" headerText="#{msg.options}" styleClass="options_column column-button">
-								<f:facet name="header">
-									#{msg.options}
-								</f:facet>
+                        <p:column style="width:20%" headerText="#{msg.options}" styleClass="options_column column-button">
+                            <f:facet name="header">
+                                #{msg.options}
+                            </f:facet>
 
-								<h:outputLink value="admin/adminnewschange.jsf?news_id=#{news.id}" title="#{msg.edit}">
-									<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-									<span><h:outputText value="#{msg.edit}" /></span>
-								</h:outputLink>
+                            <h:outputLink value="admin/adminnewschange.jsf?news_id=#{news.id}" title="#{msg.edit}">
+                                <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
+                                <span><h:outputText value="#{msg.edit}"/></span>
+                            </h:outputLink>
 
-								<p:commandLink actionListener="#{adminNewsBean.onDeleteNews(news)}" process="@this"
-											   update="@form :growl" rendered="#{userBean.admin}"	title="#{msg.delete}">
-									<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-									<span><h:outputText value="#{msg.delete}" /> </span>
-									<p:confirm message="Do you really want to delete '#{news.title}' ?" />
-								</p:commandLink>
-							</p:column>
-						</p:dataTable>
-					</div>
-				</div>
-			</h:form>
-		</ui:fragment>
-	
-	</ui:define>
+                            <p:commandLink actionListener="#{adminNewsBean.onDeleteNews(news)}" process="@this"
+                                           update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
+                                <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
+                                <span><h:outputText value="#{msg.delete}"/> </span>
+                                <p:confirm message="Do you really want to delete '#{news.title}' ?"/>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:fragment>
+
+</ui:define>
 </ui:composition>

@@ -9,16 +9,11 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.banlist_header}"/>
-
-	<ui:define name="content">
-
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.banlist_header}" url="admin/banlist.jsf#"/>
+	</ui:define>
+	<ui:define name="center_layout">
 	<h:outputScript library="admin" name="banlist.js" target="head" />
-
-        <div class="page-header">
-            <h1>Banlist</h1>
-        </div>
-
         <ui:fragment>
             <div class="p-grid" >
                 <div class="p-col-12 border-box no-padding-bottom">
