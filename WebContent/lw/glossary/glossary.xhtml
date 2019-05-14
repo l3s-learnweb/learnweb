@@ -148,7 +148,7 @@
                             <!--</div>-->
                             <div class="p-col-12">
 								<p:fileUpload id = "uploadXmlDialog" widgetVar="uploadXmlDialog" mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBean.parseXls}"
-											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" oncomplete="PF('glossaryDlg').show();PF('excel_import_dialog').hide();"
+											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":my_gloss_table" oncomplete="PF('glossaryDlg').show();PF('excel_import_dialog').hide();"
 
 								/>
                             </div>
@@ -342,7 +342,7 @@
 
 
 			$(document).ready(function() {
-				groupRow();
+
 			});
 
 			function setPasteStatus(element, field)

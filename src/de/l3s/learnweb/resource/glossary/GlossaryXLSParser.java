@@ -11,7 +11,6 @@ import org.primefaces.model.UploadedFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GlossaryXLSParser
 {
@@ -86,29 +85,22 @@ public class GlossaryXLSParser
     private List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
     {
         List<GlossaryEntry> result = new ArrayList<>();
-        Iterator<GlossaryEntry> glossEntryIterator = glossaryEntries.iterator();
-        while(glossEntryIterator.hasNext())
+        for(final GlossaryEntry entry : glossaryEntries)
         {
-            GlossaryEntry entry = glossEntryIterator.next();
-            final AtomicBoolean alreadyExist = new AtomicBoolean(false);
-            result.forEach(resultGlossary ->
+            boolean alreadyExist = false;
+            if(!result.isEmpty() && StringUtils.equals(result.get(result.size() - 1).getTopicOne(), entry.getTopicOne())
+                    && StringUtils.equals(result.get(result.size() - 1).getTopicTwo(), entry.getTopicTwo())
+                    && StringUtils.equals(result.get(result.size() - 1).getTopicThree(), entry.getTopicThree())
+                    && StringUtils.equals(result.get(result.size() - 1).getDescription(), entry.getDescription()))
             {
-                if(StringUtils.equals(resultGlossary.getTopicOne(), entry.getTopicOne())
-                        && StringUtils.equals(resultGlossary.getTopicTwo(), entry.getTopicTwo())
-                        && StringUtils.equals(resultGlossary.getTopicThree(), entry.getTopicThree())
-                        && StringUtils.equals(resultGlossary.getDescription(), entry.getDescription()))
-                {
-                    resultGlossary.getTerms().addAll(entry.getTerms());
-                    alreadyExist.set(true);
-                }
-            });
-            if(!alreadyExist.get())
+                result.get(result.size() - 1).getTerms().addAll(entry.getTerms());
+                alreadyExist = true;
+            }
+            if(!alreadyExist)
             {
                 result.add(entry);
             }
-            glossEntryIterator.remove();
         }
-        ;
         return result;
     }
 
