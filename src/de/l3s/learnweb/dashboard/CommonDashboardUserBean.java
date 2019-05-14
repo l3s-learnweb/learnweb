@@ -2,6 +2,7 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
@@ -22,7 +24,7 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     private static final long serialVersionUID = 9047964884484786815L;
 
     private List<Integer> selectedUsersIds;
-
+    private List<Integer> selectedGroupsIds;
     protected Date startDate = null;
     protected Date endDate = null;
 
@@ -58,6 +60,24 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
         if(null == allGroups)
             allGroups = getUser().getOrganisation().getGroups();
         return allGroups;
+    }
+
+    public List<Integer> getSelectedGroupsIds()
+    {
+        return selectedGroupsIds;
+    }
+
+    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws  SQLException
+    {
+        this.selectedGroupsIds = selectedGroupsIds;
+        List<Integer> selectedUsers = new ArrayList<>();
+        for(Integer groupId : selectedGroupsIds)
+        {
+            Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+            for(User user :group.getMembers())
+                selectedUsers.add(user.getId());
+        }
+        this.setSelectedUsersIds(selectedUsers);
     }
 
     /**
