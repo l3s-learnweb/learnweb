@@ -67,8 +67,6 @@ public class ExportManager
             default: break;
         }
 
-        // make prefix for file
-
         for (Map.Entry<String, InputStream> resourceFile : resourcesToPack.entrySet()){
             ZipEntry fileEntry = new ZipEntry(resourceFile.getKey());
             zipOutputStream.putNextEntry(fileEntry);
@@ -110,6 +108,26 @@ public class ExportManager
     private  Map<String, InputStream> packGroupResources(Group group, String platform) throws Exception
     {
         final List<Resource> groupResources = group.getResources();
+        Map<String, InputStream> filesToPack = new HashMap<>();
+        filesToPack.putAll(this.getAllResources(groupResources, platform, group.getTitle()));
+        return filesToPack;
+    }
+
+    /**
+     * Future feature to export only selected group resources.
+     * */
+    private  Map<String, InputStream> packGroupResources(Group group, String platform, List<Integer> selectedResources) throws Exception
+    {
+        final List<Resource> groupResources = group.getResources();
+
+        for (Resource r : groupResources)
+        {
+            if (!selectedResources.contains(r.getId()))
+            {
+                groupResources.remove(r);
+            }
+        }
+
         Map<String, InputStream> filesToPack = new HashMap<>();
         filesToPack.putAll(this.getAllResources(groupResources, platform, group.getTitle()));
         return filesToPack;
@@ -166,8 +184,6 @@ public class ExportManager
 
     private Document createIndexFile(List<Resource> userResources) throws SQLException, UnknownResourceTypeException
     {
-        List<de.l3s.learnweb.resource.File> filesToZip = new LinkedList<>();
-
         Document indexFile = new Document(DocumentType.HTMLStrict);
 
         Style tableStyle = new Style("text/css");
@@ -219,7 +235,7 @@ public class ExportManager
         return indexFile;
     }
 
-    private Tr composeRow(A link, List<String> metafdata)
+    private Tr composeRow(A link, List<String> metadata)
     {
         Tr row = new Tr();
 
@@ -227,7 +243,7 @@ public class ExportManager
         cell.appendChild(link);
         row.appendChild(cell);
 
-        for (String item : metafdata){
+        for (String item : metadata){
             Td tmpCell = new Td();
             tmpCell.appendText(item);
             row.appendChild(tmpCell);
@@ -286,6 +302,9 @@ public class ExportManager
         return result;
     }
 
+    /**
+     * Print information about external resources in dialog menu when group resources are requested.
+     * */
     public List<String> getExternalResources(int groupId) throws SQLException
     {
         final List<Resource> resources = learnweb.getGroupManager().getGroupById(groupId).getResources();
