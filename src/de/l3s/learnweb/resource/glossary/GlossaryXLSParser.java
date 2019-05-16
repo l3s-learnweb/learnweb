@@ -16,7 +16,7 @@ public class GlossaryXLSParser
 {
     private static final Logger log = Logger.getLogger(GlossaryXLSParser.class);
 
-    private List<GlossaryEntry> sortedGlossaryEntries;
+    private List<GlossaryEntry> sortedGlossaryEntries = new ArrayList<>();
     private UploadedFile uploadedFile;
     private Map<String, Locale> languageMap;
     private List<Exception> errorsDuringProcessing = new ArrayList<>();
@@ -84,8 +84,24 @@ public class GlossaryXLSParser
 
     private List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
     {
-        //TODO IMPLEMENT ME, after xhtml fixing
-        return glossaryEntries;
+        List<GlossaryEntry> result = new ArrayList<>();
+        for(final GlossaryEntry entry : glossaryEntries)
+        {
+            boolean alreadyExist = false;
+            if(!result.isEmpty() && StringUtils.equals(result.get(result.size() - 1).getTopicOne(), entry.getTopicOne())
+                    && StringUtils.equals(result.get(result.size() - 1).getTopicTwo(), entry.getTopicTwo())
+                    && StringUtils.equals(result.get(result.size() - 1).getTopicThree(), entry.getTopicThree())
+                    && StringUtils.equals(result.get(result.size() - 1).getDescription(), entry.getDescription()))
+            {
+                result.get(result.size() - 1).getTerms().addAll(entry.getTerms());
+                alreadyExist = true;
+            }
+            if(!alreadyExist)
+            {
+                result.add(entry);
+            }
+        }
+        return result;
     }
 
     /**

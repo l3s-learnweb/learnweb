@@ -7,20 +7,25 @@
 
 	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
 	<ui:param name="loginRequired" value="true" />
-	
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="resource_id" value="#{glossaryBean.resourceId}"></f:viewParam>
 			<f:viewAction action="#{glossaryBean.onLoad()}" />
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
 		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 }">
+
+			<p:dialog header="" widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
+				<h:outputText value="#{glossaryBean.resultOfXmlParsing}" escape="false" />
+			</p:dialog>
+
 			<h:panelGroup id="main_component" layout="block">
-				
+
 				<h:form id= "form" prependId="false">
 					<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
                                  paginator="false" rows="#{glossaryBean.paginator ? 100 : 0}" paginatorPosition="bottom"
@@ -32,7 +37,7 @@
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
 
-						<f:facet name="header">	        					 
+						<f:facet name="header">
 							<p:outputPanel>
 								<p:autoUpdate />
 								<h:outputText value="#{msg['Glossary.search_all_field']} " />
@@ -40,7 +45,7 @@
 									placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
 						</f:facet>
-						
+
 						<p:column style=" width:20px;" exportable="false">
 							<p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" process="@this">
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />
@@ -78,9 +83,9 @@
 								<p:selectCheckboxMenu value="#{glossaryBean.tableLanguageFilter}" onchange="PF('glossTable').filter()" styleClass="custom-filter" converter="#{localeConverter}" label="#{msg.filter}">
 									<f:selectItems value="#{glossaryBean.allowedTermLanguages}" />
 									<p:ajax event="toggleSelect" process="@this" oncomplete="PF('glossTable').filter()" />
-									
-								</p:selectCheckboxMenu>								
-								
+
+								</p:selectCheckboxMenu>
+
 							</f:facet>
 
 							<h:outputText value="#{msg['language_' += item.languageTag]}" />
@@ -99,13 +104,13 @@
 						</p:column>
 						<p:column headerText="#{msg['Glossary.phraseology']}">
 							<h:outputText value="#{item.phraseology}" />
-						</p:column>					
+						</p:column>
 
 						<p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
 							<h:outputText value="#{item.fulltext}" />
 						</p:column>
 					</p:dataTable>
-					
+
 					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; padding:none;">
 						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBean.entryCount}" style="text-align:center;"
                                       styleClass="glossary_footer_text"></h:outputText>
@@ -142,8 +147,10 @@
                                 <!--</p:selectOneRadio>-->
                             <!--</div>-->
                             <div class="p-col-12">
-                                <p:fileUpload mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBean.parseXls}"
-                                              allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" update=":my_gloss_table"/>
+								<p:fileUpload id = "uploadXmlDialog" widgetVar="uploadXmlDialog" mode="advanced" skinSimple="true"  fileUploadListener="#{glossaryBean.parseXls}"
+											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":my_gloss_table" oncomplete="PF('glossaryDlg').show();PF('excel_import_dialog').hide();"
+
+								/>
                             </div>
                         </div>
                     </p:dialog>
@@ -156,13 +163,13 @@
 				<button type="button" onclick="openGlossForm()" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton">
 					<h:outputText value="#{msg['Glossary.add_new_entry']}"></h:outputText>
 				</button>
-				
+
 				<div id="glossform" style="display: none">
 					<h:form id="glossary_add" styleClass="grey_border" prependId="false">
 						<p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
 							<p:autoUpdate />
 						</p:growl>
-						
+
 						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
 							<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
 							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}">
@@ -189,28 +196,28 @@
 								<p:inputText rendered="#{empty glossaryBean.availableTopicThree}" value="#{glossaryBean.formEntry.topicThree}" />
 							</h:panelGroup>
 							<h:outputText value="" />
-							
+
 							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
 							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
-							<p:message for="description" />							
-						</p:panelGrid>						
-						
+							<p:message for="description" />
+						</p:panelGrid>
+
 	        			<h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
-						
+
 						<br />
 						<p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
-        					
+
 							<p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
-								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPasteStatus(this, 'term');"/>								
-								<p:message for="term" />								
-									
+								<p:inputText id="term" value="#{term.term}" style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}" pt:onpaste="setPasteStatus(this, 'term');"/>
+								<p:message for="term" />
+
 	        					<h:inputHidden value="#{term.termPasted}" id="paste_status_term"></h:inputHidden>
 	        					<h:inputHidden value="#{term.pronounciationPasted}" id="paste_status_pronounciation"></h:inputHidden>
 	        					<h:inputHidden value="#{term.acronymPasted}" id="paste_status_acronym"></h:inputHidden>
-	        					<h:inputHidden value="#{term.phraseologyPasted}" id="paste_status_phraseology"></h:inputHidden>								
+	        					<h:inputHidden value="#{term.phraseologyPasted}" id="paste_status_phraseology"></h:inputHidden>
 							</p:column>
-							
+
 							<p:column headerText="#{msg.language}" rendered="#{not term.deleted}">
 								<p:selectOneMenu id="language" value="#{term.language}" converter="#{localeConverter}">
 									<f:selectItems value="#{glossaryBean.allowedTermLanguages}" />
@@ -280,22 +287,22 @@
 
 						<br />
 						<br />
-				
+
 					</h:form>
 				</div>
-				
+
 			</h:panelGroup>
 		</ui:fragment>
 		<script type="text/javascript">
 			//<![CDATA[
-			        
+
 			var groupRow = function() {
 				var colIndex = 2;
 				var rows = $('#my_gloss_table').find('tr');
 				var groupStartIndex = null, rowGroupCellData = null, rowGroupCount = 1, columnData = null;
 
 				var groupCounter = 1;
-				
+
 				for (var i = 0; i < rows.length; i++) {
 					var row = rows.eq(i);
 					var columns = [];
@@ -311,7 +318,7 @@
 						groupStartIndex = i;
 						rowGroupCellData = columnData;
 						rowGroupCount = 1;
-					} 
+					}
 					else {
 						for (var k = 0; k < columns.length; k++)
 							columns[k].remove();
@@ -320,31 +327,31 @@
 						rowGroupCount++;
 					}
 
-					if (groupStartIndex != null && rowGroupCount > 1) 
-					{						
+					if (groupStartIndex != null && rowGroupCount > 1)
+					{
 						for (var l = 0; l < columns.length; l++)
 						{
 							var cell = rows.eq(groupStartIndex).children('td').eq(l);
-							cell.attr('rowspan', rowGroupCount);							
+							cell.attr('rowspan', rowGroupCount);
 							cell.removeClass(); // remove all classes
 							cell.addClass(groupCounter % 2 === 0? 'ui-datatable-even' : 'ui-datatable-odd');
 						}
-					}					
+					}
 				}
 			};
 
-			
+
 			$(document).ready(function() {
-				groupRow();
+
 			});
-			
+
 			function setPasteStatus(element, field)
 			{
 				var id = $(element).attr('id');
 				id = id.substring(0, id.lastIndexOf(':'));
 				id = id +":paste_status_"+ field;
 				id = "#"+ id.replace(/:/g, '\\:'); //  need to escape : for jquery
-				$(id).val('true');				
+				$(id).val('true');
 			}
 			//]]>
 		</script>
@@ -359,6 +366,6 @@
 				<br /> <br />
 				<h:outputText value="The resource you are trying to access is deleted and does not exist." style="text-align:center; font-weight:bold"></h:outputText>
 			</div>
-		</ui:fragment>	 
-	</ui:define>	
+		</ui:fragment>
+	</ui:define>
 </ui:composition>
