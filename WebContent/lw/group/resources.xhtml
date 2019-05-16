@@ -72,6 +72,22 @@
                 </h:form>
             </c:if>
 
+            <h:form id="request_group_form" >
+                <p:commandButton type="button"  value="Request Group Data" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
+                <p:dialog header="Download Group Resources" widgetVar="dlg1">
+                    <h:outputText value="Note that this group contains #{dataExporterBean.externalResourcesCount(groupResourcesBean.groupId)} external resources that can not be downloaded:" />
+
+                    <p:dataTable var="entry" value="#{dataExporterBean.externalResources(groupResourcesBean.groupId)}" scrollable="true" scrollHeight="150" style="width: auto; left: 10%;">
+                        <p:column headerText="Resource">
+                            <h:outputText value="#{entry}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.groupId}" />
+                    <h:commandLink value="Start Download" action="#{dataExporterBean.requestGroupResources()}" styleClass="resource_button greenbutton resourcetoolbutton" />
+                </p:dialog>
+            </h:form>
+
             <h:form id="center_header_form">
                 <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
                                  iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton"
