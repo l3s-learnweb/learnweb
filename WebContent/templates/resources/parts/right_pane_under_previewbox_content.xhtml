@@ -312,14 +312,14 @@
 	</h:form>
 
 	<h:form id="tag_input_form"
-		rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+		rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}" style="display: flex; flex-direction: column;">
 
 		<p:inputText styleClass="tag_field"
 			value="#{resourceDetailBean.tagName}" id="tag_name" />
 		<p:commandButton actionListener="#{resourceDetailBean.addTag}"
 			styleClass="greenbutton clearfix" value="#{msg.addTag}"
 			update=":tag_form :growl :tag_input_form:tag_name"
-			process="@form" style="margin-right:0;margin-top:4px;float:right"
+			process="@form" style="margin-right:0;margin-top:4px;float:right; align-self: flex-end;"
 			partialSubmit="true">
 
 			<f:setPropertyActionListener
@@ -328,7 +328,7 @@
 
 	</h:form>
 
-	<h:form id="comment_input_form" styleClass="clear" prependId="false">
+	<h:form id="comment_input_form" styleClass="clear" prependId="false" style="display: flex; flex-direction: column;">
 
 		<h:panelGroup layout="block" class="resource_field"
 			style="padding-top: 10px"
@@ -352,7 +352,7 @@
 				<br />
 			</div>
 			<p:commandButton id="comment_button"
-				styleClass="greenbutton float-right" value="#{msg.addComment}"
+				styleClass="greenbutton float-right" style="align-self: flex-end;" value="#{msg.addComment}"
 				actionListener="#{resourceDetailBean.addComment()}"
 				update=":resourcesView :comment_input_form :comment_form :growl">
 				<f:setPropertyActionListener

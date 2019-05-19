@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      lang="#{userBean.localeCode}">
+
+    <!--@elvariable id="pageTitle" type="java.lang.String"-->
+    <!--@elvariable id="helpText" type="java.lang.String"-->
+    <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
+    <!--@elvariable id="smallPage" type="java.lang.Boolean"-->
+    <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
+
+    <f:view locale="#{userBean.locale}" contentType="text/html">
+        <ui:insert name="metadata"/>
+
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+            </f:facet>
+            <title>
+                <h:outputText value="#{pageTitle}" escape="false"/>
+                - #{msg['application.name']}
+            </title>
+            <h:outputScript name="js/nanoscroller.js" library="california-layout"/>
+            <h:outputScript name="js/layout.js" library="california-layout"/>
+            <h:outputScript library="main-template" name="default2.js"/>
+            <h:outputStylesheet name="california-layout/css/nanoscroller.css"/>
+            <h:outputStylesheet name="california-layout/css/layout-green.css"/>
+            <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css"/>
+
+            <h:outputStylesheet name="california-layout/css/matviei-extd.css"/>
+
+            <h:outputScript library="main-template" name="default2.js"/>
+            <h:outputStylesheet name="california-layout/css/aleks-extd.css"/>
+            <ui:decorate template="/templates/main/tooltips.xhtml"/>
+
+
+            <base href="#{request.contextPath}/lw/"/>
+
+            <ui:insert name="head"/>
+        </h:head>
+
+        <h:body styleClass="main-body" >
+            <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
+                <div class="layout-main" >
+                    <ui:include src="megamenu.xhtml"/>
+                    <ui:include src="topbar.xhtml"/>
+                    <ui:fragment rendered="#{userBean.loggedIn}">
+                        <ui:include src="sidebar.xhtml"/>
+                        <ui:include src="right-sidebar.xhtml"/>
+                    </ui:fragment>
+                    <script type="text/javascript">
+
+                        function scroller() {
+                            try {
+                                $(".nano").nanoScroller({
+                                    paneClass: 'pane',
+                                    sliderClass: 'slider',
+                                    contentClass: 'content',
+                                    alwaysVisible: true
+                                });
+                            } catch (e) {
+                                console.log('scroller problem', e);
+                            }
+                        }
+
+                        $(document).ready(function () {
+                            if ($(".ui-layout-unit-content", "#right_pane")) {
+                                document.getElementById("center_pane").addClass("nano");
+                                $(".ui-layout-unit-content", "#center_pane").addClass("nano");
+                                $(".ui-layout-unit-content", "#right_pane").addClass("nano");
+                                $(".ui-layout-unit-content", "#right_pane").wrapInner('&lt;div class="content" /&gt;');
+                                $(".ui-layout-unit-content", "#left_pane").addClass("nano");
+                                $(".ui-layout-unit").style.visibility="inherit";
+
+                            }
+                            scroller();
+                            setInterval("scroller()", 500);
+                        });
+                    </script>
+                    <ui:fragment rendered="#{userBean.loggedIn and pageTitle!=''}">
+                        <ui:insert name="breadcrumb_bar">
+                            <p:breadCrumb>
+                                <p:menuitem value="" url="#{userBean.bannerLink}"/>
+                                <ui:insert name="sub_breadcrumb"/>
+                            </p:breadCrumb>
+                        </ui:insert>
+                    </ui:fragment>
+                    <div class="layout-main-content" >
+                        <ui:fragment  rendered="#{not learnwebBean.maintenanceMode}">
+                            <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
+                                <ui:include src="/templates/user/login.xhtml"/>
+                            </ui:fragment>
+                            <p:layout >
+                                <div class="ui-g" style="flex-wrap: nowrap;">
+                                    <div class="ui-g-2" >
+                                        <ui:decorate template="/templates/main/group_menu.xhtml"/>
+                                    </div>
+                                    <div class="ui-g-5"  style="visibility: inherit !important;">
+                                        <div id="center_pane">
+                                            <ui:insert name="center_layout"></ui:insert>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-5" >
+                                        <ui:insert name="right_layout"/>
+                                    </div>
+                                </div>
+                            </p:layout>
+                        </ui:fragment>
+                    </div>
+                    <ui:include src="footer.xhtml"/>
+                </div>
+
+            </div>
+
+            <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+                <f:facet name="start">
+                    <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+                </f:facet>
+
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+
+            <p:growl id="growl" rendered="#{not disableGrowl}"/>
+
+            <h:form styleClass="display-none">
+                <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this"
+                                 partialSubmit="true" global="false"/>
+            </h:form>
+
+            <h:form class="display-none">
+                <p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this"
+                                 partialSubmit="true" global="false"/>
+            </h:form>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">
+                <p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+        </h:body>
+    </f:view>
+    <script type="text/javascript">
+        function setHeightWindow() {
+            screenSize = document.body.clientHeight;
+            footerSize = document.body.getElementsByClassName("layout-footer")[0].clientHeight;
+            topbarSize = document.body.getElementsByClassName("layout-topbar")[0].clientHeight;
+            if (document.body.clientHeight > 1300)
+                totalSize = screenSize - footerSize - topbarSize + 15;
+            else {
+                totalSize = screenSize - footerSize - topbarSize - 30;
+            }
+            document.body.getElementsByClassName("layout-main-content")[0].setAttribute("style", "height:" + totalSize + "px");
+            document.body.getElementsByClassName("layout-main-content").setAttribute("style", "top:" + 0);
+
+        }
+    </script>
+</html>

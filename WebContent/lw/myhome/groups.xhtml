@@ -1,4 +1,4 @@
-<ui:composition template="/WEB-INF/templates/layout/template_new.html"
+<ui:composition template="/WEB-INF/templates/layout/template_2.xhtml"
 				xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -8,15 +8,17 @@
 <ui:param name="loginRequired" value="true" />
 <ui:param name="pageTitle" value="#{msg.groupsTitle}" />
 <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
-
+<ui:define name="sub_breadcrumb">
+	<p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
+</ui:define>
 <ui:define name="right_layout">
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false"
-				  collapsible="false" style="border: none;" id="right_pane">
-		<h:panelGroup style= "left: 5%; position:relative;">
-			<h:form id="addgroupform" style="width: 90%;" prependId="false">
+				  collapsible="false"   id="right_pane">
+		<h:panelGroup style= "position:relative;">
+			<h:form id="addgroupform"  prependId="false">
 
-				<div class="page_header">
+				<div class="group_menu_header">
 						<span>
 							#{msg.createGroup}
 						</span>
@@ -105,16 +107,15 @@
 
 	</script>
 
-	<div class="page_header">
-			<span>
-				#{msg.myGroups}
-			</span>
-	</div>
-
-	<h:form id="my_groups">
-
+	<h:form id="my_groups" style="margin-top: 2px;">
+		<div class="group_menu_header">
+						<span>
+							#{msg.myGroups}
+						</span>
+		</div>
 		<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
 			<p:ajax event="sort" oncomplete="applyTooltip()" />
+
 
 			<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 
@@ -169,13 +170,12 @@
 	<br/>
 	<br/>
 	<h:form id="other_groups">
+		<div class="group_menu_header">
+						<span>
+							#{msg.otherGroups}
+						</span>
+		</div>
 		<ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-			<div class="page_header">
-					<span>
-						#{msg.otherGroups}
-					</span>
-			</div>
-
 			<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
 				<p:ajax event="filter" oncomplete="applyTooltip()"/>
 				<p:ajax event="sort" oncomplete="applyTooltip()"/>

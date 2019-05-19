@@ -4,14 +4,15 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <div class="group-menu">
-        <h3 class="group_link">
-            <h:outputLink value="myhome/groups.jsf" style="font-weight:normal;">
-                <h:outputText value="#{msg.groupOverview}"/>
+<div class="ui-layout-unit ui-widget ui-widget-content ui-corner-all ui-layout-east" style="height: 100%;">
+    <div class="group-menu" >
+
+            <h:outputLink value="myhome/groups.jsf" style="font-weight:normal; display: flex; justify-content: center;">
+                <h:outputText  class="group_menu_header" style="width: 100%;" value="#{msg.groupOverview}" />
                 <h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}"
                               id="new_group_count" styleClass="bold_red" style="padding-left:3px;"/>
             </h:outputLink>
-        </h3>
+
         <p:tooltip for="new_group_count" showEffect="fade" hideEffect="fade">
             <h:outputFormat value="#{msg.new_groups_message}">
                 <f:param value="#{userBean.newGroupsCount}"/>
@@ -23,8 +24,8 @@
         <h:panelGroup layout="block" id="group_menu" styleClass="group-menu">
             <ui:repeat value="#{userBean.groupMenu}" var="group">
                 <div class="panelmenu">
-                    <h3 class="group_link">
-                        <h:link value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
+                    <h3 class="group_link" >
+                        <h:link styleClass="group_link_for_group_menu" value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
                     </h3>
                 </div>
             </ui:repeat>
@@ -65,5 +66,6 @@
             </ui:repeat>
         </h:panelGroup>
     </ui:fragment>
+</div>
 </ui:composition>
 </html>

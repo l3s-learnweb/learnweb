@@ -5,13 +5,13 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" id="right_pane">
+    <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="height: 100%;" id="right_pane">
 
         <h:outputScript library="resources" name="resource-pane.js" target="head"/>
         <h:outputStylesheet library="resources" name="resource-pane.css"/>
 
-        <h:panelGroup layout="block" id="right_pane_wrapper" styleClass="right-panel">
-            <h:inputHidden id="panel_header_title" value="#{rightPaneBean.panelTitle}" readonly="true"/>
+        <h:panelGroup layout="block" id="right_pane_wrapper"  styleClass="right-panel">
+            <h:inputHidden id="panel_header_title" value="#{rightPaneBean.panelTitle}"  class="group_menu_header" readonly="true"/>
 
             <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFile'}">
                 <h:panelGroup styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
