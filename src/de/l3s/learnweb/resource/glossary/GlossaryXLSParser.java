@@ -75,7 +75,14 @@ public class GlossaryXLSParser
             }
             else
             {
-                glossaryEntries.add(glossaryEntryRowBuilder.build(sheet.getRow(rowNumber)));
+                try
+                {
+                    glossaryEntries.add(glossaryEntryRowBuilder.build(sheet.getRow(rowNumber)));
+                }
+                catch(IllegalArgumentException e)
+                {
+                    errorsDuringProcessing.add(e);
+                }
             }
         }
 
