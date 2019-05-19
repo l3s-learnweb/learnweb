@@ -8,7 +8,25 @@
     --second-grey-hover: #bbbbbb;
 }
 
+
+
+
 /*Classes*/
+
+body{
+    height: 100%;
+}
+
+.main-body .layout-wrapper, .main-body .layout-main{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main-body .layout-main-content{
+    flex-grow: 1;
+    height: 100%;
+}
 
 .main-body .layout-topbar > div{
     display: flex;
@@ -791,7 +809,9 @@ body .ui-dialog .ui-dialog-titlebar{
         flex-direction: column;
     }
 
-
+    body{
+        height: auto;
+    }
 
 }
 
@@ -819,7 +839,9 @@ body .ui-dialog .ui-dialog-titlebar{
         width: 100%;
     }
 
-
+    body{
+        height: auto;
+    }
 }
 
 /******************** helper classes **********************************/
