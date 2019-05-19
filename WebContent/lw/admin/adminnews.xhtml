@@ -62,7 +62,7 @@
 								<div></div>
 							</div>
 						</p:blockUI>
-						<p:dataTable id="news_table" var="news" value="#{adminNewsBean.newsList}">
+						<p:dataTable id="news_table" var="news" value="#{adminNewsBean.newsListAll}">
 							<p:column headerText="#{msg.title}" sortBy="#{news.title}">
 								<h:outputText value="#{news.title}" />
 							</p:column>

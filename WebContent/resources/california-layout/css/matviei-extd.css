@@ -556,6 +556,271 @@
     text-align: end;
 }
 
+#hidden_news .ui-widget-content{
+    border: none;
+}
+
+.submission_create_fix{
+    min-width: 440px;
+}
+
+.submission_create_fix td > span{
+    min-width: 227px;
+}
+
+.submission_create_fix td{
+    display: flex;
+    padding: 8px 12px;
+}
+
+
+body .ui-dialog .ui-dialog-titlebar{
+    padding: 8px 16px 6px;
+}
+
+#edit_submission_dialog1, #create_submission_dialog1{
+    margin: 0 auto;
+}
+
+#edit_dialog_survey_menu, #create_dialog_survey_menu, .submission_dialog_selectmenu{
+    width: 180px;
+}
+
+.submission_description{
+    word-break: break-word;
+}
+
+.submission_panel_avatar{
+    display: initial;
+    margin: 0 5px 0 0;;
+}
+.submission_panel_avatar img{
+    width: 30px;
+    height: 30px;
+    border: 1px solid lightgrey;
+    border-radius: 100%;
+}
+
+.submission_card_header{
+    display: flex;
+    align-items: center;
+}
+
+
+.main-body .submission_card{
+    background: white;
+}
+
+
+.main-body #lightbox{
+    z-index: 9000;
+}
+
+.main-body #lightbox_title{
+    padding: 13px;
+}
+
+.main-body #lightbox_content{
+    height: inherit;
+}
+
+.main-body #lightbox_footer{
+    padding: 10px 30px;
+    background: rgba(0, 0, 0, .80);
+    display: flex;
+    justify-content: center;
+}
+
+.main-body #lightbox_container{
+    margin: 1% 5% 1% 5%;
+}
+
+.main-body .submission_header{
+    padding: 10px 20px;
+}
+
+.main-body .submission_card_details{
+    padding: 0 10px;
+}
+
+.main-body .resource-preview-wrapper{
+
+}
+
+
+.main-body .resource-preview-image{
+    height: 200px;
+    margin: 0 auto;
+    display: flex;
+    color: black;
+}
+
+
+.main-body .resource-preview{
+    min-height: 200px;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.main-body .resource-item2:hover, .main-body .resource-item:hover{
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,.25);
+}
+
+.main-body .resource-item2, .main-body .resource-item{
+    width: calc(16.66667% - 16px);
+    background: #fff;
+    margin: 5px;
+    min-width: 200px;
+}
+
+.main-body .resource-title-text{
+    background: var(--second-grey);
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+#resourceGrid2, .resource-grid{
+    display: flex;
+}
+
+.main-body #resourceGrid .group-resources-item2.ui-selected, .main-body #resourceGrid .group-resources-item2.ui-selecting{
+    background: #fff;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,.25);
+}
+
+.main-body #resourceGrid .group-resources-item2.ui-selected > .resource-block > .resource-title > div > .resource-title-text{
+    color: #fff;
+    background: var(--main-dark-green-color-hover)!important;
+}
+
+
+.main-body #resourceGrid .group-resources-item2.ui-selecting > .resource-block > .resource-title > div > .resource-title-text{
+    color: #fff;
+    background: var(--main-dark-green-color-hover)!important;
+}
+
+.main-body .add-resource-image:hover{
+    cursor: pointer;
+}
+
+.main-body .add-resource-image{
+    display: block;
+    margin: 0 auto;
+}
+
+.main-body #submit_resources_button{
+    display: block;
+    margin: 20px auto;
+    font-size: 20px;
+    width: auto;
+}
+
+.main-body .action-remove{
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 2px 5px;
+}
+
+.main-body .submission_link{
+    font-size: 18px;
+}
+
+@media (max-width: 414px) {
+    h1{
+        font-size: 22px;
+    }
+
+    .main-body .submission_header{
+        padding: 10px 10px;
+    }
+
+    #edit_submission_dialog1, #create_submission_dialog1{
+        max-width: 320px;
+    }
+
+    .submission_dialog_select{
+        width: 100%;
+        max-width: 182px!important;
+    }
+
+    .submission_dialog_select input{
+        width: 75%;
+    }
+
+    #ui-datepicker-div{
+        margin-left: -20px;
+    }
+    .submission_create_fix td > span{
+        min-width: 92px;
+        max-width: 92px;
+    }
+
+    .submission_details{
+        max-width: 510px;
+        width: 100%;
+    }
+
+    .submission_card_details{
+        flex-direction: column;
+    }
+
+    .submission_time_block > table{
+        float: left!important;
+    }
+
+    .main-body #lightbox_container{
+        margin: 8% 5% 1% 5%;
+    }
+    .main-body #resourceGrid{
+        padding-left: 0px!important;
+        padding-top: 10px!important;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-body .resource-item2{
+        margin-right: 0;
+        width: 100%;
+    }
+
+    #resourceGrid2, .resource-grid{
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+}
+
+
+
+@media (max-height: 414px) {
+    body .ui-dialog .ui-dialog-content{
+        padding: 8px 16px;
+    }
+    body .ui-panelgrid .ui-panelgrid-cell {
+        padding: 1px 12px;
+    }
+    #edit_submission_dialog1, #create_submission_dialog1{
+        top: 2px!important;
+    }
+    .submission_card_details{
+        flex-direction: column;
+    }
+
+    .submission_time_block > table{
+        float: left!important;
+    }
+    .submission_details{
+        max-width: 510px;
+        width: 100%;
+    }
+
+
+}
 
 /******************** helper classes **********************************/
 .no-margin-top{

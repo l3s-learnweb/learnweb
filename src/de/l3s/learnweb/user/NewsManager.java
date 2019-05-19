@@ -33,7 +33,7 @@ public class NewsManager
     {
         cache.clear();
 
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC"))
+        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC "))
         {
             while(rs.next())
             {
@@ -43,6 +43,9 @@ public class NewsManager
         }catch(Exception e){
             log.error(e);
         }
+
+
+
     }
 
 

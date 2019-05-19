@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -17,16 +17,16 @@
 	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
 	<ui:param name="helpText" value="" />
 
-	<ui:define name="center_layout">
+	<ui:define name="content">
 		<h:form>
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
 
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();load_editor(); " />
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="update_header();load_editor(); " />
 		</h:form>
 
 		<h:outputStylesheet library="resource-submission" name="submit.css" />
-		
+
 		<h:panelGroup id="resourcesView" layout="block">
 			<!-- dummy for right pane -->
 		</h:panelGroup>
@@ -69,19 +69,25 @@
 		<h:panelGroup layout="block" id="user_submissions">
 		<p:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
 			<div class="submission_card">
-				<h3 style="display:inline;">#{userSubmission.user.username} (#{msg.student_id}: #{userSubmission.user.studentId})</h3>
-				<h:form style="display: inline; position:absolute;" prependId="false">
-					<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
-								process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
-								<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-								<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
-					</p:commandLink>
-					<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{not userSubmission.submitStatus}"
-								process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
-								<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-								<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
-					</p:commandLink>
-				</h:form>
+
+				<div class="submission_card_header">
+					<div class="submission_panel_avatar"><img src="/resources/image/no_profile.jpg"/></div>
+
+					<!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
+					<h3>#{userSubmission.user.username} </h3>
+					<h:form prependId="false">
+						<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
+									   process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
+							<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+							<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
+						</p:commandLink>
+						<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{not userSubmission.submitStatus}"
+									   process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
+							<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+							<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
+						</p:commandLink>
+					</h:form>
+				</div>
 				<h:panelGroup class="submission_card_resources" layout="block">
 					<hr/>
 					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
@@ -120,9 +126,9 @@
 		</h:panelGroup>
 		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 	</ui:define>
-	<ui:define name="right_layout">
+	<!--<ui:define name="right_layout">
 		<ui:decorate template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{submissionBean}" />
 		</ui:decorate>
-	</ui:define>
+	</ui:define>-->
 </ui:composition>

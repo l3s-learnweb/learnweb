@@ -18,14 +18,6 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
         this.topbarMenuButton = $('#topbar-menu-button');
         this.sidebarProfileButton = $('#sidebar-profile-button');
 
-        this.sidebarUserMenu = $('#sidebar-usermenu');
-        this.topbarUserMenu = $('#topbar-usermenu');
-
-        if(this.sidebarUserMenu.length)
-            this.usermenuLinks = this.sidebarUserMenu.find('a');
-        if (this.topbarUserMenu.length)
-            this.usermenuLinks = this.topbarUserMenu.find('a');
-
         this.topbarMenuClick = false;
         this.megaMenuClick = false;
         this.rightSidebarClick = false;
@@ -83,29 +75,6 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                 $this.megaMenuClick = true;
             });
 
-            $this.topbarMenuButton.off('click').on('click', function (e) {
-                //TODO: Move to CSS
-                $this.topbarUserMenu.css({ top: '60px', right: '0', left: 'auto' });
-                $this.topbarMenuClick = true;
-
-                if ($this.topbarUserMenu.hasClass('usermenu-active')) {
-                    $this.topbarUserMenu.removeClass('fadeInDown').addClass('fadeOutUp');
-
-                    setTimeout(function () {
-                        $this.topbarUserMenu.removeClass('usermenu-active fadeOutUp');
-                    }, 250);
-                }
-                else {
-                    $this.topbarUserMenu.addClass('usermenu-active fadeInDown');
-                }
-
-                e.preventDefault();
-            });
-
-            $this.topbarUserMenu.off('click').on('click', function (e) {
-                $this.topbarMenuClick = true;
-            });
-
             $this.menulinks.off('click').on('click', function (e) {
                 var link = $(this),
                     item = link.parent(),
@@ -133,47 +102,11 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                 }
             });
 
-            $this.sidebarProfileButton.off('click').on('click', function (e) {
-                $this.sidebarUserMenu.slideToggle();
-
-                setTimeout(function() {
-                    $this.nanoContainer.nanoScroller();
-                    $this.setInlineProfileState($this.sidebarUserMenu.get(0).offsetParent == null ? false : true);
-                }, 500);
-                e.preventDefault();
-            });
-
-            $this.usermenuLinks.on('click', function (e) {
-                var link = $(this),
-                item = link.parent(),
-                submenu = link.next();
-
-                $this.usermenuLinkClick = true;
-                item.siblings('.menuitem-active').removeClass('menuitem-active').children('ul').slideUp();
-
-                if (item.hasClass('menuitem-active')) {
-                    item.removeClass('menuitem-active');
-                    submenu.slideUp();
-                }
-                else {
-                    item.addClass('menuitem-active');
-                    submenu.slideDown();
-                }
-
-                if (submenu.length) {
-                    e.preventDefault();
-                }
-            });
-
             $this.sidebar.off('click').on('click', function () {
                 $this.sidebarMenuClick = true;
             });
 
             $(document.body).off('click').on('click', function () {
-                if (!$this.topbarMenuClick && $this.topbarUserMenu.hasClass('usermenu-active')) {
-                    $this.topbarUserMenu.removeClass('usermenu-active')
-                }
-
                 if (!$this.megaMenuClick && $this.layoutMegaMenu.hasClass('layout-megamenu-active')) {
                     $this.layoutMegaMenu.removeClass('layout-megamenu-active');
                     $(document.body).removeClass('body-megamenu-active');
@@ -307,11 +240,6 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                     }
                 }
             }
-        }
-
-        var inlineProfileCookie = $.cookie('california_inlineprofile_expanded');
-        if (inlineProfileCookie) {
-            this.sidebarUserMenu.show();
         }
     },
 
