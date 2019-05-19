@@ -25,6 +25,8 @@
         <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
         <h:outputScript name="js/nanoscroller.js" library="california-layout" />
         <h:outputScript name="js/layout.js" library="california-layout" />
+        <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js" />
+        <h:outputScript library="main-template" name="default2.js"/>
 
         <h:outputStylesheet name="california-layout/css/nanoscroller.css" />
         <h:outputStylesheet name="california-layout/css/layout-green.css" />
@@ -36,7 +38,7 @@
         <ui:insert name="head"/>
     </h:head>
 
-    <h:body styleClass="main-body" onload="setHeightWindow()" onresize="setHeightWindow()">
+    <h:body styleClass="main-body">
         <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
             <ui:include src="megamenu.xhtml" />
             <ui:include src="topbar.xhtml" />

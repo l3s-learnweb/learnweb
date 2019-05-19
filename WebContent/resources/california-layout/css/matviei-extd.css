@@ -90,6 +90,7 @@ body{
     width: inherit;
     background: white;
     padding: 0 .5rem;
+    max-width: 600px;
 }
 
 .main-body .layout-topbar #searchbutton{
@@ -744,6 +745,16 @@ body .ui-dialog .ui-dialog-titlebar{
 .main-body .submission_link{
     font-size: 18px;
 }
+
+.main-body .ui-autocomplete{
+    z-index: 999999;
+    max-width: 598px;
+}
+
+.main-body .ui-autocomplete > .ui-menu-item{
+    font-size: 20px;
+}
+
 
 @media (max-width: 414px) {
     h1{
