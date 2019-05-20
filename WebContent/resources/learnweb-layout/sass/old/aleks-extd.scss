@@ -449,13 +449,15 @@ h3.group_link {
     display: none !important;
 }
 
-.resources-filters .clear-filters:hover {
-    background: none;
-}
+.resources-filters {
+    .clear-filters:hover {
+        background: none;
+    }
 
-.resources-filters .clear-filters button {
-    background: none !important;
-    border: 0;
+    .clear-filters button {
+        background: none !important;
+        border: 0;
+    }
 }
 
 .resources-filters .clear-filters span {

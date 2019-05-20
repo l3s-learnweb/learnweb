@@ -26,22 +26,23 @@
                 <h:outputText value="#{pageTitle}" escape="false"/>
                 - #{msg['application.name']}
             </title>
-            <h:outputScript name="js/nanoscroller.js" library="california-layout"/>
-            <h:outputScript name="js/layout.js" library="california-layout"/>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js" />
+            <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js" />
+            <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="main-template" name="default2.js"/>
 
-            <h:outputStylesheet name="california-layout/css/nanoscroller.css"/>
-            <h:outputStylesheet name="california-layout/css/layout-green.css"/>
             <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css"/>
-            <h:outputStylesheet name="california-layout/css/matviei-extd.css"/>
+            <h:outputStylesheet name="vendor/nanoscroller-v0.8.7/nanoscroller.css"/>
+            <h:outputStylesheet name="css/layout.css" library="learnweb-layout"/>
 
             <base href="#{request.contextPath}/lw/"/>
 
             <ui:insert name="head"/>
         </h:head>
 
-    <h:body styleClass="main-body">
+        <h:body styleClass="main-body">
             <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
                 <ui:include src="megamenu.xhtml"/>
                 <ui:include src="topbar.xhtml"/>
@@ -71,7 +72,7 @@
                             <div class="error" style="font-size: 1.4rem">#{msg.service_unavailable}</div>
                         </ui:fragment>
                     </div>
-                    <ui:include src="footer.xhtml" />
+                    <ui:include src="footer.xhtml"/>
                 </div>
             </div>
 
@@ -103,6 +104,4 @@
             </p:confirmDialog>
         </h:body>
     </f:view>
-</f:view>
-
 </html>
