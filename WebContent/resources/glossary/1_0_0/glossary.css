@@ -73,7 +73,7 @@
 	font-size:1.5rem;
 }
 .inputfield, .inputarea{
-	font-family:Arial;
+	font-family:Arial, Helvetica, sans-serif;
 	font-size:1.5rem;
 	width:15em !important;
 	outline:none;
@@ -128,7 +128,7 @@ hr{
 
 
 .pencil-icon{
-	 background: url("/resources/icon/silk/pencil.png") no-repeat
+	 background: url("/resources/icon/silk/pencil.png") no-repeat;
 }
 .centered-form {
     margin : 0 auto;

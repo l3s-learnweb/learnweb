@@ -247,7 +247,8 @@ public class Folder extends AbstractResource implements Serializable
             }
 
             sb.append(" > ").append(name);
-            prettyPath = getGroup().getTitle() + sb.toString();
+            sb.insert(0, getGroup() != null ? getGroup().getTitle() : "Private resources");
+            prettyPath = sb.toString();
         }
         return prettyPath;
     }

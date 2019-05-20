@@ -68,7 +68,7 @@ public class CDXClient
                 String msg = e.getMessage();
                 if(msg.contains("HTTP response code: 403")) // blocked by robots
                     return null;
-                else if((msg.equals("Unexpected end of file from server") || msg.startsWith("Server returned HTTP response code: 50")) && retry >= 0) // hit request limit
+                else if((msg.equals("Unexpected end of file from server") || msg.startsWith("Server returned HTTP response code: 50")) && retry > 0) // hit request limit
                 {
                     Misc.sleep(600);
                     log.debug("To many api requests => Sleep a while");

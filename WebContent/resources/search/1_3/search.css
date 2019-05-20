@@ -60,9 +60,9 @@
 	position:relative;
 }
 
-.wayback_span {width: 400px; padding: 4px}
-.wayback_span a {color: #1020D0}
-.wayback_span a:visited {color: rgb(60, 110, 200)}
+.wayback_span {width: 400px; padding: 4px;}
+.wayback_span a {color: #1020D0;}
+.wayback_span a:visited {color: rgb(60, 110, 200);}
 
 /*To indicate if the resource is an old resource*/
 .oldResource{
@@ -96,7 +96,7 @@
 .filters_menu_bar a { 
 	font-size: 1.5rem;
 	font-weight: bolder;
-	color:white 
+	color:white;
 }
 
 .filters_menu_bar > * {
@@ -257,7 +257,7 @@
 .list_view a {  text-decoration: none; color:#1020D0;}
 .list_view a:hover { text-decoration: underline;}
 
-.list_view .add_resource_link { margin-right:1rem; display:inline-block }
+.list_view .add_resource_link { margin-right:1rem; display:inline-block; }
 .list_view .add_resource_link a:link, 
 .list_view .add_resource_link a:visited,
 .list_view .add_resource_link a { text-decoration: underline; color: black; }
@@ -268,7 +268,7 @@
 .list_view a.resourceWebLink { font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
 
-.list_view a.resourceReferenceUrl{color:green; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block}
+.list_view a.resourceReferenceUrl{color:green; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;}
 
 .page_counter {
 	font-weight:bold;
@@ -510,7 +510,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 .group-menu-bar a { 
 	font-size: 1.5rem;
 	font-weight: bolder;
-	color:white 
+	color:white;
 }
 .group-menu-bar a:hover { text-decoration:none; }
 
@@ -526,7 +526,6 @@ img.smallImage { cursor:pointer; margin:4px; }
 	background-repeat: no-repeat;
 	background-size: 16px 16px;
     background-position: left center;
-    background-repeat: no-repeat;
     padding-left: 20px;
 }
 

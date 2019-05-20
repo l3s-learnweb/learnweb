@@ -44,7 +44,7 @@ public class ConverterService
         Gson gson = new Gson();
         String stringResponse = null;
         ConverterResponse converterResponse = new ConverterResponse();
-        try(CloseableHttpClient client = HttpClients.createDefault();)
+        try(CloseableHttpClient client = HttpClients.createDefault())
         {
             HttpPost httpPost = new HttpPost(learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER"));
             String json = gson.toJson(model);

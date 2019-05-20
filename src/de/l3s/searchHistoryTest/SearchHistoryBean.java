@@ -102,12 +102,12 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
         else
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedGroupId, selectedSessionId);
 
-        JSONArray queriesArr = new JSONArray();
-        for(Query q : queries)
-        {
-            entities.add(q.getQuery());
+        final JSONArray queriesArr = new JSONArray();
+        queries.parallelStream().forEach(q -> {
             try
             {
+                entities.add(q.getQuery());
+
                 Map<String, Double> categories = TagthewebClient.getTopCategories(q.getQuery(), "en");
                 entitiesCategories.addAll(categories.keySet());
 
@@ -136,7 +136,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
             {
                 log.error("Error while creating json object for query: " + q.getSearchId(), e);
             }
-        }
+        });
         queriesGraphData = queriesArr.toString();
 
         Set<Edge> edges = getLearnweb().getSearchHistoryManager().getAllEdges(entities);

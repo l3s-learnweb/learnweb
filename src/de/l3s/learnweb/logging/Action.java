@@ -135,16 +135,7 @@ public enum Action
             System.out.print("\n" + category + ": ");
 
             List<Action> categoryActions = new ArrayList<>(Action.getActionsByCategory(category));
-            Collections.sort(categoryActions, new Comparator<Action>()
-            {
-
-                @Override
-                public int compare(Action o1, Action o2)
-                {
-                    return o1.name().compareTo(o2.name());
-                }
-
-            });
+            categoryActions.sort(Comparator.comparing(Enum::name));
             for(Action action : categoryActions)
             {
                 System.out.print("" + action.name() + ", ");

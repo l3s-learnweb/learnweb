@@ -30,7 +30,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_organisation
-    public static enum Option implements Comparable<Option>
+    public enum Option implements Comparable<Option>
     {
         Resource_Hide_Star_rating,
         Resource_Hide_Thumb_rating,

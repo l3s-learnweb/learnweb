@@ -44,7 +44,7 @@ public class GlossaryResource extends Resource implements Serializable
         setAllowedLanguages(new ArrayList<>(otherGlossaryResource.allowedLanguages));
         setDeleted(otherGlossaryResource.deleted);
         setClonedButNotPersisted(true);
-        setEntries(new ArrayList<GlossaryEntry>(otherGlossaryResource.entries.size()));
+        setEntries(new ArrayList<>(otherGlossaryResource.entries.size()));
         for(int i = 0; i < otherGlossaryResource.entries.size(); i++)
         {
             this.entries.add(i, otherGlossaryResource.entries.get(i).clone());

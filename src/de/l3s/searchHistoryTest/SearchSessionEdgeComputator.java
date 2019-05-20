@@ -127,7 +127,7 @@ public class SearchSessionEdgeComputator
     public List<String> getRelatedEntitiesForSearchId(int searchId)
     {
         List<Entity> relatedEntities = learnweb.getSearchHistoryManager().getRelatedEntitiesForSearchId(searchId);
-        List<String> entityNames = relatedEntities.stream().map(e -> e.getEntityName()).collect(Collectors.toList());
+        List<String> entityNames = relatedEntities.stream().map(Entity::getEntityName).collect(Collectors.toList());
         return entityNames;
     }
 
@@ -216,16 +216,7 @@ public class SearchSessionEdgeComputator
     public static List<Map.Entry<EntityPair, Double>> sortByScore(Map<EntityPair, Double> m)
     {
         List<Map.Entry<EntityPair, Double>> sorted = new ArrayList<>(m.entrySet());
-        Comparator<Map.Entry<EntityPair, Double>> valueComparator = new Comparator<Map.Entry<EntityPair, Double>>()
-        {
-            @Override
-            public int compare(Map.Entry<EntityPair, Double> o1,
-                    Map.Entry<EntityPair, Double> o2)
-            {
-                return (int) (o2.getValue() - o1.getValue());
-            }
-        };
-        sorted.sort(valueComparator);
+        sorted.sort((o1, o2) -> (int) (o2.getValue() - o1.getValue()));
         return sorted;
     }
 

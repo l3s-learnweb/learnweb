@@ -154,7 +154,7 @@ public class TedManager
     public int getTedVideoResourceId(String url) throws SQLException
     {
         int tedVideoResourceId = 0;
-        String slug = url.substring(url.lastIndexOf("/") + 1, url.length());
+        String slug = url.substring(url.lastIndexOf("/") + 1);
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
         pStmt.setString(1, slug);
         ResultSet rs = pStmt.executeQuery();

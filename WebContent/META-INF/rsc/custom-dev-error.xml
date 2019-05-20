@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Error - @@message@@</title>
 <style type="text/css">
-body, div, span, td, th, caption { font-family: 'Trebuchet MS', Verdana, Arial, Sans-Serif; font-size: small; }
+body, div, span, td, th, caption { font-family: 'Trebuchet MS', Verdana, Arial, sans-serif; font-size: small; }
 ul, li, pre { padding: 0; margin: 0; }
 h1 { color: #900; }
 h2, h2 span { font-size: large; color: #339; }
@@ -15,7 +15,7 @@ h2 a { text-decoration: none; color: #339; }
 code { font-size: medium; }
 #tree dl { color: #006; }
 #tree dd { margin-top: 2px; margin-bottom: 2px; }
-#tree dt { border: 1px solid #DDD; padding: 4px; border-left: 2px solid #666; font-family: "Courier New", Courier, mono; font-size: small; }
+#tree dt { border: 1px solid #DDD; padding: 4px; border-left: 2px solid #666; font-family: "Courier New", Courier, monospace; font-size: small; }
 .uicText { color: #999;  }
 .highlightComponent { color: #FFFFFF; background-color: #FF0000;  }
 table { border: 1px solid #CCC; border-collapse: collapse; border-spacing: 0px; width: 100%; text-align: left; }

@@ -210,7 +210,7 @@ public class UserManager
             return user;
         }
 
-        try(PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");)
+        try(PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?"))
         {
             stmtGetUser.setInt(1, userId);
             ResultSet rs = stmtGetUser.executeQuery();

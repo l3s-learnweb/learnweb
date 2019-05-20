@@ -120,7 +120,6 @@ public class JobScheduler
         }
         catch(InterruptedException e)
         {
-            ;
         }
         job.stopAllJobs();
     }

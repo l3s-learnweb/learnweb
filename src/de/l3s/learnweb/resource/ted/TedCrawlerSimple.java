@@ -265,7 +265,7 @@ public class TedCrawlerSimple implements Runnable
         String keywords = "", title = null, description = null;
         //String url = page.getWebURL().getURL();
 
-        String sub[] = url.split("talks/");
+        String[] sub = url.split("talks/");
         String slug = sub[1];
         int resourceId = -1;
         String tedId = null;

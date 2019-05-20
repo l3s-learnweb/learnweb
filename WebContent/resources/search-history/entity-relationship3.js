@@ -277,14 +277,39 @@ function recoverNodes(){
     var edges = d3.selectAll('.edge');
 
     var activeNodes = [];
+    var activeMinorNodes = [];
     nodes.style("opacity", function(e){
-        var isIncludes = e.data.categories ? Object.keys(e.data.categories).some(function (cat) { return window.categories.includes(cat) }) : false;
-        if (isIncludes) activeNodes.push(e.node);
-        return isIncludes ? 1 : 0.25;
+    	if (e.data.type === 'query') {
+			var isIncludes = e.data.categories ? Object.keys(e.data.categories).some(function (cat) { return window.categories.includes(cat) }) : false;
+			if (isIncludes) activeNodes.push(e.node);
+			return isIncludes ? 1 : 0.25;
+		} else {
+			var neighbors = e.G.neighbors(e.node);
+			var neighborsIncludes = false;
+			if (neighbors.length) {
+				neighborsIncludes = Array.from(neighbors).some(function (neighbor) {
+					var node = e.G.node.get(neighbor);
+					if (node.categories && Object.keys(node.categories).some(function (cat) { return window.categories.includes(cat) })) {
+						return true;
+					}
+				});
+			}
+
+			if (neighborsIncludes) activeMinorNodes.push(e.node);
+			return neighborsIncludes ? 1 : 0.25;
+		}
     });
 
     edges.style("opacity", function(e){
-        return activeNodes.includes(e.source.node) && activeNodes.includes(e.target.node) ? 1 : 0.25;
+    	if (activeNodes.includes(e.source.node) && activeNodes.includes(e.target.node)) {
+    		return 1;
+		}
+
+    	if (activeNodes.includes(e.source.node) && activeMinorNodes.includes(e.target.node)) {
+    		return 1;
+		}
+
+        return 0.25;
     });
 
 	toggle = 0;

@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
 
 import javax.faces.application.FacesMessage;
@@ -53,7 +53,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private String toggleLabel = "Show All";
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
-    private String errorsDuringXmlParsing = StringUtils.EMPTY;
+    private String resultOfXmlParsing = StringUtils.EMPTY;
 
     public void onLoad()
     {
@@ -384,7 +384,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void parseXls(FileUploadEvent fileUploadEvent)
     {
-        errorsDuringXmlParsing = StringUtils.EMPTY;
+        resultOfXmlParsing = StringUtils.EMPTY;
 
 
         User user = getUser();
@@ -392,30 +392,34 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return;
 
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
-        StringBuilder formattedErrorsDuringParsing = new StringBuilder();
+        StringBuilder formattedResultOfProcess = new StringBuilder();
         try
         {
             parser.parseGlossaryEntries();
+            formattedResultOfProcess.append("Imported entry count - ").append(parser.getEntries().size()).append(" errors count - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
             if(!parser.getErrorsDuringProcessing().isEmpty())
             {
                 log.error("Found some errors during Glossary xml parsing (see additional info on UI)");
-                parser.getErrorsDuringProcessing().forEach(e -> formattedErrorsDuringParsing.append(e.getMessage()).append(".<br/> "));
-                errorsDuringXmlParsing = formattedErrorsDuringParsing.toString();
+                formattedResultOfProcess.append("Errors:<br/>");
+                parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
 
-                log.error(errorsDuringXmlParsing);
+                log.error(resultOfXmlParsing);
+
             }
             else
             {
-                // append parsed entries to glossary
                 glossaryResource.getEntries().addAll(parser.getEntries());
                 repaintTable();
             }
+            resultOfXmlParsing = formattedResultOfProcess.toString();
+            PrimeFaces.current().ajax().update("glossary_dialog");
+            PrimeFaces.current().executeScript("PF('glossTable').filter();");
         }
         catch(IOException e)
         {
             //TODO DISPLAY FILE CANNOT BE READ
             System.out.println("There is IOException error");
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
@@ -626,14 +630,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         if(null == allowedTermLanguages && glossaryResource != null)
         {
-            allowedTermLanguages = localesToSelectitems(glossaryResource.getAllowedLanguages());
+            allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
     }
 
-    public String getErrorsDuringXmlParsing()
+    public String getResultOfXmlParsing()
     {
-        return errorsDuringXmlParsing;
+        return resultOfXmlParsing;
     }
 
     public boolean isPaginator()

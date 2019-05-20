@@ -139,7 +139,7 @@ public class StringHelper
         {
             if(out.length() != 0)
                 out.append(delimiter);
-            out.append(Integer.toString(item));
+            out.append(item);
         }
         return out.toString();
     }
@@ -178,7 +178,7 @@ public class StringHelper
      */
     public static String ucFirst(String input)
     {
-        return input.substring(0, 1).toUpperCase() + input.substring(1, input.length());
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
     /**

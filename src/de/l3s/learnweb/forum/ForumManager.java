@@ -33,7 +33,7 @@ public class ForumManager
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
         LinkedList<ForumTopic> topics = new LinkedList<>();
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC"))
         {
             select.setInt(1, groupId);
             ResultSet rs = select.executeQuery();
@@ -54,7 +54,7 @@ public class ForumManager
     public ForumTopic getTopicById(int topicId) throws SQLException
     {
         ForumTopic topic = null;
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?"))
         {
             select.setInt(1, topicId);
             ResultSet rs = select.executeQuery();
@@ -91,7 +91,7 @@ public class ForumManager
 
     public ForumPost getPostById(int postId) throws SQLException
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE post_id = ?");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE post_id = ?"))
         {
             select.setInt(1, postId);
             ResultSet rs = select.executeQuery();
@@ -193,7 +193,7 @@ public class ForumManager
 
                 // updated view count and statistic of parent topic
                 sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_views > 0";
-                try(PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery);)
+                try(PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery))
                 {
                     update.setInt(1, post.getId());
                     update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
@@ -258,7 +258,7 @@ public class ForumManager
 
     public void deletePost(ForumPost post) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("DELETE FROM lw_forum_post WHERE post_id = ?");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("DELETE FROM lw_forum_post WHERE post_id = ?"))
         {
             ps.setInt(1, post.getId());
             ps.executeUpdate();

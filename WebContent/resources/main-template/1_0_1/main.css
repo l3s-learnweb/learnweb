@@ -13,7 +13,7 @@ body {
 	width:100%;
 	font-size:1.2rem;
 }
-iframe { border:none }
+iframe { border:none; }
 
 /* fix for combination with california theme */
 body .ui-datatable thead th {
@@ -76,7 +76,7 @@ body .ui-datatable thead th {
 .ui-chkbox-box.ui-state-active,
 .ui-chkbox-box.ui-state-focus.ui-state-active,
 .ui-radiobutton-box.ui-state-active,
-.ui-radiobutton-box.ui-state-focus.ui-state-active
+.ui-radiobutton-box.ui-state-focus.ui-state-active,
 .ui-progressbar .ui-progressbar-value,
 .ui-paginator .ui-paginator-page.ui-state-active,
 .state-active {
@@ -311,7 +311,7 @@ body .ui-datatable thead th {
 	cursor:pointer;
 	padding-right:2rem;
 	padding-left:2rem;
-	vertical-align:middle
+	vertical-align:middle;
 }
 
 /* menu top bar */
@@ -361,7 +361,6 @@ body .ui-datatable thead th {
 	top:4.6rem;
 	margin:0 0 0 -13rem;
     text-align:left;
-    display:inline;
     visibility:hidden;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
@@ -672,6 +671,7 @@ body .ui-datatable thead th {
 }
 
 form#center_header_form { float:right; }
+form#request_group_form { float:right; }
 .resource_button {
 	float:right;
 	position:relative;
@@ -880,7 +880,7 @@ a { text-decoration:underline; }
 a:hover{ text-decoration:none; }
 
 td[role=gridcell] a,
-a.underline { text-decoration: underline }
+a.underline { text-decoration: underline; }
 
 td[role=gridcell] a:hover,
 a.underline:hover { text-decoration: none; }
@@ -1340,7 +1340,6 @@ button:hover {
     -o-filter:grayscale(100%); /* Not yet supported in Gecko, Opera or IE */
     filter:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
     filter:"gray"; /* IE */
-    -webkit-filter:grayscale(1); /* Old WebKit */
 }
 .buttons img:HOVER {
 	filter: none;
@@ -1505,7 +1504,7 @@ div.title {
 }
 
 .folder-tree .ui-tree-container >li > ul > li:last-child {
-  margin-bottom:0.7rem
+  margin-bottom:0.7rem;
   /* fix for safari: If scrollbar is shown the last entry is not clickable */
 }
 
@@ -1883,9 +1882,8 @@ div.title {
 
 
 .tooltipster-custom-theme {
-	border: 1px solid #000;
+	border: 1px solid #489a83;
 	background: #ffffff;
-	border-color: #489a83;
 	box-shadow: 1px 1px 5px #888888;
 }
 

@@ -21,7 +21,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_course
-    public static enum Option implements Comparable<Option>
+    public enum Option implements Comparable<Option>
     {
         Unused_1,
         Unused_2,

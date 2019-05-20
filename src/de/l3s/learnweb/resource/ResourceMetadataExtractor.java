@@ -307,9 +307,7 @@ public class ResourceMetadataExtractor
 
             JSONObject thumbnails = snippet.getJSONObject("thumbnails");
             Optional<String> size = Arrays.stream(new String[] { "maxres", "standard", "high", "medium", "default" }).filter(thumbnails::has).findFirst();
-
-            if(size.isPresent())
-                resource.setMaxImageUrl(thumbnails.getJSONObject(size.get()).getString("url"));
+            size.ifPresent(s -> resource.setMaxImageUrl(thumbnails.getJSONObject(s).getString("url")));
         }
     }
 
@@ -335,9 +333,7 @@ public class ResourceMetadataExtractor
             }*/
 
             Optional<String> size = Arrays.stream(new String[] { "thumbnail_large", "thumbnail_medium", "thumbnail_small" }).filter(json::has).findFirst();
-
-            if(size.isPresent())
-                resource.setMaxImageUrl(json.getString(size.get()));
+            size.ifPresent(s -> resource.setMaxImageUrl(json.getString(s)));
         }
     }
 
@@ -447,7 +443,7 @@ public class ResourceMetadataExtractor
 
     private String base58_decode(String snipCode)
     {
-        Long result = 0L;
+        long result = 0;
         long multi = 1;
         while(snipCode.length() > 0)
         {
@@ -456,7 +452,7 @@ public class ResourceMetadataExtractor
             multi = multi * base58alphabetString.length();
             snipCode = snipCode.substring(0, snipCode.length() - 1);
         }
-        return result.toString();
+        return Long.toString(result);
     }
 
     public FileInfo getFileInfo(InputStream inputStream, String fileName) throws IOException

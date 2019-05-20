@@ -91,7 +91,7 @@ public abstract class AbstractGlossaryRowBuilder<T>
             }
             else
             {
-                errors.add(new IllegalArgumentException("Unknown column: " + getStringValueForCell(header.getCell(cellPosition)) + " at position " + cellPosition));
+                errors.add(new IllegalArgumentException("Unknown column: '" + getStringValueForCell(header.getCell(cellPosition)) + "' at position " + cellPosition));
             }
         }
         return errors;
@@ -116,7 +116,7 @@ public abstract class AbstractGlossaryRowBuilder<T>
     protected String getStringValueForCell(Cell cell)
     {
         String result;
-        switch(cell.getCellTypeEnum())
+        switch(cell.getCellType())
         {
             case STRING:
                 result = cell.getStringCellValue();

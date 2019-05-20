@@ -317,7 +317,7 @@ public class ApplicationBean
      * @param locales
      * @return
      */
-    protected List<SelectItem> localesToSelectitems(List<Locale> locales)
+    protected List<SelectItem> localesToSelectItems(List<Locale> locales)
     {
         ArrayList<SelectItem> selectItems = new ArrayList<>(locales.size());
 

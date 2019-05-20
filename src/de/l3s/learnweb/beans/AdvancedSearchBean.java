@@ -41,8 +41,8 @@ public class AdvancedSearchBean implements Serializable
     private String city;
     private Map<String, String> countries;
     private Map<String, String> cities;
-    private String facetFields[] = null;
-    private String facetQueries[] = null;
+    private String[] facetFields = null;
+    private String[] facetQueries = null;
     private QueryResponse result;
 
     private SolrQuery solrQuery;
@@ -228,7 +228,7 @@ public class AdvancedSearchBean implements Serializable
             int end = matcher.end();
             if(start != 0)
                 newsQuery = query.substring(0, start);
-            newsQuery = newsQuery.concat(query.substring(end, query.length()));
+            newsQuery = newsQuery.concat(query.substring(end));
             return newsQuery;
         }
         else

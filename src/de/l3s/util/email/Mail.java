@@ -17,7 +17,7 @@ public class Mail
     private Session session;
     private MimeMessage message;
 
-    public Mail() throws AddressException, MessagingException
+    public Mail() throws MessagingException
     {
         System.setProperty("mail.mime.charset", "UTF-8");
         Properties props = new Properties();

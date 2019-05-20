@@ -98,13 +98,13 @@ public class ExtendedMetadataManager
         eMetadata.setLevelCount(lcount);
         eMetadata.setLevels(langlevels);
 
-        String lc = "";
+        StringBuilder lc = new StringBuilder();
         for(Map.Entry<String, Integer> entry : lcount.entrySet())
         {
-            lc += entry.getKey() + "[" + entry.getValue().toString() + "] ";
+            lc.append(entry.getKey()).append("[").append(entry.getValue().toString()).append("] ");
         }
 
-        eMetadata.setlCount(lc);
+        eMetadata.setlCount(lc.toString());
         return eMetadata;
     }
 

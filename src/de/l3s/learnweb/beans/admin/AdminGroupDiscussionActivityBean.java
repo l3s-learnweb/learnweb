@@ -81,7 +81,7 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
                 return;
             }
 
-            String token = "***REMOVED***"; // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypthoesis group
+            String token = "***REMOVED***"; // hard coded to use token of hypothesis account kemkes@l3s.de; this account must join the hypothesis group
 
             URIBuilder builder = new URIBuilder("https://hypothes.is/api/search");
             builder.setParameter("limit", "200").setParameter("group", hypothesisGroupID);
