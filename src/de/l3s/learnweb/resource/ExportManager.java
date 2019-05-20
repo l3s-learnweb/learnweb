@@ -58,7 +58,7 @@ public class ExportManager
             case "group":
                 String userAgent = facesContext.getExternalContext().getRequestHeaderMap().get("User-Agent");
                 String platform = UserAgent.parseUserAgentString(userAgent).getOperatingSystem().getName();
-                int groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("request_group_data_panel:group_id"));
+                int groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("request_group_form:group_id"));
                 resourcesToPack = packGroupResources(this.learnweb.getGroupManager().getGroupById(groupId), platform);
                 break;
             case "user":
