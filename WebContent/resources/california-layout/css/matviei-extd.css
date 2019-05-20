@@ -17,15 +17,25 @@ body{
     height: 100%;
 }
 
-.main-body .layout-wrapper, .main-body .layout-main{
+.main-body .layout-wrapper{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main-body .layout-main{
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
 .main-body .layout-main-content{
-    flex-grow: 1;
-    height: 100%;
+
+    flex: 1 0 auto;
+}
+
+.main-body .layout-footer{
+    flex-shrink: 0;
 }
 
 .main-body .layout-topbar > div{
@@ -893,7 +903,7 @@ body .ui-dialog .ui-dialog-titlebar{
 }
 
 .no-padding-bottom{
-    padding-bottom: 0;
+    padding-bottom: 0!important;
 }
 
 .display-none {

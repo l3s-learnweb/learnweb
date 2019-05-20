@@ -8,13 +8,14 @@
 
     <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''} #{guestPreferences.gradientMenu ? 'layout-sidebar-gradient': ''}">
         <div id="nano-container" class="nano">
-            <div class="nano-content sidebar-scroll-content">    
+            <div class="nano-content sidebar-scroll-content">
 
                 <h:form id="menuform">
-                    <pc:menu widgetVar="me">
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="/lw/myhome/groups.jsf"/>
+                    <pc:menu styleClass="no-padding-bottom" style="    margin-bottom: -1px;" model="#{userBean.groupMenu2}">
 
+                    </pc:menu>
+                    <pc:menu widgetVar="me" >
+                        <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
                         <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="/lw/myhome/comments.jsf"/>
                         <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>
                         <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="/lw/myhome/submission_overview.jsf"/>
