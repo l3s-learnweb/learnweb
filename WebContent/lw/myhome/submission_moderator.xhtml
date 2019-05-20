@@ -17,7 +17,7 @@
 	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
 	<ui:param name="helpText" value="" />
 
-	<ui:define name="content">
+	<ui:define name="center_layout">
 		<h:form>
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />

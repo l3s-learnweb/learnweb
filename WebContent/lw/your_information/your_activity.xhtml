@@ -14,7 +14,7 @@
     <p:menuitem value="#{msg.activity}" url="your_information/your_activity.jsf#"/>
 </ui:define>
 
-<ui:define name="content">
+<ui:define name="center_layout">
     <h:form id="yourinformationform">
         <p:dataTable id="activities_tbl" value="#{yourActivityBean.userActions}" var="action" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"

@@ -14,7 +14,7 @@
     <p:menuitem value="#{msg.groups}" url="your_information/your_groups.jsf#"/>
 </ui:define>
 
-<ui:define name="content">
+<ui:define name="center_layout">
     <h:form id="yourinformationform">
         <p:dataTable id="groups_tbl" value="#{yourGroupsBean.userGroups}" var="group" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"

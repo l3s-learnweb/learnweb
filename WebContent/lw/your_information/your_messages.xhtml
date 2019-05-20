@@ -10,7 +10,7 @@
     <p:menuitem value="#{msg.messages}" url="your_information/your_messages.jsf#"/>
 </ui:define>
 
-<ui:define name="content">
+<ui:define name="center_layout">
     <ui:decorate template="templates/messages_table_skeletton.xhtml">
         <ui:param name="messages" value="#{yourMessagesBean.messagesToUser}"/>
         <ui:param name="name_for_file" value="received_messages"/>
