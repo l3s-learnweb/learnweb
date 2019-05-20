@@ -28,6 +28,9 @@
             </title>
             <h:outputScript name="js/nanoscroller.js" library="california-layout"/>
             <h:outputScript name="js/layout.js" library="california-layout"/>
+            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js" />
+            <h:outputScript library="main-template" name="default2.js"/>
+
             <h:outputStylesheet name="california-layout/css/nanoscroller.css"/>
             <h:outputStylesheet name="california-layout/css/layout-green.css"/>
             <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css"/>
@@ -38,7 +41,7 @@
             <ui:insert name="head"/>
         </h:head>
 
-        <h:body styleClass="main-body" onload="setHeightWindow()" onresize="setHeightWindow()">
+    <h:body styleClass="main-body">
             <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
                 <ui:include src="megamenu.xhtml"/>
                 <ui:include src="topbar.xhtml"/>
@@ -46,45 +49,29 @@
                     <ui:include src="sidebar.xhtml"/>
                     <ui:include src="right-sidebar.xhtml"/>
                 </ui:fragment>
+
                 <div class="layout-main">
                     <div class="layout-main-content">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
-                            <ui:fragment rendered="#{userBean.loggedIn and pageTitle!=''}">
+                            <p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+                            <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
+                                <ui:include src="/templates/user/login.xhtml" />
+                            </ui:fragment>
+                            <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
                                 <ui:insert name="breadcrumb_bar">
                                     <p:breadCrumb>
                                         <p:menuitem value="" url="#{userBean.bannerLink}"/>
-                                        <ui:insert name="sub_breadcrumb"/>
+                                        <ui:insert name="sub_breadcrumb" />
                                     </p:breadCrumb>
                                 </ui:insert>
-                            </ui:fragment>
-                            <ui:insert name="sub_menu_bar"></ui:insert>
-                            <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
-                                <ui:include src="/templates/user/login.xhtml"/>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
-                                <section id="content" class="#{smallPage? 'small_page':''}">
-                                    <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
-                                        <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
-
-                                        <h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
-                                            <ui:include src="/templates/user/login.xhtml"/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-                                            <ui:insert name="center_layout"></ui:insert>
-                                        </h:panelGroup>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
-                                        <div class="error" style="font-size:1.4rem">#{msg.service_unavailable}</div>
-                                    </ui:fragment>
-                                </section>
+                                <ui:insert name="content" />
                             </ui:fragment>
                         </ui:fragment>
                         <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
                             <div class="error" style="font-size: 1.4rem">#{msg.service_unavailable}</div>
                         </ui:fragment>
                     </div>
-                    <ui:include src="footer.xhtml"/>
+                    <ui:include src="footer.xhtml" />
                 </div>
             </div>
 
@@ -116,18 +103,6 @@
             </p:confirmDialog>
         </h:body>
     </f:view>
-    <script type="text/javascript">
-        function setHeightWindow() {
-            screenSize = document.body.clientHeight;
-            footerSize = document.body.getElementsByClassName("layout-footer")[0].clientHeight;
-            topbarSize = document.body.getElementsByClassName("layout-topbar")[0].clientHeight;
-            if (document.body.clientHeight > 1300)
-                totalSize = screenSize - footerSize - topbarSize + 15;
-            else {
-                totalSize = screenSize - footerSize - topbarSize - 30;
-            }
-            document.body.getElementsByClassName("layout-main-content")[0].setAttribute("style", "height:" + totalSize + "px");
+</f:view>
 
-        }
-    </script>
 </html>

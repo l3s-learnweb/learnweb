@@ -28,10 +28,8 @@
         <div class="ui-g-9 content main-menu ui-md-12">
             <div class="ui-g-4 ui-md-9 adapt-640-hidder flex-center">
                 <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
-
-                    <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
-                    <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100"/>
-
+                    <input type="hidden" name="action" value="#{searchBean.queryMode}" />
+                    <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
 
                     <button id="searchbutton" title="#{msg.searchLabel}" type="submit">
 
@@ -74,6 +72,9 @@
 
         </div>
 
+        <script type="text/javascript">
+            var market = '#{userBean.localeCode}';
+        </script>
 
     </div>
 

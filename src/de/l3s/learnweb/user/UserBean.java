@@ -23,6 +23,8 @@ import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 
 import de.l3s.learnweb.Learnweb;
@@ -34,6 +36,7 @@ import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import org.primefaces.model.menu.MenuModel;
 
 @Named
 @SessionScoped
@@ -457,6 +460,38 @@ public class UserBean implements Serializable
 
         return menu;
     }
+
+
+   public MenuModel getGroupMenu2()
+    {
+        MenuModel model = new DefaultMenuModel();
+        Integer groupId = ApplicationBean.getParameterInt("group_id");
+
+        try
+        {
+            DefaultSubMenu submenu = new DefaultSubMenu("My Groups");
+            submenu.setIcon("fa fa-fw fa-folder");
+            DefaultMenuItem item;
+            for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
+            {
+                item = new DefaultMenuItem(group.getLongTitle());
+                item.setUrl("/lw/group/resources.jsf?group_id=" + group.getId());
+
+                submenu.addElement(item);
+            }
+            model.addElement(submenu);
+        }
+        catch(SQLException e)
+        {
+            log.error("Can't create menu model", e);
+        }
+
+        return model;
+    }
+
+
+
+
 
     public boolean isGroupResourcesPage()
     {

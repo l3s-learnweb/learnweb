@@ -19,6 +19,7 @@ public class AdminNewsBean extends ApplicationBean
     private static final Logger log = Logger.getLogger(AdminNewsBean.class);
 
     private List<News> newsList;
+    private List<News> newsListAll;
     @NotEmpty
     private String text;
     @NotEmpty
@@ -35,9 +36,9 @@ public class AdminNewsBean extends ApplicationBean
 
     private void load() throws SQLException {
 
-        if(getUser().isAdmin()){
             try{
                 newsList = new ArrayList<>(getLearnweb().getNewsManager().getNewsAll());
+                newsListAll = new ArrayList<>(getLearnweb().getNewsManager().getNewsAll());
             }
             catch(Exception e){
                 log.error(e);
@@ -54,8 +55,9 @@ public class AdminNewsBean extends ApplicationBean
                 addGrowl(FacesMessage.SEVERITY_FATAL, "invalid news_id parameter");
                 return;
             }
-        }else
-            return;
+
+
+
     }
 
 
@@ -128,7 +130,16 @@ public class AdminNewsBean extends ApplicationBean
 
     public List<News> getNewsList()
     {
+        if(newsList.size() > 3){
+            newsList.remove(3);
+        }
         return newsList;
+    }
+
+    public List<News> getNewsListAll()
+    {
+
+        return newsListAll;
     }
 
     public News getNews()

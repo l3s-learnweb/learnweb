@@ -1,48 +1,49 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
-	
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
 			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
 			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
-			<f:viewAction action="#{submissionBean.onLoad}"/> 
+			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
 	<ui:param name="loginRequired" value="true" />
 
-	<ui:define name="center_layout">
+	<ui:define name="content">
 
 		<h:form>
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
 		</h:form>
-	
+
 		<script>
 			var max_resources = #{submissionBean.selectedSubmission.noOfResources};
 			var resources_to_select = max_resources;
 		</script>
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane_wrapper :growl" oncomplete="update_header();selectResourceDND(); load_editor(); "/>
-			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=":right_pane_wrapper :resourceGrid2" oncomplete="update_header(); selectResourceDND(); updateMaxResources();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="selectResourceDND(); load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=" :resourceGrid2" oncomplete="selectResourceDND(); updateMaxResources();"/>
 		</h:form>
-		
+
 		<!-- only for eumade4all -->
 		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h1 class="red">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h1></p:panel>
 
 		<ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></ui:fragment>
 		<ui:fragment rendered="#{submissionBean.submitted}"><h3 class="title-header">The submitted resources</h3></ui:fragment>
 		<hr class="title-divider"/>
-		
+
 		<h:outputStylesheet library="lightbox" name="lightbox.css" />
 		<h:outputStylesheet library="resource-submission" name="submit.css" />
+		<h:outputScript library="resources" name="resource-pane.js" />
 		<h:outputScript library="resource-submission" name="submit.js" />
 
 		<h:panelGroup id="resourcesView" layout="block">
@@ -54,14 +55,21 @@
 				<p:repeat var="res" value="#{submissionBean.selectedResources}" >
 
 					<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+						<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
+							<ui:fragment>
+								<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
+									<div class="context-menu-item-wrapper">
+										<span class="context-menu-item-icon" />
+										<!--						<span class="context-menu-item-content">Remove</span>-->
+									</div>
+								</div>
+							</ui:fragment>
+						</h:panelGroup>
 						<div class="resource-block">
 
 							<div class="resource-preview">
 								<div class="resource-preview-wrapper">
-									<div class="resource-preview-wrapper2">
-										<div class="resource-preview-block"></div>
-										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-									</div>
+									<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
 								</div>
 								<h:form class="resource-controls" rendered="#{not submissionBean.submitted}">
 									<h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
@@ -89,33 +97,26 @@
 				</p:repeat>
 
 				<h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
-				<h:panelGroup id="add_resource_sign" class="resource-item" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+				<h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+
 						<div class="resource-block" style="box-shadow:none;">
-							<div class="resource-preview">
 								<div class="resource-preview-wrapper">
 									<div class="resource-preview-wrapper2">
-										<h:graphicImage value="/resources/image/add_sign.png" styleClass="resource-preview-image add-resource-image" alt="select a resource" />
+										<h:graphicImage value="/resources/image/add_sign.png" styleClass=" add-resource-image" alt="select a resource" />
 									</div>
 								</div>
-							</div>	
 						</div>
 				</h:panelGroup>
 				<div class="clear"></div>
-				<h:form id="submit_resources_form" prependId="false">
-					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=":right_pane_wrapper :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
-				</h:form>
+
 		</h:panelGroup>
+			<h:form id="submit_resources_form" prependId="false">
+				<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+			</h:form>
 		</h:panelGroup>
-		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
-			<ui:fragment>
-				<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">Remove</span>
-					</div>
-				</div>
-			</ui:fragment>
-		</h:panelGroup>
+
+
+
 		<div id="lightbox" class="submit-resources">
 			<div id="lightbox_background" onclick="select_res_lightbox.close();"></div>
 
@@ -135,10 +136,7 @@
 
 							<div class="resource-preview">
 								<div class="resource-preview-wrapper">
-									<div class="resource-preview-wrapper2">
-										<div class="resource-preview-block"></div>
 										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-									</div>
 								</div>
 							</div>
 
@@ -152,34 +150,34 @@
 							</div>
 
 						</div>
-						
+
 					</h:panelGroup>
 				</p:repeat>
 				<h:panelGroup style="background-color:white;height:100%;" rendered="#{empty submissionBean.resources}" layout="block">
 					<h:outputText value="#{msg.no_resources_found}" class="nothing_found" style="color:black;"/>
 					<span style="color:black;" class="nothing_found">
-						First add resources to  
+						First add resources to
 						<h:outputLink value="myhome/resources.jsf" style="text-decoration:underline;color:black;">
 						#{msg.myResourcesTitle}.
 						</h:outputLink>
 					</span>
 				</h:panelGroup>
 				</h:panelGroup>
-				
+
 				</div>
-				<div id="lightbox_footer" style="background: rgba(0, 0, 0, .80);">
+				<div id="lightbox_footer">
 					<span class="archive_timestamp_overlay_text">
-						<button class="greenbutton" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
 					</span>
 				</div>
 			</div>
-			
+
 		</div>
 	</ui:define>
-	
+<!--	:right_pane_wrapper-->
 	<ui:define name="right_layout">
 		<ui:decorate  template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{submissionBean}" />
 		</ui:decorate>
 	</ui:define>
-</ui:composition>	
+</ui:composition>

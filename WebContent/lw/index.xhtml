@@ -1,200 +1,157 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="pageTitle" value="#{msg.homepageTitle}"/>
-<ui:param name="disableGrowl" value="true"/>
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>Learn Web</title>
 
-    <ui:define name="center_layout">
-    <h:outputStylesheet name="frontpage/index.css"/>
+	<h:outputStylesheet name="california-layout/css/layout-teal.css" />
+	<h:outputStylesheet name="design/css/landing.css" />
+	<h:outputStylesheet name="california-layout/css/matviei-extd.css" />
+</h:head>
 
-    <div class="content_box" style="height: 600px; ">
-        <h1>
-            #{msg.homepageTitle}
-        </h1>
+<h:body styleClass="landing-body">
+	<div class="landing-wrapper">
+		<div id="header">
+			<div class="header-top clearfix">
+				<h:link outcome="california/dashboard" styleClass="logo">
+					<a href="#"><h:graphicImage value="/design/resources/images/logo.svg"/></a>
+				</h:link>
+				<ul class="header-menu">
+					<li><a href="#"><span>Log in</span></a></li>
+					<li><a href="#about"><span>About us</span></a></li>
+					<li><a href="#subscribe"><span>Subscribe</span></a></li>
+				</ul>
+			</div>
 
-        <h:outputText value="#{msg.homepage}" styleClass="homepage_infotext"/>
+			<div class="header-content clearfix news-panel no-padding-top">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-lg-4 ui-md-12">
+						<div class="header-content-panel">
+							<div class="ui-g">
+								<h:form>
+									<div class="ui-g-12 ui-lg-12 ui-md-12">
+										<h:outputText value="#{msg.username}" />
+									</div>
+									<div class="ui-g-12 ui-lg-12 ui-md-12">
+										<p:inputText placeholder="#{msg.username}" value="#{loginBean.username}" />
+									</div>
+									<div class="ui-g-12 ui-lg-12 ui-md-12">
+										<h:outputText value="#{msg.password}" />
+									</div>
+									<div class="ui-g-12 ui-lg-12 ui-md-12">
+										<p:password placeholder="#{msg.password}" value="#{loginBean.password}"  feedback="false" />
+									</div>
+									<div class="ui-g-12 ui-lg-4 ui-md-12 button-container">
+										<p:commandButton ajax="false"  value="#{msg.loginLabel}" action="#{loginBean.login()}" styleClass="turquoise-btn" />
+									</div>
+									<div class="ui-g-12 ui-lg-8 ui-md-12 chkbox-container">
+										<a href="user/password.jsf">#{msg.forgotten_password}</a>
+									</div>
+								</h:form>
 
-        <div id="div_left">
-            <ui:fragment rendered="#{!userBean.loggedIn}">
+							</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-lg-8 ui-md-12 ui-sm-12">
 
-                <h2 class="page_header">
-                    #{msg.loginLabel}
-                </h2>
-                <h:form class="grey_border" style="background-color: transparent;">
-                    <p:focus for="username"/>
-                    <h:panelGrid columns="1">
-                        <h:outputLabel for="username" value="#{msg.username}:"/>
-                        <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
+						<h:form id="newsform" styleClass="newsform">
+							<p:carousel styleClass="carousel" var="news" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" headerText="What's new?" style="margin-bottom:0">
 
-                        <h:outputLabel for="password" value="#{msg.password}:"/>
-                        <p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
-
-                        <h:panelGroup style="transform:scale(0.87);-webkit-transform:scale(0.87);transform-origin:0 0;-webkit-transform-origin:0 0;">
-                            <p:captcha label="Captcha" rendered="#{loginBean.captchaRequired}" language="#{userBean.locale}" id="captcha"/>
-                        </h:panelGroup>
-
-                        <p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"
-                                         style="margin-top:5px;"/>
-
-                    </h:panelGrid>
-                    <br/>
-                    <h:outputLink class="forgotten_password" value="user/password.jsf">
-                        <h:outputText value="#{msg.forgotten_password}"/>
-                    </h:outputLink>
-                </h:form>
-            </ui:fragment>
-
-            <div>
-                <h2 class="page_header">
-                    #{msg.presentation_guide}
-                </h2>
-                <ui:include src="/templates/user/guide.xhtml"/>
-            </div>
-        </div>
-
-
-        <div id="div_right">
-            <ui:fragment rendered="#{!userBean.loggedIn}">
-
-                <h2 class="page_header">
-                    #{msg['ArchiveWeb.sign_up']}
-                </h2>
-
-                <div class="grey_border" style="background-color: transparent;">
-                    <p><h:outputText value="#{msg['ArchiveWeb.sign_up_description']}"/></p>
-                    <h:form id="registerform">
-                        <h:panelGrid columns="3">
-                            <h:outputLabel for="register_username" value="#{msg.username}: *"/>
-                            <p:inputText id="register_username" value="#{archiveWebRegistrationBean.username}"
-                                         validator="#{archiveWebRegistrationBean.validateUsername}" label="#{msg.username}"/>
-                            <p:message showSummary="true" showDetail="false"
-                                       styleClass="error" for="register_username" id="usernameMessage"/>
-
-                            <h:outputLabel for="register_password" value="#{msg.password}: *"/>
-                            <p:password id="register_password" value="#{archiveWebRegistrationBean.password}"
-                                        autocomplete="false" label="#{msg.password}">
-                            </p:password>
-                            <p:message id="passwordMessage" showSummary="true"
-                                       showDetail="false" styleClass="error" for="register_password"/>
-
-                            <h:outputLabel for="email" value="#{msg.email_address}: *"/>
-                            <p:inputText id="email" value="#{archiveWebRegistrationBean.email}"
-                                         label="#{msg.email_address}"/>
-                            <p:message id="emailMessage" showSummary="true"
-                                       showDetail="false" styleClass="error" for="email"/>
-
-                            <h:outputLabel for="affiliation" value="#{msg.affiliation}: *"/>
-                            <p:inputText id="affiliation" value="#{archiveWebRegistrationBean.affiliation}"
-                                         label="#{msg.affiliation}"/>
-                            <p:message id="affiliationMessage" showSummary="true"
-                                       showDetail="false" styleClass="error" for="affiliation"/>
-
-                            <h:outputLabel for="description" value="#{msg.comment}:"/>
-                            <p:inputTextarea id="description" value="#{archiveWebRegistrationBean.description}"
-                                             label="#{msg.description}" rows="5" cols="50"/>
-                            <p:message id="descriptionMessage" showSummary="true"
-                                       showDetail="false" styleClass="error" for="description"/>
-
-                            <h:outputText value=""/>
-                            <p:commandButton action="#{archiveWebRegistrationBean.sendMail}"
-                                             value="#{msg['ArchiveWeb.send_request']}" ajax="false"/>
-                            <h:outputText value=""/>
-                        </h:panelGrid>
-                        <br/>
-                        <h:outputText value="* #{msg.mandatory_field}"/>
-                    </h:form>
-                </div>
-                <br/>
-            </ui:fragment>
+								<p:tab>
+									<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
+									<p><h:outputText escape="false" value="#{news.text}" /></p>
+								</p:tab>
 
 
-            <ui:fragment rendered="#{false and !userBean.loggedIn}">
+							</p:carousel>
+						</h:form>
+					</div>
 
-                <h2 class="page_header">
-                    #{msg.sign_up_for}:
-                </h2>
+				</div>
+			</div>
+		</div>
 
-                <div class="grey_border"  style="background-color: transparent;">
-                    <h3>
-                        <h:outputText value="#{msg.public_courses}"/>
-                    </h3>
 
-                    <h:panelGrid columns="2" columnClasses="first_column,description">
-                        <h:outputLink styleClass="greenbutton" value="user/register.jsf">
-                            <h:outputText value="#{msg.standard_version}"/>
-                        </h:outputLink>
+		<div id="hidden_news">
 
-                        <h:outputText value="#{msg.standard_version_description}"/>
-                    </h:panelGrid>
+			<h2>What's new ?</h2>
+			<p:dataList rows="3"  value="#{adminNewsBean.newsList}" var="news" type="definition">
+				<div>
+					<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
+					<p><h:outputText escape="false" value="#{news.text}" /></p>
+				</div>
+			</p:dataList>
 
-                    <h3>
-                        <h:outputText value="#{msg.specific_courses}"/>
-                    </h3>
 
-                    <h:panelGrid columns="2" columnClasses="first_column,description">
-                        <h:outputLink styleClass="greenbutton" value="user/register.jsf">
-                            <h:outputText value="YELL"/>
-                            <f:param name="wizard" value="yell"/>
-                        </h:outputLink>
+		</div>
 
-                        <h:outputText value="#{msg.yell_description}"/>
-                    </h:panelGrid>
-                </div>
-                <br/>
-            </ui:fragment>
+		<div id="about" class="clearfix premium">
+			<div class="premium-content">
+				<div class="ui-g-12 ui-md-6 ui-lg-6">
+					<h1>About us</h1>
+					<p><h:outputText value="#{msg.homepage}" />
+						<h:outputText value="#{msg.homepage}" /></p>
+				</div>
+				<div class="ui-g-12 ui-md-6 ui-lg-6">
+					<!--<ui:include src="/templates/user/guide.xhtml"/>-->
+					<!--<iframe width="560" height="315" src="resources/templates/user/guide.xhtml" frameborder="0"></iframe>-->
+				</div>
+			</div>
+		</div>
 
-            <ui:remove>
-                <h2 class="page_header">
-                    #{msg['Changelog.title']}
-                </h2>
+		<div id="subscribe" class="pricing">
+			<h2>Subscribe</h2>
+			<div class="ui-g" style="justify-content: center;">
+				<div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-beginner">
+					<div class="ui-g-12 pricing-header">#{msg.public_courses}</div>
+					<div class="ui-g-12 pricing-subheader">
+						<span class="duration">Playground</span>
+					</div>
+					<div class="ui-g-12 pricing-content playground">
+						<h:graphicImage value="/resources/image/icons8-playground-96.png"/>
+						<span>​<h:outputText value="#{msg.standard_version_description}" /></span>
+					</div>
+					<div class="ui-g-12 padding-bottom">
+						<p:commandButton type="button" value="Join" />
+					</div>
+				</div>
 
-                <div class="grey_border">
-                    <h4>
-                        <h:outputText value="${utilBean.StringToDate('16.10.2015')}">
-                            <f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-                        </h:outputText>
-                    </h4>
-                    <h:panelGrid columns="2" columnClasses="first_column,description">
-                        <h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
 
-                        <h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 pricing-box pricing-professional">
+					<div class="ui-g-12 pricing-header">#{msg.specific_courses}</div>
+					<div class="ui-g-12 pricing-subheader">
+						<span class="duration">YELL</span>
+					</div>
+					<div class="ui-g-12 pricing-content playground">
+						<h:graphicImage value="/resources/image/interactive_puzzle.png"/>
+						<span><h:outputText value="#{msg.yell_description}"/></span>
+					</div>
+					<div class="ui-g-12 padding-bottom">
+						<p:commandButton type="button" value="Join"/>
+					</div>
+				</div>
 
-                        <h:outputText value="#{msg['Changelog.group_options']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_10_group_options_description']}"/>
+			</div>
+		</div>
 
-                        <h:outputText value="#{msg['Changelog.forum']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_10_forum_description']}"/>
-                    </h:panelGrid>
+		<div id="footer" class="footer">
+			<div class="ui-g">
+				<div class="ui-g-12 ui-lg-12">
+					<h3 class="appname">Learn Web © 2019</h3>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                    <h4>
-                        <h:outputText value="${utilBean.StringToDate('20.7.2015')}">
-                            <f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-                        </h:outputText>
-                    </h4>
-                    <h:panelGrid columns="2" columnClasses="first_column,description">
-                        <h:outputText value="#{msg['Changelog.tooltips']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_07_tooltips_description']}"/>
-
-                        <h:outputText value="#{msg['Changelog.notifications']}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_07_notification_description']}"/>
-
-                        <h:outputText value="#{msg.text_analysis}:" class="changes"/>
-                        <h:outputText value="#{msg['Changelog.2015_07_text_analysis_description']}" escape="false" id="link"/>
-
-                    </h:panelGrid>
-                </div>
-            </ui:remove>
-        </div>
-
-        <br class="clear"/>
-
-    </div>
-
-</ui:define>
-
-</ui:composition>
+</h:body>
+</html>
