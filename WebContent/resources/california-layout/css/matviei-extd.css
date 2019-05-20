@@ -766,6 +766,11 @@ body .ui-dialog .ui-dialog-titlebar{
 }
 
 
+.main-body .box ul li{
+    background: var(--main-link-green-color);
+}
+
+
 @media (max-width: 414px) {
     h1{
         font-size: 22px;

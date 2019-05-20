@@ -20,7 +20,7 @@
                         <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>
                         <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="/lw/myhome/submission_overview.jsf"/>
                         <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="/lw/admin/dashboard/user.jsf"/>
-                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/search_history.jsf?user_id=#{userBean.user.id}"/>
+                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"/>
 
                         <p:submenu label="Moderator" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
                             <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
