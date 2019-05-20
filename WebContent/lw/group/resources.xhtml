@@ -75,14 +75,9 @@
             <h:form id="request_group_form" >
                 <p:commandButton type="button"  value="#{msg.request_group_data}" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
                 <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1">
-
-                    <h:outputFormat value="#{msg['your_info.submissions_msg']}">
-                        <f:param value="#{yourGeneralInfoBean.submissionsCount}"/>
-                    </h:outputFormat>
-
-                    <h:outputText value="#{msg.export_resources_warning}">
+                    <h:outputFormat  value="#{msg.export_resources_warning}">
                         <f:param value="#{dataExporterBean.externalResourcesCount(groupResourcesBean.groupId)} "/>
-                    </h:outputText>
+                    </h:outputFormat>
 
                     <p:dataTable var="entry" value="#{dataExporterBean.externalResources(groupResourcesBean.groupId)}" scrollable="true" scrollHeight="150" style="width: auto; left: 10%;">
                         <p:column headerText="#{msg.resource}">
