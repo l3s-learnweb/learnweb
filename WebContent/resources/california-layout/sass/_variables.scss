@@ -3,8 +3,8 @@ $primaryColor:#4AA564 !default;
 $primaryColorDarker:#378D4F !default;
 $primaryDarkerAlt:#337747 !default;
 $primaryDarkest:#1D6833 !default;
-$primaryTextColor:#ffffff !default;
-$primaryDarkTextColor:#212121 !default;
+$primaryTextColor:$body-bg !default;
+$primaryDarkTextColor:$body-color !default;
 $primaryBgColor:#aeb0b5 !default;
 $primaryDarkBgColor:#242725 !default;
 
@@ -110,11 +110,11 @@ $gradientMegamenuBottomBgColor:#446A51 !default;
 
 
 // base vars
-$fontFamily:"Source Sans Pro",Arial,sans-serif !default;
-$fontSize:14px !default;
-$borderRadius:0 !default;
-$dividerColor:#d6d7d9 !default;
+$fontFamily:$font-family-base !default;
+$fontSize:$font-size-base !default;
+$borderRadius:$border-radius !default;
+$dividerColor:$gray-200 !default;
 $textColor:$primaryDarkTextColor !default;
 $textSecondaryColor:$primaryBgColor !default;
 $transitionDuration:.3s !default;
-$mobileBreakPoint:1024px !default;
+$mobileBreakPoint:map-get($grid-breakpoints, "lg") !default;

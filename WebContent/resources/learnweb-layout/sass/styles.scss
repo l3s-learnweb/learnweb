@@ -16,14 +16,17 @@
   - All other files will be compiled from scss to css
 */
 
-// Load common variables and functions
+// Load variables
 @import 'common/_variables';
-@import 'common/_utils';
-@import 'common/_global';
 
-// Load template styles
+// Vendor styles, from 3rd-part developers
+@import 'vendor/bootstrap'; // grid layout, utilities
 @import '../../california-layout/sass/layout/_layout';
 @import '../../california-layout/sass/theme/_theme';
+
+// Load common utils and helpers
+@import 'common/_utils';
+@import 'common/_global';
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import "layouts/_general"; // should contain base styles like headers, spacings, ets.
