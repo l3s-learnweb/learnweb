@@ -15,17 +15,15 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
         this.expandedMenuitems = this.expandedMenuitems||[];
         this.menuButton = $('#menu-button');
         this.megaMenuButton = $('#layout-megamenu-button');
-        this.topbarMenuButton = $('#topbar-menu-button');
-        this.sidebarProfileButton = $('#sidebar-profile-button');
 
-        this.topbarMenuClick = false;
         this.megaMenuClick = false;
         this.rightSidebarClick = false;
         this.sidebarMenuClick = false;
+        this.sidebarUserMenuClick = false;
 
         this._bindEvents();
 
-        if(!this.wrapper.hasClass('menu-layout-horizontal')) {
+        if(!this.isSlimMenu() && !this.isHorizontalMenu()) {
             this.restoreMenuState();
         }
 
@@ -35,97 +33,138 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
     _bindEvents: function() {
         var $this = this;
 
-        $(function() {
-            $this.menuButton.off('click').on('click', function (e) {
-                $this.sidebarMenuClick = true;
+        $this.sidebar.off('click').on('click', function () {
+            $this.sidebarMenuClick = true;
+        });
 
-                if ($this.isDesktop()) {
-                    if ($this.isOverlay())
-                        $this.wrapper.toggleClass('layout-wrapper-overlay-sidebar-active');
-                    else
-                        $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+        $this.menuButton.off('click').on('click', function (e) {
+            $this.sidebarMenuClick = true;
+
+            if ($this.isDesktop()) {
+                if ($this.isOverlay())
+                    $this.wrapper.toggleClass('layout-wrapper-overlay-sidebar-active');
+                else
+                    $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+            }
+            else {
+                $this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
+            }
+
+            e.preventDefault();
+        });
+
+        $this.megaMenuButton.off('click').on('click', function (e) {
+            $this.megaMenuClick = true;
+
+            if ($this.layoutMegaMenu.hasClass('layout-megamenu-active')) {
+                $this.layoutMegaMenu.removeClass('fadeInDown').addClass('fadeOutUp');
+
+                setTimeout(function () {
+                    $this.layoutMegaMenu.removeClass('layout-megamenu-active fadeOutUp');
+                    $(document.body).removeClass('body-megamenu-active');
+                }, 250);
+            }
+            else {
+                $(document.body).addClass('body-megamenu-active');
+                $this.layoutMegaMenu.addClass('layout-megamenu-active fadeInDown');
+            }
+
+            e.preventDefault();
+        });
+
+        $this.layoutMegaMenu.off('click').on('click', function (e) {
+            $this.megaMenuClick = true;
+        });
+
+        $this.menulinks.off('click').on('click', function (e) {
+            var link = $(this),
+            item = link.parent('li'),
+                submenu = item.children('ul');
+
+            if (item.hasClass('active-menuitem')) {
+                if (submenu.length) {
+                    $this.removeMenuitem(item.attr('id'));
+
+                if($this.isSlimMenu() || $this.isHorizontalMenu()) {
+                    item.removeClass('active-menuitem');
+                    submenu.hide();
                 }
                 else {
-                    $this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
-                }
-
-                e.preventDefault();
-            });
-
-            $this.megaMenuButton.off('click').on('click', function (e) {
-                $this.megaMenuClick = true;
-
-                if ($this.layoutMegaMenu.hasClass('layout-megamenu-active')) {
-                    $this.layoutMegaMenu.removeClass('fadeInDown').addClass('fadeOutUp');
-
-                    setTimeout(function () {
-                        $this.layoutMegaMenu.removeClass('layout-megamenu-active fadeOutUp');
-                        $(document.body).removeClass('body-megamenu-active');
-                    }, 250);
-                }
-                else {
-                    $(document.body).addClass('body-megamenu-active');
-                    $this.layoutMegaMenu.addClass('layout-megamenu-active fadeInDown');
-                }
-
-                e.preventDefault();
-            });
-
-            $this.layoutMegaMenu.off('click').on('click', function (e) {
-                $this.megaMenuClick = true;
-            });
-
-            $this.menulinks.off('click').on('click', function (e) {
-                var link = $(this),
-                    item = link.parent(),
-                    submenu = item.children('ul');
-
-                if (item.hasClass('active-menuitem')) {
-                    if (submenu.length) {
-                        $this.removeMenuitem(item.attr('id'));
+                    submenu.slideUp(400, function() {
                         item.removeClass('active-menuitem');
-                        submenu.slideUp();
+                    });
+                }
+            }
+
+            if(item.parent().is($this.jq)) {
+                $this.menuActive = false;
+                }
+            }
+            else {
+                $this.addMenuitem(item.attr('id'));
+
+            if($this.isSlimMenu() || $this.isHorizontalMenu()) {
+                $this.deactivateItems(item.siblings(), false);
+            }
+            else {
+                $this.deactivateItems(item.siblings(), true);
+            }
+
+                $this.activate(item);
+
+            if(item.parent().is($this.jq)) {
+                $this.menuActive = true;
+            }
+            }
+
+            setTimeout(function() {
+                $this.nanoContainer.nanoScroller();
+            }, 500);
+
+            if (submenu.length) {
+                e.preventDefault();
+            }
+        });
+
+        this.menu.children('li').on('mouseenter', function(e) {
+            if($this.isHorizontalMenu() || $this.isSlimMenu()) {
+                var item = $(this);
+
+                if(!item.hasClass('active-menuitem')) {
+                    $this.menu.find('.active-menuitem').removeClass('active-menuitem');
+                    $this.menu.find('ul:visible').hide();
+
+                    if($this.menuActive) {
+                        item.addClass('active-menuitem');
+                        item.children('ul').show();
+
+                        if($this.isSlimMenu()) {
+                            var userProfile = $this.sidebar.find('.user-profile');
+                            userProfile.removeClass('layout-profile-active');
+                            userProfile.children('ul').hide();
+                        }
                     }
                 }
-                else {
-                    $this.addMenuitem(item.attr('id'));
-                    $this.deactivateItems(item.siblings(), true);
-                    $this.activate(item);
+            }
+        });
+
+        this.sidebar.find('.user-profile').off('mouseenter').on('mouseenter', function (e) {
+            if($this.isSlimMenu()) {
+                var item = $(this);
+
+                if(!item.hasClass('layout-profile-active')) {
+                    $this.menu.find('.active-menuitem').removeClass('active-menuitem');
+                    $this.menu.find('ul:visible').hide();
+
+                    if($this.menuActive) {
+                        item.addClass('layout-profile-active');
+                        item.children('ul').show();
+                    }
                 }
+            }
+        });
 
-                setTimeout(function() {
-                    $this.nanoContainer.nanoScroller();
-                }, 500);
-
-                if (submenu.length) {
-                    e.preventDefault();
-                }
-            });
-
-            $this.sidebar.off('click').on('click', function () {
-                $this.sidebarMenuClick = true;
-            });
-
-            $(document.body).off('click').on('click', function () {
-                if (!$this.megaMenuClick && $this.layoutMegaMenu.hasClass('layout-megamenu-active')) {
-                    $this.layoutMegaMenu.removeClass('layout-megamenu-active');
-                    $(document.body).removeClass('body-megamenu-active');
-                }
-
-                if (!$this.rightSidebarClick && $this.rightSidebar.hasClass('layout-right-sidebar-active')) {
-                    $this.rightSidebar.removeClass('layout-right-sidebar-active')
-                }
-
-                if (!$this.sidebarMenuClick && ($this.wrapper.hasClass('layout-wrapper-sidebar-mobile-active') || $this.wrapper.hasClass('layout-wrapper-overlay-sidebar-active'))) {
-                    $this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active layout-wrapper-overlay-sidebar-active');
-                }
-
-                $this.megaMenuClick = false;
-                $this.topbarMenuClick = false;
-                $this.rightSidebarClick = false;
-                $this.sidebarMenuClick = false;
-            });
-
+        $(function() {
             $this._initRightSidebar();
         });
     },
@@ -135,6 +174,9 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
         item.addClass('active-menuitem');
 
         if(submenu.length) {
+            if(this.isSlimMenu() || this.isHorizontalMenu())
+                submenu.show();
+            else
             submenu.slideDown();
         }
     },
@@ -262,6 +304,14 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
 
     isDesktop: function() {
         return window.innerWidth > 1024;
+    },
+
+    isHorizontalMenu: function() {
+        return this.wrapper.hasClass('layout-wrapper-horizontal-sidebar') && this.isDesktop();
+    },
+
+    isSlimMenu: function() {
+        return this.isDesktop() && this.wrapper.hasClass('layout-wrapper-slim-sidebar');
     },
 
     isMobile: function() {
@@ -420,7 +470,7 @@ if(window['PrimeFaces'] && window['PrimeFaces'].widget.Dialog) {
 
         syncWindowResize: function() {}
     });
-} 
+}
 
 if (PrimeFaces.widget.InputSwitch) {
     PrimeFaces.widget.InputSwitch = PrimeFaces.widget.InputSwitch.extend({
@@ -437,7 +487,7 @@ if (PrimeFaces.widget.InputSwitch) {
             var $this = this;
 
             if(this.input.prop('checked')) {
-                 this.uncheck(); 
+                 this.uncheck();
                  setTimeout(function() {
                     $this.jq.removeClass('ui-inputswitch-checked');
                  }, 100);
@@ -455,7 +505,7 @@ if (PrimeFaces.widget.InputSwitch) {
 /* Issue #2131 */
 if(window['PrimeFaces'] && window['PrimeFaces'].widget.Schedule) {
     PrimeFaces.widget.Schedule = PrimeFaces.widget.Schedule.extend({
-        
+
         setupEventSource: function() {
             var $this = this,
             offset = moment().utcOffset()*60000;
