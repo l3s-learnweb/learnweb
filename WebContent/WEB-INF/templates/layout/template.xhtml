@@ -28,14 +28,16 @@
             </title>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js" />
-            <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js" />
+            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
+            <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="main-template" name="default2.js"/>
 
             <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css"/>
             <h:outputStylesheet name="vendor/nanoscroller-v0.8.7/nanoscroller.css"/>
             <h:outputStylesheet name="css/styles.css" library="learnweb-layout"/>
+
+            <!--            <ui:decorate template="/templates/main/tooltips.xhtml"/>-->
 
             <base href="#{request.contextPath}/lw/"/>
 
@@ -50,26 +52,35 @@
                     <ui:include src="sidebar.xhtml"/>
                     <ui:include src="right-sidebar.xhtml"/>
                 </ui:fragment>
-
                 <div class="layout-main">
                     <div class="layout-main-content">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
-                            <p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+                            <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
                             <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
-                                <ui:include src="/templates/user/login.xhtml" />
+                                <ui:include src="/templates/user/login.xhtml"/>
                             </ui:fragment>
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
                                 <ui:insert name="breadcrumb_bar">
                                     <p:breadCrumb>
                                         <p:menuitem value="" url="#{userBean.bannerLink}"/>
-                                        <ui:insert name="sub_breadcrumb" />
+                                        <ui:insert name="sub_breadcrumb"/>
                                     </p:breadCrumb>
                                 </ui:insert>
-                                <ui:insert name="center_layout" />
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="center_pane" style="#{center_pane_styles}">
+                                            <ui:insert name="center_layout"/>
+                                        </div>
+                                    </div>
+                                    <ui:fragment rendered="#{rightPane}">
+                                        <div class="col">
+                                            <div class="center_pane">
+                                                <ui:insert name="right_layout"/>
+                                            </div>
+                                        </div>
+                                    </ui:fragment>
+                                </div>
                             </ui:fragment>
-                        </ui:fragment>
-                        <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
-                            <div class="error" style="font-size: 1.4rem">#{msg.service_unavailable}</div>
                         </ui:fragment>
                     </div>
                     <ui:include src="footer.xhtml"/>

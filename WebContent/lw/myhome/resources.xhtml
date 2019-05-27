@@ -1,4 +1,4 @@
-<ui:composition template="/WEB-INF/templates/layout/template_2.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,6 +9,7 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.myResourcesTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeResourcesHelp}"/>
+<ui:param name="rightPane" value="true"/>
 
 <ui:define name="metadata">
     <f:metadata>
@@ -33,7 +34,7 @@
 
             <p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}"
                              update=":folder_layout_options :breadcrumb :context-menu :resourcesView :right_pane_wrapper :growl"
-                             oncomplete="resourceDND();update_header();scroller();"/>
+                             oncomplete="resourceDND();update_header();"/>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}"
                              update=":right_pane_wrapper :growl" oncomplete="update_header();resourceDND(); "/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
@@ -134,7 +135,7 @@
                         <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
                             <li>
                                 <p:commandLink rendered="#{not status.last}" update=":breadcrumb :resourcesView :right_pane_wrapper"
-                                               oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
+                                               oncomplete="update_header();update_url(0,0,#{folder.groupId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
                                     <h:outputText value="#{folder.name}" escape="false"/>
                                 </p:commandLink>
@@ -232,7 +233,7 @@
                                     </div>
                                 </h:panelGroup>
                                 <hr style="margin-top:10px;width:97%"/>
-                                <h3>#{msg.myhomeVirtualFolders}</h3>
+                                <h5>#{msg.myhomeVirtualFolders}</h5>
                                 <br/>
                             </h:panelGroup>
                             <h:panelGroup layout="block" rendered="#{folder.groupId != 0}">

@@ -12,13 +12,15 @@
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Dashboard"/>
+<ui:param name="center_pane_styles" value="border: none;background-color: transparent;"/>
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="Dashboard" url="admin/statistics.jsf#"/>
 </ui:define>
-<ui:define name="center_layout">
+
+<ui:define name="center_layout" >
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
     <p:outputPanel
-            style="display: flex;flex-direction: column; justify-content: center; align-items: center; align-content: center; width: 100%; margin-bottom: 20px;">
+            style="display: flex;flex-direction: column; justify-content: center; align-items: center; align-content: center; margin-bottom: 20px;">
         <ui:decorate template="templates/setSelectedUsers.xhtml">
             <ui:param name="nameOfBean" value="#{glossaryDashboardBean}"/>
         </ui:decorate>
@@ -29,37 +31,34 @@
                 <div class="p-col-12 no-padding-bottom">
                     <div class="p-grid">
                         <p:outputPanel id="conceptsTermsPanel"
+                                       styleClass="container"
                                        style="display: flex;flex-direction: row; justify-content: center; align-items: center;align-content: center; width: 100%;"
                                        rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
-                            <p:outputPanel style="width: 250px">
-                                <div class="p-col no-padding-top">
-                                    <p:panel header="Total Concepts">
-                                        <f:facet name="actions">
-                                            <p:button id="totalConcepts"
-                                                      styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                      icon="ui-icon-help" onclick="return false;"/>
-                                            <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
-                                        </f:facet>
-                                        <div class="count">
-                                            <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
-                                        </div>
-                                    </p:panel>
-                                </div>
+                            <p:outputPanel styleClass="col" style="width: 250px">
+                                <p:panel header="Total Concepts">
+                                    <f:facet name="actions">
+                                        <p:button id="totalConcepts"
+                                                  styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                  icon="ui-icon-help" onclick="return false;"/>
+                                        <p:tooltip for="totalConcepts" value="Concept - a general notion"/>
+                                    </f:facet>
+                                    <div class="count">
+                                        <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
+                                    </div>
+                                </p:panel>
                             </p:outputPanel>
-                            <p:outputPanel style="width: 250px">
-                                <div class="p-col no-padding-top">
-                                    <p:panel header="Total Terms">
-                                        <f:facet name="actions">
-                                            <p:button id="totalTerms"
-                                                      styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                      icon="ui-icon-help" onclick="return false;"/>
-                                            <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
-                                        </f:facet>
-                                        <div class="count">
-                                            <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
-                                        </div>
-                                    </p:panel>
-                                </div>
+                            <p:outputPanel styleClass="col" style="width: 250px">
+                                <p:panel header="Total Terms">
+                                    <f:facet name="actions">
+                                        <p:button id="totalTerms"
+                                                  styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                                  icon="ui-icon-help" onclick="return false;"/>
+                                        <p:tooltip for="totalTerms" value="Term - a word/phrase, that is used to describe a concept"/>
+                                    </f:facet>
+                                    <div class="count">
+                                        <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
+                                    </div>
+                                </p:panel>
                             </p:outputPanel>
                         </p:outputPanel>
                         <div class="p-col-12">
@@ -169,62 +168,62 @@
                                                   rendered="#{userBean.moderator}" style="display:block; margin:0 0 0.8rem 0;"/>
 
                                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
-                                                 var="gfs" styleClass="countries_list"
+                                                 var="gfs" styleClass="table-responsive"
                                                  emptyMessage="Nothing was found for the users in the date range that you selected.">
-                                        <p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
+                                        <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
                                                   filterBy="#{gfs.user.username}" filterMatchMode="contains">
                                             <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
                                         </p:column>
-                                        <p:column styleClass="align-right" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
+                                        <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
                                             #{gfs.entries}
                                         </p:column>
-                                        <p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
                                             #{gfs.terms}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
                                             <f:facet name="header">Pasted Terms</f:facet>
                                             #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
                                             <f:facet name="header">Pronunciation</f:facet>
                                             #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}"
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}"
                                                   sortable="true">
                                             <f:facet name="header">Pasted Pronunciation</f:facet>
                                             #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
                                             <f:facet name="header">Acronym</f:facet>
                                             #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
                                             <f:facet name="header">Pasted Acronym</f:facet>
                                             #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
                                             <f:facet name="header">Phraseology</f:facet>
                                             #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
                                             <f:facet name="header">Pasted Phraseology</f:facet>
                                             #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
                                             <f:facet name="header">Uses</f:facet>
                                             #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.terms}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
                                             <f:facet name="header">Source</f:facet>
                                             #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
                                             <f:facet name="header">AVG %</f:facet>
                                             <h:outputText value="#{gfs.avg*100}">
                                                 <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
                                             </h:outputText>%
                                         </p:column>
-                                        <p:column styleClass="align-right" sortBy="#{gfs.totalPastedPct}" sortable="true">
+                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true">
                                             <f:facet name="header">Total pasted %</f:facet>
                                             <h:outputText value="#{gfs.totalPastedPct*100}">
                                                 <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>

@@ -6,7 +6,9 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <!--    <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="height: 100%;" id="right_pane">-->
-
+        <div class="group_menu_header">
+            <span>#{rightPaneBean.panelTitle}</span>
+        </div>
         <h:outputScript library="resources" name="resource-pane.js" target="head"/>
         <h:outputStylesheet library="resources" name="resource-pane.css"/>
 
@@ -579,7 +581,7 @@
                         <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
                     </p:commandButton>
                     <p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right"
-                                     update=":group_menu_tree :folderGrid :growl :right_pane_wrapper"
+                                     update=":folderGrid :growl :right_pane_wrapper"
                                      action="#{addFolderBean.addFolder}" ajax="true" oncomplete="update_header();resourceDND();">
                         <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
                     </p:commandButton>
@@ -689,7 +691,7 @@
                                                  actionListener="#{rightPaneBean.cancelEditClickedResource}"
                                                  value="#{msg.cancel}" update=":right_pane_wrapper" immediate="true" />
                                 <p:commandButton styleClass="greenbutton" style="margin-right:0.5em;" oncomplete="update_header();resourceDND();"
-                                                 value="#{msg.save}" update=":group_menu_tree :folderGrid :right_pane_wrapper :growl"
+                                                 value="#{msg.save}" update=":folderGrid :right_pane_wrapper :growl"
                                                  actionListener="#{rightPaneBean.editClickedResource}" />
                             </td>
                         </tr>
@@ -704,10 +706,10 @@
                         onUnloadCommand();
                 };
 
-                $("#right_pane_wrapper img").bind('load', function ()
-                {
-                    scroller();
-                });
+                //$("#right_pane_wrapper img").bind('load', function ()
+                //{
+                //scroller();
+                //});
 
                 function firstStepStart()
                 {
@@ -729,7 +731,7 @@
 
                     $('#right_pane .content').scrollTop(0);
 
-                    scroller();
+                    //scroller();
                     lightbox_load();
                 }
 

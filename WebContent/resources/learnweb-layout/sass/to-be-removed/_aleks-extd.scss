@@ -54,9 +54,8 @@
 }
 
 .ui-datatable .ui-datatable-header, .ui-panel-title, .center-header > h2, .page_header span {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 100;
-  color: #489a83;
   display: inline;
   margin: 0;
   text-align: left !important;
@@ -66,7 +65,7 @@
   height: 100%;
 }
 
-#center_pane {
+.center_pane {
   visibility: inherit !important;
   height: 100% !important;
   background-color: #ffffff;
@@ -74,13 +73,7 @@
   padding: .2em;
 }
 
-#center_layout {
-  height: 90%;
-}
 
-.ui-layout-unit .ui-layout-unit-content {
-  height: 94%;
-}
 
 #group_menu {
   height: 100%;
@@ -331,13 +324,13 @@ h3.group_link {
     &.filter-sub-bar {
       visibility: hidden;
       position: absolute;
-      top: 3.1rem;
+      //   top: 3.1rem;
       left: 0;
       width: auto;
       z-index: 10;
       border: solid 1px #ccc;
       background: #E6E6E6;
-      margin: -6px -1px;
+      //margin: -6px -1px;
 
       li {
         display: block;
@@ -363,6 +356,8 @@ h3.group_link {
   }
 
   .search-box {
+    padding: 0.55rem;
+
     #search_filter_form {
       white-space: nowrap;
       display: none;
@@ -375,7 +370,6 @@ h3.group_link {
     img {
       width: 16px;
       height: 16px;
-      padding: 4px 10px 2px;
       cursor: pointer;
     }
 
@@ -389,7 +383,7 @@ h3.group_link {
     }
 
     button {
-      background: url("#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
+      background: url("/resources/main-template/img/search.png") no-repeat scroll center center !important;
       background-size: 16px 16px !important;
       height: 19px;
       border: none !important;
@@ -599,4 +593,67 @@ body a {
 
 .change_grid_button {
   background-color: rgb(221, 221, 221);
+}
+
+.resource-grid{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+body .ui-panel {
+  margin: 1em;
+
+}
+
+.col-sm{
+  margin: 1em;
+}
+
+body .ui-icon {
+  height: 1em;
+  width: 1em;
+  font-size: 1.25em;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  margin-top: 0;
+  position: static;
+  text-indent: 0;
+  overflow: visible;
+  background-repeat: no-repeat;
+}
+
+body .ui-datatable thead th .ui-sortable-column-icon.ui-icon-carat-2-n-s {
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  /* font-variant: normal; */
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* text-indent: 0px !important; */
+  text-align: center;
+  background: none;
+  display: inline-block;
+  font-size: 1.25em;
+  font-size: 1em;
+}
+
+
+.noBorders tr, .noBorders td {
+  background: none !important;
+  border: none !important;
+}
+
+body .ui-datatable .ui-datatable-header {
+  display: flex;
+  width: auto;
+  background-color: #4AA564;
+  color: #ffffff;
+  padding: .4em .2em .4em .4em;
+  text-align: left;
+  font-size: 14px;
 }

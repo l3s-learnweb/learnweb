@@ -7,10 +7,10 @@
 
 <p:blockUI block="usersSelectForm:usersSelectPanel" widgetVar="buiForUsers"/>
 <p:blockUI block="usersSelectForm:groupsSelectPanel" widgetVar="buiForGroups"/>
-<p:panelGrid columns="2" style="margin: 10px;">
+<p:panelGrid columns="2" header="Users' Activity types">
     <p:outputPanel>
         <p:selectOneRadio widgetVar="widgetSorType" layout="grid" columns="1"
-                          value="Users" required="true"
+                          value="Users" required="true" styleClass="noBorders"
                           onchange="blockSelectPanel(PF('widgetSorType').getJQ().find(':checked').val());">
             <f:selectItem itemLabel="Users" itemValue="Users"/>
             <f:selectItem itemLabel="Groups" itemValue="Groups"/>
@@ -18,8 +18,8 @@
     </p:outputPanel>
     <p:outputPanel>
         <h:form id="usersSelectForm">
-            <p:panelGrid columns="2">
-                <p:outputPanel>
+            <p:panelGrid columns="2" styleClass="noBorders">
+                <p:outputPanel styleClass="noBorders">
                     <p:outputPanel id="usersSelectPanel">
                         <p:panel>
                             <p:selectCheckboxMenu style="width: 75px;"
@@ -39,12 +39,12 @@
                         </p:panel>
                     </p:outputPanel>
                     <p:outputPanel id="groupsSelectPanel">
-                        <p:panel>
+                        <p:panel styleClass="noBorders">
                             <p:selectCheckboxMenu
-                                                  style="width: 75px;"
-                                                  value="#{nameOfBean.selectedGroupsIds}"
-                                                  var="group" label="Groups"
-                                                  filter="true" filterMatchMode="startsWith">
+                                    style="width: 75px;" styleClass="noBorders"
+                                    value="#{nameOfBean.selectedGroupsIds}"
+                                    var="group" label="Groups"
+                                    filter="true" filterMatchMode="startsWith">
                                 <p:ajax global="false"
                                         update="dateAndSubmitPanel"/>
                                 <p:ajax event="toggleSelect" global="false"
@@ -55,10 +55,8 @@
                             </p:selectCheckboxMenu>
                         </p:panel>
                     </p:outputPanel>
-
                 </p:outputPanel>
                 <p:outputPanel id="dateAndSubmitPanel" style="width: 300px; padding-top:6px;">
-
                     <div class="p-grid">
                         <div class="p-col-12">
                             <div class="ui-inputgroup">
@@ -68,7 +66,6 @@
                                             showOn="button"/>
                             </div>
                         </div>
-
                         <div class="p-col-12">
                             <div class="ui-inputgroup">
                                 <p:outputLabel for="dateEnd"/>

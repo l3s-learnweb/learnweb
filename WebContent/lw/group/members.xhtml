@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -14,7 +14,9 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.groupMember}" />
 	<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.groupMember}" url="group/members.jsf?group_id=#{groupMembersBean.group.id}"/>
+	</ui:define>
 	<ui:define name="center_layout">	
 		<h:outputStylesheet library="group" name="group.css" />
 

@@ -2,7 +2,7 @@ package de.l3s.learnweb.user;
 
 import de.l3s.learnweb.Learnweb;
 import org.apache.log4j.Logger;
-import org.primefaces.component.calendar.converter.DatePatternConverter;
+
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
