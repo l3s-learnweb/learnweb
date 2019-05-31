@@ -406,7 +406,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 log.error(resultOfXmlParsing);
 
             }
-            else
+            if(!parser.getEntries().isEmpty())
             {
                 glossaryResource.getEntries().addAll(parser.getEntries());
                 repaintTable();
