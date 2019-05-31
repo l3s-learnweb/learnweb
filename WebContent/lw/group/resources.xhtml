@@ -31,7 +31,7 @@
     <p:menuitem value="#{msg.group} - #{msg.resources}" url="group/resources.jsf?group_id=#{groupResourcesBean.groupId}"/>
 </ui:define>
 <ui:define name="center_layout">
-
+    <p:panel styleClass="no-padding-panel-content no-border">
     <h:form>
         <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
@@ -507,6 +507,7 @@
 
 
     </script>
+    </p:panel>
 </ui:define>
 
 <ui:define name="right_layout">

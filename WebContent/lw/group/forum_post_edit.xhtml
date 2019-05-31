@@ -1,78 +1,75 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-	
-	<ui:define name="metadata">
-		<f:metadata> 
-			<f:viewParam name="post_id" value="#{forumEditBean.postId}" />
-			<f:viewAction action="#{forumEditBean.preRenderView}"/>
-		</f:metadata>
-	</ui:define>
-	
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="pageTitle" value="#{msg.forum} - #{msg.edit}" />
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="center_layout">	
-	
-		<h:outputStylesheet library="group" name="forum.css" />
-		
-		<div id="group_header" class="center-header">
-			<h2>
-				#{msg.edit}
-			</h2>
-		</div>
-		
-		<script type="text/javascript">
-		/* <!-- */
-			$("#center_pane").prepend($("#group_header"));
-		/* --> */
-		</script>	
-		
-		<ui:fragment rendered="#{forumEditBean.canEditPost()}">		
-			<div class="grey_border">
-				<h:form>
-					<table id="answer_table">
-						<tr>
-							<td class="width_10">
-								<h:outputText value="#{msg.category}: "/>
-							</td>
-							<td>
-								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumEditBean.post.category}" editable="true"
-									 label="#{msg.category}" required="#{forumEditBean.group.restrictionForumCategoryRequired}">
-				
-							        <f:selectItems value="#{forumEditBean.categories}" />
-						       	</p:selectOneMenu>	
-							</td>
-							<td class="width_30">
-								<p:message for="post_category"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumEditBean.post.text}" 
-									label="#{msg['PostShow.postContent']}"
-									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">	
-			 					</p:editor>
-							</td>
-							<td class="width_30">
-								<p:message for="post_message"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3">
-								<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="greenbutton save_button"
-									update="@form" ajax="true" validateClient="true" />	
-							</td>
-						</tr>
-					</table>
-				</h:form> 
-			</div>
-		</ui:fragment>
-			
-			
-		
-	</ui:define>
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="post_id" value="#{forumEditBean.postId}"/>
+        <f:viewAction action="#{forumEditBean.preRenderView}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.forum} - #{msg.edit}"/>
+
+<ui:define name="center_layout">
+
+    <h:outputStylesheet library="group" name="forum.css"/>
+
+    <p:panel header="#{msg.edit}">
+
+        <script type="text/javascript">
+            /* <!-- */
+            $("#center_pane").prepend($("#group_header"));
+            /* --> */
+        </script>
+
+        <ui:fragment rendered="#{forumEditBean.canEditPost()}">
+            <div class="grey_border">
+                <h:form>
+                    <table id="answer_table">
+                        <tr>
+                            <td class="width_10">
+                                <h:outputText value="#{msg.category}: "/>
+                            </td>
+                            <td>
+                                <p:selectOneMenu id="post_category" styleClass="category" value="#{forumEditBean.post.category}" editable="true"
+                                                 label="#{msg.category}" required="#{forumEditBean.group.restrictionForumCategoryRequired}">
+
+                                    <f:selectItems value="#{forumEditBean.categories}"/>
+                                </p:selectOneMenu>
+                            </td>
+                            <td class="width_30">
+                                <p:message for="post_category"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <p:editor id="post_message" widgetVar="editorWidget" value="#{forumEditBean.post.text}"
+                                          label="#{msg['PostShow.postContent']}"
+                                          controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+                                </p:editor>
+                            </td>
+                            <td class="width_30">
+                                <p:message for="post_message"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}"
+                                                 styleClass="greenbutton save_button"
+                                                 update="@form" ajax="true" validateClient="true"/>
+                            </td>
+                        </tr>
+                    </table>
+                </h:form>
+            </div>
+        </ui:fragment>
+    </p:panel>
+
+
+</ui:define>
 </ui:composition>

@@ -29,12 +29,8 @@
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
-            <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="main-template" name="default2.js"/>
-
-            <h:outputStylesheet name="vendor/primeflex-v1.0.0/primeflex.css"/>
-            <h:outputStylesheet name="vendor/nanoscroller-v0.8.7/nanoscroller.css"/>
             <h:outputStylesheet name="css/styles.css" library="learnweb-layout"/>
 
             <!--            <ui:decorate template="/templates/main/tooltips.xhtml"/>-->
@@ -46,11 +42,9 @@
 
         <h:body styleClass="main-body">
             <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
-                <ui:include src="megamenu.xhtml"/>
                 <ui:include src="topbar.xhtml"/>
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <ui:include src="sidebar.xhtml"/>
-                    <ui:include src="right-sidebar.xhtml"/>
                 </ui:fragment>
                 <div class="layout-main">
                     <div class="layout-main-content">
@@ -68,15 +62,11 @@
                                 </ui:insert>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="center_pane" style="#{center_pane_styles}">
-                                            <ui:insert name="center_layout"/>
-                                        </div>
+                                        <ui:insert name="center_layout"/>
                                     </div>
                                     <ui:fragment rendered="#{rightPane}">
                                         <div class="col">
-                                            <div class="center_pane">
-                                                <ui:insert name="right_layout"/>
-                                            </div>
+                                            <ui:insert name="right_layout"/>
                                         </div>
                                     </ui:fragment>
                                 </div>

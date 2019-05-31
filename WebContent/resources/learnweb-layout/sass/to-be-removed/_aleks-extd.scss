@@ -74,7 +74,6 @@
 }
 
 
-
 #group_menu {
   height: 100%;
   padding: 4px;
@@ -595,7 +594,7 @@ body a {
   background-color: rgb(221, 221, 221);
 }
 
-.resource-grid{
+.resource-grid {
   display: flex;
   flex-wrap: wrap;
 }
@@ -606,7 +605,7 @@ body .ui-panel {
 
 }
 
-.col-sm{
+.col-sm {
   margin: 1em;
 }
 
@@ -657,3 +656,53 @@ body .ui-datatable .ui-datatable-header {
   text-align: left;
   font-size: 14px;
 }
+
+.resource_panel:HOVER, .members_panelgrid:HOVER {
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #bfbfbf;
+}
+
+.members_panelgrid > .member_star {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+
+;
+
+.grey_border {
+  border: 1px solid #ccc;
+  padding: 1rem;
+}
+
+.resource_command_link {
+  text-decoration: none;
+}
+
+;
+
+.align-left {text-align:left;}
+.align-right {text-align:right;}
+.align-center {text-align:center;}
+
+.float-left {float:left;}
+.float-right {float:right;}
+.clear {clear:both;}
+.display-none {display:none;}
+
+.margin-auto {
+  margin: auto !important;
+}
+
+.no-padding-panel-content {
+  .ui-panel-content {
+    padding: 0 !important;
+  }
+}
+
+.no-left-right-margin{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+

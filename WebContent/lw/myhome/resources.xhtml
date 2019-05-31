@@ -25,9 +25,9 @@
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{msg.myResourcesTitle}" url="myhome/resources.jsf#"/>
 </ui:define>
-<div id="1" style="height: 100%;">
-    <ui:define name="center_layout">
 
+<ui:define name="center_layout">
+    <p:panel styleClass="no-padding-panel-content no-border">
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
@@ -65,7 +65,7 @@
                         </p:commandButton>
                     </h:form>
                 </div>
-                <h:form id="center_header_form" >
+                <h:form id="center_header_form">
                     <p:commandButton id="add_resource_button" value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right"
                                      styleClass="resource_button greenbutton resourcetoolbutton" type="button"/>
                     <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px">
@@ -209,13 +209,13 @@
                     <h:panelGroup rendered="#{myResourcesBean.resourcesView == 'grid' or !myResourcesBean.rootFolder}">
                         <ui:repeat var="folder" value="#{myResourcesBean.folders}">
                             <h:panelGroup layout="block" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}">
-                                <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
+                                <h:panelGroup styleClass="folder-item group-resources-item" style="margin: 0.5em;" layout="block"
                                               pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
                                               pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
                                               pt:data-canViewResource="true"
                                               pt:data-canEditResource="true"
                                               pt:data-canDeleteResource="true">
-                                    <div class="folder-block">
+                                    <div class="folder-block" >
 
                                         <div class="folder-icon">
                                             <div class="folder-icon-wrapper">
@@ -223,7 +223,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="folder-title">
+                                        <div class="folder-title" >
                                             <div class="folder-title-wrapper">
                                                 <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name"
                                                               title="#{folder.name}"/>
@@ -233,8 +233,7 @@
                                     </div>
                                 </h:panelGroup>
                                 <hr style="margin-top:10px;width:97%"/>
-                                <h5>#{msg.myhomeVirtualFolders}</h5>
-                                <br/>
+                                <h5 style="margin: 0.5em;">#{msg.myhomeVirtualFolders}</h5>
                             </h:panelGroup>
                             <h:panelGroup layout="block" rendered="#{folder.groupId != 0}">
                                 <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
@@ -312,12 +311,11 @@
                             </div>
                             <br/>
                             <h:form>
-                                <p:commandLink styleClass="more_resources_link"
-                                               update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
-                                               oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
+                                <p:commandButton styleClass="float-right" value="#{msg.show_all_my_resources_in_this_group}"
+                                                 update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
+                                                 oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
-                                    <h:outputText value="#{msg.show_all_my_resources_in_this_group}"/>
-                                </p:commandLink>
+                                </p:commandButton>
                             </h:form>
                             <div class="clear"></div>
                         </ui:repeat>
@@ -424,8 +422,9 @@
             $("#center_pane").prepend($("#group_header"));
             update_header();
         </script>
-    </ui:define>
-</div>
+    </p:panel>
+</ui:define>
+
 <ui:define name="right_layout">
     <ui:decorate template="/templates/resources/right_pane.xhtml">
         <ui:param name="bean" value="#{myResourcesBean}"/>

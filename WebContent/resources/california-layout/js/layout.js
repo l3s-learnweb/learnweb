@@ -155,9 +155,9 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                 }
             }
 
-            setTimeout(function() {
-                $this.nanoContainer.nanoScroller();
-            }, 500);
+               // setTimeout(function() {
+                //    $this.nanoContainer.nanoScroller();
+                //}, 500);
 
             if (submenu.length) {
                 e.preventDefault();
@@ -175,7 +175,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                     if($this.menuActive) {
                         item.addClass('active-menuitem');
                         item.children('ul').show();
-                        
+
                         if($this.isSlimMenu()) {
                             var userProfile = $this.sidebar.find('.user-profile');
                             userProfile.removeClass('layout-profile-active');
@@ -185,7 +185,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                 }
             }
         });
- 
+
         this.sidebar.find('.user-profile').off('mouseenter').on('mouseenter', function (e) {
             if($this.isSlimMenu()) {
                 var item = $(this);
@@ -205,7 +205,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
         this.sidebarProfileButton.off('click').on('click', function (e) {
             if ($this.isSlimMenu()) {
                 $this.sidebarUserMenuClick = true;
-                
+
                 if ($this.sidebarUserContainer.hasClass('layout-profile-active')) {
                     $this.sidebarUserContainer.removeClass('layout-profile-active');
                     $this.sidebarUserMenu.hide();
@@ -219,7 +219,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
                 $this.sidebarUserContainer.toggleClass('layout-profile-active');
                 $this.sidebarUserMenu.slideToggle();
 
-                setTimeout(function () {
+                setTimeout(function() {
                     $this.nanoContainer.nanoScroller();
                     $this.setInlineProfileState($this.sidebarUserMenu.get(0).offsetParent == null ? false : true);
                 }, 500);

@@ -6,9 +6,8 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <!--    <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="height: 100%;" id="right_pane">-->
-        <div class="group_menu_header">
-            <span>#{rightPaneBean.panelTitle}</span>
-        </div>
+
+<p:panel header="#{rightPaneBean.panelTitle}">
         <h:outputScript library="resources" name="resource-pane.js" target="head"/>
         <h:outputStylesheet library="resources" name="resource-pane.css"/>
 
@@ -744,5 +743,6 @@
                 }
             </script>
         </h:panelGroup>
+</p:panel>
 <!--    </p:layoutUnit>-->
 </ui:composition>
