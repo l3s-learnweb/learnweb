@@ -396,7 +396,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         try
         {
             parser.parseGlossaryEntries();
-            formattedResultOfProcess.append("Imported entry count - ").append(parser.getEntries().size()).append(" errors count - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
+            formattedResultOfProcess.append("Amount of errors - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
             if(!parser.getErrorsDuringProcessing().isEmpty())
             {
                 log.error("Found some errors during Glossary xml parsing (see additional info on UI)");

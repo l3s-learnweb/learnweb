@@ -33,7 +33,7 @@ public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<
         term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
 
         if (!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
-            throw new IllegalArgumentException("Language " + getStringValueForCell(row.getCell(languageHeaderPosition)) + " does not support yet" + ". Row " + row.getRowNum());
+            throw new IllegalArgumentException("Invalid pronunciation in row" + row.getRowNum() + ": Language " + getStringValueForCell(row.getCell(languageHeaderPosition)) + " does not support yet");
         }
         term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
 
