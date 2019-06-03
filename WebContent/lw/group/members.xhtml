@@ -73,9 +73,8 @@
 </ui:define>
 
 <ui:define name="right_layout">
-    <p:panel header="#{groupMembersBean.clickedUser eq null ? msg.user_details : groupMembersBean.clickedUser.username}" styleClass="no-margin" id="right_pane">
-        <div id="right_pane_wrapper">
-            <h:form id="right_form">
+    <p:panel header="#{groupMembersBean.clickedUser eq null ? msg.user_details : groupMembersBean.clickedUser.username}" styleClass="m-0 p-0 bg-transparent no-border no-padding-panel-content"  id="right_pane">
+            <h:form id="right_form" styleClass="p-0">
                 <script type="text/javascript">
                     function update_header() {
                         document.getElementById("right_pane_header").hidden = "true";
@@ -83,13 +82,12 @@
                 </script>
 
                 <ui:fragment rendered="#{groupMembersBean.clickedUser ne null}">
-                    <ui:decorate template="/templates/user/profile.xhtml">
+                    <ui:decorate template="/templates/user/profile.xhtml" >
                         <ui:param name="user" value="#{groupMembersBean.clickedUser}"/>
                         <ui:param name="userDetailsHidden" value="#{groupMembersBean.userDetailsHidden}"/>
                     </ui:decorate>
                 </ui:fragment>
             </h:form>
-        </div>
     </p:panel>
 </ui:define>
 </ui:composition>

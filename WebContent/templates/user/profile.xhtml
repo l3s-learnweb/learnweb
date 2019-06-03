@@ -10,14 +10,9 @@
 
 	<h:outputStylesheet library="user-template" name="user.css"/>
 
-	<div class="page_header">
-		<span>
-			#{msg.myProfileTitle}
-		</span>
-		#{msg.of} #{user.username}
-	</div>
 
-	<div class="profilebox grey_border">
+
+	<p:panel header="#{msg.myProfileTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mt-0 pt-0">
 
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
 
@@ -55,48 +50,29 @@
 			class="float-right"/>
 
 		<br class="clear" />
-	</div>
+	</p:panel>
 
-	<div class="page_header">
-		<span>
-			#{msg.groupsTitle}
-		</span>
-		#{msg.of} #{user.username}
-	</div>
-
-	<div id="group_table" class="grey_border">
+	<p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0" id="group_table" >
 		<p:repeat var="group" value="#{user.groups}">
-			<div class="float-left">
+			<div class="float-left col p-0">
 				<h:outputLink value="group/overview.jsf">
 					<f:param name="group_id" value="#{group.id}" />
 					<h:outputText value="#{group.title}" />
 				</h:outputLink>
+				<br/>
 			</div>
 		</p:repeat>
 		<br class="clear"/>
-	</div>
+	</p:panel>
 
 	<ui:fragment rendered="#{not empty user.credits}">
-		<div class="page_header">
-			<span>
-				#{msg.awards}
-			</span>
-			<div class="member_star"></div>
-		</div>
-
-		<div class="grey_border">
+		<p:panel header="#{msg.awards}" styleClass="ml-0 mr-0">
 			<h:outputText value="#{user.credits}" escape="false"/>
-		</div>
+		</p:panel>
 	</ui:fragment>
 
 	<ui:fragment rendered="${userBean.canModerateCourses(user.courses)}">
-		<div class="page_header">
-			<span>
-				#{msg.moderator_options}
-			</span>
-		</div>
-
-		<div class="grey_border">
+		<p:panel header="#{msg.moderator_options}" styleClass="ml-0 mr-0">
 			<h:outputLink value="myhome/profile.jsf">
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.edit_profile}" escape="false"/>
@@ -106,7 +82,7 @@
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.search_history}" escape="false"/>
 			</h:outputLink>
-		</div>
+		</p:panel>
 	</ui:fragment>
 
 </ui:composition>

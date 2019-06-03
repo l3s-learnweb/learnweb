@@ -10485,38 +10485,6 @@ body .ui-panel {
   margin: 1em;
 }
 
-body .ui-icon {
-  height: 1em;
-  width: 1em;
-  font-size: 1.25em;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0;
-  margin-top: 0;
-  position: static;
-  text-indent: 0;
-  overflow: visible;
-  background-repeat: no-repeat;
-}
-
-body .ui-datatable thead th .ui-sortable-column-icon.ui-icon-carat-2-n-s {
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  /* font-variant: normal; */
-  text-transform: none;
-  line-height: 1;
-  display: inline-block;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* text-indent: 0px !important; */
-  text-align: center;
-  background: none;
-  display: inline-block;
-  font-size: 1.25em;
-  font-size: 1em;
-}
-
 .noBorders tr, .noBorders td {
   background: none !important;
   border: none !important;
@@ -10581,17 +10549,39 @@ body .ui-datatable .ui-datatable-header {
   display: none;
 }
 
-.margin-auto {
-  margin: auto !important;
-}
-
 .no-padding-panel-content .ui-panel-content {
   padding: 0 !important;
 }
 
-.no-left-right-margin {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+.username {
+  font-weight: bold;
+  color: #333;
+  vertical-align: top;
+}
+
+.username_div {
+  padding-left: 40px;
+  margin-bottom: 5px;
+}
+
+.username_link {
+  text-decoration: none;
+  vertical-align: top;
+}
+
+.userpic {
+  float: left;
+}
+
+.resource_button {
+  float: right;
+  position: relative;
+  top: -3px;
+  right: -5px;
+}
+
+.resource_button > button {
+  padding: 6px 26px 6px 12px !important;
 }
 
 /*# sourceMappingURL=styles.css.map */

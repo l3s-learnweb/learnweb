@@ -31,8 +31,8 @@
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="main-template" name="default2.js"/>
-            <h:outputStylesheet name="css/styles.css" library="learnweb-layout"/>
-
+            <h:outputStylesheet library="learnweb-layout" name="css/styles.css" />
+            <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js"/>
             <!--            <ui:decorate template="/templates/main/tooltips.xhtml"/>-->
 
             <base href="#{request.contextPath}/lw/"/>
@@ -60,8 +60,8 @@
                                         <ui:insert name="sub_breadcrumb"/>
                                     </p:breadCrumb>
                                 </ui:insert>
-                                <div class="row">
-                                    <div class="col">
+                                <div class="row flex-nowrap">
+                                    <div class="col" id="center_pane">
                                         <ui:insert name="center_layout"/>
                                     </div>
                                     <ui:fragment rendered="#{rightPane}">

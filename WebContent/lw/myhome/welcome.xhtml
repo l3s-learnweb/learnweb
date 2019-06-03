@@ -14,7 +14,7 @@
 		</ui:define>
 		<ui:define name="center_layout">
 
-		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
+		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}" styleClass="no-padding-panel-content">
 			<div style="width: 28rem;">
 				<ui:fragment rendered="#{userBean.user.organisationId == 848}">
 					<ui:include src="/aw/guide.xhtml" />
@@ -69,7 +69,7 @@
 			
 			
 			
-			<p:panel header="#{msg.myGroups}" toggleable="true" collapsed="true" style="margin-top:20px;">
+			<p:panel header="#{msg.myGroups}" toggleable="true" styleClass="m-0" collapsed="true" style="margin-top:20px;">
 				<h:outputText value="#{msg.should_join_group}" escape="false" rendered="#{empty userBean.user.groups}" />
 			
 				<ui:repeat var="group" value="#{userBean.user.groups}">

@@ -39,10 +39,7 @@
 
 		<ui:fragment rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
 
-			<div class="page_header">
-				<span>#{msg.edit_group}</span>
-			</div>
-
+			<p:panel header="#{msg.edit_group}" styleClass="ml-0 mr-0">
 			<h:form id="group_moderator_form">
 				<h:panelGrid columns="3" style="margin-left:1rem;">
 					<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
@@ -91,7 +88,7 @@
 					<h:outputText value="" />
 				</h:panelGrid>
 			</h:form>
-
+			</p:panel>
 			<style type="text/css">
 				#group_security h2 {
 					margin: 2rem 0 0 0;
@@ -99,10 +96,8 @@
 				}
 			</style>
 
-			<div class="page_header" style="margin-top:0.5rem">
-				<span>#{msg.options}</span>
-			</div>
 
+			<p:panel header="#{msg.options}" styleClass="ml-0 mr-0">
 			<h:form id="group_security_form">
 				<div id="group_security" style="padding-left:1.2rem; margin-top:-1rem">
 
@@ -156,14 +151,9 @@
 					</p:commandButton>
 				</div>
 			</h:form>
+			</p:panel>
 
-			<br/>
-			<div class="page_header">
-				<span>
-					#{msg.copy_resources}
-				</span>
-			</div>
-
+			<p:panel header="#{msg.copy_resources}" styleClass="ml-0 mr-0">
 			<h:form id="group_copy_form" style="margin:0 0 4rem 1rem;">
 				<h:panelGrid columns="3">
 					<h:outputText value="#{msg.copy_all_resources}"/>
@@ -174,14 +164,9 @@
 									 update=":growl" onstart="return onClickCopyGroup();"/>
 				</h:panelGrid>
 			</h:form>
+			</p:panel>
 
-			<br/>
-			<div class="page_header">
-				<span>
-					#{msg['Miscellaneous']}
-				</span>
-			</div>
-
+			<p:panel header="#{msg['Miscellaneous']}" styleClass="ml-0 mr-0">
 			<h:form id="group_delete_form" style="margin:0 0 4rem 1rem;">
 				<p:commandButton action="#{groupsBean.deleteGroup}" ajax="false"
 					title="#{msg.delete}" process="@this" value="#{msg.delete_group} "
@@ -189,7 +174,7 @@
 					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}" />
 				</p:commandButton>
 			</h:form>
-
+			</p:panel>
 		</ui:fragment>
 	</ui:define>
 </ui:composition>

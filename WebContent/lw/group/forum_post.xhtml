@@ -25,22 +25,26 @@
         <ui:param name="active" value="forum"/>
 
         <ui:define name="title">
-            <h2>#{msg['ForumIndex.messages']}</h2>
-            #{msg.of} "#{forumPostBean.topic.title}"
+            <div class="row align-items-center">
+            <span class="col">
+                <span style="color: #4AA564;">#{msg['ForumIndex.messages']}</span>
+                #{msg.of} "#{forumPostBean.topic.title}"
+            </span>
+                <h:form id="center_header_form" styleClass="col align-self-center">
+                    <ui:fragment rendered="#{forumPostBean.member}">
+                        <p:commandButton value="#{msg['ForumIndex.post_reply']}"
+                                         href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
+                                         styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton float-right"
+                                         onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow');">
+                        </p:commandButton>
+                    </ui:fragment>
 
-            <h:form id="center_header_form">
-                <ui:fragment rendered="#{forumPostBean.member}">
-                    <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
-                       class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
-                        #{msg['ForumIndex.post_reply']}
-                    </a>
-                </ui:fragment>
-
-                <p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"
-                               update=":growl @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumPostBean.group}"/>
-                </p:commandLink>
-            </h:form>
+                    <p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"
+                                   update=":growl @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumPostBean.group}"/>
+                    </p:commandLink>
+                </h:form>
+            </div>
         </ui:define>
     </ui:decorate>
 
@@ -118,9 +122,9 @@
     </h:form>
 
     <ui:fragment rendered="#{forumPostBean.member}">
-        <p:panel  header="Reply" styleClass="no-left-right-margin">
+        <p:panel header="Reply" styleClass="ml-0 mr-0">
 
-            <h:form id="post_form" >
+            <h:form id="post_form">
                 <table id="answer_table">
                     <tr>
                         <td class="width_10">

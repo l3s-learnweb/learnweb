@@ -27,7 +27,7 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
             this.restoreMenuState();
         }
 
-        this.nanoContainer.nanoScroller({flash:true});
+        //this.nanoContainer.nanoScroller({flash:true});
     },
 
     _bindEvents: function() {
@@ -117,9 +117,9 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
             }
             }
 
-                setTimeout(function() {
-                    $this.nanoContainer.nanoScroller();
-                }, 500);
+                // setTimeout(function() {
+                //     $this.nanoContainer.nanoScroller();
+                // }, 500);
 
             if (submenu.length) {
                 e.preventDefault();
