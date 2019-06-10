@@ -275,12 +275,16 @@
 
 .resource-grid {
     margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .resource-item, .folder-item {
     display: inline-block;
     position: relative;
     vertical-align: top;
+    margin: 8px;
     width: calc(50% - 16px); /* two columns */
     margin-bottom: 16px;
     margin-right: 16px;
@@ -619,7 +623,7 @@
     margin: 0;
     outline: none;
     position: fixed;
-
+    height: auto !important;
     overflow-y: auto;
     padding: 8px 0;
 
@@ -670,7 +674,6 @@
 
 .context-menu-item-wrapper {
     margin-left: 4px;
-    margin-top: 3px;
     padding-left: 16px;
 }
 

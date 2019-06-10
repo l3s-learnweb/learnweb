@@ -26,13 +26,8 @@
 		</ui:fragment>
 
 		<ui:fragment rendered="#{not registrationBean.wizardParamInvalid}">
-			<div class="page_header">
-				<span>
-					#{msg.registerLabel}
-				</span>
-			</div>
 
-			<p:panel >
+			<p:panel header="#{msg.registerLabel}" >
 				<h:form id="registerform">
 
 					<h:panelGrid columns="3">

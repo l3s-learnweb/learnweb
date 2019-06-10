@@ -17,6 +17,11 @@
 	<ui:param name="pageTitle" value="#{groupOptionsBean.group.title}" />
 	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{groupOptionsBean.group.title}" url="group/overview.jsf?group_id=#{groupOptionsBean.group.id}"/>
+		<p:menuitem  value="Options" url="group/options.jsf?group_id=#{groupOptionsBean.group.id}"/>
+	</ui:define>
+
 	<ui:define name="center_layout">
 
 		<ui:decorate template="/templates/group/menu.xhtml">

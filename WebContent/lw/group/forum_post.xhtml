@@ -15,7 +15,9 @@
 <ui:param name="disableGrowl" value="true"/>
 <ui:param name="pageTitle" value="#{forumPostBean.topic.title}"/>
 <ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{forumPostBean.group.title}" url="group/overview.jsf?group_id=#{forumPostBean.group.id}"/>
     <p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumPostBean.group.id}"/>
+    <p:menuitem value="#{forumPostBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumPostBean.topicId}"/>
 </ui:define>
 <ui:define name="center_layout">
     <h:outputStylesheet library="group" name="forum.css"/>

@@ -81,7 +81,7 @@
 
 .group_link_for_group_menu {
   color: black;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 #my_groups, #other_groups {
@@ -95,7 +95,7 @@
   color: #ffffff;
   padding: .4em .2em .4em .4em;
   text-align: left;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .group-menu {
@@ -130,7 +130,7 @@
   position: relative;
 
   a {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bolder;
     color: white;
   }
@@ -165,9 +165,9 @@
 
   .filter-name {
     cursor: pointer;
-    font-size: 1.3rem;
+    font-size: 1rem;
     display: inline-block;
-    padding: 0.4rem 1.4rem 0.5rem;
+    padding: 0.5rem 1rem 0.5rem;
     color: #fff;
 
     .trimmed-text {
@@ -227,7 +227,7 @@
 
   a.clear-filter {
     text-decoration: none;
-    font-size: 1.3rem;
+    font-size: 1rem;
     display: inline-block;
     padding: 0.4rem 1.4rem 0.3rem;
 
@@ -266,7 +266,7 @@
 }
 
 h3.group_link {
-  font-size: 16px;
+  font-size: 1rem;
   margin-top: 0.4rem;
 }
 
@@ -432,6 +432,7 @@ h3.group_link {
 
 .resources-filters {
   .clear-filters {
+    padding: 0.55rem;
     &:hover {
       background: none;
     }
@@ -444,6 +445,7 @@ h3.group_link {
     span {
       cursor: pointer;
       padding: 0.6rem 0.5rem 0.5rem;
+      color: black;
 
       &:hover {
         text-decoration: underline;
@@ -597,6 +599,8 @@ body a {
 .resource-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
 }
 
 
@@ -666,7 +670,11 @@ body .ui-datatable .ui-datatable-header {
    }
  }
 
-
+.p-pn-1 {
+  .ui-panel-content {
+    padding: 1rem !important;
+  }
+}
 
 
 
@@ -697,4 +705,8 @@ body .ui-datatable .ui-datatable-header {
 
 .resource_button > button {
   padding: 6px 26px 6px 12px !important;
+}
+
+.ui-menuitem-text {
+  color: #5b616a;
 }

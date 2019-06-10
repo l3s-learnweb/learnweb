@@ -15,11 +15,13 @@
 <ui:param name="disableGrowl" value="true"/>
 <ui:param name="pageTitle" value="#{msg.forum}"/>
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.forum}" url="group/members.jsf?group_id=#{forumTopicsBean.group.id}"/>
+    <p:menuitem value="#{forumTopicsBean.group.title}" url="group/overview.jsf?group_id=#{forumTopicsBean.group.id}"/>
+    <p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumTopicsBean.group.id}"/>
+
 </ui:define>
 <ui:define name="center_layout">
     <h:outputStylesheet library="group" name="forum.css"/>
-    <p:panel styleClass="no-padding-panel-content no-border">
+    <p:panel styleClass="no-padding-panel-content ml-0 mr-0">
         <ui:decorate template="/templates/group/menu.xhtml">
             <ui:param name="group" value="#{forumTopicsBean.group}"/>
             <ui:param name="active" value="forum"/>
@@ -93,7 +95,7 @@
 
 
     <ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-        <p:panel header="#{msg['ForumIndex.new_topic']}">
+        <p:panel styleClass="ml-0 mr-0" header="#{msg['ForumIndex.new_topic']}">
 
             <div class="no-border">
 

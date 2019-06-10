@@ -6,7 +6,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/templates/main/main_old.xhtml">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml">
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -18,38 +18,34 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.myProfileTitle}" />
 	<ui:param name="smallPage" value="true" />
-
+	<ui:param name="rightPane" value="true"/>
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.myProfileTitle} #{msg.of} #{userDetailBean.user.username}" url="user/detail.jsf?user_id=#{userDetailBean.user.id}"/>
+	</ui:define>
 	<ui:define name="center_layout">
-		<div class="page_header">
-			<span>
-				#{msg.last_activities}
-			</span> 
-			#{msg.of} #{userDetailBean.user.username}
-		</div>		
-		
+		<p:panel header="#{msg.last_activities}" styleClass="m-0">
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
 		<h:panelGroup id="profile_news" rendered="#{not userDetailBean.pageHidden}">		
 			<ui:decorate template="/templates/user/logs.xhtml">
 				<ui:param name="news" value="#{newsFeedBean.newsList}"/>
 			</ui:decorate >
 		</h:panelGroup>
+		</p:panel>
 	</ui:define>
 	
 	
 	<ui:define name="right_layout">
 
-		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" 
-			collapsible="false" style="border: none;" id="right_pane" rendered="#{userBean.loggedIn}">			
-			
+		<p:panel rendered="#{userBean.loggedIn}" styleClass="m-0 pl-0 pr-0 no-padding-panel-content bg-transparent no-border">
+
 			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
-			<h:panelGroup  rendered="#{not userDetailBean.pageHidden}" layout="block" style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
+
 			
 				<ui:decorate template="/templates/user/profile.xhtml">
 					<ui:param name="user" value="#{userDetailBean.user}" />		
 				</ui:decorate>
-				
-			</h:panelGroup>
-		</p:layoutUnit>
+
+		</p:panel>
 	</ui:define>
 </ui:composition>
 </html>

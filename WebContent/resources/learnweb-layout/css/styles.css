@@ -8,7 +8,7 @@
 
  Now you can build all scss files to css files
   - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
-
+sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css
  Or you can setup to watch for changes in your files and build automatically
   - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
 
@@ -10040,7 +10040,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
 
 .group_link_for_group_menu {
   color: black;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 #my_groups, #other_groups {
@@ -10054,7 +10054,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
   color: #ffffff;
   padding: 0.4em 0.2em 0.4em 0.4em;
   text-align: left;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .group-menu {
@@ -10087,7 +10087,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
   position: relative;
 }
 .filters_menu_bar a {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bolder;
   color: white;
 }
@@ -10114,9 +10114,9 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
 }
 .filters_menu_bar .filter-name {
   cursor: pointer;
-  font-size: 1.3rem;
+  font-size: 1rem;
   display: inline-block;
-  padding: 0.4rem 1.4rem 0.5rem;
+  padding: 0.5rem 1rem 0.5rem;
   color: #fff;
 }
 .filters_menu_bar .filter-name .trimmed-text {
@@ -10166,7 +10166,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
 }
 .filters_menu_bar a.clear-filter {
   text-decoration: none;
-  font-size: 1.3rem;
+  font-size: 1rem;
   display: inline-block;
   padding: 0.4rem 1.4rem 0.3rem;
 }
@@ -10200,7 +10200,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
 }
 
 h3.group_link {
-  font-size: 16px;
+  font-size: 1rem;
   margin-top: 0.4rem;
 }
 
@@ -10332,6 +10332,9 @@ h3.group_link {
   display: none !important;
 }
 
+.resources-filters .clear-filters {
+  padding: 0.55rem;
+}
 .resources-filters .clear-filters:hover {
   background: none;
 }
@@ -10342,6 +10345,7 @@ h3.group_link {
 .resources-filters .clear-filters span {
   cursor: pointer;
   padding: 0.6rem 0.5rem 0.5rem;
+  color: black;
 }
 .resources-filters .clear-filters span:hover {
   text-decoration: underline;
@@ -10475,6 +10479,8 @@ body a {
 .resource-grid {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
 }
 
 body .ui-panel {
@@ -10553,6 +10559,10 @@ body .ui-datatable .ui-datatable-header {
   padding: 0 !important;
 }
 
+.p-pn-1 .ui-panel-content {
+  padding: 1rem !important;
+}
+
 .username {
   font-weight: bold;
   color: #333;
@@ -10582,6 +10592,10 @@ body .ui-datatable .ui-datatable-header {
 
 .resource_button > button {
   padding: 6px 26px 6px 12px !important;
+}
+
+.ui-menuitem-text {
+  color: #5b616a;
 }
 
 /*# sourceMappingURL=styles.css.map */

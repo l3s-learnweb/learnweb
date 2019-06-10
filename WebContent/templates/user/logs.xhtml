@@ -9,6 +9,7 @@
 	<h:dataTable var="logEntry" value="#{news}" style=" width: 100%;" id="logEntry">
 							
 		<h:column>
+			<p:panel styleClass="ml-0 mr-0">
 			<div class="float-left">
 				<img id="userpic" src="#{logEntry.userImage}" width="30" height="30" style="padding-right: 10px;" alt="Profile picture"/>
 			</div>
@@ -25,12 +26,8 @@
 				</h:panelGroup>
 			</div>
 						
-			<h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
-					
-			<br/>
-			<br/>
-					
-			<hr width="auto" style="border:1px solid #eee !important;" />
+			<h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>
+			</p:panel>
 		</h:column>	
 									
 	</h:dataTable>

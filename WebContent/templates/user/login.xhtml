@@ -6,12 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:composition>
-		<div class="page_header">
-			<span>
-				#{msg.loginTitle}
-			</span>
-		</div>
-		<div class="grey_border">
+		<p:panel header="#{msg.loginTitle}">
 		
 			<h:form rendered="#{!userBean.loggedIn}">
 				<p:focus for="username"/>
@@ -45,7 +40,7 @@
 			<h:outputLink value="#{request.contextPath}/lw/user/register.jsf">
 				<h:outputText value="#{msg.registerLabel}" />
 			</h:outputLink>
-		
-		</div>
+
+		</p:panel>
 	</ui:composition>
 </html>

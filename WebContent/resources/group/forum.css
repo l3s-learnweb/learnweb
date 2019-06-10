@@ -57,23 +57,7 @@
 }
 
 /*forum_page*/
-#forum_table tr td{
-	height:25px;
-}
-#forum_table tr th:first-child{
-	width:58%;
-}
-#forum_table tr th:first-child + td + td{
-	width:6%; 
-	white-space:nowrap;
-}
-#forum_table tr th:first-child + td + td + td {
-	width:7%; 
-	white-space:nowrap;
-}
-#forum_table tr th:last-child{
-	width:10%;
-}
+
 #new_topic_table,#answer_table{
 	font-size:1rem;
 	width:100%;

@@ -16,7 +16,8 @@
 <ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
 <ui:param name="rightPane" value="true"/>
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.groupMember}" url="group/members.jsf?group_id=#{groupMembersBean.group.id}"/>
+    <p:menuitem value="#{groupMembersBean.group.title}" url="group/overview.jsf?group_id=#{groupMembersBean.group.id}"/>
+    <p:menuitem value="Members" url="group/members.jsf?group_id=#{groupMembersBean.group.id}"/>
 </ui:define>
 <ui:define name="center_layout">
     <h:outputStylesheet library="group" name="group.css"/>
@@ -48,7 +49,7 @@
         /* --> */
     </script>
     <p:panel styleClass="no-margin">
-    <h:panelGrid id="resource_disp">
+    <h:panelGrid id="resource_disp" >
         <h:form>
 
                 <p:repeat id="datagrid" var="user" value="#{groupMembersBean.members}">
