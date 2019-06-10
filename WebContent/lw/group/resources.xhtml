@@ -79,7 +79,7 @@
                 </h:form>
             </c:if>
 
-            <h:form id="request_group_form" styleClass="col-3 m-0 p-0" style="text-align: right;">
+            <h:form id="request_group_form" styleClass="col-3" style="text-align: right;">
                 <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
                 <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
                     <h:outputFormat  value="#{msg.export_resources_warning}">
