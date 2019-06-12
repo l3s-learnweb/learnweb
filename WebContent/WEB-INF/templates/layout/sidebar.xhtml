@@ -11,47 +11,28 @@
             <div class="nano-content sidebar-scroll-content">
 
                 <h:form id="menuform">
-                    <!--<pc:menu styleClass="no-padding-bottom" style="    margin-bottom: -1px;" model="#{userBean.groupMenu2}">
 
-                    </pc:menu>-->
 
-                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
+                    <p:tree id="sidebar_group_tree" value="#{userBean.groupsTreeForSidebar}" var="node" animate="true" dynamic="true"
                             selectionMode="single" selection="#{searchBean.selectedNode}">
                         <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 
+                        <p:treeNode type="link" >
+                            <h:outputLink title="#{node.title}" value="#{node.url}">#{node.title}</h:outputLink>
+                        </p:treeNode>
 
                         <p:treeNode type="group" >
-                            <h:outputLink title="#{node.title}" value="/lw/group/resources.jsf?group_id=#{node.id}">#{node.title}</h:outputLink>
+                            <h:outputLink title="#{node.title}" value="/lw/myhome/resources.jsf?group_id=#{node.id}">#{node.title}</h:outputLink>
                         </p:treeNode>
 
                         <p:treeNode type="folder" >
-                            <h:outputLink title="#{node.name}" value="/lw/group/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}">#{node.name}</h:outputLink>
+                            <h:outputLink title="#{node.name}" value="/lw/myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}">#{node.name}</h:outputLink>
                         </p:treeNode>
 
-                       <!-- <h:form>
-                            <p:commandLink styleClass="resource_command_link"
-                                           update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
-                                           oncomplete="update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
-                                <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
-                                <h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
-                            </p:commandLink>
-                        </h:form>-->
                     </p:tree>
-                   <!--
-                    expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed"
-                    <p:tree id="root" value="#{userBean.rootTree}" var="node" animate="true" dynamic="true"
-                            selectionMode="single" selection="#{searchBean.selectedNode}"
-                            style="max-height:28rem; width:100%; min-width:60rem; overflow:auto; box-sizing: border-box;">
-                        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 
-
-
-                        <p:treeNode type="group" Icon="fa fa-fw fa-folder">
-                            <h:outputLink value="#{node.hypothesisLink}">#{node.title}</h:outputLink>
-                        </p:treeNode>
-
-                    </p:tree>-->
                     <pc:menu widgetVar="me" >
+
                         <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
                         <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="/lw/myhome/comments.jsf"/>
                         <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>

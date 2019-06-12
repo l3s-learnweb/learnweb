@@ -19,6 +19,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import de.l3s.learnweb.group.Link;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
@@ -59,6 +60,7 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
+    private DefaultTreeNode groupsTreeSidebar;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -462,34 +464,6 @@ public class UserBean implements Serializable
     }
 
 
-   public MenuModel getGroupMenu2()
-    {
-        MenuModel model = new DefaultMenuModel();
-        Integer groupId = ApplicationBean.getParameterInt("group_id");
-
-        try
-        {
-            DefaultSubMenu submenu = new DefaultSubMenu("My Groups");
-            submenu.setIcon("fa fa-fw fa-folder");
-            DefaultMenuItem item;
-            for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
-            {
-                item = new DefaultMenuItem(group.getLongTitle());
-                item.setUrl("/lw/group/resources.jsf?group_id=" + group.getId());
-
-                submenu.addElement(item);
-            }
-            model.addElement(submenu);
-        }
-        catch(SQLException e)
-        {
-            log.error("Can't create menu model", e);
-        }
-
-        return model;
-    }
-
-
 
 
 
@@ -506,100 +480,7 @@ public class UserBean implements Serializable
      * @throws SQLException
      */
 
-
-    private TreeNode root;
-    public TreeNode getRootTree() throws SQLException{
-        root = new DefaultTreeNode("Root", null);
-        Group item = new Group();
-        item.setHypothesisLink("/lw/myhome/resources.jsf");
-        item.setTitle("My Resources");
-        TreeNode MyResources= new DefaultTreeNode("group", item, root);
-        MyResources.setSelected(true);
-
-        Group item1 = new Group();
-        item1.setHypothesisLink("/lw/myhome/comments.jsf");
-        item1.setTitle("My Comments");
-        TreeNode Mycomments = new DefaultTreeNode("group", item1, root);
-        Mycomments.setSelected(true);
-
-        Group item2 = new Group();
-        item2.setHypothesisLink("/lw/myhome/tags.jsf");
-        item2.setTitle("My tags");
-        TreeNode Mytags= new DefaultTreeNode("group", item2, root);
-        Mytags.setSelected(true);
-
-        Group item3 = new Group();
-        item3.setHypothesisLink("/lw/myhome/submission_overview.jsf");
-        item3.setTitle("My submissions");
-        TreeNode Mysubmissions = new DefaultTreeNode("group", item3, root);
-        Mysubmissions.setSelected(true);
-
-        Group item4 = new Group();
-        item4.setHypothesisLink("/lw/admin/dashboard/user.jsf");
-        item4.setTitle("My dashboard");
-        TreeNode Mydashboard= new DefaultTreeNode("group", item4, root);
-        Mydashboard.setSelected(true);
-
-        Group item5 = new Group();
-        item5.setHypothesisLink("/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}");
-        item5.setTitle("Search history");
-        TreeNode Myhistory = new DefaultTreeNode("group", item5, root);
-        Myhistory.setSelected(true);
-
-        if(isModerator() || isAdmin()){
-            Group item6 = new Group();
-            item6.setHypothesisLink("/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}");
-            item6.setTitle("Search history");
-            TreeNode moderator = new DefaultTreeNode("group", item6, root);
-            Myhistory.setSelected(true);
-
-        }
-
-
-
-
-        // root.getChildren().add(new DefaultTreeNode("Node 2"));
-
-        return root;
-    }
-
     public TreeNode getWriteAbleGroupsTree() throws SQLException
-    {
-        if(!isLoggedIn())
-            return null;
-
-        if(null == groupsTree || groupsTreeCacheTime + 10000L < System.currentTimeMillis())
-        {
-            groupsTreeCacheTime = System.currentTimeMillis();
-            groupsTree = new DefaultTreeNode("WriteAbleGroups");
-
-            GroupManager gm = Learnweb.getInstance().getGroupManager();
-            Group myGroups = new Group();
-            myGroups.setId(0);
-            myGroups.setHypothesisLink("/lw/myhome/groups.jsf");
-            myGroups.setTitle("My Groups");
-            TreeNode myGroupsNode = new DefaultTreeNode("group", myGroups, groupsTree);
-            myGroupsNode.setSelected(true);
-
-            for(Group group : getUser().getWriteAbleGroups())
-            {
-                log.debug(group.getId());
-                TreeNode groupNode = new DefaultTreeNode("group", group, myGroupsNode);
-                gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
-            }
-
-
-
-
-        }
-
-        //log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
-
-        return groupsTree;
-    }
-
-
-   /* public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
         if(!isLoggedIn())
             return null;
@@ -626,7 +507,31 @@ public class UserBean implements Serializable
         //log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
 
         return groupsTree;
-    }*/
+    }
+
+    public TreeNode getGroupsTreeForSidebar() throws SQLException
+    {
+        if(!isLoggedIn())
+            return null;
+            groupsTreeSidebar = new DefaultTreeNode("myGroups");
+
+            GroupManager gm = Learnweb.getInstance().getGroupManager();
+            Link myGroups = new Link();
+            myGroups.setUrl("myhome/groups.jsf");
+            myGroups.setTitle("My Groups");
+            TreeNode myGroupsNode = new DefaultTreeNode("link", myGroups, groupsTreeSidebar);
+            myGroupsNode.setSelected(true);
+
+            for(Group group : getUser().getGroups())
+            {
+                log.debug(group.getId());
+                TreeNode groupNode = new DefaultTreeNode("group", group, myGroupsNode);
+                gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+            }
+
+
+        return groupsTreeSidebar;
+    }
 
 
     /**
