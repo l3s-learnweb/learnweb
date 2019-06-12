@@ -8761,7 +8761,72 @@ html {
 }
 
 .layout-wrapper .layout-sidebar {
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+.layout-wrapper .layout-sidebar .layout-menu {
+  padding-bottom: 44px;
+}
+.layout-wrapper .layout-sidebar .ui-tree {
+  width: auto;
+  padding: 0;
+  border-bottom: none;
+  box-sizing: border-box;
+  display: block;
+  margin: -1px;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container {
+  padding: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode {
+  padding: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:hover {
+  cursor: pointer;
+  background-color: #f1f1f1;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-e:before {
+  content: "";
+  transition: transform 0.3s;
+  transform: rotate(0deg);
+  color: #5b616a;
+  font-weight: 700;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-s:before {
+  color: #5b616a;
+  font-weight: 700;
+  content: "";
+  transition: transform 0.3s;
+  transform: rotate(-180deg);
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
+  margin: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label[aria-expanded=true] a {
+  color: #4AA564;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label a {
+  margin-left: 12px;
+  color: #212529;
+  font-weight: 500;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .landing-wrapper {
