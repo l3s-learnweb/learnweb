@@ -136,6 +136,13 @@ public class AdminNewsBean extends ApplicationBean
         return newsList;
     }
 
+
+    public List<News> getAllNewsList()
+    {
+
+        return newsList;
+    }
+
     public List<News> getNewsListAll()
     {
 

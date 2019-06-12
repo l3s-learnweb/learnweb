@@ -15,15 +15,15 @@
 
     .header-menu{
       padding-right: 15px;
+      margin-bottom: 0;
 
       a{
         padding: 1rem;
         text-decoration: none;
         border-bottom: 0.2rem solid transparent;
-      }
-
-      a:hover{
-        border-color: $main-teal;
+        &:hover{
+          border-color: $main-teal;
+        }
       }
 
     }
@@ -51,6 +51,21 @@
     .newsform {
       display: block;
       background: rgba(0, 0, 0, 0.9);
+      color: $white;
+      border-radius: 0.2rem;
+      >h2{
+        font-size: 1rem;
+        padding: .5rem 1rem;
+        margin: 0;
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .ui-datalist-content{
+        background: rgba(0, 0, 0, 0.9);
+        border: none;
+        padding: 1rem;
+        max-height: 24rem;
+      }
 
       .ui-carousel {
         padding: 0;
@@ -80,22 +95,6 @@
         margin: 0 0.2rem!important;
         font-size: larger;
 
-        &::-webkit-scrollbar-track {
-          -webkit-box-shadow: inset 0 0 0.4rem rgba(0, 0, 0, 0.3);
-          border-radius: 0.5rem;
-          background-color: rgba(0, 0, 0, 0.2);
-        }
-
-        &::-webkit-scrollbar {
-          width: 0.5rem;
-          background-color: rgba(0, 0, 0, 0.2);
-        }
-
-        &::-webkit-scrollbar-thumb {
-          border-radius: 0.6rem;
-          -webkit-box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.3);
-          background-color: #fff;
-        }
       }
 
       span {
@@ -120,7 +119,8 @@
     p{
       font-size: 1.5rem;
       font-weight: 500;
-      text-align: center;
+      text-align: left;
+      padding: 1rem;
     }
     h2{
       font-size: 2rem;
