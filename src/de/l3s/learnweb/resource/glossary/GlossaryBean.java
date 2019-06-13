@@ -1,23 +1,23 @@
 package de.l3s.learnweb.resource.glossary;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.primefaces.PrimeFaces;
-import org.primefaces.component.datatable.DataTable;
-import org.primefaces.event.FileUploadEvent;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -25,14 +25,30 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Named;
-import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.*;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.learnweb.user.User;
+import de.l3s.util.BeanHelper;
 
 @Named
 @ViewScoped
@@ -50,7 +66,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private final List<SelectItem> availableTopicTwo = new ArrayList<>();
     private final List<SelectItem> availableTopicThree = new ArrayList<>();
     private boolean paginator = true;
-    private String toggleLabel = "Show All";
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
     private String resultOfXmlParsing = StringUtils.EMPTY;
@@ -356,17 +371,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void togglePaginator()
-    {
-        paginator = !paginator;
-        toggleLabel = toggleLabel.equalsIgnoreCase("show all") ? getLocaleMessage("Glossary.collapse") : getLocaleMessage("Glossary.show_all");
-    }
-
-    public String getToggleLabel()
-    {
-        return toggleLabel;
-    }
-
     private Map<String, Locale> getLanguageMap()
     {
         // map term language name to locale
@@ -385,7 +389,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void parseXls(FileUploadEvent fileUploadEvent)
     {
         resultOfXmlParsing = StringUtils.EMPTY;
-
 
         User user = getUser();
         if(user == null)
