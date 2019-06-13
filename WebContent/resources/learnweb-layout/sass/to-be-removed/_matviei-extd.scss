@@ -14,172 +14,10 @@ body {
   height: 100%;
 }
 
-.main-body {
-  .layout-wrapper, .layout-main {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
 
-  .layout-main-content {
-    flex: 1 0 auto;
-  }
 
-  .layout-footer {
-    flex-shrink: 0;
-  }
 
-  .layout-topbar {
-    > div {
-      display: flex;
-      height: inherit;
-      width: 100%;
-    }
-
-    .logo {
-      max-width: 200px;
-      max-height: 60px;
-
-      > div {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 0;
-        display: block;
-      }
-    }
-  }
-
-  .page-header {
-    color: #4AA564;
-    margin: 0;
-    background: rgba(255, 255, 255, 0.9);
-    /*text-align: center;*/
-    border-radius: 2px;
-    padding: 5px 16px;
-    border: 1px solid #4AA564;
-    border-right: none;
-    border-left: none;
-    margin-bottom: var(--main-margin);
-
-    h1 {
-      margin: 0;
-    }
-  }
-
-  .layout-topbar {
-    .content {
-      display: flex;
-      align-items: center;
-    }
-
-    .right-menu {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    #searchform {
-      display: flex;
-      width: inherit;
-      justify-content: center;
-
-      input[type='search'] {
-        border: none;
-        height: 40px;
-        font-size: 22px;
-        width: inherit;
-        background: white;
-        padding: 0 .5rem;
-        max-width: 600px;
-      }
-    }
-
-    #searchbutton {
-      width: 40px;
-      height: 40px;
-      border: none;
-      background: white;
-      border-radius: 0 2px 2px 0;
-      cursor: pointer;
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      fill: grey;
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      &:hover {
-        background: #2E8540;
-        fill: white;
-      }
-    }
-
-    .menu-button button {
-      background: none;
-
-      span:before {
-        content: none;
-      }
-    }
-
-    .topbar-profile {
-      button {
-        border-radius: 100%;
-        height: 45px;
-        width: 45px;
-        background-size: contain;
-      }
-
-      border-radius: 100%;
-      height: 45px;
-      width: 45px;
-      background-size: contain;
-    }
-
-    .topbar-icon {
-      background: none;
-      border: none;
-      margin-top: 5px;
-
-      .fa {
-        width: inherit;
-        height: inherit;
-        font-size: 30px;
-        padding: 0;
-        margin: 0;
-        position: initial;
-      }
-    }
-
-    .topbar-menu {
-      justify-content: flex-end;
-    }
-
-    .menu form {
-      margin: 0 5px;
-    }
-
-    .topbar-menu-form-button {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      margin: 0 4%;
-
-      &:hover {
-        background-color: #2E8540;
-      }
-    }
-  }
-}
-
-.adapt-1024-appearer, .adapt-640-appearer {
-  visibility: hidden;
-}
+/*end*/
 
 @media screen and (max-width: 1024px) {
   .main-body {
@@ -199,13 +37,7 @@ body {
       overflow-y: auto;
     }
   }
-  .adapt-1024-hidder {
-    /* */
-    visibility: hidden;
-  }
-  .adapt-1024-appearer {
-    visibility: visible;
-  }
+
   .main-body .layout-wrapper .layout-topbar {
     #menu-button {
       left: 230px;
@@ -217,45 +49,6 @@ body {
   }
 }
 
-@media screen and (max-width: 800px) {
-  .adapt-800-hidder {
-    visibility: hidden;
-  }
-  .adapt-800-appearer {
-    visibility: visible;
-  }
-  .main-body .layout-wrapper .layout-topbar #menu-button {
-    left: 0px;
-  }
-}
-
-@media screen and (max-width: 640px) {
-  .main-body {
-    .layout-wrapper {
-      .layout-topbar {
-        height: 60px;
-      }
-
-      .layout-main {
-        margin-left: 0;
-        padding-top: 60px;
-      }
-    }
-
-    #layout-right-sidebar, .layout-wrapper .layout-sidebar {
-      top: 60px;
-    }
-  }
-  .adapt-640-hidder {
-    visibility: hidden;
-  }
-  .adapt-640-appearer {
-    visibility: visible;
-  }
-  .main-body .main-menu {
-    width: 100%;
-  }
-}
 
 /* TODO add a class for this kind of button instead of using the ids */
 
@@ -319,10 +112,6 @@ body {
     }
   }
 
-  .layout-topbar {
-    align-items: center;
-    display: flex;
-  }
 
   .layout-footer {
     clear: both;
@@ -494,11 +283,7 @@ body {
   }
 }
 
-#newsform {
 
-
-
-}
 
 .more-link {
   text-align: end;

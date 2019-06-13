@@ -15,11 +15,14 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
         this.expandedMenuitems = this.expandedMenuitems||[];
         this.menuButton = $('#menu-button');
         this.megaMenuButton = $('#layout-megamenu-button');
+        this.topbarMenuButton = $('#topbar-menu-button');
+        this.topbarUserMenu = $('#topbar-usermenu');
 
         this.megaMenuClick = false;
         this.rightSidebarClick = false;
         this.sidebarMenuClick = false;
         this.sidebarUserMenuClick = false;
+        this.topbarMenuClick = false;
 
         this._bindEvents();
 
@@ -32,6 +35,42 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
 
     _bindEvents: function() {
         var $this = this;
+
+
+        $this.topbarMenuButton.off('click').on('click', function (e) {
+            //TODO: Move to CSS
+            $this.topbarUserMenu.css({ top: '60px', right: '0', left: 'auto' });
+            $this.topbarMenuClick = true;
+
+            if ($this.topbarUserMenu.hasClass('usermenu-active')) {
+                $this.topbarUserMenu.removeClass('fadeInDown').addClass('fadeOutUp');
+
+                setTimeout(function () {
+                    $this.topbarUserMenu.removeClass('usermenu-active fadeOutUp');
+                }, 250);
+            }
+            else {
+                $this.topbarUserMenu.addClass('usermenu-active fadeInDown');
+            }
+
+            e.preventDefault();
+        });
+
+        $this.topbarUserMenu.off('click').on('click', function (e) {
+            $this.topbarMenuClick = true;
+        });
+
+
+        $(document.body).off('click').on('click', function () {
+
+
+            if (!$this.topbarMenuClick && $this.topbarUserMenu.hasClass('usermenu-active')) {
+                $this.topbarUserMenu.removeClass('usermenu-active')
+            }
+
+            $this.topbarMenuClick = false;
+        });
+
 
         $this.sidebar.off('click').on('click', function () {
             $this.sidebarMenuClick = true;

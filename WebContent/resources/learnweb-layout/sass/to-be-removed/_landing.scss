@@ -14,7 +14,7 @@
     }
 
     .header-menu{
-      padding-right: 15px;
+      padding-right: 1rem;
       margin-bottom: 0;
 
       a{
@@ -33,9 +33,9 @@
   }
 
   .header{
-    background: url("/resources/learnweb-layout/images/landing-background.jpg");
+    background: url("/resources/frontpage/luh.jpg");
     padding: 5rem 0;
-
+    background-size: cover;
     .header-content-panel{
       padding: 1rem 1.5rem;
       background-color: white;
@@ -57,11 +57,11 @@
         font-size: 1rem;
         padding: .5rem 1rem;
         margin: 0;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.8);
       }
 
       .ui-datalist-content{
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0);
         border: none;
         padding: 1rem;
         max-height: 24rem;
@@ -150,6 +150,8 @@
 
   }
 
+
+
   .pricing{
     padding: 3rem 0;
     background-color: $main-teal;
@@ -170,10 +172,13 @@
         color: $white;
         background-color: $main-dark-green-color;
         letter-spacing: 0.1rem;
+        padding: 0.8rem 0;
+        font-weight: 600;
       }
 
       .pricing-subheader {
         background-color: $landing-subheader;
+        font-weight: 600;
       }
 
 
@@ -184,7 +189,7 @@
 
       .pricing-content {
         padding-top: 1rem;
-
+        padding-bottom: 2rem;
         span {
           text-align: left;
           display: block;
@@ -207,7 +212,7 @@
   .footer {
     background-color: $main-dark-green-color;
     border-top: 0.2rem solid $white;
-
+    padding: 2rem;
     h3 {
       font-size: 1.5rem;
       text-align: center;
