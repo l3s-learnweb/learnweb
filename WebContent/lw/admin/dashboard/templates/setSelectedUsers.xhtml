@@ -40,10 +40,15 @@
                     </p:outputPanel>
                     <p:outputPanel id="groupsSelectPanel">
                         <p:panel>
-                            <p:selectCheckboxMenu label="Groups"
+                            <p:selectCheckboxMenu
                                                   style="width: 75px;"
-                                                  filter="true"
-                                                  filterMatchMode="startsWith">
+                                                  value="#{nameOfBean.selectedGroupsIds}"
+                                                  var="Group" label="Groups"
+                                                  filter="true" filterMatchMode="startsWith">
+                                <p:ajax global="false"
+                                        update="dateAndSubmitPanel"/>
+                                <p:ajax event="toggleSelect" global="false"
+                                        update="dateAndSubmitPanel"/>
                                 <f:selectItems
                                         value="#{nameOfBean.getAllGroups()}" var="group"
                                         itemValue="#{group.id}"/>

@@ -133,10 +133,6 @@
 							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-align:center;" />
 							<p:dataExporter type="pdf" fileName="glossary" target="my_gloss_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
-                        <p:commandLink id="show_all" actionListener="#{glossaryBean.togglePaginator()}" update=":my_gloss_table @this"
-                                       rendered="#{glossaryBean.entryCount >= 100}">
-                            <h:outputText value="#{glossaryBean.toggleLabel}" oncomplete="groupRow();" />
-                        </p:commandLink>
 					</p:panelGrid>
 
                     <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"

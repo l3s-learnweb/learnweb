@@ -72,6 +72,25 @@
                 </h:form>
             </c:if>
 
+            <h:form id="request_group_form" >
+                <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
+                <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
+                    <h:outputFormat  value="#{msg.export_resources_warning}">
+                        <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.groupId)} "/>
+                        <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.groupId)}"/>
+                    </h:outputFormat>
+
+                    <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.groupId)}" scrollable="true" scrollHeight="150" style="width: auto; left: 10%;">
+                        <p:column headerText="#{msg.external_resources}">
+                            <h:outputText value="#{entry}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.groupId}" />
+                    <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}" styleClass="resource_button greenbutton resourcetoolbutton" />
+                </p:dialog>
+            </h:form>
+
             <h:form id="center_header_form">
                 <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
                                  iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton"

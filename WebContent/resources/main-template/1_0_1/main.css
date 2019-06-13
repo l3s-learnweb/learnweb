@@ -671,6 +671,7 @@ body .ui-datatable thead th {
 }
 
 form#center_header_form { float:right; }
+form#request_group_form { float:right; }
 .resource_button {
 	float:right;
 	position:relative;

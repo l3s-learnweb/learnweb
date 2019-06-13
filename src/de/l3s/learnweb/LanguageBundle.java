@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -150,8 +152,27 @@ public class LanguageBundle extends ResourceBundle
         return values != null ? Collections.enumeration(values.keySet()) : parent.getKeys();
     }
 
+    private static List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<Locale>());
+
+    /**
+     *
+     * @return Supported frontend locales as defined in faces-config.xml
+     */
+    public static List<Locale> getSupportedLocales()
+    {
+        if(supportedLocales.isEmpty())
+        {
+            Iterator<Locale> iterator = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
+
+            iterator.forEachRemaining(supportedLocales::add);
+        }
+        return supportedLocales;
+    }
+
     public static void main(String[] args)
     {
+        FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
+
         System.out.println(new Locale("it"));
         System.out.println(new Locale("nl"));
         System.out.println(new Locale("en"));
@@ -166,7 +187,7 @@ public class LanguageBundle extends ResourceBundle
         log.debug(bundle.getString("register_account_already_wizard"));
         log.debug(bundle.getString("register_lw_account_wizard"));
 
-        locale = new Locale("en", "UK");
+        locale = new Locale("en");
         bundle = new LanguageBundle(locale);
         System.out.println(bundle.getString("homepageTitle"));
         bundle = new LanguageBundle(locale);

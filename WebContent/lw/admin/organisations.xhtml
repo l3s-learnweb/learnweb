@@ -7,46 +7,32 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.organization}"/>
-	
-	
+	<ui:param name="pageTitle" value="#{msg.organizations}"/>
 
-	<ui:define name="content">
-
-        <div class="page-header">
-            <h1>#{msg.organization}</h1>
-        </div>
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf" />
+	</ui:define>
 	
+	<ui:define name="content">	
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}"  >
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
 					<h:outputText value="#{organisation.title}" />		
-				</p:column>	
-				
-				<p:column headerText="id" sortable="true" sortBy="#{organisation.id}">
-					<h:outputText value="#{organisation.id}" />
-				</p:column>	
-				
+				</p:column>					
 				
 				<p:column headerText="Welcome Page" >
 					<h:outputText value="#{organisation.welcomePage}" />						
 				</p:column>	
 				
 				<p:column style="width: 13%;" styleClass="organizations-column column-button" headerText="#{msg.edit}">
-					<p:commandButton styleClass="btn-as-link" action="organisation" title="#{msg.delete}" value="#{msg.edit}" ajax="false">
-                        <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-
-						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />
-					</p:commandButton>
-                    <!--<h:outputLink action="organisation" target="#{adminOrganisationsBean.selectedOrganisation}" title="#{msg.edit}">
-                        <h:graphicImage target="#{adminOrganisationsBean.selectedOrganisation}" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-                        <h:outputText value="#{msg.edit}" target="#{adminOrganisationsBean.selectedOrganisation}" />
-                    </h:outputLink>-->
+					 <h:link title="#{msg.edit}" value="#{msg.edit}" outcome="/lw/admin/organisation">
+					 	<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+			            <f:param name="organisation_id" value="#{organisation.id}" />
+			        </h:link>		
 				</p:column>	
 				
 			</p:dataTable>	
-		</h:form>
-		
+		</h:form>		
 		<br/>
 		
 	</ui:define>
