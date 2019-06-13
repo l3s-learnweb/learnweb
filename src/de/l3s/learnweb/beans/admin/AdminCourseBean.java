@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
 
 @Named
-@SessionScoped // TODO this should not be session scoped. but right no it doesn't work without. need to update frontend
+@SessionScoped // TODO this should not be session scoped. but right now it doesn't work without. need to update frontend
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1276599881084055950L;

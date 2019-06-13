@@ -152,18 +152,21 @@ public class LanguageBundle extends ResourceBundle
         return values != null ? Collections.enumeration(values.keySet()) : parent.getKeys();
     }
 
+    private static List<Locale> supportedLocales = Collections.synchronizedList(new ArrayList<Locale>());
+
     /**
      *
      * @return Supported frontend locales as defined in faces-config.xml
      */
     public static List<Locale> getSupportedLocales()
     {
-        Iterator<Locale> iterator = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
+        if(supportedLocales.isEmpty())
+        {
+            Iterator<Locale> iterator = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
 
-        List<Locale> locales = new ArrayList<Locale>();
-        iterator.forEachRemaining(locales::add);
-
-        return locales;
+            iterator.forEachRemaining(supportedLocales::add);
+        }
+        return supportedLocales;
     }
 
     public static void main(String[] args)
