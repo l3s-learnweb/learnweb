@@ -1,10 +1,15 @@
 package de.l3s.learnweb.resource.glossary.builders;
 
-import de.l3s.learnweb.beans.UtilBean;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
-import java.util.*;
+import de.l3s.learnweb.beans.UtilBean;
 
 public abstract class AbstractGlossaryRowBuilder<T>
 {
@@ -27,71 +32,67 @@ public abstract class AbstractGlossaryRowBuilder<T>
     //Workaround for language (change to Language utils, properties or enums...)
     protected Map<String, Locale> languageMap;
 
-    public static void main(String[] args)
-    {
-        Locale[] locales = { Locale.GERMAN, Locale.ENGLISH, Locale.ITALIAN, new Locale("pt") };
-
-        for(Locale locale : locales)
-            System.out.println(UtilBean.getLocaleMessage(locale, "Glossary.topic"));
-    }
-
     public List<Exception> headerInit(Row header, Map<String, Locale> languageMap)
     {
         List<Exception> errors = new ArrayList<>();
         this.languageMap = languageMap;
+
         for(int cellPosition = 0; cellPosition < header.getPhysicalNumberOfCells(); ++cellPosition)
         {
             if(header.getCell(cellPosition) == null)
             {
                 return errors;
             }
-            if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.first_topic"))
+
+            String cellValue = getStringValueForCell(header.getCell(cellPosition));
+
+            if(isEqualForSomeLocale(cellValue, "Glossary.first_topic"))
             {
                 topicOneHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.second_topic"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.second_topic"))
             {
                 topicTwoHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.third_topic"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.third_topic"))
             {
                 topicThreeHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "description"))
+            else if(isEqualForSomeLocale(cellValue, "description"))
             {
                 descriptionHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.term"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.term"))
             {
                 termHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "language"))
+            else if(isEqualForSomeLocale(cellValue, "language"))
             {
                 languageHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.use"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.use"))
             {
                 usesHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.pronounciation"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.pronounciation"))
             {
                 pronunciationHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.acronym"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.acronym"))
             {
                 acronymHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "source"))
+            else if(isEqualForSomeLocale(cellValue, "source"))
             {
                 sourceHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(getStringValueForCell(header.getCell(cellPosition)), "Glossary.phraseology"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.phraseology"))
             {
                 phraseologyHeaderPosition = cellPosition;
             }
             else
             {
-                errors.add(new IllegalArgumentException("Unknown column name: '" + getStringValueForCell(header.getCell(cellPosition)) + "' in cell " + header.getCell(cellPosition).getAddress().formatAsString()));
+                errors.add(new IllegalArgumentException("Unknown column name: '" + cellValue + "' in cell " + header.getCell(cellPosition).getAddress().formatAsString()));
             }
         }
         return errors;
@@ -101,16 +102,16 @@ public abstract class AbstractGlossaryRowBuilder<T>
 
     private boolean isEqualForSomeLocale(String value, String propertyAlias)
     {
-        boolean result = false;
-
         for(Locale localeToCheck : POSSIBLE_LOCALE_LIST)
         {
-            if(value != null && value.equalsIgnoreCase(UtilBean.getLocaleMessage(localeToCheck, propertyAlias)))
+            String translation = UtilBean.getLocaleMessage(localeToCheck, propertyAlias);
+            System.out.println(propertyAlias + "\t" + translation);
+            if(value.equalsIgnoreCase(translation))
             {
-                result = true;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     protected String getStringValueForCell(Cell cell)
@@ -118,17 +119,17 @@ public abstract class AbstractGlossaryRowBuilder<T>
         String result;
         switch(cell.getCellType())
         {
-            case STRING:
-                result = cell.getStringCellValue();
-                break;
-            case NUMERIC:
-                result = String.valueOf(cell.getNumericCellValue());
-                break;
-            case FORMULA:
-                result = cell.getCellFormula();
-                break;
-            default:
-                result = "";
+        case STRING:
+            result = cell.getStringCellValue();
+            break;
+        case NUMERIC:
+            result = String.valueOf(cell.getNumericCellValue());
+            break;
+        case FORMULA:
+            result = cell.getCellFormula();
+            break;
+        default:
+            result = "";
         }
         return result;
     }
