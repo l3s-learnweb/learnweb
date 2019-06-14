@@ -4,7 +4,7 @@
 
  First, you need to install SASS
   - Install nodejs and npm (https://nodejs.org/en/)
-  - `npm i -g scss`
+  - Install scss using npm `npm i -g scss` (https://sass-lang.com/install)
 
  Now you can build all scss files to css files
   - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
@@ -15,6 +15,10 @@
  Good to know:
   - Files starts with underscore (_) means they should not be compiled, they intend to be imported by other files
   - All other files will be compiled from scss to css
+
+ Good to read:
+  - Sass documentation https://sass-lang.com/documentation
+  - Bootstrap documentation (see Layout, Content, Utilities sections) https://getbootstrap.com/docs/
 */
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
@@ -8881,6 +8885,7 @@ html {
   box-sizing: border-box;
   display: block;
   margin: -1px;
+  margin-top: -2px;
 }
 .layout-wrapper .layout-sidebar .ui-tree .ui-tree-container {
   padding: 0;
@@ -8898,6 +8903,7 @@ html {
   white-space: nowrap;
   overflow: hidden;
   width: 100%;
+  border-top: 1px solid #e4e2e0;
 }
 .layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:hover {
   cursor: pointer;

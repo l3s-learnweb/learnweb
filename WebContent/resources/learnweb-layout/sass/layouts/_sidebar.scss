@@ -13,7 +13,7 @@
       box-sizing: border-box;
       display: block;
       margin: -1px;
-
+      margin-top: -2px;
       .ui-tree-container{
         padding: 0;
 
@@ -34,6 +34,7 @@
             white-space: nowrap;
             overflow: hidden;
             width: 100%;
+            border-top: 1px solid #e4e2e0;
 
             &:hover {
               cursor: pointer;
