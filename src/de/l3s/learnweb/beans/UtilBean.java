@@ -12,14 +12,14 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
-import de.l3s.learnweb.group.GroupResourcesBean;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.group.GroupResourcesBean;
 import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
 
@@ -39,11 +39,6 @@ public class UtilBean implements Serializable
         return fc.getExternalContext();
     }
 
-    public static LearnwebBean getLearnwebBean()
-    {
-        return (LearnwebBean) getManagedBean("learnwebBean");
-    }
-
     public static Object getManagedBean(String beanName)
     {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -55,11 +50,13 @@ public class UtilBean implements Serializable
         return (UserBean) getManagedBean("userBean");
     }
 
+    @Deprecated
     public static GroupResourcesBean getGroupResourcesBean()
     {
         return (GroupResourcesBean) getManagedBean("groupResourcesBean");
     }
 
+    @Deprecated
     public static MyResourcesBean getMyResourcesBean()
     {
         return (MyResourcesBean) getManagedBean("myResourcesBean");
@@ -100,7 +97,7 @@ public class UtilBean implements Serializable
     {
         ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", locale);
 
-        String msg;
+        String msg = "";
         try
         {
             msg = bundle.getString(msgKey);
@@ -112,7 +109,13 @@ public class UtilBean implements Serializable
         }
         catch(MissingResourceException e)
         {
-            //	    log.error("Missing translation for key: " + msgKey);
+            //	    log.warn("Missing translation for key: " + msgKey);
+            msg = msgKey;
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.error("Can't translate msgKey=" + msgKey + " with msg=" + msg + "; May happen if the msg contains unexpected curly brackets.", e);
+
             msg = msgKey;
         }
         return msg;
@@ -156,8 +159,10 @@ public class UtilBean implements Serializable
         return timeFormatter.format(date);
     }
 
-    public static String formatValAndPct(int value, int total) {
-        if (total == 0 || value == 0) return "0";
+    public static String formatValAndPct(int value, int total)
+    {
+        if(total == 0 || value == 0)
+            return "0";
         return String.format("%d (%.2f%%)", value, (double) value / total * 100);
     }
 }

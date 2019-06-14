@@ -74,120 +74,102 @@ public class GlossaryManager
         resource.setClonedButNotPersisted(false); //Required to reset it if it was set prior to this.
     }
 
-    public void saveEntry(GlossaryEntry entryCloned, GlossaryResource glossaryResource) throws SQLException
+    public void saveEntry(GlossaryEntry entry, GlossaryResource glossaryResource) throws SQLException
     {
-        entryCloned.setTimestamp(new Timestamp(System.currentTimeMillis())); // change timestamp of entry to latest timestamp
-        if(entryCloned.isDeleted())
+
+        if(entry.isDeleted())
         {
-            deleteEntry(entryCloned);
+            deleteEntry(entry);
         }
         else
         {
-            if(entryCloned.getId() < 0) // new entry
-            {
-                insertEntry(entryCloned);
+            entry.setResourceId(glossaryResource.getId());
+            entry.setTimestamp(new Timestamp(System.currentTimeMillis())); // update timestamp
 
+            if(entry.getId() < 0) // new entry
+            {
+                insertEntry(entry);
+
+                // TODO philipp: check if this can be moved to glossaryBean
                 try
                 {
                     HttpSession session;
                     String sessionId = (session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true)) != null ? session.getId() : null;
-                    learnweb.getLogManager().log(learnweb.getUserManager().getUser(entryCloned.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(), glossaryResource.getId(), Integer.toString(entryCloned.getId()), sessionId);
+                    learnweb.getLogManager().log(learnweb.getUserManager().getUser(entry.getLastChangedByUserId()), Action.glossary_entry_add, glossaryResource.getGroupId(), glossaryResource.getId(), Integer.toString(entry.getId()), sessionId);
                 }
                 catch(Exception e)
                 {
-                    log.error("Error in logging " + Action.glossary_entry_add + " for entry ID: " + entryCloned.getId() + " of resource: " + entryCloned.getResourceId());
+                    log.error("Error in logging " + Action.glossary_entry_add + " for entry ID: " + entry.getId() + " of resource: " + entry.getResourceId());
                 }
-
             }
             else //old entry updated
             {
-                updateEntry(entryCloned);
+                updateEntry(entry);
             }
-            saveTerms(entryCloned, glossaryResource.getGroupId());
-            entryCloned.getTerms().removeIf(GlossaryTerm::isDeleted);
-            //Replace or Add the entry corresponding to cloned entry
-            glossaryResource.getEntries().removeIf(entry -> entry.getId() == entryCloned.getId());
-            glossaryResource.getEntries().add(entryCloned);
+            saveTerms(entry, glossaryResource.getGroupId());
+            entry.getTerms().removeIf(GlossaryTerm::isDeleted);
+
+            // the glossary edit form uses a working copy (clone) therefore we have to replace the original entry
+            glossaryResource.getEntries().removeIf(e -> e.getId() == entry.getId());
+            glossaryResource.getEntries().add(entry);
         }
     }
 
-    private void deleteEntry(GlossaryEntry entryCloned) throws SQLException
+    private void deleteEntry(GlossaryEntry entry) throws SQLException
     {
         try(PreparedStatement deleteEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
             deleteEntry.setBoolean(1, true);
-            deleteEntry.setInt(2, entryCloned.getLastChangedByUserId());
-            deleteEntry.setInt(3, entryCloned.getId());
+            deleteEntry.setInt(2, entry.getLastChangedByUserId());
+            deleteEntry.setInt(3, entry.getId());
             deleteEntry.executeQuery();
         }
         try(PreparedStatement deleteTerms = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_term` SET `deleted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
             deleteTerms.setBoolean(1, true);
-            deleteTerms.setInt(2, entryCloned.getLastChangedByUserId());
-            deleteTerms.setInt(3, entryCloned.getId());
+            deleteTerms.setInt(2, entry.getLastChangedByUserId());
+            deleteTerms.setInt(3, entry.getId());
             deleteTerms.executeQuery();
         }
-
     }
 
-    private void insertEntry(GlossaryEntry entryCloned) throws SQLException
+    private void insertEntry(GlossaryEntry entry) throws SQLException
     {
-
-        //String ins = "INSERT INTO `lw_glossary_entry`(`entry_id`, `resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `last_changed_by_user_id`=VALUES(`last_changed_by_user_id`), `topic_one`=VALUES(`topic_one`), `topic_two`=VALUES(`topic_two`), `topic_three`=VALUES(`topic_three`), `description`=VALUES(`description`), `description_pasted`=VALUES(`description_pasted`)";
         try(PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
                 "INSERT INTO `lw_glossary_entry`(`resource_id`, `original_entry_id`, `last_changed_by_user_id`, `user_id`, `topic_one`, `topic_two`, `topic_three`, `description`, `description_pasted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 PreparedStatement.RETURN_GENERATED_KEYS))
         {
-            //PreparedStatement insertEntry = learnweb.getConnection().prepareStatement(
-            //ins, PreparedStatement.RETURN_GENERATED_KEYS);
-            if(entryCloned.getUserId() <= 0)
-                entryCloned.setUserId(entryCloned.getLastChangedByUserId());//last change by userID == original user ID in insert
-            /*insertEntry.setInt(1, entry.getId());
-            insertEntry.setInt(2, entry.getResourceId());
-            insertEntry.setInt(3, entry.getOriginalEntryId());
-            insertEntry.setInt(4, entry.getLastChangedByUserId());
-            insertEntry.setInt(5, entry.getUserId());
-            insertEntry.setString(6, entry.getTopicOne());
-            insertEntry.setString(7, entry.getTopicTwo());
-            insertEntry.setString(8, entry.getTopicThree());
-            insertEntry.setString(9, entry.getDescription());
-            insertEntry.setBoolean(10, entry.isDescriptionPasted());
-            insertEntry.executeUpdate();*/
-            insertEntry.setInt(1, entryCloned.getResourceId());
-            insertEntry.setInt(2, entryCloned.getOriginalEntryId());
-            insertEntry.setInt(3, entryCloned.getLastChangedByUserId());
-            insertEntry.setInt(4, entryCloned.getUserId());
-            insertEntry.setString(5, entryCloned.getTopicOne());
-            insertEntry.setString(6, entryCloned.getTopicTwo());
-            insertEntry.setString(7, entryCloned.getTopicThree());
-            insertEntry.setString(8, entryCloned.getDescription());
-            insertEntry.setBoolean(9, entryCloned.isDescriptionPasted());
+            if(entry.getUserId() <= 0)
+                entry.setUserId(entry.getLastChangedByUserId());//last change by userID == original user ID in insert
+
+            insertEntry.setInt(1, entry.getResourceId());
+            insertEntry.setInt(2, entry.getOriginalEntryId());
+            insertEntry.setInt(3, entry.getLastChangedByUserId());
+            insertEntry.setInt(4, entry.getUserId());
+            insertEntry.setString(5, entry.getTopicOne());
+            insertEntry.setString(6, entry.getTopicTwo());
+            insertEntry.setString(7, entry.getTopicThree());
+            insertEntry.setString(8, entry.getDescription());
+            insertEntry.setBoolean(9, entry.isDescriptionPasted());
             insertEntry.executeQuery();
-            ResultSet entryInserted = insertEntry.getGeneratedKeys();
-            entryInserted.next();
-            entryCloned.setId(entryInserted.getInt(1));
-            /*if(entry.getId() < 1)
-            {
+
             ResultSet entryInserted = insertEntry.getGeneratedKeys();
             entryInserted.next();
             entry.setId(entryInserted.getInt(1));
-            glossaryResource.getEntries().add(entry);
-            }*/
         }
-
     }
 
-    private void updateEntry(GlossaryEntry entryCloned) throws SQLException
+    private void updateEntry(GlossaryEntry entry) throws SQLException
     {
         try(PreparedStatement updateEntry = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary_entry` SET `topic_one`=?,`topic_two`=?,`topic_three`=?,`description`=?,`description_pasted`=?, `last_changed_by_user_id`=? WHERE `entry_id`=?"))
         {
-            updateEntry.setString(1, entryCloned.getTopicOne());
-            updateEntry.setString(2, entryCloned.getTopicTwo());
-            updateEntry.setString(3, entryCloned.getTopicThree());
-            updateEntry.setString(4, entryCloned.getDescription());
-            updateEntry.setBoolean(5, entryCloned.isDescriptionPasted());
-            updateEntry.setInt(6, entryCloned.getLastChangedByUserId());
-            updateEntry.setInt(7, entryCloned.getId());
+            updateEntry.setString(1, entry.getTopicOne());
+            updateEntry.setString(2, entry.getTopicTwo());
+            updateEntry.setString(3, entry.getTopicThree());
+            updateEntry.setString(4, entry.getDescription());
+            updateEntry.setBoolean(5, entry.isDescriptionPasted());
+            updateEntry.setInt(6, entry.getLastChangedByUserId());
+            updateEntry.setInt(7, entry.getId());
             updateEntry.executeUpdate();
         }
     }
@@ -338,19 +320,6 @@ public class GlossaryManager
             entry.setFulltext(fulltext.toString());
         }
         return entryTerms;
-    }
-
-    public ArrayList<GlossaryTableView> convertToGlossaryTableView(GlossaryResource glossaryResource2)
-    {
-        ArrayList<GlossaryTableView> tableView = new ArrayList<>();
-        for(GlossaryEntry entry : glossaryResource2.getEntries())
-        {
-            for(GlossaryTerm term : entry.getTerms())
-            {
-                tableView.add(new GlossaryTableView(entry, term));
-            }
-        }
-        return tableView;
     }
 
     public void delete(GlossaryResource resource) throws SQLException

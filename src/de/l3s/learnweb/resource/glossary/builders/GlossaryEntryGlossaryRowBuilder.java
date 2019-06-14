@@ -1,21 +1,27 @@
 package de.l3s.learnweb.resource.glossary.builders;
 
-import de.l3s.learnweb.resource.glossary.GlossaryEntry;
-import de.l3s.learnweb.resource.glossary.GlossaryTerm;
-import org.apache.poi.ss.usermodel.Row;
-
 import java.util.Arrays;
 import java.util.List;
 
-public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<GlossaryEntry> {
+import org.apache.poi.ss.usermodel.Row;
+
+import de.l3s.learnweb.resource.glossary.GlossaryEntry;
+import de.l3s.learnweb.resource.glossary.GlossaryTerm;
+
+public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<GlossaryEntry>
+{
 
     @Override
-    public GlossaryEntry build(Row row) {
+    public GlossaryEntry build(Row row)
+    {
         GlossaryEntry result = new GlossaryEntry();
 
-        if (topicOneHeaderPosition >= 0) {
+        if(topicOneHeaderPosition >= 0)
+        {
             result.setTopicOne(getStringValueForCell(row.getCell(topicOneHeaderPosition)));
-        } else {
+        }
+        else
+        {
             throw new IllegalArgumentException("Topic 1 column absent in Excel file");
         }
         result.setTopicTwo(getStringValueForCell(row.getCell(topicTwoHeaderPosition)));
@@ -27,13 +33,15 @@ public class GlossaryEntryGlossaryRowBuilder extends AbstractGlossaryRowBuilder<
         return result;
     }
 
-    private GlossaryTerm buildTerm(Row row) {
+    private GlossaryTerm buildTerm(Row row)
+    {
         GlossaryTerm term = new GlossaryTerm();
 
         term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
 
-        if (!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition)))) {
-            throw new IllegalArgumentException("Language " + getStringValueForCell(row.getCell(languageHeaderPosition)) + " does not support yet" + ". Row " + row.getRowNum());
+        if(!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition))))
+        {
+            throw new IllegalArgumentException("Invalid pronunciation in row" + row.getRowNum() + ": Language " + getStringValueForCell(row.getCell(languageHeaderPosition)) + " does not support yet");
         }
         term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
 

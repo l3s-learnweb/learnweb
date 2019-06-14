@@ -1,23 +1,23 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
+
+import java.io.Serializable;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.ExportManager;
 import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import java.io.Serializable;
 
 /**
  * Accordingly to GDPR user can be able to download all collected about him data.
  * This bean responses on request of data with
- * */
+ */
 @Named
 @ViewScoped
 public class DataExporterBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(DataExporterBean.class);
+    //private static final Logger log = Logger.getLogger(DataExporterBean.class);
 
     private static final long serialVersionUID = -505457925640299810L;
     private ExportManager exportManager;
@@ -33,7 +33,7 @@ public class DataExporterBean extends ApplicationBean implements Serializable
 
     public void requestUserResources() throws Exception
     {
-        exportManager.handleResponse( "user");
+        exportManager.handleResponse("user");
     }
 
     public void requestGroupResources() throws Exception

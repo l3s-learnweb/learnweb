@@ -43,7 +43,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -108,7 +107,7 @@ public class WaybackUrlManager
     }
 
     /**
-     * 
+     *
      * @param url UTF8 or ASCII encoded URL
      * @return
      * @throws URISyntaxException
@@ -142,7 +141,7 @@ public class WaybackUrlManager
 
     /**
      * This method will only return cached records or null if no cached record was found
-     * 
+     *
      * @param url
      * @return
      * @throws URISyntaxException
@@ -867,7 +866,7 @@ public class WaybackUrlManager
             this.factory = factory;
         }
 
-        /* 
+        /*
         @Override
         public Socket createSocket() throws IOException {
         return  factory.createSocket();
@@ -923,7 +922,7 @@ public class WaybackUrlManager
         /*Calendar minCrawlTime = Calendar.getInstance();
         minCrawlTime.add(Calendar.DATE, -1);
         Date MIN_ACCEPTABLE_CRAWL_TIME = minCrawlTime.getTime();
-        
+
         log.debug("start");
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
         UrlRecord record = manager.getUrlRecord("http://www.google.com/");

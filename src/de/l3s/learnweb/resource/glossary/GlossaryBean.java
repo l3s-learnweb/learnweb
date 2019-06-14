@@ -1,23 +1,23 @@
 package de.l3s.learnweb.resource.glossary;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.primefaces.PrimeFaces;
-import org.primefaces.component.datatable.DataTable;
-import org.primefaces.event.FileUploadEvent;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -25,14 +25,32 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Named;
-import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.*;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.primefaces.event.FileUploadEvent;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+
+import de.l3s.learnweb.LanguageBundle;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.glossary.builders.ParsingError;
+import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.learnweb.user.User;
+import de.l3s.util.BeanHelper;
 
 @Named
 @ViewScoped
@@ -43,17 +61,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private int resourceId;
     private GlossaryResource glossaryResource;
-    private List<GlossaryTableView> tableItems;
-    private List<GlossaryTableView> filteredTableItems;
+    private transient List<GlossaryTableView> tableItems;
     private GlossaryEntry formEntry;
     private final List<SelectItem> availableTopicOne = new ArrayList<>();
     private final List<SelectItem> availableTopicTwo = new ArrayList<>();
     private final List<SelectItem> availableTopicThree = new ArrayList<>();
-    private boolean paginator = true;
-    private String toggleLabel = "Show All";
+
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
-    private String resultOfXmlParsing = StringUtils.EMPTY;
+
+    private String importResponse;
+    private List<ParsingError> importErrors = new ArrayList<ParsingError>();
 
     public void onLoad()
     {
@@ -100,15 +118,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void repaintTable()
-    {
-        if(glossaryResource != null)
-        {
-            tableItems = getLearnweb().getGlossaryManager().convertToGlossaryTableView(glossaryResource);
-            setFilteredTableItems(tableItems);
-        }
-    }
-
     public void setGlossaryForm(GlossaryTableView tableItem)
     {
         try
@@ -138,7 +147,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             //logging
             if(formEntry.getId() > 1)
-                log(Action.glossary_entry_edit, glossaryResource.getGroupId(), formEntry.getId(), "", getUser());
+                log(Action.glossary_entry_edit, glossaryResource, formEntry.getId());
 
             formEntry.setLastChangedByUserId(getUser().getId());
 
@@ -153,7 +162,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 term.setLastChangedByUserId(getUser().getId());
                 //log term edit actions
                 if(term.getId() > 0)
-                    log(Action.glossary_term_edit, glossaryResource, glossaryResource.getGroupId());
+                    log(Action.glossary_term_edit, glossaryResource, term.getId());
             }
 
             if(formEntry.getTerms().size() == numberOfDeletedTerms())
@@ -163,7 +172,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 return null;
             }
 
-            formEntry.setLastChangedByUserId(getUser().getId());
             getLearnweb().getGlossaryManager().saveEntry(formEntry, glossaryResource);
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Changes_saved"));
             setKeepMessages();
@@ -203,14 +211,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            log(Action.glossary_entry_delete, glossaryResource.getGroupId(), row.getEntryId(), "", getUser());
+            log(Action.glossary_entry_delete, glossaryResource, row.getEntryId());
             row.getEntry().setDeleted(true);
             row.getEntry().setLastChangedByUserId(getUser().getId());
 
             getLearnweb().getGlossaryManager().saveEntry(row.getEntry(), glossaryResource);
             //Remove entry from resource
             glossaryResource.getEntries().remove(row.getEntry());
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.deleted") + "!");
+            addMessage(FacesMessage.SEVERITY_INFO, "entry_deleted");
             setKeepMessages();
             return "/lw/glossary/glossary.jsf?resource_id=" + getResourceId() + "&faces-redirect=true";
         }
@@ -240,8 +248,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 formEntry.getTerms().remove(term);
             }
             formEntry.setFulltext(null);
-            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term") + ": " + term.getTerm() + " " + getLocaleMessage("Glossary.deleted") + "!");
-            log(Action.glossary_term_delete, glossaryResource.getGroupId(), term.getId(), "", getUser());
+            addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
+
+            log(Action.glossary_term_delete, glossaryResource, term.getId());
         }
         catch(Exception e)
         {
@@ -356,36 +365,29 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void togglePaginator()
-    {
-        paginator = !paginator;
-        toggleLabel = toggleLabel.equalsIgnoreCase("show all") ? getLocaleMessage("Glossary.collapse") : getLocaleMessage("Glossary.show_all");
-    }
-
-    public String getToggleLabel()
-    {
-        return toggleLabel;
-    }
-
+    /**
+     * Maps all valid names of allowed languages to their Locale
+     *
+     * @return
+     */
     private Map<String, Locale> getLanguageMap()
     {
-        // map term language name to locale
         HashMap<String, Locale> languageMap = new HashMap<>();
-        for(Locale locale : glossaryResource.getAllowedLanguages()) // English mapping
+        for(Locale supportedLocale : LanguageBundle.getSupportedLocales())
         {
-            languageMap.put(locale.toLanguageTag(), locale);
-        }
-        for(SelectItem item : getAllowedTermLanguages()) // translated mapping
-        {
-            languageMap.put(item.getLabel(), (Locale) item.getValue());
+            for(Locale glossaryLocale : glossaryResource.getAllowedLanguages())
+            {
+                languageMap.put(UtilBean.getLocaleMessage(supportedLocale, "language_" + glossaryLocale.getLanguage()), glossaryLocale);
+            }
         }
         return languageMap;
     }
 
-    public void parseXls(FileUploadEvent fileUploadEvent)
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException
     {
-        resultOfXmlParsing = StringUtils.EMPTY;
-
+        log.debug("parseXls");
+        importResponse = StringUtils.EMPTY;
+        importErrors.clear();
 
         User user = getUser();
         if(user == null)
@@ -396,31 +398,41 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         try
         {
             parser.parseGlossaryEntries();
-            formattedResultOfProcess.append("Imported entry count - ").append(parser.getEntries().size()).append(" errors count - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
+
+            // TODO add also success message if no errors occur
+            formattedResultOfProcess.append("Amount of errors - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
             if(!parser.getErrorsDuringProcessing().isEmpty())
             {
-                log.error("Found some errors during Glossary xml parsing (see additional info on UI)");
+                log.error("Found some errors during Glossary xls parsing (see additional info on UI)");
                 formattedResultOfProcess.append("Errors:<br/>");
                 parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
-
-                log.error(resultOfXmlParsing);
-
             }
-            else
+            importResponse = formattedResultOfProcess.toString();
+
+            // TODO importErrors = parser.getErrorsDuringProcessing();
+
+            // persist parsed entries
+            int userId = getUser().getId();
+            for(GlossaryEntry entry : parser.getEntries())
             {
-                glossaryResource.getEntries().addAll(parser.getEntries());
-                repaintTable();
+                // set creator of new entries
+                entry.setUserId(userId);
+                entry.getTerms().forEach(term -> term.setUserId(userId));
+                entry.setOriginalEntryId(-1); // to indicate that it was imported from a file
+
+                getLearnweb().getGlossaryManager().saveEntry(entry, glossaryResource);
             }
-            resultOfXmlParsing = formattedResultOfProcess.toString();
-            PrimeFaces.current().ajax().update("glossary_dialog");
-            PrimeFaces.current().executeScript("PF('glossTable').filter();");
+
+            repaintTable();
         }
         catch(IOException e)
         {
-            //TODO DISPLAY FILE CANNOT BE READ
+            // TODO add appropriate notification of the user
+            // TODO never use System.out.println
             System.out.println("There is IOException error");
             System.out.println(e.toString());
         }
+        log.debug("parseXls done");
     }
 
     public void postProcessXls(Object document)
@@ -436,11 +448,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 log.debug("post processing glossary xls");
 
                 HSSFWorkbook wb = (HSSFWorkbook) document;
-
                 HSSFSheet sheet = wb.getSheetAt(0);
-
                 HSSFRow row0 = sheet.getRow(1);
-                HSSFCell cell0;
+
+                if(row0 == null)
+                    return;
+
+                HSSFCell cell0 = row0.getCell(0);
 
                 File watermark = text2Image(getLearnweb().getResourceManager().getResource(resourceId).getUser().getUsername());
 
@@ -450,19 +464,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
                 is.close();
                 CreationHelper helper = wb.getCreationHelper();
-                Drawing drawing = sheet.createDrawingPatriarch();
+                HSSFPatriarch drawing = sheet.createDrawingPatriarch();
                 ClientAnchor anchor = helper.createClientAnchor();
                 anchor.setAnchorType(ClientAnchor.AnchorType.DONT_MOVE_AND_RESIZE);
-
-                if(row0 != null)
-                {
-                    cell0 = row0.getCell(0);
-                }
-                else
-                {
-
-                    return;
-                }
 
                 for(int i = 2; i <= sheet.getLastRowNum(); i++)
                 {
@@ -514,7 +518,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
             addErrorMessage(e);
         }
-
     }
 
     public File text2Image(String textString) throws IOException
@@ -583,25 +586,28 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return glossaryResource;
     }
 
+    /**
+     * force reload of the tableItems from the glossaryResource
+     */
+    private void repaintTable()
+    {
+        tableItems = null;
+    }
+
     public List<GlossaryTableView> getTableItems()
     {
+        if(null == tableItems && glossaryResource != null)
+        {
+            tableItems = glossaryResource.getGlossaryTableView();
+        }
+        log.debug("getTableItems() " + tableItems.size());
+
         return tableItems;
-    }
-
-    public List<GlossaryTableView> getFilteredTableItems()
-    {
-        return filteredTableItems;
-    }
-
-    public void setFilteredTableItems(List<GlossaryTableView> filteredTableItems)
-    {
-        this.filteredTableItems = filteredTableItems;
     }
 
     public int getEntryCount()
     {
         return glossaryResource.getEntries().size();
-
     }
 
     public GlossaryEntry getFormEntry()
@@ -633,16 +639,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             allowedTermLanguages = localesToSelectItems(glossaryResource.getAllowedLanguages());
         }
         return allowedTermLanguages;
-    }
-
-    public String getResultOfXmlParsing()
-    {
-        return resultOfXmlParsing;
-    }
-
-    public boolean isPaginator()
-    {
-        return paginator;
     }
 
     public boolean isOptionMandatoryDescription()
@@ -709,6 +705,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return property;
         }
     }*/
+
+    public String getImportResponse()
+    {
+        return importResponse;
+    }
+
+    public List<ParsingError> getImportErrors()
+    {
+        return importErrors;
+    }
 
     public List<Locale> getTableLanguageFilter()
     {

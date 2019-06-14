@@ -3,6 +3,7 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -242,7 +243,6 @@ public class UserBean implements Serializable
             log.error("Unsupported language: " + localeCode);
             break;
         }
-        //log.debug("Locale set: " + locale + ";");
 
         localePrettyTime = null; // reset date formatter
 
@@ -305,7 +305,7 @@ public class UserBean implements Serializable
      */
     public boolean canModerateCourse(Course course) throws SQLException
     {
-        LinkedList<Course> courses = new LinkedList<>(); // create dummy list with single entry
+        List<Course> courses = new ArrayList<>(1); // create dummy list with single entry
         courses.add(course);
 
         return canModerateCourses(courses);

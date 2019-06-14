@@ -1,4 +1,4 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
-import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Course;
@@ -21,7 +19,7 @@ import de.l3s.learnweb.user.User;
 public class YourCoursesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 2345329598608998027L;
-    private static final Logger log = Logger.getLogger(YourCoursesBean.class);
+    //private static final Logger log = Logger.getLogger(YourCoursesBean.class);
 
     private List<Course> courses;
 

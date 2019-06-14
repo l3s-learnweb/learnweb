@@ -51,9 +51,9 @@ public enum Action
     edit_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // param = folder name; target_id = folder_id
     glossary_open(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
     glossary_create(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
-    glossary_entry_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
-    glossary_entry_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
-    glossary_entry_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
+    glossary_entry_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary entry id
+    glossary_entry_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary entry id
+    glossary_entry_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary entry id
     glossary_term_edit(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
     glossary_term_add(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary id
     glossary_term_delete(ActionTargetId.RESOURCE_ID, ActionCategory.GLOSSARY), // target_id = resource id, param = glossary_term_id
@@ -129,7 +129,7 @@ public enum Action
 
     public static void main(String[] arg)
     {
-       
+
         for(ActionCategory category : ActionCategory.values())
         {
             System.out.print("\n" + category + ": ");
@@ -143,7 +143,7 @@ public enum Action
         }
 
         /*
-      Action[] actions = { Action.unused };
+        Action[] actions = { Action.unused };
 
         System.out.print("\nCASE action");
 
