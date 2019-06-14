@@ -1,25 +1,25 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.user.User;
+
 /**
  * YourResourcesBean is responsible for displaying user resources.
- * */
+ */
 @Named
 @ViewScoped
 public class YourResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 5490911640532982940L;
-    private static final Logger log = Logger.getLogger(YourResourcesBean.class);
+    //private static final Logger log = Logger.getLogger(YourResourcesBean.class);
 
     private List<Resource> userResources;
 

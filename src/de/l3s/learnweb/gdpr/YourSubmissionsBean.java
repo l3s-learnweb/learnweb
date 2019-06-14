@@ -1,15 +1,15 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.submission.Submission;
 import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * YourSubmissionsBean is responsible for displaying user submissions.
@@ -19,7 +19,7 @@ import java.util.List;
 public class YourSubmissionsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -7818173987582995716L;
-    private static final Logger log = Logger.getLogger(YourSubmissionsBean.class);
+    //private static final Logger log = Logger.getLogger(YourSubmissionsBean.class);
 
     private List<Submission> userSubmissions;
 

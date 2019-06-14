@@ -1,15 +1,15 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * MessagesBean is responsible for displaying user messages.
@@ -19,7 +19,7 @@ import java.util.List;
 public class YourMessagesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 9183874194970002045L;
-    private static final Logger log = Logger.getLogger(YourMessagesBean.class);
+    //private static final Logger log = Logger.getLogger(YourMessagesBean.class);
 
     private List<Message> receivedMessages;
     private List<Message> sentMessages;

@@ -1,14 +1,14 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.user.User;
 
 /**
  * PersonalInfoBean is responsible for displaying detailed information about user.
@@ -18,7 +18,7 @@ import java.util.Date;
 public class YourPersonalInfoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6016324259224515500L;
-    private static final Logger log = Logger.getLogger(YourPersonalInfoBean.class);
+    //private static final Logger log = Logger.getLogger(YourPersonalInfoBean.class);
 
     private String fullName;
     private String address;
@@ -35,6 +35,8 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
             // when not logged in
             return;
 
+        // TODO use a helper method to get rid of all these if statements
+
         this.fullName = user.getFullName();
         if(null == fullName)
         {
@@ -50,7 +52,7 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
         Date birthDate = user.getDateOfBirth();
         if(null != birthDate)
         {
-            this.dateOfBirth = user.getDateOfBirth().toString();
+            this.dateOfBirth = user.getDateOfBirth().toString(); // TODO this is bad. USe HSF date formating
         }
         else
         {
@@ -103,7 +105,8 @@ public class YourPersonalInfoBean extends ApplicationBean implements Serializabl
         return this.studentId;
     }
 
-    public String getUserImage(){
+    public String getUserImage()
+    {
         return this.userImage;
     }
 

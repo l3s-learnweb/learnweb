@@ -1,4 +1,4 @@
-package de.l3s.learnweb.gdpr.beans;
+package de.l3s.learnweb.gdpr;
 
 import java.io.Serializable;
 
