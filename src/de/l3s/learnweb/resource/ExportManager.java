@@ -115,6 +115,11 @@ public class ExportManager
 
     /**
      * Future feature to export only selected group resources.
+     * TODO:
+     *      - print list of all resources in dialog box
+     *      - add checkboxes in front of every resource with resource ID as value with checked value by default
+     *      - parse checkboxes in handleResponse and pass list of not selected resource IDs to packGroupResources
+     *      - filter resources list before putting them to filesToPack list
      * */
     private  Map<String, InputStream> packGroupResources(Group group, String platform, List<Integer> selectedResources) throws Exception
     {
@@ -141,7 +146,7 @@ public class ExportManager
         {
             if(lwResource.getStorageType() == Resource.LEARNWEB_RESOURCE)
             {
-                files.put("resources/" + lwResource.getFileName(), new FileInputStream(this.getMainFile(lwResource.getFiles()).getActualFile()));
+                files.put(createFileName("resources/", lwResource.getFileName()), new FileInputStream(this.getMainFile(lwResource.getFiles()).getActualFile()));
             }
         }
 
@@ -163,7 +168,7 @@ public class ExportManager
             } else if (lwResource.getStorageType() == Resource.WEB_RESOURCE)
             {
                 Pair<String, InputStream> file = createUrlFile(lwResource.getUrl(), platform, lwResource.getTitle());
-                files.put(folderName + file.getLeft(), file.getRight());
+                files.put(createFileName(folderName, file.getLeft()), file.getRight());
             }
         }
 
@@ -302,28 +307,11 @@ public class ExportManager
         return result;
     }
 
-    /**
-     * Print information about external resources in dialog menu when group resources are requested.
-     * */
-    public List<String> getExternalResources(int groupId) throws SQLException
+    private String createFileName(final String path, final String fileName)
     {
-        final List<Resource> resources = learnweb.getGroupManager().getGroupById(groupId).getResources();
-        List<String> paths = new ArrayList();
-        for (Resource r : resources)
-        {
-            if (r.getStorageType() == Resource.WEB_RESOURCE)
-            {
-                String prettyPath = r.getPrettyPath();
-                if (null != prettyPath)
-                {
-                    paths.add(r.getPrettyPath() + " > " + r.getTitle());
-                }
-                else
-                {
-                    paths.add(r.getTitle());
-                }
-            }
-        }
-        return paths;
+        String result = path + fileName;
+        // remove illegal symbols to avoid file system errors
+        result = result.replaceAll("[\"<>|*?:/\\\\]", "_");
+        return result;
     }
 }

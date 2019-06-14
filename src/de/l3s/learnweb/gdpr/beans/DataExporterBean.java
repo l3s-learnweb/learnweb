@@ -8,8 +8,6 @@ import org.apache.log4j.Logger;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Accordingly to GDPR user can be able to download all collected about him data.
@@ -41,15 +39,5 @@ public class DataExporterBean extends ApplicationBean implements Serializable
     public void requestGroupResources() throws Exception
     {
         exportManager.handleResponse("group");
-    }
-
-    public int externalResourcesCount(int groupId) throws SQLException
-    {
-        return exportManager.getExternalResources(groupId).size();
-    }
-
-    public List<String> externalResources(int groupId) throws SQLException
-    {
-        return exportManager.getExternalResources(groupId);
     }
 }
