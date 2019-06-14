@@ -1,373 +1,392 @@
-:root {
-  --main-dark-green-color: #04493F;
-  --main-teal-color: #067E6C;
-}
-
 .landing-wrapper {
   background: white;
-}
+  overflow-x: hidden;
 
-#hidden_news {
-  display: none;
-}
+  .container{
+    max-width: 1500px;
+  }
+  /*landing-wrapper 'New style'*/
 
-.landing-wrapper {
+
+  .top-menu{
+    ul{
+      list-style: none;
+    }
+
+    .header-menu{
+      padding-right: 15px;
+
+      a{
+        padding: 1rem;
+        text-decoration: none;
+        border-bottom: 0.2rem solid transparent;
+      }
+
+      a:hover{
+        border-color: $main-teal;
+      }
+
+    }
+
+
+
+  }
+
+  .header{
+    background: url("/resources/learnweb-layout/images/landing-background.jpg");
+    padding: 5rem 0;
+
+    .header-content-panel{
+      padding: 1rem 1.5rem;
+      background-color: white;
+      max-width: 18rem;
+
+      input{
+        margin: 1rem 0;
+        width: 100%;
+      }
+
+    }
+
+    .newsform {
+      display: block;
+      background: rgba(0, 0, 0, 0.9);
+
+      .ui-carousel {
+        padding: 0;
+        border: none;
+        background: rgba(0, 0, 0, 0);
+        border-radius: 0.2rem;
+      }
+
+      .ui-carousel-header {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .ui-carousel-viewport {
+        border: none;
+        height: 24rem;
+      }
+
+      .ui-carousel-item {
+        background: none;
+        border: none!important;
+        color: white;
+        padding: 0 1rem!important;
+        max-height: 23rem;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        overflow-y: auto;
+        margin: 0 0.2rem!important;
+        font-size: larger;
+
+        &::-webkit-scrollbar-track {
+          -webkit-box-shadow: inset 0 0 0.4rem rgba(0, 0, 0, 0.3);
+          border-radius: 0.5rem;
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        &::-webkit-scrollbar {
+          width: 0.5rem;
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 0.6rem;
+          -webkit-box-shadow: inset 0 0 0.3rem rgba(0, 0, 0, 0.3);
+          background-color: #fff;
+        }
+      }
+
+      span {
+        display: block;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+
+  }
+
+  .hidden-news {
+
+    display: none;
+    padding: 1rem;
+    span{
+      font-size: 1rem;
+      margin: 0 0.4rem;
+      text-align: center;
+    }
+    p{
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    h2{
+      font-size: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      margin-top: 1rem;
+    }
+    .ui-datalist-item {
+      border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 1rem;
+    }
+    .ui-widget-content {
+      border: none;
+    }
+
+  }
+
+
+
+  .about{
+    padding: 3rem 0;
+
+    .about-content {
+      color: $main-dark-green-color;
+    }
+
+  }
+
+  .pricing{
+    padding: 3rem 0;
+    background-color: $main-teal;
+    border-top: none;
+
+    h2 {
+      color: $white;
+      font-size: 2rem;
+    }
+
+    .pricing-box {
+      text-align: center;
+      background-color: $white;
+      padding: 0;
+      margin: 1rem;
+
+      .pricing-header {
+        color: $white;
+        background-color: $main-dark-green-color;
+        letter-spacing: 0.1rem;
+      }
+
+      .pricing-subheader {
+        background-color: $landing-subheader;
+      }
+
+
+      .duration {
+        font-size: 1.2rem;
+        color: $main-dark-green-color;
+      }
+
+      .pricing-content {
+        padding-top: 1rem;
+
+        span {
+          text-align: left;
+          display: block;
+          padding: 0.2rem 1.1rem 0.2rem 0;
+          color: $main-dark-green-color;
+        }
+      }
+
+      .ui-button{
+        top: 0;
+        margin-bottom: 1rem;
+      }
+
+
+    }
+
+  }
+
+
+  .footer {
+    background-color: $main-dark-green-color;
+    border-top: 0.2rem solid $white;
+
+    h3 {
+      font-size: 1.5rem;
+      text-align: center;
+      color: $white;
+    }
+  }
+
+
+
+
+
+
+
+  /*end*/
+
   * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
   }
 
-  #header {
-    .header-top {
-      min-height: 60px;
-      background-color: #ffffff;
-      padding: 0 150px;
+}
 
-      .logo {
-        padding-top: 10px;
-        display: inline-block;
-
-        img {
-          height: 40px;
-        }
+@media (max-width: 576px) {
+  .landing-wrapper {
+    .top-menu{
+      .logo{
+        width: 19rem;
+        margin: .5rem;
       }
 
-      .header-menu {
-        text-decoration: none;
-        padding: 0;
-        float: right;
-        height: 60px;
-        margin: 0;
-
-        li {
-          display: inline-block;
-
-          a {
-            display: inline-block;
-            padding: 19px;
-            color: #5b616b;
-            border-bottom: 4px solid transparent;
-
-            &:hover {
-              border-color: var(--main-teal-color);
-            }
-          }
-        }
-      }
-    }
-
-    .header-content {
-      background: url("#{resource['design:images/landing-background.jpg']}");
-      height: 550px;
-      background-size: cover;
-      padding: 150px 150px 0 150px;
-
-      .header-content-panel {
-        padding: 20px 25px;
-        background-color: white;
-        text-align: left;
-        width: 300px;
-
-        h1 {
-          color: var(--main-dark-green-color);
-          margin: 0;
-          font-weight: 100;
-        }
-
-        p {
-          color: var(--main-dark-green-color);
-          margin-bottom: 20px;
-        }
-
-        div {
-          color: var(--main-dark-green-color);
-
-          a {
-            color: var(--main-dark-green-color);
-          }
-        }
-
-        .ui-button {
-          margin: 0;
-          padding: 5px 10px;
-
-          span {
-            padding: 0;
-          }
-        }
-      }
-    }
-  }
-
-  .premium {
-    background-color: white;
-    padding: 32px 0;
-
-    .premium-content {
-      padding: 20px 150px;
-
-      h1 {
-        color: var(--main-dark-green-color);
-        margin: 0;
-        font-weight: 100;
-      }
-
-      p {
-        color: var(--main-dark-green-color);
-        padding-bottom: 30px;
+      .header-menu{
         margin-bottom: 0;
-        max-width: 400px;
       }
 
-      .ui-button {
-        margin: 0;
-      }
     }
-  }
-
-  .pricing {
-    padding: 20px 150px;
-    background-color: var(--main-teal-color);
-
-    h2 {
-      color: #ffffff;
-      text-align: left;
-      font-weight: 100;
-      font-size: 28px;
-    }
-
-    .pricing-box {
-      text-align: center;
-      background-color: #ffffff;
-      padding: 0;
-      margin: .5em;
-      height: fit-content;
-
-      .pricing-header {
-        color: #ffffff;
-        background-color: var(--main-dark-green-color);
-        letter-spacing: 2px;
-        font-weight: 600;
-        padding: 12px 0px;
-      }
-
-      .pricing-subheader {
-        background-color: #efefef;
-      }
-
-      .price {
+    .header{
+      .header-content-panel{
         display: block;
-        font-size: 32px;
-        font-weight: 600;
-        color: var(--main-dark-green-color);
+        margin: 0 auto;
+        max-width: 20rem;
       }
-
-      .duration {
-        display: block;
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--main-dark-green-color);
-      }
-
-      .pricing-content {
-        background-color: #ffffff;
-        /*min-height: 175px;*/
-        padding-top: 20px;
-
-        span {
-          text-align: left;
-          display: block;
-          padding: 5px 0;
-          color: var(--main-dark-green-color);
-        }
-      }
-
-      .ui-button {
-        position: relative;
-      }
-
-      &.pricing-basic {
-        .pricing-header {
-          background-color: var(--main-dark-green-color);
-        }
-
-        .price, .duration {
-          color: var(--main-dark-green-color);
-        }
+      .newsform {
+        display: none;
       }
     }
-  }
 
-  .footer {
-    background-color: var(--main-dark-green-color);
-    border-top: 2px solid #ffffff;
-    padding: 50px 150px;
-
-    .appname {
-      font-size: 24px;
-      font-weight: 500;
-      text-align: left;
-      color: #ffffff;
-      margin: 0 0 14px 0;
-    }
-
-    p {
-      margin: 0;
-      color: #ffffff;
-    }
-
-    a {
-      color: #9faebf;
-      font-size: 14px;
+    .hidden-news {
       display: block;
-      opacity: 0.9;
+    }
 
-      &:hover {
-        color: #ffffff;
-      }
-
-      i {
-        padding: 5px 15px 0px 0px;
-        line-height: 24px;
-        font-size: 24px;
+    .about{
+      h2{
+        text-align: center;
       }
     }
 
-    .header {
-      color: #9faebf;
-      font-size: 14px;
-      display: block;
-      opacity: 0.9;
-      line-height: 35px;
-      font-weight: 700;
+    .pricing{
+      h2{
+        text-align: center;
+      }
+      .pricing-box{
+        margin: 2rem;
+      }
     }
 
-    .footer-social a {
-      display: inline-block;
-    }
+
   }
 }
 
-@media (max-width: 1025px) {
+@media (min-width: 577px) and (max-width: 768px) {
   .landing-wrapper {
-    #header {
-      .header-top {
-        padding: 0;
-        text-align: center;
-
-        .header-menu {
-          float: none;
-
-          li a {
-            padding: 19px 5px;
-          }
-        }
+    .top-menu{
+      .logo{
+        width: 19rem;
+        margin: .5rem;
       }
 
-      .header-content {
-        padding: 20px 0;
+      .header-menu{
+        margin-bottom: 0;
+      }
 
-        .header-content-panel {
-          text-align: center;
-          margin: 0 auto;
-        }
+    }
+    .header{
+      .header-content-panel{
+        display: block;
+        margin: 0 auto;
+        max-width: 20rem;
+      }
+      .newsform {
+        display: none;
       }
     }
 
-    .features {
-      padding: 75px 50px;
-      text-align: center;
-
-      h2 {
-        text-align: center;
-      }
-
-      img {
-        width: 130px;
-      }
-
-      .ui-g-9 {
-        padding-left: 0;
-      }
-
-      .ui-g > .ui-g-12 {
-        padding-top: 32px;
-      }
-
-      p {
-        text-align: center;
-        padding-right: 0;
-      }
+    .hidden-news {
+      display: block;
     }
 
-    .premium {
-      background-color: white;
-
-      .premium-content {
-        padding: 5px 50px;
-        text-align: center;
-
-        p {
-          max-width: 700px;
-        }
-      }
-    }
-
-    .news {
-      padding: 75px 50px;
-      text-align: center;
-
-      .ui-g > .ui-g-12 {
-        padding-top: 32px;
-      }
-    }
-
-    .pricing {
-      padding: 5px 50px;
-      text-align: center;
-
-      .pricing-box .pricing-content {
-        /*min-height: 315px;*/
-      }
-
-      h2 {
+    .about{
+      h2{
         text-align: center;
       }
     }
 
-    .media {
-      padding: 75px 50px;
-
-      .video-container iframe {
-        width: 100%;
-      }
-    }
-
-    .footer {
-      padding: 75px 50px;
-      text-align: center;
-
-      .appname {
+    .pricing{
+      h2{
         text-align: center;
       }
-
-      .ui-g > .ui-g-12 {
-        padding-top: 32px;
+      .pricing-box{
+        margin: 2rem;
       }
     }
+
+
   }
-  #newsform {
-    display: none;
+}
+
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .landing-wrapper {
+    .top-menu{
+      .logo{
+        width: 19rem;
+        margin: .5rem;
+      }
+
+      .header-menu{
+        margin-bottom: 0;
+      }
+
+    }
+    .header{
+      .header-content-panel{
+        display: block;
+        margin: 0 auto;
+        max-width: 20rem;
+      }
+      .newsform {
+        display: none;
+      }
+    }
+
+    .hidden-news {
+      display: block;
+    }
+
+    .about{
+      h2{
+        text-align: center;
+      }
+    }
+
+    .pricing{
+      h2{
+        text-align: center;
+      }
+      .pricing-box{
+        margin: 2rem;
+      }
+    }
+
+
   }
-  #hidden_news {
-    display: block;
-  }
-  .landing-wrapper #header .header-content {
-    height: auto;
-    padding: 0;
-  }
-  .news-panel > div {
-    padding: 15px 0 0;
+}
+
+@media (min-width: 993px) and (max-width: 1200px) {
+  .landing-wrapper {
+    .top-menu{
+
+
+      .header-menu{
+        margin-bottom: 0;
+      }
+
+    }
+
+    .container{
+      max-width: 1000px;
+    }
+
   }
 }
