@@ -97,7 +97,7 @@ public class UtilBean implements Serializable
     {
         ResourceBundle bundle = LanguageBundle.getLanguageBundle("de.l3s.learnweb.lang.messages", locale);
 
-        String msg;
+        String msg = "";
         try
         {
             msg = bundle.getString(msgKey);
@@ -109,7 +109,13 @@ public class UtilBean implements Serializable
         }
         catch(MissingResourceException e)
         {
-            //	    log.error("Missing translation for key: " + msgKey);
+            //	    log.warn("Missing translation for key: " + msgKey);
+            msg = msgKey;
+        }
+        catch(IllegalArgumentException e)
+        {
+            log.error("Can't translate msgKey=" + msgKey + " with msg=" + msg + "; May happen if the msg contains unexpected curly brackets.", e);
+
             msg = msgKey;
         }
         return msg;

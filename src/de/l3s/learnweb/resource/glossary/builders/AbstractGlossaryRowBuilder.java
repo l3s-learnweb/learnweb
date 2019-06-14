@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.glossary.builders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -9,13 +8,11 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
+import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.UtilBean;
 
 public abstract class AbstractGlossaryRowBuilder<T>
 {
-
-    private static final List<Locale> POSSIBLE_LOCALE_LIST = Arrays.asList(Locale.ENGLISH, Locale.ITALIAN, Locale.GERMAN, new Locale("pt"));
-
     protected int topicOneHeaderPosition = -1;
     protected int topicTwoHeaderPosition = -1;
     protected int topicThreeHeaderPosition = -1;
@@ -58,7 +55,7 @@ public abstract class AbstractGlossaryRowBuilder<T>
             {
                 topicThreeHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(cellValue, "description"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.description"))
             {
                 descriptionHeaderPosition = cellPosition;
             }
@@ -102,10 +99,10 @@ public abstract class AbstractGlossaryRowBuilder<T>
 
     private boolean isEqualForSomeLocale(String value, String propertyAlias)
     {
-        for(Locale localeToCheck : POSSIBLE_LOCALE_LIST)
+        for(Locale localeToCheck : LanguageBundle.getSupportedLocales())
         {
             String translation = UtilBean.getLocaleMessage(localeToCheck, propertyAlias);
-            System.out.println(propertyAlias + "\t" + translation);
+
             if(value.equalsIgnoreCase(translation))
             {
                 return true;
@@ -116,22 +113,17 @@ public abstract class AbstractGlossaryRowBuilder<T>
 
     protected String getStringValueForCell(Cell cell)
     {
-        String result;
         switch(cell.getCellType())
         {
         case STRING:
-            result = cell.getStringCellValue();
-            break;
+            return cell.getStringCellValue();
         case NUMERIC:
-            result = String.valueOf(cell.getNumericCellValue());
-            break;
+            return String.valueOf(cell.getNumericCellValue());
         case FORMULA:
-            result = cell.getCellFormula();
-            break;
+            return cell.getCellFormula();
         default:
-            result = "";
+            return "";
         }
-        return result;
     }
 
 }
