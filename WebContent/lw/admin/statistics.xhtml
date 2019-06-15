@@ -8,16 +8,10 @@
  
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
-
-	<ui:define name="content">
-
-		
-		<div class="page-header" >
-
-			<h1>#{msg.statistics_group}</h1>
-
-		</div>
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.statistics_group}" url="admin/statistics.jsf#"/>
+	</ui:define>
+	<ui:define name="center_layout">
 		<h:form id="anlyse_form" styleClass="form">
 			<div class="p-grid margin-top no-padding-bottom">
 				<div class="p-col-12 grid no-padding-top no-padding-bottom ">

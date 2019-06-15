@@ -358,6 +358,41 @@ body {
             padding: $headerPadding;
         }
     }
+    
+    .ui-dataview {        
+        .ui-dataview-header {
+            padding: $headerPadding;
+            font-weight: 700;
+            font-size: $fontSize + 2;
+            text-align: left;
+
+            & + .ui-paginator-top {
+                border-top: 0 none;
+            }
+            
+            .ui-dataview-layout-options {
+                .ui-button-icon-only {
+                    width: 2.5em;
+                }
+            }
+        }
+        
+        .ui-paginator {
+            padding: 0;
+
+            &.ui-paginator-top {
+                border-bottom: 0 none;
+            }
+    
+            &.ui-paginator-bottom {
+                padding-top: 0;
+    
+                .ui-paginator-pages {
+                    padding: 4px 0 0 0;
+                }
+            }
+        }
+    }
 
     .ui-picklist {
         .ui-picklist-buttons {
@@ -401,7 +436,7 @@ body {
         }
 
         .ui-picklist-filter-container {
-            display: none;
+            padding: .5em;
         }
 
         .ui-picklist-list {

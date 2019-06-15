@@ -3,9 +3,12 @@ package de.l3s.learnweb.user;
 import de.l3s.learnweb.Learnweb;
 import org.apache.log4j.Logger;
 
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 
 public class News
@@ -18,6 +21,9 @@ public class News
     private String text;
     private Date date;
     private int user_id;
+
+    String DATE_FORMAT = "dd-MM-yyyy";
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
     public int getUser_id()
     {
@@ -35,9 +41,10 @@ public class News
         this.date = date;
     }
 
-    public Date getDate()
+    public String getDate() throws ParseException
     {
-        return date;
+        String s = sdf.format(date);
+        return  s;
     }
     public int getId()
     {

@@ -22,8 +22,8 @@
 		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf" />
 		<p:menuitem value="#{adminOrganisationBean.selectedOrganisation.title}" url="#" />
 	</ui:define>
-	
-    <ui:define name="content">
+
+    <ui:define name="center_layout">
         <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
             <h:form id="editwelcomeform" styleClass="form">
                 <div class="p-grid">
@@ -77,7 +77,7 @@
                                         </p>
                                         <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                             <f:selectItem itemLabel="No default" itemValue="#{null}" />
-                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang" 
+                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
                                             	itemLabel="#{msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                         </p:selectOneMenu>
 
@@ -86,7 +86,7 @@
                                         </p>
                                         <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
                                             <f:selectItem itemValue="" itemLabel="No variant" />
-                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant" 
+                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
                                             	itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
                                         </p:selectOneMenu>
 

@@ -47,6 +47,13 @@
     transition:         $transition;
 }
 
+@mixin focused-input() {
+    outline: 0;
+    border-color: $focusOutlineColor;
+    background-color: white;
+    @include shadow(0 0 5px rgba(0,112,210,.35));
+}
+
 @mixin rotate($deg) {
     -webkit-transform: rotate($deg);
     -moz-transform: rotate($deg);
@@ -84,11 +91,18 @@
     -moz-box-shadow: $value;
 }
 
-@mixin focused-input() {
-    outline: 0;
-    border-color: $focusOutlineColor;
-    background-color: white;
-    @include shadow(0 0 5px rgba(0,112,210,.35));
+@mixin translateX($val) {
+    -webkit-transform: translateX($val);
+    -moz-transform: translateX($val);
+    -o-transform: translateX($val);
+    -ms-transform: translateX($val);
+    transform: translateX($val);
+}
+
+@mixin box-sizing($box-model) {
+    -webkit-box-sizing: $box-model;
+    -moz-box-sizing: $box-model;
+    box-sizing: $box-model;
 }
 
 @mixin border-box() {

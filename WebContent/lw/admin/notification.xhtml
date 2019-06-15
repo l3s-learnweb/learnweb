@@ -9,13 +9,11 @@
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.notification}" />
-
-	<ui:define name="content">
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.notification}" url="admin/notification.jsf#"/>
+	</ui:define>
+	<ui:define name="center_layout">
 		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
-
-		<div class="page-header">
-			<h1>#{msg.notification}</h1>
-		</div>
 
 		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
 			<h:form id="us_form" styleClass="form">

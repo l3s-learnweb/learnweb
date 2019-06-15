@@ -20,10 +20,13 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import de.l3s.learnweb.group.Link;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 
 import de.l3s.learnweb.Learnweb;
@@ -35,6 +38,7 @@ import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import org.primefaces.model.menu.MenuModel;
 
 @Named
 @SessionScoped
@@ -57,6 +61,7 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
+    private DefaultTreeNode groupsTreeSidebar;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -458,6 +463,10 @@ public class UserBean implements Serializable
         return menu;
     }
 
+
+
+
+
     public boolean isGroupResourcesPage()
     {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
@@ -470,6 +479,7 @@ public class UserBean implements Serializable
      * @return
      * @throws SQLException
      */
+
     public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
         if(!isLoggedIn())
@@ -498,6 +508,31 @@ public class UserBean implements Serializable
 
         return groupsTree;
     }
+
+    public TreeNode getGroupsTreeForSidebar() throws SQLException
+    {
+        if(!isLoggedIn())
+            return null;
+            groupsTreeSidebar = new DefaultTreeNode("myGroups");
+
+            GroupManager gm = Learnweb.getInstance().getGroupManager();
+            Link myGroups = new Link();
+            myGroups.setUrl("myhome/groups.jsf");
+            myGroups.setTitle("My Groups");
+            TreeNode myGroupsNode = new DefaultTreeNode("link", myGroups, groupsTreeSidebar);
+            myGroupsNode.setSelected(true);
+
+            for(Group group : getUser().getGroups())
+            {
+                log.debug(group.getId());
+                TreeNode groupNode = new DefaultTreeNode("group", group, myGroupsNode);
+                gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+            }
+
+
+        return groupsTreeSidebar;
+    }
+
 
     /**
      * Returns true when there is any tooltip message to show

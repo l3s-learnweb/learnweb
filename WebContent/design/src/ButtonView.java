@@ -1,4 +1,0 @@
-@ManagedBean
-public class ButtonView
-
-}

@@ -1,8 +1,120 @@
-$fontFamily:"Source Sans Pro",Arial,sans-serif;
-$fontSize:14px;
-$borderRadius:0;
-$dividerColor:#d6d7d9;
-$textColor:#212121;
-$textSecondaryColor:#aeb0b5;
-$transitionDuration:.3s;
-$mobileBreakPoint:1024px;
+// theme colors
+$primaryColor:#4AA564 !default;
+$primaryColorDarker:#378D4F !default;
+$primaryDarkerAlt:#337747 !default;
+$primaryDarkest:#1D6833 !default;
+$primaryTextColor:$body-bg !default;
+$primaryDarkTextColor:$body-color !default;
+$primaryBgColor:#aeb0b5 !default;
+$primaryDarkBgColor:#242725 !default;
+
+// theme colors
+$buttonFocusOutlineColor:$primaryBgColor !default;
+
+$primaryButtonBgColor:$primaryColor !default;
+$primaryButtonHoverBgColor:$primaryColorDarker !default;
+$primaryButtonActiveBgColor:$primaryDarkest !default;
+$primaryButtonFocusBgColor:$primaryBgColor !default;
+$primaryButtonTextColor:$primaryTextColor !default;
+
+$primaryAltButtonBgColor:#F9C642 !default;
+$primaryAltButtonHoverBgColor:#FDB81E !default;
+$primaryAltButtonActiveBgColor:#EAA200 !default;
+$primaryAltButtonFocusBgColor:$primaryBgColor !default;
+$primaryAltButtonTextColor:$primaryTextColor !default;
+
+$secondaryButtonBgColor: #5b616b !default;
+$secondaryButtonHoverBgColor:#323a44 !default;
+$secondaryButtonActiveBgColor:$primaryDarkTextColor !default;
+$secondaryButtonFocusBgColor:#5b616b !default;
+$secondaryButtonTextColor:$primaryTextColor !default;
+
+$outlineButtonBgColor:transparent !default;
+$outlineButtonHoverBgColor:transparent !default;
+$outlineButtonActiveBgColor:transparent !default;
+$outlineButtonFocusBgColor:transparent !default;
+$outlineButtonBorderColor:$primaryColor !default;
+$outlineButtonTextColor:$primaryColor !default;
+$outlineButtonHoverBorderColor:$primaryColorDarker !default;
+$outlineButtonHoverTextColor:$primaryColorDarker !default;
+$outlineButtonActiveBorderColor:$primaryDarkest !default;
+$outlineButtonActiveTextColor:$primaryDarkest !default;
+
+$menuitemHoverBgColor:$primaryDarkest !default;
+$menuitemTextColor:$primaryDarkTextColor !default;
+$menuitemHoverTextColor:$primaryTextColor !default;
+$carouselButtonHoverColor:#b2b2b2 !default;
+$carouselPageLinksActiveColor:$primaryDarkest !default;
+
+// layout colors
+$bodyBgColor:#f2f5fa !default;
+$topbarLeftBgColor:$primaryColor !default;
+$topbarRightBgColor:$primaryColor !default;
+$topbarIconHoverBgColor:#2E8540 !default;
+$topbarTextColor:$primaryTextColor !default;
+$sidebarBorderColor:#d6d7d9 !default;
+$footerBgColor:$primaryDarkBgColor !default;
+$statsTopBorderColor:$primaryColor !default;
+$teamContentHoverBorderColor:$primaryColor !default;
+
+$sidebarBgColor:$primaryTextColor !default;
+$sidebarMenuitemTextColor:$primaryDarkTextColor !default;
+$sidebarMenuitemDividerColor:#e4e2e0 !default;
+$sidebarMenuitemIconColor:#5b616a !default;
+$sidebarMenuitemHoverBgColor:#f1f1f1 !default;
+$sidebarMenuitemActiveBorderLeftColor:$primaryColor !default;
+$sidebarMenuitemActiveTextColor:$primaryColor !default;
+$sidebarMenuitemActiveIconColor:$primaryColor !default;
+
+$darkSidebarBgColor:$primaryDarkBgColor !default;
+$darkSidebarMenuitemTextColor:$primaryTextColor !default;
+$darkSidebarMenuitemDividerColor:rgba(255,255,255,.075) !default;
+$darkSidebarMenuitemIconColor:$primaryTextColor !default;
+$darkSidebarMenuitemHoverBgColor:rgba(255,255,255,.1) !default;
+$darkSidebarMenuItemHoverTextColor:$primaryColor !default;
+$darkSidebarMenuitemActiveBorderLeftColor:$primaryColor !default;
+$darkSidebarMenuitemActiveTextColor:$primaryColor !default;
+$darkSidebarMenuitemActiveIconColor:$primaryColor !default;
+
+$gradientSidebarTopBgColor:$primaryDarkBgColor !default;
+$gradientSidebarBottomBgColor:#446A51 !default;
+$gradientSidebarMenuitemTextColor:$primaryTextColor !default;
+$gradientSidebarMenuitemDividerColor:rgba(255,255,255,.075) !default;
+$gradientSidebarMenuitemIconColor:$primaryTextColor !default;
+$gradientSidebarMenuitemHoverBgColor:rgba(255,255,255,.1) !default;
+$gradientSidebarMenuItemHoverTextColor:$primaryColor !default;
+$gradientSidebarMenuitemActiveBorderLeftColor:$primaryColor !default;
+$gradientSidebarMenuitemActiveTextColor:$primaryColor !default;
+$gradientSidebarMenuitemActiveIconColor:$primaryColor !default;
+
+$megamenuButtonTextColor:$primaryTextColor !default;
+$megamenuBgColor:$primaryTextColor !default;
+$megamenuBorderColor:#d6d7d9 !default;
+$megamenuTextColor:#5b616a !default;
+$megamenuHeaderColor:#2E8540 !default;
+$megamenuIconColor:#5b616a !default;
+$megamenuHoverBgColor:#f1f1f1 !default;
+$megamenuActiveTextColor:$primaryColor !default;
+$megamenuMobileBgColor:#2E8540 !default;
+$megamenuMobileHoverBgColor:$primaryColorDarker !default;
+
+$darkMegamenuBgColor:$primaryDarkBgColor !default;
+$darkMegamenuTextColor:$primaryTextColor !default;
+$darkMegamenuHeaderShadowColor:#000000 !default;
+$darkMegamenuIconColor:$primaryTextColor !default;
+$darkMegamenuHoverBgColor:rgba(255,255,255,.1) !default;
+$darkMegamenuHoverTextColor:$primaryColor !default;
+
+$gradientMegamenuTopBgColor:$primaryDarkBgColor !default;
+$gradientMegamenuBottomBgColor:#446A51 !default;
+
+
+// base vars
+$fontFamily:$font-family-base !default;
+$fontSize:$font-size-base !default;
+$borderRadius:$border-radius !default;
+$dividerColor:$gray-200 !default;
+$textColor:$primaryDarkTextColor !default;
+$textSecondaryColor:$primaryBgColor !default;
+$transitionDuration:.3s !default;
+$mobileBreakPoint:map-get($grid-breakpoints, "lg") !default;

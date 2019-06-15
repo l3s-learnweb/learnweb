@@ -12,14 +12,14 @@
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf" />
 	</ui:define>
-	
-	<ui:define name="content">	
+
+	<ui:define name="center_layout">
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}"  >
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
 					<h:outputText value="#{organisation.title}" />		
-				</p:column>					
-				
+				</p:column>
+
 				<p:column headerText="Welcome Page" >
 					<h:outputText value="#{organisation.welcomePage}" />						
 				</p:column>	
@@ -28,11 +28,11 @@
 					 <h:link title="#{msg.edit}" value="#{msg.edit}" outcome="/lw/admin/organisation">
 					 	<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 			            <f:param name="organisation_id" value="#{organisation.id}" />
-			        </h:link>		
+			        </h:link>
 				</p:column>	
 				
 			</p:dataTable>	
-		</h:form>		
+		</h:form>
 		<br/>
 		
 	</ui:define>

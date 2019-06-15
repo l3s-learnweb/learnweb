@@ -1,131 +1,130 @@
 <ui:composition
-		template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.users}"/>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.users}"/>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.users}" url="admin/users.jsf#"/>
+</ui:define>
+<ui:define name="center_layout">
+    <h:form styleClass="form">
+        <div class="p-grid">
+            <div class="p-col-12">
+                <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" paginatorPosition="bottom"
+                             rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rendered="#{userBean.user.organisationId ne 1249}">
+                    <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
 
-	<ui:define name="content">
-		<div class="page-header">
-			<h1>#{msg.users}</h1>
-		</div>
+                        <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}">
+                            <f:param name="user_id" value="#{user.id}"/>
+                        </p:link>
+                    </p:column>
+
+                    <p:column sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains">
+                        <f:facet name="header">
+                            #{msg.email_address}
+                        </f:facet>
+                        <h:outputText value="#{user.email}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" filterMatchMode="contains">
+                        <f:facet name="header">
+                            #{msg.organization}
+                        </f:facet>
+                        <h:outputText value="#{user.organisation.title}"/>
+                    </p:column>
+
+                    <p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 10%;">
+                        <p:selectBooleanCheckbox value="#{user.moderator}">
+                            <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:column style="width: 10%;">
+                        <f:facet name="header">
+                            #{msg.options}
+                        </f:facet>
+                        <h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
+                            #{msg.loginLabel}
+                        </h:commandLink>
+                    </p:column>
+
+                    <p:column headerText="Logs" style="width: 10%;">
+                        <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}"
+                                      target="_blank">Mouse tracker</h:outputLink>
+                    </p:column>
+
+                </p:dataTable>
+
+                <!-- special view for eumade4all -->
+                <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rendered="#{userBean.user.organisationId eq 1249}">
+                    <p:column filterBy="#{user.realUsername}" headerText="#{msg.username}" sortBy="#{user.username}">
+
+                        <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}" rendered="#{userBean.user.admin}">
+                            <f:param name="user_id" value="#{user.id}"/>
+                        </p:link>
+                        <h:outputText value="#{user.realUsername}" rendered="#{not userBean.user.admin}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{user.email}" filterBy="#{user.email}">
+                        <f:facet name="header">
+                            #{msg.email_address}
+                        </f:facet>
+                        <h:outputText value="#{user.email}"/>
+                    </p:column>
+
+                    <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}">
+                        <f:facet name="header">
+                            #{msg.organization}
+                        </f:facet>
+                        <h:outputText value="#{user.organisation.title}"/>
+                    </p:column>
+
+                    <p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 8%;">
+                        <p:selectBooleanCheckbox value="#{user.moderator}">
+                            <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:column headerText="Consent" sortBy="#{user.acceptTermsAndConditions}" style="width: 8%;">
+                        <p:selectBooleanCheckbox value="#{user.acceptTermsAndConditions}">
+                            <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
+                        </p:selectBooleanCheckbox>
+                    </p:column>
+
+                    <p:column headerText="Groups" sortBy="${adminUserBean.concatGroups(user.groups)}">
+                        <p:repeat var="group" value="#{user.groups}" varStatus="status">
+                            <h:outputText value="#{group.title}"/><h:outputText value=", " rendered="#{!status.last}" escape="false"/>
+                        </p:repeat>
+                    </p:column>
+
+                    <p:column style="width: 7%;" rendered="#{userBean.user.admin}">
+                        <f:facet name="header">
+                            #{msg.options}
+                        </f:facet>
+                        <h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
+                            #{msg.loginLabel}
+                        </h:commandLink>
+                    </p:column>
+
+                    <p:column headerText="Logs" style="width: 8%;">
+                        <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}"
+                                      target="_blank">Mouse tracker</h:outputLink>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+        </div>
+    </h:form>
 
 
-                <h:form styleClass="form">
-                    <div class="p-grid">
-                        <div class="p-col-12">
-                            <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" paginatorPosition="bottom" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rendered="#{userBean.user.organisationId ne 1249}">
-                        <p:column filterBy="#{user.realUsername}" filterMatchMode="contains" headerText="#{msg.username}" sortBy="#{user.realUsername}">
-
-                            <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}">
-                                <f:param name="user_id" value="#{user.id}" />
-                            </p:link>
-                        </p:column>
-
-                        <p:column sortBy="#{user.email}" filterBy="#{user.email}" filterMatchMode="contains" >
-                            <f:facet name="header">
-                                #{msg.email_address}
-                            </f:facet>
-                            <h:outputText value="#{user.email}" />
-                        </p:column>
-
-                        <p:column sortBy="#{user.organisation.title}"  filterBy="#{user.organisation.title}" filterMatchMode="contains">
-                            <f:facet name="header">
-                                #{msg.organization}
-                            </f:facet>
-                            <h:outputText value="#{user.organisation.title}" />
-                        </p:column>
-
-                        <p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 10%;">
-                            <p:selectBooleanCheckbox value="#{user.moderator}">
-                                <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
-                            </p:selectBooleanCheckbox>
-                        </p:column>
-
-                        <p:column style="width: 10%;">
-                            <f:facet name="header">
-                                #{msg.options}
-                            </f:facet>
-                            <h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
-                                #{msg.loginLabel}
-                            </h:commandLink>
-                        </p:column>
-
-                        <p:column headerText="Logs" style="width: 10%;">
-                            <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}" target="_blank">Mouse tracker</h:outputLink>
-                        </p:column>
-
-                    </p:dataTable>
-
-                    <!-- special view for eumade4all -->
-                            <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rendered="#{userBean.user.organisationId eq 1249}">
-                        <p:column filterBy="#{user.realUsername}" headerText="#{msg.username}" sortBy="#{user.username}">
-
-                            <p:link outcome="/lw/myhome/profile" value="#{user.realUsername}" rendered="#{userBean.user.admin}">
-                                <f:param name="user_id" value="#{user.id}" />
-                            </p:link>
-                            <h:outputText value="#{user.realUsername}" rendered="#{not userBean.user.admin}"/>
-                        </p:column>
-
-                        <p:column sortBy="#{user.email}" filterBy="#{user.email}">
-                            <f:facet name="header">
-                                #{msg.email_address}
-                            </f:facet>
-                            <h:outputText value="#{user.email}" />
-                        </p:column>
-
-                        <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}">
-                            <f:facet name="header">
-                                #{msg.organization}
-                            </f:facet>
-                            <h:outputText value="#{user.organisation.title}" />
-                        </p:column>
-
-                        <p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 8%;">
-                            <p:selectBooleanCheckbox value="#{user.moderator}">
-                                <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
-                            </p:selectBooleanCheckbox>
-                        </p:column>
-
-                        <p:column headerText="Consent" sortBy="#{user.acceptTermsAndConditions}" style="width: 8%;">
-                            <p:selectBooleanCheckbox value="#{user.acceptTermsAndConditions}">
-                                <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
-                            </p:selectBooleanCheckbox>
-                        </p:column>
-
-                        <p:column headerText="Groups" sortBy="${adminUserBean.concatGroups(user.groups)}">
-                            <p:repeat var="group" value="#{user.groups}" varStatus="status">
-                                <h:outputText value="#{group.title}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
-                            </p:repeat>
-                        </p:column>
-
-                        <p:column style="width: 7%;" rendered="#{userBean.user.admin}">
-                            <f:facet name="header">
-                                #{msg.options}
-                            </f:facet>
-                            <h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
-                                #{msg.loginLabel}
-                            </h:commandLink>
-                        </p:column>
-
-                        <p:column headerText="Logs" style="width: 8%;">
-                            <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}" target="_blank">Mouse tracker</h:outputLink>
-                        </p:column>
-
-                    </p:dataTable>
-                        </div>
-                    </div>
-                </h:form>
-
-
-
-	</ui:define>
+</ui:define>
 </ui:composition>

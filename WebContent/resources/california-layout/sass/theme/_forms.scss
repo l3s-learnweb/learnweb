@@ -461,6 +461,51 @@ body {
             }
         }
     }
+    
+    .ui-toggleswitch {
+        height: 24px;
+        width: 50px;
+        border: 1px solid $contentBorderColor;
+        @include border-radius(30px);
+        
+        .ui-toggleswitch-slider {
+            @include transition(background-color .3s);
+            background-color: #a8acb1;
+            color: #ffffff;
+            
+            &:before {
+                @include transition(.3s);
+                @include border-radius(50%);
+                background-color: $inputBgColor;
+                border: 1px solid transparent;
+                box-sizing: border-box;
+                width: 24px !important;
+                height: 24px;
+                left: auto;
+                bottom: auto;
+            }
+        }
+        
+        &.ui-toggleswitch-checked {
+            .ui-toggleswitch-slider {
+                background-color: $primaryColor;
+                color: $primaryTextColor;
+                
+                &:before {
+                    @include translateX(26px);
+                }
+            }
+        }
+        
+        &.ui-toggleswitch-focus {
+            .ui-toggleswitch-slider {            
+                &:before {
+                    border: 1px solid $primaryColor;
+                    @include border-shadow();
+                }
+            } 
+        }
+    }
 
     .ui-autocomplete {
         .ui-autocomplete-dropdown {
@@ -1156,6 +1201,163 @@ body {
             }
         }
     }
+    
+    .p-datepicker-panel {
+        border: 0 none;
+
+        &:not(.ui-datepicker-inline) {
+            @include overlay-shadow();
+        }
+
+        .ui-datepicker-header {
+            .ui-datepicker-prev {
+                outline: 0 none;
+
+                &:hover {
+                    color: $primaryDarkest;
+                    left: 2px;
+                }
+            }
+            
+            .ui-datepicker-next {
+                outline: 0 none;
+
+                &:hover {
+                    color: $primaryDarkest;
+                    right: 2px;
+                }
+            }
+            
+            select.ui-datepicker-month, 
+            select.ui-datepicker-year {
+                font-size: $fontSize;
+            }
+        }
+        
+        table {
+            td {
+                a {
+                    &:hover {
+                        background-color: $listItemHoverBgColor;
+                    }
+
+                    &.ui-state-highlight {
+                        color: $textColor;
+                        background-color: $dividerColor;
+                    }
+
+                    &.ui-state-active {
+                        color: $primaryTextColor;
+                        background-color: $primaryColor;
+                    }
+                }
+                
+                a,span {
+                    width: 100%;
+                    @include box-sizing(border-box);
+                }
+                
+                &.ui-datepicker-today {
+                    a {
+                        background-color: $dividerColor;
+                        color: $textColor;
+                    }
+                }
+            }
+        }
+
+        &.ui-datepicker-multiple-month {            
+            .ui-datepicker-group {
+                width: 17em;
+                border-bottom-width: 1px;
+                border-right-width: 0;
+                
+                &:first-child {
+                    border-left-width: 1px;
+                }
+                
+                &:last-child {
+                    border-right-width: 1px;
+                }
+                
+                .ui-datepicker-calendar-container {
+                    padding: 0 .4em;
+                }
+            }
+        }
+        
+        &.ui-datepicker-monthpicker {
+            .ui-monthpicker {
+                .ui-monthpicker-month {
+                    color: $textColor;
+                    @include box-sizing(border-box);
+                    
+                    &:hover {
+                        background-color: $listItemHoverBgColor;
+                    }
+                    
+                    &.ui-state-active {
+                        color: $primaryTextColor;
+                        background-color: $primaryColor;
+                    }
+                }
+            }
+        }
+        
+        .ui-timepicker {
+            font-weight: normal;
+            border-top: 0 none;
+            
+            .ui-picker-up {
+                color: $datepickerButtonTextColor;
+                @include icon_override("\f077");
+                display: block;
+                margin-bottom: .2em;
+                
+                span {
+                    display: none;
+                }
+                
+                &:hover {
+                    color: $primaryDarkest;
+                }
+            }
+            
+            .ui-picker-down {
+                color: $datepickerButtonTextColor;
+                @include icon_override("\f078");
+                display: block;
+                margin-top: .2em;
+                
+                span {
+                    display: none;
+                }
+                
+                &:hover {
+                    color: $primaryDarkest;
+                }
+            }
+        }
+        
+        .ui-datepicker-buttonbar {
+            border-top: 0 none;
+
+            .ui-button {
+                width: auto;
+                
+                &:focus {
+                    outline: 0 none;
+                    background-color: $primaryButtonHoverBgColor;
+                    border-color: $primaryButtonHoverBgColor;
+                }
+
+                &:hover {
+                    background-color: $primaryButtonActiveBgColor;
+                    border-color: $primaryButtonActiveBgColor;
+                }
+            }
+        }
+    }
 
     .ui-inplace {
         .ui-inplace-display {
@@ -1180,7 +1382,8 @@ body {
         }
     }
 
-    #keypad-div {
+    #keypad-div,
+    .keypad-popup {
         button {
             border: 0 none;
             padding: 5px;

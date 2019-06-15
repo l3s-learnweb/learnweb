@@ -1,25 +1,44 @@
 <ui:composition
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pc="http://primefaces.org/california">
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pc="http://primefaces.org/california">
 
     <div class="layout-sidebar #{guestPreferences.darkMenu ? 'layout-sidebar-dark' : ''} #{guestPreferences.gradientMenu ? 'layout-sidebar-gradient': ''}">
         <div id="nano-container" class="nano">
-            <div class="nano-content sidebar-scroll-content">    
+            <div class="nano-content sidebar-scroll-content">
 
                 <h:form id="menuform">
-                    <pc:menu widgetVar="me">
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
-                        <p:menuitem icon="fa fa-fw fa-folder" value="My Groups" url="/lw/myhome/groups.jsf"/>
 
+
+                    <p:tree id="sidebar_group_tree" value="#{userBean.groupsTreeForSidebar}" var="node" animate="true" dynamic="true"
+                            selectionMode="single" selection="#{searchBean.selectedNode}">
+                        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+
+                        <p:treeNode type="link" >
+                            <h:outputLink title="#{node.title}" value="#{node.url}">#{node.title}</h:outputLink>
+                        </p:treeNode>
+
+                        <p:treeNode type="group" >
+                            <h:outputLink title="#{node.title}" value="/lw/myhome/resources.jsf?group_id=#{node.id}">#{node.title}</h:outputLink>
+                        </p:treeNode>
+
+                        <p:treeNode type="folder" >
+                            <h:outputLink title="#{node.name}" value="/lw/myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}">#{node.name}</h:outputLink>
+                        </p:treeNode>
+
+                    </p:tree>
+
+                    <pc:menu widgetVar="me" >
+
+                        <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
                         <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="/lw/myhome/comments.jsf"/>
                         <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>
                         <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="/lw/myhome/submission_overview.jsf"/>
                         <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="/lw/admin/dashboard/user.jsf"/>
-                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/search_history.jsf?user_id=#{userBean.user.id}"/>
+                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"/>
 
                         <p:submenu label="Moderator" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
                             <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
@@ -48,23 +67,23 @@
                     <!--<pc:menu widgetVar="me">-->
 
 
-        
 
-                        <!--<p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button"-->
-                        	<!--rendered="#{userBean.user.id != 12476}">-->
-                        	<!--&lt;!&ndash; menue hidden for user EUMADE4ALL; can be removed in 2020 &ndash;&gt;-->
-                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
-                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
-                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
-                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
-                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
-                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
-                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
-                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
-                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
-                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
-                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
-                        <!--</p:submenu>-->
+
+                    <!--<p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button"-->
+                    <!--rendered="#{userBean.user.id != 12476}">-->
+                    <!--&lt;!&ndash; menue hidden for user EUMADE4ALL; can be removed in 2020 &ndash;&gt;-->
+                    <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
+                    <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
+                    <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
+                    <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
+                    <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
+                    <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
+                    <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
+                    <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
+                    <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
+                    <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
+                    <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
+                    <!--</p:submenu>-->
                     <!--</pc:menu>-->
                 </h:form>
             </div>

@@ -339,8 +339,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         try
         {
             paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
-            //TODO: remove it
-            //            RequestContext.getCurrentInstance().update(":filters");
+            // TODO: remove it
+            // PrimeFaces.current().ajax().update(":filters");
 
             if(!StringHelper.empty(query))
             {

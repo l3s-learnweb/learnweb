@@ -1,11 +1,11 @@
 @import '../variables';
 
 /*Badge*/
-$badgeBgColor:#4aa564;
-$badgeTextColor:#ffffff;
+$badgeBgColor:#4aa564 !default;
+$badgeTextColor:#ffffff !default;
 
 /* RouteBar */
-$routeBarBgColor:#ffffff;
-$routeBarBorderColor:#d6d7d9;
-$routeBarIconColor:#5b616a;
-$routeBarIconHoverBgColor:#f1f1f1;
+$routeBarBgColor:#ffffff !default;
+$routeBarBorderColor:#d6d7d9 !default;
+$routeBarIconColor:#5b616a !default;
+$routeBarIconHoverBgColor:#f1f1f1 !default;

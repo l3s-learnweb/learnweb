@@ -21,7 +21,17 @@
             }
         }
         
-        .usermenu { 
+        .usermenu {
+            > li{
+                &.menuitem-active {
+                    > a {
+                        i, span {
+                            color: $topbarTextColor;
+                        }
+                    }
+                }
+            }
+
             a {
                 position: relative;
 

@@ -12,7 +12,7 @@
     <p:menuitem value="#{msg.search_history}" url="your_information/your_search_history.jsf#"/>
 </ui:define>
 
-<ui:define name="content">
+<ui:define name="center_layout">
     <h:form>
         <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"

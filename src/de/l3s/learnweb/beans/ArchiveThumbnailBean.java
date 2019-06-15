@@ -166,18 +166,19 @@ public class ArchiveThumbnailBean extends ApplicationBean implements Serializabl
         return zoomMax;
     }
 
-    /*public void save()
+    /*
+    public void save()
     {
-    RequestContext context = RequestContext.getCurrentInstance();
-    context.update("contentFlow");
-    context.scrollTo("contentFlow");
+        PrimeFaces.current().ajax().update("contentFlow");
+        PrimeFaces.current().scrollTo("contentFlow");
     }
 
     public void onSelect(TimelineSelectEvent e)
     {
-    TimelineEvent timelineEvent = e.getTimelineEvent();
-    addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
-    }*/
+        TimelineEvent timelineEvent = e.getTimelineEvent();
+        addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
+    }
+    */
 
     public void computeSelectedArchivesHtmlBased() throws SQLException
     {
