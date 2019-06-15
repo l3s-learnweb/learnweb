@@ -1,28 +1,24 @@
 package de.l3s.learnweb.user;
 
-import de.l3s.learnweb.Learnweb;
-import org.apache.log4j.Logger;
-
-
+import java.io.Serializable;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-
-public class News
+// TODO Matvey: Move the new classes to de.l3s.learnweb they are not related to the user
+// all classes that are used in Bean fields must implement the serializable interface.
+// you copied this class therefore the serialVersionUID was duplicated. This will cause problems.
+public class News implements Serializable
 {
-    private static final long serialVersionUID = -1101352995500154406L;
-    private static final Logger log = Logger.getLogger(News.class);
+    private static final long serialVersionUID = 4219676681480459859L;
 
     private int id;
     private String title;
     private String text;
     private Date date;
-    private int user_id;
+    private int user_id; // TODO Matvey use camelCase. Update the getters and setters too. We are not writing C++
 
-    String DATE_FORMAT = "dd-MM-yyyy";
+    String DATE_FORMAT = "dd-MM-yyyy"; // dates must be formated in the frontent https://git.l3s.uni-hannover.de/Learnweb/Learnweb/wikis/JSF-Tips
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
     public int getUser_id()
@@ -35,7 +31,6 @@ public class News
         this.user_id = user_id;
     }
 
-
     public void setDate(final Date date)
     {
         this.date = date;
@@ -44,8 +39,9 @@ public class News
     public String getDate() throws ParseException
     {
         String s = sdf.format(date);
-        return  s;
+        return s;
     }
+
     public int getId()
     {
         return id;
@@ -82,7 +78,8 @@ public class News
         return "News [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", user_id=" + user_id + "]";
     }
 
-    public String onSaveString()
+    @Deprecated
+    public String onSaveString() // TODO remove
     {
         return "News [title=" + title + ", message=" + text + ", user_id=" + user_id + "]";
     }
