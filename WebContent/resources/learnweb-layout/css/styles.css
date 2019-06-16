@@ -8785,7 +8785,7 @@ html {
   overflow-y: hidden;
 }
 .onhover-scrollbar:hover {
-  overflow-y: auto;
+  overflow-y: overlay;
 }
 
 .main-body {
@@ -8997,32 +8997,7 @@ html {
   background: rgba(0, 0, 0, 0);
   border: none;
   padding: 1rem;
-  max-height: 24rem;
-}
-.landing-wrapper .header .newsform .ui-carousel {
-  padding: 0;
-  border: none;
-  background: rgba(0, 0, 0, 0);
-  border-radius: 0.2rem;
-}
-.landing-wrapper .header .newsform .ui-carousel-header {
-  background: rgba(0, 0, 0, 0.1);
-}
-.landing-wrapper .header .newsform .ui-carousel-viewport {
-  border: none;
   height: 24rem;
-}
-.landing-wrapper .header .newsform .ui-carousel-item {
-  background: none;
-  border: none !important;
-  color: white;
-  padding: 0 1rem !important;
-  max-height: 23rem;
-  word-break: break-all;
-  text-overflow: ellipsis;
-  overflow-y: auto;
-  margin: 0 0.2rem !important;
-  font-size: larger;
 }
 .landing-wrapper .header .newsform span {
   display: block;

@@ -70,15 +70,14 @@
 					<div class="col-lg-8">
 
 						<h:form id="newsform" styleClass="newsform">
-							<p:carousel styleClass="carousel" var="news" value="#{adminNewsBean.newsList}" numVisible="1" circular="true" effect="easeInStrong" headerText="What's new?" style="margin-bottom:0">
 
-								<p:tab>
+							<h2>What's new ?</h2>
+							<p:dataList rows="3" styleClass="onhover-scrollbar"  value="#{adminNewsBean.newsList}" var="news" type="definition">
+								<div>
 									<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
 									<p><h:outputText escape="false" value="#{news.text}" /></p>
-								</p:tab>
-
-
-							</p:carousel>
+								</div>
+							</p:dataList>
 						</h:form>
 					</div>
 
