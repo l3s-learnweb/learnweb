@@ -36,12 +36,13 @@
 								<h:outputText value="#{msg.groupOverview}" />
 							</a>
 						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
-								<h:outputText value="#{msg.activity_stream}" />
-							</a>
-						</li>
-                        <ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+						<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+							<li>
+								<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
+									<h:outputText value="#{msg.activity_stream}" />
+								</a>
+							</li>
+                        
                             <li>
                                 <a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
                                     <h:outputText value="#{msg.myProfileTitle}" />
@@ -68,6 +69,7 @@
 										<h:outputText value="#{msg.groupOverview}" />
 									</a>
 								</li>
+								<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
 										<h:outputText value="#{msg.activity_stream}" />
@@ -78,6 +80,8 @@
 										<h:outputText value="#{msg.myProfileTitle}" />
 									</a>
 								</li>
+								</ui:fragment>								
+								
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/comments.jsf">
 										<h:outputText value="#{msg.myCommentsTitle}" />
@@ -88,16 +92,19 @@
 										<h:outputText value="#{msg.myTags}" />
 									</a>
 								</li>
+								<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 								<li>
 									<h:outputLink value="#{request.contextPath}/lw/myhome/submission_overview.jsf">
 										#{msg['Submission.my_submissions']}
 									</h:outputLink>
 								</li>
+								</ui:fragment>
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/notification.jsf">
 										<h:outputText value="#{msg.notification}" />
 									</a>
 								</li>
+								<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 								<li>
 									<a href="#{request.contextPath}/lw/admin/dashboard/user.jsf">
 										<h:outputText value="My Dashboard" />
@@ -109,7 +116,7 @@
 										<h:outputText value="#{msg.search_history}" escape="false"/>
 									</h:outputLink>
 								</li>
-								
+								</ui:fragment>
 								<li>
 									<a href="#{request.contextPath}/lw/user/login.jsf" id="login">
 										#{msg.loginLabel}
@@ -122,12 +129,7 @@
 									</h:form>
 								</li>
 								<ui:fragment rendered="#{userBean.admin}">
-
-									<li>
-										<a href="#{request.contextPath}/lw/myhome/services.jsf">
-											<h:outputText value="#{msg.web2_0services}" />
-										</a>
-									</li>
+									
 
 									<li class="menupoint">
 										<h:outputText value="#{msg.admin}" />
@@ -153,13 +155,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
+										<a href="#{request.contextPath}/lw/admin/adminnews.jsf">
 											<h:outputText value="#{msg.admin_messages_Title}" />
-										</a>
-									</li>
-									<li>
-										<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf">
-											<h:outputText value="#{msg.change_log}" />
 										</a>
 									</li>
 								</ui:fragment>
@@ -189,13 +186,14 @@
 										</a>
 									</li>
 									<li>
-										<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
-											<h:outputText value="#{msg.text_analysis}" />
-										</a>
-									</li>
-									<li>
 										<a href="#{request.contextPath}/lw/admin/statistics.jsf">
 											<h:outputText value="#{msg.statistics}" />
+										</a>
+									</li>
+									<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+									<li>
+										<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
+											<h:outputText value="#{msg.text_analysis}" />
 										</a>
 									</li>
 									<li>
@@ -223,6 +221,7 @@
 											<h:outputText value="#{msg.activity_dashboard}" />
 										</a>
 									</li>
+									</ui:fragment>
 								</ui:fragment>
 							</ul>
 						</li>

@@ -178,7 +178,7 @@ public class AdminNewsBean extends ApplicationBean implements Serializable
         return newsId;
     }
 
-    private boolean isCanSend()
+    private boolean isCanSend() // TODO this is unnecessary. These checks are done through JSF validators. The @NotEmpty annotation should already solve this task. Otherwise you can use the "required" attribute of the input form
     {
         if(getTitle() == null)
         {

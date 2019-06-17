@@ -22,45 +22,45 @@
                         </p:treeNode>
 
                         <p:treeNode type="group" >
-                            <h:outputLink title="#{node.title}" value="/lw/myhome/resources.jsf?group_id=#{node.id}">#{node.title}</h:outputLink>
+                            <h:outputLink title="#{node.title}" value="./myhome/resources.jsf?group_id=#{node.id}">#{node.title}</h:outputLink>
                         </p:treeNode>
 
                         <p:treeNode type="folder" >
-                            <h:outputLink title="#{node.name}" value="/lw/myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}">#{node.name}</h:outputLink>
+                            <h:outputLink title="#{node.name}" value="./myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}">#{node.name}</h:outputLink>
                         </p:treeNode>
 
                     </p:tree>
 
                     <pc:menu widgetVar="me" >
 
-                        <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="/lw/myhome/resources.jsf"/>
-                        <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="/lw/myhome/comments.jsf"/>
-                        <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="/lw/myhome/tags.jsf"/>
-                        <p:menuitem value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="/lw/myhome/submission_overview.jsf"/>
-                        <p:menuitem value="My dashboard" icon="fa fa-fw fa-table " url="/lw/admin/dashboard/user.jsf"/>
-                        <p:menuitem value="Search history" icon="fa fa-fw fa-history" url="/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"/>
+<!-- Mat: TODO use translated link titles, as in the old menu -->
+                        <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="./myhome/resources.jsf"/>
+                        <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="./myhome/comments.jsf"/>
+                        <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="./myhome/tags.jsf"/>
+                        <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="My submissions" icon="fa fa-fw fa-credit-card-alt" url="./myhome/submission_overview.jsf"/>
+                        <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="My dashboard" icon="fa fa-fw fa-table " url="./admin/dashboard/user.jsf"/>
+                        <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Search history" icon="fa fa-fw fa-history" url="./searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"/>
 
                         <p:submenu label="Moderator" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
-                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
-                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
-                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
-                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
-                            <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
-                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
-                            <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
-                            <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
-                            <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
-                            <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
-                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
+                            <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="./admin/notification.jsf"/>
+                            <p:menuitem value="Users" icon="fa fa-fw fa-users " url="./admin/users.jsf"/>
+                            <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="./admin/courses.jsf"/>
+                            <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="./admin/organisation.jsf"/>
+                            <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Text analysis" icon="fa fa-fw fa-area-chart " url="./admin/text_analysis.jsf"/>
+                            <p:menuitem value="Statistics" icon="fa fa-line-chart " url="./admin/statistics.jsf"/>
+                            <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="./admin/detailed_transcript_log.jsf"/>
+                            <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Simple Transcript Log" icon="fa fa-fw fa-language " url="./admin/simple_transcript_log.jsf"/>
+                            <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Transcript Summaries" icon="fa fa-fw fa-language" url="./admin/transcript_summary.jsf"/>
+                            <p:menuitem rendered="#{learnwebBean.learnweb.service != 'AMA'}" value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="./admin/dashboard/glossary.jsf"/>
+                            <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="./admin/dashboard/activity.jsf"/>
                         </p:submenu>
 
                         <p:submenu label="Admin" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
-                            <p:menuitem value="Organisations" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisations.jsf"/>
-                            <p:menuitem value="Banlist" icon="fa fa-fw fa-area-chart " url="/lw/admin/banlist.jsf"/>
-                            <p:menuitem value="IP Requests" icon="fa fa-line-chart " url="/lw/admin/requests.jsf"/>
-                            <p:menuitem value="System Tools" icon="fa fa-fw fa-language " url="/lw/admin/systemtools.jsf"/>
-                            <p:menuitem value="Admin Messages" icon="fa fa-fw fa-language " url="/lw/admin/adminmsg.jsf"/>
-                            <p:menuitem value="News" icon="fa fa-fw fa-language" url="/lw/admin/adminnews.jsf"/>
+                            <p:menuitem value="Organisations" icon="fa fa-fw fa-sitemap " url="./admin/organisations.jsf"/>
+                            <p:menuitem value="Banlist" icon="fa fa-fw fa-area-chart " url="./admin/banlist.jsf"/>
+                            <p:menuitem value="IP Requests" icon="fa fa-line-chart " url="./admin/requests.jsf"/>
+                            <p:menuitem value="System Tools" icon="fa fa-fw fa-language " url="./admin/systemtools.jsf"/>
+                            <p:menuitem value="News" icon="fa fa-fw fa-language" url="./admin/adminnews.jsf"/>
                         </p:submenu>
 
                     </pc:menu>
@@ -72,17 +72,17 @@
                     <!--<p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button"-->
                     <!--rendered="#{userBean.user.id != 12476}">-->
                     <!--&lt;!&ndash; menue hidden for user EUMADE4ALL; can be removed in 2020 &ndash;&gt;-->
-                    <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="/lw/admin/notification.jsf"/>
-                    <p:menuitem value="Users" icon="fa fa-fw fa-users " url="/lw/admin/users.jsf"/>
-                    <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="/lw/admin/courses.jsf"/>
-                    <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="/lw/admin/organisation.jsf"/>
-                    <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="/lw/admin/text_analysis.jsf"/>
-                    <p:menuitem value="Statistics" icon="fa fa-line-chart " url="/lw/admin/statistics.jsf"/>
-                    <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/detailed_transcript_log.jsf"/>
-                    <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="/lw/admin/simple_transcript_log.jsf"/>
-                    <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="/lw/admin/transcript_summary.jsf"/>
-                    <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="/lw/admin/dashboard/glossary.jsf"/>
-                    <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="/lw/admin/dashboard/activity.jsf"/>
+                    <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="./admin/notification.jsf"/>
+                    <p:menuitem value="Users" icon="fa fa-fw fa-users " url="./admin/users.jsf"/>
+                    <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="./admin/courses.jsf"/>
+                    <p:menuitem value="Organisation" icon="fa fa-fw fa-sitemap " url="./admin/organisation.jsf"/>
+                    <p:menuitem value="Text analysis" icon="fa fa-fw fa-area-chart " url="./admin/text_analysis.jsf"/>
+                    <p:menuitem value="Statistics" icon="fa fa-line-chart " url="./admin/statistics.jsf"/>
+                    <p:menuitem value="Detailed Transcript Log" icon="fa fa-fw fa-language " url="./admin/detailed_transcript_log.jsf"/>
+                    <p:menuitem value="Simple Transcript Log" icon="fa fa-fw fa-language " url="./admin/simple_transcript_log.jsf"/>
+                    <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="./admin/transcript_summary.jsf"/>
+                    <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="./admin/dashboard/glossary.jsf"/>
+                    <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="./admin/dashboard/activity.jsf"/>
                     <!--</p:submenu>-->
                     <!--</pc:menu>-->
                 </h:form>
