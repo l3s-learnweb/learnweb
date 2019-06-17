@@ -5,13 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
@@ -24,13 +21,9 @@ import de.l3s.learnweb.user.User;
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
+    //private static final Logger log = Logger.getLogger(GlossaryDashboardBean.class);
 
     private GlossaryDashboardManager dashboardManager = null;
-
-    @Deprecated
-    @Inject
-    private GlossaryDashboardUsersBean glossaryDashboardUsersBean;
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;

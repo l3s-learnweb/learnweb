@@ -33,7 +33,7 @@
                         <p:outputPanel id="conceptsTermsPanel"
                                        styleClass="container"
                                        style="display: flex;flex-direction: row; justify-content: center; align-items: center;align-content: center; width: 100%;"
-                                       rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                       rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                             <p:outputPanel styleClass="col" style="width: 250px">
                                 <p:panel header="Total Concepts">
                                     <f:facet name="actions">
@@ -66,7 +66,7 @@
                                 <div class="p-col" style="width: 100%">
                                     <div>
                                         <p:outputPanel id="activityTypesPanel"
-                                                       rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                                       rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                                             <p:panel id="chart_barModel" header="Users' Activity types">
                                                 <f:facet name="actions">
                                                     <p:button id="userActivityTypes"
@@ -101,7 +101,7 @@
                             <div class="p-grid">
                                 <div class="p-col-5">
                                     <p:outputPanel id="sourcePanel"
-                                                   rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                                   rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                                         <p:panel id="chart_barModel_stSources" header="Users' Source">
                                             <f:facet name="actions">
                                                 <p:button id="usersSourcesChart"
@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="p-col">
                                     <p:outputPanel id="glossaryPanel"
-                                                   rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                                   rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                                         <p:panel id="glossary" header="Users' Glossary">
                                             <f:facet name="actions">
                                                 <p:button id="usersGlossary"
@@ -139,7 +139,7 @@
                     <div class="p-grid">
                         <div class="p-col-12">
                             <p:outputPanel id="InteractionsPanel"
-                                           rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                           rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                                 <p:panel id="chart_plot_01" header="Interactions">
                                     <f:facet name="actions">
                                         <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -156,7 +156,7 @@
                     <div class="p-grid">
                         <div class="p-col-12 no-padding-top margin-top">
                             <p:outputPanel id="fieldsPanel"
-                                           rendered="#{not empty glossaryDashboardBean.getSelectedUsersIds()}">
+                                           rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
                                 <p:panel id="fields" header="Fields">
                                     <f:facet name="actions">
                                         <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"

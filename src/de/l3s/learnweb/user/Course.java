@@ -25,13 +25,13 @@ public class Course implements Serializable, Comparable<Course>, HasId
     {
         Unused_1,
         Unused_2,
-        Unused_3,
-        Unused_4,
+        Groups_Forum_categories_enabled,
+        Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,
-        Users_Disable_Wizard,
-        Groups_Google_Docs_Sign_In_enabled,
-        Users_Require_Affiliation,
-        Users_Require_Student_Id
+        Users_Disable_wizard,
+        Groups_Google_Docs_sign_in_enabled,
+        Users_Require_affiliation,
+        Users_Require_student_id
     }
 
     private int id = -1;
@@ -192,10 +192,21 @@ public class Course implements Serializable, Comparable<Course>, HasId
         return HasId.collectIds(getMembers());
     }
 
-    public void addUser(User user) throws SQLException
+    public synchronized void addUser(User user) throws SQLException
     {
         if(memberCount != -1)
             memberCount++;
+
+        if(nextXUsersBecomeModerator > 0)
+        {
+            log.debug("User: " + user.getUsername() + " becomes moderator of course: " + getTitle());
+
+            user.setModerator(true);
+
+            nextXUsersBecomeModerator--;
+            save();
+        }
+
         Learnweb.getInstance().getCourseManager().addUser(this, user);
         user.clearCaches();
     }
@@ -303,4 +314,8 @@ public class Course implements Serializable, Comparable<Course>, HasId
         return "Course [id=" + id + ", title=" + title + "]";
     }
 
+    public void save() throws SQLException
+    {
+        Learnweb.getInstance().getCourseManager().save(this);
+    }
 }

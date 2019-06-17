@@ -22,6 +22,7 @@ import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
@@ -499,6 +500,19 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.categoryAbbreviation = categoryAbbreviation;
     }
 
+    public boolean isRestrictionForumCategoryEnabled()
+    {
+        try
+        {
+            return getCourse().getOption(Option.Groups_Forum_categories_enabled);
+        }
+        catch(SQLException e)
+        {
+            log.fatal("can't load setting", e);
+            return false;
+        }
+    }
+
     public boolean isRestrictionForumCategoryRequired()
     {
         return restrictionForumCategoryRequired;
@@ -817,6 +831,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public boolean isGoogleDocsSignInEnabled() throws SQLException
     {
-        return getCourse().getOption(Course.Option.Groups_Google_Docs_Sign_In_enabled);
+        return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
     }
 }

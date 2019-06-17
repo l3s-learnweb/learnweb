@@ -63,7 +63,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             Course course = new Course();
             course.setTitle(newCourseTitle);
             course.setOrganisationId(user.getOrganisationId());
-            getLearnweb().getCourseManager().save(course);
+            course.save();
 
             course.addUser(user);
             addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");

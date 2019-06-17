@@ -14,13 +14,14 @@
 	</ui:define>
 	
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{adminCourseBean.course.title} #{msg.course}" />
-	
-	<ui:define name="center_layout">
+	<ui:param name="pageTitle" value="#{adminCourseBean.course.title}" />
 
-		<!--<div class="page-header">
-			<h1>#{adminCourseBean.course.title} - #{msg.course}</h1>
-		</div>-->
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.courses}" url="admin/courses.jsf" />
+		<p:menuitem value="#{adminCourseBean.course.title}" url="admin/course.jsf?course_id=#{adminCourseBean.course.id}" />
+	</ui:define>
+		
+	<ui:define name="center_layout">
 
 		<h:form id="editwelcomeform"  prependId="false" styleClass="form">
 			<div class="p-grid">
@@ -28,9 +29,11 @@
 				<div class="p-col-12">
 					<div class="card card-w-title">
 						<h2><h:outputText value="#{msg.welcome_message}" /></h2>
-						<p:textEditor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{not adminCourseBean.course.welcomeMessage.contains('table')}" />
-						<!--
-						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="#{adminCourseBean.course.welcomeMessage.contains('table')}" />-->
+						
+						<!-- a dirty fix. we should check old message and remove tables -->
+						<p:textEditor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="${!adminCourseBean.course.welcomeMessage.contains('table')}" />
+						
+						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="${adminCourseBean.course.welcomeMessage.contains('table')}" />
 					</div>
 				</div>
 

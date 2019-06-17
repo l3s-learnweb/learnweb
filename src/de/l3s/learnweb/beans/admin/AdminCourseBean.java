@@ -109,7 +109,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         }
         try
         {
-            getLearnweb().getCourseManager().save(course);
+            course.save();
             addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
         catch(Exception e)
