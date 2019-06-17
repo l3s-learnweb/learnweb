@@ -14,7 +14,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
-import org.apache.jena.base.Sys;
 
 @Named
 @SessionScoped
@@ -67,14 +66,14 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
         return selectedGroupsIds;
     }
 
-    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws  SQLException
+    public void setSelectedGroupsIds(final List<Integer> selectedGroupsIds) throws SQLException
     {
         this.selectedGroupsIds = selectedGroupsIds;
         List<Integer> selectedUsers = new ArrayList<>();
         for(Integer groupId : selectedGroupsIds)
         {
             Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
-            for(User user :group.getMembers())
+            for(User user : group.getMembers())
                 selectedUsers.add(user.getId());
         }
         this.setSelectedUsersIds(selectedUsers);
@@ -111,6 +110,7 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
     {
         this.endDate = endDate;
     }
+
     public void onSubmitSelectedUsers() throws SQLException
     {
 

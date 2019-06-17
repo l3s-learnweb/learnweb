@@ -182,7 +182,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
                 wizardParamInvalid = true;
             }
-            else if(course.getOption(Option.Users_Disable_Wizard))
+            else if(course.getOption(Option.Users_Disable_wizard))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
                 wizardParamInvalid = true;
@@ -195,8 +195,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
                     addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
 
                 mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
-                affiliationRequired = course.getOption(Course.Option.Users_Require_Affiliation);
-                studentIdRequired = course.getOption(Course.Option.Users_Require_Student_Id);
+                affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
+                studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
             }
         }
         else

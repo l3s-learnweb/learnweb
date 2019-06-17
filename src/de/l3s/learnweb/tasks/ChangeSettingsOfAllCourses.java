@@ -19,9 +19,8 @@ public class ChangeSettingsOfAllCourses
         {
             log.debug("Update " + course);
             course.setOption(Option.Users_Require_mail_address, true);
-            course.setOption(Option.Users_Disable_Wizard, false);
-
-            learnweb.getCourseManager().save(course);
+            course.setOption(Option.Users_Disable_wizard, false);
+            course.save();
         }
 
         for(Organisation organisation : learnweb.getOrganisationManager().getOrganisationsAll())

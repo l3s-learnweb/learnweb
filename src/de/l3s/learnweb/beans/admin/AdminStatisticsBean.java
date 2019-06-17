@@ -3,7 +3,6 @@ package de.l3s.learnweb.beans.admin;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.Learnweb;
@@ -156,7 +155,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
                         			{
                         			    sb.append("; no comments");
                         			}
-                        
+
                         			if(resource.getDescription().length() == 0)
                         			{
                         			    sb.append("; no description");

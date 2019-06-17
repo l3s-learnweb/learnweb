@@ -176,7 +176,7 @@ public class CourseManager
      * @return
      * @throws SQLException
      */
-    public synchronized Course save(Course course) throws SQLException
+    protected synchronized Course save(Course course) throws SQLException
     {
         if(course.getId() < 0) // the course is not yet stored at the database
         { // we have to get a new id from the group manager
@@ -217,7 +217,7 @@ public class CourseManager
     public void anonymize(Course course) throws SQLException
     {
         // disable registration wizard
-        course.setOption(Option.Users_Disable_Wizard, true);
+        course.setOption(Option.Users_Disable_wizard, true);
         save(course);
 
         // anonymize users

@@ -78,7 +78,7 @@
                                         <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
                                             <f:selectItem itemLabel="No default" itemValue="#{null}" />
                                             <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
-                                            	itemLabel="#{msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
+                                            	itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                         </p:selectOneMenu>
 
                                         <p>
@@ -111,8 +111,8 @@
                                     <p:accordionPanel autoHeight="false" id="courseoptions">
                                         <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
 
-                                            <p:tab title="#{adminOrganisationBean.optionGroups[status.index].title}">
-                                                <h:dataTable value="#{adminOrganisationBean.optionGroups[status.index].options}" var="option">
+                                            <p:tab title="${adminOrganisationBean.optionGroups[status.index].title}">
+                                                <h:dataTable value="${adminOrganisationBean.optionGroups[status.index].options}" var="option">
                                                     <h:column>
                                                         <h:selectBooleanCheckbox value="#{option.value}" id="checkbox" />
                                                     </h:column>

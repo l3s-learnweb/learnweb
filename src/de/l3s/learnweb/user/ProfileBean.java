@@ -144,10 +144,10 @@ public class ProfileBean extends ApplicationBean implements Serializable
             if(course.getOption(Course.Option.Users_Require_mail_address))
                 mailRequired = true;
 
-            if(course.getOption(Course.Option.Users_Require_Affiliation))
+            if(course.getOption(Course.Option.Users_Require_affiliation))
                 affiliationRequired = true;
 
-            if(course.getOption(Course.Option.Users_Require_Student_Id))
+            if(course.getOption(Course.Option.Users_Require_student_id))
                 studentIdRequired = true;
         }
 
