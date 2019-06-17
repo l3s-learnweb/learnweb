@@ -13,7 +13,7 @@
 		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf" />
 	</ui:define>
 
-	<ui:define name="content">
+	<ui:define name="center_layout">
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}"  >
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">

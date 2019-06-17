@@ -53,6 +53,7 @@
       background: rgba(0, 0, 0, 0.9);
       color: $white;
       border-radius: 0.2rem;
+<<<<<<< HEAD
 
       >h2{
         font-size: 1rem;
@@ -73,6 +74,51 @@
 
 
 
+=======
+      >h2{
+        font-size: 1rem;
+        padding: .5rem 1rem;
+        margin: 0;
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .ui-datalist-content{
+        background: rgba(0, 0, 0, 0);
+        border: none;
+        padding: 1rem;
+        max-height: 24rem;
+      }
+
+      .ui-carousel {
+        padding: 0;
+        border: none;
+        background: rgba(0, 0, 0, 0);
+        border-radius: 0.2rem;
+      }
+
+      .ui-carousel-header {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .ui-carousel-viewport {
+        border: none;
+        height: 24rem;
+      }
+
+      .ui-carousel-item {
+        background: none;
+        border: none!important;
+        color: white;
+        padding: 0 1rem!important;
+        max-height: 23rem;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        overflow-y: auto;
+        margin: 0 0.2rem!important;
+        font-size: larger;
+
+      }
+>>>>>>> refs/heads/master
 
       span {
         display: block;

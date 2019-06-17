@@ -9,9 +9,11 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.banlist_header}"/>
+	
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.banlist_header}" url="admin/banlist.jsf#"/>
 	</ui:define>
+	
 	<ui:define name="center_layout">
 	<h:outputScript library="admin" name="banlist.js" target="head" />
         <ui:fragment>

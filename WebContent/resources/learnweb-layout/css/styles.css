@@ -8785,6 +8785,7 @@ html {
   overflow-y: hidden;
 }
 .onhover-scrollbar:hover {
+<<<<<<< HEAD
   overflow-y: overlay;
 }
 
@@ -8998,6 +8999,246 @@ html {
   border: none;
   padding: 1rem;
   height: 24rem;
+=======
+  overflow-y: auto;
+}
+
+.main-body {
+  /*.layout-main-content {
+    flex: 1 0 auto;
+  }*/
+  /*.layout-footer {
+    flex-shrink: 0;
+  }*/
+  /* .page-header {
+     color: #4AA564;
+     margin: 0;
+     background: rgba(255, 255, 255, 0.9);
+     !*text-align: center;*!
+     border-radius: 2px;
+     padding: 5px 16px;
+     border: 1px solid #4AA564;
+     border-right: none;
+     border-left: none;
+     margin-bottom: var(--main-margin);
+
+     h1 {
+       margin: 0;
+     }
+   }*/
+  /*New*/
+}
+.main-body .layout-wrapper .layout-topbar .menu-button {
+  position: initial !important;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  display: block;
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
+  -moz-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+.main-body .layout-wrapper .layout-topbar .menu-button:hover {
+  background-color: #2E8540;
+}
+.main-body .layout-wrapper .layout-topbar .menu-button i {
+  line-height: inherit;
+}
+.main-body .layout-wrapper .layout-topbar .searchform {
+  display: flex;
+  width: 100%;
+}
+.main-body .layout-wrapper .layout-topbar .searchform input[type=search] {
+  border: none;
+  font-size: 1.4rem;
+  width: inherit;
+  background: white;
+  padding: 0 0.5rem;
+  max-width: 37.5rem;
+}
+.main-body .layout-wrapper .layout-topbar .searchbutton {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background: white;
+  border-radius: 0 0.1rem 0.1rem 0;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  fill: grey;
+}
+.main-body .layout-wrapper .layout-topbar .searchbutton svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.main-body .layout-wrapper .layout-topbar .searchbutton:hover {
+  background: #2E8540;
+  fill: white;
+}
+.main-body .layout-wrapper .layout-topbar .topbar-menu-button {
+  position: initial !important;
+}
+.main-body .layout-wrapper .layout-topbar .usermenu a {
+  text-decoration: none;
+}
+
+.layout-wrapper .layout-sidebar {
+  overflow-y: auto;
+}
+.layout-wrapper .layout-sidebar .layout-menu {
+  padding-bottom: 44px;
+}
+.layout-wrapper .layout-sidebar .ui-tree {
+  width: auto;
+  padding: 0;
+  border-bottom: none;
+  box-sizing: border-box;
+  display: block;
+  margin: -1px;
+  margin-top: -2px;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container {
+  padding: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode {
+  padding: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  border-top: 1px solid #e4e2e0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:hover {
+  cursor: pointer;
+  background-color: #f1f1f1;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-e:before {
+  content: "";
+  transition: transform 0.3s;
+  transform: rotate(0deg);
+  color: #5b616a;
+  font-weight: 700;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-s:before {
+  color: #5b616a;
+  font-weight: 700;
+  content: "";
+  transition: transform 0.3s;
+  transform: rotate(-180deg);
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
+  margin: 0;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label[aria-expanded=true] a {
+  color: #4AA564;
+}
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label a {
+  margin-left: 12px;
+  color: #212529;
+  font-weight: 500;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.landing-wrapper {
+  background: white;
+  overflow-x: hidden;
+  /*landing-wrapper 'New style'*/
+  /*end*/
+}
+.landing-wrapper .container {
+  max-width: 1500px;
+}
+.landing-wrapper .top-menu ul {
+  list-style: none;
+}
+.landing-wrapper .top-menu .header-menu {
+  padding-right: 1rem;
+  margin-bottom: 0;
+}
+.landing-wrapper .top-menu .header-menu a {
+  padding: 1rem;
+  text-decoration: none;
+  border-bottom: 0.2rem solid transparent;
+}
+.landing-wrapper .top-menu .header-menu a:hover {
+  border-color: #067E6C;
+}
+.landing-wrapper .header {
+  background: url("/resources/frontpage/luh.jpg");
+  padding: 5rem 0;
+  background-size: cover;
+}
+.landing-wrapper .header .header-content-panel {
+  padding: 1rem 1.5rem;
+  background-color: white;
+  max-width: 18rem;
+}
+.landing-wrapper .header .header-content-panel input {
+  margin: 1rem 0;
+  width: 100%;
+}
+.landing-wrapper .header .newsform {
+  display: block;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 0.2rem;
+}
+.landing-wrapper .header .newsform > h2 {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+.landing-wrapper .header .newsform .ui-datalist-content {
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  padding: 1rem;
+  max-height: 24rem;
+}
+.landing-wrapper .header .newsform .ui-carousel {
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0.2rem;
+}
+.landing-wrapper .header .newsform .ui-carousel-header {
+  background: rgba(0, 0, 0, 0.1);
+}
+.landing-wrapper .header .newsform .ui-carousel-viewport {
+  border: none;
+  height: 24rem;
+}
+.landing-wrapper .header .newsform .ui-carousel-item {
+  background: none;
+  border: none !important;
+  color: white;
+  padding: 0 1rem !important;
+  max-height: 23rem;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  overflow-y: auto;
+  margin: 0 0.2rem !important;
+  font-size: larger;
+>>>>>>> refs/heads/master
 }
 .landing-wrapper .header .newsform span {
   display: block;
