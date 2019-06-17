@@ -42,13 +42,13 @@
 									<h:outputText value="#{msg.activity_stream}" />
 								</a>
 							</li>
-                        
-                            <li>
-                                <a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
-                                    <h:outputText value="#{msg.myProfileTitle}" />
-                                </a>
-                            </li>
                         </ui:fragment>
+                        <li>
+                            <a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
+                                <h:outputText value="#{msg.myProfileTitle}" />
+                            </a>
+                        </li>
+                        
 
 						<li>
 							<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28"
@@ -75,12 +75,13 @@
 										<h:outputText value="#{msg.activity_stream}" />
 									</a>
 								</li>
+								</ui:fragment>	
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
 										<h:outputText value="#{msg.myProfileTitle}" />
 									</a>
 								</li>
-								</ui:fragment>								
+															
 								
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/comments.jsf">

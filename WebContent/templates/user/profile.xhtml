@@ -8,7 +8,7 @@
 
 <ui:composition>
 	
-	<h:outputStylesheet library="user-template" name="user.css"/>
+	<h:outputStylesheet library="user-template" name="user.css"/>	
 	
 	<div class="page_header">
 		<span>
@@ -57,6 +57,7 @@
 		<br class="clear" />
 	</div>
 
+	<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 	<div class="page_header">
 		<span>
 			#{msg.groupsTitle}
@@ -75,7 +76,8 @@
 		</p:repeat>
 		<br class="clear"/>		
 	</div>
-
+	</ui:fragment>
+	
 	<ui:fragment rendered="#{not empty user.credits}">
 		<div class="page_header">
 			<span>

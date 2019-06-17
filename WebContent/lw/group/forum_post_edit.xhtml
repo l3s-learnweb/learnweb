@@ -35,6 +35,7 @@
 			<div class="grey_border">
 				<h:form>
 					<table id="answer_table">
+						<ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
 						<tr>
 							<td class="width_10">
 								<h:outputText value="#{msg.category}: "/>
@@ -50,12 +51,23 @@
 								<p:message for="post_category"/>
 							</td>
 						</tr>
+						</ui:fragment>
 						<tr>
 							<td colspan="2">
-								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumEditBean.post.text}" 
-									label="#{msg['PostShow.postContent']}"
-									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">	
-			 					</p:editor>
+								<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumEditBean.post.text}">
+							        <f:facet name="toolbar">
+							             <span class="ql-formats">
+							                <button class="ql-bold"></button>
+							                <button class="ql-italic"></button>
+							                <button class="ql-underline"></button>
+							                <button class="ql-strike"></button>
+							            </span>
+							            <span class="ql-formats">
+							                <select class="ql-font"></select>
+							                <select class="ql-size"></select>
+							            </span>
+							        </f:facet>
+							    </p:textEditor> 
 							</td>
 							<td class="width_30">
 								<p:message for="post_message"/>

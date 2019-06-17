@@ -2,12 +2,13 @@ package de.l3s.learnweb.user;
 
 import java.sql.SQLException;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Organisation.Option;
 
@@ -63,13 +64,13 @@ public class UserDetailBean extends ApplicationBean
         if(null == user)
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid user id");
 
-        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
+        if(user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames) || getLearnweb().getService() == SERVICE.AMA)
             pageHidden = true;
     }
 
     /**
      * true when the course uses username anonymization
-     * 
+     *
      * @return
      */
     public boolean isPageHidden()
