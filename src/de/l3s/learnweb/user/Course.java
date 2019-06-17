@@ -242,11 +242,17 @@ public class Course implements Serializable, Comparable<Course>, HasId
     }
 
     @Override
-    public int compareTo(Course o) // sort primarily by organisationTitle, secondarily by course title
+    public int compareTo(Course o)
     {
+        return getTitle().compareTo(o.getTitle());
+
+        /*
+         old version tried to sort primarily by organisationTitle, secondarily by course title
+         but I'm not sure why
+
         if(o.getOrganisationId() == getOrganisationId())
             return getTitle().compareTo(o.getTitle());
-
+        
         try
         {
             String title1 = (getOrganisationId() < 1) ? "" : getOrganisation().getTitle();
@@ -256,9 +262,10 @@ public class Course implements Serializable, Comparable<Course>, HasId
         catch(SQLException e)
         {
             log.error("unhandled error", e);
-
+        
             return 0;
         }
+        */
     }
 
     @Override

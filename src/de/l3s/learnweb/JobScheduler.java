@@ -1,8 +1,8 @@
 package de.l3s.learnweb;
 
-import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
 import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
@@ -28,10 +28,6 @@ public class JobScheduler
         // the loro crawler is not running at the moment
         //UpdateLoroResources loroTask = new UpdateLoroResources();
         //scheduler.schedule("0 1 14,28 * *", loroTask);
-
-        //Schedules the task at 1:00 on 13th and 27th of every month
-        //UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
-        //scheduler.schedule("0 1 13,27 * *", yovistoTask);
 
         if(learnweb.getService().equals(Learnweb.SERVICE.LEARNWEB))
         {
