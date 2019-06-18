@@ -23,7 +23,7 @@
 		<p:menuitem value="#{msg.myProfileTitle} #{msg.of} #{userDetailBean.user.username}" url="user/detail.jsf?user_id=#{userDetailBean.user.id}"/>
 	</ui:define>
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.last_activities}" styleClass="m-0">
+		<p:panel header="#{msg.last_activities}" styleClass="bg-transparent no-border no-padding-panel-content m-0">
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
 		<h:panelGroup id="profile_news" rendered="#{not userDetailBean.pageHidden}">		
 			<ui:decorate template="/templates/user/logs.xhtml">

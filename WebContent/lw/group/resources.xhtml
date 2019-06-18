@@ -145,25 +145,25 @@
 
         <ul>
             <li>
-                <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                <h:link value="#{msg.overview}" styleClass="p-2" outcome="/lw/group/overview.jsf?group_id=#{groupResourcesBean.group.id}"/>
             </li>
             <li>
-                <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                <h:link value="#{msg.resources}" styleClass="p-2" outcome="/lw/group/resources.jsf?group_id=#{groupResourcesBean.group.id}"/>
             </li>
             <li>
-                <h:link value="#{msg.members}" outcome="/lw/group/members.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                <h:link value="#{msg.members}" styleClass="p-2" outcome="/lw/group/members.jsf?group_id=#{groupResourcesBean.group.id}"/>
             </li>
             <ui:fragment rendered="#{not empty groupResourcesBean.group.links or not empty groupResourcesBean.group.documentLinks}">
                 <li>
-                    <h:link value="#{msg.links}" outcome="/lw/group/links.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                    <h:link value="#{msg.links}" styleClass="p-2" outcome="/lw/group/links.jsf?group_id=#{groupResourcesBean.group.id}"/>
                 </li>
             </ui:fragment>
             <li>
-                <h:link value="#{msg.forum}" outcome="/lw/group/forum.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                <h:link value="#{msg.forum}" styleClass="p-2" outcome="/lw/group/forum.jsf?group_id=#{groupResourcesBean.group.id}"/>
             </li>
             <ui:fragment rendered="${groupResourcesBean.group.course.isModerator(userBean.user) || groupResourcesBean.group.isLeader(userBean.user)}">
                 <li>
-                    <h:link value="#{msg.options}" outcome="/lw/group/options.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                    <h:link value="#{msg.options}" styleClass="p-2" outcome="/lw/group/options.jsf?group_id=#{groupResourcesBean.group.id}"/>
                 </li>
             </ui:fragment>
         </ul>

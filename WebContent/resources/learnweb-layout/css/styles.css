@@ -10104,7 +10104,7 @@ h3.group_link {
 .resources-filters .filter-name {
   cursor: pointer;
   display: inline-block;
-  padding: 0.6rem 1.5rem 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem;
 }
 .resources-filters .filter-name .trimmed-text {
   text-overflow: ellipsis;
@@ -10137,7 +10137,7 @@ h3.group_link {
   border: 0;
 }
 .resources-filters ul.filter-sub-bar li button span {
-  padding: 0.6rem 1.5rem 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem;
   color: #000 !important;
   text-align: left;
 }

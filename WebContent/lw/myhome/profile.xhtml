@@ -15,7 +15,7 @@
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
 </ui:define>
-<ui:define name="right_layout">
+<ui:define name="right_layout" >
 
 
     <style type="text/css">
@@ -38,7 +38,7 @@
         }
     </style>
 
-    <p:panel header="#{msg.edit_profile}" styleClass="mr-0 ml-0">
+    <p:panel header="#{msg.edit_profile}" styleClass="m-0">
 
         <h:form id="profile_form" enctype="multipart/form-data" style="position:relative;">
             <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
@@ -220,7 +220,7 @@
 
 <ui:define name="center_layout">
 
-    <p:panel header="#{msg.last_activities}">
+    <p:panel header="#{msg.last_activities}" styleClass="bg-transparent no-border no-padding-panel-content m-0">
         <h:panelGroup id="profile_news">
             <ui:decorate template="/templates/user/logs.xhtml">
                 <ui:param name="news" value="#{newsFeedBean.newsList}"/>

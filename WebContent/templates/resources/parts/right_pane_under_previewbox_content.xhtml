@@ -291,10 +291,10 @@
 		rendered="${not empty rightPaneBean.clickedResource.tags or rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 		<div class="resource_field"
 			style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
-
-		<ul style="margin: 0; padding: 0;">
+		<div>
+		<ul class="row ml-0 pl-0">
 			<ui:repeat var="tag" value="#{rightPaneBean.clickedResource.tags}">
-				<li class="tag_list"><h:outputLink
+				<li class="tag_list pr-2"><h:outputLink
 						styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
 						value="search.jsf">
 						<span class="ui-button-text"> #{tag.name} </span>
@@ -309,6 +309,7 @@
 					</p:commandButton></li>
 			</ui:repeat>
 		</ul>
+		</div>
 	</h:form>
 
 	<h:form id="tag_input_form"

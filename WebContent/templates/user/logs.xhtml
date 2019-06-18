@@ -9,16 +9,16 @@
 	<h:dataTable var="logEntry" value="#{news}" style=" width: 100%;" id="logEntry">
 							
 		<h:column>
-			<p:panel styleClass="ml-0 mr-0">
+			<p:panel styleClass="m-0 p-2">
 			<div class="float-left">
-				<img id="userpic" src="#{logEntry.userImage}" width="30" height="30" style="padding-right: 10px;" alt="Profile picture"/>
+				<img id="userpic" src="#{logEntry.userImage}" width="30" height="30"  alt="Profile picture"/>
 			</div>
-			<div style="width: auto;">
-				<h:outputText value="#{logEntry.description}" escape="false"  />
+			<div style="padding-left: 0.5rem;">
+				<h:outputText value="#{logEntry.description}" style="padding-left: 0.5rem;" escape="false"  />
 				<h:panelGroup rendered="#{logEntry.queryNeeded}">
-					<h:outputText value=" #{msg.with_query} " escape="false"  />	
-						<h:outputLink value="search.jsf" style="text-decoration:none">
-							<h:outputText value=" #{logEntry.resource.query}" escape="false" style="color:#3399FF;font-weight:bold;"/>
+					<h:outputText value=" #{msg.with_query}" escape="false"  />
+						<h:outputLink value="search.jsf" style="text-decoration:none;">
+							<h:outputText value=" #{logEntry.resource.query}" escape="false" style="font-weight:bold; "/>
 							<f:param name="query" value="#{logEntry.resource.query}"/>
 							<f:param name="action" value="web"/>
 						</h:outputLink>
