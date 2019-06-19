@@ -3,19 +3,21 @@ package de.l3s.learnweb.group;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Course;
+import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -30,25 +32,21 @@ public class GroupsBean extends ApplicationBean implements Serializable
     private Group selectedGroup;
 
     private Group newGroup;
-    private boolean otherGroupsShowLanguage;
+    private List<Course> editAbleCourses; // courses to which the user can add groups to
 
-    public GroupsBean()
+    private boolean optionGroupLanguageEnabled = false; // not used in any course at the moment
+
+    public GroupsBean() throws SQLException
     {
-        if(getUser() == null)
+        User user = getUser();
+        if(user == null)
             return;
 
-        try
-        {
-            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-            myGroups = getUser().getGroups();
-            newGroup = new Group();
+        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+        myGroups = user.getGroups();
+        newGroup = new Group();
 
-            otherGroupsShowLanguage = isLanguageSet(joinAbleGroups);
-        }
-        catch(Exception e)
-        {
-            addErrorMessage(e);
-        }
+        editAbleCourses = user.getCourses().stream().filter(course -> !course.getOption(Option.Groups_Only_moderators_can_create_groups)).collect(Collectors.toList());
     }
 
     public void joinGroup()
@@ -60,23 +58,20 @@ public class GroupsBean extends ApplicationBean implements Serializable
             if(null == user || null == selectedGroup)
                 return;
 
-            // make sure users can not join groups simultaneously
-            synchronized(selectedGroup)
+            if(selectedGroup.isMemberCountLimited())
             {
-                if(selectedGroup.isMemberCountLimited())
+                if(selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())
                 {
-                    if(selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())
-                    {
-                        addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
-                        return;
-                    }
+                    addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
+                    return;
                 }
-                user.joinGroup(selectedGroup);
-                myGroups = getUser().getGroups();
-                joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-                log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
-                addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
             }
+            user.joinGroup(selectedGroup);
+            myGroups = getUser().getGroups();
+            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+            log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
+            addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
+
         }
         catch(Exception e)
         {
@@ -211,19 +206,13 @@ public class GroupsBean extends ApplicationBean implements Serializable
         this.selectedGroup = selectedGroup;
     }
 
-    public boolean isOtherGroupsShowLanguage()
+    public List<Course> getEditAbleCourses()
     {
-        return otherGroupsShowLanguage;
+        return editAbleCourses;
     }
 
-    private boolean isLanguageSet(List<Group> groups)
+    public boolean isOptionGroupLanguageEnabled()
     {
-        for(Group group : groups)
-        {
-            if(StringUtils.isEmpty(group.getLanguage()))
-                return false;
-        }
-        return true;
+        return optionGroupLanguageEnabled;
     }
-
 }

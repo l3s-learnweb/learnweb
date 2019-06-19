@@ -13,7 +13,7 @@
 	
 		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" 
 			collapsible="false" style="border: none;" id="right_pane">
-			<h:panelGroup style= "left: 5%; position:relative;">
+			<h:panelGroup style= "left: 5%; position:relative;" rendered="#{not empty groupsBean.editAbleCourses}">
 				<h:form id="addgroupform" style="width: 90%;" prependId="false">
 					
 					<div class="page_header">
@@ -42,9 +42,9 @@
 							<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 												 
 							<h:outputText value="#{msg.course}*:" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">	
-								<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
-							</h:selectOneMenu>
+							<p:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id">	
+								<f:selectItems var="course" value="#{groupsBean.editAbleCourses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+							</p:selectOneMenu>
 							<h:outputText value="" />
 															
 							<h:outputText value="#{msg.description}:" />					
@@ -60,7 +60,7 @@
 							</p:textEditor >
 							<p:message for="new_description" showSummary="true" showDetail="false"/>
 
-							<ui:fragment rendered="false">
+							<ui:fragment rendered="#{groupsBean.optionGroupLanguageEnabled}">
 								<h:outputText value="#{msg.language}:" />
 								<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem" />
 								<p:message for="new_language" showSummary="true" showDetail="false" />
@@ -196,7 +196,7 @@
 						<h:outputText value="#{group.description}" escape="false"/>
 					</p:column>					
 					
-					<p:column headerText="#{msg.language}" width="7%" rendered="#{groupsBean.otherGroupsShowLanguage}">
+					<p:column headerText="#{msg.language}" width="7%" rendered="#{groupsBean.optionGroupLanguageEnabled}">
 						<h:outputText value="#{group.language}" />			
 					</p:column>
 					
