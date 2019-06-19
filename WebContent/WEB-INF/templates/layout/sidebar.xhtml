@@ -31,9 +31,10 @@
 
                     </p:tree>
 
+<!-- Mat: TODO use translated link titles, as in the old menu -->
                     <pc:menu widgetVar="me" >
 
-<!-- Mat: TODO use translated link titles, as in the old menu -->
+
                         <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="./myhome/resources.jsf"/>
                         <p:menuitem value="My comments" icon="fa fa-fw fa-comments" url="./myhome/comments.jsf"/>
                         <p:menuitem value="My tags" icon="fa fa-fw fa-tags" url="./myhome/tags.jsf"/>
@@ -64,14 +65,10 @@
                         </p:submenu>
 
                     </pc:menu>
-                    <!--<pc:menu widgetVar="me">-->
+              
 
 
 
-
-                    <!--<p:submenu label="Moderator" styleClass="mat-extd-layout-sidebar-button"-->
-                    <!--rendered="#{userBean.user.id != 12476}">-->
-                    <!--&lt;!&ndash; menue hidden for user EUMADE4ALL; can be removed in 2020 &ndash;&gt;-->
                     <p:menuitem value="Send notification" icon="fa fa-fw fa-envelope-open" url="./admin/notification.jsf"/>
                     <p:menuitem value="Users" icon="fa fa-fw fa-users " url="./admin/users.jsf"/>
                     <p:menuitem value="Courses" icon="fa fa-fw fa-graduation-cap " url="./admin/courses.jsf"/>
@@ -83,8 +80,7 @@
                     <p:menuitem value="Transcript Summaries" icon="fa fa-fw fa-language" url="./admin/transcript_summary.jsf"/>
                     <p:menuitem value="Glossary Dashboard" icon="fa fa-fw fa-bar-chart " url="./admin/dashboard/glossary.jsf"/>
                     <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="./admin/dashboard/activity.jsf"/>
-                    <!--</p:submenu>-->
-                    <!--</pc:menu>-->
+           
                 </h:form>
             </div>
         </div>

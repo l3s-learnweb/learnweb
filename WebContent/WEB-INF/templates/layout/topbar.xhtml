@@ -2,8 +2,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pc="http://primefaces.org/california">
+                xmlns:p="http://primefaces.org/ui">
 
     <div class="layout-topbar">
         <div class="row align-items-center justify-content-between">
@@ -98,17 +97,6 @@
 
 
         </div>
-
-
-    <!--<h:form>
-        <p:menuButton style="background-image: url(#{learnwebBean.getProfileImage(user)});"
-                      styleClass="menu-button topbar-profile">
-            <p:menuitem value="My profile and settings" url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-user"/>
-            <p:separator/>
-            <p:menuitem value="Logout" action="#{loginBean.logout}" icon="fa fa-sign-out"/>
-        </p:menuButton>
-    </h:form>-->
-
 
         <script type="text/javascript">
             var market = '#{userBean.localeCode}';

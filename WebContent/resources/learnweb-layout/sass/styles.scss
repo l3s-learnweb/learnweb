@@ -3,7 +3,7 @@
 
  First, you need to install SASS
   - Install nodejs and npm (https://nodejs.org/en/)
-  - Install scss using npm `npm i -g scss` (https://sass-lang.com/install)
+  - Install scss using npm `npm i -g sass` (https://sass-lang.com/install)
 
  Now you can build all scss files to css files
   - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
@@ -19,14 +19,20 @@
   - Sass documentation https://sass-lang.com/documentation
   - Bootstrap documentation (see Layout, Content, Utilities sections) https://getbootstrap.com/docs/
 */
-
+   
 // Load variables
 @import 'common/_variables';
 
 // Vendor styles, from 3rd-part developers
+//@import "vendor/bootstrap-4.3.1/functions";
+//@import "vendor/bootstrap-4.3.1/variables";
+//@import "vendor/bootstrap-4.3.1/mixins";
 @import 'vendor/bootstrap'; // grid layout, utilities
 @import '../../california-layout/sass/layout/_layout';
-//@import '../../california-layout/sass/theme/_theme';
+@import '_layout_adjustment';
+
+@import '../../california-layout/sass/theme/_theme';
+@import '_theme_adjustment.scss';
 
 // Load common utils and helpers
 @import 'common/_utils';
@@ -44,6 +50,7 @@
 @import "components/_tables";
 
 // load old styles, which should be removed later
-@import "to-be-removed/_landing";
-@import "to-be-removed/_matviei-extd";
-@import "to-be-removed/_aleks-extd";
+// @import "to-be-removed/_landing";
+// @import "to-be-removed/_matviei-extd";
+// @import "to-be-removed/_aleks-extd";
+

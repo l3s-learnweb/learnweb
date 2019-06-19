@@ -97,8 +97,6 @@
 	                //hideOnClick: true;,
 	                interactive:true,
 	                interactiveTolerance:150 // increase to debug
-	                //theme:'tooltipster-custom-theme'	
-	                //theme:'tooltipster-custom-b'
 	            });
 	    	}
 	        $(document).ready(function() {
@@ -107,6 +105,7 @@
 	        });
 	    </script>	
 
+<!--  test  -->
 		<div class="page_header">
 			<span>
 				#{msg.myGroups}
@@ -120,8 +119,7 @@
 				
 				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 					
-					<h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
-					
+					<h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">					
 						<f:param name="group_id" value="#{group.id}" />
 						<h:outputText value="#{group.longTitle}" />
 					</h:outputLink>								
@@ -182,8 +180,7 @@
 					<p:ajax event="filter" oncomplete="applyTooltip()"/>
 					<p:ajax event="sort" oncomplete="applyTooltip()"/>
 					
-					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%" filterBy="#{group.longTitle}" filterMatchMode="contains">
-						
+					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%" filterBy="#{group.longTitle}" filterMatchMode="contains">						
 						<h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.longTitle}" />
@@ -221,7 +218,7 @@
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
 						</p:commandLink>
 						
-						<h:outputLink value="group/options.jsf" rendered="#{userBean.admin || userBean.moderator}">
+						<h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						</h:outputLink>				
