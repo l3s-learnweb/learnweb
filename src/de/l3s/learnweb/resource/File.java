@@ -137,16 +137,13 @@ public class File implements Serializable, HasId
         this.actualFileExists = actualFileExists;
     }
 
-    public OutputStream getOutputStream()
+    public OutputStream getOutputStream() throws FileNotFoundException
     {
-        try
-        {
-            return new FileOutputStream(getActualFile());
-        }
-        catch(FileNotFoundException e) // the FileManager has to take care that this exception never occurs
-        {
-            throw new RuntimeException(e);
-        }
+        // if the actual file doesn't exist it is replaced with an error image. Make sure that this image isn't changed
+        if(!exists())
+            throw new FileNotFoundException();
+
+        return new FileOutputStream(getActualFile());
     }
 
     public InputStream getInputStream()
@@ -155,7 +152,7 @@ public class File implements Serializable, HasId
         {
             return new FileInputStream(getActualFile());
         }
-        catch(FileNotFoundException e) // the FileManager has to take care that is exception never occurs
+        catch(FileNotFoundException e) // the FileManager has to take care that this exception never occurs
         {
             throw new RuntimeException(e);
         }

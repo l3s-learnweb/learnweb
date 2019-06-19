@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +44,7 @@ public class FileManager
     private final java.io.File folder;
     private final String urlPattern;
     private String basePath;
+    private java.io.File fileNotFoundErrorImage;
 
     public FileManager(Learnweb learnweb) throws SQLException
     {
@@ -61,6 +63,13 @@ public class FileManager
             throw new RuntimeException("Can't read from folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
         else if(!folder.canWrite())
             throw new RuntimeException("Can't write into folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
+
+    }
+
+    @Deprecated
+    public void setFileNotFoundErrorImage(java.io.File fileNotFoundErrorImage)
+    {
+        this.fileNotFoundErrorImage = fileNotFoundErrorImage;
     }
 
     public void setServerUrl(String serverUrl)
@@ -125,39 +134,39 @@ public class FileManager
     public static void main(String[] args) throws SQLException
     {
     // delete files which are not stored on the server
-    
+
     FileManager fm = Learnweb.getInstance().getFileManager();
     List<File> files = fm.getAllFiles();
-    
+
     HashSet<Integer> set = new HashSet<Integer>();
-    
+
     for(File file : files)
     {
         if(file.actualFile == null)
         {
-    
+
     	set.add(file.getResourceId());
-    
+
     	//fm.delete(file);
         }
     }
-    
+
     Iterator<Integer> iter = set.iterator();
-    
+
     // delete the resources
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
-    
+
     while(iter.hasNext())
     {
         Integer id = iter.next();
-    
+
         if(id == 0)
     	continue;
-    
+
         rm.deleteResourcePermanent(id);
-    
+
     }
-    
+
     }
     */
 
@@ -310,7 +319,7 @@ public class FileManager
             file.setExists(false);
 
             // if(file.getMimeType().startsWith("image/")) {
-            file.setActualFile(new java.io.File(folder, "404-no-file.png"));
+            file.setActualFile(fileNotFoundErrorImage);//new java.io.File(folder, "404-no-file.png"));
             file.setMimeType("image/png");
             //}  else file.setActualFile(null);
         }
@@ -357,11 +366,16 @@ public class FileManager
 
     public static void main(String[] args) throws SQLException
     {
+        URL fileNotFoundResource = FileManager.class.getResource("/resources/resources/img/file-not-found.png");
+
+        if(null == fileNotFoundResource)
+            throw new RuntimeException("Can't find file-not-found.png");
+
         /*
         Learnweb learnweb = Learnweb.getInstance();
-        
+
         findAbandonedFiles();
-        
+
         learnweb.onDestroy();
         */
     }
