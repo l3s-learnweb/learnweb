@@ -25,7 +25,7 @@
             <ui:repeat value="#{userBean.groupMenu}" var="group">
                 <div class="panelmenu">
                     <h3 class="group_link" >
-                        <h:link styleClass="group_link_for_group_menu" value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
+                        <h:link  style="font-size: 0.8rem; color: black;" value="#{group.label}" outcome="/lw/group/resources.jsf?group_id=#{group.id}"/>
                     </h3>
                 </div>
             </ui:repeat>

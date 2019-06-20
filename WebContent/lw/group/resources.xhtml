@@ -29,7 +29,7 @@
 </ui:define>
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{groupResourcesBean.group.title}" url="group/overview.jsf?group_id=#{groupResourcesBean.groupId}"/>
-    <p:menuitem value="#{msg.resources}" url="group/resources.jsf?group_id=#{groupResourcesBean.groupId}"/>
+    <p:menuitem value="#{msg.resources}" url="" styleClass="pointer-event" style="pointer-events: none;" />
 </ui:define>
 <ui:define name="center_layout">
     <p:panel styleClass="no-padding-panel-content m-0">
