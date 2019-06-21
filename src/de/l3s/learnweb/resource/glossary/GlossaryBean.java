@@ -70,6 +70,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
 
+    private boolean overrideGlossary = false;
     private String importResponse;
     private List<ParsingError> importErrors = new ArrayList<ParsingError>();
 
@@ -393,23 +394,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(user == null)
             return;
 
+        //TODO check if user is moderator
+        if(overrideGlossary){
+            log.debug("overrideGlossary is true");
+        // delete previos entries, if not a moderator show an error
+        } else{
+            log.debug("overrideGlossary is false");
+        }
+
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
         StringBuilder formattedResultOfProcess = new StringBuilder();
         try
         {
             parser.parseGlossaryEntries();
 
-            // TODO add also success message if no errors occur
-            formattedResultOfProcess.append("Amount of errors - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
-            if(!parser.getErrorsDuringProcessing().isEmpty())
-            {
-                log.error("Found some errors during Glossary xls parsing (see additional info on UI)");
-                formattedResultOfProcess.append("Errors:<br/>");
-                parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
-            }
-            importResponse = formattedResultOfProcess.toString();
-
-            // TODO importErrors = parser.getErrorsDuringProcessing();
+            importErrors = parser.getErrorsDuringProcessing();
 
             // persist parsed entries
             int userId = getUser().getId();
@@ -427,10 +426,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(IOException e)
         {
-            // TODO add appropriate notification of the user
-            // TODO never use System.out.println
-            System.out.println("There is IOException error");
-            System.out.println(e.toString());
+            // TODO add appropriate notification for the user
         }
         log.debug("parseXls done");
     }
@@ -705,6 +701,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return property;
         }
     }*/
+
+    public boolean getOverrideGlossary()
+    {
+        return overrideGlossary;
+    }
 
     public String getImportResponse()
     {

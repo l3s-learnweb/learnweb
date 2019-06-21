@@ -136,15 +136,19 @@
                     <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"
                               min-width="400" closable="true" responsive="true">
                         <div class="p-grid">
-                            <!--<div class="p-col-5">-->
-                                <!--<p:outputLabel for="console" value="Do you want to override table?" />-->
-                            <!--</div>-->
-                            <!--<div class="p-col-5">-->
-                                <!--<p:selectOneRadio id="console">-->
-                                    <!--<f:selectItem itemLabel="Yes" itemValue="true" />-->
-                                    <!--<f:selectItem itemLabel="No" itemValue="false" />-->
-                                <!--</p:selectOneRadio>-->
-                            <!--</div>-->
+                            <!--todo check if user is moderator-->
+                            <!--<c:if test="#{userBean.moderator}">-->
+                            <!--</c:if>-->
+							<!--<div class="p-col-12" rendered="#{not userBean.moderator}">-->
+							<div class="p-col-12">
+                                <p:outputLabel for="override_glossary" escape="false" value="Overwrite all entries of this glossary?  &lt;br /&gt;
+                                Through this option the glossary will be emptied before importing the file." />
+                                <br/>
+                                <br/>
+                                <p:selectBooleanButton id="override_glossary" value="#{glossaryBean.overrideGlossary}" onLabel="Yes" offLabel="No" style="width:60px" />
+                                <br/>
+                                <br/>
+                            </div>
                             <div class="p-col-12">
 								<p:fileUpload mode="advanced" skinSimple="true" fileUploadListener="#{glossaryBean.onImportXls}"
 											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form" 
@@ -155,8 +159,20 @@
 
 					<p:dialog header="Import glossary" widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
 						<h:outputText value="#{glossaryBean.importResponse}" />
-						
-						<!-- todo show import errors in a table -->
+
+                        <!-- todo show import errors in a table -->
+						<p:dataTable var="error" value="#{glossaryBean.importResponse}">
+							<p:column headerText="Row">
+								<h:outputText value="#{error.row}"/>
+							</p:column>
+							<p:column headerText="Cell">
+								<h:outputText value="#{error.cell}"/>
+							</p:column>
+							<p:column headerText="Error">
+								<h:outputText value="#{error.errorMessage}"/>
+							</p:column>
+						</p:dataTable>
+
 					</p:dialog>
 				</h:form>
 				

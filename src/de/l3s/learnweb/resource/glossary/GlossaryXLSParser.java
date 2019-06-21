@@ -1,7 +1,9 @@
 package de.l3s.learnweb.resource.glossary;
 
-import de.l3s.learnweb.resource.glossary.builders.GlossaryEntryGlossaryRowBuilder;
+import de.l3s.learnweb.resource.glossary.builders.GlossaryRowBuilder;
+import de.l3s.learnweb.resource.glossary.builders.ParsingError;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -19,10 +21,10 @@ public class GlossaryXLSParser
     private List<GlossaryEntry> sortedGlossaryEntries = new ArrayList<>();
     private UploadedFile uploadedFile;
     private Map<String, Locale> languageMap;
-    private List<Exception> errorsDuringProcessing = new ArrayList<>();
+    private List<ParsingError> errorsDuringProcessing = new ArrayList<>();
 
 
-    public List<Exception> getErrorsDuringProcessing()
+    public List<ParsingError> getErrorsDuringProcessing()
     {
         return Collections.unmodifiableList(errorsDuringProcessing);
     }
@@ -53,7 +55,7 @@ public class GlossaryXLSParser
         POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputstream());
         HSSFWorkbook wb = new HSSFWorkbook(fs);
         HSSFSheet sheet = wb.getSheetAt(0);
-        GlossaryEntryGlossaryRowBuilder glossaryEntryRowBuilder = null;
+        GlossaryRowBuilder glossaryRowBuilder = null;
 
         List<GlossaryEntry> glossaryEntries = new ArrayList<>();
 
@@ -63,10 +65,10 @@ public class GlossaryXLSParser
             {
                 continue;
             }
-            if(glossaryEntryRowBuilder == null)
+            if(glossaryRowBuilder == null)
             {
-                glossaryEntryRowBuilder = new GlossaryEntryGlossaryRowBuilder();
-                errorsDuringProcessing = glossaryEntryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap);
+                glossaryRowBuilder = new GlossaryRowBuilder();
+                errorsDuringProcessing = glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap);
                 if(!errorsDuringProcessing.isEmpty())
                 {
                     log.error("Errors during header processing, can`t continue.");
@@ -75,17 +77,14 @@ public class GlossaryXLSParser
             }
             else
             {
-                try
-                {
-                    glossaryEntries.add(glossaryEntryRowBuilder.build(sheet.getRow(rowNumber)));
-                }
-                catch(IllegalArgumentException e)
-                {
-                    errorsDuringProcessing.add(e);
+                Pair<GlossaryEntry, List<ParsingError>> entriesWithErrors = glossaryRowBuilder.build(sheet.getRow(rowNumber));
+                if(entriesWithErrors.getValue().isEmpty()){
+                    glossaryEntries.add(entriesWithErrors.getKey());
+                } else{
+                    errorsDuringProcessing.addAll(entriesWithErrors.getValue());
                 }
             }
         }
-
         sortedGlossaryEntries = joinEntries(glossaryEntries);
     }
 
@@ -111,9 +110,6 @@ public class GlossaryXLSParser
         return result;
     }
 
-    /**
-     * @return the parsed glossary entries
-     */
     public List<GlossaryEntry> getEntries()
     {
         return sortedGlossaryEntries;
