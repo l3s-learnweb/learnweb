@@ -1,158 +1,153 @@
-<ui:composition template="/templates/main/main_old.xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="metadata">
-		<f:metadata> 
-			<f:viewParam name="group_id" value="#{forumTopicsBean.groupId}" />
-			<f:viewAction action="#{forumTopicsBean.preRenderView}"/>
-		</f:metadata>
-	</ui:define>	
-		
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="pageTitle" value="#{msg.forum}" />
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="group_id" value="#{forumTopicsBean.groupId}"/>
+		<f:viewAction action="#{forumTopicsBean.preRenderView}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="center_layout">	
-		<h:outputStylesheet library="group" name="forum.css" />
-	
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.forum}"/>
+<ui:define name="sub_breadcrumb">
+	<p:menuitem value="#{forumTopicsBean.group.title}" url="group/overview.jsf?group_id=#{forumTopicsBean.group.id}"/>
+	<p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumTopicsBean.group.id}"/>
+
+</ui:define>
+<ui:define name="center_layout">
+	<h:outputStylesheet library="group" name="forum.css"/>
+	<p:panel styleClass="no-padding-panel-content ml-0 mr-0 mb-2">
 		<ui:decorate template="/templates/group/menu.xhtml">
-			<ui:param name="group" value="#{forumTopicsBean.group}" />
-			<ui:param name="active" value="forum" />
-			
+			<ui:param name="group" value="#{forumTopicsBean.group}"/>
+			<ui:param name="active" value="forum"/>
+
 			<ui:define name="title">
-			<h2>
-				#{msg.forum}
-			</h2> 
-			#{msg.of} #{forumTopicsBean.group.title}
-			
-			<h:form id="center_header_form">
-				<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-					<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" 
-						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
-						#{msg['ForumIndex.new_topic']}
-					</a>
-				</ui:fragment>
-				
-				<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}" 
-					styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
-					process="@this" value="#{msg.join_group}">
-					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}" />
-				</p:commandLink>
-			</h:form>
+				<div class="row align-items-center">
+                    <span class="col mb-2 font-weight-bold">
+                        <span  class="mr-1 green-tittle">#{msg.forum}</span> #{msg.of} #{forumTopicsBean.group.title}
+                    </span>
+					<h:form id="center_header_form" styleClass="col mb-2">
+						<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
+							<p:commandButton value="#{msg['ForumIndex.new_topic']}"
+											 rendered="${forumTopicsBean.group.isMember(userBean.user)}"
+											 class="resource_button float-right"
+											 onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow'); return false;" />
+						</ui:fragment>
+
+						<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+									   styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true"
+									   process="@this" value="#{msg.join_group}">
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+						</p:commandLink>
+					</h:form>
+				</div>
 			</ui:define>
-		</ui:decorate>		
-		
+		</ui:decorate>
+
 		<script type="text/javascript">
-		/* <!-- */
+			/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
-		/* --> */
-		</script>			
-	
+			/* --> */
+		</script>
+
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
-				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-				emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
-			      
-			    <p:ajax event="page" 
-			    	onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
-				
-			 	<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
-					<h:link value="#{topic.title}" outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}" styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-title':''}"/>
-			    </p:column>
-			    <p:column headerText="#{msg['ForumIndex.author']}" styleClass="align-center" sortBy="#{topic.user.username}">
-                    <h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-			    </p:column>
-			    <p:column headerText="#{msg['ForumIndex.replies']}" styleClass="align-center" sortBy="#{topic.replies}">
-			        <h:outputText value="#{topic.replies}"/>
-			    </p:column>
-			    <p:column headerText="#{msg['ForumIndex.views']}" styleClass="align-center" sortBy="#{topic.views}">
-			       	<h:outputText value="#{topic.views}"/>
-			    </p:column>
-			    <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
-			       	<h:outputText value="#{topic.lastPostDate}" styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-date':''}">
-			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
-			        </h:outputText>
-			        <br/>
-			        <h:outputText value="#{msg.by} " />
-                    <h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-			    </p:column>
-			    
+						 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
+
+				<p:ajax event="page"
+						onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
+
+				<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
+					<h:link value="#{topic.title}" outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}"
+							styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-title':''}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.author']}" styleClass="align-center" sortBy="#{topic.user.username}">
+					<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="align-center" sortBy="#{topic.replies}">
+					<h:outputText value="#{topic.replies}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.views']}" styleClass="align-center" sortBy="#{topic.views}">
+					<h:outputText value="#{topic.views}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
+					<h:outputText value="#{topic.lastPostDate}"
+								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-date':''}">
+						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
+					</h:outputText>
+					<br/>
+					<h:outputText value="#{msg.by}"/>
+					<h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+				</p:column>
+
 			</p:dataTable>
 		</h:form>
-			
-		<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-			<div class="page_header" id="new_topic">
-				<span>
-					#{msg['ForumIndex.new_topic']}
-				</span>
-			</div>
-				
-			<div class="grey_border">
-		
+	</p:panel>
+
+
+	<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
+		<p:panel styleClass="ml-0 mr-0" header="#{msg['ForumIndex.new_topic']}">
+
+			<div class="no-border">
 				<h:form prependId="false">
 					<table id="new_topic_table">
 						<tr>
-							<td class="width_10">
-								<h:outputText value="#{msg['ForumIndex.topic']}: " style="margin-top:5px;margin-bottom:5px;"/>
+							<td >
+								<h:outputText value="#{msg['ForumIndex.topic']}: "/>
 							</td>
 							<td>
-								<p:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
-									<f:validateLength minimum="0" maximum="100" />
-								</p:inputText>
+								<h:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
+									<f:validateLength minimum="0" maximum="100"/>
+								</h:inputText>
 							</td>
-							<td class="width_30">
+							<td>
 								<p:message for="post_topic"/>
 							</td>
 						</tr>
-						<ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
 						<tr>
-							<td class="width_10">
-								<h:outputText value="#{msg.category}: " />
+							<td>
+								<h:outputText value="#{msg.category}: "/>
 							</td>
 							<td>
 								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}"
-									editable="true" label="#{msg.category}" required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
-									<f:selectItems value="#{forumTopicsBean.categories}" />
+												 editable="true" label="#{msg.category}"
+												 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
+									<f:selectItems value="#{forumTopicsBean.categories}"/>
 								</p:selectOneMenu>
 							</td>
-							<td class="width_30">
+							<td >
 								<p:message for="post_category"/>
 							</td>
 						</tr>
-						</ui:fragment>
 						<tr>
 							<td colspan="2">
-								<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}">
-							        <f:facet name="toolbar">
-							             <span class="ql-formats">
-							                <button class="ql-bold"></button>
-							                <button class="ql-italic"></button>
-							                <button class="ql-underline"></button>
-							                <button class="ql-strike"></button>
-							            </span>
-							            <span class="ql-formats">
-							                <select class="ql-font"></select>
-							                <select class="ql-size"></select>
-							            </span>
-							        </f:facet>
-							    </p:textEditor>
+								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}"
+										  label="#{msg['PostShow.postContent']}"
+										  controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+								</p:editor>
 							</td>
-							<td class="width_30">
+							<td >
 								<p:message for="post_message"/>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="3">
 								<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
-									action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :form_list_topics" />
+												 action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :form_list_topics"/>
 							</td>
 						</tr>
 					</table>
-				</h:form> 
+				</h:form>
 			</div>
-		</ui:fragment>
-	</ui:define>
+		</p:panel>
+	</ui:fragment>
+
+
+</ui:define>
 </ui:composition>

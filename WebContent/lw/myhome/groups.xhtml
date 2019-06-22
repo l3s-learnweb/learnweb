@@ -76,19 +76,22 @@
     <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 
     <script type="text/javascript">
-        function applyTooltip() {
+        function applyTooltip()
+        {
             $('.tooltip').tooltipster({
 
-                contentAsHTML: true,
+                contentAsHTML:true,
                 //maxWidth: 400,
-                position: 'top',
+                position:'top',
                 //hideOnClick: true;,
-                interactive: true,
-                interactiveTolerance: 150 // increase to debug
-                //theme:'tooltipster-custom-theme'
-                //theme:'tooltipster-custom-b'
+                interactive:true,
+                interactiveTolerance:150 // increase to debug
             });
         }
+        $(document).ready(function() {
+            applyTooltip();
+
+        });
 
 
     </script>
@@ -174,7 +177,7 @@
                     <h:outputText value="#{group.description}" escape="false"/>
                 </p:column>
 
-                <p:column headerText="#{msg.language}" rendered="#{groupsBean.otherGroupsShowLanguage}">
+                <p:column headerText="#{msg.language}" rendered="false">
                     <h:outputText value="#{group.language}"/>
                 </p:column>
 

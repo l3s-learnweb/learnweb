@@ -123,58 +123,9 @@
         </p:dataTable>
     </h:form>
 
-		<ui:fragment rendered="#{forumPostBean.member}">
-			<div class="page_header" id="reply">
-				<span>#{msg['ForumIndex.reply']}</span>
-			</div>
+    <ui:fragment rendered="#{forumPostBean.member}">
+        <p:panel header="Reply" styleClass="ml-0 mr-0">
 
-			<h:form id="post_form" styleClass="grey_border">
-				<table id="answer_table">
-					<ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
-					<tr>
-						<td class="width_10">
-							<h:outputText value="#{msg.category}: " />
-						</td>
-						<td><p:selectOneMenu id="post_category" styleClass="category" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
-											 value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
-								<f:selectItems value="#{forumPostBean.categories}" />
-							</p:selectOneMenu></td>
-						<td class="width_30">
-							<p:message for="post_category" />
-						</td>
-					</tr>
-					</ui:fragment>
-					<tr>
-						<td colspan="2">
-							<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" >
-						        <f:facet name="toolbar">
-						             <span class="ql-formats">
-						                <button class="ql-bold"></button>
-						                <button class="ql-italic"></button>
-						                <button class="ql-underline"></button>
-						                <button class="ql-strike"></button>
-						            </span>
-						            <span class="ql-formats">
-						                <select class="ql-font"></select>
-						                <select class="ql-size"></select>
-						            </span>
-						        </f:facet>
-						    </p:textEditor>
-						</td>
-						<td class="width_30">
-							<p:message for="post_message" />
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3">
-							<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
-								action="#{forumPostBean.onSavePost}" validateClient="true" update="@form :forum_post_table" />
-						</td>
-					</tr>
-				</table>
-			</h:form>
-		</ui:fragment>
-	</ui:define>
             <h:form id="post_form">
                 <table id="answer_table">
                     <tr>

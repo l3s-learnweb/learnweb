@@ -48,11 +48,10 @@
         </h:form>
 
         <div class="center-header" id="group_header">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-                    <span class="green-tittle mr-2">My Resources</span>
-                    <h:form styleClass="resource_button greenbutton resourcetoolbutton" id="folder_layout_options" style="display: flex;"
-                            prependId="false">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="green-tittle mr-2 mb-2">My Resources</span>
+                    <h:form  id="folder_layout_options" prependId="false">
                         <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" style="background-color: rgb(221, 221, 221);"
                                          update=":resourcesView :folder_layout_options"
                                          rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
