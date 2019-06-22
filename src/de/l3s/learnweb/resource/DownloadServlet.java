@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +68,17 @@ public class DownloadServlet extends HttpServlet
             this.learnweb = Learnweb.createInstance(context);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
             this.fileManager = learnweb.getFileManager();
+
+            // quick and dirty fix
+            URL fileNotFoundResource = getServletContext().getResource("/resources/resources/img/file-not-found.png");
+            //URL fileNotFoundResource = getClass().getResource("/resources/resources/img/file-not-found.png");
+            if(null == fileNotFoundResource)
+                throw new RuntimeException("Can't find file-not-found.png");
+            else
+            {
+                fileManager.setFileNotFoundErrorImage(new java.io.File(fileNotFoundResource.toURI()));
+            }
+
         }
         catch(Exception e)
         {

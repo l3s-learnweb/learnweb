@@ -144,12 +144,13 @@
 			            <f:selectItems value="#{groupOptionsBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
 			        </p:selectOneRadio>
 
-			        <h2>#{msg['Miscellaneous']}</h2>
-			        <h:panelGrid columns="2">
-				        <p:selectBooleanCheckbox value="#{groupOptionsBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>
-						<p:outputLabel value="#{msg['policy.forum_category']}" for="restriction_mandatory_forum_category"/>
-					</h:panelGrid>
-
+					<ui:fragment rendered="#{groupOptionsBean.group.restrictionForumCategoryEnabled}">
+				        <h2>#{msg['Miscellaneous']}</h2>
+				        <h:panelGrid columns="2">
+					        <p:selectBooleanCheckbox value="#{groupOptionsBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>
+							<p:outputLabel value="#{msg['policy.forum_category']}" for="restriction_mandatory_forum_category"/>
+						</h:panelGrid>
+					</ui:fragment>
 					<br/>
 					<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}"
                                      update=":growl :group_security_form" style="border-radius:0;">

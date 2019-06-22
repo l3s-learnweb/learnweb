@@ -16,6 +16,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
+import de.l3s.learnweb.user.UserBean;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.Misc;
 
@@ -23,6 +24,7 @@ public class ApplicationBean
 {
     private transient Learnweb learnweb;
     private transient String sessionId;
+    private transient UserBean userBean;
 
     public ApplicationBean()
     {
@@ -106,15 +108,11 @@ public class ApplicationBean
      */
     protected User getUser()
     {
-        // This value should not be cached. The value would not be updated if the user logs out.
-        return UtilBean.getUserBean().getUser();
+        if(null == userBean)
+            userBean = UtilBean.getUserBean();
 
-        // TODO test if caching works. It should because we delete the session on logout. Possibly problematic pages: login, mail validation, admin user login
-        /*
-        if(null == user)
-            user = UtilBean.getUserBean().getUser();
-        return user;
-        */
+        // This value should not be cached. The value would not be updated if the user logs out.
+        return userBean.getUser();
     }
 
     protected Learnweb getLearnweb()

@@ -7,68 +7,98 @@
 <!--@elvariable id="userDetailsHidden" type="java.lang.Boolean"-->
 
 <ui:composition>
-
-	<p:panel header="#{msg.myProfileTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mt-0 p-pn-1rem mb-3">
-
+	
+	<h:outputStylesheet library="user-template" name="user.css"/>	
+	
+	<div class="page_header">
+		<span>
+			#{msg.myProfileTitle}
+		</span> 
+		#{msg.of} #{user.username}
+	</div>
+				
+	<div class="profilebox grey_border">
+	
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
-
+		
 		<h:panelGrid columns="2" class="float-left" rendered="#{not userDetailsHidden}">
 			<h:outputText value="#{msg.username}:" />
 			<h:outputText id="username" value="#{user.username}" />
-
+		
 			<h:outputText value="#{msg.email_address}:" rendered="#{not empty user.email}"/>
 			<h:outputText value="#{user.email}" rendered="#{not empty user.email}"/>
-
+		
 			<h:outputText value="#{msg.gender}:" />
-			<h:outputText value="-" rendered="#{user.gender == 0}" />
+			<h:outputText value="-" rendered="#{user.gender == 0}" />					
 			<h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}" />
-			<h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}" />
-
+			<h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}" />				
+						
 			<h:outputText value="#{msg.address}:" rendered="#{not empty user.address}"/>
 			<h:outputText value="#{user.address}" rendered="#{not empty user.address}"/>
-
+		
 			<h:outputText value="#{msg.profession}:" rendered="#{not empty user.profession}"/>
 			<h:outputText value="#{user.profession}" rendered="#{not empty user.profession}"/>
-
+		
 			<h:outputText value="#{msg.interest}:" rendered="#{not empty user.interest}" />
 			<h:outputText value="#{user.interest}" rendered="#{not empty user.interest}" />
-
+		
 			<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty user.additionalInformation}" />
 			<h:outputText value="#{user.additionalInformation}" rendered="#{not empty user.additionalInformation}" />
-
+					
 			<h:outputText value="#{msg.registered_since}:" />
 			<h:outputText value="#{user.registrationDate}">
 				<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 			</h:outputText>
 		</h:panelGrid>
-
-		<img height="100" width="100" src="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"
+					
+		<img height="100" width="100" src="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image" 
 			class="float-right"/>
-
+		
 		<br class="clear" />
-	</p:panel>
+	</div>
 
-	<p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mb-3 p-pn-1rem" id="group_table" >
+	<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+	<div class="page_header">
+		<span>
+			#{msg.groupsTitle}
+		</span> 
+		#{msg.of} #{user.username} 
+	</div>
+				
+	<div id="group_table" class="grey_border">
 		<p:repeat var="group" value="#{user.groups}">
-			<div class="float-left col p-0">
+			<div class="float-left">		
 				<h:outputLink value="group/overview.jsf">
 					<f:param name="group_id" value="#{group.id}" />
 					<h:outputText value="#{group.title}" />
 				</h:outputLink>
-				<br/>
 			</div>
 		</p:repeat>
-		<br class="clear"/>
-	</p:panel>
-
+		<br class="clear"/>		
+	</div>
+	</ui:fragment>
+	
 	<ui:fragment rendered="#{not empty user.credits}">
-		<p:panel header="#{msg.awards}" styleClass="ml-0 mr-0 p-pn-1 m-3">
+		<div class="page_header">
+			<span>
+				#{msg.awards}
+			</span> 
+			<div class="member_star"></div>
+		</div>
+					
+		<div class="grey_border">
 			<h:outputText value="#{user.credits}" escape="false"/>
-		</p:panel>
+		</div>
 	</ui:fragment>
 
 	<ui:fragment rendered="${userBean.canModerateCourses(user.courses)}">
-		<p:panel header="#{msg.moderator_options}" styleClass="ml-0 mr-0 p-pn-1rem mb-3">
+		<div class="page_header">
+			<span>
+				#{msg.moderator_options}
+			</span> 
+		</div>
+					
+		<div class="grey_border">
 			<h:outputLink value="myhome/profile.jsf">
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.edit_profile}" escape="false"/>
@@ -78,8 +108,8 @@
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.search_history}" escape="false"/>
 			</h:outputLink>
-		</p:panel>
-	</ui:fragment>
-
+		</div>
+	</ui:fragment>	
+	
 </ui:composition>
 </html>
