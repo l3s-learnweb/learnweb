@@ -28,8 +28,8 @@
 
         <ui:define name="title">
             <div class="row align-items-center">
-            <span class="col">
-                <span style="color: #4AA564;">#{msg['ForumIndex.messages']}</span>
+            <span class="col mb-2 font-weight-bold">
+                <span class="green-tittle">#{msg['ForumIndex.messages']}</span>
                 #{msg.of} "#{forumPostBean.topic.title}"
             </span>
                 <h:form id="center_header_form" styleClass="col align-self-center">
@@ -56,20 +56,20 @@
         /* --> */
     </script>
 
-    <h:form prependId="false">
+    <h:form prependId="false" styleClass="pb-4">
         <p:dataTable var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" lazy="false" paginatorPosition="bottom"
                      id="forum_post_table" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
             <p:ajax event="page" onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
 
             <p:column headerText="#{msg.author}" styleClass="align-center">
-                <h:link value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
+                <h:link value="#{post.user.username}"  outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
 
                 <br style="margin-bottom: 0.5rem;"/>
 
                 <img height="100" width="100" src="${learnwebBean.getProfileImage(post.user)}" id="profile_image" alt="profile image"/>
 
-                <div class="align-left">
+                <div class="flo">
                     <h:outputText value="#{msg.registered_since}: "/>
                     <h:outputText value="#{post.user.registrationDate}">
                         <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
@@ -81,10 +81,10 @@
 
             <p:column headerText="#{msg['ForumIndex.messages']}"
                       style="position:relative;">
-                <div class="post_title">
+                <div class="post_title pb-4">
                     <div class="float-right">
                         #{msg['ForumIndex.postedOn']}
-                        <h:outputText value="#{post.date}">
+                        <h:outputText value="#{post.date}" >
                             <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                         </h:outputText>
                     </div>

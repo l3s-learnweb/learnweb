@@ -369,10 +369,10 @@
 			<ui:repeat var="comment"
 				value="#{rightPaneBean.clickedResource.comments}">
 				<div class="comment">
-					<img class="userpic" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture" />
+					<img class="float-left" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture" />
 					<div class="username_div">
 						<span class="username">
-							<h:link value=" #{comment.user.username} " outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="username_link" />
+							<h:link value=" #{comment.user.username} " outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="text-decoration-none" />
 						</span> <span title="#{comment.date}" class="comment_date">
 							#{userBean.getPrettyDate(comment.date)} </span>
 						<div style="margin-top: 5px;">#{comment.text}</div>

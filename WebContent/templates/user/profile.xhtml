@@ -8,7 +8,7 @@
 
 <ui:composition>
 
-	<p:panel header="#{msg.myProfileTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mt-0 p-pn-1">
+	<p:panel header="#{msg.myProfileTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mt-0 p-pn-1rem mb-3">
 
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
 
@@ -48,7 +48,7 @@
 		<br class="clear" />
 	</p:panel>
 
-	<p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 p-pn-1" id="group_table" >
+	<p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}" styleClass="ml-0 mr-0 mb-3 p-pn-1rem" id="group_table" >
 		<p:repeat var="group" value="#{user.groups}">
 			<div class="float-left col p-0">
 				<h:outputLink value="group/overview.jsf">
@@ -62,13 +62,13 @@
 	</p:panel>
 
 	<ui:fragment rendered="#{not empty user.credits}">
-		<p:panel header="#{msg.awards}" styleClass="ml-0 mr-0 p-pn-1">
+		<p:panel header="#{msg.awards}" styleClass="ml-0 mr-0 p-pn-1 m-3">
 			<h:outputText value="#{user.credits}" escape="false"/>
 		</p:panel>
 	</ui:fragment>
 
 	<ui:fragment rendered="${userBean.canModerateCourses(user.courses)}">
-		<p:panel header="#{msg.moderator_options}" styleClass="ml-0 mr-0 p-pn-1">
+		<p:panel header="#{msg.moderator_options}" styleClass="ml-0 mr-0 p-pn-1rem mb-3">
 			<h:outputLink value="myhome/profile.jsf">
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.edit_profile}" escape="false"/>

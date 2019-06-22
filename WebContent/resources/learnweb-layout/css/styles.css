@@ -9855,7 +9855,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
   float: left;
 }
 .center-header ul {
-  margin: 0 -0.5rem -0.5rem;
+  margin: -0.5rem;
   padding: 0px;
   border-top: 1px solid #ccc;
   background-color: #e6e6e6;
@@ -9996,30 +9996,10 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
   display: inline;
 }
 
-.hyperlink {
-  color: #22e;
-  display: flex;
-  justify-content: center;
-}
-
-.float-left {
-  float: left;
-}
-
-#test_res {
+.green-tittle {
   font-size: 2rem;
   font-weight: 100;
-  color: #489a83;
-  display: inline;
-  margin: 0;
-  text-align: left !important;
-}
-
-.resource-grid {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
+  color: #4AA564;
 }
 
 .noBorders tr, .noBorders td {
@@ -10027,106 +10007,12 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
   border: none !important;
 }
 
-body .ui-datatable .ui-datatable-header {
-  display: flex;
-  width: auto;
-  background-color: #4AA564;
-  color: #ffffff;
-  padding: 0.4em 0.2em 0.4em 0.4em;
-  text-align: left;
-  font-size: 14px;
-}
-
-.resource_panel:HOVER, .members_panelgrid:HOVER {
-  cursor: pointer;
-  box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #bfbfbf;
-}
-
-.members_panelgrid > .member_star {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-}
-
-.grey_border {
-  border: 1px solid #ccc;
-  padding: 1rem;
-}
-
-.resource_command_link {
-  text-decoration: none;
-}
-
-.align-left {
-  text-align: left;
-}
-
-.align-right {
-  text-align: right;
-}
-
-.align-center {
-  text-align: center;
-}
-
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.clear {
-  clear: both;
-}
-
-.display-none {
-  display: none;
-}
-
 .no-padding-panel-content .ui-panel-content {
   padding: 0 !important;
 }
 
-.p-pn-1 .ui-panel-content {
+.p-pn-1rem .ui-panel-content {
   padding: 1rem !important;
-}
-
-.username {
-  font-weight: bold;
-  color: #333;
-  vertical-align: top;
-}
-
-.username_div {
-  padding-left: 40px;
-  margin-bottom: 5px;
-}
-
-.username_link {
-  text-decoration: none;
-  vertical-align: top;
-}
-
-.userpic {
-  float: left;
-}
-
-.resource_button {
-  float: right;
-  position: relative;
-  top: -3px;
-  right: -5px;
-}
-
-.resource_button > button {
-  padding: 6px 26px 6px 12px !important;
-}
-
-.ui-menuitem-text {
-  color: #5b616a;
 }
 
 /*# sourceMappingURL=styles.css.map */

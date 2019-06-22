@@ -25,3 +25,9 @@
 	right: 5px;
 	bottom: 5px;
 }
+
+.members_panelgrid:HOVER {
+	cursor: pointer;
+	box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+	border: 1px solid #bfbfbf;
+}

@@ -21,27 +21,20 @@
 </ui:define>
 <ui:define name="center_layout">
     <h:outputStylesheet library="group" name="group.css"/>
-
+    <p:panel header="#{msg.members} #{msg.of} #{groupMembersBean.group.title}" styleClass="no-padding-panel-content">
     <ui:decorate template="/templates/group/menu.xhtml">
         <ui:param name="group" value="#{groupMembersBean.group}"/>
         <ui:param name="active" value="members"/>
-
-        <ui:define name="title">
-            <h2>
-                #{msg.members}
-            </h2>
-            #{msg.of} #{groupMembersBean.group.title}
-
             <h:form id="center_header_form">
-
                 <p:commandLink rendered="#{not groupMembersBean.member}" action="#{groupsBean.joinGroup}"
                                update=":growl :group_menu @form :resource_disp" partialSubmit="true" process="@this"
                                value="#{msg.join_group}" styleClass="resource_button greenbutton">
                     <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupMembersBean.group}"/>
                 </p:commandLink>
             </h:form>
-        </ui:define>
+
     </ui:decorate>
+</p:panel>
 
     <script type="text/javascript">
         /* <!-- */
@@ -56,7 +49,7 @@
 
                     <p:commandLink styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
                         <f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
-                        <div class="members_panelgrid grey_border">
+                        <div class="members_panelgrid">
                             <img src="#{user.image}" />
                             <ui:fragment rendered="#{not empty user.credits}">
                                 <div class="member_star"></div>

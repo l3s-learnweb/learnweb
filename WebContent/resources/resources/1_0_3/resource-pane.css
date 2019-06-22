@@ -278,6 +278,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-around;
 }
 
 .resource-item, .folder-item {
@@ -784,3 +785,25 @@ a.more_resources_link:hover { text-decoration: none; }
 }
 */
 .ui-rating { opacity: 1 !important; filter: Alpha(Opacity=100) !important; }
+
+.username{
+    font-weight:bold;
+    color:#333;
+    vertical-align:top;
+}
+
+.username_div{
+    padding-left:40px;
+    margin-bottom:5px;
+}
+
+.username_link{
+    text-decoration:none;
+    vertical-align:top;
+}
+
+.hyperlink {
+    color: #22e;
+    display: flex;
+    justify-content: center;
+}
