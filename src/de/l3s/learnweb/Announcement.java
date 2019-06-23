@@ -1,14 +1,12 @@
-package de.l3s.learnweb.user;
+package de.l3s.learnweb;
 
 import java.io.Serializable;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
-// TODO Matvey: Move the new classes to de.l3s.learnweb they are not related to the user
-// all classes that are used in Bean fields must implement the serializable interface.
-// you copied this class therefore the serialVersionUID was duplicated. This will cause problems.
-public class News implements Serializable
+public class Announcement implements Serializable
 {
     private static final long serialVersionUID = 4219676681480459859L;
 
@@ -16,19 +14,19 @@ public class News implements Serializable
     private String title;
     private String text;
     private Date date;
-    private int user_id; // TODO Matvey use camelCase. Update the getters and setters too. We are not writing C++
+    private int userId;
 
     String DATE_FORMAT = "dd-MM-yyyy"; // dates must be formated in the frontent https://git.l3s.uni-hannover.de/Learnweb/Learnweb/wikis/JSF-Tips
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 
-    public int getUser_id()
+    public int getUserId()
     {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(final int user_id)
+    public void setUserId(final int userId)
     {
-        this.user_id = user_id;
+        this.userId = userId;
     }
 
     public void setDate(final Date date)
@@ -36,7 +34,7 @@ public class News implements Serializable
         this.date = date;
     }
 
-    public String getDate() throws ParseException
+    public String getDate() throws ParseException //LocalDate
     {
         String s = sdf.format(date);
         return s;
@@ -75,13 +73,6 @@ public class News implements Serializable
     @Override
     public String toString()
     {
-        return "News [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", user_id=" + user_id + "]";
+        return "Announcement [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", userId=" + userId + "]";
     }
-
-    @Deprecated
-    public String onSaveString() // TODO remove
-    {
-        return "News [title=" + title + ", message=" + text + ", user_id=" + user_id + "]";
-    }
-
 }

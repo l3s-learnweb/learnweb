@@ -8,8 +8,9 @@
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
+
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.admin_messages_Title}" url="admin/adminnews.jsf#"/>
+    <p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcements.jsf#"/>
 </ui:define>
 <ui:define name="center_layout">
     <ui:fragment>
@@ -21,8 +22,8 @@
                             <h:outputText value="#{msg.title}:"/>
                         </p>
 
-                        <p:inputText value="#{adminNewsBean.title}" style="width: 100%;box-sizing: border-box;"/>
-                        <p:textEditor styleClass="margin-top" height="184" value="#{adminNewsBean.text}">
+                        <p:inputText value="#{adminAnnouncementsBean.title}"/>
+                        <p:textEditor styleClass="margin-top" height="184" value="#{adminAnnouncementsBean.text}">
                             <f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
@@ -39,7 +40,7 @@
                             </f:facet>
                         </p:textEditor>
                         <div class="margin-top">
-                            <h:commandButton action="#{adminNewsBean.onCreateNews}" process="@this"
+                            <h:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@this"
                                              update="@form :growl" rendered="#{userBean.admin}"
                                              class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button"
                                              value="#{msg.add}"/>
@@ -59,7 +60,7 @@
                             <div></div>
                         </div>
                     </p:blockUI>
-                    <p:dataTable id="news_table" var="news" value="#{adminNewsBean.allNewsList}">
+                    <p:dataTable id="news_table" var="news" value="#{adminAnnouncementsBean.announcementList}">
                         <p:column headerText="#{msg.title}" sortBy="#{news.title}">
                             <h:outputText value="#{news.title}"/>
                         </p:column>
@@ -73,17 +74,17 @@
                                 #{msg.options}
                             </f:facet>
 
-                            <h:outputLink value="admin/adminnewschange.jsf?news_id=#{news.id}" title="#{msg.edit}">
+                            <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
                                 <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
                                 <span><h:outputText value="#{msg.edit}"/></span>
-                                <!-- mat: is there a reason why you put all texts in an additional span? -->
+                                <f:param name="announcement_id" value="#{news.id}" />
                             </h:outputLink>
 
-                            <p:commandLink actionListener="#{adminNewsBean.onDeleteNews(news)}" process="@this"
+                            <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
                                            update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
                                 <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
                                 <span><h:outputText value="#{msg.delete}"/> </span>
-                                <!-- mat: is there a reason why you put all texts in an additional span? -->
+
                                 <p:confirm message="Do you really want to delete '#{news.title}' ?"/>
                             </p:commandLink>
                         </p:column>
