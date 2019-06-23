@@ -1,6 +1,17 @@
 .layout-wrapper {
   .layout-sidebar{
-    overflow-y: auto;
+    top: 0;
+    z-index: 997;
+    .nano{
+      padding-top: 60px;
+      height: 100%;
+
+      .nano-content{
+        overflow-y: auto;
+      }
+
+    }
+
     .layout-menu{
       padding-bottom: 44px;
     }
@@ -12,7 +23,7 @@
       border-bottom: none;
       box-sizing: border-box;
       display: block;
-      margin: -1px;
+      border-right: none;
       margin-top: -2px;
       .ui-tree-container{
         padding: 0;
@@ -63,6 +74,13 @@
             }
 
 
+            &[aria-selected="true"]{
+              a{
+                color: #4AA564!important;
+              }
+            }
+
+
             .ui-tree-toggler{
               margin: 0;
             }
@@ -75,7 +93,7 @@
 
               &[aria-expanded="true"]{
                 a{
-                  color: #4AA564;
+                  //color: initial!important;
                 }
                 
               }
