@@ -3,7 +3,8 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
 	<ui:param name="loginRequired" value="true" />
@@ -141,11 +142,13 @@
                             <!--</c:if>-->
 							<!--<div class="p-col-12" rendered="#{not userBean.moderator}">-->
 							<div class="p-col-12">
-                                <p:outputLabel for="override_glossary" escape="false" value="Overwrite all entries of this glossary?  &lt;br /&gt;
-                                Through this option the glossary will be emptied before importing the file." />
+                                <h:outputFormat value="#{msg['Glossary.overwrite_question']}" />
+								 <br/>
+                                <h:outputFormat value="#{msg['Glossary.overwrite_description']}" />
                                 <br/>
                                 <br/>
-                                <p:selectBooleanButton id="override_glossary" value="#{glossaryBean.overrideGlossary}" onLabel="Yes" offLabel="No" style="width:60px" />
+                                <p:selectBooleanButton id="overwrite_glossary" value="#{glossaryBean.overwriteGlossary}"
+													   onLabel="#{msg['yes']}" offLabel="#{msg['no']}" style="width:60px" />
                                 <br/>
                                 <br/>
                             </div>
@@ -157,23 +160,27 @@
                         </div>
                     </p:dialog>
 
-					<p:dialog header="Import glossary" widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
-						<h:outputText value="#{glossaryBean.importResponse}" />
+					<p:dialog header="Import glossary result"  widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
 
-                        <!-- todo show import errors in a table -->
-						<p:dataTable var="error" value="#{glossaryBean.importResponse}">
-							<p:column headerText="Row">
-								<h:outputText value="#{error.row}"/>
-							</p:column>
-							<p:column headerText="Cell">
+                        <h:outputFormat value="#{msg['Glossary.import_successful']}"
+										rendered="#{glossaryBean.importResponse.isSuccessful()}">
+                            <f:param value="#{glossaryBean.importResponse.amountOfEntries}" />
+                        </h:outputFormat>
+
+						<h:outputFormat value="#{msg['Glossary.import_error']}"
+										rendered="#{not glossaryBean.importResponse.isSuccessful()}"/>
+						<p:dataTable var="error" value="#{glossaryBean.importResponse.listOfErrors}"
+									 rendered="#{not glossaryBean.importResponse.isSuccessful()}">
+							<p:column headerText="Excel cell">
 								<h:outputText value="#{error.cell}"/>
 							</p:column>
-							<p:column headerText="Error">
+							<p:column headerText="Error message">
 								<h:outputText value="#{error.errorMessage}"/>
 							</p:column>
 						</p:dataTable>
 
 					</p:dialog>
+
 				</h:form>
 				
 				<div id="glossform" style="display: none">

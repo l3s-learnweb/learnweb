@@ -1,10 +1,7 @@
-package de.l3s.learnweb.resource.glossary.builders;
+package de.l3s.learnweb.resource.glossary;
 
 import java.util.*;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.glossary.GlossaryEntry;
-import de.l3s.learnweb.resource.glossary.GlossaryTerm;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;

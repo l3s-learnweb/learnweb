@@ -1,7 +1,5 @@
 package de.l3s.learnweb.resource.glossary;
 
-import de.l3s.learnweb.resource.glossary.builders.GlossaryRowBuilder;
-import de.l3s.learnweb.resource.glossary.builders.ParsingError;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
@@ -21,13 +19,13 @@ public class GlossaryXLSParser
     private List<GlossaryEntry> sortedGlossaryEntries = new ArrayList<>();
     private UploadedFile uploadedFile;
     private Map<String, Locale> languageMap;
-    private List<ParsingError> errorsDuringProcessing = new ArrayList<>();
 
-
-    public List<ParsingError> getErrorsDuringProcessing()
+    public GlossaryImportResponse getImportResponse()
     {
-        return Collections.unmodifiableList(errorsDuringProcessing);
+        return importResponse;
     }
+
+    private GlossaryImportResponse importResponse = new GlossaryImportResponse();
 
     public GlossaryXLSParser(UploadedFile uploadedFile, Map<String, Locale> languageMap)
     {
@@ -68,8 +66,8 @@ public class GlossaryXLSParser
             if(glossaryRowBuilder == null)
             {
                 glossaryRowBuilder = new GlossaryRowBuilder();
-                errorsDuringProcessing = glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap);
-                if(!errorsDuringProcessing.isEmpty())
+                importResponse.addErrors(glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap));
+                if(!importResponse.isSuccessful())
                 {
                     log.error("Errors during header processing, can`t continue.");
                     return;
@@ -81,11 +79,12 @@ public class GlossaryXLSParser
                 if(entriesWithErrors.getValue().isEmpty()){
                     glossaryEntries.add(entriesWithErrors.getKey());
                 } else{
-                    errorsDuringProcessing.addAll(entriesWithErrors.getValue());
+                    importResponse.addErrors(entriesWithErrors.getValue());
                 }
             }
         }
         sortedGlossaryEntries = joinEntries(glossaryEntries);
+        importResponse.setAmountOfEntries(sortedGlossaryEntries.size());
     }
 
     private List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
