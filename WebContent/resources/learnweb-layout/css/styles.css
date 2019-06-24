@@ -8757,6 +8757,10 @@ body a {
   text-align: right;
 }
 
+.layout-wrapper .layout-topbar {
+  height: 60px !important;
+}
+
 /* Headers */
 /* Contents */
 /* Forms */
@@ -14314,6 +14318,20 @@ html {
   overflow-y: overlay;
 }
 
+.command-button {
+  background: #4AA564;
+  color: #fff;
+  border: 0.1rem solid #4AA564;
+  border-radius: 0.2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+}
+.command-button:hover {
+  background: #348D4f;
+  border-color: #348D4f;
+}
+
 .main-body {
   /*.layout-main-content {
     flex: 1 0 auto;
@@ -14572,7 +14590,7 @@ html {
   padding: 3rem 0;
 }
 .landing-wrapper .about .about-content {
-  color: #04493f;
+  color: #348D4f;
 }
 .landing-wrapper .pricing {
   padding: 3rem 0;
@@ -14591,7 +14609,7 @@ html {
 }
 .landing-wrapper .pricing .pricing-box .pricing-header {
   color: #fff;
-  background-color: #04493f;
+  background-color: #348D4f;
   letter-spacing: 0.1rem;
   padding: 0.8rem 0;
   font-weight: 600;
@@ -14602,7 +14620,7 @@ html {
 }
 .landing-wrapper .pricing .pricing-box .duration {
   font-size: 1.2rem;
-  color: #04493f;
+  color: #348D4f;
 }
 .landing-wrapper .pricing .pricing-box .pricing-content {
   padding-top: 1rem;
@@ -14612,14 +14630,14 @@ html {
   text-align: left;
   display: block;
   padding: 0.2rem 1.1rem 0.2rem 0;
-  color: #04493f;
+  color: #348D4f;
 }
 .landing-wrapper .pricing .pricing-box .ui-button {
   top: 0;
   margin-bottom: 1rem;
 }
 .landing-wrapper .footer {
-  background-color: #04493f;
+  background-color: #348D4f;
   border-top: 0.2rem solid #fff;
   padding: 2rem;
 }
@@ -14729,42 +14747,11 @@ html {
     max-width: 1000px;
   }
 }
-/*Constants*/
-:root {
-  --main-margin: 15px;
-  --main-dark-green-color-hover: #378D4F;
-  --main-link-green-color: #4AA564;
-  --second-grey: #e4e2e0;
-  --second-grey-hover: #bbbbbb;
-}
-
-/*Classes*/
-body {
-  height: 100%;
-}
-
-/*end*/
-@media screen and (max-width: 1024px) {
-  .main-body .layout-wrapper .layout-topbar {
-    height: 60px;
-  }
-  .main-body .layout-wrapper .layout-main {
-    margin-left: 0;
-    padding-top: 60px;
-  }
-  .main-body #layout-right-sidebar, .main-body .layout-wrapper .layout-sidebar {
-    top: 60px;
-    overflow-y: auto;
-  }
-
-  .main-body .layout-wrapper .layout-topbar #menu-button {
-    left: 230px;
-  }
-  .main-body .layout-wrapper .layout-topbar .logo {
-    margin-left: 0px;
-  }
-}
 /* TODO add a class for this kind of button instead of using the ids */
+.main-body {
+  /*New style*/
+  /*end*/
+}
 .main-body .control-buttons, .main-body .boolean-buttons {
   padding: 0px;
   background: none;
@@ -14805,24 +14792,10 @@ body {
   margin: 0 auto;
   padding: 0;
 }
-.main-body .in-form-link-to-button {
-  padding: 4px 12px 4px 12px;
-  color: white;
-}
-.main-body .in-form-link-to-button:hover {
-  background-color: var(--main-dark-green-color-hover);
-}
 .main-body .layout-footer {
   clear: both;
   position: relative;
   bottom: 0;
-}
-.main-body .card {
-  padding-top: 0;
-  margin-bottom: 0;
-}
-.main-body .card h2 {
-  display: inline-block;
 }
 
 /*.main-body .layout-wrapper .layout-main{
@@ -14832,10 +14805,6 @@ body {
 .main-body .layout-wrapper .layout-main .layout-main-content{
     padding-bottom: 46px;
 }*/
-.form > div .p-col-12, .border-box {
-  box-sizing: border-box;
-}
-
 .main-body .ui-fileupload {
   display: flex;
 }
@@ -14846,14 +14815,8 @@ body {
 .main-body .ui-fileupload-content {
   width: 100%;
 }
-.main-body .card.card-w-title {
-  padding-bottom: 16px;
-}
 .main-body .ui-panel-titlebar {
   padding: 8px 8px !important;
-}
-.main-body tr > .ui-state-default {
-  padding: 8px 4px !important;
 }
 .main-body .optimized-table span {
   font-size: 10px;
@@ -15216,72 +15179,6 @@ body .ui-dialog .ui-dialog-titlebar {
   }
 }
 /******************** helper classes **********************************/
-.no-margin-top {
-  margin-top: 0;
-}
-
-.no-margin-bottom {
-  margin-bottom: 0;
-}
-
-.main-body .margin-top {
-  margin-top: var(--main-margin);
-}
-
-.no-margin-top {
-  margin-top: 0;
-}
-
-.no-margin {
-  margin: 0 !important;
-}
-
-.padding-bottom {
-  padding-bottom: var(--main-margin) !important;
-}
-
-.padding-top {
-  padding-top: var(--main-margin);
-}
-
-.no-padding {
-  padding: 0;
-}
-
-.no-padding-top {
-  padding-top: 0 !important;
-}
-
-.no-padding-bottom {
-  padding-bottom: 0 !important;
-}
-
-.display-none {
-  display: none;
-}
-
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
-
-.flex-label {
-  display: flex;
-  align-content: center;
-}
-.flex-label label {
-  margin-left: var(--main-margin);
-}
-
-.grid {
-  display: grid;
-}
-
-.no-border {
-  border: none !important;
-}
-
 /* Breadcrumb */
 body .ui-menuitem-link .ui-corner-all .ui-icon .ui-icon-home {
   vertical-align: middle;

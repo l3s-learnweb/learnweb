@@ -1,58 +1,14 @@
-/*Constants*/
 
-:root {
-  --main-margin: 15px;
-  --main-dark-green-color-hover: #378D4F;
-  --main-link-green-color: #4AA564;
-  --second-grey: #e4e2e0;
-  --second-grey-hover: #bbbbbb;
-}
-
-/*Classes*/
-
-body {
-  height: 100%;
-}
-
-
-
-
-/*end*/
-
-@media screen and (max-width: 1024px) {
-  .main-body {
-    .layout-wrapper {
-      .layout-topbar {
-        height: 60px;
-      }
-
-      .layout-main {
-        margin-left: 0;
-        padding-top: 60px;
-      }
-    }
-
-    #layout-right-sidebar, .layout-wrapper .layout-sidebar {
-      top: 60px;
-      overflow-y: auto;
-    }
-  }
-
-  .main-body .layout-wrapper .layout-topbar {
-    #menu-button {
-      left: 230px;
-    }
-
-    .logo {
-      margin-left: 0px;
-    }
-  }
-}
 
 
 /* TODO add a class for this kind of button instead of using the ids */
 
+
 .main-body {
+  /*New style*/
+
+  /*end*/
+
   .control-buttons, .boolean-buttons {
     padding: 0px;
     background: none;
@@ -103,14 +59,7 @@ body {
     padding: 0;
   }
 
-  .in-form-link-to-button {
-    padding: 4px 12px 4px 12px;
-    color: white;
 
-    &:hover {
-      background-color: var(--main-dark-green-color-hover);
-    }
-  }
 
 
   .layout-footer {
@@ -119,14 +68,6 @@ body {
     bottom: 0;
   }
 
-  .card {
-    padding-top: 0;
-    margin-bottom: 0;
-
-    h2 {
-      display: inline-block;
-    }
-  }
 }
 
 /*.main-body .layout-wrapper .layout-main{
@@ -137,9 +78,7 @@ body {
     padding-bottom: 46px;
 }*/
 
-.form > div .p-col-12, .border-box {
-  box-sizing: border-box;
-}
+
 
 .main-body {
   .ui-fileupload {
@@ -155,16 +94,8 @@ body {
     width: 100%;
   }
 
-  .card.card-w-title {
-    padding-bottom: 16px;
-  }
-
   .ui-panel-titlebar {
     padding: 8px 8px !important;
-  }
-
-  tr > .ui-state-default {
-    padding: 8px 4px !important;
   }
 
   .optimized-table {
@@ -580,72 +511,6 @@ body .ui-dialog .ui-dialog-titlebar {
 
 /******************** helper classes **********************************/
 
-.no-margin-top {
-  margin-top: 0;
-}
-
-.no-margin-bottom {
-  margin-bottom: 0;
-}
-
-.main-body .margin-top {
-  margin-top: var(--main-margin);
-}
-
-.no-margin-top {
-  margin-top: 0;
-}
-
-.no-margin {
-  margin: 0 !important;
-}
-
-.padding-bottom {
-  padding-bottom: var(--main-margin) !important;
-}
-
-.padding-top {
-  padding-top: var(--main-margin);
-}
-
-.no-padding {
-  padding: 0;
-}
-
-.no-padding-top {
-  padding-top: 0 !important;
-}
-
-.no-padding-bottom {
-  padding-bottom: 0 !important;
-}
-
-.display-none {
-  display: none;
-}
-
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
-
-.flex-label {
-  display: flex;
-  align-content: center;
-
-  label {
-    margin-left: var(--main-margin);
-  }
-}
-
-.grid {
-  display: grid;
-}
-
-.no-border {
-  border: none !important;
-}
 
 /* Breadcrumb */
 

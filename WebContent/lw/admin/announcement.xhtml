@@ -18,22 +18,25 @@
 		</f:metadata>
 	</ui:define>
 
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcements.jsf#"/>
+		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
+	</ui:define>
+
 	<ui:define name="center_layout">
 
 		<ui:fragment>
-			<h:form id="editwelcomeform" styleClass="form">
-				<div class="p-grid">
-					<div class="p-col-12">
-						<div class="card card-w-title">
-
-							<p class="padding-top">
+			<h:form id="announcementform">
+				<div class="row">
+					<div class="col-12">
+						<div class="card card-w-title mt-3 pt-3 pb-3">
+							<p>
 								<h:outputText value="#{msg.title}:" />
 							</p>
-
-							<p:inputText id="news_title" value="#{adminAnnouncementBean.announcement.title}">
+							<p:inputText styleClass="w-100" id="news_title" value="#{adminAnnouncementBean.announcement.title}">
 
 							</p:inputText>
-							<p:textEditor styleClass="margin-top" height="400" value="#{adminAnnouncementBean.announcement.text}">
+							<p:textEditor height="400" styleClass="mt-3" value="#{adminAnnouncementBean.announcement.text}">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
@@ -49,8 +52,8 @@
 									</span>
 								</f:facet>
 							</p:textEditor>
-							<div class="margin-top">
-								<h:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" value="#{msg.update}" >
+							<div class="mt-4">
+								<h:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" styleClass="command-button" value="#{msg.update}" >
 									<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}" />
 								</h:commandButton>
 							</div>

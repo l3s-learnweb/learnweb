@@ -14,16 +14,15 @@
 </ui:define>
 <ui:define name="center_layout">
     <ui:fragment>
-        <h:form id="addnews_form" styleClass="form">
-            <div class="p-grid">
-                <div class="p-col-12">
-                    <div class="card card-w-title">
+        <h:form id="add_announcement_form">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-w-title mt-3 mb-3 pt-3 pb-3">
                         <p>
                             <h:outputText value="#{msg.title}:"/>
                         </p>
-
-                        <p:inputText value="#{adminAnnouncementsBean.title}"/>
-                        <p:textEditor styleClass="margin-top" height="184" value="#{adminAnnouncementsBean.text}">
+                        <p:inputText styleClass="w-100" value="#{adminAnnouncementsBean.title}"/>
+                        <p:textEditor styleClass="mt-3" height="184" value="#{adminAnnouncementsBean.text}">
                             <f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
@@ -39,10 +38,10 @@
 									</span>
                             </f:facet>
                         </p:textEditor>
-                        <div class="margin-top">
+                        <div class="mt-4">
                             <h:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@this"
                                              update="@form :growl" rendered="#{userBean.admin}"
-                                             class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button"
+                                             styleClass="command-button"
                                              value="#{msg.add}"/>
                         </div>
                     </div>
@@ -69,24 +68,29 @@
                             <h:outputText value="#{news.date}"/>
                         </p:column>
 
-                        <p:column style="width:20%" headerText="#{msg.options}" styleClass="options_column column-button">
+                        <p:column style="width:10%" headerText="#{msg.options}">
                             <f:facet name="header">
                                 #{msg.options}
                             </f:facet>
-
-                            <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
+                            <span>
+                                <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
                                 <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
                                 <span><h:outputText value="#{msg.edit}"/></span>
                                 <f:param name="announcement_id" value="#{news.id}" />
-                            </h:outputLink>
-
-                            <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
-                                           update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
+                                </h:outputLink>
+                            </span>
+                            <span>
+                                <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
+                                               update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
                                 <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
-                                <span><h:outputText value="#{msg.delete}"/> </span>
+                                <span><h:outputText value="#{msg.delete}"/></span>
 
                                 <p:confirm message="Do you really want to delete '#{news.title}' ?"/>
                             </p:commandLink>
+                            </span>
+
+
+
                         </p:column>
                     </p:dataTable>
                 </div>
