@@ -14399,6 +14399,14 @@ html {
 }
 
 .layout-wrapper .layout-sidebar {
+  top: 0;
+  z-index: 997;
+}
+.layout-wrapper .layout-sidebar .nano {
+  padding-top: 60px;
+  height: 100%;
+}
+.layout-wrapper .layout-sidebar .nano .nano-content {
   overflow-y: auto;
 }
 .layout-wrapper .layout-sidebar .layout-menu {
@@ -14410,7 +14418,7 @@ html {
   border-bottom: none;
   box-sizing: border-box;
   display: block;
-  margin: -1px;
+  border-right: none;
   margin-top: -2px;
 }
 .layout-wrapper .layout-sidebar .ui-tree .ui-tree-container {
@@ -14449,6 +14457,9 @@ html {
   transition: transform 0.3s;
   transform: rotate(-180deg);
 }
+.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content[aria-selected=true] a {
+  color: #4AA564 !important;
+}
 .layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
   margin: 0;
 }
@@ -14457,9 +14468,6 @@ html {
   white-space: nowrap;
   overflow: hidden;
   width: 100%;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label[aria-expanded=true] a {
-  color: #4AA564;
 }
 .layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label a {
   margin-left: 12px;
@@ -14512,6 +14520,7 @@ html {
   background: rgba(0, 0, 0, 0.9);
   color: #fff;
   border-radius: 0.2rem;
+  padding-bottom: 1rem;
 }
 .landing-wrapper .header .newsform > h2 {
   font-size: 1rem;

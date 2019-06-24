@@ -104,7 +104,7 @@
 
             <p:column headerText="#{msg.title}" sortBy="#{group.title}">
 
-                <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                <h:outputLink value="myhome/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
 
                     <f:param name="group_id" value="#{group.id}"/>
                     <h:outputText value="#{group.longTitle}"/>
@@ -165,7 +165,7 @@
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
                           filterMatchMode="contains">
 
-                    <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                    <h:outputLink value="myhome/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.longTitle}"/>
                     </h:outputLink>

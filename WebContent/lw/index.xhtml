@@ -72,7 +72,7 @@
 						<h:form id="newsform" styleClass="newsform">
 
 							<h2>What's new ?</h2>
-							<p:dataList rows="3" styleClass="onhover-scrollbar"  value="#{adminNewsBean.newsList}" var="news" type="definition">
+							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
 								<div>
 									<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
 									<p><h:outputText escape="false" value="#{news.text}" /></p>
@@ -88,7 +88,7 @@
 		<div id="hidden_news" class="hidden-news">
 
 			<h2>What's new ?</h2>
-			<p:dataList rows="3"  value="#{adminNewsBean.newsList}" var="news" type="definition">
+			<p:dataList rows="3" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
 				<div>
 					<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
 					<p><h:outputText escape="false" value="#{news.text}" /></p>
