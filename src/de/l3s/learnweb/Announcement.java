@@ -16,9 +16,6 @@ public class Announcement implements Serializable
     private Date date;
     private int userId;
 
-    String DATE_FORMAT = "dd-MM-yyyy"; // dates must be formated in the frontent https://git.l3s.uni-hannover.de/Learnweb/Learnweb/wikis/JSF-Tips
-    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-
     public int getUserId()
     {
         return userId;
@@ -34,10 +31,9 @@ public class Announcement implements Serializable
         this.date = date;
     }
 
-    public String getDate() throws ParseException //LocalDate
+    public Date getDate() throws ParseException //LocalDate
     {
-        String s = sdf.format(date);
-        return s;
+        return date;
     }
 
     public int getId()

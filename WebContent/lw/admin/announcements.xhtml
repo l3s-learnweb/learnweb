@@ -64,8 +64,10 @@
                             <h:outputText value="#{news.title}"/>
                         </p:column>
 
-                        <p:column style="width:10%" headerText="#{msg.date}" sortBy="#{news.date}">
-                            <h:outputText value="#{news.date}"/>
+                        <p:column style="width:8%" headerText="#{msg.date}" sortBy="#{news.date}">
+                            <h:outputText value="#{news.date}">
+                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+                            </h:outputText>
                         </p:column>
 
                         <p:column style="width:10%" headerText="#{msg.options}">
