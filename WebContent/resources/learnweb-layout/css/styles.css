@@ -14752,6 +14752,19 @@ html {
   /*New style*/
   /*end*/
 }
+.main-body .layout-wrapper .layout-main {
+  position: relative;
+  min-height: 100vh;
+}
+.main-body .layout-wrapper .layout-main .layout-main-content {
+  padding-bottom: 9em;
+}
+.main-body .layout-wrapper .layout-main .layout-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  clear: both;
+}
 .main-body .control-buttons, .main-body .boolean-buttons {
   padding: 0px;
   background: none;
@@ -14791,11 +14804,6 @@ html {
   width: fit-content;
   margin: 0 auto;
   padding: 0;
-}
-.main-body .layout-footer {
-  clear: both;
-  position: relative;
-  bottom: 0;
 }
 
 /*.main-body .layout-wrapper .layout-main{

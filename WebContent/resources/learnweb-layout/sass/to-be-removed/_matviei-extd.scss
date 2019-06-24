@@ -7,7 +7,26 @@
 .main-body {
   /*New style*/
 
-  /*end*/
+
+  .layout-wrapper{
+    .layout-main{
+      position: relative;
+      min-height: 100vh;
+      .layout-main-content{
+        padding-bottom: 9em;
+      }
+      .layout-footer{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        clear: both;
+      }
+    }
+
+  }
+
+
+    /*end*/
 
   .control-buttons, .boolean-buttons {
     padding: 0px;
@@ -62,11 +81,7 @@
 
 
 
-  .layout-footer {
-    clear: both;
-    position: relative;
-    bottom: 0;
-  }
+
 
 }
 
