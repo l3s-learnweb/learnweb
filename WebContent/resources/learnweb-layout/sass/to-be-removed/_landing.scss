@@ -2,6 +2,12 @@
   background: white;
   overflow-x: hidden;
 
+  .topbar-logo i {
+    font-size: 2rem;
+    line-height: 1;
+    padding-left: 0.5rem;
+  }
+
   .container{
     max-width: 1500px;
   }

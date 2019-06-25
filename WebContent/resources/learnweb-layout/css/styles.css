@@ -14287,6 +14287,38 @@ body .ui-log .ui-log-content {
   max-height: 250px;
 }
 
+@font-face {
+  font-family: "learnweb";
+  src: url("#{resource['learnweb-layout:fonts/learnweb.eot']}");
+  src: url("#{resource['learnweb-layout:fonts/learnweb.eot']}#iefix") format("embedded-opentype"), url("#{resource['learnweb-layout:fonts/learnweb.woff2']}") format("woff2"), url("#{resource['learnweb-layout:fonts/learnweb.woff']}") format("woff"), url("#{resource['learnweb-layout:fonts/learnweb.ttf']}") format("truetype"), url("#{resource['learnweb-layout:fonts/learnweb.svg']}#learnweb") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+[class^=lw-icon-]::before,
+[class*=" lw-icon-"]::before {
+  font-family: "learnweb";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: 0.2em;
+  text-align: center;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  margin-left: 0.2em;
+}
+
+.lw-icon-logo::before {
+  content: "";
+}
+
+.lw-icon-search:before {
+  content: "";
+}
+
 html {
   font-size: 10px;
 }
@@ -14332,32 +14364,12 @@ html {
   border-color: #348D4f;
 }
 
-.main-body {
-  /*.layout-main-content {
-    flex: 1 0 auto;
-  }*/
-  /*.layout-footer {
-    flex-shrink: 0;
-  }*/
-  /* .page-header {
-     color: #4AA564;
-     margin: 0;
-     background: rgba(255, 255, 255, 0.9);
-     !*text-align: center;*!
-     border-radius: 2px;
-     padding: 5px 16px;
-     border: 1px solid #4AA564;
-     border-right: none;
-     border-left: none;
-     margin-bottom: var(--main-margin);
-
-     h1 {
-       margin: 0;
-     }
-   }*/
-  /*New*/
+.layout-topbar .topbar-logo i {
+  font-size: 2rem;
+  line-height: 1;
+  padding-left: 0.5rem;
 }
-.main-body .layout-wrapper .layout-topbar .menu-button {
+.layout-topbar .menu-button {
   position: initial !important;
   width: 60px;
   height: 60px;
@@ -14371,17 +14383,18 @@ html {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
 }
-.main-body .layout-wrapper .layout-topbar .menu-button:hover {
+.layout-topbar .menu-button:hover {
   background-color: #2E8540;
 }
-.main-body .layout-wrapper .layout-topbar .menu-button i {
+.layout-topbar .menu-button i {
   line-height: inherit;
 }
-.main-body .layout-wrapper .layout-topbar .searchform {
+.layout-topbar .searchform {
+  /* TODO: split the name to two parts, `search-form` should be */
   display: flex;
   width: 100%;
 }
-.main-body .layout-wrapper .layout-topbar .searchform input[type=search] {
+.layout-topbar .searchform input[type=search] {
   border: none;
   font-size: 1.4rem;
   width: inherit;
@@ -14389,7 +14402,7 @@ html {
   padding: 0 0.5rem;
   max-width: 37.5rem;
 }
-.main-body .layout-wrapper .layout-topbar .searchbutton {
+.layout-topbar .searchbutton {
   width: 2.5rem;
   height: 2.5rem;
   border: none;
@@ -14401,18 +14414,18 @@ html {
   justify-content: center;
   fill: grey;
 }
-.main-body .layout-wrapper .layout-topbar .searchbutton svg {
-  width: 1.25rem;
-  height: 1.25rem;
+.layout-topbar .searchbutton i {
+  color: gray;
+  font-size: 1.25rem;
 }
-.main-body .layout-wrapper .layout-topbar .searchbutton:hover {
+.layout-topbar .searchbutton:hover {
   background: #2E8540;
   fill: white;
 }
-.main-body .layout-wrapper .layout-topbar .topbar-menu-button {
+.layout-topbar .topbar-menu-button {
   position: initial !important;
 }
-.main-body .layout-wrapper .layout-topbar .usermenu a {
+.layout-topbar .usermenu a {
   text-decoration: none;
 }
 
@@ -14500,6 +14513,11 @@ html {
   overflow-x: hidden;
   /*landing-wrapper 'New style'*/
   /*end*/
+}
+.landing-wrapper .topbar-logo i {
+  font-size: 2rem;
+  line-height: 1;
+  padding-left: 0.5rem;
 }
 .landing-wrapper .container {
   max-width: 1500px;
