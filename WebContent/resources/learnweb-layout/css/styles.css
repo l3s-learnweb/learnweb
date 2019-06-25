@@ -14590,7 +14590,7 @@ html {
   padding: 3rem 0;
 }
 .landing-wrapper .about .about-content {
-  color: #348D4f;
+  color: #04493F;
 }
 .landing-wrapper .pricing {
   padding: 3rem 0;
@@ -14609,7 +14609,7 @@ html {
 }
 .landing-wrapper .pricing .pricing-box .pricing-header {
   color: #fff;
-  background-color: #348D4f;
+  background-color: #04493F;
   letter-spacing: 0.1rem;
   padding: 0.8rem 0;
   font-weight: 600;
@@ -14620,7 +14620,7 @@ html {
 }
 .landing-wrapper .pricing .pricing-box .duration {
   font-size: 1.2rem;
-  color: #348D4f;
+  color: #04493F;
 }
 .landing-wrapper .pricing .pricing-box .pricing-content {
   padding-top: 1rem;
@@ -14630,14 +14630,14 @@ html {
   text-align: left;
   display: block;
   padding: 0.2rem 1.1rem 0.2rem 0;
-  color: #348D4f;
+  color: #04493F;
 }
 .landing-wrapper .pricing .pricing-box .ui-button {
   top: 0;
   margin-bottom: 1rem;
 }
 .landing-wrapper .footer {
-  background-color: #348D4f;
+  background-color: #04493F;
   border-top: 0.2rem solid #fff;
   padding: 2rem;
 }

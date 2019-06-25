@@ -7,15 +7,15 @@
 
 
 .command-button{
-  background: $main-green;
+  background: $primary;
   color: $white;
-  border: .1rem solid $main-green;
+  border: .1rem solid $primary;
   border-radius: .2rem;
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.2rem 0.4rem;
   &:hover{
-    background: $main-dark-green-color;
-    border-color: $main-dark-green-color;
+    background: $primary-hover;
+    border-color: $primary-hover;
   }
 }

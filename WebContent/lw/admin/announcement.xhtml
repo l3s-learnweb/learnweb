@@ -20,7 +20,7 @@
 
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcements.jsf#"/>
-		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
+		<p:menuitem value="#{adminAnnouncementBean.announcement.title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
