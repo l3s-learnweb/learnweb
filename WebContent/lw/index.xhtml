@@ -19,7 +19,7 @@
 
 <h:body styleClass="landing-body">
 	<div class="landing-wrapper">
-		<div id="top-menu" class="top-menu container">
+		<div id="top-menu" class="top-menu px-4 container">
 			<div class="row align-items-center">
 				<div class="col-4">
 					<div class="logo">
@@ -45,7 +45,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="header" class="header row">
+		<div id="header" class="header px-4 row">
 			<div class="container">
 				<div class="row align-items-center">
 					<div class="col-sm-12 col-md-12 col-lg-4">
@@ -71,10 +71,17 @@
 
 						<h:form id="newsform" styleClass="newsform">
 
-							<h2>What's new ?</h2>
+							<h2>Announcements</h2>
 							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
 								<div>
-									<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
+									<h2>
+										<h:outputText value="#{news.title}" />
+										<span>
+											<h:outputText value="#{news.date}">
+												<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+											</h:outputText>
+										</span>
+									</h2>
 									<p><h:outputText escape="false" value="#{news.text}" /></p>
 								</div>
 							</p:dataList>
@@ -90,7 +97,14 @@
 			<h2>What's new ?</h2>
 			<p:dataList rows="3" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
 				<div>
-					<h2><h:outputText value="#{news.title}" /><span>#{news.date}</span></h2>
+					<h2>
+						<h:outputText value="#{news.title}" />
+						<span>
+							<h:outputText value="#{news.date}">
+								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+							</h:outputText>
+						</span>
+					</h2>
 					<p><h:outputText escape="false" value="#{news.text}" /></p>
 				</div>
 			</p:dataList>
@@ -98,7 +112,7 @@
 
 		</div>
 
-		<div id="about" class="about row">
+		<div id="about" class="about px-4 row">
 			<div class="container">
 				<div class="about-content">
 					<div class="col-lg-6 col-12 col-md-12 col-sm-12">
@@ -115,7 +129,7 @@
 			</div>
 		</div>
 
-		<div id="pricing" class="pricing row">
+		<div id="pricing" class="pricing px-4 row">
 			<div class="container">
 			<h2>Subscribe</h2>
 				<div class="row align-items-start justify-content-center">
@@ -152,7 +166,7 @@
 			</div>
 		</div>
 				</div>
-		<div id="footer" class="footer row">
+		<div id="footer" class="footer px-4 row">
 			<div class="container">
 				<div class="ui-g">
 					<div class="ui-g-12 text-light">
