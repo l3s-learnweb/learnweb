@@ -35,6 +35,7 @@
 @import '_theme_adjustment.scss';
 
 // Load common utils and helpers
+@import 'common/_font';
 @import 'common/_utils';
 @import 'common/_global';
 
@@ -50,7 +51,7 @@
 @import "components/_tables";
 
 // load old styles, which should be removed later
- @import "to-be-removed/_landing";
- @import "to-be-removed/_matviei-extd";
- @import "to-be-removed/_aleks-extd";
+//@import "to-be-removed/_landing";
+//@import "to-be-removed/_matviei-extd";
+//@import "to-be-removed/_aleks-extd";
 

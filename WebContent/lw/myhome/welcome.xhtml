@@ -14,15 +14,15 @@
 		</ui:define>
 		<ui:define name="center_layout">
 
-		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}" styleClass="no-padding-panel-content">
-			<div style="width: 28rem;">
+		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}" >
+
 				<ui:fragment rendered="#{userBean.user.organisationId == 848}">
 					<ui:include src="/aw/guide.xhtml" />
 				</ui:fragment>
 				<ui:fragment rendered="#{userBean.user.organisationId != 848}">
 					<ui:include src="/templates/user/guide.xhtml" />
 				</ui:fragment>
-			</div>
+
 		</p:panel>
 		<p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
 				<f:facet name="header">
@@ -37,7 +37,7 @@
 				<ui:fragment rendered="#{userBean.user.organisationId == 480}">
 					<div>
 						<p>
-							<span style="margin:2px 2px 5px 2px; display:inline-block;">
+							<span class="d-inline-block">
 								#{msg.share_yell} 
 							</span>
 						</p>
@@ -45,7 +45,6 @@
 						<div>
 							Click <h:outputLink value="public/yell.jsf" style="text-decoration:underline;">here</h:outputLink> to view the user guide.
 						</div>
-						<br />
 					</div>
 				</ui:fragment>
 
@@ -69,7 +68,7 @@
 			
 			
 			
-			<p:panel header="#{msg.myGroups}" toggleable="true" styleClass="m-0" collapsed="true" style="margin-top:20px;">
+			<p:panel header="#{msg.myGroups}" toggleable="true"  collapsed="true">
 				<h:outputText value="#{msg.should_join_group}" escape="false" rendered="#{empty userBean.user.groups}" />
 			
 				<ui:repeat var="group" value="#{userBean.user.groups}">
