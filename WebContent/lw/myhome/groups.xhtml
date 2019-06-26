@@ -10,10 +10,10 @@
 <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 <ui:param name="rightPane" value="true"/>
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
+    <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#" styleClass="pe-none"/>
 </ui:define>
 <ui:define name="right_layout">
-    <p:panel header="#{msg.createGroup}" style="margin-top: 0em;">
+    <p:panel header="#{msg.createGroup}" styleClass="mt-3">
         <h:form id="addgroupform" prependId="false">
             <style type="text/css">
                 .other_groups_course_title > input {
@@ -23,7 +23,7 @@
             </style>
             <div>
 
-                <h:panelGrid columns="3" columnClasses="medium-width">
+                <h:panelGrid columns="3">
 
                     <h:outputText value="#{msg.title}*:"/>
                     <p:inputText id="new_title" style="width:22rem;" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}"
@@ -65,7 +65,7 @@
 
             <p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
                              oncomplete="applyTooltip()"
-                             styleClass="greenbutton" process="@form" update="@form :my_groups :growl"/>
+                              process="@form" update="@form :my_groups :growl"/>
 
         </h:form>
     </p:panel>
@@ -95,7 +95,7 @@
 
 
     </script>
-    <h:form id="my_groups">
+    <h:form id="my_groups" styleClass="mt-3">
         <p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
             <f:facet name="header">
                 #{msg.myGroups}
@@ -104,7 +104,7 @@
 
             <p:column headerText="#{msg.title}" sortBy="#{group.title}">
 
-                <h:outputLink value="myhome/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
 
                     <f:param name="group_id" value="#{group.id}"/>
                     <h:outputText value="#{group.longTitle}"/>
@@ -147,11 +147,9 @@
 
 
         </p:dataTable>
-        <br/><br/>
-
 
     </h:form>
-    <h:form id="other_groups">
+    <h:form id="other_groups" styleClass="mt-3">
         <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
 
             <p:dataTable rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
@@ -165,7 +163,7 @@
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
                           filterMatchMode="contains">
 
-                    <h:outputLink value="myhome/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                    <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.longTitle}"/>
                     </h:outputLink>
