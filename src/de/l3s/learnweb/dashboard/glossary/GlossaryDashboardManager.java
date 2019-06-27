@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -341,17 +342,15 @@ class GlossaryDashboardManager
         return statPerUser;
     }
 
-    ArrayList<GlossaryEntryDescLang> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    List<GlossaryEntryDescLang> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        ArrayList<GlossaryEntryDescLang> langDataList = new ArrayList<>();
+        List<GlossaryEntryDescLang> descFieldDataList = new ArrayList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT ge.description, ge.entry_id, r.language, r.owner_user_id " +
-                        "FROM lw_resource r " +
-                        "JOIN lw_glossary_entry ge USING(resource_id) " +
-                        "WHERE ge.deleted != 1 AND r.deleted != 1 " +
-                        "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
-                        "AND ge.timestamp BETWEEN ? AND ?"))
+                "SELECT entry_id, resource_id, user_id, description, description_pasted " +
+                        "FROM lw_glossary_entry " +
+                        "WHERE deleted != 1 AND user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                        "AND timestamp BETWEEN ? AND ?"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -360,15 +359,16 @@ class GlossaryDashboardManager
             while(rs.next())
             {
                 GlossaryEntryDescLang descFieldData = new GlossaryEntryDescLang();
-                descFieldData.setDescription(rs.getString(1));
-                descFieldData.setEntryId(rs.getInt(2));
-                descFieldData.setLang(rs.getString(3));
-                descFieldData.setUserId(rs.getInt(4));
-                langDataList.add(descFieldData);
+                descFieldData.setEntryId(rs.getInt(1));
+                descFieldData.setResourceId(rs.getInt(2));
+                descFieldData.setUserId(rs.getInt(3));
+                descFieldData.setDescription(rs.getString(4));
+                descFieldData.setDescriptionPasted(rs.getBoolean(5));
+                descFieldDataList.add(descFieldData);
             }
         }
 
-        return langDataList;
+        return descFieldDataList;
     }
 
     Map<String, Integer> getProxySourcesWithCounters(int trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException

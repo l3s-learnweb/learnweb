@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.primefaces.model.chart.BarChartModel;
@@ -17,7 +17,7 @@ import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.user.User;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
@@ -27,14 +27,14 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;
-    private transient ArrayList<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
+    private transient List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
     private transient Map<Integer, GlossaryUserActivity> glossaryStatisticPerUser;
     private transient Map<String, Integer> glossaryConceptsCountPerUser;
     private transient Map<String, Integer> glossarySourcesWithCounters;
     private transient Map<String, Integer> glossaryTermsCountPerUser;
     private transient Map<Integer, Integer> actionsWithCounters;
     private transient Map<String, Integer> actionsCountPerDay;
-    private transient ArrayList<GlossaryEntryDescLang> descFieldsStatistic;
+    private transient List<GlossaryEntryDescLang> descFieldsStatistic;
 
     private transient LineChartModel interactionsChart;
     private transient BarChartModel usersActivityTypesChart;
@@ -85,7 +85,6 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
         totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
 
-        //TODO Tetiana: redo descFieldsStatistic when description field will be restored
         descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
         glossaryFieldsSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUsersIds, startDate, endDate);
         glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(selectedUsersIds, startDate, endDate);
@@ -167,7 +166,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return totalTerms;
     }
 
-    public ArrayList<GlossaryUserTermsSummary> getGlossaryFieldsSummeryPerUser()
+    public List<GlossaryUserTermsSummary> getGlossaryFieldsSummeryPerUser()
     {
         return glossaryFieldsSummeryPerUser;
     }
@@ -177,7 +176,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return new ArrayList<>(glossaryStatisticPerUser.values());
     }
 
-    public ArrayList<GlossaryEntryDescLang> getDescFieldsStatistic()
+    public List<GlossaryEntryDescLang> getDescFieldsStatistic()
     {
         return descFieldsStatistic;
     }
