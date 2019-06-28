@@ -53,7 +53,7 @@
                             </ui:fragment>
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
                                 <ui:insert name="breadcrumb_bar">
-                                    <p:breadCrumb>
+                                    <p:breadCrumb styleClass="breadCrumb">
                                         <p:menuitem value="" url="#{userBean.bannerLink}"/>
                                         <ui:insert name="sub_breadcrumb"/>
                                     </p:breadCrumb>

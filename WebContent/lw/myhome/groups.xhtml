@@ -10,10 +10,10 @@
 <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 <ui:param name="rightPane" value="true"/>
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#" styleClass="pe-none"/>
+    <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
 </ui:define>
 <ui:define name="right_layout">
-    <p:panel header="#{msg.createGroup}" styleClass="mt-3">
+    <p:panel header="#{msg.createGroup}">
         <h:form id="addgroupform" prependId="false">
             <style type="text/css">
                 .other_groups_course_title > input {
@@ -95,7 +95,7 @@
 
 
     </script>
-    <h:form id="my_groups" styleClass="mt-3">
+    <h:form id="my_groups" >
         <p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
             <f:facet name="header">
                 #{msg.myGroups}
@@ -149,7 +149,7 @@
         </p:dataTable>
 
     </h:form>
-    <h:form id="other_groups" styleClass="mt-3">
+    <h:form id="other_groups">
         <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
 
             <p:dataTable rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
