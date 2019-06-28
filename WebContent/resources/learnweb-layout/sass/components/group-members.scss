@@ -1,0 +1,32 @@
+.section-group-members {
+  .member_username {
+    font-size: 1rem;
+    margin-bottom: 0px;
+    margin-top: 0.4rem;
+  }
+
+  .member_username_small {
+    font-size: 0.8rem;
+    margin-bottom: 1px;
+  }
+
+  .members_panelgrid {
+    padding: 10px;
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 130px;
+    height: 130px;
+    transition: box-shadow 0.3s;
+    > .member_star {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+    }
+    &:HOVER {
+      cursor: pointer;
+      box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #bfbfbf;
+    }
+  }
+}

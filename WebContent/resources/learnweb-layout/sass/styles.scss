@@ -49,8 +49,9 @@
 @import "components/_forms";
 @import "components/_panels";
 @import "components/_tables";
-//group/resources
+// /group folder
 @import "components/group-resources";
+@import "components/group-members";
 
 // load old styles, which should be removed later
 //@import "to-be-removed/_landing";
