@@ -7,10 +7,10 @@
         xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
+<ui:param name="pageTitle" value="#{msg.announcements}"/>
 
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcements.jsf#"/>
+    <p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
 </ui:define>
 <ui:define name="center_layout">
     <ui:fragment>
@@ -59,7 +59,7 @@
                             <div></div>
                         </div>
                     </p:blockUI>
-                    <p:dataTable id="news_table" var="news" value="#{adminAnnouncementsBean.announcementList}">
+                    <p:dataTable id="news_table" var="news" value="#{adminAnnouncementsBean.announcements}">
                         <p:column headerText="#{msg.title}" sortBy="#{news.title}">
                             <h:outputText value="#{news.title}"/>
                         </p:column>

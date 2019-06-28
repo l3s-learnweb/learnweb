@@ -23,7 +23,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
     private static final long serialVersionUID = -5638619427036990427L;
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
-    private List<Announcement> announcementList;
+    private List<Announcement> announcements;
     @NotEmpty
     private String text;
     @NotEmpty
@@ -39,7 +39,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
 
         try
         {
-            announcementList = new ArrayList<>(getLearnweb().getAnnouncementsManager().getAnnouncementsAll());
+            announcements = new ArrayList<>(getLearnweb().getAnnouncementsManager().getAnnouncementsAll());
         }
         catch(Exception e)
         {
@@ -102,9 +102,9 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         this.title = title;
     }
 
-    public List<Announcement> getAnnouncementList()
+    public List<Announcement> getAnnouncements()
     {
-        return announcementList;
+        return announcements;
     }
 
 }

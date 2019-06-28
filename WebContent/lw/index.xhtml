@@ -66,8 +66,8 @@
 
 						<h:form id="newsform" styleClass="newsform">
 
-							<h2>Announcements</h2>
-							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
+							<h2>#{msg.announcements}</h2>
+							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.announcements}" var="news" type="definition">
 								<div>
 									<h2>
 										<h:outputText value="#{news.title}" />
@@ -89,8 +89,8 @@
 
 		<div id="hidden_news" class="hidden-news">
 
-			<h2>What's new ?</h2>
-			<p:dataList rows="3" value="#{adminAnnouncementsBean.announcementList}" var="news" type="definition">
+			<h2>#{msg.announcements}</h2>
+			<p:dataList rows="3" value="#{adminAnnouncementsBean.announcements}" var="news" type="definition">
 				<div>
 					<h2>
 						<h:outputText value="#{news.title}" />
