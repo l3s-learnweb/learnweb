@@ -29,10 +29,10 @@
 </ui:define>
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{groupResourcesBean.group.title}" url="group/overview.jsf?group_id=#{groupResourcesBean.groupId}"/>
-    <p:menuitem value="#{msg.resources}" url="" styleClass="pointer-event" style="pointer-events: none;" />
+    <p:menuitem value="#{msg.resources}" url="" />
 </ui:define>
 <ui:define name="center_layout">
-    <p:panel styleClass="no-padding-panel-content m-0">
+    <p:panel styleClass="section-group-resources no-padding-panel-content">
     <h:form>
         <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
