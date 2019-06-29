@@ -25,6 +25,7 @@
     </h:form>
 
     <ui:fragment rendered="#{groupOverviewBean.group ne null}">
+        <p:panel styleClass="no-padding-panel-content">
         <ui:decorate template="/templates/group/menu.xhtml">
             <ui:param name="group" value="#{groupOverviewBean.group}"/>
             <ui:param name="active" value="overview"/>
@@ -45,10 +46,10 @@
                 </div>
             </ui:define>
         </ui:decorate>
-
+        </p:panel>
         <script type="text/javascript">
             /* <!-- */
-            $("#center_pane").prepend($("#group_header"));
+            //$("#center_pane").prepend($("#group_header"));
             /* --> */
         </script>
 

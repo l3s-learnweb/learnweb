@@ -12,25 +12,25 @@
 
         <ul>
             <li>
-                <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{group.id}" styleClass="#{active == 'overview' ? 'active' : ''}" />
+                <h:link value="#{msg.overview}" outcome="/lw/group/overview.jsf?group_id=#{group.id}" styleClass="p-2" />
             </li>
             <li>
-                <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{group.id}" styleClass="#{active == 'resources' ? 'active' : ''}" />
+                <h:link value="#{msg.resources}" outcome="/lw/group/resources.jsf?group_id=#{group.id}" styleClass="p-2" />
             </li>
             <li>
-                <h:link value="#{msg.members}" outcome="/lw/group/members.jsf?group_id=#{group.id}" styleClass="#{active == 'members' ? 'active' : ''}" />
+                <h:link value="#{msg.members}" outcome="/lw/group/members.jsf?group_id=#{group.id}" styleClass="p-2" />
             </li>
             <ui:fragment rendered="#{not empty group.links or not empty group.documentLinks}">
                 <li>
-                    <h:link value="#{msg.links}" outcome="/lw/group/links.jsf?group_id=#{group.id}" styleClass="#{active == 'links' ? 'active' : ''}" />
+                    <h:link value="#{msg.links}" outcome="/lw/group/links.jsf?group_id=#{group.id}" styleClass="p-2" />
                 </li>
             </ui:fragment>
             <li>
-                <h:link value="#{msg.forum}" outcome="/lw/group/forum.jsf?group_id=#{group.id}" styleClass="#{active == 'forum' ? 'active' : ''}" />
+                <h:link value="#{msg.forum}" outcome="/lw/group/forum.jsf?group_id=#{group.id}" styleClass="p-2" />
             </li>
             <ui:fragment rendered="${group.course.isModerator(userBean.user) || group.isLeader(userBean.user)}">
                 <li>
-                    <h:link value="#{msg.options}" outcome="/lw/group/options.jsf?group_id=#{group.id}" styleClass="#{active == 'options' ? 'active' : ''}" />
+                    <h:link value="#{msg.options}" outcome="/lw/group/options.jsf?group_id=#{group.id}" styleClass="p-2" />
                 </li>
             </ui:fragment>
         </ul>

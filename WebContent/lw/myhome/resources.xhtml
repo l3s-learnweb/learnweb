@@ -127,7 +127,7 @@
                 <h:form rendered="#{not empty myResourcesBean.breadcrumb}">
                     <ul>
                         <li>
-                            <h:link value="#{msg.myResourcesTitle}" outcome="/lw/myhome/resources.jsf"/>
+                            <h:link value="#{msg.myResourcesTitle}" styleClass="m-1" outcome="/lw/myhome/resources.jsf"/>
                         </li>
 
                         <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
