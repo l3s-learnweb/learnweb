@@ -1,9 +1,11 @@
 package de.l3s.learnweb.resource.glossary;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
@@ -27,16 +29,25 @@ public class GlossaryRowBuilder
 
     protected Map<String, Locale> languageMap;
 
-    public List<ParsingError> headerInit(Row header, Map<String, Locale> languageMap)
+    private final List<ParsingError> errors = new ArrayList<>();
+
+    /**
+     * Checks the position and validity of the header columns
+     *
+     * @param header row containing the headers
+     * @param languageMap
+     * @return false if header could not be processed
+     */
+    public boolean headerInit(Row header, Map<String, Locale> languageMap)
     {
-        List<ParsingError> errors = new ArrayList<>();
         this.languageMap = languageMap;
 
         for(int cellPosition = 0; cellPosition < header.getPhysicalNumberOfCells(); ++cellPosition)
         {
             if(header.getCell(cellPosition) == null)
             {
-                return errors;
+                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Is null"));
+                return false;
             }
 
             String cellValue = getStringValueForCell(header.getCell(cellPosition));
@@ -87,11 +98,10 @@ public class GlossaryRowBuilder
             }
             else
             {
-                errors.add(new ParsingError(0, header.getCell(cellPosition).getAddress().formatAsString(),
-                        "Unknown column name: " + cellValue));
+                errors.add(new ParsingError(header.getRowNum(), header.getCell(cellPosition), "Unknown column name: " + cellValue));
             }
         }
-        return errors;
+        return errors.isEmpty();
     }
 
     private boolean isEqualForSomeLocale(String value, String propertyAlias)
@@ -123,10 +133,10 @@ public class GlossaryRowBuilder
         }
     }
 
-    public Pair<GlossaryEntry, List<ParsingError>> build(Row row)
+    public GlossaryEntry build(Row row)
     {
         GlossaryEntry result = new GlossaryEntry();
-        Pair<GlossaryTerm, List<ParsingError>> termWithErrors = buildTerm(row);
+        GlossaryTerm term = buildTerm(row);
 
         if(getStringValueForCell(row.getCell(topicOneHeaderPosition)) != null)
         {
@@ -134,30 +144,30 @@ public class GlossaryRowBuilder
         }
         else
         {
-            termWithErrors.getValue().add(new ParsingError(row.getRowNum(), row.getCell(topicOneHeaderPosition).getAddress().formatAsString(),
-                    "Column Topic 1 is empty"));
+            errors.add(new ParsingError(row.getRowNum(), row.getCell(topicOneHeaderPosition), "Column Topic 1 is empty"));
         }
         result.setTopicTwo(getStringValueForCell(row.getCell(topicTwoHeaderPosition)));
         result.setTopicThree(getStringValueForCell(row.getCell(topicThreeHeaderPosition)));
         result.setDescription(getStringValueForCell(row.getCell(descriptionHeaderPosition)));
 
-        result.addTerm(termWithErrors.getKey());
+        result.addTerm(term);
 
-        return new ImmutablePair<>(result, termWithErrors.getValue());
+        return result;
     }
 
-    private Pair<GlossaryTerm, List<ParsingError>> buildTerm(Row row)
+    private GlossaryTerm buildTerm(Row row)
     {
         GlossaryTerm term = new GlossaryTerm();
-        List<ParsingError> errors = new ArrayList<>();
 
         term.setTerm(getStringValueForCell(row.getCell(termHeaderPosition)));
         if(!languageMap.containsKey(getStringValueForCell(row.getCell(languageHeaderPosition))))
         {
-            errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition).getAddress().formatAsString(),
+            errors.add(new ParsingError(row.getRowNum(), row.getCell(languageHeaderPosition),
                     "Invalid language '" + getStringValueForCell(row.getCell(languageHeaderPosition)) +
                             "' This glossary is limited to " + languageMap.keySet() + " entries."));
-        } else {
+        }
+        else
+        {
             term.setLanguage(languageMap.get(getStringValueForCell(row.getCell(languageHeaderPosition))));
         }
         String usesString = getStringValueForCell(row.getCell(usesHeaderPosition));
@@ -169,6 +179,12 @@ public class GlossaryRowBuilder
         term.setSource(getStringValueForCell(row.getCell(sourceHeaderPosition)));
         term.setPhraseology(getStringValueForCell(row.getCell(phraseologyHeaderPosition)));
 
-        return new ImmutablePair<>(term, errors);
+        return term;
     }
+
+    public List<ParsingError> getErrors()
+    {
+        return errors;
+    }
+
 }

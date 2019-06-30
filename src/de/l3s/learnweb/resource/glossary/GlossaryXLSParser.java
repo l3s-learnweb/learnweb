@@ -1,7 +1,13 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -9,23 +15,12 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.model.UploadedFile;
 
-import java.io.IOException;
-import java.util.*;
-
 public class GlossaryXLSParser
 {
     private static final Logger log = Logger.getLogger(GlossaryXLSParser.class);
 
-    private List<GlossaryEntry> sortedGlossaryEntries = new ArrayList<>();
     private UploadedFile uploadedFile;
     private Map<String, Locale> languageMap;
-
-    public GlossaryImportResponse getImportResponse()
-    {
-        return importResponse;
-    }
-
-    private GlossaryImportResponse importResponse = new GlossaryImportResponse();
 
     public GlossaryXLSParser(UploadedFile uploadedFile, Map<String, Locale> languageMap)
     {
@@ -48,46 +43,50 @@ public class GlossaryXLSParser
         return true;
     }
 
-    public void parseGlossaryEntries() throws IOException
+    public GlossaryParserResponse parseGlossaryEntries() throws IOException
     {
         POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputstream());
-        HSSFWorkbook wb = new HSSFWorkbook(fs);
-        HSSFSheet sheet = wb.getSheetAt(0);
-        GlossaryRowBuilder glossaryRowBuilder = null;
-
-        List<GlossaryEntry> glossaryEntries = new ArrayList<>();
-
-        for(int rowNumber = 0; rowNumber < sheet.getPhysicalNumberOfRows(); ++rowNumber)
+        try(HSSFWorkbook wb = new HSSFWorkbook(fs))
         {
-            if(isEmptyRow(sheet.getRow(rowNumber)))
+            HSSFSheet sheet = wb.getSheetAt(0);
+            GlossaryRowBuilder glossaryRowBuilder = null;
+
+            List<GlossaryEntry> glossaryEntries = new ArrayList<>();
+
+            for(int rowNumber = 0; rowNumber < sheet.getPhysicalNumberOfRows(); ++rowNumber)
             {
-                continue;
-            }
-            if(glossaryRowBuilder == null)
-            {
-                glossaryRowBuilder = new GlossaryRowBuilder();
-                importResponse.addErrors(glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap));
-                if(!importResponse.isSuccessful())
+                if(isEmptyRow(sheet.getRow(rowNumber))) // skip empty rows
                 {
-                    log.error("Errors during header processing, can`t continue.");
-                    return;
+                    continue;
+                }
+                else if(glossaryRowBuilder == null) // parse header
+                {
+                    glossaryRowBuilder = new GlossaryRowBuilder();
+                    if(!glossaryRowBuilder.headerInit(sheet.getRow(rowNumber), languageMap))
+                    {
+                        log.error("Errors during header processing, can't continue.");
+
+                        return new GlossaryParserResponse(null, glossaryRowBuilder.getErrors());
+                    }
+                }
+                else // parse entry
+                {
+                    GlossaryEntry entry = glossaryRowBuilder.build(sheet.getRow(rowNumber));
+                    if(entry != null)
+                    {
+                        glossaryEntries.add(entry);
+                    }
                 }
             }
-            else
-            {
-                Pair<GlossaryEntry, List<ParsingError>> entriesWithErrors = glossaryRowBuilder.build(sheet.getRow(rowNumber));
-                if(entriesWithErrors.getValue().isEmpty()){
-                    glossaryEntries.add(entriesWithErrors.getKey());
-                } else{
-                    importResponse.addErrors(entriesWithErrors.getValue());
-                }
-            }
+
+            if(glossaryRowBuilder == null || glossaryEntries.isEmpty())
+                return new GlossaryParserResponse(null, Arrays.asList(new ParsingError(-1, "", "The file is empty")));
+
+            return new GlossaryParserResponse(joinEntries(glossaryEntries), glossaryRowBuilder.getErrors());
         }
-        sortedGlossaryEntries = joinEntries(glossaryEntries);
-        importResponse.setAmountOfEntries(sortedGlossaryEntries.size());
     }
 
-    private List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
+    private static List<GlossaryEntry> joinEntries(final List<GlossaryEntry> glossaryEntries)
     {
         List<GlossaryEntry> result = new ArrayList<>();
         for(final GlossaryEntry entry : glossaryEntries)
@@ -108,10 +107,4 @@ public class GlossaryXLSParser
         }
         return result;
     }
-
-    public List<GlossaryEntry> getEntries()
-    {
-        return sortedGlossaryEntries;
-    }
-
 }

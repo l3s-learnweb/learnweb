@@ -71,7 +71,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private boolean overwriteGlossary;
 
-    private GlossaryImportResponse importResponse;
+    private GlossaryParserResponse importResponse;
 
     public void onLoad()
     {
@@ -383,33 +383,34 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return languageMap;
     }
 
-    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException
     {
         log.debug("parseXls");
-        importResponse = new GlossaryImportResponse();
 
         User user = getUser();
         if(user == null)
             return;
 
         //TODO check if user is moderator
-        if(overwriteGlossary){
+        if(overwriteGlossary)
+        {
             log.debug("overrideGlossary is true");
-        // delete previos entries, if not a moderator show an error
-        } else{
+            // delete previous entries, if not a moderator show an error
+        }
+        else
+        {
             log.debug("overrideGlossary is false");
         }
 
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
 
-        try
-        {
-            parser.parseGlossaryEntries();
-            importResponse = parser.getImportResponse();
+        importResponse = parser.parseGlossaryEntries();
 
+        if(importResponse.isSuccessful())
+        {
             // persist parsed entries
             int userId = getUser().getId();
-            for(GlossaryEntry entry : parser.getEntries())
+            for(GlossaryEntry entry : importResponse.getEntries())
             {
                 // set creator of new entries
                 entry.setUserId(userId);
@@ -420,10 +421,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
 
             repaintTable();
-        }
-        catch(IOException e)
-        {
-            // TODO add appropriate notification for the user
         }
         log.debug("parseXls done");
     }
@@ -593,7 +590,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             tableItems = glossaryResource.getGlossaryTableView();
         }
-        log.debug("getTableItems() " + tableItems.size());
 
         return tableItems;
     }
@@ -704,7 +700,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return overwriteGlossary;
     }
 
-    public GlossaryImportResponse getImportResponse()
+    public GlossaryParserResponse getImportResponse()
     {
         return importResponse;
     }
