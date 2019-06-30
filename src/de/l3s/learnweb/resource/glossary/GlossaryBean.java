@@ -27,7 +27,6 @@ import javax.imageio.ImageIO;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -47,7 +46,6 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.glossary.builders.ParsingError;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
@@ -71,8 +69,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
 
-    private String importResponse;
-    private List<ParsingError> importErrors = new ArrayList<ParsingError>();
+    private boolean overwriteGlossary;
+
+    private GlossaryImportResponse importResponse;
 
     public void onLoad()
     {
@@ -387,30 +386,26 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException
     {
         log.debug("parseXls");
-        importResponse = StringUtils.EMPTY;
-        importErrors.clear();
+        importResponse = new GlossaryImportResponse();
 
         User user = getUser();
         if(user == null)
             return;
 
+        //TODO check if user is moderator
+        if(overwriteGlossary){
+            log.debug("overrideGlossary is true");
+        // delete previos entries, if not a moderator show an error
+        } else{
+            log.debug("overrideGlossary is false");
+        }
+
         GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
-        StringBuilder formattedResultOfProcess = new StringBuilder();
+
         try
         {
             parser.parseGlossaryEntries();
-
-            // TODO add also success message if no errors occur
-            formattedResultOfProcess.append("Amount of errors - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
-            if(!parser.getErrorsDuringProcessing().isEmpty())
-            {
-                log.error("Found some errors during Glossary xls parsing (see additional info on UI)");
-                formattedResultOfProcess.append("Errors:<br/>");
-                parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
-            }
-            importResponse = formattedResultOfProcess.toString();
-
-            // TODO importErrors = parser.getErrorsDuringProcessing();
+            importResponse = parser.getImportResponse();
 
             // persist parsed entries
             int userId = getUser().getId();
@@ -428,10 +423,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(IOException e)
         {
-            // TODO add appropriate notification of the user
-            // TODO never use System.out.println
-            System.out.println("There is IOException error");
-            System.out.println(e.toString());
+            // TODO add appropriate notification for the user
         }
         log.debug("parseXls done");
     }
@@ -707,14 +699,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }*/
 
-    public String getImportResponse()
+    public boolean getOverwriteGlossary()
     {
-        return importResponse;
+        return overwriteGlossary;
     }
 
-    public List<ParsingError> getImportErrors()
+    public GlossaryImportResponse getImportResponse()
     {
-        return importErrors;
+        return importResponse;
     }
 
     public List<Locale> getTableLanguageFilter()
