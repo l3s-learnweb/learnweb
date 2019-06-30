@@ -1,12 +1,19 @@
 package de.l3s.learnweb.resource.glossary;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Locale;
 
-public class GlossaryTableView
+public class GlossaryTableView implements Serializable
 {
-    private final GlossaryEntry entry;
-    private final GlossaryTerm term;
+    private static final long serialVersionUID = -757320545292668593L;
+    private GlossaryEntry entry;
+    private GlossaryTerm term;
+
+    public GlossaryTableView()
+    {
+        // required by Serializable
+    }
 
     public GlossaryTableView(GlossaryEntry entry, GlossaryTerm term)
     {
