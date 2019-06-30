@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
@@ -64,19 +65,23 @@ public class SearchLogManager
         this.queue = new LinkedBlockingQueue<>();
         this.consumerThread = new Thread(new Consumer());
         this.consumerThread.start();
-
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
-        File felJarFile = new File(felAnnotatorPath);
-        if(felJarFile.exists() && learnweb.getService() == de.l3s.learnweb.Learnweb.SERVICE.LEARNWEB)
-        {
-            this.searchIdQueue = new LinkedBlockingQueue<>();
-            this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
-            this.felAnnotationConsumerThread.start();
-            felAnnotate = true;
-        }
-        else
-            log.error("Couldn't load FEL Annotator jar");
 
+        if(StringUtils.isEmpty(felAnnotatorPath))
+            log.warn("'FEL_ANNOTATOR_PATH' not set in properties. Feature disabled");
+        else
+        {
+            File felJarFile = new File(felAnnotatorPath);
+            if(felJarFile.exists())
+            {
+                this.searchIdQueue = new LinkedBlockingQueue<>();
+                this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
+                this.felAnnotationConsumerThread.start();
+                felAnnotate = true;
+            }
+            else
+                log.error("Couldn't load FEL Annotator jar");
+        }
     }
 
     public int logQuery(String query, MODE searchMode, SERVICE searchService, String language, String searchFilters, User user)
