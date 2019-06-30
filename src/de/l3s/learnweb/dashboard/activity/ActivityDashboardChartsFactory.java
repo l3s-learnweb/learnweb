@@ -1,11 +1,19 @@
 package de.l3s.learnweb.dashboard.activity;
 
-import org.apache.commons.collections4.map.LinkedMap;
-import org.primefaces.model.chart.*;
-
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections4.map.LinkedMap;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
 
 public class ActivityDashboardChartsFactory
 {
@@ -58,7 +66,8 @@ public class ActivityDashboardChartsFactory
             String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
             columns.put("Date", dateKey);
 
-            for(ActivityGraphData activityData : data) {
+            for(ActivityGraphData activityData : data)
+            {
                 columns.put(activityData.getName(), activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
             rows.add(columns);

@@ -2,19 +2,23 @@ package de.l3s.learnweb.dashboard.activity;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import org.primefaces.model.chart.LineChartModel;
 
+import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
@@ -25,10 +29,6 @@ import de.l3s.learnweb.user.User;
 public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 3326736281893564706L;
-
-    @Deprecated
-    @Inject
-    private ActivityDashboardUsersBean activityDashboardUsersBean;
 
     private ActivityDashboardManager activityDashboardManager;
 
@@ -166,7 +166,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     public Set<String> getInteractionsTableColumnNames()
     {
-        if (interactionsTable == null) return null;
+        if(interactionsTable == null)
+            return null;
         return interactionsTable.size() > 0 ? interactionsTable.get(0).keySet() : new HashSet<>();
     }
 
