@@ -240,7 +240,7 @@
                  rowsPerPageTemplate="25,50,100"
                                     >
                           <f:facet name="header">
-                          	Descriptions
+                          	Definitions
                              <p:button id="descriptionsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                                        icon="ui-icon-help" onclick="return false;"/>
                              <p:tooltip for="descriptionsTable" value="All descriptions that were filled in by users"/>
@@ -250,7 +250,7 @@
                                      filterBy="#{gds.user.username}" filterMatchMode="contains">
                                <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gds.user.username}
                            </p:column>
-                           <p:column headerText="#{msg.description}" sortBy="#{gds.description}" sortable="true"
+                           <p:column headerText="Definition" sortBy="#{gds.description}" sortable="true"
                            	filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">
                                #{gds.description}
                            </p:column>

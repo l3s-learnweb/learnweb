@@ -188,7 +188,7 @@
 
 						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
 							<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
-							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}">
+							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}" editable="true">
 								<f:selectItems value="#{glossaryBean.availableTopicOne}" />
 								<f:ajax listener="#{glossaryBean.changeTopicOne}" render="topic_2 topic_3" />
 							</p:selectOneMenu>

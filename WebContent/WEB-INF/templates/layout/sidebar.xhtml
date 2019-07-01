@@ -32,7 +32,7 @@
                     </p:tree>
 
 <!-- Mat: TODO use translated link titles, as in the old menu -->
-                    <pc:menu widgetVar="me" >
+                    <p:menu widgetVar="me" >
 
 
                         <p:menuitem  icon="fa fa-fw fa-folder" value="My Resources" url="./myhome/resources.jsf"/>
@@ -56,7 +56,7 @@
                             <p:menuitem value="Activity Dashboard" icon="fa fa-line-chart" url="./admin/dashboard/activity.jsf"/>
                         </p:submenu>
 
-                        <p:submenu label="Admin" rendered="#{userBean.user.moderator and userBean.user.id != 12476}">
+                        <p:submenu label="Admin" rendered="#{userBean.user.admin and userBean.user.id != 12476}">
                             <p:menuitem value="Organisations" icon="fa fa-fw fa-sitemap " url="./admin/organisations.jsf"/>
                             <p:menuitem value="Banlist" icon="fa fa-fw fa-area-chart " url="./admin/banlist.jsf"/>
                             <p:menuitem value="IP Requests" icon="fa fa-line-chart " url="./admin/requests.jsf"/>
@@ -64,7 +64,7 @@
                             <p:menuitem value="News" icon="fa fa-fw fa-language" url="./admin/adminnews.jsf"/>
                         </p:submenu>
 
-                    </pc:menu>
+                    </p:menu>
               
 
 
