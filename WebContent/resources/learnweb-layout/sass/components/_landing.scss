@@ -154,16 +154,10 @@
 
   }
 
-
   .footer {
     background-color: $main-dark-green-color;
     border-top: 0.2rem solid $white;
-    padding: 2rem;
-    h3 {
-      font-size: 1.5rem;
-      text-align: center;
-      color: $white;
-    }
+    color: $dividerColor;
   }
 
   *{
