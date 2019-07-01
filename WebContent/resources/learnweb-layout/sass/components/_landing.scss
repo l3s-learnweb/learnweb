@@ -11,8 +11,6 @@
   .container{
     max-width: 1500px;
   }
-  /*landing-wrapper 'New style'*/
-
 
   .top-menu{
     ul{
@@ -33,8 +31,6 @@
       }
 
     }
-
-
 
   }
 
@@ -74,12 +70,6 @@
         padding: 1rem;
         height: 24rem;
       }
-
-
-
-
-
-
 
       span {
         display: block;
@@ -136,57 +126,29 @@
 
 
 
-  .pricing{
-    padding: 3rem 0;
+  .subscriptions{
     background-color: $main-teal;
-    border-top: none;
 
-    h2 {
-      color: $white;
-      font-size: 2rem;
-    }
+    .subscription-box {
 
-    .pricing-box {
-      text-align: center;
-      background-color: $white;
-      padding: 0;
-      margin: 1rem;
-
-      .pricing-header {
-        color: $white;
+      .subscription-header {
         background-color: $main-dark-green-color;
         letter-spacing: 0.1rem;
-        padding: 0.8rem 0;
-        font-weight: 600;
       }
 
-      .pricing-subheader {
+      .subscription-subheader {
         background-color: $landing-subheader;
-        font-weight: 600;
-      }
-
-
-      .duration {
-        font-size: 1.2rem;
-        color: $main-dark-green-color;
-      }
-
-      .pricing-content {
-        padding-top: 1rem;
-        padding-bottom: 2rem;
-        span {
-          text-align: left;
-          display: block;
-          padding: 0.2rem 1.1rem 0.2rem 0;
+        span{
+          font-size: 1.2rem;
           color: $main-dark-green-color;
         }
       }
 
-      .ui-button{
-        top: 0;
-        margin-bottom: 1rem;
+      .subscription-content {
+        span {
+          color: $main-dark-green-color;
+        }
       }
-
 
     }
 
@@ -204,15 +166,7 @@
     }
   }
 
-
-
-
-
-
-
-  /*end*/
-
-  * {
+  *{
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -254,11 +208,11 @@
       }
     }
 
-    .pricing{
+    .subscriptions{
       h2{
         text-align: center;
       }
-      .pricing-box{
+      .subscription-box{
         margin: 2rem;
       }
     }
@@ -301,11 +255,11 @@
       }
     }
 
-    .pricing{
+    .subscriptions{
       h2{
         text-align: center;
       }
-      .pricing-box{
+      .subscription-box{
         margin: 2rem;
       }
     }
@@ -349,11 +303,11 @@
       }
     }
 
-    .pricing{
+    .subscriptions{
       h2{
         text-align: center;
       }
-      .pricing-box{
+      .subscription-box{
         margin: 2rem;
       }
     }

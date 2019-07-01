@@ -17,9 +17,9 @@
 	<h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
 </h:head>
 
-<h:body styleClass="landing-body">
+<h:body>
 	<div class="landing-wrapper">
-		<div id="top-menu" class="top-menu px-4 container">
+		<div id="top-menu" class="top-menu px-4 py-3 container">
 			<div class="row align-items-center">
 				<div class="col-4">
 					<div class="topbar-logo">
@@ -124,38 +124,38 @@
 			</div>
 		</div>
 
-		<div id="pricing" class="pricing px-4 row">
+		<div id="subscriptions" class="subscriptions px-4 py-5 border-top-0 row">
 			<div class="container">
-			<h2>Subscribe</h2>
+			<h2 class="text-white h2">Subscribe</h2>
 				<div class="row align-items-start justify-content-center">
 
-					<div class="col-md-5 col-sm-10 col-10 pricing-box">
-						<div class=" pricing-header">#{msg.public_courses}</div>
-						<div class=" pricing-subheader">
-						<span class="duration">Playground</span>
-					</div>
-						<div class=" pricing-content playground">
-						<h:graphicImage value="/resources/image/icons8-playground-96.png"/>
-						<span>​<h:outputText value="#{msg.standard_version_description}" /></span>
-					</div>
-						<div class="">
-						<p:commandButton type="button" value="Join" />
-					</div>
+					<div class="col-md-5 col-sm-10 col-10 subscription-box bg-white text-center m-3 p-0">
+						<div class="subscription-header text-white font-weight-bold py-3 px-0 ">#{msg.public_courses}</div>
+						<div class="subscription-subheader font-weight-bold ">
+							<span>Playground</span>
+						</div>
+						<div class="subscription-content playground row p-3">
+							<h:graphicImage styleClass="col-4 col-sm-2 m-auto m-sm-0 py-2 h-100" value="/resources/image/icons8-playground-96.png"/>
+							<span class="col-12 col-sm-10 py-1 text-left">​<h:outputText value="#{msg.standard_version_description}" /></span>
+						</div>
+						<div>
+							<p:commandButton styleClass=" mb-3" type="button" value="Join" />
+						</div>
 				</div>
 
 
-					<div class="col-md-5 col-sm-10 col-10 pricing-box">
-						<div class="pricing-header">#{msg.specific_courses}</div>
-						<div class=" pricing-subheader">
-						<span class="duration">YELL</span>
-					</div>
-						<div class="pricing-content playground">
-						<h:graphicImage value="/resources/image/interactive_puzzle.png"/>
-						<span><h:outputText value="#{msg.yell_description}"/></span>
-					</div>
-						<div class="">
-						<p:commandButton type="button" value="Join"/>
-					</div>
+					<div class="col-md-5 col-sm-10 col-10 subscription-box bg-white text-center m-3 p-0">
+						<div class="subscription-header text-white font-weight-bold py-3 px-0">#{msg.specific_courses}</div>
+						<div class="subscription-subheader font-weight-bold" >
+							<span>YELL</span>
+						</div>
+						<div class="subscription-content playground row p-3">
+							<h:graphicImage styleClass="col-4 col-sm-2 m-auto m-sm-0 py-2 h-100" value="/resources/image/interactive_puzzle.png"/>
+							<span class="col-12 col-sm-10 py-1 text-left"><h:outputText value="#{msg.yell_description}"/></span>
+						</div>
+						<div>
+							<p:commandButton styleClass=" mb-3" type="button" value="Join"/>
+						</div>
 				</div>
 
 			</div>
