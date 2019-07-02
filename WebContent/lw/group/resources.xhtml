@@ -56,7 +56,7 @@
     </h:form>
 
     <div class="center-header" id="group_header">
-        <div class="row align-items-center mb-2">
+        <div class="row align-items-center mb-2 mw-100">
             <span class="col mb-2 font-weight-bold">
                 <span class="green-tittle"> #{msg.resources} </span>
                     #{msg.of}
@@ -79,7 +79,7 @@
                 </h:form>
             </c:if>
 
-            <h:form id="request_group_form" styleClass="col-3 text-right">
+            <h:form id="request_group_form" styleClass="text-right">
                 <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}"  onclick="PF('dlg1').show();"/>
                 <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
                     <h:outputFormat  value="#{msg.export_resources_warning}">
@@ -98,7 +98,7 @@
                 </p:dialog>
             </h:form>
 
-            <h:form id="center_header_form" styleClass="col-2 m-0 text-right">
+            <h:form id="center_header_form" styleClass="m-0 text-right">
                 <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
                                  iconPos="right"
                                  type="button" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
