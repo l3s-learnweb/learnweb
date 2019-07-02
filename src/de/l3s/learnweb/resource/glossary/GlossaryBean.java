@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
@@ -695,7 +696,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }*/
 
-    public boolean getOverwriteGlossary()
+    public boolean isOverwriteGlossary()
     {
         return overwriteGlossary;
     }
@@ -705,6 +706,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return importResponse;
     }
 
+    public void changeOverwriteFlag(AjaxBehaviorEvent overwriteGlossary)
+    {
+        log.debug("Value changed");
+    }
     public List<Locale> getTableLanguageFilter()
     {
         return tableLanguageFilter;
@@ -713,6 +718,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setTableLanguageFilter(List<Locale> tableLanguageFilter)
     {
         this.tableLanguageFilter = tableLanguageFilter;
+    }
+
+    public void setOverwriteGlossary(final boolean overwriteGlossary)
+    {
+        log.debug("setter");
+        this.overwriteGlossary = overwriteGlossary;
     }
 
 }
