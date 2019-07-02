@@ -69,7 +69,7 @@
 							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
 							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
+						<p:column headerText="#{msg['Glossary.Definition']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
 							filterMatchMode="contains" filterStyle="width: 90%;">
 							<h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4" />
 						</p:column>
@@ -213,8 +213,8 @@
 							</h:panelGroup>
 							<h:outputText value="" />
 
-							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
-							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
+							<p:outputLabel value="#{msg['Glossary.Definition']} " for="description" />
+							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" />
 							<p:message for="description" />
 						</p:panelGrid>
 
