@@ -2,12 +2,14 @@ package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import com.google.api.client.util.DateTime;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -28,7 +30,9 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private String title;
     private int announcementId;
     private Announcement announcement;
-
+    @NotEmpty
+    private Date date;
+    private boolean hidden;
 
     public void onLoad() throws SQLException
     {
@@ -64,7 +68,9 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             Announcement announcement = new Announcement();
             announcement.setTitle(this.announcement.getTitle());
             announcement.setText(this.announcement.getText());
+            announcement.setDate(this.announcement.getDate());
             announcement.setId(announcementId);
+            announcement.setHidden(this.announcement.isHidden());
             log.debug(announcement.toString());
             getLearnweb().getAnnouncementsManager().update(announcement);
             addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was updated !");
@@ -75,6 +81,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         }
 
     }
+
 
     public String getText()
     {

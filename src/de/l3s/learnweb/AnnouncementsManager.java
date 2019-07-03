@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -52,18 +53,20 @@ public class AnnouncementsManager
         announcement.setText(rs.getString("message"));
         announcement.setUserId(rs.getInt("user_id"));
         announcement.setDate(rs.getDate("created_at")); // TODO be careful with SQL getDate. It will really only return the date but not the time.
-
+        announcement.setHidden(rs.getBoolean("hidden"));
         return announcement;
     }
 
     public synchronized Announcement save(Announcement announcement) throws SQLException
     {
 
-        try(PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id) VALUES (?, ?, ?)"))
+        try(PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id, created_at, hidden) VALUES (?, ?, ?, ?, ?)"))
         {
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
             stmt.setInt(3, announcement.getUserId());
+            stmt.setDate(4,sqlDate(announcement.getDate()));
+            stmt.setBoolean(5,announcement.isHidden());
             log.debug(stmt.toString());
             stmt.executeUpdate();
             stmt.close();
@@ -93,17 +96,42 @@ public class AnnouncementsManager
     public synchronized void update(Announcement announcement) throws SQLException
     {
 
-        try(PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_news SET title = ?, message = ? WHERE news_id = ?"))
+        try(PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_news SET title = ?, message = ?, created_at = ?, hidden = ?  WHERE news_id = ?"))
         {
 
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
-            stmt.setInt(3, announcement.getId());
+            stmt.setDate(3,sqlDate(announcement.getDate()));
+            stmt.setBoolean(4,announcement.isHidden());
+            stmt.setInt(5, announcement.getId());
+            log.debug(stmt.toString());
+            stmt.executeUpdate();
+            stmt.close();
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public synchronized void hide(Announcement announcement) throws SQLException
+    {
+
+        try(PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_news SET hidden = ?  WHERE news_id = ?"))
+        {
+
+            stmt.setBoolean(1,announcement.isHidden());
+            stmt.setInt(2, announcement.getId());
             log.debug(stmt.toString());
             stmt.executeUpdate();
             stmt.close();
         }
     }
+
+    private java.sql.Date sqlDate(java.util.Date calendarDate) {
+        return new java.sql.Date(calendarDate.getTime());
+    }
+
 
     public Collection<Announcement> getAnnouncementsAll() throws SQLException
     {

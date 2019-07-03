@@ -19,7 +19,7 @@
 	</ui:define>
 
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="#{msg.admin_messages_Title}" url="admin/announcements.jsf#"/>
+		<p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
 		<p:menuitem value="#{adminAnnouncementBean.announcement.title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
 	</ui:define>
 
@@ -29,21 +29,23 @@
 			<h:form id="announcementform">
 				<div class="row">
 					<div class="col-12">
-						<div class="card card-w-title mt-3 pt-3 pb-3">
+						<p:panel>
 							<p>
-								<h:outputText value="#{msg.title}:" />
+								<h:outputText value="#{msg.title}: " />
+								<p:inputText styleClass="w-25" id="news_title" value="#{adminAnnouncementBean.announcement.title}"/>
 							</p>
-							<p:inputText styleClass="w-100" id="news_title" value="#{adminAnnouncementBean.announcement.title}">
-
-							</p:inputText>
-							<p:textEditor height="400" styleClass="mt-3" value="#{adminAnnouncementBean.announcement.text}">
+							<p>
+								<p:outputLabel for="datepick" value="Date:" />
+								<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" styleClass="ml-1 w-25" pattern="dd.MM.yyyy" showTime="true"  timeZone="#{userBean.timeZone}" />
+							</p>
+							<p:textEditor height="400" styleClass="mt-3 mb-3" value="#{adminAnnouncementBean.announcement.text}">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
 										<select class="ql-size"></select>
 									</span>
 
-									 <span class="ql-formats">
+									<span class="ql-formats">
 										<button class="ql-bold"></button>
 										<button class="ql-italic"></button>
 										<button class="ql-underline"></button>
@@ -52,12 +54,13 @@
 									</span>
 								</f:facet>
 							</p:textEditor>
+							Hide: <p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" />
 							<div class="mt-4">
 								<h:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" styleClass="command-button" value="#{msg.update}" >
 									<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}" />
 								</h:commandButton>
 							</div>
-						</div>
+						</p:panel>
 					</div>
 				</div>
 			</h:form>

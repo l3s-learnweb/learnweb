@@ -17,12 +17,18 @@
         <h:form id="add_announcement_form">
             <div class="row">
                 <div class="col-12">
-                    <div class="card card-w-title mt-3 mb-3 pt-3 pb-3">
+                    <p:panel>
+
                         <p>
-                            <h:outputText value="#{msg.title}:"/>
+                            <h:outputText value="#{msg.title}: "/>
+                            <p:inputText styleClass="w-25" value="#{adminAnnouncementsBean.title}"/>
                         </p>
-                        <p:inputText styleClass="w-100" value="#{adminAnnouncementsBean.title}"/>
-                        <p:textEditor styleClass="mt-3" height="184" value="#{adminAnnouncementsBean.text}">
+                        <p>
+                            <p:outputLabel for="datepick" value="Date:" />
+                            <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" styleClass="ml-1 w-25" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                        </p>
+
+                        <p:textEditor styleClass="mt-3 mb-3" height="184" value="#{adminAnnouncementsBean.text}">
                             <f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>
@@ -38,19 +44,20 @@
 									</span>
                             </f:facet>
                         </p:textEditor>
+                        Hide: <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}"/>
                         <div class="mt-4">
                             <h:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@this"
-                                             update="@form :growl" rendered="#{userBean.admin}"
+                                             update=":growl" rendered="#{userBean.admin}"
                                              styleClass="command-button"
                                              value="#{msg.add}"/>
                         </div>
-                    </div>
+                    </p:panel>
                 </div>
             </div>
         </h:form>
-        <h:form id="news_form" styleClass="form">
+        <h:form id="news_form">
             <div class="p-grid">
-                <div class="p-col-12 no-padding-top margin-top">
+                <div class="p-col-12 pt-0 mt-1">
                     <p:blockUI block="news_table" widgetVar="news_form_blocker">
                         <div class="float-left">#{msg.please_wait}</div>
                         <div class="loading-animation small float-left">
@@ -64,10 +71,16 @@
                             <h:outputText value="#{news.title}"/>
                         </p:column>
 
-                        <p:column style="width:8%" headerText="#{msg.date}" sortBy="#{news.date}">
-                            <h:outputText value="#{news.date}">
-                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+                        <p:column style="width:8%" headerText="#{msg.date}" styleClass="m-auto" sortBy="#{news.date}">
+                            <h:outputText  value="#{news.date}">
+                                <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
                             </h:outputText>
+                        </p:column>
+
+                        <p:column style="width:6%" headerText="#{msg.hide}" sortBy="#{news.hidden}">
+                            <p:selectBooleanCheckbox value="#{news.hidden}" styleClass="m-auto d-block">
+                                <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
+                            </p:selectBooleanCheckbox>
                         </p:column>
 
                         <p:column style="width:10%" headerText="#{msg.options}">
@@ -88,7 +101,7 @@
                                 <span><h:outputText value="#{msg.delete}"/></span>
 
                                 <p:confirm message="Do you really want to delete '#{news.title}' ?"/>
-                            </p:commandLink>
+                                </p:commandLink>
                             </span>
 
 

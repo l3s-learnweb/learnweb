@@ -14414,6 +14414,10 @@ html {
   border-color: #348D4f;
 }
 
+.w-30 {
+  width: 30% !important;
+}
+
 .layout-topbar .topbar-logo i {
   font-size: 2rem;
   line-height: 1;
@@ -14556,158 +14560,6 @@ html {
   font-weight: 500;
   font-size: 1rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-
-.section-group-resources .resources-filters {
-  margin: 0 -0.5rem -0.5rem;
-}
-.section-group-resources .resources-filters ul {
-  list-style: none outside none;
-  margin: 0;
-  padding: 0;
-}
-.section-group-resources .resources-filters ul li {
-  float: left;
-  display: block;
-  position: relative;
-  white-space: nowrap;
-}
-.section-group-resources .resources-filters ul li.active, .section-group-resources .resources-filters ul li:hover {
-  background-color: #ccc;
-}
-.section-group-resources .resources-filters .filter-name {
-  cursor: pointer;
-  display: inline-block;
-  padding: 0.5rem 0.5rem 0.5rem;
-}
-.section-group-resources .resources-filters .filter-name .trimmed-text {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 200px;
-  float: left;
-}
-.section-group-resources .resources-filters li:hover .filter-sub-bar {
-  visibility: visible;
-}
-.section-group-resources .resources-filters ul li.disabled {
-  display: none;
-}
-.section-group-resources .resources-filters ul.filter-sub-bar {
-  visibility: hidden;
-  position: absolute;
-  left: 0;
-  width: auto;
-  z-index: 10;
-  border: solid 1px #ccc;
-}
-.section-group-resources .resources-filters ul.filter-sub-bar li {
-  display: block;
-  background-color: #e6e6e6;
-  width: 100%;
-}
-.section-group-resources .resources-filters ul.filter-sub-bar li button {
-  background: none !important;
-  border: 0;
-}
-.section-group-resources .resources-filters ul.filter-sub-bar li button span {
-  padding: 0.5rem 0.5rem 0.5rem;
-  color: #000 !important;
-  text-align: left;
-}
-.section-group-resources .resources-filters ul.filter-sub-bar li.active, .section-group-resources .resources-filters ul.filter-sub-bar li:hover {
-  background: #ccc;
-}
-.section-group-resources .resources-filters ul .clear-filters {
-  padding: 0.55rem;
-}
-.section-group-resources .resources-filters ul .clear-filters:hover {
-  background: none;
-}
-.section-group-resources .resources-filters ul .clear-filters button {
-  background: none !important;
-  border: 0;
-}
-.section-group-resources .resources-filters ul .clear-filters span {
-  cursor: pointer;
-  padding: 0.6rem 0.5rem 0.5rem;
-  color: black;
-}
-.section-group-resources .resources-filters ul .clear-filters span:hover {
-  text-decoration: underline;
-}
-.section-group-resources .resources-filters ul .arrow {
-  width: 0;
-  height: 0;
-  border-left: 0.5rem solid transparent;
-  border-right: 0.5rem solid transparent;
-  border-top: 0.4rem solid #333;
-  display: inline-block;
-  margin-bottom: 2px;
-  margin-left: 5px;
-}
-.section-group-resources .resources-filters .search-box {
-  padding: 0.55rem;
-}
-.section-group-resources .resources-filters .search-box #search_filter_form {
-  white-space: nowrap;
-  display: none;
-}
-.section-group-resources .resources-filters .search-box.active #search_filter_form {
-  display: block;
-}
-.section-group-resources .resources-filters .search-box img {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-.section-group-resources .resources-filters .search-box.active img {
-  display: none;
-}
-.section-group-resources .resources-filters .search-box input {
-  margin-top: 1px;
-  width: 18rem;
-}
-.section-group-resources .resources-filters .search-box button {
-  background: url("resource [main-template/img/search.png]") no-repeat scroll center center !important;
-  background-size: 16px 16px !important;
-  height: 19px;
-  border: none !important;
-  cursor: pointer;
-}
-.section-group-resources .resources-filters .search-box button:hover, .section-group-resources .resources-filters .search-box button:focus {
-  background-color: #eee !important;
-}
-.section-group-resources .resources-filters .search-box button span {
-  display: inline;
-}
-
-.section-group-members .member_username {
-  font-size: 1rem;
-  margin-bottom: 0px;
-  margin-top: 0.4rem;
-}
-.section-group-members .member_username_small {
-  font-size: 0.8rem;
-  margin-bottom: 1px;
-}
-.section-group-members .members_panelgrid {
-  padding: 10px;
-  position: relative;
-  float: left;
-  text-align: center;
-  width: 130px;
-  height: 130px;
-  transition: box-shadow 0.3s;
-}
-.section-group-members .members_panelgrid > .member_star {
-  position: absolute;
-  right: 5px;
-  bottom: 5px;
-}
-.section-group-members .members_panelgrid:HOVER {
-  cursor: pointer;
-  box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #bfbfbf;
 }
 
 .landing-wrapper {
@@ -14932,6 +14784,182 @@ html {
   .landing-wrapper .container {
     max-width: 1000px;
   }
+}
+.request-tables {
+  background-color: transparent !important;
+}
+.request-tables .ui-tabs-nav {
+  background: #fff;
+  width: fit-content;
+}
+.request-tables .ui-tabs-panels {
+  background: #fff;
+}
+
+.imageupload-button {
+  display: flex;
+}
+.imageupload-button .ui-fileupload-buttonbar {
+  width: fit-content;
+  padding: 0 !important;
+}
+.imageupload-button .ui-button {
+  margin-right: 0 !important;
+}
+.imageupload-button .ui-fileupload-content {
+  width: 30%;
+}
+
+.section-group-resources .resources-filters {
+  margin: 0 -0.5rem -0.5rem;
+}
+.section-group-resources .resources-filters ul {
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+}
+.section-group-resources .resources-filters ul li {
+  float: left;
+  display: block;
+  position: relative;
+  white-space: nowrap;
+}
+.section-group-resources .resources-filters ul li.active, .section-group-resources .resources-filters ul li:hover {
+  background-color: #ccc;
+}
+.section-group-resources .resources-filters .filter-name {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.5rem 0.5rem 0.5rem;
+}
+.section-group-resources .resources-filters .filter-name .trimmed-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 200px;
+  float: left;
+}
+.section-group-resources .resources-filters li:hover .filter-sub-bar {
+  visibility: visible;
+}
+.section-group-resources .resources-filters ul li.disabled {
+  display: none;
+}
+.section-group-resources .resources-filters ul.filter-sub-bar {
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  width: auto;
+  z-index: 10;
+  border: solid 1px #ccc;
+}
+.section-group-resources .resources-filters ul.filter-sub-bar li {
+  display: block;
+  background-color: #e6e6e6;
+  width: 100%;
+}
+.section-group-resources .resources-filters ul.filter-sub-bar li button {
+  background: none !important;
+  border: 0;
+}
+.section-group-resources .resources-filters ul.filter-sub-bar li button span {
+  padding: 0.5rem 0.5rem 0.5rem;
+  color: #000 !important;
+  text-align: left;
+}
+.section-group-resources .resources-filters ul.filter-sub-bar li.active, .section-group-resources .resources-filters ul.filter-sub-bar li:hover {
+  background: #ccc;
+}
+.section-group-resources .resources-filters ul .clear-filters {
+  padding: 0.55rem;
+}
+.section-group-resources .resources-filters ul .clear-filters:hover {
+  background: none;
+}
+.section-group-resources .resources-filters ul .clear-filters button {
+  background: none !important;
+  border: 0;
+}
+.section-group-resources .resources-filters ul .clear-filters span {
+  cursor: pointer;
+  padding: 0.6rem 0.5rem 0.5rem;
+  color: black;
+}
+.section-group-resources .resources-filters ul .clear-filters span:hover {
+  text-decoration: underline;
+}
+.section-group-resources .resources-filters ul .arrow {
+  width: 0;
+  height: 0;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.4rem solid #333;
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-left: 5px;
+}
+.section-group-resources .resources-filters .search-box {
+  padding: 0.55rem;
+}
+.section-group-resources .resources-filters .search-box #search_filter_form {
+  white-space: nowrap;
+  display: none;
+}
+.section-group-resources .resources-filters .search-box.active #search_filter_form {
+  display: block;
+}
+.section-group-resources .resources-filters .search-box img {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.section-group-resources .resources-filters .search-box.active img {
+  display: none;
+}
+.section-group-resources .resources-filters .search-box input {
+  margin-top: 1px;
+  width: 18rem;
+}
+.section-group-resources .resources-filters .search-box button {
+  background: url("resource main-template/img/search.png") no-repeat scroll center center !important;
+  background-size: 16px 16px !important;
+  height: 19px;
+  border: none !important;
+  cursor: pointer;
+}
+.section-group-resources .resources-filters .search-box button:hover, .section-group-resources .resources-filters .search-box button:focus {
+  background-color: #eee !important;
+}
+.section-group-resources .resources-filters .search-box button span {
+  display: inline;
+}
+
+.section-group-members .member_username {
+  font-size: 1rem;
+  margin-bottom: 0px;
+  margin-top: 0.4rem;
+}
+.section-group-members .member_username_small {
+  font-size: 0.8rem;
+  margin-bottom: 1px;
+}
+.section-group-members .members_panelgrid {
+  padding: 10px;
+  position: relative;
+  float: left;
+  text-align: center;
+  width: 130px;
+  height: 130px;
+  transition: box-shadow 0.3s;
+}
+.section-group-members .members_panelgrid > .member_star {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+.section-group-members .members_panelgrid:HOVER {
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #bfbfbf;
 }
 
 /*# sourceMappingURL=styles.css.map */

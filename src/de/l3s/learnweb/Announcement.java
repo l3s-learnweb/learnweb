@@ -1,7 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -14,6 +14,7 @@ public class Announcement implements Serializable
     private String title;
     private String text;
     private Date date;
+    private boolean hidden;
     private int userId;
 
     public int getUserId()
@@ -61,6 +62,16 @@ public class Announcement implements Serializable
         return text;
     }
 
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden(final boolean hidden)
+    {
+        this.hidden = hidden;
+    }
+
     public void setText(final String text)
     {
         this.text = text;
@@ -69,6 +80,6 @@ public class Announcement implements Serializable
     @Override
     public String toString()
     {
-        return "Announcement [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", userId=" + userId + "]";
+        return "Announcement [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", userId=" + userId + ", hidden=" + hidden + "]";
     }
 }

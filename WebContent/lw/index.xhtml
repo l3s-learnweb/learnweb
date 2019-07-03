@@ -67,13 +67,13 @@
 						<h:form id="newsform" styleClass="newsform">
 
 							<h2>#{msg.announcements}</h2>
-							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.announcements}" var="news" type="definition">
+							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="definition">
 								<div>
 									<h2>
 										<h:outputText value="#{news.title}" />
 										<span>
 											<h:outputText value="#{news.date}">
-												<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+												<f:convertDateTime  pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}" />
 											</h:outputText>
 										</span>
 									</h2>
@@ -90,13 +90,13 @@
 		<div id="hidden_news" class="hidden-news">
 
 			<h2>#{msg.announcements}</h2>
-			<p:dataList rows="3" value="#{adminAnnouncementsBean.announcements}" var="news" type="definition">
+			<p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="definition">
 				<div>
 					<h2>
 						<h:outputText value="#{news.title}" />
 						<span>
 							<h:outputText value="#{news.date}">
-								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+								<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 						</span>
 					</h2>
