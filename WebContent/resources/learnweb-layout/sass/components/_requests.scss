@@ -1,0 +1,10 @@
+.request-tables{
+  background-color: transparent!important;
+  .ui-tabs-nav{
+    background: $body-bg;
+    width: fit-content;
+  }
+  .ui-tabs-panels{
+    background: $body-bg;
+  }
+}

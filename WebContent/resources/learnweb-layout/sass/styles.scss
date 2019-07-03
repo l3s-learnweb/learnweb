@@ -49,10 +49,14 @@
 @import "components/_forms";
 @import "components/_panels";
 @import "components/_tables";
+@import "components/_landing";
+@import "components/_requests";
+@import "components/_organization";
 // /group folder
 @import "components/group-resources";
 @import "components/group-members";
-@import "components/_landing";
+
+
 
 // load old styles, which should be removed later
 //@import "to-be-removed/_matviei-extd";
