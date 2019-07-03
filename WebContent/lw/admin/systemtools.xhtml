@@ -9,14 +9,16 @@
 <ui:param name="loginRequired" value="true" />
 <ui:param name="pageTitle" value="System Tools" />
 
+<ui:define name="sub_breadcrumb">
+	<p:menuitem value="Database connections" url="admin/systemtools.jsf"/>
+</ui:define>
+
+
 <ui:define name="center_layout">
 	<h:outputText value="Missing authentication" rendered="#{not userBean.admin}" />
 	<ui:fragment rendered="#{userBean.admin}">
-		<div class="page-header" >
-			<h1>
-				Database connections
-			</h1>
-		</div>
+
+
 
 
 		<h:form>		
@@ -62,10 +64,10 @@
 						<h:outputText value="#{process.progress}" />
 					</p:column>
 
-					<p:column class="column-button"  headerText="Terminate">
-						<p:commandButton styleClass="btn-as-link" value="terminate"
+					<p:column headerText="Terminate">
+						<p:commandButton styleClass="command-button m-auto d-block" value="terminate"
 							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable">
-							<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.edit}" />
+<!--							<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.edit}" />-->
 						</p:commandButton>
 					</p:column>
 
@@ -73,7 +75,9 @@
 			</h:form>
 
 		<h:form>
-			<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="margin-top" value="Clear caches" />
+			<p:panel>
+				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="command-button" value="Clear caches" />
+			</p:panel>
 		</h:form>
 	</ui:fragment>
 </ui:define>
