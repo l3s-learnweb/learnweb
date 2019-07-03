@@ -9,12 +9,13 @@
    	<style type="text/css">
    	.klapper_zu {
 		float:left;
-		width:11px;
+		width:1rem;
+        height: 1rem;
 		background:url("#{resource['icon/icon-minus.gif']}") bottom no-repeat;
 		margin-right:3px;
 		cursor:pointer;
 	}
-	.klapper_auf { background-image:url("#{resource['icon/icon-plus.gif']}"); }			    	
+	.klapper_auf { background-image:url("#{resource['icon/icon-plus.gif']}"); }
    	</style>
     <div id="userselect">
 
@@ -25,25 +26,27 @@
         <ul>
             <p:repeat var="course" value="#{userBean.user.courses}">
                 <li>
-                    <div class="klapper_zu klapper_auf">&#160;</div>
+
+                    <div class="klapper_zu klapper_auf align-middle">&#160;</div>
                     <input type="checkbox" name="ignore" value="1" class="checker"/>
                     <h:outputText value=" #{course.title}" style="font-weight:bold;"/>
 
-                    <ul class="display-none">
+                    <ul style="display: none;">
                         <p:repeat var="group" value="#{course.groups}">
                             <li>
+
                                 <div class="klapper_zu klapper_auf">&#160;</div>
                                 <input type="checkbox" name="ignore" value="1" class="checker"/>
                                 <h:outputText value=" #{group.title} (#{msg.group})"/>
 
-                                <ul class="display-none">
+                                <ul style="display: none;">
                                     <p:repeat var="user" value="#{group.members}">
                                         <li>
                                             <input name="selected_users" id="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" value="#{user.id}" type="checkbox"/>
                                             <label for="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}"> #{user.username}</label>
                                         </li>
                                     </p:repeat>
-                                    
+
                         			<ui:fragment rendered="#{empty group.members}"><li>This group has no members</li></ui:fragment>
                                 </ul>
                             </li>
