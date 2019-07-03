@@ -12,7 +12,7 @@
 		<p:menuitem value="#{msg.requests_header}" url="admin/requests.jsf#"/>
 	</ui:define>
 	<ui:define name="center_layout">
-	<p:tabView>
+	<p:tabView styleClass="mt-3 request-tables">
         <p:tab title="#{msg.requests}">
 			<h:form id="requestform" >
 
@@ -69,7 +69,7 @@
 					#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
 						    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 													</h:outputText>
-					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-link-to-button" immediate="true"/>
+					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="command-button ml-3" immediate="true"/>
 				</span>
 
 				<p:dataTable var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
