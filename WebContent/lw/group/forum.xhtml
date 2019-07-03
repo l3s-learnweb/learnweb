@@ -20,8 +20,8 @@
 
 </ui:define>
 <ui:define name="center_layout">
-	<h:outputStylesheet library="group" name="forum.css"/>
-	<p:panel styleClass="no-padding-panel-content ml-0 mr-0 mb-2">
+
+	<p:panel styleClass="no-padding-panel-content">
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{forumTopicsBean.group}"/>
 			<ui:param name="active" value="forum"/>
@@ -49,11 +49,11 @@
 			</ui:define>
 		</ui:decorate>
 
-		<script type="text/javascript">
-			/* <!-- */
+		<!--<script type="text/javascript">
+			/* &lt;!&ndash; */
 			$("#center_pane").prepend($("#group_header"));
-			/* --> */
-		</script>
+			/* &ndash;&gt; */
+		</script>-->
 
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
@@ -63,20 +63,20 @@
 				<p:ajax event="page"
 						onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
 
-				<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
+				<p:column headerText="#{msg['ForumIndex.topic']}" styleClass="text-center" sortBy="#{topic.title}">
 					<h:link value="#{topic.title}" outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}"
 							styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-title':''}"/>
 				</p:column>
-				<p:column headerText="#{msg['ForumIndex.author']}" styleClass="align-center" sortBy="#{topic.user.username}">
+				<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
 					<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
 				</p:column>
-				<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="align-center" sortBy="#{topic.replies}">
+				<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
 					<h:outputText value="#{topic.replies}"/>
 				</p:column>
-				<p:column headerText="#{msg['ForumIndex.views']}" styleClass="align-center" sortBy="#{topic.views}">
+				<p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}">
 					<h:outputText value="#{topic.views}"/>
 				</p:column>
-				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
+				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
 					<h:outputText value="#{topic.lastPostDate}"
 								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-date':''}">
 						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
@@ -99,10 +99,10 @@
 					<table id="new_topic_table">
 						<tr>
 							<td >
-								<h:outputText value="#{msg['ForumIndex.topic']}: "/>
+								<h:outputText styleClass="w-100 mb-2" value="#{msg['ForumIndex.topic']}: "/>
 							</td>
 							<td>
-								<h:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
+								<h:inputText value="#{forumTopicsBean.newTopicTitle}" styleClass="w-100 mb-2" id="post_topic" label="#{msg['ForumIndex.topic']}">
 									<f:validateLength minimum="0" maximum="100"/>
 								</h:inputText>
 							</td>
@@ -115,7 +115,7 @@
 								<h:outputText value="#{msg.category}: "/>
 							</td>
 							<td>
-								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}"
+								<p:selectOneMenu id="post_category" styleClass="w-100 mb-2" value="#{forumTopicsBean.newPost.category}"
 												 editable="true" label="#{msg.category}"
 												 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
 									<f:selectItems value="#{forumTopicsBean.categories}"/>
@@ -138,7 +138,7 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
+								<p:commandButton ajax="true" value="#{msg.save}"
 												 action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :form_list_topics"/>
 							</td>
 						</tr>
