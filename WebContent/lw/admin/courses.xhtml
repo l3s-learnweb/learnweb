@@ -13,9 +13,10 @@
     <p:menuitem value="#{msg.courses}" url="admin/courses.jsf#"/>
 </ui:define>
 <ui:define name="center_layout">
+    <p:panel header="#{msg.courses}" styleClass="no-padding-panel-content">
     <h:form id="courses_form" styleClass="form">
         <div class="p-grid">
-            <div class="p-col-12 no-padding-bottom">
+            <div class="p-col-12">
                 <p:blockUI block="courses_table" widgetVar="courses_form_blocker">
                     <div class="float-left">#{msg.please_wait}. This action may take several minutes for big courses.</div>
                     <div class="loading-animation small float-left">
@@ -24,7 +25,7 @@
                         <div></div>
                     </div>
                 </p:blockUI>
-                <p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+                <p:dataTable id="courses_table" style="margin-top: 0 !important;"  var="course" value="#{adminCoursesBean.courses}">
                     <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                         <h:outputText value="#{course.title}"/>
                     </p:column>
@@ -76,43 +77,27 @@
             </div>
         </div>
     </h:form>
-    <div class="p-grid">
-        <h:form id="addcourse" styleClass="p-col form margin-top">
-            <div class="p-grid">
-                <div class="p-col-12 no-padding-bottom">
-                    <div class="card card-w-title grid">
-                        <h2><h:outputText value="#{msg.add_new_course}"/></h2>
-                        <p class="no-margin-top">
-                            #{msg.course_title}:
-                        </p>
-                        <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
-                        <p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-                        <p>
-                            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"/>
-                        </p>
-                    </div>
-                </div>
-            </div>
+    </p:panel>
+    <p:panel header="#{msg.add_new_course}" >
+        <h:form id="addcourse">
+                        <div class="row">
+                            <span class="p-2">#{msg.course_title}:</span>
+                            <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
+                            <p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+                        </div>
+                            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" styleClass="" process="@form"/>
         </h:form>
-
-        <h:form id="addorganisation" rendered="#{userBean.admin}" styleClass="p-col form margin-top">
-            <div class="p-grid">
-                <div class="p-col-12 no-padding-bottom">
-                    <div class="card card-w-title grid">
-                        <h2><h:outputText value="#{msg.add_new_organization}"/></h2>
-                        <p class="no-margin-top">
-                            #{msg.organization_title}:
-                        </p>
+    </p:panel>
+    <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
+        <h:form id="addorganisation" >
+            <div class="row">
+                        <span class="p-2">#{msg.organization_title}:</span>
                         <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
                         <p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-                        <p>
-                            <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form"/>
-                        </p>
-                    </div>
-                </div>
             </div>
+                            <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form"/>
         </h:form>
-    </div>
+    </p:panel>
 
 
 </ui:define>
