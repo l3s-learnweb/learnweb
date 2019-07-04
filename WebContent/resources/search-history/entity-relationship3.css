@@ -100,7 +100,7 @@
 /* styles for vertical session timeline */
 .box {
   overflow-y: scroll;
-  padding: 0 0 0 62px;
+  padding: 0 0 0 74px;
   height: calc(100vh - 180px);
 }
 
@@ -189,7 +189,7 @@
 
 .box .time span {
   position: absolute;
-  left: -72px;
+  left: -85px;
   color: black;
   /*font-size: 80%;*/
   font-weight: bold;
