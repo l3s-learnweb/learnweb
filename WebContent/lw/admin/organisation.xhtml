@@ -25,92 +25,77 @@
 
     <ui:define name="center_layout">
         <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
-            <h:form id="editwelcomeform" styleClass="mt-3">
-                <div class="row">
-                    <div class="col-12">
-                        <p:panel header="#{msg.welcome_message}">
+            <h:form id="editwelcomeform" >
+
+                    <p:panel header="#{msg.welcome_message}" styleClass="no-padding-panel-content">
                             <p:textEditor height="184" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}" />
-                        </p:panel>
-                    </div>
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-6">
+                    </p:panel>
+
                                 <p:panel header="Common settings">
-                                    <div class="grid">
-                                        <p>
-                                            <h:outputText value="#{msg.title}: " />
-                                            <p:inputText value="#{adminOrganisationBean.selectedOrganisation.title}" />
-                                        </p>
 
 
-
-                                        <p>
-                                            <h:outputText value="Banner image: " />
-                                            <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="imageupload-button" id="imageupload" mode="advanced" update="bannerimage" auto="true" sizeLimit="1000000"
-                                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
-                                            <h:panelGroup id="bannerimage">
-                                                <img src="#{adminOrganisationBean.selectedOrganisation.bannerImage}" />
-                                            </h:panelGroup>
-                                        </p>
+                                            <h:outputText styleClass="font-weight-bold" value="#{msg.title}:" />
 
 
-
-                                        <div class="d-flex align-items-center">
-                                            <h:outputText styleClass="mr-1" value="Welcome Page: " />
-                                            <p:selectOneMenu id="welcomePage"  value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
-                                                <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
-                                                <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
-                                            </p:selectOneMenu>
-                                        </div>
+                                        <p:inputText styleClass="w-100 mb-2" value="#{adminOrganisationBean.selectedOrganisation.title}" />
 
 
-                                        <div class="mt-3 d-flex align-items-center">
-                                            <h:outputText styleClass="mr-1" value="Logout Page: " />
-                                            <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
-                                                <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
-                                                <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
-                                                <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page" />
-                                            </p:selectOneMenu>
-                                        </div>
+                                            <h:outputText styleClass="font-weight-bold" value="Banner image:" />
+
+                                        <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" id="imageupload" mode="advanced" update="bannerimage" auto="true" sizeLimit="1000000"
+                                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+                                        <h:panelGroup id="bannerimage">
+                                            <img src="#{adminOrganisationBean.selectedOrganisation.bannerImage}" />
+                                        </h:panelGroup>
 
 
-                                        <div class="mt-3 d-flex align-items-center">
-                                            <h:outputText styleClass="mr-1" value="Default language: " />
-                                            <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
-                                                <f:selectItem itemLabel="No default" itemValue="#{null}" />
-                                                <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
-                                                               itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
-                                            </p:selectOneMenu>
-                                        </div>
+                                            <h:outputText styleClass="font-weight-bold" value="Welcome Page: " />
+
+                                        <p:selectOneMenu styleClass="w-100 mb-2" id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
+                                            <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
+                                            <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
+                                        </p:selectOneMenu>
 
 
-                                        <div class="mt-3 mb-3 d-flex align-items-center" >
-                                            <h:outputText styleClass="mr-1" value="Language variant: " />
-                                            <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
-                                                <f:selectItem itemValue="" itemLabel="No variant" />
-                                                <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
-                                                               itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
-                                            </p:selectOneMenu>
-                                        </div>
+                                            <h:outputText styleClass="font-weight-bold" value="Logout Page: " />
+
+                                        <p:selectOneMenu styleClass="w-100 mb-2" value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
+                                            <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
+                                            <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
+                                            <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page" />
+                                        </p:selectOneMenu>
 
 
-                                        <p>
-                                            <h:outputText value="Glossary languages: " />
-                                        </p>
-                                        <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
+                                            <h:outputText styleClass="font-weight-bold" value="Default language: " />
+
+                                        <p:selectOneMenu styleClass="w-100 mb-2" value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
+                                            <f:selectItem itemLabel="No default" itemValue="#{null}" />
+                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
+                                            	itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
+                                        </p:selectOneMenu>
+
+
+                                            <h:outputText styleClass="font-weight-bold" value="Language variant: " />
+
+                                        <p:selectOneMenu styleClass="w-100 mb-2" value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
+                                            <f:selectItem itemValue="" itemLabel="No variant" />
+                                            <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
+                                            	itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
+                                        </p:selectOneMenu>
+
+
+                                            <h:outputText value="Glossary languages: " styleClass="font-weight-bold" />
+
+                                        <p:selectCheckboxMenu styleClass="w-100 mb-2" value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                                               label="#{msg.language}" multiple="true" converter="#{localeConverter}">
                                             <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
                                         </p:selectCheckboxMenu>
 
-
-
-                                    </div>
                                 </p:panel>
 
-                            </div>
-                            <div class="col-6">
 
-                                <p:panel header="Additional settings">
+                            <p:panel header="Additional settings">
+
                                     <p:accordionPanel autoHeight="false" id="courseoptions">
                                         <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
 
@@ -127,21 +112,19 @@
 
                                         </c:forEach>
                                     </p:accordionPanel>
-                                </p:panel>
-                            </div>
-                        </div>
-                    </div>
+
+                            </p:panel>
 
 
-                    <div class="col-12">
-                        <p:panel>
-<!--                                <p:button rendered="#{userBean.admin}" outcome="organisations" styleClass="command-button mr-4" value="Back to Organisations" />-->
-                                <p:commandButton action="#{adminOrganisationBean.onSave}" styleClass="command-button" value="#{msg.save}" ajax="false" />
-                        </p:panel>
 
-                    </div>
 
-                </div>
+
+                                <p:commandButton styleClass="mt-3" action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false" />
+                                <p:button rendered="#{userBean.admin}" outcome="organisations" value="Back to Organisations" />
+
+
+
+
 
             </h:form>
         </ui:fragment>
