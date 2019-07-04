@@ -36,9 +36,9 @@
             </div>
         </div>
     </div>-->
-    <h:form id="dateForm">
-        <div class="row justify-content-around mr-0 ml-0 spa">
-            <div class="col mr-0 ml-0 pl-0">
+    <h:form id="dateForm" styleClass="pt-3">
+        <div class="row justify-content-around">
+            <div class="col">
                 <div class="ui-inputgroup pb-3">
                     <p:outputLabel for="dateStart"/>
                     <p:calendar id="dateStart" value="#{glossaryDashboardUsersBean.startDate}"
@@ -56,7 +56,7 @@
             </div>
         </div>
     </h:form>
-    <h:panelGroup id="dashboardMain" styleClass="col pl-0 pr-0" layout="block">
+    <h:panelGroup id="dashboardMain" styleClass="col" layout="block">
         <div class="row justify-content-between">
             <p:panel styleClass="col-sm" header="Total Concepts">
                 <f:facet name="actions">
@@ -98,8 +98,8 @@
 
 
 
-        <div class="row pr-0 pl-0">
-            <div class="col-8 pr-0 pl-0">
+        <div class="row">
+            <div class="col-8">
                 <p:panel id="chart_plot_Interactions" header="Interactions" style="margin-bottom:20px">
                     <f:facet name="actions">
                         <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -109,9 +109,8 @@
                     <p:chart type="line" model="#{glossaryDashboardUsersBean.interactionsChart}" style="height:300px;" responsive="true"/>
                 </p:panel>
             </div>
-            <div class="col-4 pr-0 pl-0">
-                <p:panel id="chart_bar_userActivity" header="Users' Activity types"
-                         style="margin-bottom:20px">
+            <div class="col-4">
+                <p:panel id="chart_bar_userActivity" header="Users' Activity types">
                     <f:facet name="actions">
                         <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                                   icon="ui-icon-help" onclick="return false;"/>
@@ -156,8 +155,7 @@
 
     -->
         <h:form>
-            <p:panel header="Users' Activity types"
-                     style="margin-bottom:20px" styleClass="mr-0 ml-0">
+            <p:panel header="Users' Activity types">
                 <f:facet name="Glossaries">
                     <p:button id="glossariesTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                               icon="ui-icon-help"
@@ -187,7 +185,7 @@
 
         <div class="row">
             <div class="col-4">
-                <p:panel id="pie_chart_sources" styleClass="mr-0 ml-0" header="Sources" style="margin-bottom:20px">
+                <p:panel id="pie_chart_sources" header="Sources">
                     <f:facet name="actions">
                         <p:button id="sourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                                   icon="ui-icon-help" onclick="return false;"/>

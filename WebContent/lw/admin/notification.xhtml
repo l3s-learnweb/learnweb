@@ -17,32 +17,28 @@
 
 		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
 			<h:form id="us_form" styleClass="form">
-				<div class="p-grid">
-					<div class="p-col-12 grid no-padding-bottom">
-						<div class="card card-w-title grid">
+				<p:panel>
+
 							<h:panelGroup>
-								<p><h:outputText value="#{msg.title}:" /></p>
+								<p><h:outputText styleClass="font-weight-bold" value="#{msg.title}:" /></p>
 								<p:message showSummary="true" showDetail="false"  for="msg_title" />
 							</h:panelGroup>
-							<p:inputText value="#{adminNotificationBean.title}" id="msg_title" />
+							<p:inputText value="#{adminNotificationBean.title}" styleClass="w-100 mb-3" id="msg_title" />
 
 
 							<h:panelGroup>
-								<p><h:outputText value="#{msg.description}:" /></p>
+								<p><h:outputText styleClass="font-weight-bold" value="#{msg.description}:" /></p>
 								<p:message showSummary="true" showDetail="false" for="msg_description" />
 							</h:panelGroup>
 
 							<p:textEditor height="184" value="#{adminNotificationBean.text}" id="msg_description" />
-						</div>
-					</div>
 
-					<div class="p-col-12 grid no-padding-top margin-top">
-						<div class="card card-w-title grid">
-							<h2><h:outputText value="#{msg.select_users}" /></h2>
+				</p:panel>
+					<p:panel header="#{msg.select_users}" styleClass="mb-3">
 							<ui:include src="/templates/user/user_select_form.xhtml" />
 
 							<div class="flex-label">
-								<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />
+								<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" styleClass="mr-3" id="send_notification_also_per_mail"  />
 								<p:outputLabel for="send_notification_also_per_mail">#{msg.send_notification_also_per_mail}</p:outputLabel>
 							</div>
 
@@ -51,21 +47,14 @@
 							<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
 								<h4>You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
 							</ui:fragment>
+					</p:panel>
 
-						</div>
-					</div>
-
-					<div class="p-col-12">
-						<div class="card card-w-title control-buttons no-padding-bottom"  >
-							<p>
-								<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
+					<div class="mt-3">
+								<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" styleClass="mr-3" ajax="false"/>
 								<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
-							</p>
-						</div>
-
 					</div>
 
-				</div>
+
 
 			</h:form>
 		</ui:fragment>
