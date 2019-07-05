@@ -1,6 +1,17 @@
 .layout-wrapper{
   .layout-topbar{
     height: 60px!important;
+    .usermenu{
+      .usermenu-overlay{
+        li{
+          a{
+            &:hover{
+              color: $primaryTextColor;
+            }
+          }
+        }
+      }
+    }
   }
 
   .layout-main{
@@ -11,4 +22,37 @@
     }
   }
 
+
+
+
 }
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+
+}
+
+@media (max-width: 992px) {
+  .layout-wrapper {
+    .layout-main {
+      padding-top: 6rem;
+    }
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 993px) {
+  .layout-wrapper {
+    .layout-main {
+      padding-top: 60px;
+    }
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {}

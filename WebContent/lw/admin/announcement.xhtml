@@ -32,13 +32,16 @@
 						<p:panel>
 							<p>
 								<h:outputText value="#{msg.title}: " />
-								<p:inputText styleClass="w-25" id="news_title" value="#{adminAnnouncementBean.announcement.title}"/>
 							</p>
-							<p>
+							<p:inputText styleClass="w-25" id="news_title" value="#{adminAnnouncementBean.announcement.title}"/>
+
+							<p class="mt-3">
 								<p:outputLabel for="datepick" value="Date:" />
-								<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" styleClass="ml-1 w-25" pattern="dd.MM.yyyy" showTime="true"  timeZone="#{userBean.timeZone}" />
 							</p>
-							<p:textEditor height="400" styleClass="mt-3 mb-3" value="#{adminAnnouncementBean.announcement.text}">
+
+							<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" styleClass="w-25" pattern="dd.MM.yyyy"  timeZone="#{userBean.timeZone}" />
+
+							<p:textEditor height="400" styleClass="mt-4 mb-3" value="#{adminAnnouncementBean.announcement.text}">
 								<f:facet name="toolbar">
 									<span class="ql-formats">
 										<select class="ql-font"></select>

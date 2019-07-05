@@ -25,9 +25,10 @@
 
     <ui:define name="center_layout">
         <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
-            <h:form id="editwelcomeform" >
-
-                    <p:panel header="#{msg.welcome_message}" styleClass="no-padding-panel-content">
+            <h:form id="editwelcomeform">
+                <div class="row">
+                    <div class="col-12">
+                        <p:panel header="#{msg.welcome_message}">
                             <p:textEditor height="184" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}" />
                         </p:panel>
                     </div>

@@ -21,12 +21,13 @@
 
                         <p>
                             <h:outputText value="#{msg.title}: "/>
-                            <p:inputText styleClass="w-25" value="#{adminAnnouncementsBean.title}"/>
                         </p>
-                        <p>
+                        <p:inputText styleClass="w-25" value="#{adminAnnouncementsBean.title}"/>
+
+                        <p class="mt-3">
                             <p:outputLabel for="datepick" value="Date:" />
-                            <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" styleClass="ml-1 w-25" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
                         </p>
+                        <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" styleClass="w-25" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
 
                         <p:textEditor styleClass="mt-4 mb-3" height="184" value="#{adminAnnouncementsBean.text}">
                             <f:facet name="toolbar">

@@ -8738,6 +8738,9 @@ body a {
 .layout-wrapper .layout-topbar {
   height: 60px !important;
 }
+.layout-wrapper .layout-topbar .usermenu .usermenu-overlay li a:hover {
+  color: #fff;
+}
 .layout-wrapper .layout-main {
   position: relative;
   min-height: 100vh;
@@ -8746,6 +8749,16 @@ body a {
   padding-bottom: 9em;
 }
 
+@media (max-width: 992px) {
+  .layout-wrapper .layout-main {
+    padding-top: 6rem;
+  }
+}
+@media (min-width: 993px) {
+  .layout-wrapper .layout-main {
+    padding-top: 60px;
+  }
+}
 /* Headers */
 /* Contents */
 /* Forms */
@@ -14920,7 +14933,7 @@ html {
   width: 18rem;
 }
 .section-group-resources .resources-filters .search-box button {
-  background: url("resource main-template/img/search.png") no-repeat scroll center center !important;
+  background: url("resource [main-template/img/search.png]") no-repeat scroll center center !important;
   background-size: 16px 16px !important;
   height: 19px;
   border: none !important;
