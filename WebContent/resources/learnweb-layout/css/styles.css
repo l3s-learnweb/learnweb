@@ -8747,6 +8747,33 @@ body a {
 }
 .layout-wrapper .layout-main .layout-main-content {
   padding-bottom: 9em;
+  /* Breadcrumb */
+  /*end Breadcrumb*/
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb {
+  border: 1px solid #4AA564;
+  border-left: none;
+  border-right: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  font-size: 20px;
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul li:first-child {
+  font-size: 20px;
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul li .ui-menuitem-link {
+  top: 0px;
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul .ui-breadcrumb-chevron {
+  font-size: 20px;
+  vertical-align: middle;
+  height: auto;
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul .ui-breadcrumb-chevron:before {
+  content: "";
+}
+.layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul .ui-menuitem-link {
+  vertical-align: middle;
 }
 
 @media (max-width: 992px) {

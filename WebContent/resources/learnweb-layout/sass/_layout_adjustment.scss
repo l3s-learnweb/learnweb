@@ -19,6 +19,41 @@
     min-height: 100vh;
     .layout-main-content{
       padding-bottom: 9em;
+
+      /* Breadcrumb */
+      .ui-breadcrumb {
+        border: 1px solid #4AA564;
+        border-left: none;
+        border-right: none;
+        background: rgba(255, 255, 255, 0.9);
+        font-weight: 700;
+        font-size: 20px;
+        ul{
+          li{
+            &:first-child {
+              font-size: 20px;
+            }
+            .ui-menuitem-link {
+              top: 0px;
+            }
+          }
+          .ui-breadcrumb-chevron {
+            font-size: 20px;
+            vertical-align: middle;
+            height: auto;
+            &:before {
+              content: "\f105 ";
+            }
+          }
+          .ui-menuitem-link{
+            vertical-align: middle;
+          }
+
+        }
+      }
+      /*end Breadcrumb*/
+
+
     }
   }
 

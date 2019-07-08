@@ -514,48 +514,6 @@ body .ui-dialog .ui-dialog-titlebar {
 
 /******************** helper classes **********************************/
 
-
-/* Breadcrumb */
-
-body {
-  .ui-menuitem-link .ui-corner-all .ui-icon .ui-icon-home {
-    vertical-align: middle;
-  }
-
-  .ui-breadcrumb {
-    border: 1px solid #4AA564;
-    border-left: none;
-    border-right: none;
-    background: rgba(255, 255, 255, 0.9);
-    font-weight: 700;
-    font-size: 20px;
-    margin-bottom: var(--main-margin);
-  }
-
-  .ui-icon {
-    height: 20px;
-  }
-
-  .ui-breadcrumb ul li {
-    &:first-child {
-      font-size: 20px;
-    }
-
-    .ui-menuitem-link {
-      top: 0px;
-    }
-
-    &.ui-breadcrumb-chevron {
-      font-size: 20px;
-      vertical-align: middle;
-
-      &:before {
-        content: "\f105 ";
-      }
-    }
-  }
-}
-
 #sub_menu_bar {
   background-color: #616161;
   height: 3rem;
