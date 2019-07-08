@@ -49,7 +49,6 @@ public class GlossaryResource extends Resource implements Serializable
         {
             this.entries.add(i, otherGlossaryResource.entries.get(i).clone());
         }
-
     }
 
     public List<Locale> getAllowedLanguages()

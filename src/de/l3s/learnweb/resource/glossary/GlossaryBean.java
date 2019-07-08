@@ -27,7 +27,6 @@ import javax.imageio.ImageIO;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -47,7 +46,6 @@ import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.glossary.builders.ParsingError;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
@@ -61,7 +59,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private int resourceId;
     private GlossaryResource glossaryResource;
-    private transient List<GlossaryTableView> tableItems;
+    private List<GlossaryTableView> tableItems;
+
     private GlossaryEntry formEntry;
     private final List<SelectItem> availableTopicOne = new ArrayList<>();
     private final List<SelectItem> availableTopicTwo = new ArrayList<>();
@@ -70,8 +69,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private boolean optionMandatoryDescription;
     private List<Locale> tableLanguageFilter;
 
-    private String importResponse;
-    private List<ParsingError> importErrors = new ArrayList<ParsingError>();
+    private boolean overwriteGlossary;
+
+    private GlossaryParserResponse importResponse;
 
     public void onLoad()
     {
@@ -383,37 +383,34 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return languageMap;
     }
 
-    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException
     {
         log.debug("parseXls");
-        importResponse = StringUtils.EMPTY;
-        importErrors.clear();
 
         User user = getUser();
         if(user == null)
             return;
 
-        GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
-        StringBuilder formattedResultOfProcess = new StringBuilder();
-        try
+        //TODO check if user is moderator
+        if(overwriteGlossary)
         {
-            parser.parseGlossaryEntries();
+            log.debug("overrideGlossary is true");
+            // delete previous entries, if not a moderator show an error
+        }
+        else
+        {
+            log.debug("overrideGlossary is false");
+        }
 
-            // TODO add also success message if no errors occur
-            formattedResultOfProcess.append("Amount of errors - ").append(parser.getErrorsDuringProcessing().size()).append("<br/>");
-            if(!parser.getErrorsDuringProcessing().isEmpty())
-            {
-                log.error("Found some errors during Glossary xls parsing (see additional info on UI)");
-                formattedResultOfProcess.append("Errors:<br/>");
-                parser.getErrorsDuringProcessing().forEach(e -> formattedResultOfProcess.append("- ").append(e.getMessage()).append("<br/>"));
-            }
-            importResponse = formattedResultOfProcess.toString();
+        GlossaryXLSParser parser = new GlossaryXLSParser(fileUploadEvent.getFile(), getLanguageMap());
 
-            // TODO importErrors = parser.getErrorsDuringProcessing();
+        importResponse = parser.parseGlossaryEntries();
 
+        if(importResponse.isSuccessful())
+        {
             // persist parsed entries
             int userId = getUser().getId();
-            for(GlossaryEntry entry : parser.getEntries())
+            for(GlossaryEntry entry : importResponse.getEntries())
             {
                 // set creator of new entries
                 entry.setUserId(userId);
@@ -424,13 +421,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
 
             repaintTable();
-        }
-        catch(IOException e)
-        {
-            // TODO add appropriate notification of the user
-            // TODO never use System.out.println
-            System.out.println("There is IOException error");
-            System.out.println(e.toString());
         }
         log.debug("parseXls done");
     }
@@ -545,7 +535,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -600,7 +590,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             tableItems = glossaryResource.getGlossaryTableView();
         }
-        log.debug("getTableItems() " + tableItems.size());
 
         return tableItems;
     }
@@ -650,70 +639,70 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-    
+
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-    
+
         return columns;
     }
-    
-    
+
+
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-    
+
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-    
+
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-    
+
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-    
+
         //update columns
         createDynamicColumns();
     }
-    
+
     static public class ColumnModel implements Serializable
     {
-    
+
         private String header;
         private String property;
-    
+
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-    
+
         public String getHeader()
         {
             return header;
         }
-    
+
         public String getProperty()
         {
             return property;
         }
     }*/
 
-    public String getImportResponse()
+    public boolean getOverwriteGlossary()
     {
-        return importResponse;
+        return overwriteGlossary;
     }
 
-    public List<ParsingError> getImportErrors()
+    public GlossaryParserResponse getImportResponse()
     {
-        return importErrors;
+        return importResponse;
     }
 
     public List<Locale> getTableLanguageFilter()

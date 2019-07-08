@@ -25,8 +25,9 @@
             <ui:param name="nameOfBean" value="#{glossaryDashboardBean}"/>
         </ui:decorate>
     </p:outputPanel>
-    <h:panelGroup id="content">
-        <div class="form">
+    <h:panelGroup id="content" >
+    	<h:form rendered="#{not empty glossaryDashboardBean.selectedUsersIds}" prependId="false">
+        
             <div class="p-grid">
                 <div class="p-col-12 no-padding-bottom">
                     <div class="p-grid">
@@ -153,90 +154,120 @@
                         </div>
 
                     </div>
-                    <div class="p-grid">
-                        <div class="p-col-12 no-padding-top margin-top">
-                            <p:outputPanel id="fieldsPanel"
-                                           rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
-                                <p:panel id="fields" header="Fields">
-                                    <f:facet name="actions">
-                                        <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                  icon="ui-icon-help" onclick="return false;"/>
-                                        <p:tooltip for="fieldsTable" value="The amount of fields that were filled by users"/>
-                                    </f:facet>
-
-                                    <h:outputText value="We started to record the 'was pasted' flag on 5.11.2018." styleClass="red"
-                                                  rendered="#{userBean.moderator}" style="display:block; margin:0 0 0.8rem 0;"/>
-
-                                    <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
-                                                 var="gfs" styleClass="table-responsive"
-                                                 emptyMessage="Nothing was found for the users in the date range that you selected.">
-                                        <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
-                                                  filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                            <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
-                                            #{gfs.entries}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
-                                            #{gfs.terms}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Pasted Terms</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Pronunciation</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}"
-                                                  sortable="true">
-                                            <f:facet name="header">Pasted Pronunciation</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Acronym</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
-                                            <f:facet name="header">Pasted Acronym</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Phraseology</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
-                                            <f:facet name="header">Pasted Phraseology</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Uses</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
-                                            <f:facet name="header">Source</f:facet>
-                                            #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
-                                            <f:facet name="header">AVG %</f:facet>
-                                            <h:outputText value="#{gfs.avg*100}">
-                                                <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
-                                            </h:outputText>%
-                                        </p:column>
-                                        <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true">
-                                            <f:facet name="header">Total pasted %</f:facet>
-                                            <h:outputText value="#{gfs.totalPastedPct*100}">
-                                                <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
-                                            </h:outputText>%
-                                        </p:column>
-                                    </p:dataTable>
-                                </p:panel>
-                            </p:outputPanel>
-                        </div>
-                    </div>
+                
+                                          <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
+                                      var="gfs" styleClass="table-responsive"
+                                      emptyMessage="Nothing was found for the users in the date range that you selected.">
+                                      
+                                      
+                         <f:facet name="header">
+                         		Fields
+                             <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                       icon="ui-icon-help" onclick="return false;"/>
+                             <p:tooltip for="fieldsTable" value="The number of fields that were filled in by users. 
+                             We started to record the 'was pasted' flag on 5.11.2018."/>
+                         </f:facet>         
+                                      
+                                      
+                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
+                                       filterBy="#{gfs.user.username}" filterMatchMode="contains">
+                                 <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
+                                 #{gfs.entries}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" headerText="Terms" sortBy="#{gfs.terms}" sortable="true">
+                                 #{gfs.terms}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Pasted Terms</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Pronunciation</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}"
+                                       sortable="true">
+                                 <f:facet name="header">Pasted Pronunciation</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Acronym</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true">
+                                 <f:facet name="header">Pasted Acronym</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Phraseology</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true">
+                                 <f:facet name="header">Pasted Phraseology</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Uses</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
+                                 <f:facet name="header">Source</f:facet>
+                                 #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
+                                 <f:facet name="header">AVG %</f:facet>
+                                 <h:outputText value="#{gfs.avg*100}">
+                                     <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                 </h:outputText>%
+                             </p:column>
+                             <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true">
+                                 <f:facet name="header">Total pasted %</f:facet>
+                                 <h:outputText value="#{gfs.totalPastedPct*100}">
+                                     <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                 </h:outputText>%
+                             </p:column>
+                         </p:dataTable>
+                     
+                  
+                     
+                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.descFieldsStatistic}"
+                                    var="gds" 
+                                    emptyMessage="Nothing was found for the users in the date range that you selected."
+                                    paginator="true" rows="25"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="25,50,100"
+                                    >
+                          <f:facet name="header">
+                          	#{msg['Glossary.Definitions']}
+                             <p:button id="descriptionsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                       icon="ui-icon-help" onclick="return false;"/>
+                             <p:tooltip for="descriptionsTable" value="All descriptions that were filled in by users"/>
+                         </f:facet>         
+                                    
+                           <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"
+                                     filterBy="#{gds.user.username}" filterMatchMode="contains">
+                               <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gds.user.username}
+                           </p:column>
+                           <p:column headerText="Definition" sortBy="#{gds.description}" sortable="true"
+                           	filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">
+                               #{gds.description}
+                           </p:column>
+                           <p:column headerText="Word count" sortBy="#{gds.length}" sortable="true">
+                               #{gds.length}
+                           </p:column>
+                           <p:column headerText="Pasted" sortBy="#{gds.descriptionPasted}" sortable="true" >
+                               #{gds.descriptionPasted}
+                           </p:column>
+                    
+                       </p:dataTable>
+                      
+                   
                 </div>
             </div>
-        </div>
+       
+        </h:form>
     </h:panelGroup>
 </ui:define>
 

@@ -159,6 +159,14 @@ public class UtilBean implements Serializable
         return timeFormatter.format(date);
     }
 
+    /**
+     * TODO this method must be replaced with a JSF component that will take the frontend locale into account
+     *
+     * @param value
+     * @param total
+     * @return
+     */
+    @Deprecated
     public static String formatValAndPct(int value, int total)
     {
         if(total == 0 || value == 0)

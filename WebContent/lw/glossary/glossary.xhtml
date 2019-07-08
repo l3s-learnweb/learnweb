@@ -3,7 +3,8 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
 	<ui:param name="loginRequired" value="true" />
@@ -68,7 +69,7 @@
 							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
 							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
+						<p:column headerText="#{msg['Glossary.Definition']}" sortBy="#{item.description}" filterBy="#{item.description}" filterable="true"
 							filterMatchMode="contains" filterStyle="width: 90%;">
 							<h:outputText value="#{item.description}" pt:data-itemId="#{item.entryId}" id="cell4" />
 						</p:column>
@@ -136,15 +137,19 @@
                     <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"
                               min-width="400" closable="true" responsive="true">
                         <div class="p-grid">
-                            <!--<div class="p-col-5">-->
-                                <!--<p:outputLabel for="console" value="Do you want to override table?" />-->
-                            <!--</div>-->
-                            <!--<div class="p-col-5">-->
-                                <!--<p:selectOneRadio id="console">-->
-                                    <!--<f:selectItem itemLabel="Yes" itemValue="true" />-->
-                                    <!--<f:selectItem itemLabel="No" itemValue="false" />-->
-                                <!--</p:selectOneRadio>-->
-                            <!--</div>-->
+                    		
+							<h:panelGroup rendered="#{userBean.moderator and false}" styleClass="p-col-12">
+								<!-- disabled until completed -->
+                                <h:outputFormat value="#{msg['Glossary.overwrite_question']}" />
+								 <br/>
+                                <h:outputText value="#{msg['Glossary.overwrite_description']}" />
+                                <br/>
+                                <br/>
+                                <p:selectBooleanButton id="overwrite_glossary" value="#{glossaryBean.overwriteGlossary}"
+													   onLabel="#{msg['yes']}" offLabel="#{msg['no']}" style="width:60px" />
+                                <br/>
+                                <br/>
+                            </h:panelGroup>
                             <div class="p-col-12">
 								<p:fileUpload mode="advanced" skinSimple="true" fileUploadListener="#{glossaryBean.onImportXls}"
 											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form" 
@@ -153,11 +158,26 @@
                         </div>
                     </p:dialog>
 
-					<p:dialog header="Import glossary" widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
-						<h:outputText value="#{glossaryBean.importResponse}" />
-						
-						<!-- todo show import errors in a table -->
+					<p:dialog header="Import glossary result"  widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
+
+                        <h:outputFormat value="#{msg['Glossary.import_successful']}" rendered="#{glossaryBean.importResponse.successful}">
+                            <f:param value="#{glossaryBean.importResponse.entryCount}" />
+                        </h:outputFormat>
+
+						<h:outputText value="#{msg['Glossary.import_error']}"
+										rendered="#{not glossaryBean.importResponse.successful}"/>
+						<p:dataTable var="error" value="#{glossaryBean.importResponse.errors}"
+									 rendered="#{not glossaryBean.importResponse.successful}">
+							<p:column headerText="Excel cell">
+								<h:outputText value="#{error.cell}"/>
+							</p:column>
+							<p:column headerText="Error message">
+								<h:outputText value="#{error.errorMessage}"/>
+							</p:column>
+						</p:dataTable>
+
 					</p:dialog>
+
 				</h:form>
 				
 				<div id="glossform" style="display: none">
@@ -168,7 +188,7 @@
 
 						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
 							<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
-							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}">
+							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}" editable="true">
 								<f:selectItems value="#{glossaryBean.availableTopicOne}" />
 								<f:ajax listener="#{glossaryBean.changeTopicOne}" render="topic_2 topic_3" />
 							</p:selectOneMenu>
@@ -193,8 +213,8 @@
 							</h:panelGroup>
 							<h:outputText value="" />
 
-							<p:outputLabel value="#{msg['Glossary.description']} " for="description"></p:outputLabel>
-							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" requiredMessage="#{msg['Glossary.description_message']}" />
+							<p:outputLabel value="#{msg['Glossary.Definition']} " for="description" />
+							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" />
 							<p:message for="description" />
 						</p:panelGrid>
 

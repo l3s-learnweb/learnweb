@@ -48,7 +48,7 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
-    private ArrayList<GlossaryEntryDescLang> descFieldsStatistic;
+    private List<GlossaryEntryDescLang> descFieldsStatistic;
     private ArrayList<String> glossaryDescriptions;
     private Map<String, Integer> proxySourcesWithCounters;
     private LinkedList<TrackerUserActivity> trackerStatistics;
@@ -126,11 +126,13 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(485);
     }
 
+    @Override
     public Date getStartDate()
     {
         return startDate;
     }
 
+    @Override
     public void setStartDate(Date startDate)
     {
         this.startDate = startDate;
@@ -138,11 +140,13 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
 
+    @Override
     public Date getEndDate()
     {
         return endDate;
     }
 
+    @Override
     public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
