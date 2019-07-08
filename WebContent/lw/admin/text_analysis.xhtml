@@ -13,33 +13,29 @@
 </ui:define>
 <ui:define name="center_layout">
     <h:form id="anlyse_form" styleClass="form">
-        <div class="p-grid">
-            <div class="p-col-12 grid">
-                <div class="card card-w-title grid">
-                    <h2><h:outputText value="#{msg.select_users}"/></h2>
+
+            <p:panel header="#{msg.select_users}">
+
                     <ui:include src="/templates/user/user_select_form.xhtml"/>
                     <p:commandButton styleClass="in-form-button" actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
                                      value="#{msg.selected_users_comments}"
-                                     process="@form" update=":growl output"/>
-                </div>
-            </div>
+                                     process="@form" update=":growl output1"/>
+            </p:panel>
 
-            <div class="p-col-12 grid">
-                <div class="card card-w-title grid">
-                    <h2><h:outputText value="#{msg.comments}"/></h2>
+            <p:panel id="output1" header="#{msg.comments}">
                     <p>#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}"/></p>
                     <h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank"
-                            styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-button in-form-link-to-button "/>
+                            styleClass="mb-3 ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-button in-form-link-to-button "/>
+                    <br/>
                     <h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
-                </div>
-            </div>
+            </p:panel>
 
-            <h:panelGroup id="output" styleClass="display-none">
+            <h:panelGroup id="output" styleClass="d-none">
                 <p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}">
 
                 </p:panel>
             </h:panelGroup>
-        </div>
+
     </h:form>
 
 </ui:define>

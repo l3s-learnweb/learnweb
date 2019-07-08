@@ -12,29 +12,25 @@
 		<p:menuitem value="#{msg.statistics_group}" url="admin/statistics.jsf#"/>
 	</ui:define>
 	<ui:define name="center_layout">
-		<h:form id="anlyse_form" styleClass="form">
-			<div class="p-grid margin-top no-padding-bottom">
-				<div class="p-col-12 grid no-padding-top no-padding-bottom ">
-					<div class="card card-w-title grid">
-						<h2><h:outputText value="#{msg.select_groups}" /></h2>
+		<h:form id="anlyse_form" >
+				<p:panel header="#{msg.select_groups}">
 						<ui:include src="/templates/user/user_select_form.xhtml" />
-						<div class="flex-label">
+						<div>
 							<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" />
 							<label>#{msg.statistics_show_detailed}</label>
 						</div>
-						<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" styleClass="margin-top in-form-button" value="#{msg.statistics_show}" process="@form" />
+						<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" styleClass="margin-top in-form-button" value="#{msg.statistics_show}" process="@form" />
 										 <!--update=":growl output"/>-->
+				</p:panel>
 
-					</div>
-				</div>
-			</div>
 
-			<div id="output">
-                <div class="p-grid margin-top">
-                    <div class="p-col-12 grid no-padding-top ">
-                        <div class="card card-w-title grid">
-                            <h2><h:outputText value="#{msg.statistics}" /></h2>
-					            <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
+
+
+
+				<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
+					<f:facet name="header">
+						#{msg.statistics}
+					</f:facet>
 					 	<p:column headerText="#{msg.group}" sortBy="#{entry.title}">
 					    	<h:outputText value="#{entry.title}" />
 					    </p:column>
@@ -76,32 +72,28 @@
 					    </p:column>
 
 					</p:dataTable>
-                        </div>
-                    </div>
 
-					<ui:fragment rendered="#{adminStatisticsBean.showDetails}" >
-						<div class="p-col-12 grid" >
-							<div class="card card-w-title grid">
-								<h2><h:outputText value="#{msg.statistics_detailed}" /></h2>
-								<div class="boolean-buttons">
-										<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
-															   onchange="$('.description').toggle();" value="off" />
-										<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
-															   onchange="$('.admin_comments').toggle();" value="on" />
 
-								</div>
 
-								<hr />
-								<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />
-							</div>
-						</div>
-					</ui:fragment>
 
 <!--				<p:panel header="" rendered="#{adminStatisticsBean.showDetails}" style="margin-top:30px;">
 
 				</p:panel>-->
-                </div>
-			</div>
+
+			<ui:fragment rendered="#{adminStatisticsBean.showDetails}" >
+				<p:panel header="#{msg.statistics_detailed}">
+						<div class="boolean-buttons">
+							<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
+												   onchange="$('.description').toggle();" value="off" />
+							<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
+												   onchange="$('.admin_comments').toggle();" value="on" />
+
+						</div>
+
+						<hr />
+						<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />
+				</p:panel>
+			</ui:fragment>
 
 		</h:form>
 

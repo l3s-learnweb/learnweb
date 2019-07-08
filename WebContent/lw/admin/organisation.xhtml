@@ -37,58 +37,56 @@
                             <div class="col-12 col-md-6">
                                 <p:panel header="Common settings">
                                     <div class="grid">
-                                        <p>
-                                            <h:outputText value="#{msg.title}: " />
+                                            <h:outputText value="#{msg.title}: " styleClass="font-weight-bold" />
 
-                                        </p>
-                                        <p:inputText value="#{adminOrganisationBean.selectedOrganisation.title}" />
+                                        <p:inputText value="#{adminOrganisationBean.selectedOrganisation.title}" styleClass="w-100 mb-3" />
 
 
-                                        <p class="mt-3">
+                                        <div class="mb-3">
                                             <h:outputText value="Banner image: " />
                                             <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="imageupload-button" id="imageupload" mode="advanced" update="bannerimage" auto="true" sizeLimit="1000000"
                                                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
                                             <h:panelGroup id="bannerimage">
                                                 <img src="#{adminOrganisationBean.selectedOrganisation.bannerImage}" />
                                             </h:panelGroup>
-                                        </p>
+                                        </div>
 
-                                        <p>
-                                            <h:outputText value="Welcome Page: " />
-                                        </p>
-                                        <p:selectOneMenu id="welcomePage"  value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
+
+                                            <h:outputText value="Welcome Page: " styleClass="font-weight-bold" />
+
+                                        <p:selectOneMenu id="welcomePage" styleClass="w-100 mb-3" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
                                             <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
                                             <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
                                         </p:selectOneMenu>
-                                        <p  class="mt-3">
-                                            <h:outputText styleClass="mr-1" value="Logout Page: " />
-                                        </p>
-                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
+
+                                            <h:outputText  value="Logout Page: " styleClass="font-weight-bold" />
+
+                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" styleClass="w-100 mb-3" editable="true">
                                             <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
                                             <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
                                             <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page" />
                                         </p:selectOneMenu>
-                                        <p  class="mt-3">
-                                            <h:outputText styleClass="mr-1" value="Default language: " />
-                                        </p>
-                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
+
+                                            <h:outputText styleClass="font-weight-bold"  value="Default language: " />
+
+                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}" styleClass="w-100 mb-3">
                                             <f:selectItem itemLabel="No default" itemValue="#{null}" />
                                             <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
                                                            itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                         </p:selectOneMenu>
-                                        <p  class="mt-3">
-                                            <h:outputText styleClass="mr-1" value="Language variant: " />
-                                        </p>
-                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
+
+                                            <h:outputText styleClass="font-weight-bold"  value="Language variant: " />
+
+                                        <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}" styleClass="w-100 mb-3">
                                             <f:selectItem itemValue="" itemLabel="No variant" />
                                             <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
                                                            itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
                                         </p:selectOneMenu>
 
-                                        <p  class="mt-3">
-                                            <h:outputText value="Glossary languages: " />
-                                        </p>
-                                        <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
+
+                                            <h:outputText styleClass="font-weight-bold"  value="Glossary languages: " />
+
+                                        <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" styleClass="w-100 mb-3"  required="true" requiredMessage="#{msg.mandatory_field}"
                                                               label="#{msg.language}" multiple="true" converter="#{localeConverter}">
                                             <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
                                         </p:selectCheckboxMenu>
@@ -122,14 +120,10 @@
                     </div>
 
 
-                    <div class="col-12">
-                        <p:panel>
+                    <div class="col-12 mt-3">
 <!--                                <p:button rendered="#{userBean.admin}" outcome="organisations" styleClass="command-button mr-4" value="Back to Organisations" />-->
                                 <p:commandButton action="#{adminOrganisationBean.onSave}" styleClass="command-button" value="#{msg.save}" ajax="false" />
-                        </p:panel>
-
                     </div>
-
                 </div>
 
             </h:form>
