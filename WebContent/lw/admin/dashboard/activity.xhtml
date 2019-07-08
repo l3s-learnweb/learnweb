@@ -18,93 +18,78 @@
 <ui:define name="center_layout">
     <h:outputStylesheet library="admin-dashboard" name="activity.css"/>
     <h:outputScript library="admin-dashboard" name="activity.js" target="body"/>
-    <div class="form">
-        <div class="p-grid">
-            <div class="p-col-12">
-                <div class="p-grid">
 
-                    <div class="p-col no-padding">
-                        <div class="p-col-12">
-                            <div class="card card-w-title">
 
-                                <div class="center-header user-activities" id="group_header">
-                                    <h2>Users' Activities</h2>
-                                    <p>All user interactions</p>
-                                </div>
+    <p:panel header="Users' Activities (All user interactions)">
+        <p:outputPanel styleClass="d-flex justify-content-center mb-3">
+            <ui:decorate template="templates/setSelectedUsers.xhtml">
+                <ui:param name="nameOfBean" value="#{activityDashboardBean}"/>
+            </ui:decorate>
+        </p:outputPanel>
+        <div class="p-col-9 no-padding">
+            <h:form>
+                <div id="grouped_activities" class="p-col-12">
 
-                                <ui:decorate template="templates/setSelectedUsers.xhtml">
-                                    <ui:param name="nameOfBean" value="#{activityDashboardBean}"/>
-                                </ui:decorate>
-                                <div class="p-col-9 no-padding">
-                                    <h:form>
-                                        <div id="grouped_activities" class="p-col-12">
-
-                                            <p:selectManyCheckbox id="grid1" widgetVar="grid1"
-                                                                  value="#{activityDashboardBean.selectedActionItems}"
-                                                                  layout="responsive" columns="3"
-                                                                  var="action" itemLabel="#{action}" itemValue="#{action}"
-                                                                  onchange="unselectAllCheckBoxes(PF('grid2'))">
-                                                <f:selectItems
-                                                        value="#{activityDashboardBean.actions.keySet()}"
-                                                        var="action" itemLabel="#{action}" itemValue="#{action}"/>
-                                                <p:ajax event="valueChange" global="false" process="@this"/>
-                                            </p:selectManyCheckbox>
-
-                                        </div>
-
-                                        <div class="p-col-4 no-padding-bottom">
-                                            <div id="advanced_options">
-                                                <span><h:outputText value="Advanced options"/></span> <i
-                                                    class="fa fa-angle-double-up"/>
-                                            </div>
-                                        </div>
-                                        <div id="all_activities" class="p-col-12">
-                                            <p:selectManyCheckbox id="grid2" widgetVar="grid2"
-                                                                  value="#{activityDashboardBean.selectedGroupedActions}"
-                                                                  layout="responsive" columns="3"
-                                                                  onchange="unselectAllCheckBoxes(PF('grid1'))">
-                                                <p:ajax event="valueChange" global="false" process="@this"/>
-                                                <f:selectItems value="#{activityDashboardBean.groupedActions}"
-                                                               var="groupedAction" itemLabel="#{groupedAction}"
-                                                               itemValue="#{groupedAction}"/>
-                                            </p:selectManyCheckbox>
-
-                                        </div>
-                                    </h:form>
-                                </div>
-
-                            </div>
-                        </div>
-                        <h:panelGroup id="content">
-                            <p:outputPanel id="activityPanel" styleClass="dashboard">
-                                <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="Activities">
-                                    <f:facet name="actions">
-                                        <p:button id="interactions"
-                                                  styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                                  icon="ui-icon-help" onclick="return false;"/>
-                                        <p:tooltip for="interactions"
-                                                   value="Number of selected activities (of all selected users) per day"/>
-                                    </f:facet>
-                                    <p:chart type="line"
-                                             model="#{activityDashboardBean.interactionsChart}"
-                                             style="height:300px;" responsive="true"/>
-                                </p:panel>
-
-                                <p:panel rendered="#{!empty activityDashboardBean.interactionsTable}" header="Activities Table">
-                                    <p:dataTable var="row" value="#{activityDashboardBean.interactionsTable}">
-                                        <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                                            <h:outputText value="#{row[key]}"/>
-                                        </p:columns>
-                                    </p:dataTable>
-                                </p:panel>
-                            </p:outputPanel>
-                        </h:panelGroup>
-                    </div>
+                    <p:selectManyCheckbox id="grid1" widgetVar="grid1"
+                                          value="#{activityDashboardBean.selectedActionItems}"
+                                          layout="responsive" columns="3"
+                                          var="action" itemLabel="#{action}" itemValue="#{action}"
+                                          onchange="unselectAllCheckBoxes(PF('grid2'))">
+                        <f:selectItems
+                                value="#{activityDashboardBean.actions.keySet()}"
+                                var="action" itemLabel="#{action}" itemValue="#{action}"/>
+                        <p:ajax event="valueChange" global="false" process="@this"/>
+                    </p:selectManyCheckbox>
 
                 </div>
-            </div>
+
+                <div class="p-col-4 no-padding-bottom">
+                    <div id="advanced_options">
+                        <span><h:outputText value="Advanced options"/></span> <i
+                            class="fa fa-angle-double-up"/>
+                    </div>
+                </div>
+                <div id="all_activities" class="p-col-12">
+                    <p:selectManyCheckbox id="grid2" widgetVar="grid2"
+                                          value="#{activityDashboardBean.selectedGroupedActions}"
+                                          layout="responsive" columns="3"
+                                          onchange="unselectAllCheckBoxes(PF('grid1'))">
+                        <p:ajax event="valueChange" global="false" process="@this"/>
+                        <f:selectItems value="#{activityDashboardBean.groupedActions}"
+                                       var="groupedAction" itemLabel="#{groupedAction}"
+                                       itemValue="#{groupedAction}"/>
+                    </p:selectManyCheckbox>
+
+                </div>
+            </h:form>
         </div>
-    </div>
+    </p:panel>
+
+
+    <h:panelGroup id="content">
+        <p:outputPanel id="activityPanel" styleClass="dashboard">
+            <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="Activities">
+                <f:facet name="actions">
+                    <p:button id="interactions"
+                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                              icon="ui-icon-help" onclick="return false;"/>
+                    <p:tooltip for="interactions"
+                               value="Number of selected activities (of all selected users) per day"/>
+                </f:facet>
+                <p:chart type="line"
+                         model="#{activityDashboardBean.interactionsChart}"
+                         style="height:300px;" responsive="true"/>
+            </p:panel>
+
+            <p:panel rendered="#{!empty activityDashboardBean.interactionsTable}" header="Activities Table">
+                <p:dataTable var="row" value="#{activityDashboardBean.interactionsTable}">
+                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
+                        <h:outputText value="#{row[key]}"/>
+                    </p:columns>
+                </p:dataTable>
+            </p:panel>
+        </p:outputPanel>
+    </h:panelGroup>
 
 
 </ui:define>

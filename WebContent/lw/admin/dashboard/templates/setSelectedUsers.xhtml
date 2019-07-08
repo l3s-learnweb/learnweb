@@ -19,9 +19,9 @@
     <p:outputPanel>
         <h:form id="usersSelectForm">
             <p:panelGrid columns="2" styleClass="noBorders">
-                <p:outputPanel styleClass="noBorders">
+                <p:outputPanel styleClass="noBorders col">
                     <p:outputPanel id="usersSelectPanel">
-                        <p:panel>
+                        <p:panel styleClass="no-padding-panel-content">
                             <p:selectCheckboxMenu style="width: 75px;"
                                                   value="#{nameOfBean.selectedUsersIds}"
                                                   var="user"
@@ -39,7 +39,7 @@
                         </p:panel>
                     </p:outputPanel>
                     <p:outputPanel id="groupsSelectPanel">
-                        <p:panel styleClass="noBorders">
+                        <p:panel styleClass="no-padding-panel-content">
                             <p:selectCheckboxMenu
                                     style="width: 75px;" styleClass="noBorders"
                                     value="#{nameOfBean.selectedGroupsIds}"
@@ -56,31 +56,31 @@
                         </p:panel>
                     </p:outputPanel>
                 </p:outputPanel>
-                <p:outputPanel id="dateAndSubmitPanel" style="width: 300px; padding-top:6px;">
-                    <div class="p-grid">
-                        <div class="p-col-12">
-                            <div class="ui-inputgroup">
+                <p:outputPanel id="dateAndSubmitPanel">
+                    <div class="col">
+                        <div class="mb-2">
+
                                 <p:outputLabel for="dateStart"/>
                                 <p:calendar id="dateStart" var="date"
                                             value="#{nameOfBean.startDate}"
                                             showOn="button"/>
-                            </div>
+
                         </div>
-                        <div class="p-col-12">
-                            <div class="ui-inputgroup">
+                        <div class="mb-2">
+
                                 <p:outputLabel for="dateEnd"/>
                                 <p:calendar id="dateEnd" var="date" value="#{nameOfBean.endDate}"
                                             showOn="button"/>
-                            </div>
+
                         </div>
-                        <div class="p-col-12">
+                        <div class="mb-2">
                             <div class="ui-inputgroup">
                                 <h:outputText
                                         value="Users selected: #{nameOfBean.getSelectedUsersIds().size()}"
                                         rendered="#{!empty(nameOfBean.getSelectedUsersIds())}"/>
                             </div>
                         </div>
-                        <div class="p-col-12 auto-button">
+                        <div>
                             <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()">
                                 <p:commandButton value="Update"
                                                  icon="ui-icon-check"
