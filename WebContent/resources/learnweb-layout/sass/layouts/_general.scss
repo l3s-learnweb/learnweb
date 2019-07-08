@@ -7,16 +7,16 @@
 
 
 .command-button{
-  background: $primary;
-  color: $white;
-  border: .1rem solid $primary;
+  background: $primaryButtonBgColor;
+  color: $primaryButtonTextColor;
+  border: .1rem solid $primaryButtonBgColor;
   border-radius: .2rem;
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.2rem 0.4rem;
   &:hover{
-    background: $primary-hover;
-    border-color: $primary-hover;
+    background: $primaryButtonHoverBgColor;
+    border-color: $primaryButtonHoverBgColor;
   }
 }
 

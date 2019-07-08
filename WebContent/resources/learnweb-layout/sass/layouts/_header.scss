@@ -1,4 +1,5 @@
 .layout-topbar {
+  height: 60px!important;
   .topbar-logo i {
     font-size: 2rem;
     line-height: 1;
@@ -52,8 +53,11 @@
     fill: grey;
 
     i {
-      color: gray;
+      color: $megamenuTextColor;
       font-size: 1.25rem;
+      &:hover {
+        color: $primaryTextColor;
+      }
     }
 
     &:hover {
@@ -69,6 +73,9 @@
   .usermenu {
     a {
       text-decoration: none;
+      &:hover{
+        color: $primaryTextColor;
+      }
     }
   }
 }

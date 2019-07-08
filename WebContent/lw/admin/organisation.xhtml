@@ -42,13 +42,10 @@
                                         <p:inputText value="#{adminOrganisationBean.selectedOrganisation.title}" styleClass="w-100 mb-3" />
 
 
-                                        <div class="mb-3">
-                                            <h:outputText value="Banner image: " />
-                                            <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="imageupload-button" id="imageupload" mode="advanced" update="bannerimage" auto="true" sizeLimit="1000000"
-                                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
-                                            <h:panelGroup id="bannerimage">
-                                                <img src="#{adminOrganisationBean.selectedOrganisation.bannerImage}" />
-                                            </h:panelGroup>
+                                        <div class="mb-3 d-flex flex-column">
+                                            <h:outputText value="Banner image: " styleClass="font-weight-bold" />
+                                            <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="imageupload-button d-flex align-items-center" mode="simple" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
+
                                         </div>
 
 
@@ -122,7 +119,9 @@
 
                     <div class="col-12 mt-3">
 <!--                                <p:button rendered="#{userBean.admin}" outcome="organisations" styleClass="command-button mr-4" value="Back to Organisations" />-->
+                        <p:panel>
                                 <p:commandButton action="#{adminOrganisationBean.onSave}" styleClass="command-button" value="#{msg.save}" ajax="false" />
+                        </p:panel>
                     </div>
                 </div>
 

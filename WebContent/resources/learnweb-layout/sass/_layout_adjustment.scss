@@ -1,19 +1,4 @@
 .layout-wrapper{
-  .layout-topbar{
-    height: 60px!important;
-    .usermenu{
-      .usermenu-overlay{
-        li{
-          a{
-            &:hover{
-              color: $primaryTextColor;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .layout-main{
     position: relative;
     min-height: 100vh;
@@ -22,23 +7,23 @@
 
       /* Breadcrumb */
       .ui-breadcrumb {
-        border: 1px solid #4AA564;
+        border: 1px solid $primaryColor;
         border-left: none;
         border-right: none;
         background: rgba(255, 255, 255, 0.9);
         font-weight: 700;
-        font-size: 20px;
+        font-size: 1.2rem;
         ul{
           li{
             &:first-child {
-              font-size: 20px;
+              font-size: 1.2rem;
             }
             .ui-menuitem-link {
               top: 0px;
             }
           }
           .ui-breadcrumb-chevron {
-            font-size: 20px;
+            font-size: 1.2rem;
             vertical-align: middle;
             height: auto;
             &:before {

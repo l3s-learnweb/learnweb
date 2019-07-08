@@ -437,6 +437,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
 
             if(file != null)
+                // bannerImage = "background-image: url(" + file.getUrl() + ");";
                 bannerImage = "background-image: url(" + file.getUrl() + ");";
             else
                 bannerImage = "";

@@ -8735,12 +8735,6 @@ body a {
   color: #fff;
 }
 
-.layout-wrapper .layout-topbar {
-  height: 60px !important;
-}
-.layout-wrapper .layout-topbar .usermenu .usermenu-overlay li a:hover {
-  color: #fff;
-}
 .layout-wrapper .layout-main {
   position: relative;
   min-height: 100vh;
@@ -8756,16 +8750,16 @@ body a {
   border-right: none;
   background: rgba(255, 255, 255, 0.9);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.2rem;
 }
 .layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul li:first-child {
-  font-size: 20px;
+  font-size: 1.2rem;
 }
 .layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul li .ui-menuitem-link {
   top: 0px;
 }
 .layout-wrapper .layout-main .layout-main-content .ui-breadcrumb ul .ui-breadcrumb-chevron {
-  font-size: 20px;
+  font-size: 1.2rem;
   vertical-align: middle;
   height: auto;
 }
@@ -14450,14 +14444,17 @@ html {
   padding: 0.2rem 0.4rem;
 }
 .command-button:hover {
-  background: #348D4f;
-  border-color: #348D4f;
+  background: #378D4F;
+  border-color: #378D4F;
 }
 
 .w-30 {
   width: 30% !important;
 }
 
+.layout-topbar {
+  height: 60px !important;
+}
 .layout-topbar .topbar-logo i {
   font-size: 2rem;
   line-height: 1;
@@ -14509,8 +14506,11 @@ html {
   fill: grey;
 }
 .layout-topbar .searchbutton i {
-  color: gray;
+  color: #5b616a;
   font-size: 1.25rem;
+}
+.layout-topbar .searchbutton i:hover {
+  color: #fff;
 }
 .layout-topbar .searchbutton:hover {
   background: #2E8540;
@@ -14521,6 +14521,9 @@ html {
 }
 .layout-topbar .usermenu a {
   text-decoration: none;
+}
+.layout-topbar .usermenu a:hover {
+  color: #fff;
 }
 
 .layout-wrapper .layout-sidebar {
@@ -14609,7 +14612,6 @@ html {
 .landing-wrapper .topbar-logo i {
   font-size: 2rem;
   line-height: 1;
-  padding-left: 0.5rem;
 }
 .landing-wrapper .container {
   max-width: 1500px;
@@ -14625,6 +14627,7 @@ html {
   padding: 1rem;
   text-decoration: none;
   border-bottom: 0.2rem solid transparent;
+  color: #212529;
 }
 .landing-wrapper .top-menu .header-menu a:hover {
   border-color: #067E6C;
@@ -14847,7 +14850,7 @@ html {
   margin-right: 0 !important;
 }
 .imageupload-button .ui-fileupload-content {
-  width: 30%;
+  width: 100%;
 }
 
 .section-group-resources .resources-filters {
