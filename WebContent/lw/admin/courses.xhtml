@@ -13,7 +13,6 @@
     <p:menuitem value="#{msg.courses}" url="admin/courses.jsf#"/>
 </ui:define>
 <ui:define name="center_layout">
-    <p:panel header="#{msg.courses}" styleClass="no-padding-panel-content">
     <h:form id="courses_form" styleClass="form">
         <div class="p-grid">
             <div class="p-col-12">
@@ -25,7 +24,7 @@
                         <div></div>
                     </div>
                 </p:blockUI>
-                <p:dataTable id="courses_table" style="margin-top: 0 !important;"  var="course" value="#{adminCoursesBean.courses}">
+                <p:dataTable id="courses_table" var="course" value="#{adminCoursesBean.courses}">
                     <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                         <h:outputText value="#{course.title}"/>
                     </p:column>
@@ -34,16 +33,16 @@
                         <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
                     </p:column>
 
-                    <p:column style="width:10%" headerText="#{msg.members}" sortBy="#{course.memberCount}">
+                    <p:column style="width:9%" headerText="#{msg.members}" sortBy="#{course.memberCount}">
                         <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
                     </p:column>
 
-                    <p:column style="width:38%" headerText="#{msg.options}" styleClass="options_column column-button">
+                    <p:column style="width:26%" headerText="#{msg.options}" styleClass="options_column column-button">
                         <f:facet name="header">
                             #{msg.options}
                         </f:facet>
 
-                        <h:outputLink value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
+                        <h:outputLink styleClass="mr-1" value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
                             <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
                             <span><h:outputText value="#{msg.edit}"/></span>
                         </h:outputLink>
@@ -77,27 +76,35 @@
             </div>
         </div>
     </h:form>
-    </p:panel>
-    <p:panel header="#{msg.add_new_course}" >
-        <h:form id="addcourse">
-                        <div class="row">
-                            <span class="p-2">#{msg.course_title}:</span>
-                            <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
-                            <p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-                        </div>
-                            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" styleClass="" process="@form"/>
-        </h:form>
-    </p:panel>
-    <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
-        <h:form id="addorganisation" >
-            <div class="row">
-                        <span class="p-2">#{msg.organization_title}:</span>
-                        <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
+    <div class="row">
+        <div class="col-12 col-sm-6">
+            <p:panel header="#{msg.add_new_course}" >
+                <h:form id="addcourse">
+                    <div class="mb-3 d-flex flex-column">
+                        <h:outputText value="#{msg.course_title}:" styleClass="font-weight-bold" />
+                        <h:inputText value="#{adminCoursesBean.newCourseTitle}" styleClass="w-10" id="c_title"/>
+                        <p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+                    </div>
+                    <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" styleClass="command-button" process="@form"/>
+                </h:form>
+            </p:panel>
+        </div>
+        <div class="col-12 col-sm-6">
+            <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
+                <h:form id="addorganisation" >
+                    <div class="mb-3 d-flex flex-column">
+                        <h:outputText value="#{msg.organization_title}:" styleClass="font-weight-bold" />
+                        <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" styleClass="w-10" id="c_organisation"/>
                         <p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-            </div>
-                            <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form"/>
-        </h:form>
-    </p:panel>
+                    </div>
+                    <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" styleClass="command-button" type="submit" process="@form"/>
+                </h:form>
+            </p:panel>
+        </div>
+    </div>
+
+
+
 
 
 </ui:define>
