@@ -41,12 +41,12 @@
                     </p:column>
 
                     <p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 10%;">
-                        <p:selectBooleanCheckbox value="#{user.moderator}">
+                        <p:selectBooleanCheckbox styleClass="m-auto d-block" value="#{user.moderator}">
                             <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
                         </p:selectBooleanCheckbox>
                     </p:column>
 
-                    <p:column style="width: 10%;">
+                    <p:column style="width: 6%;">
                         <f:facet name="header">
                             #{msg.options}
                         </f:facet>
@@ -55,7 +55,7 @@
                         </h:commandLink>
                     </p:column>
 
-                    <p:column headerText="Logs" style="width: 10%;">
+                    <p:column headerText="Logs" style="width: 8%;">
                         <h:outputLink value="http://learnweb.l3s.uni-hannover.de/tracker/client/2/user/#{user.id}"
                                       target="_blank">Mouse tracker</h:outputLink>
                     </p:column>
