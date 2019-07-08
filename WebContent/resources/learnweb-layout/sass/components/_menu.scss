@@ -1,0 +1,68 @@
+.ui-lwmenu.ui-panelmenu {
+  padding: 0;
+  list-style-type: none;
+
+  /* Adjust icons to add more space around caret icon */
+  .ui-panelmenu-header {
+    > span.ui-icon {
+      min-width: 22px;
+      height: 31px;
+      line-height: 2;
+      margin-right: 2px;
+      margin-top: -14px;
+    }
+  }
+
+  .ui-panelmenu-content {
+    border: 0;
+  }
+
+  .ui-menuitem {
+    .ui-menuitem-link {
+      border-left: 4px solid transparent;
+      padding: 6px 8px;
+      color: #212529;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+      .ui-menuitem-icon {
+        float: none;
+        vertical-align: middle;
+        margin-right: 6px;
+        color: #5b616a;
+        display: inline-block;
+      }
+
+      &.ui-state-hover {
+        background-color: #1D6833;
+        color: #fff;
+        border-left-color: #4AA564;
+
+        .ui-menuitem-icon {
+          color: #fff;
+        }
+      }
+    }
+
+    /* Adjust icons to add more space around caret icon */
+    .ui-menuitem-link {
+      padding: 0 8px 0 4px;
+
+      > span.ui-icon {
+        min-width: 24px;
+        height: 28px;
+        line-height: 2;
+        margin-right: 2px;
+
+        &.ui-panelmenu-icon {
+          margin-right: 0;
+        }
+      }
+
+      > .ui-menuitem-text {
+        padding: 6px 0;
+      }
+    }
+  }
+}

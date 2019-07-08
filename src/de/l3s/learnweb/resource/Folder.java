@@ -10,7 +10,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-public class Folder extends AbstractResource implements Serializable
+public class Folder extends AbstractResource implements Serializable, IResourceContainer
 {
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);

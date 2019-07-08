@@ -20,11 +20,13 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import de.l3s.learnweb.component.ActiveSubMenu;
+import de.l3s.learnweb.component.ResourceContainerMenuItem;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.*;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -58,7 +60,8 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
-    private DefaultTreeNode groupsTreeSidebar;
+    private DynamicMenuModel sidebarMenuModel;
+    private long sidebarMenuModelCacheTime = 0L;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -219,26 +222,26 @@ public class UserBean implements Serializable
 
         switch(localeCode)
         {
-        case "de":
-            locale = new Locale("de", "DE", languageVariant);
-            break;
-        case "en":
-            locale = new Locale("en", "UK", languageVariant);
-            break;
-        case "it":
-            locale = new Locale("it", "IT", languageVariant);
-            break;
-        case "pt":
-            locale = new Locale("pt", "BR", languageVariant);
-            break;
-        case "xx":
-            // only for translation editors
-            locale = new Locale("xx");
-            break;
-        default:
-            locale = new Locale("en", "UK");
-            log.error("Unsupported language: " + localeCode);
-            break;
+            case "de":
+                locale = new Locale("de", "DE", languageVariant);
+                break;
+            case "en":
+                locale = new Locale("en", "UK", languageVariant);
+                break;
+            case "it":
+                locale = new Locale("it", "IT", languageVariant);
+                break;
+            case "pt":
+                locale = new Locale("pt", "BR", languageVariant);
+                break;
+            case "xx":
+                // only for translation editors
+                locale = new Locale("xx");
+                break;
+            default:
+                locale = new Locale("en", "UK");
+                log.error("Unsupported language: " + localeCode);
+                break;
         }
 
         localePrettyTime = null; // reset date formatter
@@ -484,14 +487,14 @@ public class UserBean implements Serializable
             groupsTree = new DefaultTreeNode("WriteAbleGroups");
 
             GroupManager gm = Learnweb.getInstance().getGroupManager();
-            Group myResources = new Group();
-            myResources.setId(0);
-            myResources.setTitle(UtilBean.getLocaleMessage("myPrivateResources"));
+            Group myResources = new Group(0, UtilBean.getLocaleMessage("myPrivateResources"));
             TreeNode myResourcesNode = new DefaultTreeNode("group", myResources, groupsTree);
             myResourcesNode.setSelected(true);
 
             for(Group group : getUser().getWriteAbleGroups())
             {
+                // group /lw/myhome/resources.jsf?group_id=#{node.id}">#{node.title}
+                // folder /lw/myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}"
                 TreeNode groupNode = new DefaultTreeNode("group", group, groupsTree);
                 gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
             }
@@ -502,28 +505,70 @@ public class UserBean implements Serializable
         return groupsTree;
     }
 
-    public TreeNode getGroupsTreeForSidebar() throws SQLException
+    public MenuModel getSidebarMenuModel() throws SQLException
     {
         if(!isLoggedIn())
             return null;
-        groupsTreeSidebar = new DefaultTreeNode("myGroups");
 
-        GroupManager gm = Learnweb.getInstance().getGroupManager();
-        Link myGroups = new Link();
-        myGroups.setUrl("myhome/groups.jsf");
-        myGroups.setTitle("My Groups");
-        TreeNode myGroupsNode = new DefaultTreeNode("link", myGroups, groupsTreeSidebar);
-        myGroupsNode.setSelected(true);
-
-        for(Group group : getUser().getGroups())
+        if(null == sidebarMenuModel || sidebarMenuModelCacheTime + 10000L < System.currentTimeMillis())
         {
-            log.debug(group.getId());
-            TreeNode groupNode = new DefaultTreeNode("group", group, myGroupsNode);
-            gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+            DynamicMenuModel model = new DynamicMenuModel();
+
+            // My Groups
+            ActiveSubMenu myGroups = new ActiveSubMenu("My Groups", "fa fa-fw fa-folder", "/lw/myhome/groups.jsf");
+            myGroups.addElement(new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myPrivateResources")), "fa fa-fw fa-user", "fa fa-fw fa-folder"));
+            for(Group group : getUser().getGroups())
+            {
+                myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder"));
+            }
+
+            // User
+            model.addElement(myGroups);
+            model.addElement(new DefaultMenuItem("My Resources", "fa fa-fw fa-folder", "/lw/myhome/resources.jsf"));
+            model.addElement(new DefaultMenuItem("My comments", "fa fa-fw fa-comments", "/lw/myhome/comments.jsf"));
+            model.addElement(new DefaultMenuItem("My tags", "fa fa-fw fa-tags", "/lw/myhome/tags.jsf"));
+            model.addElement(new DefaultMenuItem("My submissions", "fa fa-fw fa-credit-card-alt", "/lw/myhome/submission_overview.jsf"));
+            model.addElement(new DefaultMenuItem("My dashboard", "fa fa-fw fa-table", "/lw/admin/dashboard/user.jsf"));
+            model.addElement(new DefaultMenuItem("Search history", "fa fa-fw fa-history", "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
+
+            // Moderator
+            if(getUser().isModerator() && getUser().getId() != 12476) // TODO: why do we need to exclude this user?
+            {
+                DefaultSubMenu moderatorSubmenu = new DefaultSubMenu("Moderator");
+                moderatorSubmenu.addElement(new DefaultMenuItem("Send notification", "fa fa-fw fa-envelope-open", "/lw/admin/notification.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Users", "fa fa-fw fa-users", "/lw/admin/users.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Courses", "fa fa-fw fa-graduation-cap", "/lw/admin/courses.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Organisation", "fa fa-fw fa-sitemap", "/lw/admin/organisation.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Text analysis", "fa fa-fw fa-area-chart", "/lw/admin/text_analysis.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Statistics", "fa fa-line-chart", "/lw/admin/statistics.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Detailed Transcript Log", "fa fa-fw fa-language", "/lw/admin/detailed_transcript_log.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Simple Transcript Log", "fa fa-fw fa-language", "/lw/admin/simple_transcript_log.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Transcript Summaries", "fa fa-fw fa-language", "/lw/admin/transcript_summary.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Glossary Dashboard", "fa fa-fw fa-bar-chart", "/lw/admin/dashboard/glossary.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem("Activity Dashboard", "fa fa-fw fa-line-chart", "/lw/admin/dashboard/activity.jsf"));
+                model.addElement(moderatorSubmenu);
+            }
+
+            // Admin
+            if(getUser().isAdmin() && getUser().getId() != 12476)
+            {
+                DefaultSubMenu adminSubmenu = new DefaultSubMenu("Admin");
+                adminSubmenu.addElement(new DefaultMenuItem("Save", "fa fa-fw fa-sitemap", "/lw/admin/organisations.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem("Banlist", "fa fa-fw fa-area-chart", "/lw/admin/banlist.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem("IP Requests", "fa fa-line-chart", "/lw/admin/requests.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem("System Tools", "fa fa-fw fa-language", "/lw/admin/systemtools.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem("Admin Messages", "fa fa-fw fa-language", "/lw/admin/adminmsg.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem("News", "fa fa-fw fa-language", "/lw/admin/adminnews.jsf"));
+                model.addElement(adminSubmenu);
+            }
+
+            sidebarMenuModel = model;
+            sidebarMenuModelCacheTime = System.currentTimeMillis();
         }
 
-        return groupsTreeSidebar;
+        return sidebarMenuModel;
     }
+
 
     /**
      * Returns true when there is any tooltip message to show
@@ -609,7 +654,6 @@ public class UserBean implements Serializable
     }
 
     /**
-     *
      * @param url
      * @return Returns the given url proxied through WAPS.io if enabled for the current organization
      */

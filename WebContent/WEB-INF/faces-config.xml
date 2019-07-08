@@ -39,6 +39,19 @@
         <exception-handler-factory>de.l3s.learnweb.beans.LearnwebExceptionHandlerFactory</exception-handler-factory>
     </factory>
 
+    <component>
+        <component-type>de.l3s.learnweb.component.LearnwebMenu</component-type>
+        <component-class>de.l3s.learnweb.component.LearnwebMenu</component-class>
+    </component>
+
+    <render-kit>
+        <renderer>
+            <component-family>de.l3s.learnweb.component</component-family>
+            <renderer-type>de.l3s.learnweb.component.LearnwebMenuRenderer</renderer-type>
+            <renderer-class>de.l3s.learnweb.component.LearnwebMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+
 	<!--
 	 org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
 	 de.l3s.learnweb.beans.CustomExceptionHandlerFactory

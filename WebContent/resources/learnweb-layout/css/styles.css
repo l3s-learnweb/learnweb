@@ -14531,81 +14531,69 @@ html {
 
 .layout-wrapper .layout-sidebar {
   top: 0;
+  padding-top: 60px;
   z-index: 997;
 }
-.layout-wrapper .layout-sidebar .nano {
-  padding-top: 60px;
+.layout-wrapper .layout-sidebar .sidebar-scroll-content {
   height: 100%;
-}
-.layout-wrapper .layout-sidebar .nano .nano-content {
   overflow-y: auto;
 }
-.layout-wrapper .layout-sidebar .layout-menu {
-  padding-bottom: 44px;
-}
-.layout-wrapper .layout-sidebar .ui-tree {
-  width: auto;
+
+.ui-lwmenu.ui-panelmenu {
   padding: 0;
-  border-bottom: none;
-  box-sizing: border-box;
-  display: block;
-  border-right: none;
-  margin-top: -2px;
+  list-style-type: none;
+  /* Adjust icons to add more space around caret icon */
 }
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container {
-  padding: 0;
+.ui-lwmenu.ui-panelmenu .ui-panelmenu-header > span.ui-icon {
+  min-width: 22px;
+  height: 31px;
+  line-height: 2;
+  margin-right: 2px;
+  margin-top: -14px;
 }
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode {
-  padding: 0;
+.ui-lwmenu.ui-panelmenu .ui-panelmenu-content {
+  border: 0;
 }
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-  border-top: 1px solid #e4e2e0;
+.ui-lwmenu.ui-panelmenu .ui-menuitem {
+  /* Adjust icons to add more space around caret icon */
 }
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:hover {
-  cursor: pointer;
-  background-color: #f1f1f1;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-e:before {
-  content: "";
-  transition: transform 0.3s;
-  transform: rotate(0deg);
-  color: #5b616a;
-  font-weight: 700;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-icon-triangle-1-s:before {
-  color: #5b616a;
-  font-weight: 700;
-  content: "";
-  transition: transform 0.3s;
-  transform: rotate(-180deg);
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content[aria-selected=true] a {
-  color: #4AA564 !important;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
-  margin: 0;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-}
-.layout-wrapper .layout-sidebar .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label a {
-  margin-left: 12px;
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link {
+  border-left: 4px solid transparent;
+  padding: 6px 8px;
   color: #212529;
-  font-weight: 500;
-  font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
+  float: none;
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #5b616a;
+  display: inline-block;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link.ui-state-hover {
+  background-color: #1D6833;
+  color: #fff;
+  border-left-color: #4AA564;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon {
+  color: #fff;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link {
+  padding: 0 8px 0 4px;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > span.ui-icon {
+  min-width: 24px;
+  height: 28px;
+  line-height: 2;
+  margin-right: 2px;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > span.ui-icon.ui-panelmenu-icon {
+  margin-right: 0;
+}
+.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > .ui-menuitem-text {
+  padding: 6px 0;
 }
 
 .landing-wrapper {

@@ -21,12 +21,13 @@ import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.IResourceContainer;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
-public class Group implements Comparable<Group>, HasId, Serializable
+public class Group implements Comparable<Group>, HasId, Serializable, IResourceContainer
 {
     private static final long serialVersionUID = -6209978709028007958L;
     private static final Logger log = Logger.getLogger(Group.class);
@@ -139,6 +140,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.id = -1;
     }
 
+    public Group(int id, String title)
+    {
+        this.id = id;
+        this.title = title;
+    }
+
     @Override
     public int getId()
     {
@@ -236,7 +243,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      * @return
      * @throws SQLException
      */
-    public List<Folder> getFolders() throws SQLException
+    public List<Folder> getSubFolders() throws SQLException
     {
         if(folders == null)
         {
@@ -245,6 +252,16 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
         return folders;
     }
+
+    /**
+     * @deprecated use {@link #getSubFolders} instead
+     */
+    @Deprecated
+    public List<Folder> getFolders() throws SQLException
+    {
+        return getSubFolders();
+    }
+
     /* not used
     public AbstractPaginator getResources(Order order) throws SQLException
     {
