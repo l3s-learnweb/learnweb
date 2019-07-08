@@ -47,7 +47,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         if(menu.getElementsCount() > 0)
         {
-            encodeMenuElements(context, menu, menu.getElements());
+            encodeRootMenuElements(context, menu, menu.getElements());
         }
 
         writer.endElement("ul");
@@ -235,6 +235,24 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         }
 
         writer.endElement("li");
+    }
+
+    private void encodeRootMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException
+    {
+        for(MenuElement element : elements)
+        {
+            if(element.isRendered())
+            {
+                if(element instanceof Submenu)
+                {
+                    encodeRootSubmenu(context, menu, (Submenu) element);
+                }
+                else if(element instanceof MenuItem)
+                {
+                    encodeMenuItemWrapper(context, menu, (MenuItem) element, "-1");
+                }
+            }
+        }
     }
 
     private void encodeMenuElements(final FacesContext context, final LearnwebMenu menu, final List<MenuElement> elements) throws IOException
