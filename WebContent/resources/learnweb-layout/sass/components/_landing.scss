@@ -7,25 +7,26 @@
     line-height: 1;
   }
 
-  .container{
+  .container {
     max-width: 1500px;
   }
 
-  .top-menu{
-    ul{
+  .top-menu {
+    ul {
       list-style: none;
     }
 
-    .header-menu{
+    .header-menu {
       padding-right: 1rem;
       margin-bottom: 0;
 
-      a{
+      a {
         padding: 1rem;
         text-decoration: none;
         border-bottom: 0.2rem solid transparent;
         color: $primaryDarkTextColor;
-        &:hover{
+
+        &:hover {
           border-color: $main-teal;
         }
       }
@@ -34,16 +35,17 @@
 
   }
 
-  .header{
+  .header {
     background: url("/resources/frontpage/luh.jpg");
     padding: 5rem 0;
     background-size: cover;
-    .header-content-panel{
+
+    .header-content-panel {
       padding: 1rem 1.5rem;
       background-color: white;
       max-width: 18rem;
 
-      input{
+      input {
         margin: 1rem 0;
         width: 100%;
       }
@@ -57,14 +59,14 @@
       border-radius: 0.2rem;
       padding-bottom: 1rem;
 
-      >h2{
+      > h2 {
         font-size: 1rem;
         padding: .5rem 1rem;
         margin: 0;
         background: rgba(0, 0, 0, 0.8);
       }
 
-      .ui-datalist-content{
+      .ui-datalist-content {
         background: rgba(0, 0, 0, 0);
         border: none;
         padding: 1rem;
@@ -85,28 +87,33 @@
 
     display: none;
     padding: 1rem;
-    span{
+
+    span {
       font-size: 1rem;
       margin: 0 0.4rem;
       text-align: center;
     }
-    p{
+
+    p {
       font-size: 1.5rem;
       font-weight: 500;
       text-align: left;
       padding: 1rem;
     }
-    h2{
+
+    h2 {
       font-size: 2rem;
       text-align: center;
       display: flex;
       flex-direction: column;
       margin-top: 1rem;
     }
+
     .ui-datalist-item {
       border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
       padding-bottom: 1rem;
     }
+
     .ui-widget-content {
       border: none;
     }
@@ -114,8 +121,7 @@
   }
 
 
-
-  .about{
+  .about {
     padding: 3rem 0;
 
     .about-content {
@@ -125,8 +131,7 @@
   }
 
 
-
-  .subscriptions{
+  .subscriptions {
     background-color: $main-teal;
 
     .subscription-box {
@@ -138,7 +143,8 @@
 
       .subscription-subheader {
         background-color: $landing-subheader;
-        span{
+
+        span {
           font-size: 1.2rem;
           color: $main-dark-green-color;
         }
@@ -160,7 +166,7 @@
     color: $dividerColor;
   }
 
-  *{
+  * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -170,23 +176,25 @@
 
 @media (max-width: 576px) {
   .landing-wrapper {
-    .top-menu{
-      .logo{
+    .top-menu {
+      .logo {
         width: 19rem;
         margin: .5rem;
       }
 
-      .header-menu{
+      .header-menu {
         margin-bottom: 0;
       }
 
     }
-    .header{
-      .header-content-panel{
+
+    .header {
+      .header-content-panel {
         display: block;
         margin: 0 auto;
         max-width: 20rem;
       }
+
       .newsform {
         display: none;
       }
@@ -196,17 +204,18 @@
       display: block;
     }
 
-    .about{
-      h2{
+    .about {
+      h2 {
         text-align: center;
       }
     }
 
-    .subscriptions{
-      h2{
+    .subscriptions {
+      h2 {
         text-align: center;
       }
-      .subscription-box{
+
+      .subscription-box {
         margin: 2rem;
       }
     }
@@ -217,23 +226,25 @@
 
 @media (min-width: 577px) and (max-width: 768px) {
   .landing-wrapper {
-    .top-menu{
-      .logo{
+    .top-menu {
+      .logo {
         width: 19rem;
         margin: .5rem;
       }
 
-      .header-menu{
+      .header-menu {
         margin-bottom: 0;
       }
 
     }
-    .header{
-      .header-content-panel{
+
+    .header {
+      .header-content-panel {
         display: block;
         margin: 0 auto;
         max-width: 20rem;
       }
+
       .newsform {
         display: none;
       }
@@ -243,17 +254,18 @@
       display: block;
     }
 
-    .about{
-      h2{
+    .about {
+      h2 {
         text-align: center;
       }
     }
 
-    .subscriptions{
-      h2{
+    .subscriptions {
+      h2 {
         text-align: center;
       }
-      .subscription-box{
+
+      .subscription-box {
         margin: 2rem;
       }
     }
@@ -265,23 +277,25 @@
 
 @media (min-width: 769px) and (max-width: 992px) {
   .landing-wrapper {
-    .top-menu{
-      .logo{
+    .top-menu {
+      .logo {
         width: 19rem;
         margin: .5rem;
       }
 
-      .header-menu{
+      .header-menu {
         margin-bottom: 0;
       }
 
     }
-    .header{
-      .header-content-panel{
+
+    .header {
+      .header-content-panel {
         display: block;
         margin: 0 auto;
         max-width: 20rem;
       }
+
       .newsform {
         display: none;
       }
@@ -291,17 +305,18 @@
       display: block;
     }
 
-    .about{
-      h2{
+    .about {
+      h2 {
         text-align: center;
       }
     }
 
-    .subscriptions{
-      h2{
+    .subscriptions {
+      h2 {
         text-align: center;
       }
-      .subscription-box{
+
+      .subscription-box {
         margin: 2rem;
       }
     }
@@ -312,16 +327,16 @@
 
 @media (min-width: 993px) and (max-width: 1200px) {
   .landing-wrapper {
-    .top-menu{
+    .top-menu {
 
 
-      .header-menu{
+      .header-menu {
         margin-bottom: 0;
       }
 
     }
 
-    .container{
+    .container {
       max-width: 1000px;
     }
 

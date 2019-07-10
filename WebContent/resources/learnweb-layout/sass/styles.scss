@@ -19,32 +19,28 @@
   - Sass documentation https://sass-lang.com/documentation
   - Bootstrap documentation (see Layout, Content, Utilities sections) https://getbootstrap.com/docs/
 */
-   
 // Load variables
 @import 'common/_variables';
-
 // Vendor styles, from 3rd-part developers
 //@import "vendor/bootstrap-4.3.1/functions";
 //@import "vendor/bootstrap-4.3.1/variables";
 //@import "vendor/bootstrap-4.3.1/mixins";
-@import 'vendor/bootstrap'; // grid layout, utilities
+@import 'vendor/bootstrap';
+// grid layout, utilities
 @import '../../california-layout/sass/layout/_layout';
 @import '_layout_adjustment';
-
 @import '../../california-layout/sass/theme/_theme';
 @import '_theme_adjustment.scss';
-
 // Load common utils and helpers
 @import 'common/_font';
 @import 'common/_utils';
 @import 'common/_global';
-
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
-@import "layouts/_general"; // should contain base styles like headers, spacings, ets.
+@import "layouts/_general";
+// should contain base styles like headers, spacings, ets.
 @import "layouts/_footer";
 @import "layouts/_header";
 @import "layouts/_sidebar";
-
 // All other styles should be slitted by components, like forms, panels, tables, etc.
 @import "components/_forms";
 @import "components/_menu";
@@ -56,7 +52,6 @@
 // /group folder
 @import "components/_group-resources";
 @import "components/_group-members";
-
 
 
 // load old styles, which should be removed later

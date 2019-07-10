@@ -1,12 +1,13 @@
-.onhover-scrollbar{
+.onhover-scrollbar {
   overflow-y: hidden;
-  &:hover{
+
+  &:hover {
     overflow-y: overlay;
   }
 }
 
 
-.command-button{
+.command-button {
   background: $primaryButtonBgColor;
   color: $primaryButtonTextColor;
   border: .1rem solid $primaryButtonBgColor;
@@ -14,12 +15,13 @@
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.2rem 0.4rem;
-  &:hover{
+
+  &:hover {
     background: $primaryButtonHoverBgColor;
     border-color: $primaryButtonHoverBgColor;
   }
 }
 
-.w-30{
+.w-30 {
   width: 30% !important;
 }

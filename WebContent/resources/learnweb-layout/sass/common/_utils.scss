@@ -1,19 +1,23 @@
 .center-header {
   background-color: #eee;
   padding: 0.5rem;
+
   ul a {
     display: block;
   }
+
   a {
     &.active, &:hover {
       background-color: #EEE;
       text-decoration: none;
     }
   }
+
   li {
     float: left;
-    list-style-type:none;
+    list-style-type: none;
   }
+
   ul {
     margin: -0.5rem;
     padding: 0px;
@@ -21,6 +25,7 @@
     border-bottom: 1px solid #ccc;
     background-color: rgb(230, 230, 230);
     clear: both;
+
     &:after {
       content: '';
       display: block;
@@ -59,7 +64,7 @@
   }
 }
 
-.breadCrumb{
+.breadCrumb {
   ul {
     li:last-child {
       pointer-events: none;

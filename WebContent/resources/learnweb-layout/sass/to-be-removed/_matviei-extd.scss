@@ -1,6 +1,3 @@
-
-
-
 /* TODO add a class for this kind of button instead of using the ids */
 
 
@@ -8,14 +5,16 @@
   /*New style*/
 
 
-  .layout-wrapper{
-    .layout-main{
+  .layout-wrapper {
+    .layout-main {
       position: relative;
       min-height: 100vh;
-      .layout-main-content{
+
+      .layout-main-content {
         padding-bottom: 9em;
       }
-      .layout-footer{
+
+      .layout-footer {
         position: absolute;
         bottom: 0;
         width: 100%;
@@ -26,7 +25,7 @@
   }
 
 
-    /*end*/
+  /*end*/
 
   .control-buttons, .boolean-buttons {
     padding: 0px;
@@ -79,10 +78,6 @@
   }
 
 
-
-
-
-
 }
 
 /*.main-body .layout-wrapper .layout-main{
@@ -92,7 +87,6 @@
 .main-body .layout-wrapper .layout-main .layout-main-content{
     padding-bottom: 46px;
 }*/
-
 
 
 .main-body {
@@ -218,7 +212,6 @@
 }
 
 
-
 .more-link {
   text-align: end;
   display: block;
@@ -244,7 +237,6 @@
     margin: 0 7px 0px 4px;
   }
 }
-
 
 
 .submission_create_fix {

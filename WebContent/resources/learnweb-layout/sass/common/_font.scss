@@ -28,5 +28,10 @@
   margin-left: .2em;
 }
 
-.lw-icon-logo::before { content: '\e800'; }
-.lw-icon-search:before { content: '\e801'; }
+.lw-icon-logo::before {
+  content: '\e800';
+}
+
+.lw-icon-search:before {
+  content: '\e801';
+}

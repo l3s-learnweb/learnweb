@@ -1,13 +1,16 @@
-.imageupload-button{
+.imageupload-button {
   display: flex;
-  .ui-fileupload-buttonbar{
+
+  .ui-fileupload-buttonbar {
     width: fit-content;
-    padding: 0!important;
+    padding: 0 !important;
   }
-  .ui-button{
-    margin-right: 0!important;
+
+  .ui-button {
+    margin-right: 0 !important;
   }
-  .ui-fileupload-content{
+
+  .ui-fileupload-content {
     width: 100%;
   }
 }

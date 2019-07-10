@@ -18,11 +18,13 @@
     width: 130px;
     height: 130px;
     transition: box-shadow 0.3s;
+
     > .member_star {
       position: absolute;
       right: 5px;
       bottom: 5px;
     }
+
     &:HOVER {
       cursor: pointer;
       box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);

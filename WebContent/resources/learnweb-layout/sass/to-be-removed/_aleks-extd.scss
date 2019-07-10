@@ -1,25 +1,30 @@
 .center-header {
   background-color: #eee;
   padding: 0.5rem;
+
   ul a {
     padding: 5px 15px;
     display: block;
   }
+
   a {
     &.active, &:hover {
       background-color: #EEE;
       text-decoration: none;
     }
   }
+
   li {
     float: left;
   }
+
   ul {
     margin: -0.5rem;
     padding: 0px;
     border-top: 1px solid #ccc;
     background-color: rgb(230, 230, 230);
     clear: both;
+
     &:after {
       content: '';
       display: block;
@@ -32,10 +37,12 @@
   padding: 5px 15px;
   display: block;
 }
+
 /* Resource filters bar */
 
 .resources-filters {
   margin: 0 -0.5rem -0.5rem;
+
   ul {
     list-style: none outside none;
     margin: 0;
@@ -104,8 +111,10 @@
         }
       }
     }
+
     .clear-filters {
       padding: 0.55rem;
+
       &:hover {
         background: none;
       }
@@ -125,6 +134,7 @@
         }
       }
     }
+
     .arrow {
       width: 0;
       height: 0;
@@ -196,10 +206,10 @@
 
 
 .no-padding-panel-content {
-   .ui-panel-content {
-     padding: 0 !important;
-   }
- }
+  .ui-panel-content {
+    padding: 0 !important;
+  }
+}
 
 .p-pn-1rem {
   .ui-panel-content {
