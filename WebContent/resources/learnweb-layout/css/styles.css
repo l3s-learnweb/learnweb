@@ -14539,61 +14539,147 @@ html {
   overflow-y: auto;
 }
 
-.ui-lwmenu.ui-panelmenu {
+.ui-lwmenu {
   padding: 0;
+  width: auto;
   list-style-type: none;
-  /* Adjust icons to add more space around caret icon */
 }
-.ui-lwmenu.ui-panelmenu .ui-panelmenu-header > span.ui-icon {
-  min-width: 22px;
-  height: 31px;
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
+  cursor: pointer;
+  position: relative;
+  background-color: #4AA564;
+  font-weight: 700;
+  margin-top: 4px;
+  -moz-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  -webkit-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header a {
+  display: block;
+  padding: 0.5em 0.5em 0.5em 2.2em;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon {
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > span,
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > a {
+  color: #fff;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-s {
+  margin-top: -6px;
+  margin-left: 2px;
+  background: none;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-indent: 0px !important;
+  text-align: center;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-s:before {
+  content: "";
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-e {
+  margin-top: -7px;
+  margin-left: 2px;
+  background: none;
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-indent: 0px !important;
+  text-align: center;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-e:before {
+  content: "";
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-hover {
+  background-color: #378D4F;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-active {
+  background-color: #378D4F;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled {
+  cursor: default;
+}
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled a {
+  cursor: default;
+}
+.ui-lwmenu .ui-menu-parent .ui-menu-list {
+  position: static;
+  margin-left: 10px;
+}
+.ui-lwmenu .ui-menu-parent > .ui-menuitem-link > .ui-icon {
+  left: 1.5em;
+}
+.ui-lwmenu .ui-menu-parent .ui-menuitem-link-hasicon {
+  padding-left: 2.8em;
+}
+.ui-lwmenu .ui-menu-parent .ui-lwmenu-icon.ui-icon {
+  left: 0.5em;
+}
+.ui-lwmenu .ui-menu-parent .ui-menu-parent .ui-icon {
+  min-width: 18px;
+}
+.ui-lwmenu .ui-icon {
+  right: auto;
+  top: 0;
+  bottom: 0;
+  left: 0.5em;
+  position: static;
   line-height: 2;
-  margin-right: 2px;
-  margin-top: -14px;
+  display: inline-block;
+  vertical-align: middle;
+  min-width: 22px;
+  height: 28px;
+  margin: auto 0;
 }
-.ui-lwmenu.ui-panelmenu .ui-panelmenu-content {
-  border: 0;
+.ui-lwmenu .ui-icon.ui-icon-empty {
+  visibility: hidden;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem {
-  /* Adjust icons to add more space around caret icon */
+.ui-lwmenu .ui-menuitem {
+  margin: 1px 0;
+  padding: 0;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link {
-  border-left: 4px solid transparent;
-  padding: 6px 8px;
+.ui-lwmenu .ui-menuitem .ui-menuitem-link {
+  display: block;
+  outline: 0;
+  text-decoration: none;
+  font-weight: 400;
+  border: solid 1px transparent;
+  line-height: 16px;
+  cursor: pointer;
+  position: relative;
   color: #212529;
+  border-left: 4px solid transparent;
+  padding: 0 8px 0 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
-  float: none;
-  vertical-align: middle;
-  margin-right: 6px;
+.ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
   color: #5b616a;
-  display: inline-block;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link.ui-state-hover {
+.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover {
   background-color: #1D6833;
   color: #fff;
   border-left-color: #4AA564;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon {
+.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon {
   color: #fff;
 }
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link {
-  padding: 0 8px 0 4px;
-}
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > span.ui-icon {
-  min-width: 24px;
-  height: 28px;
-  line-height: 2;
-  margin-right: 2px;
-}
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > span.ui-icon.ui-panelmenu-icon {
-  margin-right: 0;
-}
-.ui-lwmenu.ui-panelmenu .ui-menuitem .ui-menuitem-link > .ui-menuitem-text {
-  padding: 6px 0;
+.ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
+  float: none;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 6px 0 6px 2px;
 }
 
 .landing-wrapper {

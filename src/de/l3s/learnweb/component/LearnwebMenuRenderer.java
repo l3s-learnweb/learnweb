@@ -2,6 +2,7 @@ package de.l3s.learnweb.component;
 
 import org.primefaces.component.menu.AbstractMenu;
 import org.primefaces.component.menu.BaseMenuRenderer;
+import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.Submenu;
@@ -71,7 +72,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("li");
     }
 
-    private void encodeRootSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
+    private void encodePanelSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
         String style = submenu.getStyle();
@@ -183,7 +184,9 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         String styleClass = submenu.getStyleClass();
         styleClass = styleClass == null ? LearnwebMenu.DESCENDANT_SUBMENU_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_CLASS + " " + styleClass;
         boolean expanded = submenu.isExpanded();
-        String toggleIconClass = expanded ? LearnwebMenu.DESCENDANT_SUBMENU_EXPANDED_ICON_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_COLLAPSED_ICON_CLASS;
+        boolean isEmpty = submenu.getElementsCount() == 0;
+        String toggleIconClass = isEmpty ? LearnwebMenu.DESCENDANT_SUBMENU_EMPTY_ICON_CLASS :
+                (expanded ? LearnwebMenu.DESCENDANT_SUBMENU_EXPANDED_ICON_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_COLLAPSED_ICON_CLASS);
         String listClass = expanded ? LearnwebMenu.DESCENDANT_SUBMENU_EXPANDED_LIST_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_COLLAPSED_LIST_CLASS;
         boolean hasIcon = (icon != null);
         String linkClass = (hasIcon) ? LearnwebMenu.MENUITEM_LINK_WITH_ICON_CLASS : LearnwebMenu.MENUITEM_LINK_CLASS;
@@ -243,9 +246,13 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         {
             if(element.isRendered())
             {
-                if(element instanceof Submenu)
+                if(element instanceof DefaultSubMenu)
                 {
-                    encodeRootSubmenu(context, menu, (Submenu) element);
+                    encodePanelSubmenu(context, menu, (Submenu) element);
+                }
+                else if(element instanceof Submenu)
+                {
+                    encodeDescendantSubmenu(context, menu, (Submenu) element);
                 }
                 else if(element instanceof MenuItem)
                 {

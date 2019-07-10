@@ -34,7 +34,6 @@ import de.l3s.learnweb.beans.FrontpageServlet;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
-import de.l3s.learnweb.group.Link;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
@@ -514,51 +513,49 @@ public class UserBean implements Serializable
         {
             DynamicMenuModel model = new DynamicMenuModel();
 
-            // My Groups
-            ActiveSubMenu myGroups = new ActiveSubMenu("My Groups", "fa fa-fw fa-folder", "/lw/myhome/groups.jsf");
-            myGroups.addElement(new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myPrivateResources")), "fa fa-fw fa-user", "fa fa-fw fa-folder"));
-            for(Group group : getUser().getGroups())
-            {
-                myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder"));
-            }
+            // My resources
+            ActiveSubMenu myResources = new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myResourcesTitle")), null, "fa fa-fw fa-folder");
+            model.addElement(myResources);
 
-            // User
+            // My groups
+            ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, "/lw/myhome/groups.jsf");
+            for(Group group : getUser().getGroups()) myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder"));
             model.addElement(myGroups);
-            model.addElement(new DefaultMenuItem("My Resources", "fa fa-fw fa-folder", "/lw/myhome/resources.jsf"));
-            model.addElement(new DefaultMenuItem("My comments", "fa fa-fw fa-comments", "/lw/myhome/comments.jsf"));
-            model.addElement(new DefaultMenuItem("My tags", "fa fa-fw fa-tags", "/lw/myhome/tags.jsf"));
-            model.addElement(new DefaultMenuItem("My submissions", "fa fa-fw fa-credit-card-alt", "/lw/myhome/submission_overview.jsf"));
-            model.addElement(new DefaultMenuItem("My dashboard", "fa fa-fw fa-table", "/lw/admin/dashboard/user.jsf"));
-            model.addElement(new DefaultMenuItem("Search history", "fa fa-fw fa-history", "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
 
-            // Moderator
-            if(getUser().isModerator() && getUser().getId() != 12476) // TODO: why do we need to exclude this user?
+            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", "/lw/myhome/comments.jsf"));
+            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", "/lw/myhome/tags.jsf"));
+            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", "/lw/myhome/submission_overview.jsf"));
+            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myDashboardTitle"), "fa fa-fw fa-table", "/lw/admin/dashboard/user.jsf"));
+            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("search_history"), "fa fa-fw fa-history", "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
+
+            // Moderator (menu hidden for user EUMADE4ALL; can be removed in 2020)
+            if(getUser().isModerator() && getUser().getId() != 12476)
             {
-                DefaultSubMenu moderatorSubmenu = new DefaultSubMenu("Moderator");
-                moderatorSubmenu.addElement(new DefaultMenuItem("Send notification", "fa fa-fw fa-envelope-open", "/lw/admin/notification.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Users", "fa fa-fw fa-users", "/lw/admin/users.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Courses", "fa fa-fw fa-graduation-cap", "/lw/admin/courses.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Organisation", "fa fa-fw fa-sitemap", "/lw/admin/organisation.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Text analysis", "fa fa-fw fa-area-chart", "/lw/admin/text_analysis.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Statistics", "fa fa-line-chart", "/lw/admin/statistics.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Detailed Transcript Log", "fa fa-fw fa-language", "/lw/admin/detailed_transcript_log.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Simple Transcript Log", "fa fa-fw fa-language", "/lw/admin/simple_transcript_log.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Transcript Summaries", "fa fa-fw fa-language", "/lw/admin/transcript_summary.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Glossary Dashboard", "fa fa-fw fa-bar-chart", "/lw/admin/dashboard/glossary.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem("Activity Dashboard", "fa fa-fw fa-line-chart", "/lw/admin/dashboard/activity.jsf"));
+                DefaultSubMenu moderatorSubmenu = new DefaultSubMenu(UtilBean.getLocaleMessage("moderator"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("send_notification"), "fa fa-fw fa-envelope-open", "/lw/admin/notification.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("users"), "fa fa-fw fa-users", "/lw/admin/users.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("courses"), "fa fa-fw fa-graduation-cap", "/lw/admin/courses.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("organisation"), "fa fa-fw fa-sitemap", "/lw/admin/organisation.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("text_analysis"), "fa fa-fw fa-area-chart", "/lw/admin/text_analysis.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("statistics"), "fa fa-fw fa-line-chart", "/lw/admin/statistics.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("detailed_transcript_log"), "fa fa-fw fa-language", "/lw/admin/detailed_transcript_log.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("simple_transcript_log"), "fa fa-fw fa-language", "/lw/admin/simple_transcript_log.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("transcript_summaries"), "fa fa-fw fa-language", "/lw/admin/transcript_summary.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("glossary_dashboard"), "fa fa-fw fa-bar-chart", "/lw/admin/dashboard/glossary.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("activity_dashboard"), "fa fa-fw fa-line-chart", "/lw/admin/dashboard/activity.jsf"));
                 model.addElement(moderatorSubmenu);
             }
 
-            // Admin
+            // Admin (menu hidden for user EUMADE4ALL; can be removed in 2020)
             if(getUser().isAdmin() && getUser().getId() != 12476)
             {
-                DefaultSubMenu adminSubmenu = new DefaultSubMenu("Admin");
-                adminSubmenu.addElement(new DefaultMenuItem("Save", "fa fa-fw fa-sitemap", "/lw/admin/organisations.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem("Banlist", "fa fa-fw fa-area-chart", "/lw/admin/banlist.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem("IP Requests", "fa fa-line-chart", "/lw/admin/requests.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem("System Tools", "fa fa-fw fa-language", "/lw/admin/systemtools.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem("Admin Messages", "fa fa-fw fa-language", "/lw/admin/adminmsg.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem("News", "fa fa-fw fa-language", "/lw/admin/adminnews.jsf"));
+                DefaultSubMenu adminSubmenu = new DefaultSubMenu(UtilBean.getLocaleMessage("admin"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("organisations"), "fa fa-fw fa-sitemap", "/lw/admin/organisations.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("banlist"), "fa fa-fw fa-area-chart", "/lw/admin/banlist.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("ip_requests"), "fa fa-fw fa-line-chart", "/lw/admin/requests.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("system_tools"), "fa fa-fw fa-language", "/lw/admin/systemtools.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("admin_messages_Title"), "fa fa-fw fa-language", "/lw/admin/adminmsg.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("news"), "fa fa-fw fa-language", "/lw/admin/adminnews.jsf"));
                 model.addElement(adminSubmenu);
             }
 

@@ -5,16 +5,16 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.tagsTitle}" />
+	<ui:param name="pageTitle" value="#{msg.myTagsTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="#{msg.tagsTitle}" url="myhome/tags.jsf#"/>
+		<p:menuitem value="#{msg.myTagsTitle}" url="myhome/tags.jsf#"/>
 	</ui:define>
 	<ui:define name="center_layout">
 		<h:form prependId="false">
 			<p:dataTable var="tag" value="#{userBean.user.tags}" id="tag_table">
 				<f:facet name="header">
-					#{msg.tagsTitle}
+					#{msg.myTagsTitle}
 				</f:facet>
 				<p:column style="width:20%">
 					<f:facet name="header">

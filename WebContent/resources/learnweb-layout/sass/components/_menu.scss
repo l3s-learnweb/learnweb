@@ -1,67 +1,145 @@
-.ui-lwmenu.ui-panelmenu {
+.ui-lwmenu {
   padding: 0;
+  width: auto;
   list-style-type: none;
 
-  /* Adjust icons to add more space around caret icon */
-  .ui-panelmenu-header {
-    > span.ui-icon {
-      min-width: 22px;
-      height: 31px;
-      line-height: 2;
-      margin-right: 2px;
-      margin-top: -14px;
+  .ui-lwmenu-panel {
+    .ui-lwmenu-panel-header {
+      cursor: pointer;
+      position: relative;
+      background-color: $primaryColor;
+      font-weight: 700;
+      margin-top: 4px;
+      @include transition(background-color .3s);
+
+      a {
+        display: block;
+        padding: .5em .5em .5em 2.2em;
+      }
+
+      .ui-icon {
+        position: absolute;
+        top: 50%;
+        margin-top: -8px;
+      }
+
+      > span,
+      > a {
+        color: $primaryTextColor;
+      }
+
+      .ui-icon-triangle-1-s {
+        margin-top: -6px;
+        margin-left: 2px;
+        @include icon_override("\f107");
+      }
+
+      .ui-icon-triangle-1-e {
+        margin-top: -7px;
+        margin-left: 2px;
+        @include icon_override("\f105");
+      }
+
+      &.ui-state-hover {
+        background-color: $primaryColorDarker;
+      }
+
+      &.ui-state-active {
+        background-color: $primaryColorDarker;
+      }
+
+      &.ui-state-disabled {
+        cursor: default;
+
+        a {
+          cursor: default;
+        }
+      }
     }
   }
 
-  .ui-panelmenu-content {
-    border: 0;
+  .ui-menu-parent {
+    .ui-menu-list {
+      position: static;
+      margin-left: 10px;
+    }
+
+    > .ui-menuitem-link > .ui-icon {
+      left: 1.5em;
+    }
+
+    .ui-menuitem-link-hasicon {
+      padding-left: 2.8em;
+    }
+
+    .ui-lwmenu-icon.ui-icon {
+      left: .5em;
+    }
+
+    .ui-menu-parent {
+      .ui-icon {
+        min-width: 18px;
+      }
+    }
+  }
+
+  .ui-icon {
+    right: auto;
+    top: 0;
+    bottom: 0;
+    left: .5em;
+    position: static;
+    line-height: 2;
+    display: inline-block;
+    vertical-align: middle;
+    min-width: 22px;
+    height: 28px;
+    margin: auto 0;
+
+    &.ui-icon-empty {
+      visibility: hidden;
+    }
   }
 
   .ui-menuitem {
+    margin: 1px 0;
+    padding: 0;
+
     .ui-menuitem-link {
+      display: block;
+      outline: 0;
+      text-decoration: none;
+      font-weight: 400;
+      border: solid 1px transparent;
+      line-height: 16px;
+      cursor: pointer;
+      position: relative;
+      color: $menuitemTextColor;
       border-left: 4px solid transparent;
-      padding: 6px 8px;
-      color: #212529;
+      padding: 0 8px 0 0;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
 
       .ui-menuitem-icon {
-        float: none;
-        vertical-align: middle;
-        margin-right: 6px;
         color: #5b616a;
-        display: inline-block;
       }
 
       &.ui-state-hover {
-        background-color: #1D6833;
-        color: #fff;
+        background-color: $menuitemHoverBgColor;
+        color: $menuitemHoverTextColor;
         border-left-color: #4AA564;
 
         .ui-menuitem-icon {
           color: #fff;
         }
       }
-    }
 
-    /* Adjust icons to add more space around caret icon */
-    .ui-menuitem-link {
-      padding: 0 8px 0 4px;
-
-      > span.ui-icon {
-        min-width: 24px;
-        height: 28px;
-        line-height: 2;
-        margin-right: 2px;
-
-        &.ui-panelmenu-icon {
-          margin-right: 0;
-        }
-      }
-
-      > .ui-menuitem-text {
-        padding: 6px 0;
+      .ui-menuitem-text {
+        float: none;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 6px 0 6px 2px;
       }
     }
   }
