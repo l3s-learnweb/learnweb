@@ -6,8 +6,12 @@
   }
 }
 
+.breadcrumbs ul span {
+  padding: 5px 15px;
+  display: block;
+}
 
-.command-button {
+.command-button { /* TODO: it should be moved to components, probably components/buttons.scss (you can rename `organization` to `buttons`) */
   background: $primaryButtonBgColor;
   color: $primaryButtonTextColor;
   border: .1rem solid $primaryButtonBgColor;
@@ -22,6 +26,6 @@
   }
 }
 
-.w-30 {
+.w-30 { /* TODO: it should be moved to utils */
   width: 30% !important;
 }

@@ -1,19 +1,19 @@
-.center-header {
+.center-header { /* TODO: this should be moved to layouts/general.scss */
   background-color: #eee;
   padding: 0.5rem;
 
-  ul a {
+  ul a { /* TODO: should be moved to existing ul section below */
     display: block;
   }
 
   a {
-    &.active, &:hover {
+    &.active, &:hover { /* TODO: if you use multiple selectors, separate them with new line */
       background-color: #EEE;
       text-decoration: none;
     }
   }
 
-  li {
+  li { /* TODO: should be moved to existing ul section below (li can't be used without ul) */
     float: left;
     list-style-type: none;
   }
@@ -34,19 +34,14 @@
   }
 }
 
-.breadcrumbs ul span {
-  padding: 5px 15px;
-  display: block;
-}
-
-.green-tittle {
+.green-tittle { /* TODO: we need to avoid such classes */
   font-size: 2rem;
   font-weight: 100;
   color: $green;
 }
 
 
-.noBorders tr, .noBorders td {
+.noBorders tr, .noBorders td { /* TODO: should be renamed to no-borders */
   background: none !important;
   border: none !important;
 }
@@ -64,7 +59,7 @@
   }
 }
 
-.breadCrumb {
+.breadCrumb { /* TODO: should be moved to layouts/general.scss, also merged with existing class .breadcrumbs */
   ul {
     li:last-child {
       pointer-events: none;

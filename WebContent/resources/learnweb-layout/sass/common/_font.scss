@@ -11,7 +11,7 @@
 }
 
 //noinspection CssNoGenericFontName
-[class^="lw-icon-"]::before,
+[class^="lw-icon-"]::before, /* TODO: we need to make it fully compatible with other icons */
 [class*=" lw-icon-"]::before {
   font-family: "learnweb";
   font-style: normal;

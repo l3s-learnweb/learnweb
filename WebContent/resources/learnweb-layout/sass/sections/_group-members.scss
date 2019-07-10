@@ -1,0 +1,34 @@
+.section-group-members {
+  .member_username { /* TODO: don't use _ for class names, use only - to split words */
+    font-size: 1rem;
+    margin-bottom: 0px;
+    margin-top: 0.4rem;
+  }
+
+  .member_username_small { /* TODO: don't use _ for class names, use only - to split words */
+    font-size: 0.8rem;
+    margin-bottom: 1px;
+  }
+
+  .members_panelgrid { /* TODO: don't use _ for class names, use only - to split words */
+    padding: 10px;
+    position: relative;
+    float: left;
+    text-align: center;
+    width: 130px;
+    height: 130px;
+    transition: box-shadow 0.3s;
+
+    > .member_star { /* TODO: don't use _ for class names, use only - to split words */
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+    }
+
+    &:HOVER { /* TODO: why is it UPPERCASE? MASLE4KO. */
+      cursor: pointer;
+      box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #bfbfbf; /* TODO: colors should be defined via variables */
+    }
+  }
+}

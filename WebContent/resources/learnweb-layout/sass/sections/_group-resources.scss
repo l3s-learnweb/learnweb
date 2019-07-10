@@ -134,7 +134,7 @@
       }
 
       button {
-        background: url("#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
+        background: url("\#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
         background-size: 16px 16px !important;
         height: 19px;
         border: none !important;

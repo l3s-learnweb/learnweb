@@ -1,4 +1,4 @@
-.landing-wrapper {
+.landing-wrapper { /* TODO: make it section like (wrap into single class) */
   background: white;
   overflow-x: hidden;
 
@@ -36,7 +36,7 @@
   }
 
   .header {
-    background: url("/resources/frontpage/luh.jpg");
+    background: url("/resources/frontpage/luh.jpg"); /* TODO: you should use format like url("\#{resource['main-template/img/search.png']}") */
     padding: 5rem 0;
     background-size: cover;
 
@@ -174,7 +174,7 @@
 
 }
 
-@media (max-width: 576px) {
+@media (max-width: 576px) { /* TODO: should be replaced to @include media-breakpoint-down(sm) 8? */
   .landing-wrapper {
     .top-menu {
       .logo {
@@ -224,7 +224,7 @@
   }
 }
 
-@media (min-width: 577px) and (max-width: 768px) {
+@media (min-width: 577px) and (max-width: 768px) { /* TODO: you should use only one filter */
   .landing-wrapper {
     .top-menu {
       .logo {
