@@ -55,12 +55,12 @@
 
                     <p:commandLink styleClass="resource_command_link" update=":right_form" >
                         <f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
-                        <div class="members_panelgrid">
+                        <div class="members-panelgrid">
                             <img src="#{user.image}" />
                             <ui:fragment rendered="#{not empty user.credits}">
-                                <div class="member_star"></div>
+                                <div class="member-star"></div>
                             </ui:fragment>
-                            <div class="member_username_small">
+                            <div class="member-username-small">
                                 #{user.username}
                             </div>
                         </div>

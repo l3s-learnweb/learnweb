@@ -1,39 +1,3 @@
-.center-header { /* TODO: this should be moved to layouts/general.scss */
-  background-color: #eee;
-  padding: 0.5rem;
-
-  ul a { /* TODO: should be moved to existing ul section below */
-    display: block;
-  }
-
-  a {
-    &.active, &:hover { /* TODO: if you use multiple selectors, separate them with new line */
-      background-color: #EEE;
-      text-decoration: none;
-    }
-  }
-
-  li { /* TODO: should be moved to existing ul section below (li can't be used without ul) */
-    float: left;
-    list-style-type: none;
-  }
-
-  ul {
-    margin: -0.5rem;
-    padding: 0px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    background-color: rgb(230, 230, 230);
-    clear: both;
-
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
-    }
-  }
-}
-
 .green-tittle { /* TODO: we need to avoid such classes */
   font-size: 2rem;
   font-weight: 100;
@@ -41,7 +5,7 @@
 }
 
 
-.noBorders tr, .noBorders td { /* TODO: should be renamed to no-borders */
+.no-borders tr, .no-borders td {
   background: none !important;
   border: none !important;
 }
@@ -56,13 +20,5 @@
 .p-pn-1rem {
   .ui-panel-content {
     padding: 1rem !important;
-  }
-}
-
-.breadCrumb { /* TODO: should be moved to layouts/general.scss, also merged with existing class .breadcrumbs */
-  ul {
-    li:last-child {
-      pointer-events: none;
-    }
   }
 }

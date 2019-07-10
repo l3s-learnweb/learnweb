@@ -38,21 +38,21 @@
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
 
         <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
-                         update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
+                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();"/>
         <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
-                         update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
+                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
         <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
-                         update=":right_pane_wrapper :growl" oncomplete="update_header();"/>
+                         update=":right_pane_wrapper :right_pane  :growl" oncomplete="update_header();"/>
         <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
-                         update=":breadcrumbs :resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl"
+                         update=":breadcrumbs :resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
                          oncomplete="update_header();resourceDND();"/>
         <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesView :paginator :resourcesFilters :right_pane_wrapper :growl"
+                         update=":resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
                          oncomplete="resourceDND();update_header();"/>
         <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
-                         update=":right_pane_wrapper :growl" oncomplete="update_header()"/>
+                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
         <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                         update=":right_pane_wrapper :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
+                         update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
     </h:form>
 
     <div class="center-header" id="group_header">

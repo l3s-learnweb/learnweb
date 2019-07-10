@@ -33,18 +33,18 @@
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
 
             <p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}"
-                             update=":folder_layout_options :breadcrumb :context-menu :resourcesView :right_pane_wrapper :growl"
+                             update=":folder_layout_options :breadcrumb :context-menu :resourcesView :right_pane_wrapper :right_pane :growl"
                              oncomplete="resourceDND();"/>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}"
-                             update=":right_pane_wrapper :growl" oncomplete="resourceDND(); "/>
+                             update=":right_pane_wrapper :right_pane :growl" oncomplete="resourceDND(); "/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
-                             update=":breadcrumb :resourcesView :right_pane_wrapper :growl " oncomplete="resourceDND();"/>
+                             update=":breadcrumb :resourcesView :right_pane_wrapper :right_pane :growl " oncomplete="resourceDND();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}"
-                             update=":right_pane_wrapper :growl" />
+                             update=":right_pane_wrapper :right_pane :growl" />
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}"
-                             update=":right_pane_wrapper :growl" />
+                             update=":right_pane_wrapper :right_pane :growl" />
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                             update=":right_pane_wrapper :resourcesView :growl" oncomplete="resourceDND();"/>
+                             update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="resourceDND();"/>
         </h:form>
 
         <div class="center-header" id="group_header">
@@ -416,10 +416,10 @@
         </h:panelGroup>
 
 
-   <!--     <script type="text/javascript">
-            $("#center_pane").prepend($("#group_header"));
+        <script type="text/javascript">
+           // $("#center_pane").prepend($("#group_header"));
             update_header();
-        </script>-->
+        </script>
     </p:panel>
 </ui:define>
 

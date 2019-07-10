@@ -6,9 +6,16 @@
   }
 }
 
-.breadcrumbs ul span {
-  padding: 5px 15px;
-  display: block;
+.breadcrumbs {
+  ul {
+    span {
+      padding: 5px 15px;
+      display: block;
+    }
+    li:last-child {
+      pointer-events: none;
+    }
+  }
 }
 
 .command-button { /* TODO: it should be moved to components, probably components/buttons.scss (you can rename `organization` to `buttons`) */
@@ -28,4 +35,39 @@
 
 .w-30 { /* TODO: it should be moved to utils */
   width: 30% !important;
+}
+
+.center-header {
+  background-color: #eee;
+  padding: 0.5rem;
+
+  a {
+    &.active,
+    &:hover {
+      background-color: #EEE;
+      text-decoration: none;
+    }
+  }
+
+  ul {
+    margin: -0.5rem;
+    padding: 0px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background-color: rgb(230, 230, 230);
+    clear: both;
+
+    a {
+      display: block;
+    }
+    li {
+      float: left;
+      list-style-type: none;
+    }
+    &:after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
 }

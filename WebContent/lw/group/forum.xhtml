@@ -82,7 +82,7 @@
 						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 					<br/>
-					<h:outputText value="#{msg.by}"/>
+					<h:outputText value="#{msg.by} "/>
 					<h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
 				</p:column>
 
