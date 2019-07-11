@@ -320,7 +320,9 @@ public class BounceManager extends Observable
 
     private void addToDB(String originalRecipient, Date date, String code, String description)
     {
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bounces (address, timereceived, code, description) VALUES(?, ?, ?, ?)"))
+        final String query = "INSERT INTO lw_bounces (address, timereceived, code, description) VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE timereceived = VALUES(timereceived), code = VALUES(code), description = VALUES(description)";
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement(query))
         {
             insert.setString(1, originalRecipient);
             insert.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
