@@ -109,7 +109,7 @@
 		<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
 			<p:panel>
 				Links to the resources that you have submitted:
-				<ul style="margin-bottom:0.5rem">
+				<ul>
 					<ui:repeat var="submission" value="#{submissionBean.pastSubmissions}">
 						<ui:repeat var="res" value="#{submission.submittedResources}">
 							<li>
@@ -134,7 +134,6 @@
 					</ui:repeat>
 				</ul>
 			</p:panel>
-			<br/>
 		</ui:fragment>
 
 
@@ -282,13 +281,13 @@
 		</p:dialog>
 		
 
-		<h:panelGroup  id="submissions" layout="block" style="margin-bottom: 30px;">
+		<h:panelGroup  id="submissions" layout="block">
 			<div>
 				<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 			</div>
 			<h:panelGroup id="past_submissions" layout="block" rendered="#{not empty submissionBean.pastSubmissions}">
 				<div class="submission_header">
-					<div style="margin-top:10px;"><h1>#{msg['Submission.past_submissions']} (${submissionBean.pastSubmissions.size()})<span
+					<div><h1>#{msg['Submission.past_submissions']} (${submissionBean.pastSubmissions.size()})<span
 								class="icon_wrapper"><i class="fa fa-caret-right" /></span></h1></div>
 				</div>
 				<div class="submission_cards">
@@ -299,7 +298,7 @@
 			</h:panelGroup>
 			<h:panelGroup id="current_submissions" layout="block" rendered="#{not empty submissionBean.currentSubmissions}">
 				<div class="submission_header">
-					<div style="margin-top:10px;"><h1>#{msg['Submission.current_submissions']} (${submissionBean.currentSubmissions.size()})<span
+					<div><h1>#{msg['Submission.current_submissions']} (${submissionBean.currentSubmissions.size()})<span
 								class="icon_wrapper"><i class="fa fa-caret-right" /></span></h1></div>
 				</div>
 				<div class="submission_cards">
@@ -310,7 +309,7 @@
 			</h:panelGroup>
 			<h:panelGroup id="future_submissions" layout="block" rendered="#{not empty submissionBean.futureSubmissions}">
 				<div class="submission_header">
-					<div style="margin-top:10px;"><h1>#{msg['Submission.future_submissions']} (${submissionBean.futureSubmissions.size()})<span
+					<div><h1>#{msg['Submission.future_submissions']} (${submissionBean.futureSubmissions.size()})<span
 								class="icon_wrapper"><i class="fa fa-caret-right" /></span> </h1></div>
 				</div>
 				<div class="submission_cards">
@@ -321,7 +320,7 @@
 			</h:panelGroup>
 			<br/>
 			<h:form prependId="false">
-				<p:commandLink styleClass="ui-button in-form-button in-form-link-to-button" style="text-decoration:none;" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.admin || userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+				<p:commandLink styleClass="command-button" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.admin || userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 							process="@this" oncomplete="PF('create_submission_dialog').show();">
 							#{msg['Submission.create_new_submission']}
 				</p:commandLink>

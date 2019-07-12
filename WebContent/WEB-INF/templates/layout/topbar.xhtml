@@ -33,11 +33,11 @@
 
             <div class="col-sm-7 col-xl-7 col-lg-5 d-none d-sm-block">
                 <div class="">
-                    <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="searchform" id="searchform">
+                    <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="search-form" id="searchform">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}" />
                         <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
 
-                        <button id="searchbutton" class="searchbutton" title="#{msg.searchLabel}" type="submit">
+                        <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
                             <i class="lw-icon-search" aria-hidden="true"></i>
                         </button>
 

@@ -18,7 +18,7 @@
 </h:head>
 
 <h:body>
-	<div class="landing-wrapper">
+	<div class="landing">
 		<div id="top-menu" class="top-menu px-4 py-3 container">
 			<div class="row align-items-center">
 				<div class="col-4">
@@ -64,7 +64,7 @@
 						</div>
 					<div class="col-lg-8">
 
-						<h:form id="newsform" styleClass="newsform">
+						<h:form id="newsform" styleClass="news-form">
 
 							<h2>#{msg.announcements}</h2>
 							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="definition">

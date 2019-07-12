@@ -1,8 +1,10 @@
 .layout-wrapper {
-  .layout-topbar {
-    height: 60px !important;
+  ul{
+    list-style: none;
   }
-
+  .klapper_zu{
+    height: .9rem;
+  }
   .layout-main {
     position: relative;
     min-height: 100vh;

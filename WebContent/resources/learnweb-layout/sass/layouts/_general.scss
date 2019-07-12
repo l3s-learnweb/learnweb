@@ -18,24 +18,9 @@
   }
 }
 
-.command-button { /* TODO: it should be moved to components, probably components/buttons.scss (you can rename `organization` to `buttons`) */
-  background: $primaryButtonBgColor;
-  color: $primaryButtonTextColor;
-  border: .1rem solid $primaryButtonBgColor;
-  border-radius: .2rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 0.2rem 0.4rem;
 
-  &:hover {
-    background: $primaryButtonHoverBgColor;
-    border-color: $primaryButtonHoverBgColor;
-  }
-}
 
-.w-30 { /* TODO: it should be moved to utils */
-  width: 30% !important;
-}
+
 
 .center-header {
   background-color: #eee;

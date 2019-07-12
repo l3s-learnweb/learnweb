@@ -25,8 +25,7 @@
             <p:panel id="output1" header="#{msg.comments}">
                     <p>#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}"/></p>
                     <h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank"
-                            styleClass="mb-3 ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only in-form-button in-form-link-to-button "/>
-                    <br/>
+                            styleClass="command-button"/>
                     <h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
             </p:panel>
 

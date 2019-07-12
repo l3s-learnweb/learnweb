@@ -1,4 +1,4 @@
-.landing-wrapper { /* TODO: make it section like (wrap into single class) */
+.landing {
   background: white;
   overflow-x: hidden;
 
@@ -36,7 +36,7 @@
   }
 
   .header {
-    background: url("/resources/frontpage/luh.jpg"); /* TODO: you should use format like url("\#{resource['main-template/img/search.png']}") */
+    background: url("\#{resource['frontpage/luh.jpg']}");
     padding: 5rem 0;
     background-size: cover;
 
@@ -52,7 +52,7 @@
 
     }
 
-    .newsform {
+    .news-form {
       display: block;
       background: rgba(0, 0, 0, 0.9);
       color: $white;
@@ -174,8 +174,9 @@
 
 }
 
-@media (max-width: 576px) { /* TODO: should be replaced to @include media-breakpoint-down(sm) 8? */
-  .landing-wrapper {
+
+@include media-breakpoint-down(sm) {
+  .landing {
     .top-menu {
       .logo {
         width: 19rem;
@@ -195,7 +196,7 @@
         max-width: 20rem;
       }
 
-      .newsform {
+      .news-form {
         display: none;
       }
     }
@@ -224,8 +225,8 @@
   }
 }
 
-@media (min-width: 577px) and (max-width: 768px) { /* TODO: you should use only one filter */
-  .landing-wrapper {
+@media (min-width: 577px) {
+  .landing {
     .top-menu {
       .logo {
         width: 19rem;
@@ -245,7 +246,7 @@
         max-width: 20rem;
       }
 
-      .newsform {
+      .news-form {
         display: none;
       }
     }
@@ -275,8 +276,8 @@
 }
 
 
-@media (min-width: 769px) and (max-width: 992px) {
-  .landing-wrapper {
+@media (min-width: 769px) {
+  .landing {
     .top-menu {
       .logo {
         width: 19rem;
@@ -296,7 +297,7 @@
         max-width: 20rem;
       }
 
-      .newsform {
+      .news-form {
         display: none;
       }
     }
@@ -325,8 +326,8 @@
   }
 }
 
-@media (min-width: 993px) and (max-width: 1200px) {
-  .landing-wrapper {
+@media (min-width: 993px) {
+  .landing {
     .top-menu {
 
 
@@ -336,8 +337,15 @@
 
     }
 
-    .container {
-      max-width: 1000px;
+    .header {
+
+      .news-form {
+        display: block;
+      }
+    }
+
+    .hidden-news {
+      display: none;
     }
 
   }

@@ -1,0 +1,31 @@
+.imageupload-button {
+  display: flex;
+
+  .ui-fileupload-buttonbar {
+    width: fit-content;
+    padding: 0 !important;
+  }
+
+  .ui-button {
+    margin-right: 0 !important;
+  }
+
+  .ui-fileupload-content {
+    width: 100%;
+  }
+}
+
+.command-button {
+  background: $primaryButtonBgColor;
+  color: $primaryButtonTextColor;
+  border: .1rem solid $primaryButtonBgColor;
+  border-radius: .2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.2rem 0.4rem;
+
+  &:hover {
+    background: $primaryButtonHoverBgColor;
+    border-color: $primaryButtonHoverBgColor;
+  }
+}

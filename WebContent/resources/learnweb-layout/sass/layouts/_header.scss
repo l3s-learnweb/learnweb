@@ -27,7 +27,7 @@
     }
   }
 
-  .searchform { /* TODO: split the name to two parts, `search-form` should be */
+  .search-form {
     display: flex;
     width: 100%;
 
@@ -41,7 +41,7 @@
     }
   }
 
-  .searchbutton {
+  .search-button {
     width: 2.5rem;
     height: 2.5rem;
     border: none;
@@ -59,12 +59,14 @@
 
       &:hover {
         color: $primaryTextColor;
+        fill: $primaryTextColor;
       }
     }
 
     &:hover {
       background: #2E8540;
-      fill: white;
+      color: $primaryTextColor;
+      fill: $primaryTextColor;
     }
   }
 
