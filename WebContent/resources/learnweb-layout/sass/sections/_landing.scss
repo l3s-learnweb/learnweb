@@ -12,6 +12,13 @@
   }
 
   .top-menu {
+    .logo {
+      @include media-breakpoint-up(sm) {
+        width: 19rem;
+        margin: .5rem;
+      }
+    }
+
     ul {
       list-style: none;
     }
@@ -19,6 +26,10 @@
     .header-menu {
       padding-right: 1rem;
       margin-bottom: 0;
+
+      @include media-breakpoint-up(sm) {
+        margin-bottom: 0;
+      }
 
       a {
         padding: 1rem;
@@ -30,9 +41,7 @@
           border-color: $main-teal;
         }
       }
-
     }
-
   }
 
   .header {
@@ -45,11 +54,16 @@
       background-color: white;
       max-width: 18rem;
 
+      @include media-breakpoint-up(sm) {
+        display: block;
+        margin: 0 auto;
+        max-width: 20rem;
+      }
+
       input {
         margin: 1rem 0;
         width: 100%;
       }
-
     }
 
     .news-form {
@@ -58,6 +72,10 @@
       color: $white;
       border-radius: 0.2rem;
       padding-bottom: 1rem;
+
+      @include media-breakpoint-down(lg) {
+        display: none;
+      }
 
       > h2 {
         font-size: 1rem;
@@ -79,14 +97,15 @@
         color: rgba(255, 255, 255, 0.6);
       }
     }
-
-
   }
 
   .hidden-news {
-
     display: none;
     padding: 1rem;
+
+    @include media-breakpoint-down(lg) {
+      display: block;
+    }
 
     span {
       font-size: 1rem;
@@ -117,24 +136,37 @@
     .ui-widget-content {
       border: none;
     }
-
   }
 
 
   .about {
     padding: 3rem 0;
 
+    h2 {
+      @include media-breakpoint-up(sm) {
+        text-align: center;
+      }
+    }
+
     .about-content {
       color: $main-dark-green-color;
     }
-
   }
 
 
   .subscriptions {
     background-color: $main-teal;
 
+    h2 {
+      @include media-breakpoint-up(sm) {
+        text-align: center;
+      }
+    }
+
     .subscription-box {
+      @include media-breakpoint-up(sm) {
+        margin: 2rem;
+      }
 
       .subscription-header {
         background-color: $main-dark-green-color;
@@ -155,198 +187,12 @@
           color: $main-dark-green-color;
         }
       }
-
     }
-
   }
 
   .footer {
     background-color: $main-dark-green-color;
     border-top: 0.2rem solid $white;
     color: $dividerColor;
-  }
-
-  * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-
-}
-
-
-@include media-breakpoint-down(sm) {
-  .landing {
-    .top-menu {
-      .logo {
-        width: 19rem;
-        margin: .5rem;
-      }
-
-      .header-menu {
-        margin-bottom: 0;
-      }
-
-    }
-
-    .header {
-      .header-content-panel {
-        display: block;
-        margin: 0 auto;
-        max-width: 20rem;
-      }
-
-      .news-form {
-        display: none;
-      }
-    }
-
-    .hidden-news {
-      display: block;
-    }
-
-    .about {
-      h2 {
-        text-align: center;
-      }
-    }
-
-    .subscriptions {
-      h2 {
-        text-align: center;
-      }
-
-      .subscription-box {
-        margin: 2rem;
-      }
-    }
-
-
-  }
-}
-
-@media (min-width: 577px) {
-  .landing {
-    .top-menu {
-      .logo {
-        width: 19rem;
-        margin: .5rem;
-      }
-
-      .header-menu {
-        margin-bottom: 0;
-      }
-
-    }
-
-    .header {
-      .header-content-panel {
-        display: block;
-        margin: 0 auto;
-        max-width: 20rem;
-      }
-
-      .news-form {
-        display: none;
-      }
-    }
-
-    .hidden-news {
-      display: block;
-    }
-
-    .about {
-      h2 {
-        text-align: center;
-      }
-    }
-
-    .subscriptions {
-      h2 {
-        text-align: center;
-      }
-
-      .subscription-box {
-        margin: 2rem;
-      }
-    }
-
-
-  }
-}
-
-
-@media (min-width: 769px) {
-  .landing {
-    .top-menu {
-      .logo {
-        width: 19rem;
-        margin: .5rem;
-      }
-
-      .header-menu {
-        margin-bottom: 0;
-      }
-
-    }
-
-    .header {
-      .header-content-panel {
-        display: block;
-        margin: 0 auto;
-        max-width: 20rem;
-      }
-
-      .news-form {
-        display: none;
-      }
-    }
-
-    .hidden-news {
-      display: block;
-    }
-
-    .about {
-      h2 {
-        text-align: center;
-      }
-    }
-
-    .subscriptions {
-      h2 {
-        text-align: center;
-      }
-
-      .subscription-box {
-        margin: 2rem;
-      }
-    }
-
-
-  }
-}
-
-@media (min-width: 993px) {
-  .landing {
-    .top-menu {
-
-
-      .header-menu {
-        margin-bottom: 0;
-      }
-
-    }
-
-    .header {
-
-      .news-form {
-        display: block;
-      }
-    }
-
-    .hidden-news {
-      display: none;
-    }
-
   }
 }
