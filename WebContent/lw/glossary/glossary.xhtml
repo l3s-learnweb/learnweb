@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -15,7 +15,9 @@
 			<f:viewAction action="#{glossaryBean.onLoad()}" />
 		</f:metadata>
 	</ui:define>
-
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="#{msg['Glossary.glossary']}" url=""/>
+    </ui:define>
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
@@ -33,15 +35,15 @@
 						<p:ajax event="sort" oncomplete="groupRow()" />
 
 						<f:facet name="header">
-							<p:outputPanel>
+							<div class="row">
+							<p:outputPanel styleClass="col">
 								<p:autoUpdate />
-								<h:outputText value="#{msg['Glossary.search_all_field']} " />
-								<p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px"
+								<h:outputText value="#{msg['Glossary.search_all_field']}" styleClass="font-weight-light mr-2" style="color: #4AA564;" />
+								<p:inputText id="globalFilter"  onkeyup="PF('glossTable').filter()" style="width:150px"
 									placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
-                            <button type="button" onclick="openGlossForm();scrollToAnchor();" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton">
-                                <h:outputText value="#{msg['Glossary.add_new_entry']}"></h:outputText>
-                            </button>
+                            <p:commandButton type="button" onclick="openGlossForm();scrollToAnchor();" styleClass="mr-2" value="#{msg['Glossary.add_new_entry']}"/>
+							</div>
 						</f:facet>
 
 
@@ -134,8 +136,7 @@
 				</h:form>
 				
 				<h:form id="import_form" prependId="false">				
-                    <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"
-                              min-width="400" closable="true" responsive="true">
+                    <p:dialog header="Import glossary" widgetVar="excel_import_dialog"  closable="true" responsive="true">
                         <div class="p-grid">
                     		
 							<h:panelGroup rendered="#{userBean.moderator and false}" styleClass="p-col-12">
@@ -180,41 +181,41 @@
 
 				</h:form>
 				
-				<div id="glossform" style="display: none">
+				<p:panel header="#{msg['Glossary.add_new_entry']}" id="glossform" style="display: none">
 					<h:form id="glossary_add"  prependId="false">
 						<p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
 							<p:autoUpdate />
 						</p:growl>
 
-						<p:panelGrid id="grid" styleClass="centered-form" columns="3" style="border-style: none !important; margin: 0 auto;">
-							<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
-							<p:selectOneMenu id="topic_1" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}" editable="true">
+						<p:panelGrid id="grid" styleClass="centered-form" columns="3" >
+							<p:outputLabel for="topic_1" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 1 " />
+							<p:selectOneMenu id="topic_1" styleClass="w-100" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}" editable="true">
 								<f:selectItems value="#{glossaryBean.availableTopicOne}" />
 								<f:ajax listener="#{glossaryBean.changeTopicOne}" render="topic_2 topic_3" />
 							</p:selectOneMenu>
 							<p:message for="topic_1" />
 
-							<p:outputLabel for="topic_2" value="#{msg['Glossary.topic']} 2 " />
+							<p:outputLabel for="topic_2" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 2 " />
 							<h:panelGroup id="topic_2">
-								<p:selectOneMenu rendered="#{not empty glossaryBean.availableTopicTwo}" value="#{glossaryBean.formEntry.topicTwo}" editable="true">
+								<p:selectOneMenu  rendered="#{not empty glossaryBean.availableTopicTwo}" value="#{glossaryBean.formEntry.topicTwo}" editable="true">
 									<f:selectItems value="#{glossaryBean.availableTopicTwo}" />
 									<f:ajax listener="#{glossaryBean.changeTopicTwo}" render="topic_3" />
 								</p:selectOneMenu>
-								<p:inputText rendered="#{empty glossaryBean.availableTopicTwo}" value="#{glossaryBean.formEntry.topicTwo}" />
+								<p:inputText styleClass="w-100" rendered="#{empty glossaryBean.availableTopicTwo}" value="#{glossaryBean.formEntry.topicTwo}" />
 							</h:panelGroup>
 							<p:message for="topic_2" />
 
-							<p:outputLabel for="topic_3" value="#{msg['Glossary.topic']} 3 " />
+							<p:outputLabel for="topic_3" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 3 " />
 							<h:panelGroup id="topic_3">
-								<p:selectOneMenu rendered="#{not empty glossaryBean.availableTopicThree}" value="#{glossaryBean.formEntry.topicThree}" editable="true">
+								<p:selectOneMenu styleClass="w-100" rendered="#{not empty glossaryBean.availableTopicThree}" value="#{glossaryBean.formEntry.topicThree}" editable="true">
 									<f:selectItems value="#{glossaryBean.availableTopicThree}" />
 								</p:selectOneMenu>
-								<p:inputText rendered="#{empty glossaryBean.availableTopicThree}" value="#{glossaryBean.formEntry.topicThree}" />
+								<p:inputText rendered="#{empty glossaryBean.availableTopicThree}" styleClass="w-100" value="#{glossaryBean.formEntry.topicThree}" />
 							</h:panelGroup>
 							<h:outputText value="" />
 
-							<p:outputLabel value="#{msg['Glossary.Definition']} " for="description" />
-							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" />
+							<p:outputLabel value="#{msg['Glossary.Definition']} " for="description" styleClass="font-weight-bold" />
+							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield w-100" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" />
 							<p:message for="description" />
 						</p:panelGrid>
 
@@ -305,7 +306,7 @@
 						<br />
 
 					</h:form>
-				</div>
+				</p:panel>
 			</h:panelGroup>
 		</ui:fragment>
 

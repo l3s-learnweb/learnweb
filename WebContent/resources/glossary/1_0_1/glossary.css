@@ -1,11 +1,5 @@
-@media print {
-    #left_pane, .ui-column-filter{
-		display: none !important;
-	}
-}
-
 .ui-datatable-header {
-	border: 1px solid red !important;
+	background-color: gainsboro !important;
 }
 
 .glossary_footer_text{
