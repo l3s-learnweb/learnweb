@@ -1,0 +1,156 @@
+.section-glossary {
+  .ui-datatable-header {
+    background-color: gainsboro !important;
+  }
+
+  .glossary_footer_text {
+    font-size: 2rem;
+    font-weight: 100;
+    color: #489a83;
+    display: inline;
+    margin: 0;
+    text-align: justify !important;
+  }
+
+  .datatable_footer span {
+    font-size: 2rem;
+    font-weight: 100;
+    color: #489a83;
+    display: inline;
+    margin: 0;
+    text-align: justify !important;
+  }
+
+  .datatable_footer {
+    border: 1px solid #ccc;
+    background-color: #eee !important;
+    margin-bottom: 5px;
+    padding: 1rem !important;
+    display: block;
+    position: relative;
+  }
+
+  .glossary {
+    text-align: center;
+    margin-right: 1em;
+    border-spacing: 0px;
+    margin-bottom: 5rem;
+    margin-top: 1rem;
+  }
+
+  .glossary table {
+    width: auto !important;
+    min-width: 100%;
+  }
+
+  .myTable thead th {
+    border: none !important;
+    background: none !important;
+  }
+
+  #glossform {
+    margin: 0 auto;
+  }
+
+  .glossary td {
+    overflow: scroll !important;
+  }
+
+  .glossary th {
+    font-size: 1.5rem;
+    border: 1px solid grey;
+  }
+
+  .glossary td {
+    border: 1px solid grey;
+  }
+
+  .glossary tr td a {
+    font-weight: bold;
+    color: #489a83;
+  }
+
+  .data {
+    font-size: 1.5rem;
+  }
+
+  .inputfield, .inputarea {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    width: 15em !important;
+    outline: none;
+  }
+
+  .datatype {
+    font-size: 1.5rem;
+    margin-left: 1rem;
+  }
+
+  .filter {
+    font-size: 1.5rem;
+  }
+
+  #message {
+    display: none;
+  }
+
+  form input, .inputarea {
+    margin-left: 1rem;
+  }
+
+  hr {
+    margin-bottom: 5rem;
+  }
+
+  .dataDescription {
+    font-size: 1.5rem;
+    color: red;
+    text-align: right;
+  }
+
+  .italian {
+    text-align: right;
+  }
+
+  .termsHeading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    float: left;
+  }
+
+  /*both pages*/
+  #group_header {
+    margin: 1rem 5px 0px 5px;
+  }
+
+  #searchbutton {
+    margin-left: 0;
+  }
+
+  #formbutton {
+    margin-left: 0;
+    border: 5px solid #fff;
+  }
+
+  .grey_border {
+    margin: 0px auto;
+    text-align: center;
+  }
+
+
+  .pencil-icon {
+    background: url("/resources/icon/silk/pencil.png") no-repeat;
+  }
+
+  .centered-form {
+    margin: 0 auto;
+  }
+
+  /*change primefaces ui*/
+  .ui-state-hover, .ui-state-focus, .ui-state-active {
+    box-shadow: 0 0 0px 0px #fff !important;
+    background-color: #d1d1d1 !important;
+    background-image: none !important;
+    border: 1px solid #a8a8a8 !important;
+  }
+}

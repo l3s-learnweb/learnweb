@@ -19,12 +19,11 @@
         <p:menuitem value="#{msg['Glossary.glossary']}" url=""/>
     </ui:define>
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
 		
 		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 }">
 
-			<h:panelGroup id="main_component" layout="block">
+			<h:panelGroup id="main_component" styleClass="section-glossary" layout="block">
 
 				<h:form id="glossary_table_form" prependId="false">
 					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"                                 
