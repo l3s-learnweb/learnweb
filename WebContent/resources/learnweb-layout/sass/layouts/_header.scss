@@ -56,17 +56,17 @@
     i {
       color: $megamenuTextColor;
       font-size: 1.25rem;
-
-      &:hover {
-        color: $primaryTextColor;
-        fill: $primaryTextColor;
-      }
     }
 
     &:hover {
       background: #2E8540;
       color: $primaryTextColor;
       fill: $primaryTextColor;
+
+      i {
+        color: $primaryTextColor;
+        fill: $primaryTextColor;
+      }
     }
   }
 

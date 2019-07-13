@@ -12,14 +12,12 @@
       padding: 5px 15px;
       display: block;
     }
+
     li:last-child {
       pointer-events: none;
     }
   }
 }
-
-
-
 
 
 .center-header {
@@ -45,10 +43,12 @@
     a {
       display: block;
     }
+
     li {
       float: left;
       list-style-type: none;
     }
+
     &:after {
       content: '';
       display: block;

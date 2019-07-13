@@ -12,7 +12,7 @@
                     <div class="col-lg-6 col-xl-6 d-none d-sm-none d-md-none d-lg-block">
                         <div class="topbar-logo">
                             <a href="#{request.contextPath}/lw/myhome/welcome.jsf">
-                                <i class="lw-icon-logo text-white"></i>
+                                <i class="lw lw-logo text-white"></i>
                             </a>
                         </div>
                     </div>
@@ -26,9 +26,7 @@
                             </div>
                         </ui:fragment>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-sm-7 col-xl-7 col-lg-5 d-none d-sm-block">
@@ -38,35 +36,25 @@
                         <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
 
                         <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
-                            <i class="lw-icon-search" aria-hidden="true"></i>
+                            <i class="lw lw-search" aria-hidden="true"></i>
                         </button>
-
                     </form>
                 </div>
             </div>
 
             <div class="col-6 col-sm-3 col-lg-2">
-
-
-
-
                     <ui:fragment rendered="#{userBean.loggedIn}">
                         <div class="row align-items-center justify-content-end">
-
-
                             <div class="col-4 col-sm-5 col-xl-3">
                                 <a class="menu-button" href="#{request.contextPath}/lw/myhome/notification.jsf">
                                     <i class="fa fa-envelope"/>
                                 </a>
                             </div>
 
-
                             <div class="col-5 col-sm-6 col-xl-4">
                                 <a id="topbar-menu-button" class="topbar-menu-button" href="#">
                                     <img id="j_idt24" src="#{learnwebBean.getProfileImage(user)}" alt=""/>
                                 </a>
-
-
 
                                 <h:form>
                                     <ul id="topbar-usermenu" class="usermenu usermenu-overlay">
@@ -82,19 +70,13 @@
                                     </ul>
                                 </h:form>
                             </div>
-
                         </div>
                     </ui:fragment>
-
             </div>
-
-
         </div>
 
         <script type="text/javascript">
             var market = '#{userBean.localeCode}';
         </script>
-
     </div>
-
 </ui:composition>
