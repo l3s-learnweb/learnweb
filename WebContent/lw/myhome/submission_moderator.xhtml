@@ -25,106 +25,106 @@
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="update_header();load_editor(); " />
 		</h:form>
 
-		<h:outputStylesheet library="resource-submission" name="submit.css" />
-
 		<h:panelGroup id="resourcesView" layout="block">
 			<!-- dummy for right pane -->
 		</h:panelGroup>
-		
-		<h:panelGroup layout="block" class="submission_card">
-			<div class="submission_card_details">
-				<div class="submission_details">
-					<h2>
-						<b>#{submissionModeratorBean.submission.title} </b>					
-					</h2>
-					<span class="submission_description">#{submissionModeratorBean.submission.description}</span>
-				</div>
-				<div class="submission_time_block">
-					<table style="position: relative; float: right;">
-						<tr>
-							<td><span style="font-weight: bold;">#{msg['Submission.open_date']}:</span></td>
-							<td>
-								<h:outputText value="#{submissionModeratorBean.submission.openDatetime}">
-									<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
-								</h:outputText>
-							</td>
-						</tr>
-						<tr>
-							<td><span style="font-weight: bold;">#{msg['Submission.close_date']}:</span></td>
-							<td>
-								<h:outputText value="#{submissionModeratorBean.submission.closeDatetime}">
-									<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
-								</h:outputText>
-							</td>
-						</tr>
-						<tr>
-							<td><span style="font-weight: bold;">#{msg.course}: </span></td>
-							<td><h:outputText value="#{submissionModeratorBean.submission.course.title}" />
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</h:panelGroup>
-		<h:panelGroup layout="block" id="user_submissions">
-		<p:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-			<div class="submission_card">
 
-				<div class="submission_card_header">
-					<div class="submission_panel_avatar"><img src="/resources/image/no_profile.jpg"/></div>
-
-					<!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
-					<h3>#{userSubmission.user.username} </h3>
-					<h:form prependId="false">
-						<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
-									   process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
-							<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-							<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
-						</p:commandLink>
-						<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{not userSubmission.submitStatus}"
-									   process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
-							<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-							<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
-						</p:commandLink>
-					</h:form>
+		<h:panelGroup styleClass="section-resource-submission" layout="block">
+			<h:panelGroup layout="block" class="submission_card">
+				<div class="submission_card_details">
+					<div class="submission_details">
+						<h2>
+							<b>#{submissionModeratorBean.submission.title} </b>
+						</h2>
+						<span class="submission_description">#{submissionModeratorBean.submission.description}</span>
+					</div>
+					<div class="submission_time_block">
+						<table style="position: relative; float: right;">
+							<tr>
+								<td><span style="font-weight: bold;">#{msg['Submission.open_date']}:</span></td>
+								<td>
+									<h:outputText value="#{submissionModeratorBean.submission.openDatetime}">
+										<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td><span style="font-weight: bold;">#{msg['Submission.close_date']}:</span></td>
+								<td>
+									<h:outputText value="#{submissionModeratorBean.submission.closeDatetime}">
+										<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td><span style="font-weight: bold;">#{msg.course}: </span></td>
+								<td><h:outputText value="#{submissionModeratorBean.submission.course.title}" />
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
-				<h:panelGroup class="submission_card_resources" layout="block">
-					<hr/>
-					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
-						<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
-								<p:repeat var="res" value="#{userSubmission.resources}" >
-				
-									<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-										<div class="resource-block">
-				
-											<div class="resource-preview">
-												<div class="resource-preview-wrapper">
-													<div class="resource-preview-wrapper2">
-														<div class="resource-preview-block"></div>
-														<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+			</h:panelGroup>
+			<h:panelGroup layout="block" id="user_submissions">
+				<p:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
+					<div class="submission_card">
+
+						<div class="submission_card_header">
+							<div class="submission_panel_avatar"><img src="/resources/image/no_profile.jpg"/></div>
+
+							<!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
+							<h3>#{userSubmission.user.username} </h3>
+							<h:form prependId="false">
+								<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
+											   process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
+									<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+									<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
+								</p:commandLink>
+								<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{not userSubmission.submitStatus}"
+											   process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
+									<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+									<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
+								</p:commandLink>
+							</h:form>
+						</div>
+						<h:panelGroup class="submission_card_resources" layout="block">
+							<hr/>
+							<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+								<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
+									<p:repeat var="res" value="#{userSubmission.resources}" >
+
+										<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+											<div class="resource-block">
+
+												<div class="resource-preview">
+													<div class="resource-preview-wrapper">
+														<div class="resource-preview-wrapper2">
+															<div class="resource-preview-block"></div>
+															<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+														</div>
 													</div>
 												</div>
-											</div>
-				
-											<div class="resource-title">
-												<div class="resource-title-wrapper">
-													<div class="resource-title-text">
-														<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-														<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+
+												<div class="resource-title">
+													<div class="resource-title-wrapper">
+														<div class="resource-title-text">
+															<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+															<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+														</div>
 													</div>
 												</div>
+
 											</div>
-				
-										</div>
-									</h:panelGroup>
-								</p:repeat>
+										</h:panelGroup>
+									</p:repeat>
+								</h:panelGroup>
+							</h:panelGroup>
 						</h:panelGroup>
-					</h:panelGroup>				
-				</h:panelGroup>
-			</div>
-		</p:repeat>
+					</div>
+				</p:repeat>
+			</h:panelGroup>
+			<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 		</h:panelGroup>
-		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 	</ui:define>
 	<!--<ui:define name="right_layout">
 		<ui:decorate template="/templates/resources/right_pane.xhtml">

@@ -1,0 +1,206 @@
+.section-forum {
+  /*both pages*/
+
+  #forum_post_table tr td:first-child a {
+    font-weight: bold;
+    color: #489a83;
+  }
+
+  #forum_table tr td {
+    &:first-child {
+      a, + td a {
+        font-weight: bold;
+        color: #489a83;
+      }
+    }
+
+    &:last-child a {
+      font-weight: bold;
+      color: #489a83;
+    }
+  }
+
+  #center_header_form a {
+    padding: 6px 12px;
+  }
+
+  #new_topic, #reply {
+    margin-top: 2rem;
+  }
+
+  .grey_border {
+    margin-bottom: 2rem;
+    overflow: auto;
+  }
+
+  .save_button {
+    margin-top: 1rem;
+  }
+
+  /*change primefaces ui*/
+
+  .ui-selectonemenu {
+    .ui-selectonemenu-label, .ui-selectonemenu-trigger {
+      border: none !important;
+    }
+  }
+
+  .ui-selectonemenu-item .ui-selectonemenu-list-item {
+    &:hover, &:focus {
+      border: none !important;
+    }
+  }
+
+  .ui-selectonemenu-panel .ui-selectonemenu-list-item {
+    border: 1px solid #ffffff;
+  }
+
+  .ui-shadow {
+    box-shadow: none;
+  }
+
+  /*
+  .ui-state-active, .ui-state-highlight{
+      background-image:none !important;
+      background-color:#d1d1d1 !important;
+      color:#4f4f4f !important;
+      text-shadow:none !important;
+      border:1px solid #8F8F8F !important;
+  }
+  .ui-state-hover, .ui-state-focus{
+      box-shadow:none !important;
+      border:1px solid #a8a8a8 !important;
+      background-color:#d1d1d1 !important;
+      background-image:none !important;
+      color:#4f4f4f !important;
+  }
+  */
+
+  .ui-corner-right {
+    border-radius: 0;
+    border-right: 1px solid #a8a8a8;
+  }
+
+  /*forum_page*/
+
+  #new_topic_table, #answer_table {
+    font-size: 1rem;
+    width: 100%;
+    min-width: 300px !important;
+    /* doesn't work?!*/
+  }
+
+  .width_10 {
+    width: 10%;
+  }
+
+  .width_30 {
+    width: 30%;
+  }
+
+  #post_message {
+    margin-top: 10px;
+  }
+
+  #post_category {
+    vertical-align: middle;
+  }
+
+  #post_topic {
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    outline: none;
+  }
+
+  .category {
+    width: 30% !important;
+
+    input {
+      width: 95% !important;
+    }
+  }
+
+  /*forum_post_page*/
+  #forum_post_table tr {
+    th:first-child {
+      width: 13%;
+      min-width: 100px !important;
+      /* doesn't work?!*/
+    }
+
+    td {
+      &:first-child {
+        width: 13%;
+        min-width: 100px !important;
+        /* doesn't work?!*/
+        vertical-align: top;
+
+        div {
+          margin-bottom: 1rem;
+        }
+      }
+
+      &:last-child {
+        vertical-align: top;
+      }
+    }
+  }
+
+  .post_title {
+    border-bottom: 1px solid #a8a8a8;
+    padding: 1rem 0;
+    margin-top: -4px;
+  }
+
+  /*quote, edit, clear buttons*/
+  .post_button a {
+    padding: 0.2rem 0.8rem;
+    margin-left: 0.5rem;
+  }
+
+  .post_text {
+    position: relative;
+    min-height: 7rem;
+    padding-bottom: 6rem;
+    margin-bottom: -4px;
+    margin-top: 0.4rem;
+  }
+
+  .post_button {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 0.6rem 0;
+    box-sizing: border-box;
+    text-align: right;
+    border-top: 1px solid rgb(168, 168, 168);
+  }
+
+  .post_info {
+    float: left;
+    line-height: 2.4rem;
+  }
+
+  .post_quote .post_quote {
+    background-color: rgb(187, 187, 187) !important;
+  }
+
+  /* These values have to be set when the style tags in forumPostBean are changed
+  .post_quote {
+  }
+  .post_quote_name{
+  }
+  */
+
+  .new-topic-date {
+    font-weight: bold;
+  }
+
+  .new-topic-title {
+    background: url("\#{resource['main-template/img/message.png']}") left no-repeat;
+    background-size: 18px 18px;
+    padding-left: 26px;
+  }
+}

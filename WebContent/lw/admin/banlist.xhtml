@@ -15,7 +15,6 @@
 	</ui:define>
 	
 	<ui:define name="center_layout">
-	<h:outputScript library="admin" name="banlist.js" target="head" />
         <ui:fragment>
             <div class="row" >
                 <div class="col-12">
@@ -193,7 +192,15 @@
 
 		</p:panel>
 
-		<!--<p:panel header="#{msg.banlist}"></p:panel>-->
+		<script type="text/javascript">
+			function setname(name) {
+				formObj = document.getElementById("banformdialog");
+				nameObj = formObj.elements.item(0);
+				nameObj.value = name;
+				radioObj = formObj.elements.item(0);
+				radioObj.checked = true;
+			}
+		</script>
 
 	</ui:define>
 </ui:composition>

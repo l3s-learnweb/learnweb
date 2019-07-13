@@ -23,8 +23,6 @@
 		<script type="text/javascript">
 			var googleSignInEnabled = #{groupLinksBean.group.googleDocsSignInEnabled};
 		</script>
-		<h:outputScript library="group" name="links.js" target="head"/>
-		
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{groupLinksBean.group}" />
 			<ui:param name="active" value="links" />
@@ -190,6 +188,48 @@
 		
 		<h:form style="display:none;">	
 			<p:remoteCommand actionListener="${groupLinksBean.saveGmailId()}" name="saveGmailId" process="@this"/>
-		</h:form>	
+		</h:form>
+
+		<script type="text/javascript">
+			function onLinkClick(element) {
+				if(googleSignInEnabled)
+				{
+					var googleAuthObj = gapi.auth2.getAuthInstance();
+					googleAuthObj.signIn().then(
+							function(success)
+							{
+								window.open(element.href, '_blank');
+								onSignIn(googleAuthObj.currentUser.get());
+							}
+					);
+				}
+				else
+					return true;
+				return false;
+			}
+
+			function onSignIn(googleUser) {
+				var profile = googleUser.getBasicProfile();
+				saveGmailId([{name:'gmail_id', value:profile.getEmail()}]);
+			}
+
+			$(document).ready(function(){
+				if(googleSignInEnabled)
+				{
+					gapi.load('auth2', function() {
+
+						gapi.auth2.init(
+								{
+									fetch_basic_profile: true,
+									scope:'https://www.googleapis.com/auth/plus.login'
+								}).then(
+								function (){
+									console.log('init google sign in');
+								});
+					});
+
+				}
+			});
+		</script>
 	</ui:define>
 </ui:composition>

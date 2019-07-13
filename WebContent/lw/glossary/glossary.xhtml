@@ -19,8 +19,8 @@
         <p:menuitem value="#{msg['Glossary.glossary']}" url=""/>
     </ui:define>
 	<ui:define name="center_layout">
-		<h:outputScript library="glossary" name="glossary.js" />
-		
+		<h:outputScript library="learnweb-layout" name="js/glossary.js"/>
+
 		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 }">
 
 			<h:panelGroup id="main_component" styleClass="section-glossary" layout="block">

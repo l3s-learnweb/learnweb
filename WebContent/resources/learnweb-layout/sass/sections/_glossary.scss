@@ -12,15 +12,6 @@
     text-align: justify !important;
   }
 
-  .datatable_footer span {
-    font-size: 2rem;
-    font-weight: 100;
-    color: #489a83;
-    display: inline;
-    margin: 0;
-    text-align: justify !important;
-  }
-
   .datatable_footer {
     border: 1px solid #ccc;
     background-color: #eee !important;
@@ -28,6 +19,15 @@
     padding: 1rem !important;
     display: block;
     position: relative;
+
+    span {
+      font-size: 2rem;
+      font-weight: 100;
+      color: #489a83;
+      display: inline;
+      margin: 0;
+      text-align: justify !important;
+    }
   }
 
   .glossary {
@@ -36,11 +36,11 @@
     border-spacing: 0px;
     margin-bottom: 5rem;
     margin-top: 1rem;
-  }
 
-  .glossary table {
-    width: auto !important;
-    min-width: 100%;
+    table {
+      width: auto !important;
+      min-width: 100%;
+    }
   }
 
   .myTable thead th {
@@ -52,22 +52,24 @@
     margin: 0 auto;
   }
 
-  .glossary td {
-    overflow: scroll !important;
-  }
+  .glossary {
+    td {
+      overflow: scroll !important;
+    }
 
-  .glossary th {
-    font-size: 1.5rem;
-    border: 1px solid grey;
-  }
+    th {
+      font-size: 1.5rem;
+      border: 1px solid grey;
+    }
 
-  .glossary td {
-    border: 1px solid grey;
-  }
+    td {
+      border: 1px solid grey;
+    }
 
-  .glossary tr td a {
-    font-weight: bold;
-    color: #489a83;
+    tr td a {
+      font-weight: bold;
+      color: #489a83;
+    }
   }
 
   .data {
@@ -136,7 +138,6 @@
     margin: 0px auto;
     text-align: center;
   }
-
 
   .pencil-icon {
     background: url("/resources/icon/silk/pencil.png") no-repeat;

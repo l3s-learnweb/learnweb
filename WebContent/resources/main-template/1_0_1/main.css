@@ -1268,7 +1268,7 @@ hr {
 .member_star {
 	height: 40px;
 	width: 28px;
-	background: transparent url("#{resource['group/member_badge.gif']}") repeat scroll 0% 0% / cover;
+	background: transparent url("#{resource['main-template/img/member_badge.gif']}") repeat scroll 0% 0% / cover;
 }
 /*taken from new_main2.css*/
 

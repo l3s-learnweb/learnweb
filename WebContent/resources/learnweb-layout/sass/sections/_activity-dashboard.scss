@@ -1,0 +1,27 @@
+.section-activity-dashboard {
+  #advanced_options {
+    color: black;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    display: block;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+      color: #92948f;
+    }
+  }
+
+  #all_activities {
+    display: none;
+  }
+
+  .fa-angle-double-up.open {
+    transform: rotate(180deg);
+    transition: transform 0.2s linear;
+  }
+}
