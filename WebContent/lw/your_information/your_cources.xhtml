@@ -1,3 +1,4 @@
+<!-- after merging the new template rename this page to your_courses -->
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -18,7 +19,7 @@
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
 	                     style="margin-bottom:20px" tableStyle="table-layout: auto">
 	            <f:facet name="header">
-					<h:outputText value="#{msg['your_info.list_of_cources']}"/>
+					<h:outputText value="#{msg['courses']}"/>
 	            </f:facet>
 	
 	            <f:facet name="{Exporters}">

@@ -40,7 +40,7 @@
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_cources.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-address-book"></span>
 	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.cources_msg']}">
+                                                <h:outputFormat value="#{msg['your_info.courses_msg']}">
                                                     <f:param value="#{yourGeneralInfoBean.userCoursesCount}"/>
                                                 </h:outputFormat>
                                             </span>
@@ -81,7 +81,7 @@
 	                                        <span class="ui-menuitem-icon fa fa-mail-reply"></span>
 	                                        <span class="ui-menuitem-text">
                                                 <h:outputFormat value="#{msg['your_info.sent_messages_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
+                                                    <f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
                                                 </h:outputFormat>
                                             </span>
 	                                    </a>
@@ -90,8 +90,8 @@
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_messages.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-mail-forward"></span>
 	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.received_massages_msg']}">
-                                                    <f:param value="#{yourGeneralInfoBean.sentMessagesCount}"/>
+                                                <h:outputFormat value="#{msg['your_info.received_messages_msg']}">
+                                                    <f:param value="#{yourGeneralInfoBean.receivedMessagesCount}"/>
                                                 </h:outputFormat>
                                             </span>
 	                                    </a>

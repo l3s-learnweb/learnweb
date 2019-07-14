@@ -72,8 +72,8 @@
                 </h:form>
             </c:if>
 
-            <h:form id="request_group_form" >
-                <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
+            <h:form id="request_group_form" rendered="#{learnwebBean.learnweb.service == 'AMA'}">
+                <p:commandButton type="button" value="#{msg.download_group_resources}" styleClass="resource_button greenbutton resourcetoolbutton" onclick="PF('dlg1').show();"/>
                 <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
                     <h:outputFormat  value="#{msg.export_resources_warning}">
                         <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.groupId)} "/>
