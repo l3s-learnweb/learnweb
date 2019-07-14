@@ -4,7 +4,7 @@
 
     <h:panelGroup id="dataList" styleClass="dataList">
         <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-            <h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item" layout="block"
+            <h:panelGroup id="rdetail" styleClass="group-resources2-item" layout="block"
                           pt:data-itemType="resource"
                           pt:data-itemId="#{res.resource.id}"
                           pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"

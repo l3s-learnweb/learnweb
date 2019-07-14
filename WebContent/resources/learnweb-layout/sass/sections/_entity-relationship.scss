@@ -7,6 +7,7 @@
     color: #fff;
     border-radius: 2px;
 
+    /* Creates a small triangle extender for the tooltip */
     &:after {
       box-sizing: border-box;
       display: inline;
@@ -19,16 +20,13 @@
       text-align: center;
     }
 
+    /* Style northward tooltips differently */
     &.n:after {
       margin: -1px 0 0 0;
       top: 100%;
       left: 0;
     }
   }
-
-  /* Creates a small triangle extender for the tooltip */
-
-  /* Style northward tooltips differently */
 
   .session-timeline {
     border-right: 1px solid lightgrey;
@@ -37,69 +35,73 @@
   .knowledge-graph {
     height: 95vh;
     position: relative;
+
+    .tagging-panel {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      display: none;
+
+      .ui-panel-content {
+        height: 200px;
+        overflow-y: scroll;
+      }
+
+      label {
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 130px;
+      }
+    }
   }
 
-  .tagging-panel {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    display: none;
-
-    .ui-panel-content {
-      height: 200px;
-      overflow-y: scroll;
-    }
-
-    label {
-      -o-text-overflow: ellipsis;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      width: 130px;
-    }
-  }
-
+  /*styles for snippet viewer*/
   .snippet-viewer {
     display: none;
     background-color: white;
     box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
     height: 100vh;
-  }
 
-  .reference_url {
-    color: green;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
-    margin-bottom: -10px;
-  }
+    .hideIcon {
+      float: right;
+      height: 14px;
+      width: 14px;
+      padding-right: 10px;
+      cursor: pointer;
+    }
 
-  .snippet_query {
-    color: grey;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: inline-block;
-    width: 180px;
-  }
+    #snippets {
+      overflow-y: auto;
+      height: 95%;
 
-  .selected_snippet {
-    background-color: rgba(72, 154, 131, 0.22);
-    padding: 2px;
-    border-radius: 3px;
-  }
+      .snippet {
+        width: 95%;
+        margin-bottom: 10px;
 
-  .hideIcon {
-    float: right;
-    height: 14px;
-    width: 14px;
-    padding-right: 10px;
-    cursor: pointer;
+        .reference_url {
+          color: green;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: block;
+          margin-bottom: -10px;
+        }
+
+        .snippet_query {
+          color: grey;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: inline-block;
+          width: 180px;
+        }
+      }
+    }
   }
 
   /* styles for vertical session timeline */
-
   .box {
     overflow-y: scroll;
     padding: 0 0 0 74px;
@@ -174,18 +176,45 @@
       }
     }
 
-    .title {
-      text-transform: uppercase;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 5px;
-      background-color: inherit;
-      padding: 0;
-    }
+    .info {
+      &:first-letter {
+        /*text-transform: capitalize;*/
+        line-height: 1.7;
+      }
 
-    .info:first-letter {
-      /*text-transform: capitalize;*/
-      line-height: 1.7;
+      > span {
+        background-size: 10px 10px;
+        background-position: left center;
+        background-repeat: no-repeat;
+        padding-left: 15px;
+      }
+
+      span {
+        &:after {
+          content: '\2192';
+        }
+
+        &:last-child:after {
+          content: '';
+        }
+      }
+
+      /*styles for service icons */
+      .source_bing {
+        background-image: url("\#{resource['icon:services/bing.gif']}");
+      }
+
+      .source_learnweb {
+        background-image: url("\#{resource['icon:services/learnweb.gif']}");
+      }
+
+      .source_archiveit {
+        background-image: url("\#{resource['icon:services/archiveit.gif']}");
+      }
+
+      .source_loro {
+        background-image: url("\#{resource['icon:services/loro.gif']}");
+      }
     }
 
     .time span {
@@ -226,54 +255,5 @@
         background: #848484;
       }
     }
-  }
-
-  /*styles for service icons */
-
-  div.info {
-    > span {
-      background-size: 10px 10px;
-      background-position: left center;
-      background-repeat: no-repeat;
-      padding-left: 15px;
-    }
-
-    span {
-      &:after {
-        content: '\2192';
-      }
-
-      &:last-child:after {
-        content: '';
-      }
-    }
-
-    .source_bing {
-      background-image: url("\#{resource['icon:services/bing.gif']}");
-    }
-
-    .source_learnweb {
-      background-image: url("\#{resource['icon:services/learnweb.gif']}");
-    }
-
-    .source_archiveit {
-      background-image: url("\#{resource['icon:services/archiveit.gif']}");
-    }
-
-    .source_loro {
-      background-image: url("\#{resource['icon:services/loro.gif']}");
-    }
-  }
-
-  /*styles for snippet viewer*/
-
-  #snippets {
-    overflow-y: auto;
-    height: 95%;
-  }
-
-  .snippet {
-    width: 95%;
-    margin-bottom: 10px;
   }
 }

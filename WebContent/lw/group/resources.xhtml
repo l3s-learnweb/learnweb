@@ -12,12 +12,6 @@
 <ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
 <ui:param name="rightPane" value="true"/>
 
-<ui:define name="head-meta">
-    <ui:fragment rendered="#{userBean.user.organisation.id eq 480}">
-        <h:outputStylesheet library="resources" name="resource_chloe_interface.css"/>
-    </ui:fragment>
-</ui:define>
-
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}"/>
@@ -32,483 +26,481 @@
     <p:menuitem value="#{msg.resources}" url="" />
 </ui:define>
 <ui:define name="center_layout">
-    <p:panel styleClass="section-group-resources no-padding-panel-content">
-    <h:form>
-        <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
-        <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
+    <p:panel styleClass="section-group-resources section-resources no-padding-panel-content">
+        <h:form>
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
 
-        <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();"/>
-        <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
-        <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
-                         update=":right_pane_wrapper :right_pane  :growl" oncomplete="update_header();"/>
-        <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
-                         update=":breadcrumbs :resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
-                         oncomplete="update_header();resourceDND();"/>
-        <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
-                         oncomplete="resourceDND();update_header();"/>
-        <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
-        <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                         update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
-    </h:form>
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
+                             update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();"/>
+            <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
+                             update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
+            <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
+                             update=":right_pane_wrapper :right_pane  :growl" oncomplete="update_header();"/>
+            <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
+                             update=":breadcrumbs :resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
+                             oncomplete="update_header();resourceDND();"/>
+            <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
+                             update=":resourcesView :right_pane :paginator :resourcesFilters :right_pane_wrapper :growl"
+                             oncomplete="resourceDND();update_header();"/>
+            <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
+                             update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
+            <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
+                             update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
+        </h:form>
 
-    <div class="center-header" id="group_header">
-        <div class="row align-items-center mb-2 mw-100">
-            <span class="col mb-2 font-weight-bold">
-                <span class="green-tittle"> #{msg.resources} </span>
-                    #{msg.of}
-                #{groupResourcesBean.group.title}
-                (#{groupResourcesBean.group.resourcesCount} #{msg.resources})
-            </span>
+        <div class="center-header" id="group_header">
+            <div class="row align-items-center mb-2 mw-100">
+                <span class="col mb-2 font-weight-bold">
+                    <span class="green-tittle"> #{msg.resources} </span>
+                        #{msg.of}
+                    #{groupResourcesBean.group.title}
+                    (#{groupResourcesBean.group.resourcesCount} #{msg.resources})
+                </span>
 
-            <c:if test="${userBean.user.organisation.id eq 480}">
-                <h:form  id="group_layout_options" prependId="false">
-                    <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist"
-                                     update=":resourcesView :group_layout_options"
-                                     rendered="#{groupResourcesBean.gridView}">
-                        <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="false"/>
-                    </p:commandButton>
-                    <p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid"
-                                     update=":resourcesView :group_layout_options"
-                                     rendered="#{!groupResourcesBean.gridView}">
-                        <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="true"/>
+                <c:if test="${userBean.user.organisation.id eq 480}">
+                    <h:form  id="group_layout_options" prependId="false">
+                        <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist"
+                                         update=":resourcesView :group_layout_options"
+                                         rendered="#{groupResourcesBean.gridView}">
+                            <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="false"/>
+                        </p:commandButton>
+                        <p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid"
+                                         update=":resourcesView :group_layout_options"
+                                         rendered="#{!groupResourcesBean.gridView}">
+                            <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="true"/>
+                        </p:commandButton>
+                    </h:form>
+                </c:if>
+
+                <h:form id="request_group_form" styleClass="text-right">
+                    <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}"  onclick="PF('dlg1').show();"/>
+                    <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
+                        <h:outputFormat  value="#{msg.export_resources_warning}">
+                            <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.groupId)} "/>
+                            <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.groupId)}"/>
+                        </h:outputFormat>
+
+                        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.groupId)}" scrollable="true" scrollHeight="150">
+                            <p:column headerText="#{msg.external_resources}">
+                                <h:outputText value="#{entry}" />
+                            </p:column>
+
+                        </p:dataTable>
+                        <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.groupId}" />
+                        <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"  />
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="center_header_form" styleClass="m-0 text-right">
+                    <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
+                                     iconPos="right"
+                                     type="button" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
+                    <p:tieredMenu overlay="true" trigger="add_group_resource_button" my="left top" at="left bottom"
+                                  style="width:200px" widgetVar="add_resource_menu"
+                                  rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
+                        <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed"
+                                    onclick="doAction('create-folder'); PF('add_resource_menu').hide(); return false;"/>
+                        <p:separator/>
+                        <p:submenu label="#{msg.create}" icon="fa fa-plus-square">
+                            <p:menuitem value="#{msg.office_document}"
+                                        onclick="doAction('new-file', 'document'); PF('add_resource_menu').hide(); return false;"
+                                        icon="fa fa-file-word-o" update=":right_pane_wrapper" oncomplete="update_header()"
+                                        actionListener="#{addResourceBean.clearForm()}">
+                            </p:menuitem>
+                            <p:menuitem value="#{msg.office_spreadsheet}"
+                                        onclick="doAction('new-file','spreadsheet'); PF('add_resource_menu').hide(); return false;"
+                                        icon="fa fa-file-excel-o" update=":right_pane_wrapper" oncomplete="update_header()"
+                                        actionListener="#{addResourceBean.clearForm()}">
+                            </p:menuitem>
+                            <p:menuitem value="#{msg.office_presentation}"
+                                        onclick="doAction('new-file', 'presentation'); PF('add_resource_menu').hide(); return false;"
+                                        icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
+                                        oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+                            </p:menuitem>
+                        </p:submenu>
+                        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk"
+                                    onclick="doAction('upload-file'); PF('add_resource_menu').hide(); return false;"/>
+                        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link"
+                                    onclick="doAction('add-website'); PF('add_resource_menu').hide(); return false;"/>
+                        <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link"
+                                    onclick="doAction('add-glossary2'); PF('add_resource_menu').hide(); return false;"/>
+                    </p:tieredMenu>
+
+                    <p:commandButton rendered="#{groupResourcesBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"
+                                   action="#{groupsBean.joinGroup}"
+                                   update=":growl @form" partialSubmit="true" process="@this">
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
                     </p:commandButton>
                 </h:form>
+            </div>
+
+
+
+            <ul>
+                <li>
+                    <h:link value="#{msg.overview}" styleClass="p-2" outcome="/lw/group/overview.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                </li>
+                <li>
+                    <h:link value="#{msg.resources}" styleClass="p-2" outcome="/lw/group/resources.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                </li>
+                <li>
+                    <h:link value="#{msg.members}" styleClass="p-2" outcome="/lw/group/members.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                </li>
+                <ui:fragment rendered="#{not empty groupResourcesBean.group.links or not empty groupResourcesBean.group.documentLinks}">
+                    <li>
+                        <h:link value="#{msg.links}" styleClass="p-2" outcome="/lw/group/links.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                    </li>
+                </ui:fragment>
+                <li>
+                    <h:link value="#{msg.forum}" styleClass="p-2" outcome="/lw/group/forum.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                </li>
+                <ui:fragment rendered="${groupResourcesBean.group.course.isModerator(userBean.user) || groupResourcesBean.group.isLeader(userBean.user)}">
+                    <li>
+                        <h:link value="#{msg.options}" styleClass="p-2" outcome="/lw/group/options.jsf?group_id=#{groupResourcesBean.group.id}"/>
+                    </li>
+                </ui:fragment>
+            </ul>
+
+            <c:if test="${userBean.user.organisation.id ne 480}">
+                <!--suppress XmlDuplicatedId -->
+                <h:panelGroup id="resourcesFilters" layout="block">
+                    <h:form styleClass="resources-filters" id="filters">
+                        <ul>
+                            <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
+                                <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
+                                    <span class="filter-name">
+                                        <span class="trimmed-text">#{filter.name}</span>
+                                        <span class="arrow"/>
+                                    </span>
+                                    <ul class="filter-sub-bar vCarousel-wrapper filter-vCarousel">
+                                        <h:panelGroup styleClass="vCarousel-container" layout="block">
+                                            <li class="#{!filter.active ? 'active' : null}">
+                                                <p:commandButton value="#{filter.anyText}"
+                                                                 action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
+                                                                 update=":resourcesView :paginator :resourcesFilters"
+                                                                 oncomplete="updateCarousel();resourceDND();"/>
+                                            </li>
+
+                                            <p:repeat value="#{filter.items}" var="item">
+                                                <li class="#{item.active ? 'active' : null}">
+                                                    <p:commandButton
+                                                            value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
+                                                            action="#{groupResourcesBean.changeFilters(item.url)}"
+                                                            update=":resourcesView :paginator :resourcesFilters"
+                                                            oncomplete="updateCarousel();resourceDND();"/>
+                                                </li>
+                                            </p:repeat>
+
+                                        </h:panelGroup>
+                                        <li class="vCarousel-expand">
+                                            <p:commandButton value="#{msg.filter_carousel_all}"/>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </p:repeat>
+
+                            <li class="search-box #{groupResourcesBean.query != null ? 'active' : null}">
+                                <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
+
+                                <div id="search_filter_form">
+                                    <h:inputText value="#{groupResourcesBean.query}"/>
+
+                                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true"
+                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
+                                                     process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
+                                </div>
+                            </li>
+
+                            <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
+                                <li class="filter clear-filters">
+                                    <p:commandButton value="#{msg.clear_filters}"
+                                                     action="#{groupResourcesBean.clearFilters()}"
+                                                     update=":resourcesView :paginator :resourcesFilters"
+                                                     oncomplete="updateCarousel();resourceDND();"/>
+                                </li>
+                            </h:panelGroup>
+                        </ul>
+                    </h:form>
+                </h:panelGroup>
             </c:if>
 
-            <h:form id="request_group_form" styleClass="text-right">
-                <p:commandButton type="button"  value="#{msg.download} #{msg.all_resources}"  onclick="PF('dlg1').show();"/>
-                <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
-                    <h:outputFormat  value="#{msg.export_resources_warning}">
-                        <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.groupId)} "/>
-                        <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.groupId)}"/>
-                    </h:outputFormat>
-
-                    <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.groupId)}" scrollable="true" scrollHeight="150">
-                        <p:column headerText="#{msg.external_resources}">
-                            <h:outputText value="#{entry}" />
-                        </p:column>
-
-                    </p:dataTable>
-                    <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.groupId}" />
-                    <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"  />
-                </p:dialog>
-            </h:form>
-
-            <h:form id="center_header_form" styleClass="m-0 text-right">
-                <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
-                                 iconPos="right"
-                                 type="button" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
-                <p:tieredMenu overlay="true" trigger="add_group_resource_button" my="left top" at="left bottom"
-                              style="width:200px" widgetVar="add_resource_menu"
-                              rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
-                    <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed"
-                                onclick="doAction('create-folder'); PF('add_resource_menu').hide(); return false;"/>
-                    <p:separator/>
-                    <p:submenu label="#{msg.create}" icon="fa fa-plus-square">
-                        <p:menuitem value="#{msg.office_document}"
-                                    onclick="doAction('new-file', 'document'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-word-o" update=":right_pane_wrapper" oncomplete="update_header()"
-                                    actionListener="#{addResourceBean.clearForm()}">
-                        </p:menuitem>
-                        <p:menuitem value="#{msg.office_spreadsheet}"
-                                    onclick="doAction('new-file','spreadsheet'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-excel-o" update=":right_pane_wrapper" oncomplete="update_header()"
-                                    actionListener="#{addResourceBean.clearForm()}">
-                        </p:menuitem>
-                        <p:menuitem value="#{msg.office_presentation}"
-                                    onclick="doAction('new-file', 'presentation'); PF('add_resource_menu').hide(); return false;"
-                                    icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
-                                    oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
-                        </p:menuitem>
-                    </p:submenu>
-                    <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk"
-                                onclick="doAction('upload-file'); PF('add_resource_menu').hide(); return false;"/>
-                    <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link"
-                                onclick="doAction('add-website'); PF('add_resource_menu').hide(); return false;"/>
-                    <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link"
-                                onclick="doAction('add-glossary2'); PF('add_resource_menu').hide(); return false;"/>
-                </p:tieredMenu>
-
-                <p:commandButton rendered="#{groupResourcesBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"
-                               action="#{groupsBean.joinGroup}"
-                               update=":growl @form" partialSubmit="true" process="@this">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-                </p:commandButton>
-            </h:form>
-        </div>
-
-
-
-        <ul>
-            <li>
-                <h:link value="#{msg.overview}" styleClass="p-2" outcome="/lw/group/overview.jsf?group_id=#{groupResourcesBean.group.id}"/>
-            </li>
-            <li>
-                <h:link value="#{msg.resources}" styleClass="p-2" outcome="/lw/group/resources.jsf?group_id=#{groupResourcesBean.group.id}"/>
-            </li>
-            <li>
-                <h:link value="#{msg.members}" styleClass="p-2" outcome="/lw/group/members.jsf?group_id=#{groupResourcesBean.group.id}"/>
-            </li>
-            <ui:fragment rendered="#{not empty groupResourcesBean.group.links or not empty groupResourcesBean.group.documentLinks}">
-                <li>
-                    <h:link value="#{msg.links}" styleClass="p-2" outcome="/lw/group/links.jsf?group_id=#{groupResourcesBean.group.id}"/>
-                </li>
-            </ui:fragment>
-            <li>
-                <h:link value="#{msg.forum}" styleClass="p-2" outcome="/lw/group/forum.jsf?group_id=#{groupResourcesBean.group.id}"/>
-            </li>
-            <ui:fragment rendered="${groupResourcesBean.group.course.isModerator(userBean.user) || groupResourcesBean.group.isLeader(userBean.user)}">
-                <li>
-                    <h:link value="#{msg.options}" styleClass="p-2" outcome="/lw/group/options.jsf?group_id=#{groupResourcesBean.group.id}"/>
-                </li>
-            </ui:fragment>
-        </ul>
-
-        <c:if test="${userBean.user.organisation.id ne 480}">
-            <!--suppress XmlDuplicatedId -->
-            <h:panelGroup id="resourcesFilters" layout="block">
-                <h:form styleClass="resources-filters" id="filters">
+            <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
+                <ui:fragment rendered="#{not empty groupResourcesBean.breadcrumbs}">
                     <ul>
-                        <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
-                            <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
-                                <span class="filter-name">
-                                    <span class="trimmed-text">#{filter.name}</span>
-                                    <span class="arrow"/>
-                                </span>
-                                <ul class="filter-sub-bar vCarousel-wrapper filter-vCarousel">
-                                    <h:panelGroup styleClass="vCarousel-container" layout="block">
-                                        <li class="#{!filter.active ? 'active' : null}">
-                                            <p:commandButton value="#{filter.anyText}"
-                                                             action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
-                                                             update=":resourcesView :paginator :resourcesFilters"
-                                                             oncomplete="updateCarousel();resourceDND();"/>
-                                        </li>
-
-                                        <p:repeat value="#{filter.items}" var="item">
-                                            <li class="#{item.active ? 'active' : null}">
-                                                <p:commandButton
-                                                        value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
-                                                        action="#{groupResourcesBean.changeFilters(item.url)}"
-                                                        update=":resourcesView :paginator :resourcesFilters"
-                                                        oncomplete="updateCarousel();resourceDND();"/>
-                                            </li>
-                                        </p:repeat>
-
-                                    </h:panelGroup>
-                                    <li class="vCarousel-expand">
-                                        <p:commandButton value="#{msg.filter_carousel_all}"/>
-                                    </li>
-                                </ul>
-                            </li>
-                        </p:repeat>
-
-                        <li class="search-box #{groupResourcesBean.query != null ? 'active' : null}">
-                            <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
-
-                            <div id="search_filter_form">
-                                <h:inputText value="#{groupResourcesBean.query}"/>
-
-                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true"
-                                                 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
-                                                 process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
-                            </div>
+                        <li data-folderId="0">
+                            <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupResourcesBean.group.title}</h:outputLink>
                         </li>
 
-                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
-                            <li class="filter clear-filters">
-                                <p:commandButton value="#{msg.clear_filters}"
-                                                 action="#{groupResourcesBean.clearFilters()}"
-                                                 update=":resourcesView :paginator :resourcesFilters"
-                                                 oncomplete="updateCarousel();resourceDND();"/>
+                        <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}" varStatus="status">
+                            <li data-folderId="#{folder.id}">
+                                <h:outputLink rendered="#{not status.last}" value="#"
+                                              onclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
+                                <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
                             </li>
-                        </h:panelGroup>
+                        </p:repeat>
                     </ul>
+                </ui:fragment>
+            </h:panelGroup>
+        </div>
+
+        <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
+            <h3 class="error">
+                #{msg.group_resources_access_denied}
+                <h:outputText
+                        rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"
+                        value="#{msg.group_resources_access_denied_join_first}"/>
+            </h3>
+        </ui:fragment>
+
+        <c:if test="${userBean.user.organisation.id eq 480}">
+            <!--suppress XmlDuplicatedId -->
+            <h:panelGroup id="resourcesFilters" layout="block">
+                <!-- from here begins the new metadata visualization -->
+                <h:form id="yell-filters-tabs">
+                    <h:form id="header_query_form" prependId="false">
+                        <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}"
+                                     id="input_query_form"
+                                     onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
+
+                        <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false"
+                                         oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
+                                         process="@form" update=":resourcesView :paginator :resourcesFilters"
+                                         value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
+                    </h:form>
+                    <br/>
+
+                    <h:form id="accordion_form" style="width:530px;">
+                        <p:accordionPanel activeIndex="-2">
+                            <p:tab title="Filters - refine your search or narrow down your search results!">
+                                <h:form id="metadata_filter_form">
+                                    <p:panelGrid columns="3" cellpadding="20" layout="grid">
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="alist" value="Author:  "/>
+                                            <p:selectCheckboxMenu id="alist"
+                                                                  value="#{groupResourcesBean.selectedAuthors}"
+                                                                  label="Authors" multiple="true" filter="true"
+                                                                  filterMatchMode="startsWith">
+                                                <f:selectItems value="#{groupResourcesBean.authors}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="llist" value="Language:"/>
+                                            <p:selectCheckboxMenu id="llist"
+                                                                  value="#{groupResourcesBean.selectedLanguages}"
+                                                                  label="Languages" multiple="true" filter="true"
+                                                                  filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.langs}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="levlist" value="Language Level:"/>
+                                            <p:selectCheckboxMenu id="levlist"
+                                                                  value="#{groupResourcesBean.selectedLevels}"
+                                                                  label="Levels" multiple="true" filter="true"
+                                                                  filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.levels}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="aglist" value="Target Learner:"/>
+                                            <p:selectCheckboxMenu id="aglist"
+                                                                  value="#{groupResourcesBean.selectedTargets}"
+                                                                  label="Target Learners" multiple="true"
+                                                                  filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.targets}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="aclist" value="Purpose of Use:"/>
+                                            <p:selectCheckboxMenu id="aclist"
+                                                                  value="#{groupResourcesBean.selectedPurposes}"
+                                                                  label="Purposes of Use" multiple="true"
+                                                                  filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.purposes}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+
+                                        <p:commandButton styleClass="greenbutton" value="Filter"
+                                                         actionListener="#{groupResourcesBean.onMetadataFilterClick}"
+                                                         oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
+                                                         process="@form"
+                                                         update=":paginator :resourcesView"/>
+                                    </p:panelGrid>
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </h:form>
+                    <hr/>
+
+                    <b><h:outputText
+                            value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
                 </h:form>
             </h:panelGroup>
         </c:if>
 
-        <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
-            <ui:fragment rendered="#{not empty groupResourcesBean.breadcrumbs}">
-                <ul>
-                    <li data-folderId="0">
-                        <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupResourcesBean.group.title}</h:outputLink>
-                    </li>
+        <ui:fragment rendered="#{groupResourcesBean.group.canViewResources(userBean.user)}">
+            <h:panelGroup id="resourcesView" layout="block" style="height: 100%; width: 100%; padding-top: 3px;"
+                          pt:data-canAddResources="#{groupResourcesBean.group.canAddResources(userBean.user)}"
+                          pt:data-canMoveResources="#{groupResourcesBean.group.canMoveResources(userBean.user)}">
 
-                    <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}" varStatus="status">
-                        <li data-folderId="#{folder.id}">
-                            <h:outputLink rendered="#{not status.last}" value="#"
-                                          onclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
-                            <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
-                        </li>
-                    </p:repeat>
-                </ul>
-            </ui:fragment>
-        </h:panelGroup>
-    </div>
+                <c:if test="${userBean.user.organisation.id eq 480}">
+                    <ui:fragment rendered="#{!groupResourcesBean.gridView}">
+                        <ui:decorate template="/lw/group/resources_list_view.xhtml"></ui:decorate>
+                    </ui:fragment>
 
-    <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
-        <h3 class="error">
-            #{msg.group_resources_access_denied}
-            <h:outputText
-                    rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"
-                    value="#{msg.group_resources_access_denied_join_first}"/>
-        </h3>
-    </ui:fragment>
+                    <ui:fragment rendered="#{groupResourcesBean.gridView}">
+                        <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
+                    </ui:fragment>
+                </c:if>
 
-    <c:if test="${userBean.user.organisation.id eq 480}">
-        <!--suppress XmlDuplicatedId -->
-        <h:panelGroup id="resourcesFilters" layout="block">
-            <!-- from here begins the new metadata visualization -->
-            <h:form id="yell-filters-tabs">
-                <h:form id="header_query_form" prependId="false">
-                    <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}"
-                                 id="input_query_form"
-                                 onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
-
-                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false"
-                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
-                                     process="@form" update=":resourcesView :paginator :resourcesFilters"
-                                     value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
-                </h:form>
-                <br/>
-
-                <h:form id="accordion_form" style="width:530px;">
-                    <p:accordionPanel activeIndex="-2">
-                        <p:tab title="Filters - refine your search or narrow down your search results!">
-                            <h:form id="metadata_filter_form">
-                                <p:panelGrid columns="3" cellpadding="20" layout="grid">
-
-                                    <h:panelGroup>
-                                        <h:outputLabel for="alist" value="Author:  "/>
-                                        <p:selectCheckboxMenu id="alist"
-                                                              value="#{groupResourcesBean.selectedAuthors}"
-                                                              label="Authors" multiple="true" filter="true"
-                                                              filterMatchMode="startsWith">
-                                            <f:selectItems value="#{groupResourcesBean.authors}"/>
-                                        </p:selectCheckboxMenu>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <h:outputLabel for="llist" value="Language:"/>
-                                        <p:selectCheckboxMenu id="llist"
-                                                              value="#{groupResourcesBean.selectedLanguages}"
-                                                              label="Languages" multiple="true" filter="true"
-                                                              filterMatchMode="startsWith"
-                                                              panelStyle="width:250px">
-                                            <f:selectItems value="#{searchFilterBean.langs}"/>
-                                        </p:selectCheckboxMenu>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <h:outputLabel for="levlist" value="Language Level:"/>
-                                        <p:selectCheckboxMenu id="levlist"
-                                                              value="#{groupResourcesBean.selectedLevels}"
-                                                              label="Levels" multiple="true" filter="true"
-                                                              filterMatchMode="startsWith"
-                                                              panelStyle="width:250px">
-                                            <f:selectItems value="#{searchFilterBean.levels}"/>
-                                        </p:selectCheckboxMenu>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <h:outputLabel for="aglist" value="Target Learner:"/>
-                                        <p:selectCheckboxMenu id="aglist"
-                                                              value="#{groupResourcesBean.selectedTargets}"
-                                                              label="Target Learners" multiple="true"
-                                                              filter="true" filterMatchMode="startsWith"
-                                                              panelStyle="width:250px">
-                                            <f:selectItems value="#{searchFilterBean.targets}"/>
-                                        </p:selectCheckboxMenu>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup>
-                                        <h:outputLabel for="aclist" value="Purpose of Use:"/>
-                                        <p:selectCheckboxMenu id="aclist"
-                                                              value="#{groupResourcesBean.selectedPurposes}"
-                                                              label="Purposes of Use" multiple="true"
-                                                              filter="true" filterMatchMode="startsWith"
-                                                              panelStyle="width:250px">
-                                            <f:selectItems value="#{searchFilterBean.purposes}"/>
-                                        </p:selectCheckboxMenu>
-                                    </h:panelGroup>
-
-
-                                    <p:commandButton styleClass="greenbutton" value="Filter"
-                                                     actionListener="#{groupResourcesBean.onMetadataFilterClick}"
-                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
-                                                     process="@form"
-                                                     update=":paginator :resourcesView"/>
-                                </p:panelGrid>
-                            </h:form>
-                        </p:tab>
-                    </p:accordionPanel>
-                </h:form>
-                <hr/>
-
-                <b><h:outputText
-                        value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
-            </h:form>
-        </h:panelGroup>
-    </c:if>
-
-    <ui:fragment rendered="#{groupResourcesBean.group.canViewResources(userBean.user)}">
-        <h:panelGroup id="resourcesView" layout="block" style="height: 100%; width: 100%; padding-top: 3px;"
-                      pt:data-canAddResources="#{groupResourcesBean.group.canAddResources(userBean.user)}"
-                      pt:data-canMoveResources="#{groupResourcesBean.group.canMoveResources(userBean.user)}">
-
-            <c:if test="${userBean.user.organisation.id eq 480}">
-                <ui:fragment rendered="#{!groupResourcesBean.gridView}">
-                    <ui:decorate template="/lw/group/resources_list_view.xhtml"></ui:decorate>
-                </ui:fragment>
-
-                <ui:fragment rendered="#{groupResourcesBean.gridView}">
+                <c:if test="${userBean.user.organisation.id ne 480}">
                     <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
-                </ui:fragment>
-            </c:if>
+                </c:if>
+            </h:panelGroup>
 
-            <c:if test="${userBean.user.organisation.id ne 480}">
-                <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
-            </c:if>
-        </h:panelGroup>
+            <h:panelGroup id="paginator" layout="block">
+                <ui:decorate template="/templates/main/paging.xhtml">
+                    <ui:param name="paginator" value="${groupResourcesBean.paginator}"/>
+                </ui:decorate>
+            </h:panelGroup>
 
-        <h:panelGroup id="paginator" layout="block">
-            <ui:decorate template="/templates/main/paging.xhtml">
-                <ui:param name="paginator" value="${groupResourcesBean.paginator}"/>
-            </ui:decorate>
-        </h:panelGroup>
-
-        <div class="context-menu resource-context-menu" role="menu" id="context-menu">
-            <div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.open}</span>
+            <div class="context-menu resource-context-menu" role="menu" id="context-menu">
+                <div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.open}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-create-folder" role="menuitem" data-action="create-folder" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.create_folder}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item divider action-upload-file" role="menuitem" data-action="upload-file" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.upload_file}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-add-website" role="menuitem" data-action="add-website" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.upload_url}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.addTag}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.edit}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.copy}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-move" role="menuitem" data-action="move" data-per="canDeleteResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.move}</span>
+                    </div>
+                </div>
+                <div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.removeFromGroup}</span>
+                    </div>
                 </div>
             </div>
-            <div class="context-menu-item action-create-folder" role="menuitem" data-action="create-folder" data-per="canAddResources">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.create_folder}</span>
-                </div>
-            </div>
-            <div class="context-menu-item divider action-upload-file" role="menuitem" data-action="upload-file" data-per="canAddResources">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.upload_file}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-add-website" role="menuitem" data-action="add-website" data-per="canAddResources">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.upload_url}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.addTag}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.edit}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.copy}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-move" role="menuitem" data-action="move" data-per="canDeleteResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.move}</span>
-                </div>
-            </div>
-            <div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
-                <div class="context-menu-item-wrapper">
-                    <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.removeFromGroup}</span>
-                </div>
-            </div>
-        </div>
-    </ui:fragment>
+        </ui:fragment>
 
-    <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource_title}" widgetVar="deleteConfirm"
-              appendTo="@(body)" closable="false" minWidth="540" modal="true">
-        <p>
-            <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="single-folder"/>
-            <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="single-resource"/>
-            <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural"/>
-        </p>
+        <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource_title}" widgetVar="deleteConfirm"
+                  appendTo="@(body)" closable="false" minWidth="540" modal="true">
+            <p>
+                <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="single-folder"/>
+                <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="single-resource"/>
+                <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural"/>
+            </p>
 
-        <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-            <p:button value="#{msg.cancel}" styleClass="graybutton"
-                      onclick="PF('deleteConfirm').hide(); return false;"/>
-            <p:button value="#{msg.delete}" styleClass="confirm greenbutton" onclick="return false"/>
-        </h:panelGroup>
-    </p:dialog>
+            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
+                <p:button value="#{msg.cancel}" styleClass="graybutton"
+                          onclick="PF('deleteConfirm').hide(); return false;"/>
+                <p:button value="#{msg.delete}" styleClass="confirm greenbutton" onclick="return false"/>
+            </h:panelGroup>
+        </p:dialog>
 
-    <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
-              minWidth="540" modal="true">
-        <h:panelGrid columns="2">
-            <h:outputText value="#{msg.add_to}:"/>
+        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
+                  minWidth="540" modal="true">
+            <h:panelGrid columns="2">
+                <h:outputText value="#{msg.add_to}:"/>
 
-            <h:form>
-                <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single"
-                        selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
-                    <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
+                <h:form>
+                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single"
+                            selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
+                        <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
 
-                    <p:treeNode type="group">
-                        <h:outputText id="group" value="#{node.title}"/>
-                    </p:treeNode>
+                        <p:treeNode type="group">
+                            <h:outputText id="group" value="#{node.title}"/>
+                        </p:treeNode>
 
-                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                        <h:outputText value="#{node.name}"/>
-                    </p:treeNode>
-                </p:tree>
-            </h:form>
-        </h:panelGrid>
+                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                            <h:outputText value="#{node.name}"/>
+                        </p:treeNode>
+                    </p:tree>
+                </h:form>
+            </h:panelGrid>
 
-        <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-            <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('selectDestination').hide(); return false;"/>
-            <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false;"/>
-        </h:panelGroup>
-    </p:dialog>
+            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
+                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('selectDestination').hide(); return false;"/>
+                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false;"/>
+            </h:panelGroup>
+        </p:dialog>
 
-    <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
-        <h:panelGrid columns="1">
-            <p:inputText id="modal_tag_name"/>
-        </h:panelGrid>
+        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
+            <h:panelGrid columns="1">
+                <p:inputText id="modal_tag_name"/>
+            </h:panelGrid>
 
-        <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-            <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('addTag').hide(); return false;"/>
-            <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
-        </h:panelGroup>
-    </p:dialog>
+            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
+                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('addTag').hide(); return false;"/>
+                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
+            </h:panelGroup>
+        </p:dialog>
 
-    <script type="text/javascript">
-        $(document).on("click", "#search_filter_icon", function () {
-            $("#search_filter_form").animate({width: "toggle"}, 500, 'swing');
-            $("#search_filter_form input").trigger('focus');
-            $("#search_filter_icon").hide();
-        });
+        <script type="text/javascript">
+            $(document).on("click", "#search_filter_icon", function () {
+                $("#search_filter_form").animate({width: "toggle"}, 500, 'swing');
+                $("#search_filter_form input").trigger('focus');
+                $("#search_filter_icon").hide();
+            });
 
-        updateCarousel();
+            updateCarousel();
 
-        //$("#center_pane").prepend($("#group_header")).append($("#paginator"));
+            //$("#center_pane").prepend($("#group_header")).append($("#paginator"));
 
-        $(function () {
-            $("#center_pane .ui-layout-unit-content").height($("#center_pane").height() - $("#center_pane #group_header").outerHeight() - $("#center_pane #paginator").outerHeight());
-        });
-
-
-    </script>
+            $(function () {
+                $("#center_pane .ui-layout-unit-content").height($("#center_pane").height() - $("#center_pane #group_header").outerHeight() - $("#center_pane #paginator").outerHeight());
+            });
+        </script>
     </p:panel>
 </ui:define>
 
