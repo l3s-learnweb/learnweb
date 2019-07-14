@@ -10,8 +10,7 @@ import de.l3s.learnweb.resource.ExportManager;
 import de.l3s.learnweb.user.User;
 
 /**
- * Accordingly to GDPR user can be able to download all collected about him data.
- * This bean responses on request of data with
+ * Allows to download resources of a user or a group
  */
 @Named
 @ViewScoped

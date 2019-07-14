@@ -106,7 +106,7 @@
                         <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
                         <p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
                         <p>
-                            <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form"/>
+                            <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form" update=":message :growl"/>
                         </p>
                     </div>
                 </div>

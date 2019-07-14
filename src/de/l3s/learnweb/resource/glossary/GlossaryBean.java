@@ -236,18 +236,20 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            term.setDeleted(true);
             if(formEntry.getTerms().size() <= 1 || numberOfDeletedTerms() == formEntry.getTerms().size())
             {
-                term.setDeleted(false);//reset deletion
                 addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("Glossary.term_validation"));
                 return;
             }
+
+            term.setDeleted(true);
+
             if(term.getId() <= 0) //Its a new term. Safe to remove here.
             {
                 formEntry.getTerms().remove(term);
             }
-            formEntry.setFulltext(null);
+            formEntry.setFulltext(null); // reset full text index
+
             addMessage(FacesMessage.SEVERITY_INFO, getLocaleMessage("entry_deleted") + ": " + term.getTerm());
 
             log(Action.glossary_term_delete, glossaryResource, term.getId());
@@ -535,7 +537,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-        
+
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -639,56 +641,56 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-
+    
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-
+    
         return columns;
     }
-
-
+    
+    
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-
+    
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-
+    
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-
+    
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-
+    
         //update columns
         createDynamicColumns();
     }
-
+    
     static public class ColumnModel implements Serializable
     {
-
+    
         private String header;
         private String property;
-
+    
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-
+    
         public String getHeader()
         {
             return header;
         }
-
+    
         public String getProperty()
         {
             return property;
