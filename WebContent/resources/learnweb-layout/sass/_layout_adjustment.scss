@@ -3,18 +3,14 @@
     list-style: none;
   }
 
-  .klapper_zu {
-    height: .9rem;
-  }
-
   .layout-main {
     position: relative;
     min-height: 100vh;
+    padding-top: 60px !important;
 
     .layout-main-content {
-      padding-bottom: 9em;
+      padding-bottom: 9em; /* TODO: what is this? */
 
-      /* Breadcrumb */
       .ui-breadcrumb {
         border: 1px solid $primaryColor;
         border-left: none;
@@ -22,6 +18,7 @@
         background: rgba(255, 255, 255, 0.9);
         font-weight: 700;
         font-size: 1.2rem;
+        margin-bottom: 15px;
 
         ul {
           li {
@@ -30,7 +27,7 @@
             }
 
             .ui-menuitem-link {
-              top: 0px;
+              top: 0;
             }
           }
 
@@ -40,53 +37,15 @@
             height: auto;
 
             &:before {
-              content: "\f105 ";
+              content: "\f105";
             }
           }
 
           .ui-menuitem-link {
             vertical-align: middle;
           }
-
         }
       }
-
-      /*end Breadcrumb*/
-
-
     }
   }
-
-
-}
-
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) {
-
-}
-
-// Medium devices (tablets, 768px and up)
-@media (min-width: 768px) {
-
-}
-
-@media (max-width: 992px) {
-  .layout-wrapper {
-    .layout-main {
-      padding-top: 6rem;
-    }
-  }
-}
-
-// Large devices (desktops, 992px and up)
-@media (min-width: 993px) {
-  .layout-wrapper {
-    .layout-main {
-      padding-top: 60px;
-    }
-  }
-}
-
-// Extra large devices (large desktops, 1200px and up)
-@media (min-width: 1200px) {
 }

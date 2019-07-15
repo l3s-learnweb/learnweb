@@ -4,11 +4,13 @@
   color: $green;
 }
 
-.no-borders tr, .no-borders td {
-  background: none !important;
-  border: none !important;
+.no-borders {
+  tr,
+  td {
+    background: none !important;
+    border: none !important;
+  }
 }
-
 
 .no-padding-panel-content {
   .ui-panel-content {
@@ -24,4 +26,8 @@
 
 .w-30 {
   width: 30% !important;
+}
+
+.klapper_zu { /* TODO: remove this */
+  height: .9rem;
 }
