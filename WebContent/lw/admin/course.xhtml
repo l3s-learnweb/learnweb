@@ -24,69 +24,70 @@
 	<ui:define name="center_layout">
 
 		<h:form id="editwelcomeform"  prependId="false" styleClass="form">
-			<div class="p-grid">
+			<div class="row">
 
-				<div class="p-col-12">
-					<div class="card card-w-title">
+				<div class="col-12">
+					<p:panel>
 						<h2><h:outputText value="#{msg.welcome_message}" /></h2>
-						
+
 						<!-- a dirty fix. we should check old message and remove tables -->
 						<p:textEditor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="${!adminCourseBean.course.welcomeMessage.contains('table')}" />
-						
+
 						<p:editor height="284" value="#{adminCourseBean.course.welcomeMessage}" rendered="${adminCourseBean.course.welcomeMessage.contains('table')}" />
-					</div>
+					</p:panel>
 				</div>
 
-				<div class="p-col-12">
-					<div class="p-grid">
-						<div class="p-col">
-							<div class="card card-w-title">
-								<h2 class="no-margin-bottom">Common settings</h2>
-								<div class="grid padding-bottom">
+				<div class="col-12 mt-3">
+					<div class="row">
+						<div class="col">
+							<p:panel>
+								<h2 class="">Common settings</h2>
+								<div class="grid">
 
-										<p>
-											<h:outputText value="#{msg.title}:" />
-										</p>
-										<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
-											<p:ajax update="message_c_title" />
-										</p:inputText>
-										<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+									<p>
+										<h:outputText value="#{msg.title}:" />
+									</p>
+									<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
+										<p:ajax update="message_c_title" />
+									</p:inputText>
+									<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
 
-										<p>
-											<h:outputText value="Wizard Parameter:" />
-										</p>
-										<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
-											<p:ajax update="message_c_param" />
-										</p:inputText>
-										<p:message for="c_param" showSummary="true" showDetail="false" id="message_c_param"/>
+									<p>
+										<h:outputText value="Wizard Parameter:" />
+									</p>
+									<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
+										<p:ajax update="message_c_param" />
+									</p:inputText>
+									<p:message for="c_param" showSummary="true" showDetail="false" id="message_c_param"/>
 
-										<p><h:outputText value="#{msg.organization}:" rendered="#{userBean.admin}" /></p>
-										<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}" rendered="#{userBean.admin}">
-											<f:selectItem itemLabel="No organisation" itemValue="0" />
-											<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
-											<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
-										</p:selectOneMenu>
-										<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation" rendered="#{userBean.admin}"/>
+									<p><h:outputText value="#{msg.organization}:" rendered="#{userBean.admin}" /></p>
+									<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}" rendered="#{userBean.admin}">
+										<f:selectItem itemLabel="No organisation" itemValue="0" />
+										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+										<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
+									</p:selectOneMenu>
+									<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation" rendered="#{userBean.admin}"/>
 
-										<p><h:outputText value="Default group:" /></p>
-										<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
-											<f:selectItem itemLabel="No default group" itemValue="0" />
-											<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
-											<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-										</p:selectOneMenu>
-										<p:message for="c_group" showSummary="true" showDetail="false" />
+									<p><h:outputText value="Default group:" /></p>
+									<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
+										<f:selectItem itemLabel="No default group" itemValue="0" />
+										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+										<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+									</p:selectOneMenu>
+									<p:message for="c_group" showSummary="true" showDetail="false" />
 
 								</div>
-							</div>
+							</p:panel>
+
 
 
 
 
 						</div>
-						<div class="p-col">
+						<div class="col">
 
 							<div class="card card-w-title">
-								<h2 style="margin-bottom: 14px!important;">Additional settings</h2>
+								<h2>Additional settings</h2>
 								<p:accordionPanel autoHeight="false" id="courseoptions">
 									<c:forEach items="#{adminCourseBean.optionGroups}" var="group" varStatus="status">
 
@@ -112,14 +113,13 @@
 					</div>
 				</div>
 
-				<div class="p-col-12">
-					<div class="card card-w-title control-buttons" >
-						<p>
+				<div class="col-12 mt-3">
+					<p:panel>
 							<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl :courseoptions">
 								<f:param name="course_id" value="#{adminCourseBean.courseId}" />
 							</p:commandButton>
-						</p>
-					</div>
+					</p:panel>
+
 
 				</div>
 

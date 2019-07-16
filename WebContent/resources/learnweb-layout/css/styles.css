@@ -7771,9 +7771,6 @@ body a {
 .layout-wrapper ul {
   list-style: none;
 }
-.layout-wrapper .klapper_zu {
-  height: 0.9rem;
-}
 .layout-wrapper .layout-main {
   position: relative;
   min-height: 100vh;
@@ -7781,6 +7778,7 @@ body a {
 }
 .layout-wrapper .layout-main .layout-main-content {
   padding-bottom: 9em;
+  /* TODO: what is this? */
 }
 .layout-wrapper .layout-main .layout-main-content .ui-breadcrumb {
   border: 1px solid #4AA564;
@@ -13380,7 +13378,8 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   color: #4AA564;
 }
 
-.no-borders tr, .no-borders td {
+.no-borders tr,
+.no-borders td {
   background: none !important;
   border: none !important;
 }
@@ -13395,6 +13394,11 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
 
 .w-30 {
   width: 30% !important;
+}
+
+.klapper_zu {
+  /* TODO: remove this */
+  height: 0.9rem;
 }
 
 html {
@@ -13727,10 +13731,13 @@ html {
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.2rem 0.4rem;
+  text-decoration: none;
 }
 .command-button:hover {
   background: #378D4F;
   border-color: #378D4F;
+  color: #fff;
+  text-decoration: none;
 }
 
 .section-entity-relationship {

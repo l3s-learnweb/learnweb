@@ -33,11 +33,11 @@
                         <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
                     </p:column>
 
-                    <p:column style="width:9%" headerText="#{msg.members}" sortBy="#{course.memberCount}">
+                    <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
                         <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
                     </p:column>
 
-                    <p:column style="width:26%" headerText="#{msg.options}" styleClass="options_column column-button">
+                    <p:column headerText="#{msg.options}" styleClass="options_column column-button">
                         <f:facet name="header">
                             #{msg.options}
                         </f:facet>
@@ -76,7 +76,7 @@
             </div>
         </div>
     </h:form>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-12 col-sm-6">
             <p:panel header="#{msg.add_new_course}" >
                 <h:form id="addcourse">

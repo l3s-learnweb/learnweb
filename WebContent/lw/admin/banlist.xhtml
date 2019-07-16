@@ -67,7 +67,7 @@
 					</p:panel>
                 </div>
             </div>
-            <h:form styleClass="" id="banlistform" >
+            <h:form styleClass="mt-3" id="banlistform" >
                 <p:dataTable var="accessData" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
@@ -75,7 +75,7 @@
                         <h:outputText value="#{accessData.name}" />
                     </p:column>
 
-                    <p:column style="width: 10%" headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
+                    <p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
                         <h:outputText value="#{accessData.banDate}">
                             <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
                         </h:outputText>

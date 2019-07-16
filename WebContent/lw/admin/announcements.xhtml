@@ -72,19 +72,19 @@
                             <h:outputText value="#{news.title}"/>
                         </p:column>
 
-                        <p:column style="width:8%" headerText="#{msg.date}" styleClass="m-auto" sortBy="#{news.date}">
+                        <p:column headerText="#{msg.date}" styleClass="m-auto" sortBy="#{news.date}">
                             <h:outputText  value="#{news.date}">
                                 <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
                             </h:outputText>
                         </p:column>
 
-                        <p:column style="width:6%" headerText="#{msg.hide}" sortBy="#{news.hidden}">
+                        <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
                             <p:selectBooleanCheckbox value="#{news.hidden}" styleClass="m-auto d-block">
                                 <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
                             </p:selectBooleanCheckbox>
                         </p:column>
 
-                        <p:column style="width:10%" headerText="#{msg.options}">
+                        <p:column headerText="#{msg.options}">
                             <f:facet name="header">
                                 #{msg.options}
                             </f:facet>

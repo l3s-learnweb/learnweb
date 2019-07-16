@@ -27,7 +27,7 @@
 
 
 
-				<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
+				<p:dataTable id="output" var="entry" styleClass="mt-3" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
 					<f:facet name="header">
 						#{msg.statistics}
 					</f:facet>
@@ -81,7 +81,7 @@
 				</p:panel>-->
 
 			<ui:fragment rendered="#{adminStatisticsBean.showDetails}" >
-				<p:panel header="#{msg.statistics_detailed}">
+				<p:panel styleClass="mt-3" header="#{msg.statistics_detailed}">
 						<div class="boolean-buttons">
 							<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
 												   onchange="$('.description').toggle();" value="off" />

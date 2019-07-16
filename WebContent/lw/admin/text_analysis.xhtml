@@ -22,7 +22,7 @@
                                      process="@form" update=":growl output1"/>
             </p:panel>
 
-            <p:panel id="output1" header="#{msg.comments}">
+            <p:panel styleClass="mt-3" id="output1" header="#{msg.comments}">
                     <p>#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}"/></p>
                     <h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank"
                             styleClass="command-button"/>

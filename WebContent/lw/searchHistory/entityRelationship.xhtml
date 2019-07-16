@@ -39,7 +39,7 @@
 				<p:remoteCommand name="setSelectedSearchIds" actionListener="#{searchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
 				<p:remoteCommand name="setSelectedGroupId" actionListener="#{searchHistoryBean.actionSelectedGroupId}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
 			</h:form>
-			<p:panel styleClass="ui-g ui-fluid pt-0 no-padding-panel-content">
+			<p:panel styleClass="ui-g ui-fluid pt-0 no-padding-panel-content w-100">
 				<div class="ui-g-4 ui-md-4 ui-lg-4 session-timeline">
 					<h:panelGroup id="sh_nav_dock" layout="block" styleClass="ui-g">
 						<div class="ui-g-12 ui-md-6 ui-lg-5">

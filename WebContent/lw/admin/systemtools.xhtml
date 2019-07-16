@@ -32,7 +32,7 @@
 					</p:column>
 
 
-					<p:column headerText="#{msg.username}" style="width: 3%;" sortBy="#{process.user}">
+					<p:column headerText="#{msg.username}" sortBy="#{process.user}">
 						<h:outputText value="#{process.user}" />
 					</p:column>
 
@@ -75,7 +75,7 @@
 			</h:form>
 
 		<h:form>
-			<p:panel>
+			<p:panel styleClass="mt-3">
 				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="command-button" value="Clear caches" />
 			</p:panel>
 		</h:form>

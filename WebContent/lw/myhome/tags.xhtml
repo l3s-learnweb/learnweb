@@ -13,10 +13,8 @@
 	<ui:define name="center_layout">
 		<h:form prependId="false">
 			<p:dataTable var="tag" value="#{userBean.user.tags}" id="tag_table">
-				<f:facet name="header">
-					#{msg.myTagsTitle}
-				</f:facet>
-				<p:column style="width:20%">
+
+				<p:column>
 					<f:facet name="header">
 						#{msg.tags}
 					</f:facet>
@@ -28,13 +26,11 @@
 						#{msg.resource}
 					</f:facet>
 					<p:repeat var="res" value="#{tag.resources}">
-						<div class="float-left" style="width:50%;padding:1px 0;">
 							<h:outputLink value="myhome/resources.jsf">
 								<f:param name="resource_id" value="#{res.id}" />
 								<f:param name="group_id" value="#{res.groupId}" />
 								<h:outputText value="#{res.title}" escape="false" />
 							</h:outputLink>
-						</div>
 					</p:repeat>
 				</p:column>
 			</p:dataTable>
