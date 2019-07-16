@@ -36,22 +36,22 @@ function openTagsDiv() {
 	if($('.overlay').width() === 0)
     {
 		$('.overlay').width("256px");
-	    $('.embedded').width($('.embedded').width() - 256);
-	    $('.right_bar').css("margin-right","256px");
+/*	    $('.embedded').width($('.embedded').width() - 256);
+	    $('.right_bar').css("margin-right","256px");*/
     }
 }
 
 function closeTagsDiv() {
 	$('.overlay').width("0px");	
-    $('.embedded').width($('.embedded').width() + 256);
-    $('.right_bar').css("margin-right","0px");
+/*    $('.embedded').width($('.embedded').width() + 256);
+    $('.right_bar').css("margin-right","0px");*/
     $('.note').removeClass('hover');
     $('.ui-selected').removeClass("ui-selected");
 }
 
 $(document).ready(function(){
 	//To include embedded TED video
-	$(".embedded").contents().each(function(index, node) {
+	$(".embed-responsive").contents().each(function(index, node) {
 		if (node.nodeType === 8) {
 		// node is a comment
 		$(node).replaceWith(node.nodeValue);
@@ -124,16 +124,14 @@ $(document).ready(function(){
 	});
 	
 	//To prevent selection when the mouse leaves the transcript HTML element
-	$('.embedded').mousedown(function() {return false;}); 
+	$('.embed-responsive').mousedown(function() {return false;});
 	$('.tedTranscript').mouseleave(function(){
 		deleteSelection();
 	});
 
 	if(!readOnly)
 		initializeJQueryContextMenu();
-	
-	initializeResizableDiv();
-	
+	//initializeResizableDiv();
 	$( "#selectable" ).selectable({
 	      stop: function() {
 	        $( ".ui-selected", this ).each(function() {
