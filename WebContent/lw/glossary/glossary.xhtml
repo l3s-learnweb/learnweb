@@ -17,6 +17,8 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
+<!--		responsive voice API-->
+		<script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
 		
@@ -93,6 +95,8 @@
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
 							<h:outputText value="#{item.pronounciation}" />
+							<button onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
+									type="button" value="Play">RV api</button>
 						</p:column>
 						<p:column headerText="#{msg['Glossary.acronym']}">
 							<h:outputText value="#{item.acronym}" />
