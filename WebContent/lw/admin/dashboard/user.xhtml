@@ -14,11 +14,6 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Dashboard"/>
 
-<style>
-    ul {
-        list-style: none;
-    }
-</style>
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="Dashboard" url="admin/dashboard/user.jsf#"/>
 </ui:define>
@@ -38,8 +33,8 @@
     </div>-->
     <h:form id="dateForm">
         <div class="row">
-            <div class="col-3">
-                <p:panel styleClass="w-75">
+            <div class="col-12 col-sm-6 col-md-5 col-xl-3">
+                <p:panel>
                     <div class="ui-inputgroup pb-3">
                         <p:outputLabel for="dateStart"/>
                         <p:calendar id="dateStart" value="#{glossaryDashboardUsersBean.startDate}"
@@ -61,7 +56,7 @@
     </h:form>
     <h:panelGroup id="dashboardMain" styleClass="col-12 mt-3" layout="block">
         <div class="row">
-            <p:panel styleClass="col-sm" header="Total Concepts">
+            <p:panel styleClass="col-12 col-sm-6 col-xl-3 mt-3 mt-sm-0" header="Total Concepts">
                 <f:facet name="actions">
                     <p:button id="totalConcepts" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
                               icon="ui-icon-help" onclick="return false;"/>
@@ -71,7 +66,7 @@
                     <h:outputText value="#{glossaryDashboardUsersBean.totalConcepts}"/>
                 </div>
             </p:panel>
-            <p:panel styleClass="col-sm" header="Total Terms">
+            <p:panel styleClass="col-12 col-sm-6 col-xl-3 mt-3 mt-sm-0" header="Total Terms">
                 <f:facet name="actions">
                     <p:button id="totalTerms" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help"
                               onclick="return false;"/>
@@ -81,7 +76,7 @@
                     <h:outputText value="#{glossaryDashboardUsersBean.totalTerms}"/>
                 </div>
             </p:panel>
-            <p:panel styleClass="col-sm" header="Total Sources">
+            <p:panel styleClass="col-12 col-sm-6 col-xl-3 mt-3 mt-xl-0" header="Total Sources">
                 <f:facet name="actions">
                     <p:button id="totalSources" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help"
                               onclick="return false;"/>
@@ -92,7 +87,7 @@
                 </div>
             </p:panel>
 
-            <p:panel styleClass="col-sm" header="Ratio terms/concept">
+            <p:panel styleClass="col-12 col-sm-6 col-xl-3 mt-3 mt-xl-0" header="Ratio terms/concept">
                 <div class="count">
                     <h:outputText value="#{glossaryDashboardUsersBean.ratioTermConcept}"/>
                 </div>
@@ -105,7 +100,7 @@
     </h:panelGroup>
 
     <div class="row mt-3">
-        <div class="col-8">
+        <div class="col-12 col-xl-8">
             <p:panel id="chart_plot_Interactions" header="Interactions">
                 <f:facet name="actions">
                     <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -115,7 +110,7 @@
                 <p:chart type="line" model="#{glossaryDashboardUsersBean.interactionsChart}" style="height:300px;" responsive="true"/>
             </p:panel>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-xl-4 mt-3 mt-xl-0">
             <p:panel id="chart_bar_userActivity" header="Users' Activity types">
                 <f:facet name="actions">
                     <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -190,7 +185,7 @@
     </h:form>
 
     <div class="row mt-3">
-        <div class="col-6">
+        <div class="col-12 col-xl-6">
             <p:panel id="pie_chart_sources" header="Sources">
                 <f:facet name="actions">
                     <p:button id="sourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -200,7 +195,7 @@
                 <p:chart type="pie" model="#{glossaryDashboardUsersBean.usersSourcesChart}" responsive="true"/>
             </p:panel>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-sm-8 col-xl-4 mt-3 mt-xl-0">
             <p:panel id="table_sources_list" header="User Proxy sources list" widgetVar="panel"
                      stickyHeader="true">
                 <f:facet name="actions">
@@ -221,8 +216,8 @@
                 </h:form>
             </p:panel>
         </div>
-        <div class="col-2" >
-            <div class="col-sm">
+        <div class="col-12 col-sm-4 col-xl-2 mt-3 mt-xl-0" >
+            <div class="">
                 <p:panel header="Total events">
                     <f:facet name="actions">
                         <p:button id="eventsNumber" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -234,7 +229,7 @@
                     </div>
                 </p:panel>
             </div>
-            <div class="col-sm mt-3">
+            <div class="mt-3">
                 <p:panel header="Time stay">
                     <f:facet name="actions">
                         <p:button id="timeStay" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -246,7 +241,7 @@
                     </div>
                 </p:panel>
             </div>
-            <div class="col-sm mt-3">
+            <div class="mt-3">
                 <p:panel header="Time active">
                     <f:facet name="actions">
                         <p:button id="timeActive" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -258,7 +253,7 @@
                     </div>
                 </p:panel>
             </div>
-            <div class="col-sm mt-3">
+            <div class="mt-3">
                 <p:panel header="Clicks">
                     <f:facet name="actions">
                         <p:button id="clicks" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
@@ -270,7 +265,7 @@
                     </div>
                 </p:panel>
             </div>
-            <div class="col-sm mt-3">
+            <div class="mt-3">
                 <p:panel header="Key presses">
                     <f:facet name="actions">
                         <p:button id="keyPresses" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
