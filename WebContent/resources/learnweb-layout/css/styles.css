@@ -13396,6 +13396,10 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   width: 30% !important;
 }
 
+.w-15 {
+  width: 15% !important;
+}
+
 .klapper_zu {
   /* TODO: remove this */
   height: 0.9rem;
