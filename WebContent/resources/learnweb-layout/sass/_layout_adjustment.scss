@@ -24,11 +24,24 @@
           li {
             &:first-child {
               font-size: 1.2rem;
+              a{
+                display: flex;
+                align-items: center;
+                width: auto;
+                span{
+                  display: none;
+                }
+              }
             }
 
             .ui-menuitem-link {
               top: 0;
             }
+
+            .ui-menuitem-text{
+              padding: .3rem;
+            }
+
           }
 
           .ui-breadcrumb-chevron {
