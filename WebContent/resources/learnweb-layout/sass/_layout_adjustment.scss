@@ -62,3 +62,14 @@
     }
   }
 }
+
+.dashboard {
+  .stats {
+    min-height: auto;
+
+    .stats-title,
+    .stats-numbers {
+      margin: 10px;
+    }
+  }
+}

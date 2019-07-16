@@ -17,58 +17,58 @@
 <ui:define name="center_layout">
     <h:form id="yourinformationform">
         <div class="dashboard flex-center">
-            <div class="ui-g-12 ui-md-12 ui-lg-8">
-                <div data-widget="widget_j_idt209" class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details ui-g-12">
-                    <div class="ui-panel-content ui-widget-content">
-                        <h:graphicImage library="your_information" name="universitaet_panorama.jpg" alt="profile background picture" ></h:graphicImage>
-                        <img src="#{yourPersonalInfoBean.userImage}" alt="profile photo" class="profile-avatar"></img>
-                        <span class="profile-name"><h:outputText value="#{yourPersonalInfoBean.fullName}" /></span>
-                        <span class="profile-role"><h:outputText value="#{yourGeneralInfoBean.username}" /></span>
-                        <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"
-                                role="button" aria-disabled="false"><span class="ui-button-text ui-c"><h:outputText value="#{msg.go_to_profile}"/></span></a>
-                        <div class="ui-g-12">
-                            <div class="profile-statistics-panel ui-g-4" style="">
-                                <span class="profile-statistics" >Personal data</span>
+            <div class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details">
+                <div class="ui-panel-content ui-widget-content">
+                    <h:graphicImage library="your_information" name="universitaet_panorama.jpg" alt="profile background picture" ></h:graphicImage>
+                    <img src="#{yourPersonalInfoBean.userImage}" alt="profile photo" class="profile-avatar"></img>
+                    <span class="profile-name"><h:outputText value="#{yourPersonalInfoBean.fullName}" /></span>
+                    <span class="profile-role"><h:outputText value="#{yourGeneralInfoBean.username}" /></span>
+                    <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"
+                            aria-disabled="false"><span class="ui-button-text ui-c"><h:outputText value="#{msg.go_to_profile}"/></span></a>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.dateofbirth}"/></div>
-                                    <div class="stats-title" style="margin: 10px;">
+                    <div class="container-fluid">
+                        <div class="row my-2">
+                            <div class="profile-statistics-panel col-4">
+                                <span class="profile-statistics">Personal data</span>
+
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.dateofbirth}"/></div>
+                                    <div class="stats-title">
                                         <h:outputText value="#{yourPersonalInfoBean.dateOfBirth}">
                                             <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
                                         </h:outputText>
                                     </div>
                                 </div>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.address}"/></div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourPersonalInfoBean.address}" /></div>
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.address}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.address}" /></div>
                                 </div>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.profession}"/></div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourPersonalInfoBean.userProfession}" /></div>
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.profession}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.userProfession}" /></div>
                                 </div>
                             </div>
-                            <div class="profile-statistics-panel ui-g-4">
+                            <div class="profile-statistics-panel col-4">
                                 <span class="profile-statistics"><h:outputText value="#{msg.account} #{msg.data}"/></span>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.email_address}"/></div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourPersonalInfoBean.email}" /></div>
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.email_address}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.email}" /></div>
                                 </div>
                             </div>
-
-                            <div class="profile-statistics-panel ui-g-4">
+                            <div class="profile-statistics-panel col-4">
                                 <span class="profile-statistics"><h:outputText value="#{msg.student} #{msg.data}"/></span>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.student_id}"/></div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourPersonalInfoBean.studentId}" /></div>
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.student_id}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.studentId}" /></div>
                                 </div>
 
-                                <div class="stats" style="min-height: auto;">
-                                    <div class="stats-numbers" style="margin: 10px;"><h:outputText value="#{msg.organization}"/></div>
-                                    <div class="stats-title" style="margin: 10px;"><h:outputText value="#{yourPersonalInfoBean.userOrganisation}" /></div>
+                                <div class="stats">
+                                    <div class="stats-numbers"><h:outputText value="#{msg.organization}"/></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.userOrganisation}" /></div>
                                 </div>
                             </div>
                         </div>

@@ -20,49 +20,42 @@
                 <div class="col-12">
 					<p:panel header="#{msg.manual_ban}">
 						<h:form id="banformreg">
-							<div class="row">
-								<div class="col-12 col-md-6">
-									<div class="col-12">
-										<div class="row">
-											<div class="col-5 col-md-2">
-												<h:outputText value="#{msg.name_or_ip}:" />
-											</div>
-											<div class="col-7 col-md-4">
-												<p:inputText value="#{adminBanlistBean.name}" styleClass="w-100" id="name" required="true" />
-											</div>
-											<div class="col-12 col-md-3">
-												<p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
-													<f:selectItem itemValue="user" itemLabel="User" />
-													<f:selectItem itemValue="ip" itemLabel="IP" />
-												</p:selectOneRadio>
-											</div>
-										</div>
-									</div>
-									<div class="col-12  mt-3">
-										<div class="row">
-											<div class="col-4 col-md-2">
-												<h:outputText value="#{msg.ban_for}:" />
-											</div>
-											<div class=" col-8 col-md-6 justify-content-between d-flex">
-												<ui:fragment >
-													<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="w-30"  />
-													<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="w-30"  />
-													<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="w-30" />
-												</ui:fragment>
-											</div>
-											<div class="col-12 col-md-2">
-												<ui:fragment>
-													<p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}"  id="permabancheckbox" styleClass="mr-1"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
-												</ui:fragment>
-											</div>
-										</div>
-									</div>
-									<div class="col-12">
-										<p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" styleClass="command-button mt-3" ajax="false" />
-									</div>
+							<div class="row my-2">
+								<div class="col-5 col-md-2">
+									<h:outputText value="#{msg.name_or_ip}:" />
+								</div>
+								<div class="col-7 col-md-5">
+									<p:inputText value="#{adminBanlistBean.name}" styleClass="w-100" id="name" required="true" />
+								</div>
+								<div class="col-12 col-md-5">
+									<p:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
+										<f:selectItem itemValue="user" itemLabel="User" />
+										<f:selectItem itemValue="ip" itemLabel="IP" />
+									</p:selectOneRadio>
 								</div>
 							</div>
-
+							<div class="row my-2">
+								<div class="col-5 col-md-2">
+									<h:outputText value="#{msg.ban_for}:" />
+								</div>
+								<div class="col-7 col-md-5 d-flex">
+									<ui:fragment >
+										<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="flex-fill w-100 mr-2 "  />
+										<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="flex-fill w-100 mr-2"  />
+										<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" class="flex-fill w-100" />
+									</ui:fragment>
+								</div>
+								<div class="col-12 col-md-5">
+									<ui:fragment>
+										<p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}"  id="permabancheckbox" styleClass="mr-1"/> <p:outputLabel for="permabancheckbox">#{msg.permaban}</p:outputLabel>
+									</ui:fragment>
+								</div>
+							</div>
+							<div class="row my-2">
+								<div class="col-12">
+									<p:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" styleClass="command-button mt-3" ajax="false" />
+								</div>
+							</div>
 						</h:form>
 					</p:panel>
                 </div>
@@ -127,9 +120,9 @@
 						
 						<h:outputText value="#{msg.ban_for}:" />
 						<ui:fragment>
-							<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" pt:value="" class="numinput" />
-							<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" pt:value="" class="numinput" />
-							<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" pt:value="" class="numinput" />
+							<h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="numinput" />
+							<h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="numinput" />
+							<h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins" class="numinput" />
 						</ui:fragment>
 
 						<ui:fragment>
