@@ -96,7 +96,7 @@
 
     </script>
     <h:form id="my_groups" >
-        <p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+        <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
             <f:facet name="header">
                 #{msg.myGroups}
             </f:facet>

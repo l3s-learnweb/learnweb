@@ -20,7 +20,6 @@
 
 </ui:define>
 <ui:define name="center_layout">
-
 	<p:panel styleClass="no-padding-panel-content">
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{forumTopicsBean.group}"/>
@@ -78,7 +77,7 @@
 				</p:column>
 				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
 					<h:outputText value="#{topic.lastPostDate}"
-								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-date':''}">
+								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'font-weight-bold':''}">
 						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 					<br/>
@@ -92,9 +91,7 @@
 
 
 	<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-		<p:panel styleClass="ml-0 mr-0" header="#{msg['ForumIndex.new_topic']}">
-
-			<div class="no-border">
+		<p:panel styleClass="mt-3" header="#{msg['ForumIndex.new_topic']}">
 				<h:form prependId="false">
 					<table id="new_topic_table">
 						<tr>
@@ -127,10 +124,20 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<p:editor id="post_message" styleClass="mb-2" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}"
-										  label="#{msg['PostShow.postContent']}"
-										  controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
-								</p:editor>
+								<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" label="#{msg['PostShow.postContent']}" >
+									<f:facet name="toolbar">
+						             <span class="ql-formats">
+						                <button class="ql-bold"></button>
+						                <button class="ql-italic"></button>
+						                <button class="ql-underline"></button>
+						                <button class="ql-strike"></button>
+						            </span>
+										<span class="ql-formats">
+						                <select class="ql-font"></select>
+						                <select class="ql-size"></select>
+						            </span>
+									</f:facet>
+								</p:textEditor>
 							</td>
 							<td >
 								<p:message for="post_message"/>
@@ -144,7 +151,7 @@
 						</tr>
 					</table>
 				</h:form>
-			</div>
+
 		</p:panel>
 	</ui:fragment>
 

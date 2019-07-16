@@ -38,12 +38,12 @@
                             <ui:fragment rendered="#{forumPostBean.member}">
                                 <p:commandButton value="#{msg['ForumIndex.post_reply']}"
                                                  href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
-                                                 styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton float-right"
+                                                 styleClass="float-right mb-2"
                                                  onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow');">
                                 </p:commandButton>
                             </ui:fragment>
 
-                            <p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"
+                            <p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}"
                                            update=":growl @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
                                 <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumPostBean.group}"/>
                             </p:commandLink>
@@ -65,11 +65,11 @@
                     <p:ajax event="page" onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
 
                     <p:column headerText="#{msg.author}" styleClass="col text-center">
-
+                        <div>
                         <h:link value="#{post.user.username}" styleClass="mx-auto"  outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
+                        </div>
 
-
-                        <img height="100" width="100" src="${learnwebBean.getProfileImage(post.user)}" id="profile_image" alt="profile image"/>
+                        <img class="img-fluid" src="${learnwebBean.getProfileImage(post.user)}" id="profile_image" alt="profile image"/>
 
                         <div>
                             <h:outputText value="#{msg.registered_since}: "/>
@@ -82,27 +82,25 @@
 
                     </p:column>
 
-                    <p:column headerText="#{msg['ForumIndex.messages']}"
-                              style="position:relative;" styleClass="align-top">
-                        <div class="post_title pb-4">
+                    <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="col align-top">
+                        <div class="p-1 border-bottom pb-4">
                             <div class="float-right">
                                 #{msg['ForumIndex.postedOn']}
-                                <h:outputText value="#{post.date}" >
+                                <h:outputText value="#{post.date}">
                                     <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
                             </div>
                             <ui:fragment rendered="#{not empty post.category}">
                                 #{msg.category}: #{post.category}
                             </ui:fragment>
-                            <div class="clear"></div>
                         </div>
 
-                        <div class="post_text">
+                        <div class="">
                             <h:outputText value="#{post.text}" escape="false"/>
-
-                            <div class="post_button">
+                            <!--float-right w-100 p-2 border-top position-absolute-->
+                            <div class="border-top w-100 position-absolute" style="bottom:0px;">
                                 <ui:fragment rendered="#{post.editCount gt 0}">
-                                    <div class="post_info">
+                                    <div class="float-left py-2">
                                         <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
                                             <f:param value="#{post.editCount}"/>
                                             <f:param value="#{post.lastEditDate}"/>
@@ -112,14 +110,14 @@
                                 </ui:fragment>
 
                                 <p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" ajax="true"
-                                               actionListener="#{forumPostBean.deletePost(post)}" styleClass="float-right" update=":forum_post_table"/>
-                                <h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="float-right">
+                                               actionListener="#{forumPostBean.deletePost(post)}" styleClass="float-right mr-2 p-2" update=":forum_post_table"/>
+                                <h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="float-right mr-2 p-2">
                                     <f:param name="post_id" value="#{post.id}"/>
                                     #{msg.edit}
                                 </h:outputLink>
                                 <p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}"
                                                oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message"
-                                               ajax="true" styleClass="float-right"/>
+                                               ajax="true" styleClass="float-right mr-2 p-2"/>
                             </div>
                         </div>
                     </p:column>
@@ -127,20 +125,20 @@
             </h:form>
         </p:panel>
         <ui:fragment rendered="#{forumPostBean.member}">
-            <p:panel header="#{msg['ForumIndex.reply']}" styleClass="ml-0 mr-0">
+            <p:panel header="#{msg['ForumIndex.reply']}" styleClass="mt-3">
 
                 <h:form id="post_form">
                     <table id="answer_table">
                         <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
-                            <tr>
-                                <td class="width_10">
+                            <tr class="mb-2">
+                                <td>
                                     <h:outputText value="#{msg.category}: " />
                                 </td>
-                                <td><p:selectOneMenu id="post_category" styleClass="category" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
+                                <td><p:selectOneMenu id="post_category" styleClass="w-100" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
                                                      value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
                                     <f:selectItems value="#{forumPostBean.categories}" />
                                 </p:selectOneMenu></td>
-                                <td class="width_30">
+                                <td>
                                     <p:message for="post_category" />
                                 </td>
                             </tr>
@@ -168,7 +166,7 @@
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button"
+                                <p:commandButton ajax="true" value="#{msg.save}" styleClass="mt-2"
                                                  action="#{forumPostBean.onSavePost}" validateClient="true" update="@form :forum_post_table" />
                             </td>
                         </tr>
