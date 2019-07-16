@@ -20,7 +20,8 @@
       .ui-icon {
         position: absolute;
         top: 50%;
-        margin-top: -8px;
+        margin-top: -7px;
+        margin-left: 2px;
       }
 
       > span,
@@ -28,15 +29,7 @@
         color: $primaryTextColor;
       }
 
-      .ui-icon-triangle-1-s {
-        margin-top: -6px;
-        margin-left: 2px;
-        @include icon_override("\f107");
-      }
-
       .ui-icon-triangle-1-e {
-        margin-top: -7px;
-        margin-left: 2px;
         @include icon_override("\f105");
       }
 
@@ -54,6 +47,16 @@
         a {
           cursor: default;
         }
+      }
+    }
+
+    &.ui-state-expand {
+      > .ui-lwmenu-panel-header > .ui-icon:before {
+        content: "\f107";
+      }
+
+      > .ui-lwmenu-panel-content {
+        display: block;
       }
     }
   }
@@ -81,6 +84,22 @@
         min-width: 18px;
       }
     }
+
+    &.ui-state-expand {
+      > .ui-menuitem-link > .ui-lwmenu-icon:before {
+        content: "\f0d7";
+      }
+
+      > .ui-menu-list {
+        display: block;
+      }
+    }
+
+    &.ui-state-empty {
+      > .ui-menuitem-link > .ui-lwmenu-icon {
+        visibility: hidden;
+      }
+    }
   }
 
   .ui-icon {
@@ -95,10 +114,6 @@
     min-width: 22px;
     height: 28px;
     margin: auto 0;
-
-    &.ui-icon-empty {
-      visibility: hidden;
-    }
   }
 
   .ui-menuitem {

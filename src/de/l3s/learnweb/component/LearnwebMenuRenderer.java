@@ -78,10 +78,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         String style = submenu.getStyle();
         String styleClass = submenu.getStyleClass();
         styleClass = styleClass == null ? LearnwebMenu.PANEL_CLASS : LearnwebMenu.PANEL_CLASS + " " + styleClass;
-        boolean expanded = submenu.isExpanded();
-        String headerClass = expanded ? LearnwebMenu.ACTIVE_HEADER_CLASS : LearnwebMenu.INACTIVE_HEADER_CLASS;
-        String headerIconClass = expanded ? LearnwebMenu.ACTIVE_TAB_HEADER_ICON_CLASS : LearnwebMenu.INACTIVE_TAB_HEADER_ICON_CLASS;
-        String contentClass = expanded ? LearnwebMenu.ACTIVE_ROOT_SUBMENU_CONTENT : LearnwebMenu.INACTIVE_ROOT_SUBMENU_CONTENT;
+        styleClass = submenu.isExpanded() ? styleClass + " ui-state-expand" : styleClass;
 
         //wrapper
         writer.startElement("li", null);
@@ -93,13 +90,13 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         //header
         writer.startElement("div", null);
-        writer.writeAttribute("class", headerClass, null);
+        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_CLASS, null);
         writer.writeAttribute("role", "tab", null);
         writer.writeAttribute("tabindex", "0", null);
 
         //icon
         writer.startElement("span", null);
-        writer.writeAttribute("class", headerIconClass, null);
+        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_ICON_CLASS, null);
         writer.endElement("span");
 
         writer.startElement("a", null);
@@ -120,7 +117,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         //content
         writer.startElement("div", null);
-        writer.writeAttribute("class", contentClass, null);
+        writer.writeAttribute("class", LearnwebMenu.PANEL_CONTENT_CLASS, null);
         writer.writeAttribute("role", "tabpanel", null);
         writer.writeAttribute("id", menu.getClientId(context) + "_" + submenu.getId(), null);
         writer.writeAttribute("tabindex", "0", null);
@@ -183,11 +180,8 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         String style = submenu.getStyle();
         String styleClass = submenu.getStyleClass();
         styleClass = styleClass == null ? LearnwebMenu.DESCENDANT_SUBMENU_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_CLASS + " " + styleClass;
-        boolean expanded = submenu.isExpanded();
-        boolean isEmpty = submenu.getElementsCount() == 0;
-        String toggleIconClass = isEmpty ? LearnwebMenu.DESCENDANT_SUBMENU_EMPTY_ICON_CLASS :
-                (expanded ? LearnwebMenu.DESCENDANT_SUBMENU_EXPANDED_ICON_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_COLLAPSED_ICON_CLASS);
-        String listClass = expanded ? LearnwebMenu.DESCENDANT_SUBMENU_EXPANDED_LIST_CLASS : LearnwebMenu.DESCENDANT_SUBMENU_COLLAPSED_LIST_CLASS;
+        styleClass = submenu.getElementsCount() == 0 ? styleClass + " ui-state-empty" : styleClass;
+        styleClass = submenu.isExpanded() ? styleClass + " ui-state-expand" : styleClass;
         boolean hasIcon = (icon != null);
         String linkClass = (hasIcon) ? LearnwebMenu.MENUITEM_LINK_WITH_ICON_CLASS : LearnwebMenu.MENUITEM_LINK_CLASS;
 
@@ -209,7 +203,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         //toggle icon
         writer.startElement("span", null);
-        writer.writeAttribute("class", toggleIconClass, null);
+        writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_ICON_CLASS, null);
         writer.endElement("span");
 
         //user icon
@@ -232,7 +226,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         if(submenu.getElementsCount() > 0)
         {
             writer.startElement("ul", null);
-            writer.writeAttribute("class", listClass, null);
+            writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_LIST_CLASS, null);
             encodeMenuElements(context, menu, submenu.getElements());
             writer.endElement("ul");
         }

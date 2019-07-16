@@ -108,6 +108,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         }
 
         this.restoreState();
+        this.markCurrentMenuItem();
     },
 
     bindEvents: function () {
@@ -377,24 +378,21 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     collapseRootSubmenu: function (header) {
+        header.parent().removeClass('ui-state-expand');
+        header.attr('aria-expanded', false).removeClass('ui-state-active').addClass('ui-state-hover');
+
         var panel = header.next();
-
-        header.attr('aria-expanded', false).removeClass('ui-state-active ui-corner-top').addClass('ui-state-hover ui-corner-all')
-            .children('.ui-icon').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
-
         panel.attr('aria-hidden', true).slideUp('normal', 'easeInOutCirc');
-
         this.removeAsExpanded(panel);
     },
 
     expandRootSubmenu: function (header, restoring) {
+        header.parent().addClass('ui-state-expand');
+        header.attr('aria-expanded', true).addClass('ui-state-active').removeClass('ui-state-hover');
+
         var panel = header.next();
-
-        header.attr('aria-expanded', true).addClass('ui-state-active ui-corner-top').removeClass('ui-state-hover ui-corner-all')
-            .children('.ui-icon').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
-
         if (restoring) {
-            panel.attr('aria-hidden', false).show();
+            panel.attr('aria-hidden', false);
         } else {
             panel.attr('aria-hidden', false).slideDown('normal', 'easeInOutCirc');
 
@@ -403,11 +401,8 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     expandTreeItem: function (submenu, restoring) {
-        var submenuLink = submenu.find('> .ui-menuitem-link');
-
-        submenuLink.find('> .ui-menuitem-text').attr('aria-expanded', true);
-        submenuLink.find('> .ui-lwmenu-icon').addClass('ui-icon-triangle-1-s');
-        submenu.children('.ui-menu-list').show();
+        submenu.addClass('ui-state-expand');
+        submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', true);
 
         if (!restoring) {
             this.addAsExpanded(submenu);
@@ -415,11 +410,8 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     collapseTreeItem: function (submenu) {
-        var submenuLink = submenu.find('> .ui-menuitem-link');
-
-        submenuLink.find('> .ui-menuitem-text').attr('aria-expanded', false);
-        submenuLink.find('> .ui-lwmenu-icon').removeClass('ui-icon-triangle-1-s');
-        submenu.children('.ui-menu-list').hide();
+        submenu.removeClass('ui-state-expand');
+        submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', false);
 
         this.removeAsExpanded(submenu);
     },
@@ -462,6 +454,33 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             for (var i = 0; i < activeTreeSubmenus.length; i++) {
                 this.expandedNodes.push(activeTreeSubmenus.eq(i).parent().attr('id'));
             }
+        }
+    },
+
+    markCurrentMenuItem: function () {
+        var currentPath = window.location.pathname + window.location.search;
+        var activeMenuLinks = this.menuitemLinks.filter('a[href="' + currentPath + '"]');
+
+        if (activeMenuLinks.length) {
+            var that = this;
+            activeMenuLinks.each(function () {
+                var activeMenuLink = $(this);
+                var activeMenuItem = activeMenuLink.closest('.ui-menuitem');
+
+                activeMenuLink.addClass('ui-state-active');
+                that.expandMenuItemThree(activeMenuItem);
+            });
+        }
+    },
+
+    expandMenuItemThree: function (submenu) {
+        if (!submenu.hasClass('ui-state-empty')) {
+            this.expandTreeItem(submenu);
+        }
+
+        var parentSubmenu = submenu.parent().closest('.ui-menu-parent');
+        if (parentSubmenu.length) {
+            this.expandMenuItemThree(parentSubmenu);
         }
     },
 

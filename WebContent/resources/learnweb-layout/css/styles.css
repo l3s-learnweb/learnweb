@@ -13592,31 +13592,14 @@ html {
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon {
   position: absolute;
   top: 50%;
-  margin-top: -8px;
+  margin-top: -7px;
+  margin-left: 2px;
 }
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > span,
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > a {
   color: #fff;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-s {
-  margin-top: -6px;
-  margin-left: 2px;
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-s:before {
-  content: "";
-}
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-e {
-  margin-top: -7px;
-  margin-left: 2px;
   background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
@@ -13642,6 +13625,12 @@ html {
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled a {
   cursor: default;
 }
+.ui-lwmenu .ui-lwmenu-panel.ui-state-expand > .ui-lwmenu-panel-header > .ui-icon:before {
+  content: "";
+}
+.ui-lwmenu .ui-lwmenu-panel.ui-state-expand > .ui-lwmenu-panel-content {
+  display: block;
+}
 .ui-lwmenu .ui-menu-parent .ui-menu-list {
   position: static;
   margin-left: 10px;
@@ -13658,6 +13647,15 @@ html {
 .ui-lwmenu .ui-menu-parent .ui-menu-parent .ui-icon {
   min-width: 18px;
 }
+.ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menuitem-link > .ui-lwmenu-icon:before {
+  content: "";
+}
+.ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menu-list {
+  display: block;
+}
+.ui-lwmenu .ui-menu-parent.ui-state-empty > .ui-menuitem-link > .ui-lwmenu-icon {
+  visibility: hidden;
+}
 .ui-lwmenu .ui-icon {
   right: auto;
   top: 0;
@@ -13670,9 +13668,6 @@ html {
   min-width: 22px;
   height: 28px;
   margin: auto 0;
-}
-.ui-lwmenu .ui-icon.ui-icon-empty {
-  visibility: hidden;
 }
 .ui-lwmenu .ui-menuitem {
   margin: 1px 0;
@@ -13973,105 +13968,7 @@ html {
 }
 
 .section-forum {
-  /*both pages*/
-  /*change primefaces ui*/
-  /*
-  .ui-state-active, .ui-state-highlight{
-      background-image:none !important;
-      background-color:#d1d1d1 !important;
-      color:#4f4f4f !important;
-      text-shadow:none !important;
-      border:1px solid #8F8F8F !important;
-  }
-  .ui-state-hover, .ui-state-focus{
-      box-shadow:none !important;
-      border:1px solid #a8a8a8 !important;
-      background-color:#d1d1d1 !important;
-      background-image:none !important;
-      color:#4f4f4f !important;
-  }
-  */
-  /*forum_page*/
   /*forum_post_page*/
-  /*quote, edit, clear buttons*/
-  /* These values have to be set when the style tags in forumPostBean are changed
-  .post_quote {
-  }
-  .post_quote_name{
-  }
-  */
-}
-.section-forum #forum_post_table tr td:first-child a {
-  font-weight: bold;
-  color: #489a83;
-}
-.section-forum #forum_table tr td:first-child a, .section-forum #forum_table tr td:first-child + td a {
-  font-weight: bold;
-  color: #489a83;
-}
-.section-forum #forum_table tr td:last-child a {
-  font-weight: bold;
-  color: #489a83;
-}
-.section-forum #center_header_form a {
-  padding: 6px 12px;
-}
-.section-forum #new_topic, .section-forum #reply {
-  margin-top: 2rem;
-}
-.section-forum .grey_border {
-  margin-bottom: 2rem;
-  overflow: auto;
-}
-.section-forum .save_button {
-  margin-top: 1rem;
-}
-.section-forum .ui-selectonemenu .ui-selectonemenu-label, .section-forum .ui-selectonemenu .ui-selectonemenu-trigger {
-  border: none !important;
-}
-.section-forum .ui-selectonemenu-item .ui-selectonemenu-list-item:hover, .section-forum .ui-selectonemenu-item .ui-selectonemenu-list-item:focus {
-  border: none !important;
-}
-.section-forum .ui-selectonemenu-panel .ui-selectonemenu-list-item {
-  border: 1px solid #ffffff;
-}
-.section-forum .ui-shadow {
-  box-shadow: none;
-}
-.section-forum .ui-corner-right {
-  border-radius: 0;
-  border-right: 1px solid #a8a8a8;
-}
-.section-forum #new_topic_table, .section-forum #answer_table {
-  font-size: 1rem;
-  width: 100%;
-  min-width: 300px !important;
-  /* doesn't work?!*/
-}
-.section-forum .width_10 {
-  width: 10%;
-}
-.section-forum .width_30 {
-  width: 30%;
-}
-.section-forum #post_message {
-  margin-top: 10px;
-}
-.section-forum #post_category {
-  vertical-align: middle;
-}
-.section-forum #post_topic {
-  box-sizing: border-box;
-  width: 100%;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  outline: none;
-}
-.section-forum .category {
-  width: 30% !important;
-}
-.section-forum .category input {
-  width: 95% !important;
 }
 .section-forum #forum_post_table tr th:first-child {
   width: 13%;
@@ -14080,7 +13977,6 @@ html {
 }
 .section-forum #forum_post_table tr td:first-child {
   width: 13%;
-  min-width: 100px !important;
   /* doesn't work?!*/
   vertical-align: top;
 }
@@ -14090,40 +13986,22 @@ html {
 .section-forum #forum_post_table tr td:last-child {
   vertical-align: top;
 }
-.section-forum .post_title {
-  border-bottom: 1px solid #a8a8a8;
-  padding: 1rem 0;
-  margin-top: -4px;
-}
-.section-forum .post_button a {
-  padding: 0.2rem 0.8rem;
-  margin-left: 0.5rem;
-}
-.section-forum .post_text {
-  position: relative;
-  min-height: 7rem;
-  padding-bottom: 6rem;
-  margin-bottom: -4px;
-  margin-top: 0.4rem;
-}
-.section-forum .post_button {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  padding: 0.6rem 0;
-  box-sizing: border-box;
-  text-align: right;
-  border-top: 1px solid #a8a8a8;
-}
-.section-forum .post_info {
-  float: left;
-  line-height: 2.4rem;
-}
-.section-forum .post_quote .post_quote {
-  background-color: #bbbbbb !important;
-}
-.section-forum .new-topic-date {
-  font-weight: bold;
+@media (min-width: 360px) and (max-width: 767.98px) {
+  .section-forum #forum_post_table tr th:first-child {
+    width: 30%;
+    /* doesn't work?!*/
+  }
+  .section-forum #forum_post_table tr td:first-child {
+    width: 30%;
+    /* doesn't work?!*/
+    vertical-align: top;
+  }
+  .section-forum #forum_post_table tr td:first-child div {
+    margin-bottom: 1rem;
+  }
+  .section-forum #forum_post_table tr td:last-child {
+    vertical-align: top;
+  }
 }
 .section-forum .new-topic-title {
   background: url("#{resource['main-template/img/message.png']}") left no-repeat;
@@ -16332,6 +16210,210 @@ html {
 }
 .section-search .filter-sub-bar {
   box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.section-ted-transcript {
+  /* When the height of the screen is less than 450 pixels, change the position the close button again*/
+  /* Style the tablinks inside the list items */
+  /*
+  .embedded {
+      !*
+      padding-top: 5px;
+      padding-left: 5px;
+        position: absolute;
+
+        height: 92%;
+        max-height: 92%;
+        *!
+      box-sizing: border-box;
+      position: relative;
+      float:left;
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      padding-top: 4.6rem;
+      border-right:5px solid #ccc;
+      transition: 0.3s;
+  }
+  .embedded iframe {
+      border:10px solid white;
+      box-sizing: border-box;
+      height: auto;
+  }*/
+  /*.note:hover{
+      background-color:#c4fcff !important;
+  }*/
+}
+.section-ted-transcript .overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  right: 0;
+  top: 2%;
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-x: hidden;
+  transition: 0.3s;
+}
+.section-ted-transcript .overlay-content {
+  position: relative;
+  top: 20%;
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+}
+.section-ted-transcript #selectable {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.section-ted-transcript #selectable .ui-selecting {
+  background: #50c09c;
+}
+.section-ted-transcript #selectable .ui-selected {
+  background: #4ea68d;
+  color: white;
+}
+.section-ted-transcript #selectable li {
+  padding: 8px;
+  font-size: 1.6rem;
+  color: black;
+  display: block;
+}
+.section-ted-transcript .overlay .closebtn {
+  position: absolute;
+  top: 45px;
+  right: 0px;
+  font-size: 60px;
+  width: 26px;
+  height: 26px;
+  background: url("#{resource['image:cross_white.png']}") center no-repeat;
+}
+@media screen and (max-height: 450px) {
+  .section-ted-transcript .overlay .closebtn {
+    font-size: 40px;
+    top: 45px;
+    right: 0px;
+  }
+}
+.section-ted-transcript ul.tab {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  border-radius: 2px;
+  top: 11%;
+}
+.section-ted-transcript ul.tab li {
+  float: left;
+}
+.section-ted-transcript ul.tab li a {
+  display: inline-block;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 6px 8px;
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 1.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.section-ted-transcript ul.tab li a:hover {
+  background-color: #ddd;
+  color: #000000;
+}
+.section-ted-transcript ul.tab li a:focus {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+.section-ted-transcript .active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+.section-ted-transcript #textarea_s {
+  height: 60px;
+  width: 90%;
+}
+.section-ted-transcript #textarea_m {
+  height: 100px;
+  width: 90%;
+}
+.section-ted-transcript #textarea_l {
+  height: 180px;
+  width: 90%;
+}
+.section-ted-transcript .options_button {
+  float: right;
+  position: relative;
+  top: -5px;
+  right: 2px;
+}
+.section-ted-transcript .options_button > button {
+  padding: 6px 26px 6px 12px !important;
+}
+.section-ted-transcript .transcript_note {
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #A4A4A4;
+}
+.section-ted-transcript .highlight {
+  background-color: yellow;
+}
+.section-ted-transcript .colorpicker {
+  background: yellow;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: auto;
+  border: 1px solid gray;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+.section-ted-transcript .note {
+  background-color: yellow;
+}
+.section-ted-transcript .hover {
+  background-color: #c4fcff !important;
+}
+.section-ted-transcript .ui-corner-all {
+  border-radius: 0px;
+}
+.section-ted-transcript .button_position {
+  float: right;
+  bottom: 5px;
+}
+.section-ted-transcript #transcript_column .ui-layout-unit-header {
+  background: none;
+  background-color: #eee !important;
+  border: 1px solid #ddd !important;
+  border-radius: 0px !important;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  padding: 10px;
+  max-height: 100%;
+}
+.section-ted-transcript .tedTranscript {
+  padding: 15px 5px 0px 15px;
+  text-align: justify;
+  border: 1px solid #A4A4A4;
+}
+.section-ted-transcript #ted_transcript::selection, .section-ted-transcript #ted_transcript::-moz-selection {
+  background: yellow;
+}
+.section-ted-transcript .noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Chrome/Safari/Opera */
+  -khtml-user-select: none;
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
 }
 
 /*# sourceMappingURL=styles.css.map */
