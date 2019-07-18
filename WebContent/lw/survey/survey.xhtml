@@ -24,28 +24,6 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="survey" name="survey.css" />
 
-		<style>
-			.print-only { display:none; }
-			
-			.survey .question { max-width: 80rem; }
-			
-			.survey .question > label {
-			    display: block;
-			    margin: 1rem 0 0.4rem;
-			}
-			.survey h3 {				
-			    margin: 1.6rem 0 0.6rem;
-			}
-			
-			@media print {
-				.print-only { display: block; }
-			
-				.survey h3 { break-after: avoid; }
-				.survey .question { break-inside: avoid; border:1px solid red; }
-				
-			}
-		</style>
-
 		<h:form id="form" rendered="#{surveyBean.resource != null}">
 		
 			<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
@@ -53,16 +31,15 @@
 				<h:panelGroup rendered="#{surveyBean.formEnabled}" >
 					
 					<h:panelGroup id="questions" styleClass="survey">
-						<h:panelGroup styleClass="print-only">
-							<h2>#{surveyBean.resource.title}</h2>
-						</h:panelGroup>
+					
+						<h2 class="d-none d-print-block">#{surveyBean.resource.title}</h2>
 						
 						<c:forEach var="question" items="#{surveyBean.resource.questions}">
 
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">							
 									<h3>
-										<h:outputText value="${question.label}" style="font-style: italic; font-weight: bold;" />
+										<h:outputText value="${question.label}" />
 									</h3>
 								</c:if>
 								<c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
@@ -182,7 +159,7 @@
 							action="#{surveyBean.onSubmit()}" update=":message @form"
 							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
 							ajax="true">
-							<p:confirm message="Do you want to submit this form finally? You will not be able to change your answers." disabled="#{not surveyBean.resource.saveable}" />
+							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}" />
 						</p:commandButton>
 	
 						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
@@ -199,14 +176,14 @@
 				</h:panelGroup>	
 				
 				<ui:fragment rendered="#{not surveyBean.formEnabled}">
-					<h:outputText value="You can't edit this survey." />
+					<h:outputText value="#{msg['survey.cant_edit']}" />
 					<br />
 					<br />
 					
 					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="float-left greenbutton">
 						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
-						<h:outputText value="View answers" />
+						<h:outputText value="#{msg['survey.View_answers']}" />
 					</h:outputLink>
 
 					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}"  

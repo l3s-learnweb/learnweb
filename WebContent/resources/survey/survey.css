@@ -14,6 +14,7 @@
 	table-layout: auto !important;
 }
 
+/* copied from glossary: should be removed */
 .noresource {
 	font-weight: bold;
 	font-size: 1.5rem;
@@ -21,11 +22,27 @@
 	text-align: center;
 }
 
-.inputfield {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 1.5rem;
-	font-style: italic;
-	width: 15em !important;
-	color: #489a83;
-	outline: none;
+
+
+
+
+.survey .question { max-width: 80rem; }
+.survey input { display:block; }
+.survey .question > label {
+    display: block;
+    margin: 1rem 0 0.4rem;
 }
+.survey h3 {				
+    margin: 1.6rem 0 0.6rem;
+}
+
+@media print {		
+	.survey .question { break-inside: avoid; }
+	
+	/* bootstrap rules can be removed in new template */
+	.d-print-block { display: block; }
+	h3 { break-after: avoid; }				
+}
+
+/* bootstrap rule can be removed in new template */
+.d-none { display:none; }
