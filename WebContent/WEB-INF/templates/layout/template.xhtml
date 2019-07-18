@@ -39,7 +39,7 @@
         </h:head>
 
         <h:body styleClass="main-body">
-            <div class="layout-wrapper #{guestPreferences.menuLayout == 'overlay' ? 'layout-wrapper-overlay-sidebar': null}">
+            <div class="layout-wrapper">
                 <ui:include src="topbar.xhtml"/>
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <ui:include src="sidebar.xhtml"/>
