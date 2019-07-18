@@ -5,32 +5,33 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<!--@elvariable id="news" type="java.util.List<de.l3s.learnweb.LogEntry>"-->
-	<style>.grey_border {margin-bottom:2rem;}</style>
-	
-	<h:dataTable var="logEntry" value="#{news}" style=" width: 100%;" id="logEntry">
-							
-		<h:column>
-			<p:panel styleClass="m-0 p-2">
-			<div class="float-left">
-				<img id="userpic" src="#{logEntry.userImage}" width="30" height="30"  alt="Profile picture"/>
+
+
+	<p:repeat value="#{news}" var="logEntry">
+		<p:panel styleClass="m-0 p-2 d-flex rounded-sm mt-1">
+			<div class="d-flex align-items-center ">
+				<img id="userpic" class="mr-4 mr-md-2 rounded-circle" src="#{logEntry.userImage}" width="45" height="45"  alt="Profile picture"/>
+				<div class="d-flex flex-column">
+					<div>
+						<h:outputText value="#{logEntry.description}" escape="false"  />
+						<h:panelGroup rendered="#{logEntry.queryNeeded}">
+							<h:outputText value=" #{msg.with_query}" escape="false"  />
+							<h:outputLink value="search.jsf">
+								<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+								<f:param name="query" value="#{logEntry.resource.query}"/>
+								<f:param name="action" value="web"/>
+							</h:outputLink>
+							<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+						</h:panelGroup>
+					</div>
+
+					<small><h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" styleClass="font-weight-light"/></small>
+				</div>
 			</div>
-			<div style="padding-left: 0.5rem;">
-				<h:outputText value="#{logEntry.description}" style="padding-left: 0.5rem;" escape="false"  />
-				<h:panelGroup rendered="#{logEntry.queryNeeded}">
-					<h:outputText value=" #{msg.with_query}" escape="false"  />
-						<h:outputLink value="search.jsf" style="text-decoration:none;">
-							<h:outputText value=" #{logEntry.resource.query}" escape="false" style="font-weight:bold; "/>
-							<f:param name="query" value="#{logEntry.resource.query}"/>
-							<f:param name="action" value="web"/>
-						</h:outputLink>
-					<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
-				</h:panelGroup>
-			</div>
-						
-			<h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>
-			</p:panel>
-		</h:column>	
-									
-	</h:dataTable>
+
+
+
+		</p:panel>
+	</p:repeat>
 				
 </ui:composition>

@@ -65,7 +65,7 @@ public class LogEntry implements Serializable
 
         String url = "";//Learnweb.getInstance().getServerUrl() + "/lw/";
 
-        String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration:none;\">" + username + "</a> ";
+        String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\">" + username + "</a> ";
 
         String resourceTitle = rs.getString("resource_title");
         resourceTitle = (null == resourceTitle) ? "a resource" : "<b>" + StringHelper.shortnString(resourceTitle, 80) + "</b>";
@@ -78,7 +78,7 @@ public class LogEntry implements Serializable
         else
         {
             groupTitle = StringHelper.shortnString(groupTitle, 80);
-            groupLink = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#53b398;text-decoration:none;font-weight:bold\">" + groupTitle + "</a>";
+            groupLink = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" >" + groupTitle + "</a>";
         }
 
         switch(action)

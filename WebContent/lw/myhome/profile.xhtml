@@ -1,233 +1,200 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml">
+<ui:composition
+        template="/WEB-INF/templates/layout/template.xhtml"
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+        xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
-<ui:param name="rightPane" value="true"/>
 
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
 </ui:define>
-<ui:define name="right_layout" >
-
-
-    <style type="text/css">
-        .ui-state-hover, .ui-state-focus, .ui-state-active {
-            box-shadow: 0 0 0px 0px #fff !important;
-            background-color: #d1d1d1 !important;
-            background-image: none !important;
-            border: 1px solid #a8a8a8 !important;
-        }
-
-        #profile_form td textarea,
-        #profile_form td input[type=text] {
-            width: 100%;
-            max-width: 40rem;
-            box-sizing: border-box;
-        }
-
-        .first-column {
-            width: 19%;
-        }
-    </style>
-
-    <p:panel header="#{msg.edit_profile}" styleClass="m-0">
-
-        <h:form id="profile_form" enctype="multipart/form-data" style="position:relative;">
-            <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
-
-            <h:panelGroup id="profile_image" style="position:absolute; right:1rem;">
-                <img height="100" width="100" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
-                     alt="Profile image"/>
-            </h:panelGroup>
-            <h:panelGrid columns="3" style="position:relative; width:100%;" columnClasses="first-column">
-                <h:outputText value="#{msg.username}:"/>
-                <p:inputText id="username" value="#{profileBean.username}" validator="#{profileBean.validateUsername}" style="width:16rem"
-                             label="#{msg.username}">
-                    <f:ajax render="usernameMessage"/>
-                </p:inputText>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage"/>
-
-                <h:outputText value="#{msg.photo}:"/>
-                <p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" style="width:16rem"
-                              update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb" sizeLimit="10485760"
-                              allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
-                              disabled="#{profileBean.anonymizeUsername}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="userphoto" id="userphotoMessage"/>
-
-                <h:outputText value="#{msg.gender}:"/>
-                <h:selectOneMenu id="usergender" value="#{profileBean.gender}" style="width:16rem">
-                    <f:selectItem id="g0" itemLabel="--" itemValue="0"/>
-                    <f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1"/>
-                    <f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2"/>
-                </h:selectOneMenu>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="usergender" id="usergenderMessage"/>
-
-
-                <h:outputText>
-                    #{msg.email_address}<h:outputText value=" *" rendered="#{profileBean.mailRequired}"/>:
-                </h:outputText>
-                <p:inputText id="useremail" value="#{profileBean.email}" label="#{msg.email_address}:">
-                    <f:ajax render="useremailMessage"/>
-                </p:inputText>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage"/>
-
-                <h:outputText>
-                    #{msg.student_id}<h:outputText value=" *" rendered="#{profileBean.studentIdRequired}"/>:
-                </h:outputText>
-                <p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage"/>
-
-                <h:outputText value="Consent:" rendered="#{profileBean.studentIdRequired}"/>
-                <h:panelGroup rendered="#{profileBean.studentIdRequired}">
-                    <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.acceptTermsAndConditions}"/>
-                    <p:outputLabel value=" I've given consent to use my data for the project" for="accept_terms"/>
-                </h:panelGroup>
-                <p:message rendered="#{profileBean.studentIdRequired}" showSummary="true" showDetail="false" styleClass="error" for="accept_terms"
-                           id="accept_termsMessage"/>
-
-                <h:outputText value="#{msg.full_name}:"/>
-                <p:inputText id="userfullname" value="#{profileBean.fullName}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="userfullname" id="userfullnameMessage"/>
-
-                <h:outputText value="#{msg.affiliation}:"/>
-                <p:inputText id="useraffiliation" value="#{profileBean.affiliation}" required="#{profileBean.affiliationRequired}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="useraffiliation" id="useraffiliationMessage"/>
-
-                <h:outputText value="#{msg.address}:"/>
-                <p:inputTextarea id="useraddress" value="#{profileBean.address}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="useraddress" id="useraddressMessage"/>
-
-                <h:outputText value="#{msg.profession}:"/>
-                <p:inputText id="userprofession" value="#{profileBean.profession}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="userprofession" id="userprofessionMessage"/>
-
-                <h:outputText value="#{msg.interest}:"/>
-                <p:inputTextarea id="userinterest" value="#{profileBean.interest}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="userinterest" id="userinterestMessage"/>
-
-                <h:outputText rendered="false" value="#{msg.dateofbirth}:"/>
-                <p:calendar rendered="false" disabled="true" id="userdateofbirth" value="#{profileBean.dateOfBirth}"
-                            navigator="true" maxdate="#{profileBean.maxBirthday}" locale="de"/>
-                <p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth"
-                           id="userdateofbirthMessage"/>
-
-                <h:outputText value="#{msg.additionalinformation}:" rendered="#{profileBean.moderatorAccess}"/>
-                <p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}"
-                                 rendered="#{profileBean.moderatorAccess}"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation"
-                           id="useradditionalinformationMessage" rendered="#{profileBean.moderatorAccess}"/>
-
-                <h:outputText value="#{msg.awards}:" rendered="#{profileBean.moderatorAccess}"/>
-                <p:editor id="usercredits" value="#{profileBean.credits}" rendered="#{profileBean.moderatorAccess}" height="80"
-                          style="width:100%; max-width: 40rem;" controls="bold italic underline undo redo"/>
-                <p:message showSummary="true" showDetail="false" styleClass="error" for="usercredits" rendered="#{profileBean.moderatorAccess}"
-                           id="usercreditsMessage"/>
-
-                <h:outputText value=""/>
-                <p:commandButton actionListener="#{profileBean.onSaveProfile}" value="#{msg.save}" ajax="true" process="@form"
-                                 update=":growl @form :profile_news"/>
-                <h:outputText value=""/>
-            </h:panelGrid>
-
-            <br class="clear"/>
-        </h:form>
-    </p:panel>
-
-    <ui:fragment rendered="#{not empty profileBean.selectedUser.credits}">
-        <p:panel header="#{msg.awards}">
-            <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
-        </p:panel>
-    </ui:fragment>
-
-    <p:panel header="#{msg.change_password}" styleClass="mr-0 ml-0">
-        <h:form id="passwordform">
-
-            <table>
-                <tr>
-                    <td>
-                        <h:outputLabel for="current_password" value="#{msg.current_password}:"/>
-                    </td>
-                    <td>
-                        <p:password id="current_password" value="#{profileBean.currentPassword}"
-                                    validator="#{profileBean.validateCurrentPassword}" feedback="false" autocomplete="off" style="width:15rem;">
-                            <f:ajax render="currentPasswordMessage"/>
-                        </p:password>
-                    </td>
-                    <td>
-                        <p:message id="currentPasswordMessage" showSummary="true" showDetail="false" styleClass="error"
-                                   for="current_password"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h:outputLabel for="password" value="#{msg.new_password}:"/>
-                    </td>
-                    <td>
-                        <p:password id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}"
-                                    weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}"
-                                    strongLabel="#{msg.passwordStrength_strong}" style="width:15rem;"/>
-                    </td>
-                    <td>
-                        <p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h:outputLabel for="confirm_password" value="#{msg.confirm_password}:"/>
-                    </td>
-                    <td>
-                        <p:password id="confirm_password" value="#{profileBean.confirmPassword}"
-                                    validator="#{profileBean.validatePassword}" strongLabel="#{msg.passwordStrength_strong}"
-                                    promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-                                    goodLabel="#{msg.passwordStrength_good}" style="width:15rem;"/>
-                    </td>
-                    <td>
-                        <p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error"
-                                   for="confirm_password"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td colspan="2">
-                        <p:commandButton actionListener="#{profileBean.onChangePassword}" value="#{msg.save}" ajax="true"
-                                         process="@form" update=":growl @form"/>
-                    </td>
-                </tr>
-            </table>
-
-        </h:form>
-    </p:panel>
-    <p:panel header="	#{msg.miscellaneous}" styleClass="mr-0 ml-0">
-        <h:form id="deleteform">
-            <p:commandButton action="#{profileBean.onDeleteAccountSoft}" value="#{msg['user.account.deleteSoft.button']}">
-                <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
-            </p:commandButton>
-        </h:form>
-    </p:panel>
-
-
-</ui:define>
-
 
 <ui:define name="center_layout">
+    <div class="row flex-column-reverse flex-lg-row">
+        <div class="col-12 col-lg-6 mt-3 mt-lg-0">
+            <p:panel header="#{msg.last_activities}" styleClass="bg-transparent border-0 no-padding-panel-content m-0">
+                <h:panelGroup id="profile_news">
+                    <ui:decorate template="/templates/user/logs.xhtml">
+                        <ui:param name="news" value="#{newsFeedBean.newsList}"/>
+                    </ui:decorate>
+                </h:panelGroup>
+            </p:panel>
+        </div>
+        <div class="col-12 col-lg-6">
+            <p:panel header="#{msg.edit_profile}" styleClass="m-0">
 
-    <p:panel header="#{msg.last_activities}" styleClass="bg-transparent border-0 no-padding-panel-content m-0">
-        <h:panelGroup id="profile_news">
-            <ui:decorate template="/templates/user/logs.xhtml">
-                <ui:param name="news" value="#{newsFeedBean.newsList}"/>
-            </ui:decorate>
-        </h:panelGroup>
-    </p:panel>
+                <h:form enctype="multipart/form-data">
+                    <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
+
+                    <h:panelGroup id="profile_image">
+                        <div class="row">
+                            <div class="col-12 col-md-2">
+                                <img height="100" width="100" class="d-block   m-auto m-md-0 mb-md-3 rounded-circle" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
+                                     alt="Profile image"/>
+                            </div>
+                            <div class="col-12 col-md-10">
+                                <div class="mt-4">
+
+                                    <h:outputText styleClass="font-weight-bold" value="#{msg.photo}:"/>
+                                    <p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" styleClass="imageupload-button mb-3" mode="advanced" skinSimple="true"
+                                                  update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb" sizeLimit="10485760"
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  disabled="#{profileBean.anonymizeUsername}"/>
+                                    <p:message showSummary="true" showDetail="false" styleClass="error" for="userphoto" id="userphotoMessage"/>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div>
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.username}:"/>
+                            <p:inputText styleClass="w-100 mb-3" id="username" value="#{profileBean.username}" validator="#{profileBean.validateUsername}"
+                                         label="#{msg.username}">
+                                <f:ajax render="usernameMessage"/>
+                            </p:inputText>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage"/>
+
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.gender}:"/>
+                            <p:selectOneMenu id="usergender" styleClass="w-100 mb-3" value="#{profileBean.gender}" >
+                                <f:selectItem id="g0" itemLabel="--" itemValue="0"/>
+                                <f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1"/>
+                                <f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2"/>
+                            </p:selectOneMenu>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="usergender" id="usergenderMessage"/>
+
+
+                            <h:outputText>
+                                <span class="font-weight-bold">#{msg.email_address}</span><h:outputText styleClass="font-weight-bold" value=" *" rendered="#{profileBean.mailRequired}"/>:
+                            </h:outputText>
+                            <p:inputText id="useremail" value="#{profileBean.email}" styleClass="w-100 mb-3" label="#{msg.email_address}:">
+                                <f:ajax render="useremailMessage"/>
+                            </p:inputText>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage"/>
+
+                            <h:outputText>
+                                <span class="font-weight-bold">#{msg.student_id}</span><h:outputText styleClass="font-weight-bold" value=" *" rendered="#{profileBean.studentIdRequired}"/>:
+                            </h:outputText>
+                            <p:inputText id="studentId" value="#{profileBean.studentId}" styleClass="w-100 mb-3" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage"/>
+
+
+                            <h:outputText styleClass="font-weight-bold" value="Consent:" rendered="#{profileBean.studentIdRequired}"/>
+                            <h:panelGroup styleClass="w-100 mb-3" rendered="#{profileBean.studentIdRequired}">
+                                <p:selectBooleanCheckbox id="accept_terms" value="#{profileBean.acceptTermsAndConditions}"/>
+                                <p:outputLabel value=" I've given consent to use my data for the project" for="accept_terms"/>
+                            </h:panelGroup>
+                            <p:message rendered="#{profileBean.studentIdRequired}" showSummary="true" showDetail="false" styleClass="error" for="accept_terms"
+                                       id="accept_termsMessage"/>
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.full_name}:"/>
+                            <p:inputText styleClass="w-100 mb-3" id="userfullname" value="#{profileBean.fullName}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="userfullname" id="userfullnameMessage"/>
+
+
+                            <h:outputText  styleClass="font-weight-bold" value="#{msg.affiliation}:"/>
+                            <p:inputText styleClass="w-100 mb-3" id="useraffiliation" value="#{profileBean.affiliation}" required="#{profileBean.affiliationRequired}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="useraffiliation" id="useraffiliationMessage"/>
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.address}:"/>
+                            <p:inputTextarea styleClass="w-100 mb-3" id="useraddress" value="#{profileBean.address}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="useraddress" id="useraddressMessage"/>
+
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.profession}:"/>
+                            <p:inputText styleClass="w-100 mb-3" id="userprofession" value="#{profileBean.profession}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="userprofession" id="userprofessionMessage"/>
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.interest}:"/>
+                            <p:inputTextarea styleClass="w-100 mb-3" id="userinterest" value="#{profileBean.interest}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="userinterest" id="userinterestMessage"/>
+
+
+                            <h:outputText styleClass="font-weight-bold" rendered="false" value="#{msg.dateofbirth}:"/>
+                            <p:calendar styleClass="w-100 mb-3" rendered="false" disabled="true" id="userdateofbirth" value="#{profileBean.dateOfBirth}"
+                                        navigator="true" maxdate="#{profileBean.maxBirthday}" locale="de"/>
+                            <p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth"
+                                       id="userdateofbirthMessage"/>
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.additionalinformation}:" rendered="#{profileBean.moderatorAccess}"/>
+                            <p:inputTextarea styleClass="w-100 mb-3" id="useradditionalinformation" value="#{profileBean.additionalInformation}"
+                                             rendered="#{profileBean.moderatorAccess}"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation"
+                                       id="useradditionalinformationMessage" rendered="#{profileBean.moderatorAccess}"/>
+
+                            <h:outputText styleClass="font-weight-bold" value="#{msg.awards}:" rendered="#{profileBean.moderatorAccess}"/>
+                            <p:editor styleClass="w-100 mb-3" id="usercredits" value="#{profileBean.credits}" rendered="#{profileBean.moderatorAccess}" height="80"
+                                       controls="bold italic underline undo redo"/>
+                            <p:message showSummary="true" showDetail="false" styleClass="error" for="usercredits" rendered="#{profileBean.moderatorAccess}"
+                                       id="usercreditsMessage"/>
+
+                            <h:outputText styleClass="font-weight-bold" value=""/>
+                            <p:commandButton styleClass="command-button" actionListener="#{profileBean.onSaveProfile}" value="#{msg.save}" ajax="true" process="@form"
+                                             update=":growl @form :profile_news"/>
+                            <h:outputText value=""/>
+                        </div>
+
+
+
+
+
+                    </h:panelGroup>
+                </h:form>
+            </p:panel>
+
+            <ui:fragment rendered="#{not empty profileBean.selectedUser.credits}">
+                <p:panel header="#{msg.awards}">
+                    <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
+                </p:panel>
+            </ui:fragment>
+
+            <p:panel header="#{msg.change_password}" styleClass="mt-3">
+                <h:form id="passwordform">
+
+                    <h:outputText styleClass="font-weight-bold" value="#{msg.current_password}:"/>
+                    <p:password styleClass="w-100 mb-3" id="current_password" value="#{profileBean.currentPassword}"
+                                validator="#{profileBean.validateCurrentPassword}" feedback="false" autocomplete="off" >
+                        <f:ajax render="currentPasswordMessage"/>
+                    </p:password>
+                    <p:message id="currentPasswordMessage" showSummary="true" showDetail="false" styleClass="error"
+                               for="current_password"/>
+
+                    <h:outputText styleClass="font-weight-bold" value="#{msg.new_password}:"/>
+                    <p:password styleClass="w-100 mb-3" id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}"
+                                weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}"
+                                strongLabel="#{msg.passwordStrength_strong}" />
+                    <p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password"/>
+
+                    <h:outputText styleClass="font-weight-bold" value="#{msg.confirm_password}:"/>
+                    <p:password styleClass="w-100 mb-3" id="confirm_password" value="#{profileBean.confirmPassword}"
+                                validator="#{profileBean.validatePassword}" strongLabel="#{msg.passwordStrength_strong}"
+                                promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+                                goodLabel="#{msg.passwordStrength_good}" />
+                    <p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error"
+                               for="confirm_password"/>
+
+                    <p:commandButton styleClass="command-button" actionListener="#{profileBean.onChangePassword}" value="#{msg.save}" ajax="true"
+                                     process="@form" update=":growl @form"/>
+
+                </h:form>
+            </p:panel>
+            <p:panel header="#{msg.miscellaneous}" styleClass="mt-3">
+                <h:form id="deleteform">
+                    <p:commandButton action="#{profileBean.onDeleteAccountSoft}" value="#{msg['user.account.deleteSoft.button']}">
+                        <p:confirm message="#{msg['user.account.deleteSoft.confirmDescription']}" escape="false"/>
+                    </p:commandButton>
+                </h:form>
+            </p:panel>
+
+
+        </div>
+    </div>
 </ui:define>
 
 </ui:composition>
-</html>

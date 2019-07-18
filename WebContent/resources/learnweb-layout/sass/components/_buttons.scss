@@ -4,6 +4,11 @@
   .ui-fileupload-buttonbar {
     width: fit-content;
     padding: 0 !important;
+    display: flex;
+    align-items: center;
+    .ui-button-text{
+      width: max-content;
+    }
   }
 
   .ui-button {
