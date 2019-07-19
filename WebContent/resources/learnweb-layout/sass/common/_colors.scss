@@ -20,6 +20,9 @@ $lightPurple:#dbd4e9;
 $red:               #cd2026;
 $indigo:            #514A9D;
 
+// DO NOT USE $green, $greenDarker, $greenDarkerAlt, $greenDarkest (and other) COLORS!
+// Use $themePrimaryColor, $themePrimaryColorDarker, $themePrimaryDarkerAlt and other starting from $theme... instead! (see variables.scss)
+
 $blue:              #0071bc;
 $blueDarker:        #205493;
 $blueDarkerAlt:     #1A4172;
