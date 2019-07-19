@@ -4,7 +4,7 @@
     font-weight: bold;
     padding: 12px;
     background: rgba(0, 0, 0, 0.8);
-    color: #fff;
+    color: $white;
     border-radius: 2px;
 
     /* Creates a small triangle extender for the tooltip */
@@ -124,7 +124,7 @@
         display: block;
         width: 0;
         height: 100%;
-        border: 1px dashed #489a83;
+        border: 1px dashed $themePrimaryColor;
         position: absolute;
         top: 0;
         left: -7px;
@@ -134,8 +134,8 @@
         margin: 20px 10px 60px;
         position: relative;
         padding: 10px 10px;
-        background: #489a83;
-        color: #fff;
+        background: $themePrimaryColor;
+        color: $white;
         border-radius: 10px;
         line-height: 20px;
 
@@ -144,7 +144,7 @@
           display: block;
           width: 0;
           height: 100%;
-          border: 1px solid #489a83;
+          border: 1px solid $themePrimaryColor;
           position: absolute;
           top: 0;
           left: -17px;
@@ -155,8 +155,8 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #489a83;
-            border: 2px solid #fff;
+            background: $themePrimaryColor;
+            border: 2px solid $white;
             position: absolute;
             left: -7px;
           }
@@ -240,19 +240,19 @@
 
     &.box-group ul {
       &:before {
-        border: 1px dashed #848484;
+        border: 1px dashed $gray-600;
       }
 
       li {
         > span {
-          border: 1px solid #848484;
+          border: 1px solid $gray-600;
 
           &:before, &:after {
-            background: #848484;
+            background: $gray-600;
           }
         }
 
-        background: #848484;
+        background: $gray-600;
       }
     }
   }

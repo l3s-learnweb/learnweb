@@ -38,8 +38,7 @@
 @import 'common/_global';
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
-@import "layouts/_general"; // should contain base styles like headers, spacings, ets.
-@import "layouts/_footer";
+@import "layouts/_general";
 @import "layouts/_header";
 @import "layouts/_sidebar";
 

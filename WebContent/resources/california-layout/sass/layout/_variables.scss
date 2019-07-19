@@ -1,11 +1,73 @@
 @import '../variables';
 
+/* color schema */
+$bodyBgColor:$lightGray; // common
+$topbarLeftBgColor:$themePrimaryColor;
+$topbarRightBgColor:$themePrimaryColor;
+$topbarIconHoverBgColor:$themePrimaryDarkerAlt;
+$topbarTextColor:$white; // common
+$sidebarBorderColor:$gray-400; // common
+$footerBgColor:$themeDarkBgColor;
+$statsTopBorderColor:$themePrimaryColor;
+$teamContentHoverBorderColor:$themePrimaryColor;
+
+$sidebarBgColor:$white; // common
+$sidebarMenuitemTextColor:$gray-900; // common
+$sidebarMenuitemDividerColor:$themeSidebarDividerColor;
+$sidebarMenuitemIconColor:$gray-600; // common
+$sidebarMenuitemHoverBgColor:$themeSidebarHoverBgColor;
+$sidebarMenuitemActiveBorderLeftColor:$themePrimaryColor;
+$sidebarMenuitemActiveTextColor:$themePrimaryColor;
+$sidebarMenuitemActiveIconColor:$themePrimaryColor;
+
+$darkSidebarBgColor:$themeDarkBgColor;
+$darkSidebarMenuitemTextColor:$white; // common
+$darkSidebarMenuitemDividerColor:rgba($white,.075); // common
+$darkSidebarMenuitemIconColor:$white; // common
+$darkSidebarMenuitemHoverBgColor:rgba($white,.1); // common
+$darkSidebarMenuItemHoverTextColor:$themePrimaryColor;
+$darkSidebarMenuitemActiveBorderLeftColor:$themePrimaryColor;
+$darkSidebarMenuitemActiveTextColor:$themePrimaryColor;
+$darkSidebarMenuitemActiveIconColor:$themePrimaryColor;
+
+$gradientSidebarTopBgColor:$themeDarkBgColor;
+$gradientSidebarBottomBgColor:$themeLightBgColor;
+$gradientSidebarMenuitemTextColor:$white; // common
+$gradientSidebarMenuitemDividerColor:rgba($white,.075); // common
+$gradientSidebarMenuitemIconColor:$white; // common
+$gradientSidebarMenuitemHoverBgColor:rgba($white,.1); // common
+$gradientSidebarMenuItemHoverTextColor:$themePrimaryColor;
+$gradientSidebarMenuitemActiveBorderLeftColor:$themePrimaryColor;
+$gradientSidebarMenuitemActiveTextColor:$themePrimaryColor;
+$gradientSidebarMenuitemActiveIconColor:$themePrimaryColor;
+
+$megamenuButtonTextColor:$white; // common
+$megamenuBgColor:$white; // common
+$megamenuBorderColor:$gray-400; // common
+$megamenuTextColor:$gray-600; // common
+$megamenuHeaderColor:$themePrimaryDarkerAlt;
+$megamenuIconColor:$gray-600; // common
+$megamenuHoverBgColor:$gray-500; // common
+$megamenuActiveTextColor:$themePrimaryColor;
+$megamenuMobileBgColor:$themePrimaryDarkerAlt;
+$megamenuMobileHoverBgColor:$themePrimaryColorDarker;
+
+$darkMegamenuBgColor:$themeDarkBgColor;
+$darkMegamenuTextColor:$white; // common
+$darkMegamenuHeaderShadowColor:$black; // common
+$darkMegamenuIconColor:$white; // common
+$darkMegamenuHoverBgColor:rgba($white,.1); // common
+$darkMegamenuHoverTextColor:$themePrimaryColor;
+
+$gradientMegamenuTopBgColor:$themeDarkBgColor;
+$gradientMegamenuBottomBgColor:$themeLightBgColor;
+
 /*Badge*/
-$badgeBgColor:#4aa564 !default;
-$badgeTextColor:#ffffff !default;
+$badgeBgColor:$green;
+$badgeTextColor:$white;
 
 /* RouteBar */
-$routeBarBgColor:#ffffff !default;
-$routeBarBorderColor:#d6d7d9 !default;
-$routeBarIconColor:#5b616a !default;
-$routeBarIconHoverBgColor:#f1f1f1 !default;
+$routeBarBgColor:$white;
+$routeBarBorderColor:$gray-400;
+$routeBarIconColor:$gray-600;
+$routeBarIconHoverBgColor:$gray-200;

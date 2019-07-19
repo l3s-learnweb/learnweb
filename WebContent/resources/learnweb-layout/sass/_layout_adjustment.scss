@@ -9,10 +9,8 @@
     padding-top: 60px !important;
 
     .layout-main-content {
-      padding-bottom: 9em; /* TODO: what is this? */
-
       .ui-breadcrumb {
-        border: 1px solid $primaryColor;
+        border: 1px solid $themePrimaryColor;
         border-left: none;
         border-right: none;
         background: rgba(255, 255, 255, 0.9);
@@ -34,6 +32,10 @@
               }
             }
 
+            &:last-child {
+              pointer-events: none;
+            }
+
             .ui-menuitem-link {
               top: 0;
             }
@@ -42,6 +44,10 @@
               padding: .3rem;
             }
 
+            span {
+              padding: 5px 15px;
+              display: block;
+            }
           }
 
           .ui-breadcrumb-chevron {

@@ -14,7 +14,7 @@
         white-space: nowrap;
 
         &.active, &:hover {
-          background-color: #ccc;
+          background-color: $gray-400;
         }
       }
     }
@@ -47,11 +47,11 @@
         left: 0;
         width: auto;
         z-index: 10;
-        border: solid 1px #ccc;
+        border: solid 1px $gray-400;
 
         li {
           display: block;
-          background-color: #e6e6e6;
+          background-color: $gray-200;
           width: 100%;
 
           button {
@@ -60,13 +60,13 @@
 
             span {
               padding: 0.5rem 0.5rem 0.5rem;
-              color: #000 !important;
+              color: $black !important;
               text-align: left;
             }
           }
 
           &.active, &:hover {
-            background: #ccc;
+            background: $gray-400;
           }
         }
       }
@@ -99,7 +99,7 @@
         height: 0;
         border-left: 0.5rem solid transparent;
         border-right: 0.5rem solid transparent;
-        border-top: 0.4rem solid #333;
+        border-top: 0.4rem solid $gray-900;
         display: inline-block;
         margin-bottom: 2px;
         margin-left: 5px;
@@ -141,7 +141,7 @@
         cursor: pointer;
 
         &:hover, &:focus {
-          background-color: #eee !important;
+          background-color: $gray-100 !important;
         }
 
         span {

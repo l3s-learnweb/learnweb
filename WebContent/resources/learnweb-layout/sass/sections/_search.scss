@@ -19,7 +19,7 @@
     font-weight: bold;
     display: none;
     border: 0.1rem solid black;
-    background-color: #5C5C5C;
+    background-color: $gray-700;
     padding: 0.5rem;
     color: white;
     margin: 1rem;
@@ -32,7 +32,7 @@
     font-weight: bold;
     display: none;
     border: 0.1rem solid black;
-    background-color: #5C5C5C;
+    background-color: $gray-700;
     padding: 0.5rem;
     color: white;
     margin: 1rem;
@@ -74,10 +74,10 @@
     padding: 4px;
 
     a {
-      color: #1020D0;
+      color: $blue;
 
       &:visited {
-        color: rgb(60, 110, 200);
+        color: $blueDarkest;
       }
     }
   }
@@ -103,7 +103,7 @@
   }
 
   .filters_menu_bar {
-    background-color: #6E6E6E;
+    background-color: $gray-600;
     line-height: 2.2rem;
     width: 100%;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1) inset;
@@ -133,12 +133,12 @@
         margin-right: -4px;
 
         &.active, &:hover {
-          background-color: #616161;
+          background-color:$gray-600;
         }
 
         &.sources {
           &.active, &:hover {
-            background-color: #808080;
+            background-color: $gray-600;
           }
         }
       }
@@ -149,7 +149,7 @@
       font-size: 1.3rem;
       display: inline-block;
       padding: 0.4rem 1.4rem 0.5rem;
-      color: #fff;
+      color: $white;
 
       .trimmed-text {
         text-overflow: ellipsis;
@@ -182,8 +182,8 @@
       left: 0;
       width: auto;
       z-index: 10;
-      border: solid 1px #ccc;
-      background: #fff;
+      border: solid 1px $gray-400;
+      background: $white;
 
       &.hidden {
         display: none;
@@ -195,13 +195,13 @@
         text-decoration: none;
         padding: 0 15px 0 10px;
         line-height: 3.2rem;
-        color: #000;
+        color: $black;
         max-width: 60rem;
         text-overflow: ellipsis;
         overflow: hidden;
 
         &.active, &:hover {
-          background: #eee;
+          background: $gray-100;
         }
       }
     }
@@ -222,7 +222,7 @@
       height: 0;
       border-left: 0.5rem solid transparent;
       border-right: 0.5rem solid transparent;
-      border-top: 0.4rem solid #fff;
+      border-top: 0.4rem solid $white;
       display: inline-block;
       margin-bottom: 0.2rem;
       margin-left: 0.5rem;
@@ -278,7 +278,7 @@
 
     a {
       text-decoration: none;
-      color: #1020D0;
+      color: $blue;
 
       &:hover {
         text-decoration: underline;
@@ -320,7 +320,7 @@
         font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 
         &:visited {
-          color: rgb(60, 110, 200);
+          color: $blueDarkest;
         }
       }
 
@@ -377,20 +377,20 @@
       max-width: 100%;
       /* width:75%; enable for search history, but has side effects */
       position: relative;
-      border-left: 1px solid #CCCCCC;
-      border-top: 1px solid #CCCCCC;
+      border-left: 1px solid $gray-400;
+      border-top: 1px solid $gray-400;
 
       .resource {
         float: left;
         text-align: left;
         height: auto;
-        border-bottom: 1px solid #CCCCCC;
+        border-bottom: 1px solid $gray-400;
         z-index: 2;
       }
 
       .border {
         padding: 6px;
-        border-right: 1px solid #CCCCCC;
+        border-right: 1px solid $gray-400;
       }
     }
 
@@ -489,7 +489,7 @@
     }
 
     .description {
-      color: #4F4F4F;
+      color: $gray-600;
     }
 
     > .location {
@@ -567,9 +567,9 @@
     margin: 15px;
     width: 35%;
     min-width: 356.296875px;
-    border: 1px solid #ddd;
+    border: 1px solid $gray-300;
     z-index: 10000;
-    box-shadow: 0 0 4px #ccc;
+    box-shadow: 0 0 4px $gray-400;
     padding: 0px;
     color: black;
   }
@@ -577,7 +577,7 @@
   /*------------------- search filter, source selector -------------------------*/
 
   .group-menu-bar {
-    background-color: #808080;
+    background-color: $gray-600;
     padding: 1rem 0 0;
     width: 100%;
 
@@ -596,7 +596,7 @@
       padding-bottom: 0.2rem;
       color: white;
       font-size: 1.5rem;
-      border-bottom: 0.1rem solid #666666;
+      border-bottom: 0.1rem solid $gray-700;
 
       span {
         background-repeat: no-repeat;
@@ -620,7 +620,7 @@
         z-index: 24;
 
         &:hover {
-          background: #6E6E6E;
+          background: $gray-600;
           opacity: .9;
         }
 
@@ -677,13 +677,13 @@
       text-decoration: none;
 
       &:hover {
-        background-color: #928F8F;
+        background-color: $gray-500;
         border-radius: 1px;
       }
     }
 
     .group-menu-title {
-      border-bottom: 2px solid #6F6F6F;
+      border-bottom: 2px solid $gray-600;
       line-height: 2.1rem;
       background-size: 16px 16px;
       background-position: left center;
@@ -764,7 +764,7 @@
           text-overflow: ellipsis;
 
           &.url {
-            color: #70D1B5;
+            color: $themePrimaryColor;
             font-size: 1rem;
             min-width: 60px;
             padding: 2px 0 0 3px;

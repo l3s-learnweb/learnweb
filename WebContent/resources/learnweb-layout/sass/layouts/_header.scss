@@ -59,13 +59,13 @@
     }
 
     &:hover {
-      background: #2E8540;
-      color: $primaryTextColor;
-      fill: $primaryTextColor;
+      background: $greenDarker;
+      color: $body-bg;
+      fill: $body-bg;
 
       i {
-        color: $primaryTextColor;
-        fill: $primaryTextColor;
+        color: $body-bg;
+        fill: $body-bg;
       }
     }
   }
@@ -79,7 +79,7 @@
       text-decoration: none;
 
       &:hover {
-        color: $primaryTextColor;
+        color: $body-bg;
       }
     }
   }

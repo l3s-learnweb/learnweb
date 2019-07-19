@@ -495,9 +495,11 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     addAsExpanded: function (element) {
-        this.expandedNodes.push(element.attr('id'));
-
-        this.saveState();
+        var id = element.attr('id');
+        if (id) {
+            this.expandedNodes.push(element.attr('id'));
+            this.saveState();
+        }
     },
 
     clearState: function () {

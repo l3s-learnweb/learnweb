@@ -26,7 +26,7 @@
 
       > span,
       > a {
-        color: $primaryTextColor;
+        color: $body-bg;
       }
 
       .ui-icon-triangle-1-e {
@@ -137,16 +137,16 @@
       overflow: hidden;
 
       .ui-menuitem-icon {
-        color: #5b616a;
+        color: $gray-700;
       }
 
       &.ui-state-hover {
         background-color: $menuitemHoverBgColor;
         color: $menuitemHoverTextColor;
-        border-left-color: #4AA564;
+        border-left-color: $green;
 
         .ui-menuitem-icon {
-          color: #fff;
+          color: $white;
         }
       }
 

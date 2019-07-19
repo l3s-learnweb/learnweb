@@ -1,57 +1,57 @@
 /*Overview*/
-$overviewTextColor:#ffffff;
+$overviewTextColor:$white;
 
 /*Stats*/
-$statsBgColor:#ffffff;
-$statsBorderColor:#d6d7d9;
-$statsIconBgColor:#ffffff;
-$statsSubtitleTextColor:#00bfe7;
-$statsSubtitleColor:#aeb0b5;
+$statsBgColor:$white;
+$statsBorderColor:$gray-400;
+$statsIconBgColor:$white;
+$statsSubtitleTextColor:$cyan;
+$statsSubtitleColor:$gray-500;
 
 /*Weekly Tasks*/
-$addtaskBgColor:#f6f6f5;
-$tasksIconColor:#aeb0b5;
-$daytagBgColor:#e4e2e0;
+$addtaskBgColor:$gray-200;
+$tasksIconColor:$gray-500;
+$daytagBgColor:$gray-300;
 
 /*Resolution Center*/
-$estimationTextColor:#aeb0b5;
-$estimatedHourTextColor:#e59393;
+$estimationTextColor:$gray-500;
+$estimatedHourTextColor:$lightRed;
 
 /*Team*/
-$teamContentHoverBgColor:#f2f3f3;
-$teamPrimaryTextColor:#212121;
-$teamSecondaryTextColor:#aeb0b5;
-$contactIconBgColor:#0872b9;
-$contactIconColor:#ffffff;
+$teamContentHoverBgColor:$gray-200;
+$teamPrimaryTextColor:$gray-900;
+$teamSecondaryTextColor:$gray-500;
+$contactIconBgColor:$blue;
+$contactIconColor:$white;
 
 /*Chat*/
-$messagefromBorderColor:#4aa564;
-$messageownBorderColor:#e31c3d;
-$messageBgColor:#f4f4f4;
-$messageTimeTextColor:#aeb0b5;
-$messageBorderColor:#d6d7d9;
-$messageIconColor:#d6d7d9;
+$messagefromBorderColor:$green;
+$messageownBorderColor:$red;
+$messageBgColor:$gray-200;
+$messageTimeTextColor:$gray-500;
+$messageBorderColor:$gray-400;
+$messageIconColor:$gray-400;
 
 
 /*Daily Sales*/
-$salesHoverBgColor:#f1f1f1;
-$salesColumnHeaderColor:#424242;
-$salesRowTextColor:#212121;
-$salesUpIconColor:#4caf50;
-$salesDownIconColor:#f44336;
+$salesHoverBgColor:$gray-200;
+$salesColumnHeaderColor:$gray-700;
+$salesRowTextColor:$gray-900;
+$salesUpIconColor:$green;
+$salesDownIconColor:$red;
 
 /*Timeline*/
-$timelineSeperatorColor:#dddddd;
-$loveNotificationBgColor:#f8dede;
-$loveNotificationTextColor:#cd2026;
-$checkedNotificationBgColor:#e1f3f8;
-$checkedNotificationTextColor:#00a6d2;
-$eventNotificationBgColor:#fff1d2;
-$eventNotificationTextColor:#f39f19;
-$notificationTimeColor:#5b616b;
+$timelineSeperatorColor:$gray-300;
+$loveNotificationBgColor:$lightRed;
+$loveNotificationTextColor:$red;
+$checkedNotificationBgColor:$lightBlue;
+$checkedNotificationTextColor:$cyanDarker;
+$eventNotificationBgColor:$lightYellow;
+$eventNotificationTextColor:$yellowDarkerAlt;
+$notificationTimeColor:$gray-600;
 
 /* Profile */
-$profileTextColor:#212121;
+$profileTextColor:$gray-900;
 
 .dashboard {
     .overview-box {
@@ -96,7 +96,7 @@ $profileTextColor:#212121;
             box-sizing: border-box;
             position: relative;
             padding: 10px 10px 10px 20px;
-            @include background-gradient-with-degree(240deg, #ff7295, #fe875d);
+            @include background-gradient-with-degree(240deg, $pink, $orange);
         }
         &.monthly-views {
             width: 100%;
@@ -104,7 +104,7 @@ $profileTextColor:#212121;
             box-sizing: border-box;
             position: relative;
             padding: 10px 10px 10px 20px;
-            @include background-gradient-with-degree(240deg, #00aadf, #0071bc);
+            @include background-gradient-with-degree(240deg, $cyan, $blue);
         }
         &.monthly-users {
             width: 100%;
@@ -112,7 +112,7 @@ $profileTextColor:#212121;
             box-sizing: border-box;
             position: relative;
             padding: 10px 10px 10px 20px;
-            @include background-gradient-with-degree(240deg, #4b7ecf, #8e70ee);
+            @include background-gradient-with-degree(240deg, $cyanDarker, $purple);
         }
     }
     .stats {
@@ -391,17 +391,17 @@ $profileTextColor:#212121;
         }
         thead {
             text-align: right;
-            background-color: #ffffff;
+            background-color: $white;
             th {
                 padding: 8px 16px;
             }
         }
         tbody {
             tr:nth-child(even) {
-                background: #ffffff
+                background: $white
             }
             tr:nth-child(odd) {
-                background: #f1f1f1
+                background: $gray-200
             }
             td {
                 border-color: transparent;

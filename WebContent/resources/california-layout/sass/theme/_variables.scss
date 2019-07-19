@@ -1,190 +1,235 @@
 @import '../variables';
 
-$focusOutlineColor:#0071bc !default;
+$primaryColor:$themePrimaryColor;
+$primaryColorDarker:$themePrimaryColorDarker;
+$primaryDarkerAlt:$themePrimaryDarkerAlt;
+$primaryDarkest:$themePrimaryDarkest;
+$primaryTextColor:$body-bg; // common
+
+// Buttons
+$buttonFocusOutlineColor:$gray-500; // common
+
+$primaryButtonBgColor:$themePrimaryColor;
+$primaryButtonHoverBgColor:$themePrimaryColorDarker;
+$primaryButtonActiveBgColor:$themePrimaryDarkest;
+$primaryButtonFocusBgColor:$gray-500; // common
+$primaryButtonTextColor:$body-bg; // common
+
+$primaryAltButtonBgColor:$themePrimaryAltColor;
+$primaryAltButtonHoverBgColor:$themePrimaryAltColorDarker;
+$primaryAltButtonActiveBgColor:$themePrimaryAltDarkerAlt;
+$primaryAltButtonFocusBgColor:$gray-500; // common
+$primaryAltButtonTextColor:$body-bg; // common
+
+$secondaryButtonBgColor:$gray-600; // common
+$secondaryButtonHoverBgColor:$gray-800; // common
+$secondaryButtonActiveBgColor:$gray-900; // common
+$secondaryButtonFocusBgColor:$gray-600; // common
+$secondaryButtonTextColor:$body-bg; // common
+
+$outlineButtonBgColor:transparent; // common
+$outlineButtonHoverBgColor:transparent; // common
+$outlineButtonActiveBgColor:transparent; // common
+$outlineButtonFocusBgColor:transparent; // common
+$outlineButtonBorderColor:$themePrimaryColor;
+$outlineButtonTextColor:$themePrimaryColor;
+$outlineButtonHoverBorderColor:$themePrimaryColorDarker;
+$outlineButtonHoverTextColor:$themePrimaryColorDarker;
+$outlineButtonActiveBorderColor:$themePrimaryDarkest;
+$outlineButtonActiveTextColor:$themePrimaryDarkest;
+
+$menuitemHoverBgColor:$themePrimaryDarkest;
+$menuitemTextColor:$gray-900; // common
+$menuitemHoverTextColor:$body-bg; // common
+$carouselButtonHoverColor:$gray-500; // common
+$carouselPageLinksActiveColor:$themePrimaryDarkest;
+/* end color schema */
+
+$focusOutlineColor:$blue;
 
 /* Headers */
-$headerPadding:8px 16px !default;
-$inputListHeaderPadding:8px !default;
-$headerFontSize:16px !default;
-$headerBgColor:$primaryColor !default;
-$headerTextColor:$primaryTextColor !default;
-$headerLightBgColor:#f1f1f1 !default;
-$headerLightTextColor:#212121 !default;
-$headerLightHoverBgColor:#d6d7d9 !default;
-$headerLightBorderColor:#d6d7d9 !default;
+$headerPadding:8px 16px;
+$inputListHeaderPadding:8px;
+$headerFontSize:16px;
+$headerBgColor:$primaryColor;
+$headerTextColor:$primaryTextColor;
+$headerLightBgColor:$gray-200;
+$headerLightTextColor:$gray-900;
+$headerLightHoverBgColor:$gray-400;
+$headerLightBorderColor:$gray-400;
 
 /* Contents */
-$contentPadding:16px !default;
-$contentBgColor:#ffffff !default;
-$contentBorderColor:#d6d7d9 !default;
-$contentLighterBorderColor:#f1f1f1 !default;
+$contentPadding:16px;
+$contentBgColor:$white;
+$contentBorderColor:$gray-400;
+$contentLighterBorderColor:$gray-200;
 
 /* Forms */
-$buttonBorderRadius:3px !default;
-$inputPadding:4px !default;
-$inputBgColor:#ffffff !default;
-$inputBorderColor:#aeb0b5 !default;
-$inputHoverBorderColor:#5b616b !default;
-$inputInvalidBorderColor:#cd2026 !default;
-$inputHeaderBgColor:#e4e2e0 !default;
-$inputSwitchOffBgColor:#a8acb1 !default;
-$inputSwitchOffTextColor:#ffffff !default;
-$iconActiveColor:#ffffff !default;
-$iconCloseColor:#212121 !default;
-$inputTextHighlightColor:#ffffff !default;
-$ratingCancelIconColor:#000000 !default;
-$ratingStarColor:#aeb0b5 !default;
-$ratingStarHoverColor:#5b616b !default;
-$splitbuttonTextColor:#ffffff !default;
-$datepickerButtonTextColor:#ffffff !default;
-$keypadBgColor:#000000 !default;
+$buttonBorderRadius:3px;
+$inputPadding:4px;
+$inputBgColor:$white;
+$inputBorderColor:$gray-500;
+$inputHoverBorderColor:$gray-600;
+$inputInvalidBorderColor:$red;
+$inputHeaderBgColor:$gray-300;
+$inputSwitchOffBgColor:$gray-500;
+$inputSwitchOffTextColor:$white;
+$iconActiveColor:$white;
+$iconCloseColor:$gray-900;
+$inputTextHighlightColor:$white;
+$ratingCancelIconColor:$black;
+$ratingStarColor:$gray-500;
+$ratingStarHoverColor:$gray-600;
+$splitbuttonTextColor:$white;
+$datepickerButtonTextColor:$white;
+$keypadBgColor:$black;
 
 /*groups*/
-$inputGroupBorderColor:#aeb0b5 !default;
-$inputGroupBgColor:#ffffff !default;
-$inputGroupTextColor:$textColor !default;
-$inputGroupIconColor:$textSecondaryColor !default;
-$inputGroupAddonMinWidth:2*$fontSize !default;
-$checkboxWidth:20px !default;
-$checkboxHeight:20px !default;
+$inputGroupBorderColor:$gray-500;
+$inputGroupBgColor:$white;
+$inputGroupTextColor:$textColor;
+$inputGroupIconColor:$textSecondaryColor;
+$inputGroupAddonMinWidth:2*$fontSize;
+$checkboxWidth:20px;
+$checkboxHeight:20px;
 
 /* Buttons */
-$buttonPadding:4px !default;
+$buttonPadding:4px;
 
-$secondaryButtonBgColor: #5b616b !default;
-$secondaryButtonHoverBgColor:#323a44 !default;
-$secondaryButtonActiveBgColor:#212121 !default;
-$secondaryButtonFocusBgColor:#5b616b !default;
-$secondaryButtonTextColor:#ffffff !default;
+//$secondaryButtonBgColor: $gray-600;
+//$secondaryButtonHoverBgColor:$gray-800;
+//$secondaryButtonActiveBgColor:$gray-900;
+//$secondaryButtonFocusBgColor:$gray-600;
+//$secondaryButtonTextColor:$white;
 
-$blueButtonBgColor:#0071bc !default;
-$blueButtonHoverBgColor:#205493 !default;
-$blueButtonActiveBgColor:#122e51 !default;
-$blueButtonFocusBgColor:#aeb0b5 !default;
-$blueButtonTextColor:#ffffff !default;
+$blueButtonBgColor:$blue;
+$blueButtonHoverBgColor:$blueDarker;
+$blueButtonActiveBgColor:$blueDarkest;
+$blueButtonFocusBgColor:$gray-500;
+$blueButtonTextColor:$white;
 
-$cyanButtonBgColor:#00bfe7 !default;
-$cyanButtonHoverBgColor:#00a6d2 !default;
-$cyanButtonActiveBgColor:#046b99 !default;
-$cyanButtonFocusBgColor:#aeb0b5 !default;
-$cyanButtonTextColor:#ffffff !default;
+$cyanButtonBgColor:$cyan;
+$cyanButtonHoverBgColor:$cyanDarker;
+$cyanButtonActiveBgColor:$cyanDarkest;
+$cyanButtonFocusBgColor:$gray-500;
+$cyanButtonTextColor:$white;
 
-$greenButtonBgColor:#4AA564 !default;
-$greenButtonHoverBgColor:#378D4F !default;
-$greenButtonActiveBgColor:#1D6833 !default;
-$greenButtonFocusBgColor:#aeb0b5 !default;
-$greenButtonTextColor:#ffffff !default;
+$greenButtonBgColor:$green;
+$greenButtonHoverBgColor:$greenDarker;
+$greenButtonActiveBgColor:$greenDarkest;
+$greenButtonFocusBgColor:$gray-500;
+$greenButtonTextColor:$white;
 
-$yellowButtonBgColor:#F9C642 !default;
-$yellowButtonHoverBgColor:#FDB81E !default;
-$yellowButtonActiveBgColor:#EAA200 !default;
-$yellowButtonFocusBgColor:#aeb0b5 !default;
-$yellowButtonTextColor:#ffffff !default;
+$yellowButtonBgColor:$yellow;
+$yellowButtonHoverBgColor:$yellowDarker;
+$yellowButtonActiveBgColor:$yellowDarkest;
+$yellowButtonFocusBgColor:$gray-500;
+$yellowButtonTextColor:$white;
 
-$purpleButtonBgColor:#6A4AA5 !default;
-$purpleButtonHoverBgColor:#4B2F7F !default;
-$purpleButtonActiveBgColor:#36215D !default;
-$purpleButtonFocusBgColor:#aeb0b5 !default;
-$purpleButtonTextColor:#ffffff !default;
+$purpleButtonBgColor:$purple;
+$purpleButtonHoverBgColor:$purpleDarker;
+$purpleButtonActiveBgColor:$purpleDarkest;
+$purpleButtonFocusBgColor:$gray-500;
+$purpleButtonTextColor:$white;
 
-$pinkButtonBgColor:#9f4488 !default;
-$pinkButtonHoverBgColor:#8d3c79 !default;
-$pinkButtonActiveBgColor:#692d5a !default;
-$pinkButtonFocusBgColor:#aeb0b5 !default;
-$pinkButtonTextColor:#ffffff !default;
+$pinkButtonBgColor:$pink;
+$pinkButtonHoverBgColor:$pinkDarker;
+$pinkButtonActiveBgColor:$pinkDarkest;
+$pinkButtonFocusBgColor:$gray-500;
+$pinkButtonTextColor:$white;
 
-$bluegreyButtonBgColor: #4B6D7E !default;
-$bluegreyButtonHoverBgColor:#365361 !default;
-$bluegreyButtonActiveBgColor:#233944 !default;
-$bluegreyButtonFocusBgColor:#aeb0b5 !default;
-$bluegreyButtonTextColor:#ffffff !default;
+$bluegreyButtonBgColor:$bluegray;
+$bluegreyButtonHoverBgColor:$bluegrayDarker;
+$bluegreyButtonActiveBgColor:$bluegrayDarkest;
+$bluegreyButtonFocusBgColor:$gray-500;
+$bluegreyButtonTextColor:$white;
 
-$tealButtonBgColor: #07A089 !default;
-$tealButtonHoverBgColor:#067E6C !default;
-$tealButtonActiveBgColor:#04493F !default;
-$tealButtonFocusBgColor:#aeb0b5 !default;
-$tealButtonTextColor:#ffffff !default;
+$tealButtonBgColor:$teal;
+$tealButtonHoverBgColor:$tealDarker;
+$tealButtonActiveBgColor:$tealDarkest;
+$tealButtonFocusBgColor:$gray-500;
+$tealButtonTextColor:$white;
 
-$orangeButtonBgColor: #fe875d !default;
-$orangeButtonHoverBgColor:#E26134 !default;
-$orangeButtonActiveBgColor:#B34621 !default;
-$orangeButtonFocusBgColor:#aeb0b5 !default;
-$orangeButtonTextColor:#ffffff !default;
+$orangeButtonBgColor:$orange;
+$orangeButtonHoverBgColor:$orangeDarker;
+$orangeButtonActiveBgColor:$orangeDarkest;
+$orangeButtonFocusBgColor:$gray-500;
+$orangeButtonTextColor:$white;
 
-$greyButtonBgColor: #5B616B !default;
-$greyButtonHoverBgColor:#43474E !default;
-$greyButtonActiveBgColor:#1B1E22 !default;
-$greyButtonFocusBgColor:#aeb0b5 !default;
-$greyButtonTextColor:#ffffff !default;
+$greyButtonBgColor: $gray-600;
+$greyButtonHoverBgColor:$gray-700;
+$greyButtonActiveBgColor:$gray-900;
+$greyButtonFocusBgColor:$gray-500;
+$greyButtonTextColor:$white;
 
 /* List Items */
-$listItemPadding:4px 8px !default;
-$listItemHoverBgColor:#f1f1f1 !default;
-$listItemHoverTextColor:$textColor !default;
+$listItemPadding:4px 8px;
+$listItemHoverBgColor:$gray-200;
+$listItemHoverTextColor:$textColor;
 
 /* Messages */
-$infoMessageBgColor:#e1f3f8 !default;
-$infoMessageTextColor:#212121 !default;
-$warnMessageBgColor:#fff1d2 !default;
-$warnMessageTextColor:#212121 !default;
-$errorMessageBgColor:#f9dede !default;
-$errorMessageTextColor:#212121 !default;
-$fatalMessageBgColor:#d6d7d9 !default;
-$fatalMessageTextColor:#212121 !default;
-$messageCloseIconColor:#5b616b !default;
+$infoMessageBgColor:$lightBlue;
+$infoMessageTextColor:$gray-900;
+$warnMessageBgColor:$lightYellow;
+$warnMessageTextColor:$gray-900;
+$errorMessageBgColor:$lightRed;
+$errorMessageTextColor:$gray-900;
+$fatalMessageBgColor:$gray-400;
+$fatalMessageTextColor:$gray-900;
+$messageCloseIconColor:$gray-600;
 
 /* TabView */
-$headerTabBgColor:#ffffff !default;
+$headerTabBgColor:$white;
 
 /* PanelGrid */
-$panelGridHeaderBorderColor:#ffffff !default;
-$panelGridCellBorderColor:#aeb0b5 !default;
-$toolbarBorderColor:#dddddd !default;
-$tabsBgColor:#ffffff !default;
-$scrollpanelDragBgColor:#a8acb1 !default;
-$scrollpanelTrackBgColor:#f0f3f5 !default;
-$tooltipTextBgColor:#2d353c !default;
-$wizardBgColor:#ffffff !default;
+$panelGridHeaderBorderColor:$white;
+$panelGridCellBorderColor:$gray-500;
+$toolbarBorderColor:$gray-400;
+$tabsBgColor:$white;
+$scrollpanelDragBgColor:$gray-500;
+$scrollpanelTrackBgColor:$gray-100;
+$tooltipTextBgColor:$gray-800;
+$wizardBgColor:$white;
 
 /*Overlay*/
-$dialogTitlebarIconHover:#aeb0b5 !default;
-$overlayIconColor:#ffffff !default;
-$overlayIconHoverColor:#d6d7d9 !default;
+$dialogTitlebarIconHover:$gray-500;
+$overlayIconColor:$white;
+$overlayIconHoverColor:$gray-400;
 
 /*misc*/
-$progressbarTextColor:#ffffff !default;
-$progressbarBgColor:#aeb0b5 !default;
+$progressbarTextColor:$white;
+$progressbarBgColor:$gray-500;
 
 /*Data*/
-$datatableCellPadding: 4px 8px 5px 8px !default;
-$paginatorBgColor:#ffffff !default;
-$panelHeaderTextColor:#999999 !default;
-$paginatorTextColor:#999999 !default;
-$tableHoverColor:#f1f1f1 !default;
-$datatableEvenColor:#f8f8f8 !default;
-$panelTitlebarBgColor:#f5f5f5 !default;
-$carouselBorderColor:#aeb0b5 !default;
-$carouselTextColor:#ffffff !default;
-$treeTextColor:#5b616a !default;
-$treetableActiveTextColor:#ffffff !default;
-$panelButtonBgColor:#ffffff !default;
-$scheduleHeaderButtonHoverColor:#5b616b !default;
-$scheduleHeaderButtonActiveColor:#122e51 !default;
-$tableColumnHeaderBgFocus:#f0f3f5 !default;
-$buttonHoverBorderColor:#ffffff !default;
-$tableColumnHeaderBgColor:#f0f3f5 !default;
+$datatableCellPadding: 4px 8px 5px 8px;
+$paginatorBgColor:$white;
+$panelHeaderTextColor:$gray-500;
+$paginatorTextColor:$gray-500;
+$tableHoverColor:$gray-200;
+$datatableEvenColor:$gray-100;
+$panelTitlebarBgColor:$gray-100;
+$carouselBorderColor:$gray-500;
+$carouselTextColor:$white;
+$treeTextColor:$gray-600;
+$treetableActiveTextColor:$white;
+$panelButtonBgColor:$white;
+$scheduleHeaderButtonHoverColor:$gray-600;
+$scheduleHeaderButtonActiveColor:$blueDarkest;
+$tableColumnHeaderBgFocus:$gray-100;
+$buttonHoverBorderColor:$white;
+$tableColumnHeaderBgColor:$gray-100;
 
 /*Menu*/
-$menuitemPadding: 6px 8px !default;
-$menuListPadding: 6px 0 !default;
-$breadcrumbBgColor:#ffffff !default;
-$breadcrumbTextColor:#5b616a !default;
-$breadcrumbBorderColor:#d6d7d9 !default;
-$stepsItemHighlightBgColor:#e1f3f8 !default;
-$stepsItemHighlightTextColor:#0071bb !default;
-$stepsItemDisabledBgColor:#ffffff !default;
-$stepsItemDisabledTextColor:#212121 !default;
-$stepsItemBgColor:#e7f4e4 !default;
-$stepsItemColor:#2e8540 !default;
-$menuitemIconColor:#5b616a !default;
-$menuBgColor:#ffffff !default;
+$menuitemPadding: 6px 8px;
+$menuListPadding: 6px 0;
+$breadcrumbBgColor:$white;
+$breadcrumbTextColor:$gray-700;
+$breadcrumbBorderColor:$gray-400;
+$stepsItemHighlightBgColor:$lightBlue;
+$stepsItemHighlightTextColor:$blue;
+$stepsItemDisabledBgColor:$white;
+$stepsItemDisabledTextColor:$gray-900;
+$stepsItemBgColor:$lightGreen;
+$stepsItemColor:$greenDarker;
+$menuitemIconColor:$gray-600;
+$menuBgColor:$white;

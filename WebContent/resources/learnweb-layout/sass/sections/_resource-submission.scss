@@ -15,8 +15,8 @@
     width: calc(20% - 16px); /* five columns */
     margin-bottom: 16px;
     margin-right: 16px;
-    background-color: #eeeeee;
-    color: #626262;
+    background-color: $gray-100;
+    color: $gray-700;
   }
 
   .ui-selectable-helper {
@@ -30,8 +30,8 @@
 
   .group-resources-item2 {
     &.selected, &.ui-selected, &.ui-selecting {
-      color: #fff;
-      background-color: #489a83;
+      color: $white;
+      background-color: $themePrimaryColor;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
     }
   }
@@ -47,7 +47,7 @@
 
   .submission_card hr {
     margin: 5px 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid $gray-100;
   }
 
   .submission_card_details > div {
@@ -179,12 +179,12 @@
   .submission_header {
     margin-top: 5px;
     padding: 10px;
-    border: 1px solid #e8e9ea;
+    border: 1px solid $gray-200;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      background-color: #47998254;
+      background-color: $themePrimaryDarkest;
       cursor: pointer;
     }
   }
@@ -196,7 +196,7 @@
   .submission_card {
     margin-top: 5px;
     padding: 10px;
-    border: 1px solid #e8e9ea;
+    border: 1px solid $gray-200;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
@@ -225,7 +225,7 @@
   }
 
   .active {
-    background-color: #47998291;
+    background-color: $themePrimaryDarkest;
   }
 
   .fa-caret-right.open {

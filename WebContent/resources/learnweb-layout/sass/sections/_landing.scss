@@ -35,10 +35,10 @@
         padding: 1rem;
         text-decoration: none;
         border-bottom: 0.2rem solid transparent;
-        color: $primaryDarkTextColor;
+        color: $body-color;
 
         &:hover {
-          border-color: $main-teal;
+          border-color: $themePrimaryColorDarker;
         }
       }
     }
@@ -149,13 +149,13 @@
     }
 
     .about-content {
-      color: $main-dark-green-color;
+      color: $themePrimaryDarkest;
     }
   }
 
 
   .subscriptions {
-    background-color: $main-teal;
+    background-color: $themePrimaryColorDarker;
 
     h2 {
       @include media-breakpoint-up(sm) {
@@ -169,29 +169,29 @@
       }
 
       .subscription-header {
-        background-color: $main-dark-green-color;
+        background-color: $themePrimaryDarkest;
         letter-spacing: 0.1rem;
       }
 
       .subscription-subheader {
-        background-color: $landing-subheader;
+        background-color: $gray-200;
 
         span {
           font-size: 1.2rem;
-          color: $main-dark-green-color;
+          color: $themePrimaryDarkest;
         }
       }
 
       .subscription-content {
         span {
-          color: $main-dark-green-color;
+          color: $themePrimaryDarkest;
         }
       }
     }
   }
 
   .footer {
-    background-color: $main-dark-green-color;
+    background-color: $themePrimaryDarkest;
     border-top: 0.2rem solid $white;
     color: $dividerColor;
   }

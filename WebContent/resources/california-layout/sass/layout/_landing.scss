@@ -5,7 +5,7 @@
     #header {
         .header-top {
             min-height: 60px;
-            background-color: #ffffff;
+            background-color: $white;
             padding: 0 150px;
             .logo {
                 padding-top: 10px;
@@ -25,10 +25,10 @@
                     a {
                         display: inline-block;
                         padding: 19px;
-                        color: #5b616b;
+                        color: $gray-600;
                         border-bottom: 4px solid transparent;
                         &:hover {
-                            border-color: #0071bc;
+                            border-color: $blue;
                         }
                     }
                 }
@@ -41,16 +41,16 @@
             padding: 80px 150px 0 150px;
             .header-content-panel {
                 padding: 20px 25px;
-                background-color: #122e51;
+                background-color: $blueDarkest;
                 text-align: left;
                 width: 300px;
                 h1 {
-                    color: #ffffff;
+                    color: $white;
                     margin: 0;
                     font-weight: 100;
                 }
                 p {
-                    color: #00bfe7;
+                    color: $cyan;
                     margin-bottom: 20px;
                 }
                 .ui-button {
@@ -68,10 +68,10 @@
         .learn-more {
             font-size: 16px;
             font-weight: 600;
-            color: #e31c3d;
+            color: $red;
         }
         h2 {
-            color: #e31c3d;
+            color: $red;
             text-align: left;
             font-weight: 100;
             font-size: 28px;
@@ -79,15 +79,15 @@
         h3 {
             margin-top: 0;
             margin-bottom: 16px;
-            color: #212121;
+            color: $gray-900;
         }
         p {
-            color: #212121;
+            color: $gray-900;
             margin: 14px 0;
             padding-right: 100px;
         }
         i {
-            color: #e31c3d;
+            color: $red;
             margin-left: 5px;
         }
         img {
@@ -105,12 +105,12 @@
         .premium-content {
             padding: 75px 150px;
             h1 {
-                color: #ffffff;
+                color: $white;
                 margin: 0;
                 font-weight: 100;
             }
             p {
-                color: #ffffff;
+                color: $white;
                 padding-bottom: 30px;
                 margin-bottom: 0;
                 max-width: 400px;
@@ -125,23 +125,23 @@
         span {
             font-size: 16px;
             font-weight: 600;
-            color: #e31c3d;
+            color: $red;
         }
         h2 {
-            color: #e31c3d;
+            color: $red;
             text-align: left;
             font-weight: 100;
             font-size: 28px;
         }
         h3 {
             margin-top: 0;
-            color: #323a44;
+            color: $gray-800;
         }
         p {
-            color: #323a44;
+            color: $gray-800;
         }
         i {
-            color: #e31c3d;
+            color: $red;
             margin-left: 5px;
         }
         .news-icon {
@@ -152,10 +152,10 @@
     }
     .pricing {
         padding: 75px 150px;
-        background-color: #205493;
-        border-top: 10px solid #00a6d2;
+        background-color: $blueDarker;
+        border-top: 10px solid $cyanDarker;
         h2 {
-            color: #ffffff;
+            color: $white;
             text-align: left;
             font-weight: 100;
             font-size: 28px;
@@ -163,29 +163,29 @@
         .pricing-box {
             text-align: center;
             .pricing-header {
-                color: #ffffff;
-                background-color: #122e51;
+                color: $white;
+                background-color: $blueDarkest;
                 letter-spacing: 2px;
                 font-weight: 600;
                 padding: 12px 0px;
             }
             .pricing-subheader {
-                background-color: #efefef;
+                background-color: $gray-200;
             }
             .price {
                 display: block;
                 font-size: 32px;
                 font-weight: 600;
-                color: #122e51;
+                color: $blueDarkest;
             }
             .duration {
                 display: block;
                 font-size: 18px;
                 font-weight: 600;
-                color: #4773aa;
+                color: $blue;
             }
             .pricing-content {
-                background-color: #ffffff;
+                background-color: $white;
                 min-height: 250px;
                 padding-top: 20px;
                 span {
@@ -200,13 +200,13 @@
             }
             &.pricing-basic {
                 .pricing-header {
-                    background-color: #00a6d2;
+                    background-color: $cyanDarker;
                 }
                 .price {
-                    color: #00a6d2;
+                    color: $cyanDarker;
                 }
                 .duration {
-                    color: #00a6d2;
+                    color: $cyanDarker;
                 }
             }
         }
@@ -214,7 +214,7 @@
     .media {
         padding: 75px 150px;
         h2 {
-            color: #e31c3d;
+            color: $red;
             text-align: left;
             font-weight: 100;
             font-size: 28px;
@@ -224,34 +224,34 @@
             margin: 0;
             font-size: 16px;
             text-align: left;
-            color: #212121;
+            color: $gray-900;
         }
         .video-container {
             margin-top: 50px;
         }
     }
     .footer {
-        background-color: #122e51;
-        border-top: 10px solid #00a6d2;
+        background-color: $blueDarkest;
+        border-top: 10px solid $cyanDarker;
         padding: 50px 150px;
         .appname {
             font-size: 24px;
             font-weight: 500;
             text-align: left;
-            color: #ffffff;
+            color: $white;
             margin: 0 0 14px 0;
         }
         p {
             margin: 0;
-            color: #ffffff;
+            color: $white;
         }
         a {
-            color: #9faebf;
+            color: $lightBlue;
             font-size: 14px;
             display: block;
             opacity: 0.9;
             &:hover {
-                color: #ffffff;
+                color: $white;
             }
             i {
                 padding: 5px 15px 0px 0px;
@@ -260,7 +260,7 @@
             }
         }
         .header {
-            color: #9faebf;
+            color: $lightBlue;
             font-size: 14px;
             display: block;
             opacity: 0.9;

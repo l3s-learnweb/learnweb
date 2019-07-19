@@ -42,7 +42,7 @@ body {
         @include border-radius-right($borderRadius);
     }
     .ui-widget-overlay {
-        background-color: #424242;
+        background-color: $gray-700;
         @include opacity(.7);
     }
     .ui-icon {

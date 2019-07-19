@@ -29,10 +29,10 @@
   }
   .submenu-title {
     padding: 4px 0 4px 11px;
-    background-color: #f1f1f1;
-    border-bottom: 1px solid #d6d7d9;
+    background-color: $gray-200;
+    border-bottom: 1px solid $gray-400;
     span {
-      color: #212121;
+      color: $gray-900;
       font-weight: 600;
       line-height: 42px;
       font-size: 16px;
@@ -59,7 +59,7 @@
     span {
       display: block;
       font-size: 12px;
-      color: #212121;
+      color: $gray-900;
       &.messager-name {
         font-weight: 600;
       }
@@ -68,7 +68,7 @@
         float: right;
       }
       &.time-stamp {
-        color: #80848b;
+        color: $gray-500;
         position: absolute;
         text-align: center;
         margin-top: 30px;
@@ -85,13 +85,13 @@
       font-weight: 600;
       box-sizing: border-box;
       margin-right: 8px;
-      background-color: #0071bc;
+      background-color: $blue;
       display: block;
       span {
         width: 100%;
         display: inline-block;
         &.date {
-          color: #ffffff;
+          color: $white;
         }
       }
     }
@@ -120,104 +120,104 @@
       }
     }
     .order-settings {
-      background-color: #e5f0f8;
-      color: #205493;
+      background-color: $gray-100;
+      color: $blueDarker;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #205493;
+        color: $blueDarker;
         font-weight: 600;
       }
     }
     .sales-settings {
-      background-color: #d5e6d8;
-      color: #2e8540;
+      background-color: $lightGreen;
+      color: $greenDarker;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #2e8540;
+        color: $greenDarker;
         font-weight: 600;
       }
     }
     .shipment-settings {
-      background-color: #fef0d2;
-      color: #e3a51b;
+      background-color: $lightYellow;
+      color: $yellowDarker;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #e3a51b;
+        color: $yellowDarker;
         font-weight: 600;
       }
     }
     .visitors-settings {
-      background-color: #fce8eb;
-      color: #cd2026;
+      background-color: $lightRed;
+      color: $red;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #cd2026;
+        color: $red;
         font-weight: 600;
       }
     }
     .history-settings {
-      background-color: #dbd4e9;
-      color: #4c2c92;
+      background-color: $lightPurple;
+      color: $purpleDarker;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #4c2c92;
+        color: $purpleDarker;
         font-weight: 600;
       }
     }
     .leads-settings {
-      background-color: #dedfe1;
-      color: #5b616b;
+      background-color: $gray-300;
+      color: $gray-600;
       text-align: center;
       width: 80px;
       height: 74px;
       &:hover {
-        box-shadow: 0 0 8px #aeb0b5;
+        box-shadow: 0 0 8px $gray-500;
       }
       i {
         font-size: 30px;
       }
       span {
-        color: #5b616b;
+        color: $gray-600;
         font-weight: 600;
       }
     }
