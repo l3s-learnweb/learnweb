@@ -273,6 +273,8 @@ public class Learnweb
             setServerUrl("http://learnweb.l3s.uni-hannover.de");
             log.error("You haven't provided an absolute base server url; Will use by default: " + this.serverUrl);
         }
+        else if(propertiesServerUrl.startsWith("http") && guessedServerUrl != null && guessedServerUrl.startsWith("/"))
+            setServerUrl(propertiesServerUrl + guessedServerUrl);
         else if(propertiesServerUrl.startsWith("http"))
             setServerUrl(propertiesServerUrl);
         else if(propertiesServerUrl.equalsIgnoreCase("auto") && StringUtils.isNotEmpty(guessedServerUrl))
