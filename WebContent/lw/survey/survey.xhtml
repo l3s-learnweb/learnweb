@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -21,12 +21,17 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="disableGrowl" value="true" />
 
+
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
+		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
+	</ui:define>
+
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="survey" name="survey.css" />
 
 		<h:form id="form" rendered="#{surveyBean.resource != null}">
 		
-			<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
+			<p:panel>
 				
 				<h:panelGroup rendered="#{surveyBean.formEnabled}">
 					<h:panelGrid columns="1" cellpadding="5">
@@ -35,8 +40,8 @@
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
 									<h:panelGroup>
-										<h3>
-											<h:outputText value="${question.label}" style="font-style: italic; font-weight: bold;" />
+										<h3 class="h3">
+											<h:outputText value="${question.label}" />
 										</h3>
 									</h:panelGroup>
 								</c:if>
@@ -48,7 +53,7 @@
 							<c:if test="#{question.type eq 'INPUT_TEXT'}">
 								<p:outputLabel for="input_#{question.id}" value="#{question.label}"></p:outputLabel>
 								<p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-									title="#{question.info}" style="width:70%;'">
+									title="#{question.info}" >
 
 									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />									
 								</p:inputText>
@@ -60,7 +65,7 @@
 							<c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
 								<p:outputLabel for="input_area_#{question.id}" value="#{question.label}"></p:outputLabel>
 								<p:inputTextarea id="input_area_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-									title="#{question.info}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100">									
+									title="#{question.info}" rows="4" >
 									
 									<f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />									
 								</p:inputTextarea>
@@ -75,7 +80,7 @@
 								<p:autoComplete id="input_complete_#{question.id}"
 									required="#{question.required and empty param[save.clientId]}"
 									value="#{surveyBean.userAnswers.answers[question.id]}"
-									completeMethod="#{question.completeText}" class="border-box-100" />
+									completeMethod="#{question.completeText}" />
 								<p:tooltip for="input_complete_#{question.id}" showEvent="hover"
 									position="left" rendered="#{true}"
 									value="#{question.info}" />
@@ -88,7 +93,7 @@
 									value="#{surveyBean.userAnswers.answers[question.id]}"
 									editable="#{question.type eq 'ONE_MENU_EDITABLE'}"
 									required="#{question.required and empty param[save.clientId]}"
-									class="border-box-100" title="#{question.info}">
+									title="#{question.info}">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
 								</p:selectOneMenu>
@@ -102,7 +107,7 @@
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
 									filter="#{question.answers.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px">
+									filterMatchMode="startsWith" panelStyle="">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option.label}" itemValue="#{option.value}" />
 								</p:selectCheckboxMenu>
@@ -117,7 +122,7 @@
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
 									filter="#{question.answers.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px">
+									filterMatchMode="startsWith" panelStyle="">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
 								</p:selectOneRadio>
@@ -131,7 +136,7 @@
 									label="" multiple="true" title="#{question.info}"
 									required="#{question.required and empty param[save.clientId]}"
 									filter="#{question.answers.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px"
+									filterMatchMode="startsWith" panelStyle=""
 									layout="grid" columns="1">
 									<f:selectItems value="#{question.answers}" var="option"
 										itemLabel="#{option}" itemValue="#{option}" />
@@ -142,9 +147,9 @@
 						</c:forEach>
 					</h:panelGrid>
 					
-					<div style="margin:2rem 0 1.5rem;">
+					<div class="mt-3">
 						<p:commandButton value="#{msg.submit}"
-							styleClass="float-left greenbutton resource_button" 
+							styleClass="command-button"
 							action="#{surveyBean.onSubmit()}" update=":message @form"
 							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
 							ajax="true">
@@ -153,9 +158,8 @@
 	
 						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
 							rendered="#{surveyBean.resource.saveable}" 
-							actionListener="#{surveyBean.onSave()}" 
-							style="float:left; margin-left:5px"
-							styleClass="graybutton resource_button"
+							actionListener="#{surveyBean.onSave()}"
+							styleClass="command-button"
 							ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
 	                     	process="@form" 
 	                     	update="@form :message">
@@ -166,20 +170,16 @@
 				
 				<ui:fragment rendered="#{not surveyBean.formEnabled}">
 					<h:outputText value="You can't edit this survey." />
-					<br />
-					<br />
-					
-					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="float-left greenbutton">
+
+					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="command-button">
 						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
 						<h:outputText value="View answers" />
 					</h:outputLink>
 
-					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}"  
-							style="margin-left:5px" styleClass="float-left greenbutton">
+					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}" styleClass="command-button">
 						<h:outputText value="#{surveyBean.goBackPageTitle}" />
 					</h:outputLink>
-					<br class="clear" />
 				</ui:fragment>	
 					
 			</p:panel>
