@@ -25,8 +25,8 @@
 
 			<h:panelGroup id="main_component" styleClass="section-glossary" layout="block">
 
-				<h:form id="glossary_table_form" prependId="false">
-					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"                                 
+				<h:form id="glossary_table_form" prependId="false" styleClass="mb-5">
+					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
                                  sortBy="#{item.getTimestamp()}" sortOrder="descending">
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
@@ -37,7 +37,7 @@
 							<div class="row">
 							<p:outputPanel styleClass="col">
 								<p:autoUpdate />
-								<h:outputText value="#{msg['Glossary.search_all_field']}" styleClass="font-weight-light mr-2" style="color: #4AA564;" />
+								<h:outputText value="#{msg['Glossary.search_all_field']}" styleClass="font-weight-light mr-2"  />
 								<p:inputText id="globalFilter"  onkeyup="PF('glossTable').filter()" style="width:150px"
 									placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 							</p:outputPanel>
@@ -110,28 +110,22 @@
 						</p:column>
 					</p:dataTable>
 
-					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; padding:none;">
-						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBean.entryCount}" style="text-align:center;"
-                                      styleClass="glossary_footer_text"></h:outputText>
+					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer">
+						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBean.entryCount}"
+                                      styleClass="text-center text-primary"></h:outputText>
                         <!--excel import button-->
-                        <p:commandLink rendered="#{userBean.moderator}" styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
-                            <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
-                                            style="position:relative; text-align:center; display: block; " />
+                        <p:commandLink rendered="#{userBean.moderator}" styleClass="text-center"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
+                            <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24" styleClass="text-center" />
                         </p:commandLink>
-						<p:commandLink styleClass="excel_export_todo_use" style="text-align:center;" ajax="false">
-							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"
-								style="position:relative; text-align:center; display: block; " />
+						<p:commandLink   styleClass="text-center" ajax="false">
+							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" styleClass="text-center" />
 							<p:dataExporter type="xls" target="glossary_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
 						</p:commandLink>
-						<p:commandLink style="text-align:center;" ajax="false">
-							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png" width="24" style="position:relative; text-align:center;" />
+						<p:commandLink  styleClass="text-center" ajax="false">
+							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png"  width="24"  />
 							<p:dataExporter type="pdf" fileName="glossary" target="glossary_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
 					</p:panelGrid>
-
-					<br />
-					<br />
-					<br />
 				</h:form>
 				
 				<h:form id="import_form" prependId="false">				
@@ -180,13 +174,13 @@
 
 				</h:form>
 				
-				<p:panel header="#{msg['Glossary.add_new_entry']}" id="glossform" style="display: none">
+				<p:panel header="#{msg['Glossary.add_new_entry']}" id="glossform"  style="display: none;">
 					<h:form id="glossary_add"  prependId="false">
 						<p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
 							<p:autoUpdate />
 						</p:growl>
-
-						<p:panelGrid id="grid" styleClass="centered-form" columns="3" >
+						<div class="text-center">
+						<p:panelGrid id="grid"  styleClass="my-0 mx-auto" columns="3" >
 							<p:outputLabel for="topic_1" styleClass="font-weight-bold" value="#{msg['Glossary.topic']} 1 " />
 							<p:selectOneMenu id="topic_1" styleClass="w-100" value="#{glossaryBean.formEntry.topicOne}" required="true" requiredMessage="#{msg['Glossary.topic_one_message']}" editable="true">
 								<f:selectItems value="#{glossaryBean.availableTopicOne}" />
@@ -217,7 +211,7 @@
 							<p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield w-100" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');" />
 							<p:message for="description" />
 						</p:panelGrid>
-
+						</div>
 	        			<h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
 
 						<br />
@@ -241,7 +235,7 @@
 								<p:message for="language" />
 								</p:column>
 
-							<p:column headerText="#{msg['Glossary.use']}" style="text-align: center" rendered="#{not term.deleted}">
+							<p:column headerText="#{msg['Glossary.use']}" styleClass="text-center" rendered="#{not term.deleted}">
 								<p:selectCheckboxMenu id="use" value="#{term.uses}" label="Uses" multiple="true" filter="true" filterMatchMode="startsWith">
 									<f:selectItem itemValue="technical" itemLabel="#{msg['Glossary.use_technical']}" />
 									<f:selectItem itemValue="popular" itemLabel="#{msg['Glossary.use_popular']}" />
@@ -284,26 +278,21 @@
 								<p:tooltip for="delete_term" value="#{msg['Glossary.remove_row']}" position="bottom" />
 							</p:column>
 						</p:dataTable>
-						<br />
-						<p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.addTerm()}" style="float:left;" styleClass="greenbutton"
+						<div class="mt-3">
+						<p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.addTerm()}"  styleClass="float-left"
                                          update=":glossary_add :lang_terms">
 							<f:ajax execute="@this lang_terms" />
 						</p:commandButton>
-
-						<br />
-						<br />
-						<p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" styleClass="greenbutton resource_button" update=":glossary_add :growl" binding="#{save}" oncomplete="groupRow()">
+						<p:commandButton id="save"  value="#{msg.save}" action="#{glossaryBean.onSave()}" styleClass="float-right" update=":glossary_add :growl" binding="#{save}" oncomplete="groupRow()">
 							<f:ajax execute="@form" />
 
 
 						</p:commandButton>
-						<p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onCancel()}" styleClass="greenbutton resource_button" update="@form :glossary_add :lang_terms"
+						<p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onCancel()}" styleClass="float-right" update="@form :glossary_add :lang_terms"
                                          process="@this" resetValues="true" oncomplete="groupRow()">
 						</p:commandButton>
-
+						</div>
 						<br />
-						<br />
-
 					</h:form>
 				</p:panel>
 			</h:panelGroup>

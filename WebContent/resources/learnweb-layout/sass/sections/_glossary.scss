@@ -1,157 +1,24 @@
 .section-glossary {
   .ui-datatable-header {
-    background-color: gainsboro !important;
-  }
-
-  .glossary_footer_text {
-    font-size: 2rem;
-    font-weight: 100;
-    color: $themePrimaryColor;
-    display: inline;
-    margin: 0;
-    text-align: justify !important;
+    background-color: $themePrimaryColor;
   }
 
   .datatable_footer {
-    border: 1px solid $gray-400;
-    background-color: $gray-100 !important;
-    margin-bottom: 5px;
-    padding: 1rem !important;
+    background-color: #fff;
     display: block;
     position: relative;
-
     span {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 100;
       color: $themePrimaryColor;
-      display: inline;
-      margin: 0;
-      text-align: justify !important;
     }
   }
-
-  .glossary {
-    text-align: center;
-    margin-right: 1em;
-    border-spacing: 0px;
-    margin-bottom: 5rem;
-    margin-top: 1rem;
-
-    table {
-      width: auto !important;
-      min-width: 100%;
-    }
-  }
-
-  .myTable thead th {
-    border: none !important;
-    background: none !important;
-  }
-
-  #glossform {
-    margin: 0 auto;
-  }
-
-  .glossary {
-    td {
-      overflow: scroll !important;
-    }
-
-    th {
-      font-size: 1.5rem;
-      border: 1px solid grey;
-    }
-
-    td {
-      border: 1px solid grey;
-    }
-
-    tr td a {
-      font-weight: bold;
-      color: $themePrimaryColor;
-    }
-  }
-
-  .data {
-    font-size: 1.5rem;
-  }
-
-  .inputfield, .inputarea {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
-    width: 15em !important;
-    outline: none;
-  }
-
-  .datatype {
-    font-size: 1.5rem;
-    margin-left: 1rem;
-  }
-
-  .filter {
-    font-size: 1.5rem;
-  }
-
-  #message {
-    display: none;
-  }
-
-  form input, .inputarea {
-    margin-left: 1rem;
-  }
-
-  hr {
-    margin-bottom: 5rem;
-  }
-
-  .dataDescription {
-    font-size: 1.5rem;
-    color: red;
-    text-align: right;
-  }
-
-  .italian {
-    text-align: right;
-  }
-
-  .termsHeading {
-    font-size: 1.5rem;
-    font-weight: bold;
-    float: left;
-  }
-
-  /*both pages*/
-  #group_header {
-    margin: 1rem 5px 0px 5px;
-  }
-
-  #searchbutton {
-    margin-left: 0;
-  }
-
-  #formbutton {
-    margin-left: 0;
-    border: 5px solid $white;
-  }
-
-  .grey_border {
-    margin: 0px auto;
-    text-align: center;
-  }
-
-  .pencil-icon {
-    background: url("/resources/icon/silk/pencil.png") no-repeat;
-  }
-
-  .centered-form {
-    margin: 0 auto;
-  }
-
-  /*change primefaces ui*/
+/*
+  !*change primefaces ui*!
   .ui-state-hover, .ui-state-focus, .ui-state-active {
     box-shadow: 0 0 0px 0px $white !important;
     background-color: $gray-400 !important;
     background-image: none !important;
     border: 1px solid $gray-500 !important;
-  }
+  }*/
 }

@@ -19,8 +19,7 @@
 	<p:menuitem value="#{msg.tedTranscriptTitle}" url=""/>
 </ui:define>
 <ui:define name="center_layout">
-	<div class="container mt-3 section-ted-transcript">
-		<div class="row">
+	<div class="mt-3 row section-ted-transcript">
 			<h:form class="display-none" id="command_form">
 				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSetSynonyms()}" name="setSynonymsForWord" process="@this" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
 				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
@@ -42,12 +41,12 @@
 				var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
 			</script>
 
-			<div id="ted_content" class="col-md">
-				<div class="embed-responsive embed-responsive-16by9 w-100" style="height: 100vh;" id="ted_embedded" >
+			<div id="ted_content" class="col">
+				<div class="embed-responsive embed-responsive-1by1" style="position: fixed; width: 43%;"   id="ted_embedded" >
 					<!-- ${tedTranscriptBean.tedResource.embedded} -->
 				</div>
 			</div>
-			<div class="col-md" style="">
+			<div class="col" style="">
 				<h:panelGroup layout="block" id="transcript_column"  class="right_bar">
 					<p:outputPanel id="transcript_options">
 						<div class="center-header noselect">
@@ -87,7 +86,7 @@
 					</p:outputPanel>
 					<h:panelGroup layout="block" id="transcript">
 						<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
-							<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
+							<h:outputText value="#{tedTranscriptBean.tedResource.transcript}"  escape="false"/>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="tedTranscript" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 							<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
@@ -138,7 +137,6 @@
 				</h:form>
 			</p:dialog>
 
-		</div>
 	</div>
 </ui:define>
 
