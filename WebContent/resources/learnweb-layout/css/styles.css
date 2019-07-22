@@ -12780,6 +12780,9 @@ html {
 .layout-topbar .topbar-menu-button {
   position: initial !important;
 }
+.layout-topbar .topbar-menu-button img {
+  border-radius: 100%;
+}
 .layout-topbar .usermenu a {
   text-decoration: none;
 }
@@ -13246,131 +13249,27 @@ html {
 }
 
 .section-glossary {
-  /*both pages*/
-  /*change primefaces ui*/
+  /*
+    !*change primefaces ui*!
+    .ui-state-hover, .ui-state-focus, .ui-state-active {
+      box-shadow: 0 0 0px 0px $white !important;
+      background-color: $gray-400 !important;
+      background-image: none !important;
+      border: 1px solid $gray-500 !important;
+    }*/
 }
 .section-glossary .ui-datatable-header {
-  background-color: gainsboro !important;
-}
-.section-glossary .glossary_footer_text {
-  font-size: 2rem;
-  font-weight: 100;
-  color: #4AA382;
-  display: inline;
-  margin: 0;
-  text-align: justify !important;
+  background-color: #4AA382;
 }
 .section-glossary .datatable_footer {
-  border: 1px solid #ced4da;
-  background-color: #f8f9fa !important;
-  margin-bottom: 5px;
-  padding: 1rem !important;
+  background-color: #fff;
   display: block;
   position: relative;
 }
 .section-glossary .datatable_footer span {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 100;
   color: #4AA382;
-  display: inline;
-  margin: 0;
-  text-align: justify !important;
-}
-.section-glossary .glossary {
-  text-align: center;
-  margin-right: 1em;
-  border-spacing: 0px;
-  margin-bottom: 5rem;
-  margin-top: 1rem;
-}
-.section-glossary .glossary table {
-  width: auto !important;
-  min-width: 100%;
-}
-.section-glossary .myTable thead th {
-  border: none !important;
-  background: none !important;
-}
-.section-glossary #glossform {
-  margin: 0 auto;
-}
-.section-glossary .glossary td {
-  overflow: scroll !important;
-}
-.section-glossary .glossary th {
-  font-size: 1.5rem;
-  border: 1px solid grey;
-}
-.section-glossary .glossary td {
-  border: 1px solid grey;
-}
-.section-glossary .glossary tr td a {
-  font-weight: bold;
-  color: #4AA382;
-}
-.section-glossary .data {
-  font-size: 1.5rem;
-}
-.section-glossary .inputfield, .section-glossary .inputarea {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.5rem;
-  width: 15em !important;
-  outline: none;
-}
-.section-glossary .datatype {
-  font-size: 1.5rem;
-  margin-left: 1rem;
-}
-.section-glossary .filter {
-  font-size: 1.5rem;
-}
-.section-glossary #message {
-  display: none;
-}
-.section-glossary form input, .section-glossary .inputarea {
-  margin-left: 1rem;
-}
-.section-glossary hr {
-  margin-bottom: 5rem;
-}
-.section-glossary .dataDescription {
-  font-size: 1.5rem;
-  color: red;
-  text-align: right;
-}
-.section-glossary .italian {
-  text-align: right;
-}
-.section-glossary .termsHeading {
-  font-size: 1.5rem;
-  font-weight: bold;
-  float: left;
-}
-.section-glossary #group_header {
-  margin: 1rem 5px 0px 5px;
-}
-.section-glossary #searchbutton {
-  margin-left: 0;
-}
-.section-glossary #formbutton {
-  margin-left: 0;
-  border: 5px solid #fff;
-}
-.section-glossary .grey_border {
-  margin: 0px auto;
-  text-align: center;
-}
-.section-glossary .pencil-icon {
-  background: url("/resources/icon/silk/pencil.png") no-repeat;
-}
-.section-glossary .centered-form {
-  margin: 0 auto;
-}
-.section-glossary .ui-state-hover, .section-glossary .ui-state-focus, .section-glossary .ui-state-active {
-  box-shadow: 0 0 0px 0px #fff !important;
-  background-color: #ced4da !important;
-  background-image: none !important;
-  border: 1px solid #adb5bd !important;
 }
 
 .section-group-resources .resources-filters {
@@ -13705,7 +13604,7 @@ html {
 }
 @media (min-width: 576px) {
   .section-resource-submission .submission-resource {
-    width: 12.5rem;
+    width: 17.5rem;
   }
 }
 @media (min-width: 1200px) {
