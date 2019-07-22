@@ -14,6 +14,7 @@ import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.user.User;
+import org.apache.log4j.Logger;
 
 /**
  * YourActivityBean is responsible for displaying user activity on site.
@@ -23,7 +24,7 @@ import de.l3s.learnweb.user.User;
 public class YourActivityBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -53694900500236594L;
-    //private static final Logger log = Logger.getLogger(YourActivityBean.class);
+    private static final Logger log = Logger.getLogger(YourActivityBean.class);
 
     private List<LogEntry> userActions;
     private Map<Integer, String> groupTitles;
@@ -41,15 +42,20 @@ public class YourActivityBean extends ApplicationBean implements Serializable
         this.userActions = getLearnweb().getLogManager().getLogsByUser(user.getId(), Action.values(), 1000);
         for(LogEntry action : userActions)
         {
-            switch(action.getGroupId())
-            {
-            // general action, which has no group assigned
-            case 0:
-                groupTitles.put(action.getGroupId(), "");
-                break;
-            default:
-                groupTitles.put(action.getGroupId(), groupManager.getGroupById(action.getGroupId()).getTitle());
-                break;
+            try {
+
+                switch(action.getGroupId())
+                {
+                    // general action, which has no group assigned
+                    case 0:
+                        groupTitles.put(action.getGroupId(), "");
+                        break;
+                    default:
+                        groupTitles.put(action.getGroupId(), groupManager.getGroupById(action.getGroupId()).getTitle());
+                        break;
+                }
+            } catch(Throwable e) {
+                log.error("Can't process action '" + action.getAction() + "' in group " + action.getGroupId(), e);
             }
         }
     }
