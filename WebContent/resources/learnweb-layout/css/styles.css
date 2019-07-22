@@ -13698,6 +13698,22 @@ html {
   margin-top: 0;
 }
 
+.section-resource-submission .submission-avatar img {
+  border-radius: 100%;
+  width: 2.8rem;
+  height: 2.8rem;
+}
+@media (min-width: 576px) {
+  .section-resource-submission .submission-resource {
+    width: 12.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  .section-resource-submission .submission-resource {
+    width: 14.5rem;
+  }
+}
+
 .section-resources {
   /*taken from new_main2.css*/
   /** styles for archive visualizations in the lightbox and right pane*/

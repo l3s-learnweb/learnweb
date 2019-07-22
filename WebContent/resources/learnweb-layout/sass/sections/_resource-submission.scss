@@ -4,3 +4,22 @@
     margin-top: 0;
   }
 }
+
+.section-resource-submission{
+  .submission-avatar{
+    img{
+      border-radius: 100%;
+      width: 2.8rem;
+      height: 2.8rem;
+    }
+
+  }
+  .submission-resource{
+    @include media-breakpoint-up(sm) {
+      width: 17.5rem;
+    }
+    @include media-breakpoint-up(xl) {
+      width: 14.5rem;
+    }
+  }
+}

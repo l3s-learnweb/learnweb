@@ -10,9 +10,9 @@
 		<div class="submission-card">
 			<div class="row">
 				<div class=" col-12 col-xl-5 ">
-					<h4 class="h3 mb-0">
+					<h4 class="h4 mb-0">
 						<b>#{submission.title} </b>
-						<h:form style="display:inline;">
+						<h:form styleClass="d-inline-block">
 							<p:commandLink title="#{msg.edit}" rendered="#{(userBean.admin || userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 										   process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 								<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
