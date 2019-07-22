@@ -59,28 +59,28 @@
 					</table>
 				</div>
 				<div class="col-12 col-xl-2 text-center my-3 my-xl-0 px-xl-0">
-					<h:outputLink styleClass=""
+					<h:outputLink styleClass="d-block m-auto"
 								  value="myhome/submission_resources.jsf"
 								  rendered="#{submission.pastSubmission and (not userBean.moderator || submissionBean.submissionOverviewReadOnly)}">
 						<f:param name="submission_id" value="#{submission.id}" />
 						<f:param name="user_id" value="#{submissionBean.userId}" />
 						#{msg['Submission.view_submission']}
 					</h:outputLink>
-					<h:outputLink styleClass=""
+					<h:outputLink styleClass="d-block m-auto"
 								  value="myhome/submission_resources.jsf"
 								  rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 						<f:param name="submission_id" value="#{submission.id}" />
 						<f:param name="user_id" value="#{submissionBean.userId}" />
 						#{msg['Submission.submit_resources']}
 					</h:outputLink>
-					<h:outputLink  styleClass=""
+					<h:outputLink  styleClass="d-block m-auto"
 								   value="../templates/resources/survey.jsf"
 								   rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 						<f:param name="resource_id" value="#{submission.surveyResourceId}" />
 						<h:outputText class="survey_submit_message" value="Please submit the survey first"/>
 					</h:outputLink>
 
-					<h:outputLink styleClass=""
+					<h:outputLink styleClass="d-block m-auto"
 								  value="myhome/submission_resources.jsf"
 								  rendered="#{submission.currentSubmission and userBean.moderator and submissionBean.submissionOverviewReadOnly}">
 						<f:param name="submission_id" value="#{submission.id}" />
@@ -89,7 +89,7 @@
 					</h:outputLink>
 
 
-					<h:outputLink styleClass=""
+					<h:outputLink styleClass="d-block m-auto"
 								  value="myhome/submission_moderator.jsf"
 								  rendered="#{userBean.moderator}">
 						<f:param name="submission_id" value="#{submission.id}" />

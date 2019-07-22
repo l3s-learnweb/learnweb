@@ -59,7 +59,7 @@
 			</ui:fragment>
 
 
-			<p:dialog header="#{msg['Submission.edit_submission']}"  width="471" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}"  width="auto" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
 
 						<h:outputText value="#{msg.title}:" title="#{msg.title}" styleClass="font-weight-bold"/>
@@ -88,12 +88,15 @@
 						<h:outputText value="#{msg['Submission.max_resources']}:" styleClass="font-weight-bold"/>
 						<p:inputText styleClass="w-100 mb-3" value="#{submissionBean.selectedSubmission.noOfResources}"/>
 
-						<h:outputText value="#{msg['Submission.survey_mandatory']}" styleClass="font-weight-bold mr-2"/>
-						<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}" widgetVar="editSurveyCheckBox">
-							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
-						</p:selectBooleanCheckbox>
+                        <div class="w-100 mb-3">
+                            <h:outputText value="#{msg['Submission.survey_mandatory']}" styleClass="font-weight-bold mr-2"/>
+                            <p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}" widgetVar="editSurveyCheckBox">
+                                <p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
+                            </p:selectBooleanCheckbox>
+                        </div>
 
-						<h:outputText id="edit_dialog_survey_text" value="#{msg['Submission.survey']}:" style="display:none;" styleClass="font-weight-bold"/>
+
+						<h:outputText id="edit_dialog_survey_text" value="#{msg['Submission.survey']}:" style="display:none;" styleClass="font-weight-bold "/>
 						<p:selectOneMenu styleClass="w-100 mb-3" id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}" style="display:none;" required="#{submissionBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
 							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
 							<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
@@ -107,7 +110,7 @@
 				</h:form>
 			</p:dialog>
 
-			<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="create_submission_dialog">
+			<p:dialog header="#{msg['Submission.create_new_submission']}" width="auto" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="create_submission_dialog">
 				<h:form prependId="false">
 
 					<h:outputText value="#{msg.title}:" styleClass="font-weight-bold" title="#{msg.title}:"/>
@@ -147,17 +150,19 @@
 					<p:inputText styleClass="w-100 mb-3" id="max_resources" value="#{submissionBean.newSubmission.noOfResources}"/>
 					<p:message for="max_resources" display="icon" />
 
-					<h:outputText value="#{msg['Submission.survey_mandatory']}" styleClass="font-weight-bold mr-2"/>
-					<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" widgetVar="surveyCheckBox" id="survey_checkbox">
-						<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
-					</p:selectBooleanCheckbox>
-					<p:message for="survey_checkbox" display="icon" />
+                    <div class="w-100 mb-3">
+                        <h:outputText value="#{msg['Submission.survey_mandatory']}" styleClass="font-weight-bold mr-2"/>
+                        <p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" widgetVar="surveyCheckBox" id="survey_checkbox">
+                            <p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
+                        </p:selectBooleanCheckbox>
+                        <p:message for="survey_checkbox" display="icon" />
+                    </div>
 
 					<h:outputText id="create_dialog_survey_text" value="#{msg['Submission.survey']}:" style="display:none;" styleClass="font-weight-bold"/>
-					<h:selectOneMenu styleClass="w-100 mb-3" id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" style="display:none;" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
+					<p:selectOneMenu styleClass="w-100 mb-3" id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" style="display:none;" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
 						<f:selectItem itemLabel="Select Survey Resource" />
 						<f:selectItems value="#{submissionBean.surveyResourcesList}"/>
-					</h:selectOneMenu>
+					</p:selectOneMenu>
 					<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon" />
 
 					<p:commandButton value="#{msg.save}" styleClass="command-button mt-3 float-right" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
@@ -170,16 +175,17 @@
 			</div>
 
 			<p:accordionPanel  id="submissions">
-				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
-					</ui:decorate>
-				</p:tab>
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
 					</ui:decorate>
 				</p:tab>
+				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
+					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
+					</ui:decorate>
+				</p:tab>
+
 				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />

@@ -34,13 +34,10 @@
 		</h:panelGroup>
 
 		<h:panelGroup layout="block" styleClass="section-resource-submission">
-            <p:panel>
+            <p:panel header="#{submissionModeratorBean.submission.title}">
                 <h:panelGroup layout="block" styleClass="mb-3">
                     <div class="p-1 row">
                         <div class="col-12 col-xl-6">
-                            <h4 class="h4 mb-0">
-                                <b>#{submissionModeratorBean.submission.title} </b>
-                            </h4>
                             <span>#{submissionModeratorBean.submission.description}</span>
                         </div>
                         <div class="col-12 col-xl-6 mt-2 mt-xl-0">
