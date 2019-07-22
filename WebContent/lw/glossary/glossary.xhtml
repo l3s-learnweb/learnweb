@@ -94,9 +94,17 @@
 							<h:outputText value="#{item.uses}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
-							<h:outputText value="#{item.pronounciation}" />
-							<button onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
-									type="button" value="Play">RV api</button>
+                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
+                                           type="button" rendered="#{item.languageTag=='en'}">
+                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
+                                                style="position:relative; text-align:center; display: block; " />
+                            </p:commandLink>
+                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'Italian Female');"
+                                           type="button" rendered="#{item.languageTag=='it'}">
+                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
+                                                style="position:relative; text-align:center; display: block; " />
+                            </p:commandLink>
+                            <h:outputText value="#{item.pronounciation}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.acronym']}">
 							<h:outputText value="#{item.acronym}" />
