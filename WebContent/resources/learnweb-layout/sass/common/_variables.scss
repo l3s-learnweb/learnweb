@@ -25,8 +25,25 @@ $themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActive
 * check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
 */
 $border-radius: 0;
-$primary: $themePrimaryColor;
-$secondary: $themePrimaryAltColor;
-$dark: $themeDarkBgColor;
 $body-bg: $white;
 $body-color: $gray-900;
+
+$primary: $themePrimaryColor;
+$secondary: $themePrimaryAltColor;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $themeDarkBgColor;
+
+$theme-colors: (
+        "primary": $primary,
+        "secondary": $secondary,
+        "green": $green,
+        "blue": $blue,
+        "cyan": $cyan,
+        "yellow": $yellow,
+        "red": $red,
+        "dark": $dark
+);

@@ -10,20 +10,21 @@
                      style="margin-bottom:20px" tableStyle="table-layout: auto">
 
             <f:facet name="header">#{table_name}</f:facet>
+
             <f:facet name="{Exporters}">
                 <h:panelGroup>
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
+                    <h:commandLink styleClass="text-red float-right p-1">
+                        <span class="lw lw-file-pdf"></span>
                         <p:dataExporter type="pdf" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
 
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="xml.png" width="24" style="float:right"/>
+                    <h:commandLink styleClass="text-green float-right p-1">
+                        <span class="lw lw-file-excel"></span>
                         <p:dataExporter type="xml" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
 
-                    <h:commandLink>
-                        <p:graphicImage library="your_information" name="csv.png" width="24" style="float:right"/>
+                    <h:commandLink styleClass="text-gray float-right p-1">
+                        <span class="lw lw-file-csv"></span>
                         <p:dataExporter type="csv" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
                 </h:panelGroup>

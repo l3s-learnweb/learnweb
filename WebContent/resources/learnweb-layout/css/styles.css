@@ -53,6 +53,11 @@
   --danger: #cd2026;
   --light: #f8f9fa;
   --dark: #272928;
+  --green: #4aa564;
+  --blue: #0071bc;
+  --cyan: #00bfe7;
+  --yellow: #F9C642;
+  --red: #cd2026;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -1739,6 +1744,106 @@ pre code {
   background-color: #b6b6b6;
 }
 
+.table-green,
+.table-green > th,
+.table-green > td {
+  background-color: #cce6d4;
+}
+.table-green th,
+.table-green td,
+.table-green thead th,
+.table-green tbody + tbody {
+  border-color: #a1d0ae;
+}
+
+.table-hover .table-green:hover {
+  background-color: #bbdec6;
+}
+.table-hover .table-green:hover > td,
+.table-hover .table-green:hover > th {
+  background-color: #bbdec6;
+}
+
+.table-blue,
+.table-blue > th,
+.table-blue > td {
+  background-color: #b8d7ec;
+}
+.table-blue th,
+.table-blue td,
+.table-blue thead th,
+.table-blue tbody + tbody {
+  border-color: #7ab5dc;
+}
+
+.table-hover .table-blue:hover {
+  background-color: #a4cce7;
+}
+.table-hover .table-blue:hover > td,
+.table-hover .table-blue:hover > th {
+  background-color: #a4cce7;
+}
+
+.table-cyan,
+.table-cyan > th,
+.table-cyan > td {
+  background-color: #b8edf8;
+}
+.table-cyan th,
+.table-cyan td,
+.table-cyan thead th,
+.table-cyan tbody + tbody {
+  border-color: #7adef3;
+}
+
+.table-hover .table-cyan:hover {
+  background-color: #a1e7f6;
+}
+.table-hover .table-cyan:hover > td,
+.table-hover .table-cyan:hover > th {
+  background-color: #a1e7f6;
+}
+
+.table-yellow,
+.table-yellow > th,
+.table-yellow > td {
+  background-color: #fdefca;
+}
+.table-yellow th,
+.table-yellow td,
+.table-yellow thead th,
+.table-yellow tbody + tbody {
+  border-color: #fce19d;
+}
+
+.table-hover .table-yellow:hover {
+  background-color: #fce8b1;
+}
+.table-hover .table-yellow:hover > td,
+.table-hover .table-yellow:hover > th {
+  background-color: #fce8b1;
+}
+
+.table-red,
+.table-red > th,
+.table-red > td {
+  background-color: #f1c1c2;
+}
+.table-red th,
+.table-red td,
+.table-red thead th,
+.table-red tbody + tbody {
+  border-color: #e58b8e;
+}
+
+.table-hover .table-red:hover {
+  background-color: #ecacae;
+}
+.table-hover .table-red:hover > td,
+.table-hover .table-red:hover > th {
+  background-color: #ecacae;
+}
+
 .table-active,
 .table-active > th,
 .table-active > td {
@@ -2142,6 +2247,56 @@ button.bg-dark:focus {
   background-color: #0e0f0f !important;
 }
 
+.bg-green {
+  background-color: #4aa564 !important;
+}
+
+a.bg-green:hover, a.bg-green:focus,
+button.bg-green:hover,
+button.bg-green:focus {
+  background-color: #3a824f !important;
+}
+
+.bg-blue {
+  background-color: #0071bc !important;
+}
+
+a.bg-blue:hover, a.bg-blue:focus,
+button.bg-blue:hover,
+button.bg-blue:focus {
+  background-color: #005289 !important;
+}
+
+.bg-cyan {
+  background-color: #00bfe7 !important;
+}
+
+a.bg-cyan:hover, a.bg-cyan:focus,
+button.bg-cyan:hover,
+button.bg-cyan:focus {
+  background-color: #0095b4 !important;
+}
+
+.bg-yellow {
+  background-color: #F9C642 !important;
+}
+
+a.bg-yellow:hover, a.bg-yellow:focus,
+button.bg-yellow:hover,
+button.bg-yellow:focus {
+  background-color: #f7b711 !important;
+}
+
+.bg-red {
+  background-color: #cd2026 !important;
+}
+
+a.bg-red:hover, a.bg-red:focus,
+button.bg-red:hover,
+button.bg-red:focus {
+  background-color: #a1191e !important;
+}
+
 .bg-white {
   background-color: #fff !important;
 }
@@ -2220,6 +2375,26 @@ button.bg-dark:focus {
 
 .border-dark {
   border-color: #272928 !important;
+}
+
+.border-green {
+  border-color: #4aa564 !important;
+}
+
+.border-blue {
+  border-color: #0071bc !important;
+}
+
+.border-cyan {
+  border-color: #00bfe7 !important;
+}
+
+.border-yellow {
+  border-color: #F9C642 !important;
+}
+
+.border-red {
+  border-color: #cd2026 !important;
 }
 
 .border-white {
@@ -5802,6 +5977,46 @@ a.text-light:hover, a.text-light:focus {
 
 a.text-dark:hover, a.text-dark:focus {
   color: #020202 !important;
+}
+
+.text-green {
+  color: #4aa564 !important;
+}
+
+a.text-green:hover, a.text-green:focus {
+  color: #327044 !important;
+}
+
+.text-blue {
+  color: #0071bc !important;
+}
+
+a.text-blue:hover, a.text-blue:focus {
+  color: #004370 !important;
+}
+
+.text-cyan {
+  color: #00bfe7 !important;
+}
+
+a.text-cyan:hover, a.text-cyan:focus {
+  color: #00809b !important;
+}
+
+.text-yellow {
+  color: #F9C642 !important;
+}
+
+a.text-yellow:hover, a.text-yellow:focus {
+  color: #e7a907 !important;
+}
+
+.text-red {
+  color: #cd2026 !important;
+}
+
+a.text-red:hover, a.text-red:focus {
+  color: #8b161a !important;
 }
 
 .text-body {
@@ -12615,6 +12830,18 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
 
 .lw-search:before {
   content: "";
+}
+
+.lw-file-pdf:before {
+  content: "";
+}
+
+.lw-file-csv:before {
+  content: "";
+}
+
+.lw-file-excel:before {
+  content: "";
 }
 
 .green-tittle {

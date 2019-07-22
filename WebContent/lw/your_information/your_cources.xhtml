@@ -22,22 +22,22 @@
 	            </f:facet>
 	
 	            <f:facet name="{Exporters}">
-	                <h:panelGroup>
-	                    <h:commandLink>
-	                        <p:graphicImage library="your_information" name="pdf.png" width="24" style="float:right"/>
-	                        <p:dataExporter type="pdf" target="cources_tbl" fileName="cources"/>
-	                    </h:commandLink>
-	
-	                    <h:commandLink>
-	                        <p:graphicImage library="your_information" name="xml.png" width="24" style="float:right"/>
-	                        <p:dataExporter type="xml" target="cources_tbl" fileName="cources"/>
-	                    </h:commandLink>
-	
-	                    <h:commandLink>
-	                        <p:graphicImage library="your_information" name="csv.png" width="24" style="float:right"/>
-	                        <p:dataExporter type="csv" target="cources_tbl" fileName="cources"/>
-	                    </h:commandLink>
-	                </h:panelGroup>
+					<h:panelGroup>
+						<h:commandLink styleClass="text-red float-right p-1">
+							<span class="lw lw-file-pdf"></span>
+							<p:dataExporter type="pdf" target="cources_tbl" fileName="cources"/>
+						</h:commandLink>
+
+						<h:commandLink styleClass="text-green float-right p-1">
+							<span class="lw lw-file-excel"></span>
+							<p:dataExporter type="xml" target="cources_tbl" fileName="cources"/>
+						</h:commandLink>
+
+						<h:commandLink styleClass="text-gray float-right p-1">
+							<span class="lw lw-file-csv"></span>
+							<p:dataExporter type="csv" target="cources_tbl" fileName="cources"/>
+						</h:commandLink>
+					</h:panelGroup>
 	            </f:facet>
 	
 	            <p:column>
