@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard.glossary;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +26,7 @@ import de.l3s.util.MapHelper;
 
 @Named
 @SessionScoped
-public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
+public class GlossaryDashboardUsersBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = -8766501339911729826L;
     //private static final Logger log = Logger.getLogger(DashboardUserBean.class);
@@ -64,30 +65,36 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     {
     }
 
-    public void onLoad() throws SQLException
+    public void onLoad()
     {
-        User user = getUser();
-        if(user == null)
-            return;
+        super.onLoad();
 
-        if(!user.isModerator() && paramUserId != null && paramUserId != user.getId())
+        try
         {
-            addAccessDeniedMessage();
-            return;
+            User user = getUser();
+            if(!user.isModerator() && paramUserId != null && paramUserId != user.getId())
+            {
+                addAccessDeniedMessage();
+                return;
+            }
+
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -1);
+
+            String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
+            String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
+            startDate = new Date(Long.parseLong(savedStartDate));
+            endDate = new Date(Long.parseLong(savedEndDate));
+
+            selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
+            selectedUsersIds = Collections.singletonList(selectedUser.getId());
+            dashboardManager = new GlossaryDashboardManager();
+            fetchDataFromManager();
         }
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -1);
-
-        String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
-        String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
-        startDate = new Date(Long.parseLong(savedStartDate));
-        endDate = new Date(Long.parseLong(savedEndDate));
-
-        selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
-        selectedUsersIds = Collections.singletonList(selectedUser.getId());
-        dashboardManager = new GlossaryDashboardManager();
-        fetchDataFromManager();
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void cleanAndUpdateStoredData() throws SQLException

@@ -90,16 +90,12 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     public void onLoad()
     {
-        User user = getUser(); // the current user
-        if(user == null || !user.isModerator()) // not logged in or no privileges
-            return;
+        super.onLoad();
+
         try
         {
             activityDashboardManager = new ActivityDashboardManager();
-            if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
-            {
-                cleanAndUpdateStoredData();
-            }
+            cleanAndUpdateStoredData();
         }
         catch(SQLException e)
         {
@@ -111,7 +107,11 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
     {
         interactionsChart = null;
         interactionsTable = null;
-        fetchDataFromManager();
+
+        if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
+        {
+            fetchDataFromManager();
+        }
     }
 
     private void fetchDataFromManager() throws SQLException

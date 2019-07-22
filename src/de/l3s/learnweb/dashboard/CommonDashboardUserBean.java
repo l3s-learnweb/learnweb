@@ -1,27 +1,16 @@
 package de.l3s.learnweb.dashboard;
 
-import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
+import java.util.*;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-@Named
-@SessionScoped
-public class CommonDashboardUserBean extends ApplicationBean implements Serializable
+public abstract class CommonDashboardUserBean extends ApplicationBean
 {
-
-    private static final long serialVersionUID = 9047964884484786815L;
-
+    private int selectedType = 1;
     private List<Integer> selectedUsersIds;
     private List<Integer> selectedGroupsIds;
     protected Date startDate = null;
@@ -37,6 +26,34 @@ public class CommonDashboardUserBean extends ApplicationBean implements Serializ
         cal.add(Calendar.MONTH, -6); // load data from last 3 month until now
         startDate = new Date(cal.getTimeInMillis());
         endDate = new Date(new Date().getTime());
+    }
+
+    public void onLoad()
+    {
+        User user = getUser(); // the current user
+        if(user == null) // not logged in or no privileges
+            return;
+
+        if(isReadOnly()) {
+            selectedUsersIds = Collections.singletonList(getUser().getId());
+        }
+    }
+
+    public boolean isReadOnly()
+    {
+        return !getUser().isModerator();
+    }
+
+    public abstract void cleanAndUpdateStoredData() throws SQLException;
+
+    public int getSelectedType()
+    {
+        return selectedType;
+    }
+
+    public void setSelectedType(final int selectedType)
+    {
+        this.selectedType = selectedType;
     }
 
     public void setSelectedUsersIds(List<Integer> selectedUsersIds)

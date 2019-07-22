@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
 import org.primefaces.model.chart.BarChartModel;
@@ -14,10 +14,9 @@ import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
-import de.l3s.learnweb.user.User;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
@@ -47,20 +46,12 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     public void onLoad()
     {
-        User user = getUser(); // the current user
-        if(user == null || !user.isModerator()) // not logged in or no privileges
-            return;
+        super.onLoad();
 
         try
         {
-
             dashboardManager = new GlossaryDashboardManager();
-
-            getSelectedUsersIds(); // TODO
-            if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
-            {
-                cleanAndUpdateStoredData();
-            }
+            cleanAndUpdateStoredData();
         }
         catch(SQLException e)
         {
@@ -70,13 +61,15 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     public void cleanAndUpdateStoredData() throws SQLException
     {
-
         interactionsChart = null;
         usersActivityTypesChart = null;
         usersGlossaryChart = null;
         usersSourcesChart = null;
 
-        fetchDataFromManager();
+        if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
+        {
+            fetchDataFromManager();
+        }
     }
 
     private void fetchDataFromManager() throws SQLException

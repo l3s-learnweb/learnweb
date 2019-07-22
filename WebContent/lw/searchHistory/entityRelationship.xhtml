@@ -116,7 +116,7 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-xl-8 mt-5 mt-xl-0">
+					<div class="col-12 col-xl-8 mt-5 mt-xl-0 d-none d-xl-block">
 						<div class="ui-g-12 ui-md-12 ui-lg-12 knowledge-graph" id="knowledge-graph">
 							<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
 								<h:panelGroup id="updateGraph">
@@ -165,6 +165,10 @@
 
 				</div>
 			</p:panel>
+
+			<p:dialog id="warningDialog" widgetVar="warningSmallScreen" minHeight="40">
+				<h:outputText value="This view is not available on small screens" />
+			</p:dialog>
 		</h:panelGroup>
 	</ui:define>
 </ui:composition>

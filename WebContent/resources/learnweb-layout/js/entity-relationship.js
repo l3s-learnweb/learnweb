@@ -3,6 +3,12 @@
 
 // function to execute on page load
 $(document).on('click', '.session_block', function(e){
+	if ($(window).width() < 1200) {
+		PF('warningSmallScreen').show();
+		e.preventDefault();
+		return;
+	}
+
     hideSnippet();
 
     var element = e.currentTarget;
