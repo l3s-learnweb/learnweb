@@ -515,19 +515,29 @@ public class UserBean implements Serializable
             DynamicMenuModel model = new DynamicMenuModel();
 
             // My resources
-            ActiveSubMenu myResources = new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myResourcesTitle")), null, "fa fa-fw fa-folder", su + "/lw/group/resources.jsf");
+            ActiveSubMenu myResources = new ActiveSubMenu(UtilBean.getLocaleMessage("myResourcesTitle"), null, su + "/lw/myhome/groups.jsf");
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", su + "/lw/myhome/comments.jsf"));
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", su + "/lw/myhome/tags.jsf"));
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", su + "/lw/myhome/submission_overview.jsf"));
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myDashboardTitle"), "fa fa-fw fa-table", su + "/lw/admin/dashboard/user.jsf"));
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("search_history"), "fa fa-fw fa-history", su + "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
+
+            // ActiveSubMenu myResources = new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myResourcesTitle")), null, "fa fa-fw fa-folder", su + "/lw/group/resources.jsf");
             model.addElement(myResources);
 
             // My groups
             ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, su + "/lw/myhome/groups.jsf");
-            for(Group group : getUser().getGroups()) myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder", su + "/lw/group/resources.jsf"));
+            for(Group group : getUser().getGroups()) {
+                ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), "fa fa-fw fa-archive", su + "/lw/group/overview.jsf?group_id=" + group.getId());
+                theGroup.addElement(new DefaultMenuItem("Overview", "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem("Resources", "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem("Members", "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem("Forum", "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem("Options", "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
+                myGroups.addElement(theGroup);
+                // myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder", su + "/lw/group/resources.jsf"));
+            }
             model.addElement(myGroups);
-
-            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", su + "/lw/myhome/comments.jsf"));
-            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", su + "/lw/myhome/tags.jsf"));
-            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", su + "/lw/myhome/submission_overview.jsf"));
-            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myDashboardTitle"), "fa fa-fw fa-table", su + "/lw/admin/dashboard/user.jsf"));
-            model.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("search_history"), "fa fa-fw fa-history", su + "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
 
             // Moderator (menu hidden for user EUMADE4ALL; can be removed in 2020)
             if(getUser().isModerator() && getUser().getId() != 12476)

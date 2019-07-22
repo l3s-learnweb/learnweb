@@ -458,7 +458,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     },
 
     markCurrentMenuItem: function () {
-        var currentPath = window.location.pathname + window.location.search;
+        var currentPath = window.location.href;
         var activeMenuLinks = this.menuitemLinks.filter('a[href="' + currentPath + '"]');
 
         if (activeMenuLinks.length) {

@@ -64,7 +64,7 @@
   .ui-menu-parent {
     .ui-menu-list {
       position: static;
-      margin-left: 10px;
+      margin-left: 18px;
     }
 
     > .ui-menuitem-link > .ui-icon {
@@ -131,7 +131,7 @@
       position: relative;
       color: $menuitemTextColor;
       border-left: 4px solid transparent;
-      padding: 0 8px 0 0;
+      padding: 0 8px 0 2px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -140,7 +140,8 @@
         color: $gray-700;
       }
 
-      &.ui-state-hover {
+      &.ui-state-hover,
+      &.ui-state-active {
         background-color: $menuitemHoverBgColor;
         color: $menuitemHoverTextColor;
         border-left-color: $green;

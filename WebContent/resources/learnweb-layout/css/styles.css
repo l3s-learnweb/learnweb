@@ -12866,7 +12866,7 @@ html {
 }
 .ui-lwmenu .ui-menu-parent .ui-menu-list {
   position: static;
-  margin-left: 10px;
+  margin-left: 18px;
 }
 .ui-lwmenu .ui-menu-parent > .ui-menuitem-link > .ui-icon {
   left: 1.5em;
@@ -12917,7 +12917,7 @@ html {
   position: relative;
   color: #212529;
   border-left: 4px solid transparent;
-  padding: 0 8px 0 0;
+  padding: 0 8px 0 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -12925,12 +12925,12 @@ html {
 .ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
   color: #495057;
 }
-.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover {
+.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover, .ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-active {
   background-color: #227053;
   color: #fff;
   border-left-color: #4aa564;
 }
-.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon {
+.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon, .ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-active .ui-menuitem-icon {
   color: #fff;
 }
 .ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
