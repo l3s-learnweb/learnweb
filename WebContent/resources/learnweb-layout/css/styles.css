@@ -12906,6 +12906,10 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   height: 0.9rem;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 html {
   font-size: 10px;
 }
@@ -15599,6 +15603,19 @@ html {
   -ms-user-select: none;
   /* Internet Explorer/Edge */
   user-select: none;
+}
+
+.unread {
+  border-bottom: 1px solid #4AA382;
+  padding: 0.5rem;
+  cursor: pointer;
+  background-color: #e9ecef;
+}
+
+.read {
+  border-bottom: 1px solid #ced4da;
+  padding: 0.5rem;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=styles.css.map */

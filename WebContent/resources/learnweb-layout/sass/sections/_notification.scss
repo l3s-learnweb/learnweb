@@ -1,0 +1,13 @@
+.unread{
+  border-bottom: 1px solid $themePrimaryColor;
+  padding: .5rem;
+  cursor: pointer;
+  background-color: $headerLightBgColor;
+}
+
+.read{
+  border-bottom: 1px solid $themeSidebarDividerColor;
+  padding: .5rem;
+  cursor: pointer;
+
+}
