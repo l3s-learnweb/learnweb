@@ -520,10 +520,6 @@ public class UserBean implements Serializable
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", su + "/lw/myhome/comments.jsf"));
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", su + "/lw/myhome/tags.jsf"));
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", su + "/lw/myhome/submission_overview.jsf"));
-            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myDashboardTitle"), "fa fa-fw fa-table", su + "/lw/admin/dashboard/user.jsf"));
-            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("search_history"), "fa fa-fw fa-history", su + "/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}"));
-
-            // ActiveSubMenu myResources = new ResourceContainerMenuItem(new Group(0, UtilBean.getLocaleMessage("myResourcesTitle")), null, "fa fa-fw fa-folder", su + "/lw/group/resources.jsf");
             model.addElement(myResources);
 
             // My groups
@@ -536,7 +532,6 @@ public class UserBean implements Serializable
                 theGroup.addElement(new DefaultMenuItem("Forum", "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem("Options", "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
                 myGroups.addElement(theGroup);
-                // myGroups.addElement(new ResourceContainerMenuItem(group, "fa fa-fw fa-users", "fa fa-fw fa-folder", su + "/lw/group/resources.jsf"));
             }
             model.addElement(myGroups);
 
