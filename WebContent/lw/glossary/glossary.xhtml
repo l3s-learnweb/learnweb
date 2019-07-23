@@ -94,14 +94,11 @@
 							<h:outputText value="#{item.uses}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
-                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
-                                           type="button" rendered="#{item.languageTag=='en'}">
-								<i class="fa fa-volume-up"></i>
+                            <p:commandLink type="button" rendered="#{userBean.moderator and !empty item.pronounciation and !empty glossaryBean.getPronounciationVoice(item.language)}"
+                                           onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
+								<i class="fa fa-fw fa-volume-up"></i>
                             </p:commandLink>
-                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'Italian Female');"
-                                           type="button" rendered="#{item.languageTag=='it'}">
-								<i class="fa fa-volume-up"></i>
-                            </p:commandLink>
+
                             <h:outputText value="#{item.pronounciation}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.acronym']}">

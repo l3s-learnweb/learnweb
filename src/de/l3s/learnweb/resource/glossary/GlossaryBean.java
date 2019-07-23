@@ -73,6 +73,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private GlossaryParserResponse importResponse;
 
+    private Map<Locale, String> pronounciationVoices = new HashMap<>();
+
     public void onLoad()
     {
         try
@@ -102,6 +104,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             availableTopicOne.add(new SelectItem("International relations"));
             availableTopicOne.add(new SelectItem("Globalization"));
             availableTopicOne.add(new SelectItem("Ecology"));
+
+            // Add pronounciation voices
+            pronounciationVoices.put(Locale.ENGLISH, "UK English Male");
+            pronounciationVoices.put(Locale.ITALIAN, "Italian Female");
+            pronounciationVoices.put(Locale.GERMAN, "Deutsch Male");
+            pronounciationVoices.put(Locale.FRENCH, "French Female");
+            // TODO: add nl, pt, es, ru (they are used in lw_glossary_term table)
 
             // convert tree like glossary structure to flat table
             repaintTable();
@@ -715,6 +724,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setTableLanguageFilter(List<Locale> tableLanguageFilter)
     {
         this.tableLanguageFilter = tableLanguageFilter;
+    }
+
+    public String getPronounciationVoice(Locale locale)
+    {
+        return pronounciationVoices.getOrDefault(locale, null);
     }
 
 }
