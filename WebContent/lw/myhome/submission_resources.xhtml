@@ -5,6 +5,8 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
+
+    <ui:param name="rightPane" value="true"/>
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
@@ -14,6 +16,11 @@
 			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
+
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
+        <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
+    </ui:define>
 
 	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
 	<ui:param name="loginRequired" value="true" />
@@ -31,87 +38,97 @@
 			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
 			var resources_to_select = max_resources;
 		</script>
+        <h:outputStylesheet library="lightbox" name="lightbox.css" />
+        <h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
+        <h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
 
 		<!-- only for eumade4all -->
-		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h1 class="red">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h1></p:panel>
+		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+            <h3 class="h3 text-danger">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h3>
+        </p:panel>
 
-		<ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></ui:fragment>
-		<ui:fragment rendered="#{submissionBean.submitted}"><h3 class="title-header">The submitted resources</h3></ui:fragment>
-		<hr class="title-divider"/>
+        <p:panel styleClass="mt-3">
+            <ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+                <h4 class="h4">#{msg['Submission.select_resources_header']}</h4>
+            </ui:fragment>
 
-		<h:outputStylesheet library="lightbox" name="lightbox.css" />
-		<h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
-		<h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
+            <ui:fragment rendered="#{submissionBean.submitted}">
+                <h4 class="h4">The submitted resources</h4>
+            </ui:fragment>
+
+
+            <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
+                <hr/>
+                <h:panelGroup id="resourceGrid2" layout="block">
+                    <p:repeat var="res" value="#{submissionBean.selectedResources}" >
+                        <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+                            <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
+                                <ui:fragment>
+                                    <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
+                                        <div class="context-menu-item-wrapper">
+                                            <span class="context-menu-item-icon" />
+                                            <!--						<span class="context-menu-item-content">Remove</span>-->
+                                        </div>
+                                    </div>
+                                </ui:fragment>
+                            </h:panelGroup>
+                            <div class="resource-block">
+
+                                <div class="resource-preview">
+                                    <div class="resource-preview-wrapper">
+                                        <img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+                                    </div>
+                                    <h:form class="resource-controls" rendered="#{not submissionBean.submitted}">
+                                        <h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
+                                            <h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+                                        </h:outputLink>
+                                    </h:form>
+                                </div>
+
+                                <div class="resource-title">
+                                    <div class="resource-title-wrapper">
+                                        <!--<div class="resource-title-icon">
+                                                <div class="resource-title-icon-wrapper">
+                                                    <img src="img.png" alt="Title" />
+                                                </div>
+                                            </div>-->
+                                        <div class="resource-title-text">
+                                            <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+                                            <span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </h:panelGroup>
+                    </p:repeat>
+
+                    <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
+
+                    <h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+
+                        <div class="resource-block">
+                            <h:graphicImage value="/resources/image/add_sign.png" styleClass="add-resource-image" alt="select a resource" />
+                        </div>
+                    </h:panelGroup>
+
+                    <div class="clear"></div>
+
+                </h:panelGroup>
+                <h:form id="submit_resources_form" prependId="false">
+                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+                </h:form>
+            </h:panelGroup>
+        </p:panel>
+
+
+
 
 		<h:panelGroup id="resourcesView" layout="block">
 			<!-- dummy for right pane -->
 		</h:panelGroup>
 
 		<h:panelGroup styleClass="section-resource-submission" layout="block">
-			<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
-				<h:panelGroup id="resourceGrid2" styleClass="resource-grid" layout="block">
-					<p:repeat var="res" value="#{submissionBean.selectedResources}" >
-
-						<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-							<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
-								<ui:fragment>
-									<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
-										<div class="context-menu-item-wrapper">
-											<span class="context-menu-item-icon" />
-											<!--						<span class="context-menu-item-content">Remove</span>-->
-										</div>
-									</div>
-								</ui:fragment>
-							</h:panelGroup>
-							<div class="resource-block">
-
-								<div class="resource-preview">
-									<div class="resource-preview-wrapper">
-										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-									</div>
-									<h:form class="resource-controls" rendered="#{not submissionBean.submitted}">
-										<h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
-											<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
-										</h:outputLink>
-									</h:form>
-								</div>
-
-								<div class="resource-title">
-									<div class="resource-title-wrapper">
-										<!--<div class="resource-title-icon">
-                                                <div class="resource-title-icon-wrapper">
-                                                    <img src="img.png" alt="Title" />
-                                                </div>
-                                            </div>-->
-										<div class="resource-title-text">
-											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-											<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
-										</div>
-									</div>
-								</div>
-
-							</div>
-						</h:panelGroup>
-					</p:repeat>
-
-					<h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
-					<h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-
-						<div class="resource-block" style="box-shadow:none;">
-							<div class="resource-preview-wrapper">
-								<div class="resource-preview-wrapper2">
-									<h:graphicImage value="/resources/image/add_sign.png" styleClass=" add-resource-image" alt="select a resource" />
-								</div>
-							</div>
-						</div>
-					</h:panelGroup>
-					<div class="clear"></div>
-
-				</h:panelGroup>
-				<h:form id="submit_resources_form" prependId="false">
-					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
-				</h:form>
-			</h:panelGroup>
 
 			<div id="lightbox" class="submit-resources">
 				<div id="lightbox_background" onclick="select_res_lightbox.close();"></div>

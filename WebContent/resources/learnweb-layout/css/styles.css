@@ -13844,6 +13844,10 @@ html {
   }
 }
 
+.add-resource-image {
+  width: 2rem;
+}
+
 .section-resources {
   /*taken from new_main2.css*/
   /** styles for archive visualizations in the lightbox and right pane*/
