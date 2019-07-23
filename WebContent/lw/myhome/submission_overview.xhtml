@@ -59,7 +59,7 @@
 			</ui:fragment>
 
 
-			<p:dialog header="#{msg['Submission.edit_submission']}"  width="auto" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}"  width="auto" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
 
 						<h:outputText value="#{msg.title}:" title="#{msg.title}" styleClass="font-weight-bold"/>
@@ -110,7 +110,7 @@
 				</h:form>
 			</p:dialog>
 
-			<p:dialog header="#{msg['Submission.create_new_submission']}" width="auto" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" minWidth="440" appendTo="@(body)" widgetVar="create_submission_dialog">
+			<p:dialog header="#{msg['Submission.create_new_submission']}" width="auto" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
 				<h:form prependId="false">
 
 					<h:outputText value="#{msg.title}:" styleClass="font-weight-bold" title="#{msg.title}:"/>

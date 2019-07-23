@@ -94,7 +94,7 @@
 										<ui:repeat var="session1" value="#{searchHistoryBean.sessions}">
 											<li>
 												<span></span>
-												<h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}" pt:data-userId="#{session1.userId}">
+												<h:panelGroup layout="block" class="session_block cursor-pointer" pt:data-sessionId="#{session1.sessionId}" pt:data-userId="#{session1.userId}">
 													<div class="info">
 														<p:repeat var="query" value="#{session1.queries}">
 															<span class="source_#{query.service}">#{query.query}</span>
@@ -118,7 +118,7 @@
 
 					<div class="col-12 col-xl-8 mt-5 mt-xl-0 d-none d-xl-block">
 						<div class="ui-g-12 ui-md-12 ui-lg-12 knowledge-graph" id="knowledge-graph">
-							<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
+							<div id="canvas" class="w3-container h-100 m-auto">
 								<h:panelGroup id="updateGraph">
 									<!--<button onclick="drawQueryPath()" id="query_path_button" style="display: none;">Query Path</button>-->
 									<h:outputScript>
@@ -129,7 +129,7 @@
 							</div>
 
 							<div class="tagging-panel" id="tagging-panel">
-								<p:panel id="updateGraphCategories" style="margin-bottom:20px">
+								<p:panel id="updateGraphCategories" styleClass="mb-4">
 									<f:facet name="footer" >
 										<p:commandButton value="Apply" id="filterByCategories" onclick="return false;"/>
 									</f:facet>
@@ -140,23 +140,23 @@
 							</div>
 						</div>
 						<div class="ui-g-3 ui-md-3 ui-lg-3 snippet-viewer" id="knowledge-snippet">
-							<h:outputText style="font-size:1.4rem;" value="Snippets: " />
+							<h:outputText value="Snippets: " />
 							<span class="hideIcon" onclick="hideSnippet();">
 								<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
 									<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
 									</polygon>
 								</svg>
 							</span>
-							<h:outputText id="snippet-viewer-entity" style="font-size:1.4rem; font-style: italic;" value="#{searchHistoryBean.selectedEntity}"/>
+							<h:outputText id="snippet-viewer-entity" styleClass="font-italic" value="#{searchHistoryBean.selectedEntity}"/>
 							<h:panelGroup layout="block" id="snippets">
-								<div style="margin-bottom: 10px;"></div>
+								<div class="mb-2"></div>
 								<ui:repeat var="snippet" value="#{searchHistoryBean.getSearchResults()}">
 									<h:panelGroup layout="block" class="snippet" pt:data-searchId="#{snippet.searchId}" pt:data-rank="#{snippet.rank}">
 										<span><a href="#{snippet.url}"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
 										<span class="reference_url">#{snippet.url}</span><br/>
 										<span>#{snippet.description}</span><br/>
 										<span class="snippet_query">query: #{searchHistoryBean.getQuery(snippet.searchId)}</span>
-										<span style="color:grey;float:right;">rank: &#35;#{snippet.rank}</span>
+										<span class="float-right">rank: &#35;#{snippet.rank}</span>
 									</h:panelGroup>
 								</ui:repeat>
 							</h:panelGroup>
