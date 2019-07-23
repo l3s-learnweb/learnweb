@@ -515,7 +515,8 @@ public class UserBean implements Serializable
             DynamicMenuModel model = new DynamicMenuModel();
 
             // My resources
-            ActiveSubMenu myResources = new ActiveSubMenu(UtilBean.getLocaleMessage("myResourcesTitle"), null, su + "/lw/myhome/groups.jsf");
+            ActiveSubMenu myResources = new ActiveSubMenu(UtilBean.getLocaleMessage("myResourcesTitle"), null, su + "/lw/myhome/resources.jsf");
+            myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myPrivateResources"), "fa fa-fw fa-folder", su + "/lw/myhome/resources.jsf"));
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", su + "/lw/myhome/comments.jsf"));
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", su + "/lw/myhome/tags.jsf"));
             myResources.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", su + "/lw/myhome/submission_overview.jsf"));
