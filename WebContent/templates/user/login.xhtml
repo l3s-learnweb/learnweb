@@ -9,25 +9,26 @@
 		<p:panel header="#{msg.loginTitle}">
 		
 			<h:form rendered="#{!userBean.loggedIn}">
-				<p:focus for="username"/>
-				<h:panelGrid columns="3">
-					<h:outputLabel for="username" value="#{msg.username}:"/>
+				<div class="d-flex flex-column w-25 mb-3">
+					<p:focus for="username"/>
+					<h:outputText styleClass="font-weight-bold" for="username" value="#{msg.username}:"/>
 					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
 					<p:message styleClass="error" for="username" />
-					
-					<h:outputLabel for="password" value="#{msg.password}:"/>
+				</div>
+				<div class="d-flex flex-column w-25 mb-3">
+					<h:outputText styleClass="font-weight-bold" for="password" value="#{msg.password}:"/>
 					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
 					<p:message styleClass="error" for="password" />
-					
-					<h:outputText value="" rendered="#{loginBean.captchaRequired}" />
-				    <p:captcha label="Captcha" rendered="#{loginBean.captchaRequired}" language="#{userBean.locale}" id="captcha"/>
+				</div>
+				<div class="d-flex flex-column w-25 mb-3">
+					<h:outputText styleClass="font-weight-bold" value="" rendered="#{loginBean.captchaRequired}" />
+					<p:captcha label="Captcha" rendered="#{loginBean.captchaRequired}" language="#{userBean.locale}" id="captcha"/>
 					<p:message styleClass="error" for="captcha" rendered="#{loginBean.captchaRequired}" />
-				    
+				</div>
 					<h:outputText value="" />
-					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
+					<p:commandButton styleClass="command-button" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />
 					<h:outputText value="" />
 
-				</h:panelGrid>			
 			</h:form>		
 			
 			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" style="font-weight:bold;"/>

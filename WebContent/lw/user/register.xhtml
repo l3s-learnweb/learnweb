@@ -19,66 +19,76 @@
 	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
-		<ui:fragment rendered="#{not empty registrationBean.wizard}">
-			<style>
-				header {display:none; }
-			</style>
-		</ui:fragment>
 
 		<ui:fragment rendered="#{not registrationBean.wizardParamInvalid}">
 
 			<p:panel header="#{msg.registerLabel}" >
 				<h:form id="registerform">
 
-					<h:panelGrid columns="3">
-						<h:outputLabel for="username" value="#{msg.username}: *" />
+					<div class="d-flex flex-column w-25 mb-3">
+						<h:outputText styleClass="font-weight-bold" for="username" value="#{msg.username}: *" />
 						<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}"
-							label="#{msg.username}" />
+									 label="#{msg.username}" />
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />
+					</div>
 
-						<h:outputLabel for="password" value="#{msg.password}: *" />
+					<div class="d-flex flex-column w-25 mb-3">
+						<h:outputText styleClass="font-weight-bold" for="password" value="#{msg.password}: *" />
 						<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}"
-							promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-							goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
+									promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+									goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
 						</p:password>
 						<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
+					</div>
 
-						<h:outputLabel for="confirm_password" value="#{msg.confirm_password}: *" />
+					<div class="d-flex flex-column w-25 mb-3">
+						<h:outputText styleClass="font-weight-bold" for="confirm_password" value="#{msg.confirm_password}: *" />
 						<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}"
-							validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}"
-							weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}"
-							strongLabel="#{msg.passwordStrength_strong}">
+									validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}"
+									weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}"
+									strongLabel="#{msg.passwordStrength_strong}">
 						</p:password>
 						<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
+					</div>
 
-						<h:outputLabel for="university" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputLabel>
+					<div class="d-flex flex-column w-25">
+						<h:outputText for="university" styleClass="font-weight-bold" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputText>
 						<p:selectOneMenu id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" style="width:125px">
-				            <f:selectItem itemLabel="Univ. of Messina" itemValue="Univ. of Messina" />
-				            <f:selectItem itemLabel="Univ. Tor Vergata" itemValue="Univ. Tor Vergata" />
-				            <f:selectItem itemLabel="Univ. of Florence" itemValue="Univ. of Florence" />
-				            <f:selectItem itemLabel="Univ. of Leeds" itemValue="Univ. of Leeds" />
-				            <f:selectItem itemLabel="Univ. of Aarhus" itemValue="Univ. of Aarhus" />
-				        </p:selectOneMenu>
+							<f:selectItem itemLabel="Univ. of Messina" itemValue="Univ. of Messina" />
+							<f:selectItem itemLabel="Univ. Tor Vergata" itemValue="Univ. Tor Vergata" />
+							<f:selectItem itemLabel="Univ. of Florence" itemValue="Univ. of Florence" />
+							<f:selectItem itemLabel="Univ. of Leeds" itemValue="Univ. of Leeds" />
+							<f:selectItem itemLabel="Univ. of Aarhus" itemValue="Univ. of Aarhus" />
+						</p:selectOneMenu>
 						<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}" />
+					</div>
 
-						<h:outputLabel for="email">#{msg.email_address}:<h:outputText value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputLabel>
+					<div class="d-flex flex-column w-25 mb-3">
+						<h:outputText styleClass="font-weight-bold" for="email" value="#{msg.email_address}:"><h:outputText styleClass="font-weight-bold" value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputText>
 						<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
 						<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
+					</div>
 
-
-						<h:outputLabel for="studentId" rendered="#{registrationBean.studentIdRequired}">#{msg.student_id} *:</h:outputLabel>
+					<div class="d-flex flex-column w-25">
+						<h:outputText for="studentId" styleClass="font-weight-bold" rendered="#{registrationBean.studentIdRequired}">#{msg.student_id} *:</h:outputText>
 						<p:inputText id="studentId" value="#{registrationBean.studentId}" label="#{msg.student_id}:" rendered="#{registrationBean.studentIdRequired}" />
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" rendered="#{registrationBean.studentIdRequired}" />
+					</div>
 
-						<h:panelGroup style="height:74px;" layout="block"></h:panelGroup>
+					<div class="d-flex flex-column w-25 mb-3">
+						<h:panelGroup layout="block"></h:panelGroup>
 						<p:captcha label="Captcha" id="captcha" language="#{userBean.locale}"/>
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="captcha" />
+					</div>
 
-						<h:outputText value="" />
-						<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
-						<h:outputText value="" />
-					</h:panelGrid>
-					<h:outputText value="* #{msg.mandatory_field}" />
+					<h:outputText value="" />
+					<p:commandButton action="#{registrationBean.register}" styleClass="command-button" value="#{msg.registerLabel}" ajax="false"/>
+					<h:outputText value="" />
+
+
+					<p class="mt-2">
+						<h:outputText value="* #{msg.mandatory_field}" />
+					</p>
 					<br/>
 					<br/><br/>
 					<h:panelGroup layout="block" rendered="#{not empty registrationBean.wizard}">
