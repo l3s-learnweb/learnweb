@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jena.atlas.lib.Pair;
+import org.apache.log4j.Logger;
 
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSString;
@@ -46,7 +47,9 @@ import eu.bitwalker.useragentutils.UserAgent;
 
 public class ExportManager
 {
+    private static final Logger log = Logger.getLogger(ExportManager.class);
     private static final String EXPORT_FILE_NAME = "full_data.zip";
+
     private User user;
     private Learnweb learnweb;
 
@@ -75,6 +78,7 @@ public class ExportManager
         switch(resourcesType)
         {
         case "group":
+            // TODO needs refactoring. group id should not be passed this way. Why isn't the platform put into account for user downloads
             String userAgent = facesContext.getExternalContext().getRequestHeaderMap().get("User-Agent");
             String platform = UserAgent.parseUserAgentString(userAgent).getOperatingSystem().getName();
             int groupId = Integer.parseInt(facesContext.getExternalContext().getRequestParameterMap().get("request_group_form:group_id"));
@@ -144,11 +148,11 @@ public class ExportManager
      * - add checkboxes in front of every resource with resource ID as value with checked value by default
      * - parse checkboxes in handleResponse and pass list of not selected resource IDs to packGroupResources
      * - filter resources list before putting them to filesToPack list
-     * 
+     *
      * private Map<String, InputStream> packGroupResources(Group group, String platform, List<Integer> selectedResources) throws Exception
      * {
      * final List<Resource> groupResources = group.getResources();
-     * 
+     *
      * for(Resource r : groupResources)
      * {
      * if(!selectedResources.contains(r.getId()))
@@ -156,7 +160,7 @@ public class ExportManager
      * groupResources.remove(r);
      * }
      * }
-     * 
+     *
      * Map<String, InputStream> filesToPack = new HashMap<>();
      * filesToPack.putAll(this.getAllResources(groupResources, platform, group.getTitle()));
      * return filesToPack;
@@ -189,7 +193,11 @@ public class ExportManager
 
             if(lwResource.getStorageType() == Resource.LEARNWEB_RESOURCE)
             {
-                files.put(folderName + lwResource.getFileName(), new FileInputStream(lwResource.getFile(TYPE.FILE_MAIN).getActualFile()));
+                File mainFile = lwResource.getFile(TYPE.FILE_MAIN);
+                if(null == mainFile)
+                    log.error("Can't get main file for resource=" + lwResource.getId());
+                else
+                    files.put(folderName + lwResource.getFileName(), new FileInputStream(mainFile.getActualFile()));
             }
             else if(lwResource.getStorageType() == Resource.WEB_RESOURCE)
             {

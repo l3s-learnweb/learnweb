@@ -147,11 +147,6 @@ public class User implements Comparable<User>, Serializable, HasId
         return courses;
     }
 
-    public int getCourceCount()
-    {
-        return Learnweb.getInstance().getCourseManager().getCoursesAll().size();
-    }
-
     public String getAdditionalInformation()
     {
         return additionalInformation;

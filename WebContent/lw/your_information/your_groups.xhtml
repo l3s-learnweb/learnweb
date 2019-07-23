@@ -11,7 +11,7 @@
 
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
-    <p:menuitem value="#{msg.groups}" url="your_information/your_groups.jsf#"/>
+    <p:menuitem value="#{msg.groupsTitle}" url="your_information/your_groups.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -20,7 +20,7 @@
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                      tableStyle="table-layout: auto">
             <f:facet name="header">
-                <h:outputText value="#{msg['your_info.list_of_groups']}"/>
+                <h:outputText value="#{msg['groups']}"/>
             </f:facet>
 
             <f:facet name="{Exporters}">

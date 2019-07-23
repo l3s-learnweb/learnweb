@@ -20,8 +20,10 @@
     </ui:define>
 	<ui:define name="center_layout">
 		<h:outputScript library="learnweb-layout" name="js/glossary.js"/>
+        <!-- responsive voice API-->
+        <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
 
-		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 }">
+		<ui:fragment rendered="#{glossaryBean.glossaryResource ne null && not glossaryBean.glossaryResource.deleted}">
 
 			<h:panelGroup id="main_component" styleClass="section-glossary" layout="block">
 
@@ -93,7 +95,17 @@
 							<h:outputText value="#{item.uses}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
-							<h:outputText value="#{item.pronounciation}" />
+                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
+                                           type="button" rendered="#{item.languageTag=='en'}">
+                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
+                                                style="position:relative; text-align:center; display: block; " />
+                            </p:commandLink>
+                            <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'Italian Female');"
+                                           type="button" rendered="#{item.languageTag=='it'}">
+                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
+                                                style="position:relative; text-align:center; display: block; " />
+                            </p:commandLink>
+                            <h:outputText value="#{item.pronounciation}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.acronym']}">
 							<h:outputText value="#{item.acronym}" />
@@ -298,17 +310,12 @@
 			</h:panelGroup>
 		</ui:fragment>
 
-		<ui:fragment rendered="#{glossaryBean.resourceId le 0}">
+		<ui:fragment rendered="#{glossaryBean.glossaryResource eq null}">
 			<div class="noresource">
 				<br /> <br />
-				<h:outputText value="Please select correct glossary resource." style="text-align:center; font-weight:bold"></h:outputText>
+				<h:outputText value="Invalid  glossary resource." style="text-align:center; font-weight:bold"></h:outputText>
 			</div>
 		</ui:fragment>
- 		<ui:fragment rendered="#{glossaryBean.glossaryResource.deleted eq true}">
-			<div class="noresource">
-				<br /> <br />
-				<h:outputText value="The resource you are trying to access is deleted and does not exist." style="text-align:center; font-weight:bold"></h:outputText>
-			</div>
-		</ui:fragment>
+
 	</ui:define>
 </ui:composition>

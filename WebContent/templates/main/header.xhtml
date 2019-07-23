@@ -93,7 +93,8 @@
 										<h:outputText value="#{msg.myTags}" />
 									</a>
 								</li>
-								<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+								<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA' and false}">
+								<!--  submissions aren't used in any course at the moment -->
 								<li>
 									<h:outputLink value="#{request.contextPath}/lw/myhome/submission_overview.jsf">
 										#{msg['Submission.my_submissions']}

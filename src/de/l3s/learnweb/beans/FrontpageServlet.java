@@ -66,7 +66,7 @@ public class FrontpageServlet extends HttpServlet
         else
             folder = "/lw/";
 
-        // redirect to HTTPS; this is only a temporary solution until we redirect all requests to https
+        // redirect to HTTPS if Learnweb is not run locally or is accessed through http://archiveweb.l3s.uni-hannover.de which doesn't support HTTPS
         if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
         {
             String server;
