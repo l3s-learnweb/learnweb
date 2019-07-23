@@ -17,12 +17,12 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-<!--		responsive voice API-->
+		<!-- responsive voice API-->
 		<script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
-		
-		<ui:fragment rendered="#{glossaryBean.glossaryResource ne null && not glossaryBean.glossaryResource.deleted}">
+
+		<ui:fragment rendered="#{glossaryBean.glossaryResource ne null and not glossaryBean.glossaryResource.deleted}">
 
 			<h:panelGroup id="main_component" layout="block">
 
@@ -96,13 +96,11 @@
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
                             <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'UK English Male');"
                                            type="button" rendered="#{item.languageTag=='en'}">
-                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
-                                                style="position:relative; text-align:center; display: block; " />
+								<i class="fa fa-volume-up"></i>
                             </p:commandLink>
                             <p:commandLink onclick="responsiveVoice.speak('#{item.term}', 'Italian Female');"
                                            type="button" rendered="#{item.languageTag=='it'}">
-                                <p:graphicImage library="default" value="/resources/icon/glossary_pronunciation.png" width="20"
-                                                style="position:relative; text-align:center; display: block; " />
+								<i class="fa fa-volume-up"></i>
                             </p:commandLink>
                             <h:outputText value="#{item.pronounciation}" />
 						</p:column>
