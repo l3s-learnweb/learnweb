@@ -282,15 +282,14 @@
                         </ui:decorate>
                     </div>
 
-                    <div class="align-center" style="padding-top: 10px">
+                    <div class="text-center pt-2">
                         <a class="hyperlink" href="#{rightPaneBean.clickedResource.urlProxied}"
                            target="_blank">
                             <h:outputText styleClass="hyperlink"
                                           rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
                                           value="#{rightPaneBean.clickedResource.url}"/>
                         </a>
-                        <a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);"
-                           style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
+                        <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);" title="#{msg['Archive.change_thumbnail']}?">
                             <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
                                             width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
                                             rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}"/>

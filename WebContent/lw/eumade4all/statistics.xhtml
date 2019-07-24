@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main.xhtml" 
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -14,21 +14,23 @@
 			<f:viewAction action="#{eUMade4AllStatisticsBean.onLoad}" />
 		</f:metadata>
 	</ui:define>
-		
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.statistics}" url="eumade4all/statistics.jsf"/>
+	</ui:define>
 	<ui:define name="center_layout">				
 	
 		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
 		
 		<ui:fragment rendered="#{userBean.moderator}">	
-			<style type="text/css">
+		<!--	<style type="text/css">
 			 .ui-datatable {margin-bottom:4rem;}
 			 #statistics_table .ui-dt-c { text-align:center; }
 			 #survey_result .ui-datatable-tablewrapper,
 			 #survey_result .ui-paginator { display:none;}
-			</style>
-			<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+			</style>-->
+
 			
-			<div class="ui-datatable ui-widget">
+			<p:panel header="#{msg.statistics}" styleClass="mb-5">
 				<table role="grid" id="statistics_table" >
 					<thead>
 						<tr role="row">
@@ -86,46 +88,41 @@
 						
 					</tbody>
 				</table>
-			</div>	
-			
-			<div class="page_header">
-				<span>
-					Peer assessments
-				</span>
-			</div>			
+			</p:panel>
+
 	
-			<p:panel>
-				<ul>
+			<p:panel header="Peer assessments" styleClass="mb-5">
+				<ul class="pl-0">
 					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=1">Leeds - Rome</a></li>
 					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=2">Aarhus - Florence</a></li>
 					<li><a href="admin/peer_assessment_pair.jsf?peer_assessment_id=3">Aarhus late submissions</a></li>
 				</ul>
 			</p:panel>
-		
-			<div class="page_header">
-				<span>
-					Combined User Statistics
-				</span>
-			</div>			
 			
 			<h:form>	
-				<p:panel>
+				<p:panel header="Combined User Statistics" styleClass="mb-5">
 					<p>Combines the submitted baseline and evaluation surveys, and the received peer and teacher's assessements per user.</p>
 					<p>Select the type you want to export:</p>
-					<p:selectOneMenu value="#{eUMade4AllStatisticsBean.assessmentType}">
+					<p:selectOneMenu value="#{eUMade4AllStatisticsBean.assessmentType}" styleClass="mb-2">
 						<f:selectItem itemValue="0" itemLabel="Select a type" itemDisabled="true"></f:selectItem>
 						<f:selectItem itemValue="25" itemLabel="CORPORATE VIDEO"></f:selectItem>
 						<f:selectItem itemValue="26" itemLabel="ABOUT US PAGE"></f:selectItem>
 						<f:selectItem itemValue="27" itemLabel="FAN VIDEO"></f:selectItem>
 						<f:selectItem itemValue="24" itemLabel="VIDEO MEDIATED INTERACTIONS"></f:selectItem>
 						<f:selectItem itemValue="23" itemLabel="WEBLOGS"></f:selectItem>
-						<p:ajax listener="#{eUMade4AllStatisticsBean.onLoad()}" update="data"></p:ajax>
+						<p:ajax listener="#{eUMade4AllStatisticsBean.onLoad()}" update="@form data"></p:ajax>
 					</p:selectOneMenu>
+					<br/>
+					<h:commandLink rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}" styleClass="excel_export_todo_use">
+						Download data
+						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"  />
+						<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
+					</h:commandLink>
 				</p:panel>
             </h:form> 
             
             <h:form id="data" prependId="false">
-				<p:dataTable id="survey_result" var="result" value="#{eUMade4AllStatisticsBean.userStatistics}" paginator="true" rows="1"
+				<p:dataTable id="survey_result" var="result" styleClass="mb-5 d-none" value="#{eUMade4AllStatisticsBean.userStatistics}" paginator="true" rows="1"
 					rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}" style="margin-bottom: 1rem;">
 					
 					<f:facet name="footer">
@@ -145,20 +142,11 @@
 					<p:columns var="column" value="#{eUMade4AllStatisticsBean.questionColumns}" headerText="#{column.label}">
 						<h:outputText value="#{result.getAnswer(column.id)}" />
 					</p:columns>
-				</p:dataTable>						
-
-				<div class="page_header">
-					<span>
-						User Overview
-					</span>
-				</div>						
+				</p:dataTable>
 			
-				<p:panel > 	
+				<p:panel header="User Overview" styleClass="mb-5">
 					<p>Each row lists one <b>User</b>, his <b>Submission</b> and the Peer and Teachers <b>Assessement</b> he has received. It shows also the <b>Surveys</b> the user has submitted.</p>
-					
-				</p:panel>
-		
-			
+
 				<p:dataTable id="processTable" var="stat"
 					value="#{eUMade4AllStatisticsBean.userStatistics}"
 					tableStyle="width: 100%; table-layout:auto"
@@ -257,6 +245,7 @@
 					</p:column>
 					
 				</p:dataTable>
+				</p:panel>
 			</h:form>
 		</ui:fragment>
 		

@@ -40,23 +40,23 @@
 				var noteId = #{tedTranscriptBean.noteId};
 				var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
 			</script>
-
-			<div id="ted_content" class="col">
-				<div class="embed-responsive embed-responsive-1by1" style="position: fixed; width: 43%;"   id="ted_embedded" >
+			<div class="col-md px-0 d-flex">
+			<div id="ted_content" class="col position-sticky">
+				<div class="embed-responsive embed-responsive-1by1 sticky-top" style="top: 5rem;"    id="ted_embedded" >
 					<!-- ${tedTranscriptBean.tedResource.embedded} -->
 				</div>
 			</div>
-			<div class="col" style="">
+			</div>
+			<div class="col-md" style="">
 				<h:panelGroup layout="block" id="transcript_column"  class="right_bar">
 					<p:outputPanel id="transcript_options">
 						<div class="center-header noselect">
 							<h:form>
 								<p:outputLabel for="select_lang" styleClass="mr-2" value="#{msg.select_transcript_lang}:" />
-								<h:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}" >
-									<f:selectItem itemValue="----------------------------"/>
+								<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}" >
 									<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 									<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
-								</h:selectOneMenu>
+								</p:selectOneMenu>
 								<p:commandButton id="save" styleClass="mr-2" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 								<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
 								<p:commandButton id="submit"  value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>

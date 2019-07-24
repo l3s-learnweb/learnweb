@@ -122,20 +122,19 @@
     }
   }
 
-  /*
   .embedded {
-      !*
+      /*
       padding-top: 5px;
       padding-left: 5px;
         position: absolute;
 
         height: 92%;
         max-height: 92%;
-        *!
+        */
       box-sizing: border-box;
-      position: relative;
+      position: fixed;
       float:left;
-      width: 100%;
+      width: 35%;
       height: 100%;
       top: 0px;
       padding-top: 4.6rem;
@@ -146,7 +145,7 @@
       border:10px solid white;
       box-sizing: border-box;
       height: auto;
-  }*/
+  }
 
   .transcript_note {
     padding: 10px;
