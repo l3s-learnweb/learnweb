@@ -11,26 +11,23 @@
 	</ui:define>
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
-			<div class="p-grid">
-				<div class="p-col-12 grid no-padding-bottom">
-					<div class="card card-w-title grid">
-						<h2><h:outputText value="#{msg.select_users}" /></h2>
+			<p:panel header="#{msg.select_users}">
 				<ui:include src="/templates/user/user_select_form.xhtml" />
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-					process="@form" styleClass="in-form-button" update=":transcript_table"/>
-					</div>
-				</div>
-			</div>
+								 process="@form" styleClass="in-form-button" update=":transcript_table"/>
+			</p:panel>
+
+
 		</h:form>
 	
-		<h:form prependId="false" styleClass="margin-top">
+		<h:form prependId="false" styleClass="mt-3">
 			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
 				
 				<f:facet name="{Exporters}">
             		<h:commandLink>
-                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;position:relative;"/>
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="20"/>
                	 		<p:dataExporter type="xls" target="transcript_table" fileName="detailed_transcript_log"/>
            	 		</h:commandLink>
         		</f:facet>
@@ -47,7 +44,7 @@
 					<h:outputText value="#{log.resource.ownerUser.username}" />
 				</p:column>
 				
-				<p:column style="width:11%" headerText="#{msg.word}">
+				<p:column headerText="#{msg.word}">
 					<h:outputText value="#{log.wordsSelected}" />
 				</p:column>
 
@@ -55,7 +52,7 @@
 					<h:outputText value="#{log.userAnnotation}" />
 				</p:column>
 
-				<p:column style="width: 19%;" headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
+				<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
 					<f:facet name="filter">
 						<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
 							<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
@@ -71,7 +68,7 @@
 					<h:outputText value="#{log.action}" />
 				</p:column>
 
-				<p:column style="width:11%" headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
+				<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
 					<h:outputText value="#{log.timestamp}" />
 				</p:column>
 				

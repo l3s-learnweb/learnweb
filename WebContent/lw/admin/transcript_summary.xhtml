@@ -11,26 +11,21 @@
 	</ui:define>
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
-			<div class="p-grid">
-				<div class="p-col-12 grid">
-					<div class="card card-w-title grid">
-						<h2><h:outputText value="#{msg.select_users}" /></h2>
+			<p:panel header="#{msg.select_users}">
 						<ui:include src="/templates/user/user_select_form.xhtml" />
 						<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
 										 process="@form" styleClass="in-form-button" update=":transcript_table"/>
-					</div>
-				</div>
-			</div>
+			</p:panel>
 		</h:form>
 
-		<h:form styleClass="margin-top" prependId="false">
+		<h:form styleClass="mt-3" prependId="false">
 			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30">
 				 
 				 <f:facet name="{Exporters}">
             		<h:commandLink>
-                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;position:relative;"/>
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="20"/>
                	 		<p:dataExporter type="xls" target="transcript_table" fileName="transcript_summaries"/>
            	 		</h:commandLink>
         		</f:facet>
