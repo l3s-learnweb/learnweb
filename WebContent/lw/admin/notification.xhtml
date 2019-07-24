@@ -13,9 +13,9 @@
 		<p:menuitem value="#{msg.notification}" url="admin/notification.jsf#"/>
 	</ui:define>
 	<ui:define name="center_layout">
-		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
+		<h:outputText value="Missing authentication" rendered="#{not (userBean.moderator)}" />
 
-		<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+		<ui:fragment rendered="#{userBean.moderator}">
 			<h:form id="us_form" styleClass="form">
 				<p:panel>
 

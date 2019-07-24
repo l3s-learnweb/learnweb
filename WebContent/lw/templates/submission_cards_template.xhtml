@@ -13,17 +13,17 @@
 					<h4 class="h4 mb-0">
 						<b>#{submission.title} </b>
 						<h:form styleClass="d-inline-block">
-							<p:commandLink title="#{msg.edit}" rendered="#{(userBean.admin || userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+							<p:commandLink title="#{msg.edit}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 										   process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 								<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</p:commandLink>
-							<p:commandLink title="unlock submission" rendered="#{(userBean.admin || userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and submission.submitted}"
+							<p:commandLink title="unlock submission" rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and submission.submitted}"
 										   process="@this" update=":current_submissions" action="#{submissionBean.unlockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();setScrollPos();" onstart="saveScrollPos(event);">
 								<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
 								<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
 							</p:commandLink>
-							<p:commandLink title="lock submission" rendered="#{(userBean.admin || userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"
+							<p:commandLink title="lock submission" rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"
 										   process="@this" update=":current_submissions" action="#{submissionBean.lockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();">
 								<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
 								<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />

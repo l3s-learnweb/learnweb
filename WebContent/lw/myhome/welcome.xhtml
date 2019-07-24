@@ -27,7 +27,7 @@
 		<p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
 				<f:facet name="header">
 					#{msg.welcome}
-					<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+					<ui:fragment rendered="#{userBean.moderator}">
 						<h:link outcome="/lw/admin/organisation.jsf">
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						</h:link>
@@ -51,7 +51,7 @@
 				<p:panel rendered="#{course.welcomeMessage.length() > 5}">
 					<f:facet name="header">
 						<h:outputText value="#{course.title}" />
-						<h:panelGroup rendered="#{userBean.admin || userBean.moderator}">
+						<h:panelGroup rendered="#{userBean.moderator}">
 							<h:link outcome="/lw/admin/course.jsf?course_id=#{course.id}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</h:link>

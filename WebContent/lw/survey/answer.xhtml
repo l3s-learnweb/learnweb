@@ -32,7 +32,7 @@
 
 					<h:panelGrid columns="1" cellpadding="5" id="survey">
 
-						<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}" style="font-weight:bold" rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}" />
+						<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}" styleClass="font-weight-bold" rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}" />
 
 						<c:forEach var="field" items="#{surveyBean.resource.questions}">
 
@@ -130,11 +130,11 @@
 
 					<br />
 					
-					<p:commandButton value="#{msg.Print}" type="button" style="float:left;" styleClass="greenbutton resource_button">
+					<p:commandButton value="#{msg.Print}" type="button"  styleClass="greenbutton resource_button float-left">
 						<p:printer target="survey" />
 					</p:commandButton>
 					
-					<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}" style="float:left; margin-left:20px;"  styleClass="greenbutton resource_button">
+					<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}" style="float:left; margin-left:20px;"  styleClass="greenbutton resource_button float-left ">
 						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
 						<h:outputText value="#{msg.edit}" />

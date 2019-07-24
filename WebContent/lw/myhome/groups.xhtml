@@ -200,7 +200,7 @@
                         <h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}"/>
                     </p:commandLink>
 
-                    <h:outputLink value="group/options.jsf" rendered="#{userBean.admin || userBean.moderator}">
+                    <h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
                     </h:outputLink>

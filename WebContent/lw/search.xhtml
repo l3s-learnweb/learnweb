@@ -17,8 +17,13 @@
 <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 <ui:param name="helpText" value="#{msg.searchHelp}"/>
 <ui:param name="loginRequired" value="true"/>
-
-<ui:define name="sub_menu_bar">
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.searchTitle}" url="search.jsf"/>
+</ui:define>
+<ui:define name="center_layout">
+    <h:outputStylesheet library="lightbox" name="lightbox.css"/>
+    <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
+    <div class="section-search">
     <div id="sub_menu_bar">
         <h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
             #{msg.back_to}
@@ -46,13 +51,8 @@
             </h:link>
         </h:form>
     </div>
-</ui:define>
 
-<ui:define name="center_layout">
-    <h:outputStylesheet library="lightbox" name="lightbox.css"/>
-    <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
-
-    <h:panelGroup styleClass="section-search" layout="block">
+    <h:panelGroup  layout="block">
         <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
             <h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{msg.search_groups_header_empty}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() == 1}">
@@ -188,7 +188,7 @@
 
         <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
 
-        <div id="results" class="#{searchBean.view}_view">
+        <div id="results" class="#{searchBean.view}_view mt-3">
             <div class="resources">
                 <ui:decorate template="/templates/search/resources.xhtml">
                     <ui:param name="resources" value="#{searchBean.search.resources}"/>
@@ -325,5 +325,6 @@
             </h:form>
         </p:dialog>
     </h:panelGroup>
+    </div>
 </ui:define>
 </ui:composition>

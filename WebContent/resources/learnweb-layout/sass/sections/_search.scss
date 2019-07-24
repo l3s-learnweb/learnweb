@@ -103,7 +103,7 @@
   }
 
   .filters_menu_bar {
-    background-color: $gray-600;
+    background-color: #616161;
     line-height: 2.2rem;
     width: 100%;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1) inset;
@@ -807,7 +807,52 @@
       }
     }
   }
+  #backtogroup {
+    float:left;
+    position:absolute;
+    text-decoration:none;
+    width:19rem;
+    padding:0 1rem;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
+    font-weight:normal;
+    margin-right:1rem;
+  }
+  #backtogroup:focus,
+  #backtogroup:hover {
+    color:#000000 !important;
+  }
 
+  #sub_menu_bar {
+    background-color:#616161;
+    height:3rem;
+    line-height:3rem;
+    width:100%;
+    overflow:hidden;
+
+  }
+
+  #sub_menu_bar .links { margin-left:22rem; }
+
+  #sub_menu_bar .activeResource,
+  #sub_menu_bar .links a {
+    text-decoration:none;
+    margin: 0 1rem;
+    padding: 0 0.5rem;
+    color:#489a83 !important;
+    border-bottom:none;
+    font-size:1.5rem;
+    font-weight:bold;
+  }
+  #sub_menu_bar .links a:focus,
+  #sub_menu_bar .links a:hover {
+    color:#FFFFFF !important;
+  }
+  #sub_menu_bar .activeResource{
+    color:#FFFFFF !important;
+    border-bottom:2px solid #489a83;
+  }
   .filter-sub-bar {
     box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
   }

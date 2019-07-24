@@ -90,7 +90,7 @@
 						
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
+								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" 
 									styleClass="links_graphic" />
 								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
@@ -100,7 +100,7 @@
 							<p:commandLink actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks"
 								title="#{msg.delete}" 
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
-								rendered="${(userBean.admin || userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
+								rendered="${(userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" 
 									styleClass="links_graphic"/> 
@@ -123,7 +123,7 @@
 							
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
+								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
 								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupLinksBean.groupId}" />
@@ -132,7 +132,7 @@
 							<p:commandLink actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks"
 								title="#{msg.delete}" 
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
+								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" 
 									styleClass="links_graphic"/> 
