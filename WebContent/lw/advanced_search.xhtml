@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -18,10 +18,12 @@
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.advancedSearch}" url="advanced_search.jsf#"/>
+	</ui:define>
 	<ui:define name="center_layout">
 	
-		<p:panel header="#{msg.advancedSearch}">		
+		<p:panel>
 			<h:form id="search_form" >	
 				<table>
 					<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
@@ -40,48 +42,48 @@
 							</c:if>	
 							-->
 							<c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">							 
-								<td>
-									<h:outputText value="#{utilBean.getLocaleMessage(field.name, null)}" />:
-								</td>
-								<td>	
-									
-									<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA'}">					
+
+									<h:outputText styleClass="font-weight-bold" value="#{utilBean.getLocaleMessage(field.name, null)}" />:
+
+								<div class="mb-3">
+									<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA'}">
 										<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{advSearchBean.queries[field.name]}" title="#{field.info}" />
 										<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
 									</c:if>
-									
-									<c:if test="#{field.type eq 'AUTOCOMPLETE'}">	 				
-										<p:autoComplete id="input_complete_#{field.name}" required="#{field.required}" value="#{advSearchBean.queries[field.name]}" 
-											completeMethod="#{field.completeText}" class="border-box-100" /> 
-										<p:tooltip for="input_complete_#{field.name}" showEvent="hover" position="left" rendered="#{true}" value="blaaaaaaa #{field.info}" /> 
+
+									<c:if test="#{field.type eq 'AUTOCOMPLETE'}">
+										<p:autoComplete id="input_complete_#{field.name}" required="#{field.required}" value="#{advSearchBean.queries[field.name]}"
+														completeMethod="#{field.completeText}" class="border-box-100" />
+										<p:tooltip for="input_complete_#{field.name}" showEvent="hover" position="left" rendered="#{true}" value="blaaaaaaa #{field.info}" />
 									</c:if>
-				
+
 									<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
 										<p:selectOneMenu id="input_selectone_#{field.name}" value="#{advSearchBean.queries[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
-											class="border-box-100" title="#{field.info}">
+														 class="border-box-100" title="#{field.info}">
 											<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
 										</p:selectOneMenu>
-										<p:tooltip for="input_selectone_#{field.name}" position="left" rendered="#{not empty field.info}" /> 
-									</c:if>	
-				
+										<p:tooltip for="input_selectone_#{field.name}" position="left" rendered="#{not empty field.info}" />
+									</c:if>
+
 									<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
 										<p:selectCheckboxMenu id="input_selectmultiple_#{field.name}" value="#{advSearchBean.queriesMultiValued[field.name]}" label="" multiple="true" title="#{field.info}"
-					                              required="#{field.required}" filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith" panelStyle="width:250px" >
-								            <f:selectItems value="#{field.optionsList}" var="option" itemLabel="#{option.label}" itemValue="#{option.value}" />
-								        </p:selectCheckboxMenu>			
-										<p:tooltip for="input_selectmultiple_#{field.name}" position="left" rendered="#{not empty field.info}" /> 
-									</c:if>							
+															  required="#{field.required}" filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith" panelStyle="width:250px" >
+											<f:selectItems value="#{field.optionsList}" var="option" itemLabel="#{option.label}" itemValue="#{option.value}" />
+										</p:selectCheckboxMenu>
+										<p:tooltip for="input_selectmultiple_#{field.name}" position="left" rendered="#{not empty field.info}" />
+									</c:if>
+								</div>
 									
-								</td>								
+
+
 							</c:if>
 							 
 						</tr>
 					</c:forEach>
 					
-					<tr>
-						<td></td>
-						<td><p:commandButton value="#{msg.searchLabel}" styleClass="greenbutton" action="#{advSearchBean.onSearch()}" /></td> 
-					 </tr>
+
+						<p:commandButton value="#{msg.searchLabel}" styleClass="command-button" action="#{advSearchBean.onSearch()}" />
+
 			
 				</table>
 			</h:form>
