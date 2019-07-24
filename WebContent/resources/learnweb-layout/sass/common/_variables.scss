@@ -7,6 +7,7 @@
 /* Theme color schema (DO NOT USE $green, $greenDarker, etc USE $themePrimaryColor, $themePrimaryColorDarker, etc VARIABLES INSTEAD!) */
 $themeSidebarDividerColor: $gray-400 !default; // $sidebarMenuitemDividerColor, #e4e2e0
 $themeSidebarHoverBgColor: $gray-500 !default; // $sidebarMenuitemHoverBgColor, #f1f1f1
+$themeElementTextColor: $white !default; // $primaryTextColor, #ffffff
 
 $themeDarkBgColor: #242725 !default; // $gradientSidebarTopBgColor
 $themeLightBgColor: #446A51 !default; // $gradientSidebarBottomBgColor
@@ -20,12 +21,16 @@ $themePrimaryAltColor: $yellow !default; // $primaryAltButtonBgColor
 $themePrimaryAltColorDarker: $yellowDarker !default; // $primaryAltButtonHoverBgColor
 $themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActiveBgColor
 
+// layout variables
+$sidebar-width: 230px;
+$transition-duration: .3s;
+
 /*
 * Bootstrap variables
 * check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
 */
 $border-radius: 0;
-$body-bg: $white;
+$body-bg: $lightGray;
 $body-color: $gray-900;
 
 $primary: $themePrimaryColor;

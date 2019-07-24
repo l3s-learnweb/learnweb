@@ -5,5 +5,5 @@ $borderRadius: $border-radius;
 $dividerColor: $gray-200;
 $textColor: $body-color;
 $textSecondaryColor: $gray-400;
-$transitionDuration: .3s;
-$mobileBreakPoint: map-get($grid-breakpoints, "lg");
+$transitionDuration: $transition-duration;
+//$mobileBreakPoint: map-get($grid-breakpoints, "lg");

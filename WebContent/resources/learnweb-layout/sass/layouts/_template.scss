@@ -1,112 +1,110 @@
-.main-body {
-  .layout-wrapper {
-    .layout-topbar {
-      height: 60px !important;
+@import "parts/_breadcrumb";
+@import "parts/_sidebar";
+@import "parts/_topbar";
+@import "parts/_usermenu";
 
-      .topbar-logo i {
-        font-size: 2rem;
-        line-height: 1;
-        padding-left: 0.5rem;
-      }
+.layout-wrapper {
+  .layout-main {
+    position: relative;
+    padding-top: 60px;
+    margin-left: $sidebar-width;
+    min-height: 100vh;
+    @include transition(margin-left $transition-duration);
 
-      .menu-button {
-        position: initial !important;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        display: block;
-        font-size: 30px;
-        color: $topbarTextColor;
-        text-align: center;
-        @include transition(background-color $transitionDuration);
+    @include media-breakpoint-down(lg) {
+      margin-left: 0;
+      padding-top: 105px;
+    }
 
-        &:hover {
-          background-color: $topbarIconHoverBgColor;
-        }
+    .route-bar {
+      @include clearfix();
+      box-sizing: border-box;
+      min-height: 31px;
+      background-color: $white;
+      border-bottom: solid 1px $gray-400;
 
-        i {
-          line-height: inherit;
-        }
-      }
-
-      .search-form {
-
-        input[type='search'] {
-          border: none;
-          font-size: 1.4rem;
-          width: inherit;
-          background: white;
-          padding: 0 .5rem;
-          max-width: 37.5rem;
-        }
-      }
-
-      .search-button {
-        width: 2.5rem;
-        height: 2.5rem;
-        border: none;
-        background: white;
-        border-radius: 0 .1rem .1rem 0;
-        cursor: pointer;
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        fill: grey;
+      .route-bar-breadcrumb {
+        padding: 6px 12px;
+        display: inline-block;
 
         i {
-          color: $megamenuTextColor;
-          font-size: 1.25rem;
+          color: $gray-600;
+          font-size: 18px;
         }
+      }
 
-        &:hover {
-          background: $greenDarker;
-          color: $body-bg;
-          fill: $body-bg;
+      .route-bar-menu {
+        float: right;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        margin-right: 12px;
+
+        li {
+          height: 100%;
+          display: inline-block;
 
           i {
-            color: $body-bg;
-            fill: $body-bg;
+            line-height: inherit;
+            font-size: 18px;
+            color: $gray-600;
           }
-        }
-      }
 
-      .topbar-menu-button {
-        position: initial !important;
+          a {
+            width: 36px;
+            font-size: 18px;
+            display: block;
+            height: 100%;
+            text-align: center;
+            line-height: 30px;
 
-        img {
-          border-radius: 100%;
-        }
-      }
+            &:hover {
+              background-color: $gray-200;
+            }
+          }
 
-      .usermenu {
-        a {
-          text-decoration: none;
+          &.search-item {
+            input {
+              margin-right: 9px;
+              border: 0 none;
+              text-align: left;
+              font-size: inherit;
+              max-width: 150px;
+              outline-offset: 0;
+              outline: 0 none;
+            }
 
-          &:hover {
-            color: $body-bg;
+            i {
+              line-height: 30px;
+              width: 36px;
+              text-align: center;
+            }
           }
         }
       }
     }
 
+    .layout-main-content {
+      padding: 15px;
+      flex: 1 0 auto;
+    }
+
+    .layout-footer {
+      flex-shrink: 1;
+    }
+  }
+
+  &.layout-wrapper-sidebar-inactive {
     .layout-main {
-      .layout-main-content {
-        flex: 1 0 auto;
-      }
-
-      .layout-footer {
-        flex-shrink: 1;
-      }
+      margin-left: 0;
     }
+  }
 
-    .layout-sidebar {
-      top: 0;
-      padding-top: 60px;
-      z-index: 997;
-
-      .sidebar-scroll-content {
-        height: 100%;
-        overflow-y: auto;
+  &.layout-wrapper-overlay-sidebar {
+    @include media-breakpoint-up(lg) {
+      .layout-main {
+        margin-left: 0;
       }
     }
   }

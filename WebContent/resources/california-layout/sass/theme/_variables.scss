@@ -4,7 +4,7 @@ $primaryColor:$themePrimaryColor;
 $primaryColorDarker:$themePrimaryColorDarker;
 $primaryDarkerAlt:$themePrimaryDarkerAlt;
 $primaryDarkest:$themePrimaryDarkest;
-$primaryTextColor:$body-bg; // common
+$primaryTextColor:$themeElementTextColor; // common
 
 // Buttons
 $buttonFocusOutlineColor:$gray-500; // common
@@ -13,19 +13,19 @@ $primaryButtonBgColor:$themePrimaryColor;
 $primaryButtonHoverBgColor:$themePrimaryColorDarker;
 $primaryButtonActiveBgColor:$themePrimaryDarkest;
 $primaryButtonFocusBgColor:$gray-500; // common
-$primaryButtonTextColor:$body-bg; // common
+$primaryButtonTextColor:$themeElementTextColor; // common
 
 $primaryAltButtonBgColor:$themePrimaryAltColor;
 $primaryAltButtonHoverBgColor:$themePrimaryAltColorDarker;
 $primaryAltButtonActiveBgColor:$themePrimaryAltDarkerAlt;
 $primaryAltButtonFocusBgColor:$gray-500; // common
-$primaryAltButtonTextColor:$body-bg; // common
+$primaryAltButtonTextColor:$themeElementTextColor; // common
 
 $secondaryButtonBgColor:$gray-600; // common
 $secondaryButtonHoverBgColor:$gray-800; // common
 $secondaryButtonActiveBgColor:$gray-900; // common
 $secondaryButtonFocusBgColor:$gray-600; // common
-$secondaryButtonTextColor:$body-bg; // common
+$secondaryButtonTextColor:$themeElementTextColor; // common
 
 $outlineButtonBgColor:transparent; // common
 $outlineButtonHoverBgColor:transparent; // common
@@ -40,7 +40,7 @@ $outlineButtonActiveTextColor:$themePrimaryDarkest;
 
 $menuitemHoverBgColor:$themePrimaryDarkest;
 $menuitemTextColor:$gray-900; // common
-$menuitemHoverTextColor:$body-bg; // common
+$menuitemHoverTextColor:$themeElementTextColor; // common
 $carouselButtonHoverColor:$gray-500; // common
 $carouselPageLinksActiveColor:$themePrimaryDarkest;
 /* end color schema */

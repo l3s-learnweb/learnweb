@@ -1,0 +1,151 @@
+.layout-wrapper {
+  .layout-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 998;
+    height: 60px;
+    background: $themePrimaryColor;
+    box-sizing: border-box;
+
+    @include media-breakpoint-down(lg) {
+      height: 105px;
+    }
+
+    .search-form {
+      input[type='search'] {
+        border: none;
+        font-size: 1.4rem;
+        width: inherit;
+        background: white;
+        padding: 0 .5rem;
+        max-width: 37.5rem;
+      }
+    }
+
+    .search-button {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: none;
+      background: white;
+      border-radius: 0 .1rem .1rem 0;
+      cursor: pointer;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      fill: grey;
+
+      i {
+        color: $gray-600;
+        font-size: 1.25rem;
+      }
+
+      &:hover {
+        background: $greenDarker;
+        color: $themeElementTextColor;
+        fill: $themeElementTextColor;
+
+        i {
+          color: $themeElementTextColor;
+          fill: $themeElementTextColor;
+        }
+      }
+    }
+
+    .logo i {
+      font-size: 2rem;
+      line-height: 1;
+      padding-left: 0.5rem;
+    }
+
+    .usermenu {
+      > li {
+        &.menuitem-active {
+          > a {
+            i, span {
+              color: $white;
+            }
+          }
+        }
+      }
+
+      a {
+        position: relative;
+        text-decoration: none;
+
+        .layout-menuitem-toggler {
+          position: absolute;
+          right: 12px;
+          top: 11px;
+        }
+
+        &:hover {
+          color: $themeElementTextColor;
+        }
+      }
+    }
+
+    .menu-button {
+      position: initial;
+      left: 230px;
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 30px;
+      color: $white;
+      text-align: center;
+      @include transition(background-color $transition-duration);
+
+      @include media-breakpoint-down(lg) {
+        left: 0;
+      }
+
+      &:hover {
+        background-color: $themePrimaryDarkerAlt;
+      }
+
+      i {
+        line-height: inherit;
+      }
+    }
+
+    .topbar-menu-button {
+      display: block;
+      position: initial;
+      right: 80px;
+      top: 10px;
+      height: 40px;
+      color: $white;
+
+      @include media-breakpoint-down(lg) {
+        right: 65px;
+
+        span {
+          display: none;
+        }
+      }
+
+      @include media-breakpoint-down(sm) {
+        right: 48px;
+      }
+
+      img {
+        border-radius: 100%;
+        display: inline-block;
+        vertical-align: middle;
+        width: 40px;
+        height: 40px;
+      }
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
