@@ -23,8 +23,7 @@
                 <meta name="apple-mobile-web-app-capable" content="yes"/>
             </f:facet>
             <title>
-                <h:outputText value="#{pageTitle}" escape="false"/>
-                - #{msg['application.name']}
+                <h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}
             </title>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
@@ -39,7 +38,7 @@
         </h:head>
 
         <h:body styleClass="main-body">
-            <div class="layout-wrapper">
+            <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
                 <ui:include src="topbar.xhtml"/>
 
                 <ui:fragment rendered="#{userBean.loggedIn}">

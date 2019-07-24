@@ -38,9 +38,7 @@
 @import 'common/_global';
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
-@import "layouts/_general";
-@import "layouts/_header";
-@import "layouts/_sidebar";
+@import "layouts/_template";
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
 @import "components/_forms";

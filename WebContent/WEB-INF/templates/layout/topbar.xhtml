@@ -17,76 +17,71 @@
                         </div>
                     </div>
 
-                    <div class="col-3 col-lg-2">
-                        <ui:fragment rendered="#{userBean.loggedIn}">
+                    <ui:fragment rendered="#{userBean.loggedIn}">
+                        <div class="col-3 col-lg-2">
                             <div class="">
                                 <a id="menu-button" class="menu-button" href="#">
                                     <i class="fa fa-align-left"/>
                                 </a>
                             </div>
-                        </ui:fragment>
-                    </div>
+                        </div>
+                    </ui:fragment>
                 </div>
             </div>
 
-            <div class="col-sm-7 col-xl-8 col-lg-7 d-none d-sm-block">
-
+            <ui:fragment rendered="#{userBean.loggedIn}">
+                <div class="col-sm-7 col-xl-8 col-lg-7 d-none d-sm-block">
                     <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="search-form w-100 d-flex justify-content-center" id="searchform">
+                        <input type="hidden" name="action" value="#{searchBean.queryMode}" />
+                        <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
 
-                            <input type="hidden" name="action" value="#{searchBean.queryMode}" />
-                            <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
-
-                            <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
-                                <i class="lw lw-search" aria-hidden="true"></i>
-                            </button>
-
-
+                        <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
+                            <i class="lw lw-search" aria-hidden="true"></i>
+                        </button>
                     </form>
+                </div>
 
-            </div>
-
-            <div class="col-6 col-sm-3 col-lg-2">
-                    <ui:fragment rendered="#{userBean.loggedIn}">
-                        <div class="row align-items-center justify-content-end">
-                            <div class="col-4 col-sm-5 col-xl-3">
-                                <a class="menu-button" href="#{request.contextPath}/lw/myhome/notification.jsf">
-                                    <i class="fa fa-envelope"/>
-                                </a>
-                            </div>
-
-                            <div class="col-5 col-sm-6 col-xl-4">
-                                <a id="topbar-menu-button" class="topbar-menu-button" href="#">
-                                    <img id="j_idt24" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt=""/>
-                                </a>
-
-                                <h:form>
-                                    <ul id="topbar-usermenu" class="usermenu usermenu-overlay">
-                                        <li>
-                                            <a href="#{request.contextPath}/lw/myhome/profile.jsf">
-                                                <i class="fa fa-fw fa-user"></i><span>#{msg.profile}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#{request.contextPath}/lw/admin/dashboard/user.jsf">
-                                                <i class="fa fa-fw fa-table"></i><span>#{msg.myDashboardTitle}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}">
-                                                <i class="fa fa-fw fa-history"></i><span>#{msg.search_history}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <h:commandLink action="#{loginBean.logout}">
-                                                <i class="fa fa-sign-out"></i><span>#{msg.logout}</span>
-                                            </h:commandLink>
-                                        </li>
-                                    </ul>
-                                </h:form>
-                            </div>
+                <div class="col-6 col-sm-3 col-lg-2">
+                    <div class="row align-items-center justify-content-end">
+                        <div class="col-4 col-sm-5 col-xl-3">
+                            <a class="menu-button" href="#{request.contextPath}/lw/myhome/notification.jsf">
+                                <i class="fa fa-envelope"/>
+                            </a>
                         </div>
-                    </ui:fragment>
-            </div>
+
+                        <div class="col-5 col-sm-6 col-xl-4">
+                            <a id="topbar-menu-button" class="topbar-menu-button" href="#">
+                                <img id="j_idt24" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt=""/>
+                            </a>
+
+                            <h:form>
+                                <ul id="topbar-usermenu" class="usermenu usermenu-overlay">
+                                    <li>
+                                        <a href="#{request.contextPath}/lw/myhome/profile.jsf">
+                                            <i class="fa fa-fw fa-user"></i><span>#{msg.profile}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{request.contextPath}/lw/admin/dashboard/user.jsf">
+                                            <i class="fa fa-fw fa-table"></i><span>#{msg.myDashboardTitle}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}">
+                                            <i class="fa fa-fw fa-history"></i><span>#{msg.search_history}</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <h:commandLink action="#{loginBean.logout}">
+                                            <i class="fa fa-sign-out"></i><span>#{msg.logout}</span>
+                                        </h:commandLink>
+                                    </li>
+                                </ul>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </ui:fragment>
         </div>
 
         <script type="text/javascript">
