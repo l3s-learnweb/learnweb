@@ -7,9 +7,9 @@
     <div class="layout-topbar">
         <div class="row align-items-center justify-content-between h-100">
 
-            <div class="col-6 col-sm-2 col-lg-5 col-xl-3">
+            <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 col-xl-6 d-none d-sm-none d-md-none d-lg-block">
+                    <div class="col-lg-9 d-none d-sm-none d-md-none d-lg-block">
                         <div class="topbar-logo">
                             <a href="#{request.contextPath}/lw/myhome/welcome.jsf">
                                 <i class="lw lw-logo text-white"></i>
@@ -17,7 +17,7 @@
                         </div>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-3 col-lg-2">
                         <ui:fragment rendered="#{userBean.loggedIn}">
                             <div class="">
                                 <a id="menu-button" class="menu-button" href="#">
@@ -29,17 +29,20 @@
                 </div>
             </div>
 
-            <div class="col-sm-7 col-xl-7 col-lg-5 d-none d-sm-block">
-                <div class="">
-                    <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="search-form" id="searchform">
-                        <input type="hidden" name="action" value="#{searchBean.queryMode}" />
-                        <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
+            <div class="col-sm-7 col-xl-8 col-lg-7 d-none d-sm-block">
 
-                        <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
-                            <i class="lw lw-search" aria-hidden="true"></i>
-                        </button>
+                    <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="search-form w-100 d-flex justify-content-center" id="searchform">
+
+                            <input type="hidden" name="action" value="#{searchBean.queryMode}" />
+                            <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
+
+                            <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
+                                <i class="lw lw-search" aria-hidden="true"></i>
+                            </button>
+
+
                     </form>
-                </div>
+
             </div>
 
             <div class="col-6 col-sm-3 col-lg-2">
