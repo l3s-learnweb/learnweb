@@ -11680,7 +11680,7 @@ html {
   border-left: none;
   border-right: none;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   padding: 0.8rem 0.5rem;
 }
 .layout-wrapper .ui-breadcrumb ul li {
@@ -11812,14 +11812,6 @@ html {
   color: #fff;
 }
 .layout-wrapper .layout-topbar .menu-button {
-  /* position: initial;
-   left: 230px;
-   width: 60px;
-   height: 60px;
-   line-height: 60px;
-   font-size: 30px;
-   color: $white;
-   text-align: center;*/
   transition: background-color 0.3s;
   color: #fff;
   font-size: 30px;
@@ -11829,9 +11821,6 @@ html {
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  /* @include media-breakpoint-down(lg) {
-     left: 0;
-   }*/
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-topbar .menu-button {
@@ -11842,7 +11831,7 @@ html {
   background-color: #387e64;
 }
 .layout-wrapper .layout-topbar .menu-button i {
-  /*line-height: inherit;*/
+  line-height: inherit;
 }
 .layout-wrapper .layout-topbar .topbar-menu-button {
   display: block;
@@ -11892,7 +11881,7 @@ html {
 .usermenu.usermenu-overlay {
   position: fixed;
   background: #4AA382;
-  width: 200px;
+  width: 13rem;
   z-index: 999;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 }
@@ -11901,12 +11890,12 @@ html {
 }
 .usermenu li a {
   display: block;
-  padding: 6px 12px;
+  padding: 0.4rem 0.8rem;
   color: #fff;
   text-align: left;
 }
 .usermenu li a i {
-  margin-right: 9px;
+  margin-right: 0.55rem;
   vertical-align: middle;
 }
 .usermenu li a i.layout-menuitem-toggler {
@@ -11931,17 +11920,17 @@ html {
   padding: 0;
 }
 .usermenu li ul a {
-  padding-left: 24px;
+  padding-left: 1.5rem;
 }
 .usermenu li ul a span, .usermenu li ul a img {
   vertical-align: middle;
 }
 .usermenu li ul a img {
-  margin-right: 8px;
+  margin-right: 0.5rem;
 }
 .usermenu > li.menuitem-active > a {
-  padding-left: 8px;
-  border-left: 4px solid #4AA382;
+  padding-left: 0.5rem;
+  border-left: 0.2rem solid #4AA382;
   color: #4AA382;
   background-color: #387e64;
 }
@@ -12785,8 +12774,8 @@ html {
   vertical-align: middle;
 }
 .command-button:hover {
-  background: #348F6D;
-  border-color: #348F6D;
+  background: #387e64;
+  border-color: #387e64;
   color: #fff;
   text-decoration: none;
 }
@@ -13423,7 +13412,6 @@ html {
 }
 
 .submission-dialog .ui-dialog-content {
-  background: #00a6d2;
   max-width: 27rem;
 }
 

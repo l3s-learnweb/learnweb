@@ -11,7 +11,7 @@
   &.usermenu-overlay {
     position: fixed;
     background: $themePrimaryColor;
-    width: 200px;
+    width: 13rem;
     z-index: 999;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 
@@ -27,12 +27,12 @@
   li {
     a {
       display: block;
-      padding: 6px 12px;
-      color: $white;
+      padding: .4rem 0.8rem;
+      color: $themeElementTextColor;
       text-align: left;
 
       i {
-        margin-right: 9px;
+        margin-right: 0.55rem;
         vertical-align: middle;
 
         &.layout-menuitem-toggler {
@@ -57,14 +57,14 @@
       padding: 0;
 
       a {
-        padding-left: 24px;
+        padding-left: 1.5rem;
 
         span, img {
           vertical-align: middle;
         }
 
         img {
-          margin-right: 8px;
+          margin-right: .5rem;
         }
       }
     }
@@ -73,8 +73,8 @@
   > li {
     &.menuitem-active {
       > a {
-        padding-left: 8px;
-        border-left: 4px solid $themePrimaryColor;
+        padding-left: .5rem;
+        border-left: 0.2rem solid $themePrimaryColor;
         color: $themePrimaryColor;
         background-color: $themePrimaryDarkerAlt;
 

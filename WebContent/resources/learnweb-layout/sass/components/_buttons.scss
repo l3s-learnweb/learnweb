@@ -21,9 +21,9 @@
 }
 
 .command-button {
-  background: $primaryButtonBgColor;
-  color: $primaryButtonTextColor;
-  border: .1rem solid $primaryButtonBgColor;
+  background: $themePrimaryColor;
+  color: $themeElementTextColor;
+  border: .1rem solid $themePrimaryColor;
   border-radius: .2rem;
   font-size: 0.9rem;
   font-weight: 700;
@@ -32,9 +32,9 @@
   vertical-align: middle;
 
   &:hover {
-    background: $primaryButtonHoverBgColor;
-    border-color: $primaryButtonHoverBgColor;
-    color: $primaryButtonTextColor;
+    background: $themePrimaryDarkerAlt;
+    border-color: $themePrimaryDarkerAlt;
+    color: $themeElementTextColor;
     text-decoration: none;
   }
 }

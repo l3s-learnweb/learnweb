@@ -2,7 +2,7 @@
   .d3-tip {
     line-height: 1;
     font-weight: bold;
-    padding: 12px;
+    padding: 0.75rem;
     background: rgba(0, 0, 0, 0.8);
     color: $white;
     border-radius: 2px;
@@ -29,7 +29,7 @@
   }
 
   .session-timeline {
-    border-right: 1px solid lightgrey;
+    border-right: 1px solid $gray-200;
   }
 
   .knowledge-graph {
@@ -60,7 +60,7 @@
   /*styles for snippet viewer*/
   .snippet-viewer {
     display: none;
-    background-color: white;
+    background-color: $white;
     box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
     height: 100vh;
 
@@ -81,7 +81,7 @@
         margin-bottom: 10px;
 
         .reference_url {
-          color: green;
+          color: $themePrimaryColor;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -90,7 +90,7 @@
         }
 
         .snippet_query {
-          color: grey;
+          color: $gray-600;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
