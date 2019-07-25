@@ -59,7 +59,7 @@
 			</ui:fragment>
 
 
-			<p:dialog header="#{msg['Submission.edit_submission']}"  width="auto" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}"  styleClass="submission-dialog" id="edit_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
 
 						<h:outputText value="#{msg.title}:" title="#{msg.title}" styleClass="font-weight-bold"/>
@@ -110,7 +110,7 @@
 				</h:form>
 			</p:dialog>
 
-			<p:dialog header="#{msg['Submission.create_new_submission']}" width="auto" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
+			<p:dialog header="#{msg['Submission.create_new_submission']}" styleClass="submission-dialog" id="create_submission_dialog1" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
 				<h:form prependId="false">
 
 					<h:outputText value="#{msg.title}:" styleClass="font-weight-bold" title="#{msg.title}:"/>
@@ -233,14 +233,15 @@
 
 			</h:panelGroup>-->
 
-			<div class="mt-3">
+				<p:panel styleClass="mt-3">
 					<h:form prependId="false">
-						<p:commandLink styleClass="command-button admin-element" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+						<p:commandLink styleClass="command-button" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									   process="@this" oncomplete="PF('create_submission_dialog').show();">
 							#{msg['Submission.create_new_submission']}
 						</p:commandLink>
 					</h:form>
-			</div>
+				</p:panel>
+
 
 
 			<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>

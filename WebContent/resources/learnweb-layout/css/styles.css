@@ -11722,7 +11722,7 @@ html {
 @media (max-width: 1199.98px) {
   .layout-wrapper .layout-sidebar {
     left: -230px;
-    top: 105px;
+    /*top: 105px;*/
     box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
   }
 }
@@ -11756,11 +11756,9 @@ html {
   height: 60px;
   background: #4AA382;
   box-sizing: border-box;
-}
-@media (max-width: 1199.98px) {
-  .layout-wrapper .layout-topbar {
-    height: 105px;
-  }
+  /* @include media-breakpoint-down(lg) {
+     height: 105px;
+   }*/
 }
 .layout-wrapper .layout-topbar .search-form input[type=search] {
   border: none;
@@ -11787,7 +11785,7 @@ html {
   font-size: 1.25rem;
 }
 .layout-wrapper .layout-topbar .search-button:hover {
-  background: #378D4F;
+  background: #387e64;
   color: #fff;
   fill: #fff;
 }
@@ -11796,9 +11794,7 @@ html {
   fill: #fff;
 }
 .layout-wrapper .layout-topbar .logo i {
-  font-size: 2rem;
-  line-height: 1;
-  padding-left: 0.5rem;
+  font-size: 2.4rem;
 }
 .layout-wrapper .layout-topbar .usermenu > li.menuitem-active > a i, .layout-wrapper .layout-topbar .usermenu > li.menuitem-active > a span {
   color: #fff;
@@ -11816,31 +11812,37 @@ html {
   color: #fff;
 }
 .layout-wrapper .layout-topbar .menu-button {
-  position: initial;
-  left: 230px;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  font-size: 30px;
-  color: #fff;
-  text-align: center;
+  /* position: initial;
+   left: 230px;
+   width: 60px;
+   height: 60px;
+   line-height: 60px;
+   font-size: 30px;
+   color: $white;
+   text-align: center;*/
   transition: background-color 0.3s;
+  color: #fff;
+  font-size: 30px;
+  display: flex;
+  height: 60px;
+  width: 60px;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  /* @include media-breakpoint-down(lg) {
+     left: 0;
+   }*/
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-topbar .menu-button {
     transition: none;
   }
 }
-@media (max-width: 1199.98px) {
-  .layout-wrapper .layout-topbar .menu-button {
-    left: 0;
-  }
-}
 .layout-wrapper .layout-topbar .menu-button:hover {
   background-color: #387e64;
 }
 .layout-wrapper .layout-topbar .menu-button i {
-  line-height: inherit;
+  /*line-height: inherit;*/
 }
 .layout-wrapper .layout-topbar .topbar-menu-button {
   display: block;
@@ -11968,7 +11970,7 @@ html {
 @media (max-width: 1199.98px) {
   .layout-wrapper .layout-main {
     margin-left: 0;
-    padding-top: 105px;
+    /*padding-top: 105px;*/
   }
 }
 .layout-wrapper .layout-main .route-bar {
@@ -12046,22 +12048,6 @@ html {
   .layout-wrapper.layout-wrapper-overlay-sidebar .layout-main {
     margin-left: 0;
   }
-}
-
-.simple-body .layout-wrapper .layout-main {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.simple-body .layout-wrapper .topbar-logo {
-  font-size: 3rem;
-  padding: 1rem 0 0;
-}
-.simple-body .layout-wrapper .layout-main .layout-main-content {
-  flex: 1 0 auto;
-  padding: 0;
-}
-.simple-body .layout-wrapper .layout-main .layout-footer {
-  flex-shrink: 1;
 }
 
 /*Overview*/
@@ -13411,7 +13397,9 @@ html {
 }
 
 .submission-card {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ced4da;
 }
 .submission-card:first-child {
   margin-top: 0;
@@ -13431,6 +13419,11 @@ html {
   .section-resource-submission .submission-resource {
     width: 14.5rem;
   }
+}
+
+.submission-dialog .ui-dialog-content {
+  background: #00a6d2;
+  max-width: 27rem;
 }
 
 .add-resource-image {

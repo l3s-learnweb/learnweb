@@ -1,5 +1,7 @@
 .submission-card{
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $gray-400;
   &:first-child{
     margin-top: 0;
   }
@@ -22,6 +24,17 @@
       width: 14.5rem;
     }
   }
+
+
+
+}
+
+.submission-dialog{
+  .ui-dialog-content{
+    background: #00a6d2;
+    max-width: 27rem;
+  }
+
 }
 
 .add-resource-image{

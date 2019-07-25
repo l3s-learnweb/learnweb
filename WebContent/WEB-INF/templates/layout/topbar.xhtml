@@ -10,7 +10,7 @@
             <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
                 <div class="row align-items-center">
                     <div class="col-lg-9 d-none d-sm-none d-md-none d-lg-block">
-                        <div class="logo">
+                        <div class="logo d-flex justify-content-center align-items-center">
                             <a href="#{request.contextPath}/lw/myhome/welcome.jsf">
                                 <i class="lw lw-logo text-white"></i>
                             </a>
@@ -19,11 +19,9 @@
 
                     <ui:fragment rendered="#{userBean.loggedIn}">
                         <div class="col-3 col-lg-2">
-                            <div class="">
-                                <a id="menu-button" class="menu-button" href="#">
-                                    <i class="fa fa-align-left"/>
-                                </a>
-                            </div>
+                            <a id="menu-button" class="menu-button" href="#">
+                                <i class="fa fa-align-left"/>
+                            </a>
                         </div>
                     </ui:fragment>
                 </div>

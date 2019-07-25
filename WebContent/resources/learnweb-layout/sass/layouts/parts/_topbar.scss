@@ -9,9 +9,9 @@
     background: $themePrimaryColor;
     box-sizing: border-box;
 
-    @include media-breakpoint-down(lg) {
+   /* @include media-breakpoint-down(lg) {
       height: 105px;
-    }
+    }*/
 
     .search-form {
       input[type='search'] {
@@ -42,7 +42,7 @@
       }
 
       &:hover {
-        background: $greenDarker;
+        background: $themePrimaryDarkerAlt;
         color: $themeElementTextColor;
         fill: $themeElementTextColor;
 
@@ -54,9 +54,7 @@
     }
 
     .logo i {
-      font-size: 2rem;
-      line-height: 1;
-      padding-left: 0.5rem;
+      font-size: 2.4rem;
     }
 
     .usermenu {
@@ -64,7 +62,7 @@
         &.menuitem-active {
           > a {
             i, span {
-              color: $white;
+              color: $themeElementTextColor;
             }
           }
         }
@@ -87,26 +85,34 @@
     }
 
     .menu-button {
-      position: initial;
+     /* position: initial;
       left: 230px;
       width: 60px;
       height: 60px;
       line-height: 60px;
       font-size: 30px;
       color: $white;
-      text-align: center;
+      text-align: center;*/
       @include transition(background-color $transition-duration);
 
-      @include media-breakpoint-down(lg) {
+      color: $themeElementTextColor;
+      font-size: 30px;
+      display: flex;
+      height: 60px;
+      width: 60px;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+     /* @include media-breakpoint-down(lg) {
         left: 0;
-      }
+      }*/
 
       &:hover {
         background-color: $themePrimaryDarkerAlt;
       }
 
       i {
-        line-height: inherit;
+        /*line-height: inherit;*/
       }
     }
 
@@ -116,7 +122,7 @@
       right: 80px;
       top: 10px;
       height: 40px;
-      color: $white;
+      color: $themeElementTextColor;
 
       @include media-breakpoint-down(lg) {
         right: 65px;
