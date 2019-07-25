@@ -18,9 +18,6 @@
 
 ## Local libs
 .idea/**/libraries/*
-!.idea/**/libraries/localLibs.xml
-
-
 
 # Output folder
 target
