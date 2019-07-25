@@ -9,7 +9,6 @@
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
     <!--@elvariable id="helpText" type="java.lang.String"-->
     <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
-    <!--@elvariable id="smallPage" type="java.lang.Boolean"-->
     <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
@@ -22,15 +21,17 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
                 <meta name="apple-mobile-web-app-capable" content="yes"/>
             </f:facet>
+
             <title>
                 <h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}
             </title>
+
+            <h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="main-template" name="default2.js"/>
-            <h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
 
             <base href="#{request.contextPath}/lw/"/>
 
@@ -77,7 +78,9 @@
                         </ui:fragment>
                     </div>
 
-                    <ui:include src="footer.xhtml"/>
+                    <div class="layout-footer bg-dark text-white-50 p-3">
+                        <h:outputText escape="false" value="#{msg.layout_footer_text}"/>
+                    </div>
                 </div>
             </div>
 

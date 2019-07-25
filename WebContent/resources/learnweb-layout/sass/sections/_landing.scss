@@ -1,198 +1,73 @@
-.landing {
-  background: white;
-  overflow-x: hidden;
+.section-landing {
+  .header {
+    background: url("\#{resource['frontpage/luh.jpg']}") center;
+    background-size: cover;
+    padding: 5rem 0;
 
-  .topbar-logo i {
-    font-size: 2rem;
-    line-height: 1;
-  }
+    .header-login-form {
+      background-color: rgba($themeElementTextColor, 0.9);
 
-  .container {
-    max-width: 1500px;
-  }
-
-  .top-menu {
-    .logo {
-      @include media-breakpoint-up(sm) {
-        width: 19rem;
-        margin: .5rem;
+      input {
+        margin: 1rem 0;
       }
     }
 
-    ul {
-      list-style: none;
-    }
+    .header-news-list {
+      background: rgba($themeDarkBgColor, 0.9);
+      color: $themeElementTextColor;
 
-    .header-menu {
-      padding-right: 1rem;
-      margin-bottom: 0;
-
-      @include media-breakpoint-up(sm) {
-        margin-bottom: 0;
+      > h2 {
+        font-size: 1rem;
+        padding: .5rem 1rem;
+        background: $themeDarkBgColor;
       }
 
-      a {
-        padding: 1rem;
-        text-decoration: none;
-        border-bottom: 0.2rem solid transparent;
-        color: $body-color;
+      .ui-datalist-data {
+        padding: 1rem 1rem 0;
+        list-style: none;
+      }
 
-        &:hover {
-          border-color: $themePrimaryColorDarker;
+      .ui-datalist-content {
+        border: none;
+        background: inherit;
+        min-height: 13.5rem;
+        max-height: 24rem;
+        overflow: auto;
+
+        .news-date {
+          display: block;
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        .news-content {
+          font-weight: normal;
         }
       }
     }
   }
 
-  .header {
-    background: url("\#{resource['frontpage/luh.jpg']}");
-    padding: 5rem 0;
-    background-size: cover;
-
-    .header-content-panel {
-      padding: 1rem 1.5rem;
-      background-color: white;
-      max-width: 18rem;
-
-      @include media-breakpoint-up(sm) {
-        display: block;
-        margin: 0 auto;
-        max-width: 20rem;
-      }
-
-      input {
-        margin: 1rem 0;
-        width: 100%;
-      }
-    }
-
-    .news-form {
-      display: block;
-      background: rgba(0, 0, 0, 0.9);
-      color: $white;
-      border-radius: 0.2rem;
-      padding-bottom: 1rem;
-
-      @include media-breakpoint-down(lg) {
-        display: none;
-      }
-
-      > h2 {
-        font-size: 1rem;
-        padding: .5rem 1rem;
-        margin: 0;
-        background: rgba(0, 0, 0, 0.8);
-      }
-
-      .ui-datalist-content {
-        background: rgba(0, 0, 0, 0);
-        border: none;
-        padding: 1rem;
-        height: 24rem;
-      }
-
-      span {
-        display: block;
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.6);
-      }
-    }
-  }
-
-  .hidden-news {
-    display: none;
-    padding: 1rem;
-
-    @include media-breakpoint-down(lg) {
-      display: block;
-    }
-
-    span {
-      font-size: 1rem;
-      margin: 0 0.4rem;
-      text-align: center;
-    }
-
-    p {
-      font-size: 1.5rem;
-      font-weight: 500;
-      text-align: left;
-      padding: 1rem;
-    }
-
-    h2 {
-      font-size: 2rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      margin-top: 1rem;
-    }
-
-    .ui-datalist-item {
-      border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
-      padding-bottom: 1rem;
-    }
-
-    .ui-widget-content {
-      border: none;
-    }
-  }
-
-
-  .about {
-    padding: 3rem 0;
-
-    h2 {
-      @include media-breakpoint-up(sm) {
-        text-align: center;
-      }
-    }
-
-    .about-content {
-      color: $themePrimaryDarkest;
-    }
-  }
-
-
   .subscriptions {
     background-color: $themePrimaryColorDarker;
 
-    h2 {
-      @include media-breakpoint-up(sm) {
-        text-align: center;
-      }
-    }
-
     .subscription-box {
-      @include media-breakpoint-up(sm) {
-        margin: 2rem;
-      }
-
       .subscription-header {
         background-color: $themePrimaryDarkest;
+        color: $themeElementTextColor;
         letter-spacing: 0.1rem;
       }
 
       .subscription-subheader {
         background-color: $gray-200;
-
-        span {
-          font-size: 1.2rem;
-          color: $themePrimaryDarkest;
-        }
+        color: $themePrimaryDarkest;
       }
 
       .subscription-content {
-        span {
-          color: $themePrimaryDarkest;
+        img {
+          width: 100%;
+          max-width: 7rem;
         }
       }
     }
-  }
-
-  .footer {
-    background-color: $themePrimaryDarkest;
-    border-top: 0.2rem solid $white;
-    color: $gray-200;
   }
 }

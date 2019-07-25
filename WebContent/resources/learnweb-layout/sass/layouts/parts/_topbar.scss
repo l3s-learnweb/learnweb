@@ -9,10 +9,6 @@
     background: $themePrimaryColor;
     box-sizing: border-box;
 
-   /* @include media-breakpoint-down(lg) {
-      height: 105px;
-    }*/
-
     .search-form {
       input[type='search'] {
         border: none;
@@ -85,8 +81,6 @@
     }
 
     .menu-button {
-      @include transition(background-color $transition-duration);
-
       color: $themeElementTextColor;
       font-size: 30px;
       display: flex;
@@ -95,6 +89,7 @@
       justify-content: center;
       align-items: center;
       text-decoration: none;
+      @include transition(background-color $transition-duration);
 
       &:hover {
         background-color: $themePrimaryDarkerAlt;

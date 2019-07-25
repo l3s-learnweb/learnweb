@@ -1,181 +1,114 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:f="http://java.sun.com/jsf/core"
-	  xmlns:ui="http://java.sun.com/jsf/facelets"
-	  xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-	<f:facet name="first">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-	</f:facet>
-	<title>Learn Web</title>
+<ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
-	<h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
-</h:head>
+<ui:define name="header_right">
+    <ul class="header-menu row justify-content-end">
+        <li><a href="#{request.requestURL}#"><span>Log in</span></a></li>
+        <li><a href="#{request.requestURL}#about"><span>About us</span></a></li>
+        <li><a href="#{request.requestURL}#subscriptions"><span>Subscribe</span></a></li>
+    </ul>
+</ui:define>
 
-<h:body>
-	<div class="landing">
-		<div id="top-menu" class="top-menu px-4 py-3 container">
-			<div class="row align-items-center">
-				<div class="col-4">
-					<div class="topbar-logo">
-						<a href="#{request.contextPath}/lw/index.jsf">
-							<i class="lw lw-logo text-black"></i>
-						</a>
-					</div>
-				</div>
-				<div class="col-8">
-					<div class="row justify-content-end">
-						<ul class="header-menu row justify-content-end">
-					<li><a href="#"><span>Log in</span></a></li>
-					<li><a href="#about"><span>About us</span></a></li>
-					<li><a href="#subscribe"><span>Subscribe</span></a></li>
-				</ul>
-			</div>
+<ui:define name="center_layout">
+    <div class="section-landing">
+        <div id="header" class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="header-login-form p-4">
+                            <h:form>
+                                <h:outputText value="#{msg.username}"/>
+                                <p:inputText placeholder="#{msg.username}" value="#{loginBean.username}" styleClass="w-100"/>
 
-				</div>
-			</div>
-		</div>
-		<div id="header" class="header px-4 row">
-			<div class="container">
-				<div class="row align-items-center">
-					<div class="col-sm-12 col-md-12 col-lg-4">
-						<div class="header-content-panel row flex-column">
-								<h:form>
-										<h:outputText value="#{msg.username}" />
+                                <h:outputText value="#{msg.password}"/>
+                                <p:password placeholder="#{msg.password}" value="#{loginBean.password}" feedback="false" styleClass="w-100"/>
 
-										<p:inputText placeholder="#{msg.username}" value="#{loginBean.username}" />
+                                <p:commandButton ajax="false" value="#{msg.loginLabel}" action="#{loginBean.login()}" styleClass="turquoise-btn"/>
 
-										<h:outputText value="#{msg.password}" />
+                                <a href="#{request.contextPath}/lw/user/password.jsf">#{msg.forgotten_password}</a>
+                            </h:form>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 d-none d-lg-block">
+                        <div class="header-news-list">
+                            <h2 class="m-0">#{msg.announcements}</h2>
 
-										<p:password placeholder="#{msg.password}" value="#{loginBean.password}"  feedback="false" />
+                            <p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="unordered">
+                                <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
-										<p:commandButton ajax="false"  value="#{msg.loginLabel}" action="#{loginBean.login()}" styleClass="turquoise-btn" />
+                                <h:outputText value="#{news.date}" styleClass="news-date mb-1">
+                                    <f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}"/>
+                                </h:outputText>
 
-										<a href="user/password.jsf">#{msg.forgotten_password}</a>
+                                <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>
+                            </p:dataList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-								</h:form>
+        <div id="about" class="about py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h2 class="text-center text-primary">About us</h2>
+                        <p><h:outputText value="#{msg.homepage}"/></p>
+                    </div>
+                    <div class="col-lg-6">
+                        <!--<ui:include src="/templates/user/guide.xhtml"/>-->
+                        <!--<iframe width="560" height="315" src="resources/templates/user/guide.xhtml" frameborder="0"></iframe>-->
+                    </div>
+                </div>
+            </div>
+        </div>
 
-							</div>
-						</div>
-					<div class="col-lg-8">
-
-						<h:form id="newsform" styleClass="news-form">
-
-							<h2>#{msg.announcements}</h2>
-							<p:dataList rows="3" styleClass="onhover-scrollbar" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="definition">
-								<div>
-									<h2>
-										<h:outputText value="#{news.title}" />
-										<span>
-											<h:outputText value="#{news.date}">
-												<f:convertDateTime  pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}" />
-											</h:outputText>
-										</span>
-									</h2>
-									<p><h:outputText escape="false" value="#{news.text}" /></p>
-								</div>
-							</p:dataList>
-						</h:form>
-					</div>
-
-				</div>
-			</div>
-		</div>
-
-		<div id="hidden_news" class="hidden-news">
-
-			<h2>#{msg.announcements}</h2>
-			<p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="definition">
-				<div>
-					<h2>
-						<h:outputText value="#{news.title}" />
-						<span>
-							<h:outputText value="#{news.date}">
-								<f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}" />
-							</h:outputText>
-						</span>
-					</h2>
-					<p><h:outputText escape="false" value="#{news.text}" /></p>
-				</div>
-			</p:dataList>
-
-
-		</div>
-
-		<div id="about" class="about px-4 row">
-			<div class="container">
-				<div class="about-content">
-					<div class="col-lg-6 col-12 col-md-12 col-sm-12">
-						<h2>About us</h2>
-					<p><h:outputText value="#{msg.homepage}" />
-						<h:outputText value="#{msg.homepage}" /></p>
-				</div>
-					<div class="col-lg-6 col-12 col-md-12 col-sm-12">
-					<!--<ui:include src="/templates/user/guide.xhtml"/>-->
-					<!--<iframe width="560" height="315" src="resources/templates/user/guide.xhtml" frameborder="0"></iframe>-->
-				</div>
-
-				</div>
-			</div>
-		</div>
-
-		<div id="subscriptions" class="subscriptions px-4 py-5 border-top-0 row">
-			<div class="container">
-			<h2 class="text-white h2">Subscribe</h2>
-				<div class="row align-items-start justify-content-center">
-
-					<div class="col-md-5 col-sm-10 col-10 subscription-box bg-white text-center m-3 p-0">
-						<div class="subscription-header text-white font-weight-bold py-3 px-0 ">#{msg.public_courses}</div>
-						<div class="subscription-subheader font-weight-bold ">
-							<span>Playground</span>
-						</div>
-						<div class="subscription-content playground row p-3">
-							<h:graphicImage styleClass="col-4 col-sm-2 m-auto m-sm-0 py-2 h-100" value="/resources/image/icons8-playground-96.png"/>
-							<span class="col-12 col-sm-10 py-1 text-left">​<h:outputText value="#{msg.standard_version_description}" /></span>
-						</div>
-						<div>
-							<p:commandButton styleClass=" mb-3" type="button" value="Join" />
-						</div>
-				</div>
-
-
-					<div class="col-md-5 col-sm-10 col-10 subscription-box bg-white text-center m-3 p-0">
-						<div class="subscription-header text-white font-weight-bold py-3 px-0">#{msg.specific_courses}</div>
-						<div class="subscription-subheader font-weight-bold" >
-							<span>YELL</span>
-						</div>
-						<div class="subscription-content playground row p-3">
-							<h:graphicImage styleClass="col-4 col-sm-2 m-auto m-sm-0 py-2 h-100" value="/resources/image/interactive_puzzle.png"/>
-							<span class="col-12 col-sm-10 py-1 text-left"><h:outputText value="#{msg.yell_description}"/></span>
-						</div>
-						<div>
-							<p:commandButton styleClass=" mb-3" type="button" value="Join"/>
-						</div>
-				</div>
-
-			</div>
-		</div>
-				</div>
-		<div id="footer" class="footer p-4  row">
-			<div class="container">
-				<div class="row">
-					<div class="col-12 ">
-						<a href="#{request.contextPath}/lw/imprint.jsf">Imprint</a> -
-
-						Learnweb is developed and maintained by the L3S Research Center, Leibniz University of Hanover, Germany. Contact:
-						<a href="mailto:learnweb-support@l3s.de">learnweb-support@l3s.de
-						</a>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
-
-</h:body>
-</html>
+        <div id="subscriptions" class="subscriptions px-4 py-5 border-top-0">
+            <div class="container">
+                <h2 class="text-white text-center mb-3">Subscribe</h2>
+                <div class="row align-items-start text-center">
+                    <div class="col-md-6">
+                        <div class="subscription-box bg-white h-100 mb-5">
+                            <h6 class="subscription-header py-3 m-0">#{msg.public_courses}</h6>
+                            <h5 class="subscription-subheader py-1 m-0">Playground</h5>
+                            <div class="subscription-content row mx-auto my-3">
+                                <div class="col-4 col-lg-3">
+                                    <h:graphicImage value="/resources/image/icons8-playground-96.png"/>
+                                </div>
+                                <div class="col-8 col-lg-9 text-left">
+                                    ​<h:outputText value="#{msg.standard_version_description}"/>
+                                </div>
+                            </div>
+                            <div class="subscription-footer my-4">
+                                <p:commandButton type="button" value="Join"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="subscription-box bg-white h-100 mb-5">
+                            <h6 class="subscription-header py-3 m-0">#{msg.specific_courses}</h6>
+                            <h5 class="subscription-subheader py-1 m-0">YELL</h5>
+                            <div class="subscription-content row mx-auto py-3">
+                                <div class="col-4 col-lg-3">
+                                    <h:graphicImage value="/resources/image/interactive_puzzle.png"/>
+                                </div>
+                                <div class="col-8 col-lg-9 text-left">
+                                    ​<h:outputText value="#{msg.yell_description}"/>
+                                </div>
+                            </div>
+                            <div class="subscription-footer my-4">
+                                <p:commandButton type="button" value="Join"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:define>
+</ui:composition>

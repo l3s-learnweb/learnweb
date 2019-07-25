@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      lang="#{userBean.localeCode}">
+
+    <!--@elvariable id="pageTitle" type="java.lang.String"-->
+    <!--@elvariable id="helpText" type="java.lang.String"-->
+    <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
+    <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
+
+    <f:view locale="#{userBean.locale}" contentType="text/html">
+        <ui:insert name="metadata"/>
+
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+            </f:facet>
+
+            <title>
+                <h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}
+            </title>
+
+            <h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+
+            <base href="#{request.contextPath}/lw/"/>
+
+            <ui:insert name="head"/>
+        </h:head>
+
+        <h:body styleClass="page-body">
+            <div class="layout-wrapper">
+                <div class="top-menu py-3">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                <div class="logo">
+                                    <a href="#{request.contextPath}/lw/index.jsf" class="text-primary">
+                                        <i class="lw lw-logo"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="row justify-content-end">
+                                    <ui:insert name="header_right"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layout-main-content">
+                    <p:growl id="growl" rendered="#{not disableGrowl}"/>
+                    <ui:insert name="center_layout"/>
+                </div>
+
+                <div class="footer py-4">
+                    <div class="container">
+                        <h:outputText escape="false" value="#{msg.layout_footer_text}"/>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </f:view>
+</html>

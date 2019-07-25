@@ -37,6 +37,7 @@
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import "layouts/_template";
+@import "layouts/_template_page";
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
 @import "components/_dashboard";
