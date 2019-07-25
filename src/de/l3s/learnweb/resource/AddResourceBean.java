@@ -27,7 +27,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.group.GroupResourcesBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -59,6 +59,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     @Inject
     private FileEditorBean fileEditorBean;
+
+    @Inject
+    private GroupResourcesBean groupResourcesBean;
+
+    @Inject
+    private MyResourcesBean myResourcesBean;
 
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
@@ -262,7 +268,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log(Action.adding_resource, getTargetGroupId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
-            UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
+            groupResourcesBean.updateResourcesFromSolr();
 
             //resource.setUrl("");
         }
@@ -354,9 +360,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             if(resource.getGroupId() != 0)
-                UtilBean.getGroupResourcesBean().updateResourcesFromSolr();
+                groupResourcesBean.updateResourcesFromSolr();
 
-            UtilBean.getMyResourcesBean().updateResources();
+            myResourcesBean.updateResources();
         }
         catch(Exception e)
         {
@@ -550,6 +556,26 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setFileEditorBean(FileEditorBean fileEditorBean)
     {
         this.fileEditorBean = fileEditorBean;
+    }
+
+    public GroupResourcesBean getGroupResourcesBean()
+    {
+        return groupResourcesBean;
+    }
+
+    public void setGroupResourcesBean(final GroupResourcesBean groupResourcesBean)
+    {
+        this.groupResourcesBean = groupResourcesBean;
+    }
+
+    public MyResourcesBean getMyResourcesBean()
+    {
+        return myResourcesBean;
+    }
+
+    public void setMyResourcesBean(final MyResourcesBean myResourcesBean)
+    {
+        this.myResourcesBean = myResourcesBean;
     }
 
     public List<SelectItem> getAvailableGlossaryLanguages()

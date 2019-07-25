@@ -79,7 +79,7 @@ public class AdminNewsBean extends ApplicationBean implements Serializable
                 news.setTitle(title);
                 news.setText(text);
                 news.setUser_id(getUser().getId());
-                log.debug(news.onSaveString());
+                log.debug(news);
                 getLearnweb().getNewsManager().save(news);
                 addGrowl(FacesMessage.SEVERITY_INFO, "News was added !");
                 load();
@@ -115,7 +115,7 @@ public class AdminNewsBean extends ApplicationBean implements Serializable
             news.setTitle(this.news.getTitle());
             news.setText(this.news.getText());
             news.setId(newsId);
-            log.debug(news.onSaveString());
+            log.debug(news);
             getLearnweb().getNewsManager().update(news);
             addGrowl(FacesMessage.SEVERITY_INFO, "News was updated !");
         }

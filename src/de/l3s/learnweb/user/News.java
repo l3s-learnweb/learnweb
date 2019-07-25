@@ -77,11 +77,4 @@ public class News implements Serializable
     {
         return "News [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", user_id=" + user_id + "]";
     }
-
-    @Deprecated
-    public String onSaveString() // TODO remove
-    {
-        return "News [title=" + title + ", message=" + text + ", user_id=" + user_id + "]";
-    }
-
 }
