@@ -40,10 +40,10 @@
 
         <h:body styleClass="main-body">
             <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
-                <ui:include src="topbar.xhtml"/>
+                <ui:include src="parts/topbar.xhtml"/>
 
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <ui:include src="sidebar.xhtml"/>
+                    <ui:include src="parts/sidebar.xhtml"/>
                 </ui:fragment>
 
                 <div class="layout-main d-flex flex-column">
