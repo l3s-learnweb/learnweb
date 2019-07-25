@@ -1,18 +1,19 @@
-<ui:composition 
-	template="/templates/main/main.xhtml" 
-	xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core">
-	
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">>
+
 	<ui:param name="pageTitle" value="#{msg.error}" />
 	<ui:param name="smallPage" value="true" />
 	<ui:param name="disableGrowl" value="true" />
-	
-	<ui:define name="center_layout">
-		<div class="error" style="font-size:1.4rem">#{msg.reload_page}</div>	        
-        <br/><br/>
-        <a href="user/login.jsf">#{msg.reload}</a>
+
+	<ui:define name="container_layout">
+		<p:panel header="Session expired" styleClass="ui-widget-danger">
+			<h5 class="text-danger">#{msg.reload_page}</h5>
+
+			<a href="user/login.jsf">#{msg.reload}</a>
+		</p:panel>
 	</ui:define>
 
 </ui:composition>

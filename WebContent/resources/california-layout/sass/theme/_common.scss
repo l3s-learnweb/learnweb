@@ -49,10 +49,10 @@ body {
         min-width: 16px;
         height: 16px;
     }
-    a {
-        color: $primaryColor;
-        &:hover {
-            color: darken($primaryColor, 10%);
-        }
-    }
+    //a {
+    //    color: $primaryColor;
+    //    &:hover {
+    //        color: darken($primaryColor, 10%);
+    //    }
+    //}
 }

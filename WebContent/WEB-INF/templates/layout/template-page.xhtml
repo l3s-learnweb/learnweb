@@ -58,7 +58,11 @@
 
                 <div class="layout-main-content">
                     <p:growl id="growl" rendered="#{not disableGrowl}"/>
-                    <ui:insert name="center_layout"/>
+                    <ui:insert name="center_layout">
+                        <div class="container my-4">
+                            <ui:insert name="container_layout"/>
+                        </div>
+                    </ui:insert>
                 </div>
 
                 <div class="footer py-4">

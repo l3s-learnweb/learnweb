@@ -76,3 +76,9 @@
 .cursor-pointer{
   cursor: pointer;
 }
+
+.ui-widget-danger {
+  .ui-widget-header {
+    background-color: $red;
+  }
+}

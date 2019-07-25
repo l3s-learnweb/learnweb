@@ -7587,12 +7587,6 @@ body .ui-icon {
   min-width: 16px;
   height: 16px;
 }
-body a {
-  color: #4AA382;
-}
-body a:hover {
-  color: #3a8066;
-}
 
 body .ui-inputfield {
   background: #fff;
@@ -11436,6 +11430,10 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   cursor: pointer;
 }
 
+.ui-widget-danger .ui-widget-header {
+  background-color: #cd2026;
+}
+
 html {
   font-size: 10px;
 }
@@ -11825,6 +11823,7 @@ html {
   flex-direction: column;
 }
 .page-body .layout-wrapper .top-menu {
+  border-bottom: 1px solid #ced4da;
   background: #fff;
 }
 .page-body .layout-wrapper .top-menu .logo i {

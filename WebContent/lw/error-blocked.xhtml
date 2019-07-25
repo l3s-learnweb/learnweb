@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui">>
 
-	<f:view locale="#{userBean.locale}" contentType="text/html">
-		<h:head>
-			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-			<title>#{msg.error}</title>
-			<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+	<ui:param name="pageTitle" value="#{msg.error}" />
+	<ui:param name="disableGrowl" value="true" />
 
-			<h:outputStylesheet library="main-template" name="main.css" />
-			<h:outputStylesheet library="main-template" name="responsive_design.css" />
+	<ui:define name="container_layout">
+		<p:panel header="Restricted access" styleClass="ui-widget-danger">
+			<h5 class="text-danger">Your access to #{msg['application.name']} has been blocked due to unauthorized activity. Please contact our support team: #{msg['application.serverAdmin']}</h5>
+		</p:panel>
+	</ui:define>
 
-			<h:outputScript library="primefaces" name="jquery/jquery.js" />
-			<h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
-			<h:outputScript library="main-template" name="default2.js" />
-		
-			<base href="#{request.contextPath}/lw/" />
-		
-		</h:head>
-		
-		<h:body>
-	
-		<header id="header">
-			<div id="main_menu_bar"></div>		
-		</header>
-		<section id="content" class="small_page">
-			<div class="error" style="font-size:1.4rem">Your access to #{msg['application.name']} has been blocked due to unauthorized activity. Please contact our support team: - #{msg['application.serverAdmin']}</div>	        
-	        <br/><br/>
-		</section>
-	
-		</h:body>
-	</f:view>
-</html>
+</ui:composition>

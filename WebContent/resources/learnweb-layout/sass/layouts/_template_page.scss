@@ -5,6 +5,7 @@
     flex-direction: column;
 
     .top-menu {
+      border-bottom: 1px solid $themeSidebarDividerColor;
       background: $themeElementTextColor;
 
       .logo i {
