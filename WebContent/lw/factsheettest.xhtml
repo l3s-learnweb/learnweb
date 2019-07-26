@@ -1,5 +1,5 @@
 <ui:composition 
-	template="/templates/main/main.xhtml" 
+	template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,11 +9,12 @@
 	<ui:param name="loginRequired" value="false" />
 	<ui:param name="pageTitle" value="Factsheet" />
 
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="Factsheet" url="factsheettest.jsf"/>
+	</ui:define>
 	<ui:define name="center_layout">
-		<div class="page_header" style="margin: 5px;">
-			<span>Facts</span>
-		</div>
 
+	<p:panel header="Facts">
 		<h:form>
 		
 			<h:panelGrid columns="2">
@@ -39,6 +40,7 @@
 				<p:commandButton value="Submit" update="facts" action="#{factSheetBean.onClick}" />
 			</h:panelGrid>
 		</h:form>
+	</p:panel>
 
 		<h:panelGroup id="facts">
 			<h:panelGrid columns="2">

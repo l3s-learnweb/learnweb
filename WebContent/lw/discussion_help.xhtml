@@ -1,5 +1,5 @@
 <ui:composition
-	template="/templates/main/main.xhtml"
+	template="/WEB-INF/templates/layout/template-page.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -10,18 +10,10 @@
 	<ui:param name="pageTitle" value="#{msg.discussion_help}"/>
 
 	<ui:define name="center_layout">
+			<p:panel header="#{msg.discussion_help}" styleClass="mt-3">
 
-	<style type="text/css">
-		.a{
-			color: blue;
-			text-decoration: underline;
-		}
-	</style>
-
-	<section id="content" class="small_page">
-			<p:panel header="#{msg.discussion_help}">
-			<h:outputText escape="false" value="#{msg.discussion_help_intro}"/>
-			<br/><h:outputText escape="false" value="1. #{msg.discussion_help_user_step_1}"/>
+			<h:outputText escape="false" value="#{msg.discussion_help_intro}"/><br/>
+			<h:outputText escape="false" value="1. #{msg.discussion_help_user_step_1}"/>
 
 			<ui:fragment rendered="#{empty param['type'] or param['type'] eq 'user'}">
 				<br/><h:outputText escape="false" value="2. #{msg.discussion_help_user_step_2}"/>
@@ -33,11 +25,7 @@
 				<br/><h:outputText escape="false" value="3. #{msg.discussion_help_admin_step_3}"/>
 				<br/><h:outputText escape="false" value="4. #{msg.discussion_help_admin_step_4}"/>
 			</ui:fragment>
-
-			<br/>
 		</p:panel>
-		</section>
-
 
 	</ui:define>
 </ui:composition>
