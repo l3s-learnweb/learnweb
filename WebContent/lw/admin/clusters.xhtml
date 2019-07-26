@@ -40,9 +40,9 @@
 			</h:panelGrid>	
 			
 			<p:dialog id="usercl" modal="true" widgetVar="clg1" resizable="true" header="#{msg.FormativeAssessment_visualiseGroups}" maximizable="true">
-				<!-- TODO: #{clusterBean.bubbleModel} is not exists -->
-				<p:chart type="bubble" model="#{clusterBean.bubbleModel}" rendered="#{clusterBean.showBubble}" style="height:650px;width:1500px"/>
-				
+				<!-- TODO: {clusterBean.bubbleModel} is not exists -->
+				<!-- <p:chart type="bubble" model="{clusterBean.bubbleModel}" rendered="{clusterBean.showBubble}" style="height:650px;width:1500px"/> -->
+
 				<svg class="bubble" height="650" width="1500">
 				<c:forEach items="#{clusterBean.listData}" var="user">
 					<g transform="translate(#{user.cx},#{user.cy})" class="node">
