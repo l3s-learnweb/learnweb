@@ -252,11 +252,11 @@ body .ui-datatable thead th {
 #language_selector a:hover {
 	background-color:#4ea68d;
 }
-.language_de { background-image:url("#{resource['main-template/img/flag_de.png']}"); }
-.language_en { background-image:url("#{resource['main-template/img/flag_en.png']}"); }
-.language_pt { background-image:url("#{resource['main-template/img/flag_pt.png']}"); }
-.language_it { background-image:url("#{resource['main-template/img/flag_it.png']}"); }
-.language_us { background-image:url("#{resource['main-template/img/flag_us.png']}"); }
+.language_de { background-image:url("#{resource['images/flags/flag_de.png']}"); }
+.language_en { background-image:url("#{resource['images/flags/flag_en.png']}"); }
+.language_pt { background-image:url("#{resource['images/flags/flag_pt.png']}"); }
+.language_it { background-image:url("#{resource['images/flags/flag_it.png']}"); }
+.language_us { background-image:url("#{resource['images/flags/flag_us.png']}"); }
 
 .hover-white:focus,
 .hover-white:hover	{
