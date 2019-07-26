@@ -11434,6 +11434,18 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   background-color: #cd2026;
 }
 
+.content-background-darker {
+  background-color: #e9ecef;
+}
+
+.no-paragraph-margin p, .no-paragraph-margin b, .no-paragraph-margin i {
+  margin: 0 !important;
+}
+
+.no-list-margin ul, .no-list-margin ol, .no-list-margin dl {
+  margin: 0 !important;
+}
+
 html {
   font-size: 10px;
 }

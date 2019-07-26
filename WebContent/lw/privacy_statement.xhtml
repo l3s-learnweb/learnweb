@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main.xhtml" 
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -6,9 +6,10 @@
 
 	<ui:param name="pageTitle" value="#{msg['privacy_statement']}"/>
 	<ui:param name="smallPage" value="true"/>
+	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
-	<script type="text/javascript">
+		<script type="text/javascript">
 /*<![CDATA[*/
 
  function UnCryptMailto(s) {
@@ -45,615 +46,970 @@ function decryptCharcode(n,start,end,offset){n=n+offset;if(offset>0&&n>end){n=st
 	
 		/*]]>*/
 	</script>
-		<style type="text/css">
-.lw_privacy_statement table td {
-	padding: 3px
-}
 
-.lw_privacy_statement p {
-	padding: 6px
-}
+		<div class="row no-gutters justify-content-center no-paragraph-margin no-list-margin my-3">
+			<p:panel styleClass="col-12 col-md-6" header="#{msg['privacy_statement']}">
+				<ui:fragment rendered="#{userBean.localeCode eq 'de'}" >
+					<div id="c47269" class="c-section mb-5">
+						<div class="row no-gutters justify-content-center p-3 content-background-darker">
+							<h3 class="h3">Inhalte auf dieser Seite</h3>
+							<div class="col-10 m-0">
+								<ol class="c-contentmenu__list c-contentmenu__list--2col">
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47272">Name und Anschrift des Verantwortlichen</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47275">Name und Anschrift des Datenschutzbeauftragten</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47277">Allgemeines zur Datenverarbeitung</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47279">Bereitstellung der Website und Erstellung von Logfiles</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47281">Kontaktformular und E-Mail-Kontakt</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47285">Formulareingaben in Internetauftritten der Leibniz Universität Hannover</a></li>
 
-.c-contentmenu {
-	padding: 1rem .6666666667em;
-	background: #e6e6e6
-}
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47291">Webanalyse durch Learnweb Analytics</a></li>
 
-.c-contentmenu__title {
-	font-size: 1.25em;
-	line-height: 1.5em;
-	font-weight: 600;
-	margin-bottom: .6666666667rem
-}
 
-.c-contentmenu__list {
-	list-style: none;
-	counter-reset: item;
-	margin: -.3333333333rem 0 0
-}
-.contentmenu__item::before {
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c54019">Einbindung von Videos</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47300">Rechte der betroffenen Person</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47301">Auskunftsrecht gemäß Art. 15 DSGVO</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47302">Recht auf Berichtigung gemäß Art. 16 DSGVO </a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47303">Recht auf Einschränkung der Verarbeitung gemäß Art. 18 DSGVO</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47304">Recht auf Löschung gemäß Art. 17 DSGVO</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47305">Recht auf Unterrichtung gemäß Art. 19 DSGVO</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47306">Recht auf Datenübertragbarkeit gemäß Art. 20 DSGVO</a></li>
+									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47307">Widerspruchsrecht gemäß Art. 21 DSGVO</a></li>
+								</ol>
+							</div>
+						</div>
+					</div>
+					<div id="c47270" class="c-section mb-5">
+						<div id="c47272" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47270">
+								<h3 class="h3 text-center">NAME UND ANSCHRIFT DES VERANTWORTLICHEN</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Der Verantwortliche im Sinne der Datenschutz-Grundverordnung und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher Bestimmungen ist
+										die:</p>
+									<p>
+										Gottfried Wilhelm Leibniz Universität Hannover<br/> Welfengarten 1
+										<br/> 30167 Hannover
+									</p>
+									<p>
+										Tel. +49 511 762 - 0<br/> Fax +49 511 762 - 3456
+										<br/>
+										<a href="https://www.uni-hannover.de" target="_blank" class="c-link"><span>www.uni-hannover.de</span></a>&#160;
+									</p>
+									<p>
+										Die Leibniz Universität Hannover ist eine Körperschaft des öffentlichen Rechts und wird durch den <a href="/de/universitaet/praesidium/praesident/" class="c-link"><span>Präsidenten</span></a>,
+										Herrn Prof. Dr. iur. Volker Epping gesetzlich vertreten.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47273" class="c-section mb-5">
+						<div id="c47275" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47273">
+								<h3 class="h3 text-center">NAME UND ANSCHRIFT DES DATENSCHUTZBEAUFTRAGTEN</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Behördlicher Datenschutzbeauftragter der Leibniz Universität Hannover:</p>
+									<p>
+										Gottfried Wilhelm Leibniz Universität Hannover<br/> - Datenschutzbeauftragter -
+										<br/> Königsworther Platz 1
+										<br/> 30167 Hannover
+									</p>
+									<p>
+										Tel. +49 511 762-8132<br/> Fax +49 511 762-8258
+										<br/> E-Mail:
+										<a href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;" class="c-link"><span>datenschutz@uni-hannover.de</span></a>
+									</p>
+									<p>
+										<a href="https://www.uni-hannover.de/de/universitaet/organisation/beauftragte-vertretungen/datenschutz/" class="c-link"><span>Website</span></a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47276" class="c-section mb-5">
+						<div id="c47277" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47276">
+								<h3 class="h3 text-center">ALLGEMEINES ZUR DATENVERARBEITUNG</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Wir verarbeiten personenbezogene Daten unserer Nutzer grundsätzlich nur, soweit dies zur Bereitstellung einer funktionsfähigen Website sowie unserer Inhalte und Leistungen
+										erforderlich ist. Die Verarbeitung personenbezogener Daten unserer Nutzer erfolgt regelmäßig nur nach Einwilligung des Nutzers. Eine Ausnahme gilt in solchen Fällen, in denen eine
+										vorherige Einholung einer Einwilligung aus tatsächlichen Gründen nicht möglich ist und die Verarbeitung der Daten durch gesetzliche Vorschriften gestattet ist.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47278" class="c-section mb-5">
+						<div id="c47279" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47278">
+								<h3 class="h3 text-center">BEREITSTELLUNG DER WEBSITE UND ERSTELLUNG VON LOGFILES</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Bei jedem Aufruf unserer Internetseite erfasst unser System automatisiert Daten und Informationen vom Computersystem des aufrufenden Rechners.</p>
+									<p>Folgende Daten werden hierbei erhoben:</p>
+									<ul>
+										<li>Informationen über den Browsertyp und die verwendete Version</li>
+										<li>Das Betriebssystem des Nutzers</li>
+										<li>Den Internet-Service-Provider des Nutzers</li>
+										<li>Die IP-Adresse des Nutzers</li>
+										<li>Datum und Uhrzeit des Zugriffs</li>
+										<li>Websites, von denen das System des Nutzers auf unsere Internetseite gelangt</li>
+										<li>Websites, die vom System des Nutzers über unsere Website aufgerufen werden</li>
+									</ul>
+									<p>Die Daten werden ebenfalls in den Logfiles unseres Systems gespeichert. Eine Speicherung dieser Daten zusammen mit anderen personenbezogenen Daten des Nutzers findet nicht statt.</p>
+									<p>Rechtsgrundlage für die vorübergehende Speicherung der Daten und der Logfiles ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+									<p>Die vorübergehende Speicherung der IP-Adresse durch das System ist notwendig, um eine Auslieferung der Website an den Rechner des Nutzers zu ermöglichen. Hierfür muss die IP-Adresse
+										des Nutzers für die Dauer der Sitzung gespeichert bleiben. Die Speicherung in Logfiles erfolgt, um die Funktionsfähigkeit der Website sicherzustellen. Zudem dienen uns die Daten zur
+										Optimierung der Website und zur Sicherstellung der Sicherheit unserer informationstechnischen Systeme. Eine Auswertung der Daten zu Marketingzwecken findet in diesem Zusammenhang nicht
+										statt. In diesen Zwecken liegt auch unser berechtigtes Interesse an der Datenverarbeitung nach Art. 6 Abs. 1 lit. f DSGVO.</p>
+									<p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind. Im Falle der Erfassung der Daten zur Bereitstellung der Website ist
+										dies der Fall, wenn die jeweilige Sitzung beendet ist.</p>
+									<p>Im Falle der Speicherung der Daten in Logfiles ist dies nach spätestens sieben Tagen der Fall. Eine darüberhinausgehende Speicherung ist möglich. In diesem Fall werden die
+										IP-Adressen der Nutzer gelöscht oder verfremdet, sodass eine Zuordnung des aufrufenden Clients nicht mehr möglich ist.</p>
+									<p>Die Erfassung der Daten zur Bereitstellung der Website und die Speicherung der Daten in Logfiles ist für den Betrieb der Internetseite zwingend erforderlich. Es besteht folglich
+										seitens des Nutzers keine Widerspruchsmöglichkeit.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47280" class="c-section mb-5">
+						<div id="c47281" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47280">
+								<h3 class="h3 text-center">KONTAKTFORMULAR UND E-MAIL-KONTAKT</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Auf unserer Internetseite ist ein Kontaktformular vorhanden, welches für die elektronische Kontaktaufnahme genutzt werden kann. Nimmt ein Nutzer diese Möglichkeit wahr, so werden die
+										in der Eingabemaske eingegeben Daten an uns übermittelt und gespeichert. Für die Verarbeitung der Daten wird im Rahmen des Absendevorgangs Ihre Einwilligung eingeholt und auf diese
+										Datenschutzerklärung verwiesen. Alternativ ist eine Kontaktaufnahme über die bereitgestellte E-Mail-Adresse möglich. In diesem Fall werden die mit der E-Mail übermittelten
+										personenbezogenen Daten des Nutzers gespeichert. Es erfolgt in diesem Zusammenhang keine Weitergabe der Daten an Dritte. Die Daten werden ausschließlich für die Verarbeitung der
+										Konversation verwendet. Rechtsgrundlage für die Verarbeitung der Daten ist bei Vorliegen einer Einwilligung des Nutzers Art. 6 Abs. 1 lit. a DSGVO. Rechtsgrundlage für die Verarbeitung der
+										Daten, die im Zuge einer Übersendung einer E-Mail übermittelt werden, ist Art. 6 Abs. 1 lit. f DSGVO. Zielt der E-Mail-Kontakt auf den Abschluss eines Vertrages ab, so ist zusätzliche
+										Rechtsgrundlage für die Verarbeitung Art. 6 Abs. 1 lit. b DSGVO.</p>
+									<p>Die Verarbeitung der personenbezogenen Daten aus der Eingabemaske dient uns allein zur Bearbeitung der Kontaktaufnahme. Im Falle einer Kontaktaufnahme per E-Mail liegt hieran auch
+										das erforderliche berechtigte Interesse an der Verarbeitung der Daten.</p>
+									<p>Die sonstigen während des Absendevorgangs verarbeiteten personenbezogenen Daten dienen dazu, einen Missbrauch des Kontaktformulars zu verhindern und die Sicherheit unserer
+										informationstechnischen Systeme sicherzustellen.</p>
+									<p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind. Für die personenbezogenen Daten aus der Eingabemaske des
+										Kontaktformulars und diejenigen, die per E-Mail übersandt wurden, ist dies dann der Fall, wenn die jeweilige Konversation mit dem Nutzer beendet ist. Beendet ist die Konversation dann,
+										wenn sich aus den Umständen entnehmen lässt, dass der betroffene Sachverhalt abschließend geklärt ist.</p>
+									<p>Die während des Absendevorgangs zusätzlich erhobenen personenbezogenen Daten werden spätestens nach einer Frist von sieben Tagen gelöscht.</p>
+									<p>Der Nutzer hat jederzeit die Möglichkeit, seine Einwilligung zur Verarbeitung der personenbezogenen Daten zu widerrufen. Nimmt der Nutzer per E-Mail Kontakt mit uns auf, so kann er
+										der Speicherung seiner personenbezogenen Daten jederzeit widersprechen. In einem solchen Fall kann die Konversation nicht fortgeführt werden. Alle personenbezogenen Daten, die im Zuge der
+										Kontaktaufnahme gespeichert wurden, werden in diesem Fall gelöscht.</p>
+								</div>
+							</div>
+						</div>
+					</div>
 
-    display: inline-block;
-    -webkit-flex: 0 0 1.3333333333em;
-    -ms-flex: 0 0 1.3333333333em;
-    flex: 0 0 1.3333333333em;
-    content: counter(item);
-    counter-increment: item;
+					<div id="c47284" class="c-section mb-5">
+						<div id="c47285" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47284">
+								<h3 class="h3 text-center">FORMULAREINGABEN IN INTERNETAUFTRITTEN DER LEIBNIZ UNIVERSITÄT HANNOVER</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Sofern darüber hinaus innerhalb des Internetangebotes die Möglichkeit zur Eingabe persönlicher oder geschäftlicher Daten (E-Mailadressen, Namen, Anschriften) besteht, so erfolgt die
+										Preisgabe dieser Daten seitens des Nutzers auf ausdrücklich freiwilliger Basis. Rechtsgrundlage für diese Verarbeitungen ist Art. 6 Abs. 1 lit. a) DSGVO. Die Erhebung und Verarbeitung der
+										Daten dient nur dem in jeweiligen Onlineformular genannten Zweck. Eine Preis- oder Weitergabe an Dritte findet nicht statt. Die Inanspruchnahme und Bezahlung aller angebotenen Dienste ist
+										- soweit technisch möglich und zumutbar - auch ohne Angabe solcher Daten bzw. unter Angabe anonymisierter Daten oder eines Pseudonyms gestattet. Die Nutzung der im Rahmen des Impressums
+										oder vergleichbarer Angaben veröffentlichten Kontaktdaten wie Postanschriften, Telefon- und Faxnummern sowie E-Mailadressen durch Dritte zur Übersendung von nicht ausdrücklich
+										angeforderten Informationen ist nicht gestattet. Rechtliche Schritte gegen die Versender von sogenannten Spam-Mails bei Verstößen gegen dieses Verbot sind ausdrücklich vorbehalten.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47290" class="c-section mb-5">
+						<div id="c47291" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47290" style="">
+								<h3 class="h3 text-center">WEBANALYSE DURCH LEARNWEB ANALYTICS</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>In ausgewählten Kursen, wie deinem, die Teil eines Forschungsprojektes sind, ist es erforderlich detailiertere Nutzungsstatistiken zu erheben.</p>
+									<p>Hierzu können Cookies eingesetzt werden. Bei Cookies handelt es sich um kleine Textdateien, die lokal im Zwischenspeicher des Internet-Browsers des Seitenbesuchers gespeichert
+										werden. Die Cookies ermöglichen unter anderem die Wiedererkennung des Internet-Browsers. Die erhobenen Daten werden auf unseren Servern verarbeitet.</p>
+									<p>Werden Einzelseiten unserer Website aufgerufen, so werden folgende Daten gespeichert:</p>
+									<ul>
+										<li>Die aufgerufene Webseite</li>
+										<li>Die Website, von der der Nutzer auf die aufgerufene Webseite gelangt ist (Referrer)</li>
+										<li>Die Unterseiten, die von der aufgerufenen Webseite aus aufgerufen werden</li>
+										<li>Die Verweildauer auf der Webseite</li>
+										<li>Die Zahl und Zeitpunkt der Benutzerinteraktionen (Mausbewegungen, Tastatureingaben)</li>
+									</ul>
+									<p>Cookies werden auf dem Rechner des Nutzers gespeichert und von diesem an unserer Seite übermittelt. Daher haben Sie als Nutzer auch die volle Kontrolle über die Verwendung von
+										Cookies. Durch eine Änderung der Einstellungen in Ihrem Internetbrowser können Sie die Übertragung von Cookies deaktivieren oder einschränken. Bereits gespeicherte Cookies können jederzeit
+										gelöscht werden. Dies kann auch automatisiert erfolgen. Werden Cookies für unsere Website deaktiviert, können möglicherweise nicht mehr alle Funktionen der Website vollumfänglich genutzt
+										werden.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c54018" class="c-section mb-5">
+						<div id="c54019" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-54018">
+								<h3 class="h3 text-center">EINBINDUNG VON VIDEOS</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>
+										Wir setzen zum Einbinden von Videos die Anbieter YouTube und Vimeo ein. Wie die meisten Websites verwenden diese Anbieter
+										Cookies, um Informationen über die Besucher ihrer Internetseite zu sammeln. Sie werden unter anderem zur Erfassung von Videostatistiken, zur Vermeidung von Betrug und zur
+										Verbesserung der Userfreundlichkeit verwendet.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47299" class="c-section mb-5">
+						<div id="c47300" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h3 class="h3 text-center">RECHTE DER BETROFFENEN PERSON</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i.S.d. DSGVO und es stehen Ihnen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47301" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Auskunftsrecht gemäß Art. 15 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Sie können von dem Verantwortlichen eine Bestätigung darüber verlangen, ob personenbezogene Daten, die Sie betreffen, von uns verarbeitet werden.</p>
+									<p>Liegt eine solche Verarbeitung vor, können Sie von dem Verantwortlichen über folgende Informationen Auskunft verlangen:</p>
+									<p>(1) die Zwecke, zu denen die personenbezogenen Daten verarbeitet werden;</p>
+									<p>(2) die Kategorien von personenbezogenen Daten, welche verarbeitet werden;</p>
+									<p>(3) die Empfänger bzw. die Kategorien von Empfängern, gegenüber denen die Sie betreffenden personenbezogenen Daten offengelegt wurden oder noch offengelegt werden;</p>
+									<p>(4) die geplante Dauer der Speicherung der Sie betreffenden personenbezogenen Daten oder, falls konkrete Angaben hierzu nicht möglich sind, Kriterien für die Festlegung der
+										Speicherdauer;</p>
+									<p>(5) das Bestehen eines Rechts auf Berichtigung oder Löschung der Sie betreffenden personenbezogenen Daten, eines Rechts auf Einschränkung der Verarbeitung durch den Verantwortlichen
+										oder eines Widerspruchsrechts gegen diese Verarbeitung;</p>
+									<p>(6) das Bestehen eines Beschwerderechts bei einer Aufsichtsbehörde;</p>
+									<p>(7) alle verfügbaren Informationen über die Herkunft der Daten, wenn die personenbezogenen Daten nicht bei der betroffenen Person erhoben werden;</p>
+									<p>(8) das Bestehen einer automatisierten Entscheidungsfindung einschließlich Profiling gemäß Art. 22 Abs. 1 und 4 DSGVO und - zumindest in diesen Fällen - aussagekräftige Informationen
+										über die involvierte Logik sowie die Tragweite und die angestrebten Auswirkungen einer derartigen Verarbeitung für die betroffene Person.</p>
+									<p>Ihnen steht das Recht zu, Auskunft darüber zu verlangen, ob die Sie betreffenden personenbezogenen Daten in ein Drittland oder an eine internationale Organisation übermittelt werden.
+										In diesem Zusammenhang können Sie verlangen, über die geeigneten Garantien gem. Art. 46 DSGVO im Zusammenhang mit der Übermittlung unterrichtet zu werden.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47302" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Recht auf Berichtigung gemäß Art. 16 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Sie haben ein Recht auf Berichtigung und/oder Vervollständigung gegenüber dem Verantwortlichen, sofern die verarbeiteten personenbezogenen Daten, die Sie betreffen, unrichtig oder
+										unvollständig sind. Der Verantwortliche hat die Berichtigung unverzüglich vorzunehmen.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47303" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Recht auf Einschränkung der Verarbeitung gemäß Art. 18 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Unter den folgenden Voraussetzungen können Sie die Einschränkung der Verarbeitung der Sie betreffenden personenbezogenen Daten verlangen:</p>
+									<p>(1) wenn Sie die Richtigkeit der Sie betreffenden personenbezogenen für eine Dauer bestreiten, die es dem Verantwortlichen ermöglicht, die Richtigkeit der personenbezogenen Daten zu
+										überprüfen;</p>
+									<p>(2) die Verarbeitung unrechtmäßig ist und Sie die Löschung der personenbezogenen Daten ablehnen und stattdessen die Einschränkung der Nutzung der personenbezogenen Daten verlangen;</p>
+									<p>(3) der Verantwortliche die personenbezogenen Daten für die Zwecke der Verarbeitung nicht länger benötigt, Sie diese jedoch zur Geltendmachung, Ausübung oder Verteidigung von
+										Rechtsansprüchen benötigen, oder</p>
+									<p>(4) wenn Sie Widerspruch gegen die Verarbeitung gemäß Art. 21 Abs. 1 DSGVO eingelegt haben und noch nicht feststeht, ob die berechtigten Gründe des Verantwortlichen gegenüber Ihren
+										Gründen überwiegen.</p>
+									<p>Wurde die Verarbeitung der Sie betreffenden personenbezogenen Daten eingeschränkt, dürfen diese Daten - von ihrer Speicherung abgesehen - nur mit Ihrer Einwilligung oder zur
+										Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte einer anderen natürlichen oder juristischen Person oder aus Gründen eines wichtigen öffentlichen
+										Interesses der Union oder eines Mitgliedstaats verarbeitet werden.</p>
+									<p>Wurde die Einschränkung der Verarbeitung nach den o.g. Voraussetzungen eingeschränkt, werden Sie von dem Verantwortlichen unterrichtet bevor die Einschränkung aufgehoben wird.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47304" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Recht auf Löschung gemäß Art. 17 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<h5 class="h5 my-1">a) Löschungspflicht</h5>
+									<p>Sie können von dem Verantwortlichen verlangen, dass die Sie betreffenden personenbezogenen Daten unverzüglich gelöscht werden, und der Verantwortliche ist verpflichtet, diese Daten
+										unverzüglich zu löschen, sofern einer der folgenden Gründe zutrifft:</p>
+									<p>(1) Die Sie betreffenden personenbezogenen Daten sind für die Zwecke, für die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig.</p>
+									<p>(2) Sie widerrufen Ihre Einwilligung, auf die sich die Verarbeitung gem. Art. 6 Abs. 1 lit. a oder Art. 9 Abs. 2 lit. a DSGVO stützte, und es fehlt an einer anderweitigen
+										Rechtsgrundlage für die Verarbeitung.</p>
+									<p>(3) Sie legen gem. Art. 21 Abs. 1 DSGVO Widerspruch gegen die Verarbeitung ein und es liegen keine vorrangigen berechtigten Gründe für die Verarbeitung vor, oder Sie legen gem. Art.
+										21 Abs. 2 DSGVO Widerspruch gegen die Verarbeitung ein.</p>
+									<p>(4) Die Sie betreffenden personenbezogenen Daten wurden unrechtmäßig verarbeitet.</p>
+									<p>(5) Die Löschung der Sie betreffenden personenbezogenen Daten ist zur Erfüllung einer rechtlichen Verpflichtung nach dem Unionsrecht oder dem Recht der Mitgliedstaaten erforderlich,
+										dem der Verantwortliche unterliegt.</p>
+									<p>(6) Die Sie betreffenden personenbezogenen Daten wurden in Bezug auf angebotene Dienste der Informationsgesellschaft gemäß Art. 8 Abs. 1 DSGVO erhoben.</p>
+									<h5 class="h5 my-1">b) Information an Dritte</h5>
+									<p>Hat der Verantwortliche die Sie betreffenden personenbezogenen Daten öffentlich gemacht und ist er gem. Art. 17 Abs. 1 DSGVO zu deren Löschung verpflichtet, so trifft er unter
+										Berücksichtigung der verfügbaren Technologie und der Implementierungskosten angemessene Maßnahmen, auch technischer Art, um für die Datenverarbeitung Verantwortliche, die die
+										personenbezogenen Daten verarbeiten, darüber zu informieren, dass Sie als betroffene Person von ihnen die Löschung aller Links zu diesen personenbezogenen Daten oder von Kopien oder
+										Replikationen dieser personenbezogenen Daten verlangt haben.</p>
+									<h5 class="h5 my-1">c) Ausnahmen</h5>
+									<p>Das Recht auf Löschung besteht nicht, soweit die Verarbeitung erforderlich ist</p>
+									<p>(1) zur Ausübung des Rechts auf freie Meinungsäußerung und Information;</p>
+									<p>(2) zur Erfüllung einer rechtlichen Verpflichtung, die die Verarbeitung nach dem Recht der Union oder der Mitgliedstaaten, dem der Verantwortliche unterliegt, erfordert, oder zur
+										Wahrnehmung einer Aufgabe, die im öffentlichen Interesse liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde;</p>
+									<p>(3) aus Gründen des öffentlichen Interesses im Bereich der öffentlichen Gesundheit gemäß Art. 9 Abs. 2 lit. h und i sowie Art. 9 Abs. 3 DSGVO;</p>
+									<p>(4) für im öffentlichen Interesse liegende Archivzwecke, wissenschaftliche oder historische Forschungszwecke oder für statistische Zwecke gem. Art. 89 Abs. 1 DSGVO, soweit das unter
+										Abschnitt a) genannte Recht voraussichtlich die Verwirklichung der Ziele dieser Verarbeitung unmöglich macht oder ernsthaft beeinträchtigt, oder</p>
+									<p>(5) zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47305" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Recht auf Unterrichtung gemäß Art. 19 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Haben Sie das Recht auf Berichtigung, Löschung oder Einschränkung der Verarbeitung gegenüber dem Verantwortlichen geltend gemacht, ist dieser verpflichtet, allen Empfängern, denen
+										die Sie betreffenden personenbezogenen Daten offengelegt wurden, diese Berichtigung oder Löschung der Daten oder Einschränkung der Verarbeitung mitzuteilen, es sei denn, dies erweist sich
+										als unmöglich oder ist mit einem unverhältnismäßigen Aufwand verbunden.</p>
+									<p>Ihnen steht gegenüber dem Verantwortlichen das Recht zu, über diese Empfänger unterrichtet zu werden.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47306" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Recht auf Datenübertragbarkeit gemäß Art. 20 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Sie haben das Recht, die Sie betreffenden personenbezogenen Daten, die Sie dem Verantwortlichen bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesbaren Format
+										zu erhalten. Außerdem haben Sie das Recht diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu
+										übermitteln, sofern</p>
+									<p>(1) die Verarbeitung auf einer Einwilligung gem. Art. 6 Abs. 1 lit. a DSGVO oder Art. 9 Abs. 2 lit. a DSGVO oder auf einem Vertrag gem. Art. 6 Abs. 1 lit. b DSGVO beruht und</p>
+									<p>(2) die Verarbeitung mithilfe automatisierter Verfahren erfolgt.</p>
+									<p>In Ausübung dieses Rechts haben Sie ferner das Recht, zu erwirken, dass die Sie betreffenden personenbezogenen Daten direkt von einem Verantwortlichen einem anderen Verantwortlichen
+										übermittelt werden, soweit dies technisch machbar ist. Freiheiten und Rechte anderer Personen dürfen hierdurch nicht beeinträchtigt werden.</p>
+									<p>Das Recht auf Datenübertragbarkeit gilt nicht für eine Verarbeitung personenbezogener Daten, die für die Wahrnehmung einer Aufgabe erforderlich ist, die im öffentlichen Interesse
+										liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47307" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
+								<h4 class="h4 text-center my-2">Widerspruchsrecht gemäß Art. 21 DSGVO</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Sie haben das Recht, aus Gründen, die sich aus ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung der Sie betreffenden personenbezogenen Daten, die aufgrund von
+										Art. 6 Abs. 1 lit. e oder f DSGVO erfolgt, Widerspruch einzulegen; dies gilt auch für ein auf diese Bestimmungen gestütztes Profiling.</p>
+									<p>Der Verantwortliche verarbeitet die Sie betreffenden personenbezogenen Daten nicht mehr, es sei denn, er kann zwingende schutzwürdige Gründe für die Verarbeitung nachweisen, die Ihre
+										Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</p>
+									<p>Werden die Sie betreffenden personenbezogenen Daten verarbeitet, um Direktwerbung zu betreiben, haben Sie das Recht, jederzeit Widerspruch gegen die Verarbeitung der Sie betreffenden
+										personenbezogenen Daten zum Zwecke derartiger Werbung einzulegen; dies gilt auch für das Profiling, soweit es mit solcher Direktwerbung in Verbindung steht.</p>
+									<p>Widersprechen Sie der Verarbeitung für Zwecke der Direktwerbung, so werden die Sie betreffenden personenbezogenen Daten nicht mehr für diese Zwecke verarbeitet.</p>
+									<p>Sie haben die Möglichkeit, im Zusammenhang mit der Nutzung von Diensten der Informationsgesellschaft - ungeachtet der Richtlinie 2002/58/EG - Ihr Widerspruchsrecht mittels
+										automatisierter Verfahren auszuüben, bei denen technische Spezifikationen verwendet werden.</p>
+									<h5 class="h5 my-1">Recht auf Widerruf der datenschutzrechtlichen Einwilligungserklärung gemäß Art. 7 Abs. 3 DSGVO</h5>
+									<p>Sie haben das Recht, Ihre datenschutzrechtliche Einwilligungserklärung jederzeit zu widerrufen. Durch den Widerruf der Einwilligung wird die Rechtmäßigkeit der aufgrund der
+										Einwilligung bis zum Widerruf erfolgten Verarbeitung nicht berührt.</p>
+									<h5 class="h5 my-1">Automatisierte Entscheidung im Einzelfall einschließlich Profiling gemäß Art. 22 DSGVO</h5>
+									<p>Sie haben das Recht, nicht einer ausschließlich auf einer automatisierten Verarbeitung - einschließlich Profiling - beruhenden Entscheidung unterworfen zu werden, die Ihnen gegenüber
+										rechtliche Wirkung entfaltet oder Sie in ähnlicher Weise erheblich beeinträchtigt. Dies gilt nicht, wenn die Entscheidung</p>
+									<p>(1) für den Abschluss oder die Erfüllung eines Vertrags zwischen Ihnen und dem Verantwortlichen erforderlich ist,</p>
+									<p>(2) aufgrund von Rechtsvorschriften der Union oder der Mitgliedstaaten, denen der Verantwortliche unterliegt, zulässig ist und diese Rechtsvorschriften angemessene Maßnahmen zur
+										Wahrung Ihrer Rechte und Freiheiten sowie Ihrer berechtigten Interessen enthalten oder</p>
+									<p>(3) mit Ihrer ausdrücklichen Einwilligung erfolgt.</p>
+									<p>Allerdings dürfen diese Entscheidungen nicht auf besonderen Kategorien personenbezogener Daten nach Art. 9 Abs. 1 DSGVO beruhen, sofern nicht Art. 9 Abs. 2 lit. a oder g DSGVO gilt
+										und angemessene Maßnahmen zum Schutz der Rechte und Freiheiten sowie Ihrer berechtigten Interessen getroffen wurden.</p>
+									<p>Hinsichtlich der in (1) und (3) genannten Fälle trifft der Verantwortliche angemessene Maßnahmen, um die Rechte und Freiheiten sowie Ihre berechtigten Interessen zu wahren, wozu
+										mindestens das Recht auf Erwirkung des Eingreifens einer Person seitens des Verantwortlichen, auf Darlegung des eigenen Standpunkts und auf Anfechtung der Entscheidung gehört.</p>
+									<h5 class="h5 my-1">Recht auf Beschwerde bei einer Aufsichtsbehörde</h5>
+									<p>Unbeschadet eines anderweitigen verwaltungsrechtlichen oder gerichtlichen Rechtsbehelfs steht Ihnen das Recht auf Beschwerde bei einer Aufsichtsbehörde, insbesondere in dem
+										Mitgliedstaat ihres Aufenthaltsorts, ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes, zu, wenn Sie der Ansicht sind, dass die Verarbeitung der Sie betreffenden
+										personenbezogenen Daten gegen die DSGVO verstößt.</p>
+									<p>Die Aufsichtsbehörde, bei der die Beschwerde eingereicht wurde, unterrichtet den Beschwerdeführer über den Stand und die Ergebnisse der Beschwerde einschließlich der Möglichkeit
+										eines gerichtlichen Rechtsbehelfs nach Art. 78 DSGVO.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c29112" class="c-section mb-5">
+						<div class="row">
+							<div class="col">
+								<h3 class="h3 text-center">BEHÖRDLICHER DATENSCHUTZBEAUFTRAGTER DER LEIBNIZ UNIVERSITÄT HANNOVER</h3>
+								<div class="tx-t3luhepv">
+									<div class="c-card  c-card--contact c-card--contact--imageless" data-mh="poc-box" min-width="48rem 30.5555555556rem">
+										<b>Ass. iur. Simon Graupe, LL.M.</b>
+										<!-- I know, it looks terrible but there is no other way with Fluid. Have I ever mentioned that I hate Fluid. ;) -->
+										<!-- https://stackoverflow.com/questions/41851924/fluid-condition-to-check-if-value-is-null-not-working          -->
+										<table class="table-borderless">
+											<tr>
+												<td class="w-25">
+													Telefon
+												</td>
+												<td>
+													<a class="c-link c-link--inline" href="tel:+49 511 762 8132">+49 511 762 8132</a>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Fax
+												</td>
+												<td>
+													<a class="c-link c-link--inline" href="tel:+49 511 762 8258">+49 511 762 8258</a>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													E-Mail
+												</td>
+												<td>
+													<a class="c-link c-link--inline" href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;">datenschutz@uni-hannover.de</a>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Adresse
+												</td>
+												<td>
+													Königsworther Platz 1<br/> 30167 Hannover
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Gebäude
+												</td>
+												<td>
+													<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/building/1502">1502</a>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Raum
+												</td>
+												<td>
+													<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/room/1502/228">228</a>
+												</td>
+											</tr>
+										</table>
 
-}
-.c-text-media__text p { text-align: left; }
-.c-headline { margin-top:18px; text-align:center; }
+										<div class="resize-sensor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
+											<div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+												<div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div>
+											</div>
+											<div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
+												<div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row text-center">
+						<div class="col">
+							<a href="https://www.uni-hannover.de/de/universitaet/organisation/beauftragte-vertretungen/datenschutz/" class="c-button">Zur Website des Datenschutzbeauftragten</a>
+						</div>
+					</div>
+				</ui:fragment>
 
-.c-card--contact__title {
- line-height:1.5em;
- font-weight:600;
- margin-bottom:0
-}
-.c-card--contact__misc,.c-card--contact__subtitle {
- line-height:1.1666666667em;
- margin-bottom:0
-}
-.c-card--contact__subtitle {
- font-weight:400
-}
-.c-card--contact__subtitle--indented {
- -webkit-flex:0 0 4.6666666667em;
- -ms-flex:0 0 4.6666666667em;
- flex:0 0 4.6666666667em;
- width:4.6666666667em;
- padding-right:.6666666667em;
- display:inline-block;
- overflow-wrap:break-word;
- word-wrap:break-word;
- hyphens:auto
-}
-.c-card--contact__subtitle--expanded {
- -webkit-flex:0 0 7em;
- -ms-flex:0 0 7em;
- flex:0 0 7rem
-}
-.c-card--contact__misc--indented {
- -webkit-flex:1 1 auto;
- -ms-flex:1 1 auto;
- flex:1 1 auto;
- display:inline-block;
- overflow-wrap:break-word;
- word-wrap:break-word;
- -webkit-hyphens:auto;
- -moz-hyphens:auto;
- -ms-hyphens:auto;
- hyphens:auto
-}
-</style>
-		<div class="page_header">
-			<span>
-				#{msg['privacy_statement']}
-			</span>
-		</div>
-	
-		<div>
-		
-			<ui:fragment rendered="#{userBean.localeCode eq 'de'}">
-			<div id="c47269" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="c-contentmenu">
-							<div class="c-contentmenu__title">Inhalte auf dieser Seite</div>
-							<ol class="c-contentmenu__list c-contentmenu__list--2col">
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47272">Name und Anschrift des Verantwortlichen</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47275">Name und Anschrift des Datenschutzbeauftragten</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47277">Allgemeines zur Datenverarbeitung</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47279">Bereitstellung der Website und Erstellung von Logfiles</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47281">Kontaktformular und E-Mail-Kontakt</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47285">Formulareingaben in Internetauftritten der Leibniz Universität Hannover</a></li>
-								 
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47291">Webanalyse durch Learnweb Analytics</a></li>
-								
-								
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c54019">Einbindung von Videos</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47300">Rechte der betroffenen Person</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47301">Auskunftsrecht gemäß Art. 15 DSGVO</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47302">Recht auf Berichtigung gemäß Art. 16 DSGVO </a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47303">Recht auf Einschränkung der Verarbeitung gemäß Art. 18 DSGVO</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47304">Recht auf Löschung gemäß Art. 17 DSGVO</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47305">Recht auf Unterrichtung gemäß Art. 19 DSGVO</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47306">Recht auf Datenübertragbarkeit gemäß Art. 20 DSGVO</a></li>
-								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47307">Widerspruchsrecht gemäß Art. 21 DSGVO</a></li>
+				<ui:fragment rendered="#{userBean.localeCode ne 'de'}">
+					<div id="c47398" class="c-section mb-5">
+						<div class="row no-gutters justify-content-center p-3 content-background-darker">
+							<h3 class="h3">Content on this page</h3>
+							<ol class="col-10 m-0">
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47399">Name and address of the person responsible</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47401">Name and address of the data protection officer</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47403">General information on data processing</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47405">Provision of the website and creation of log files</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47407">Contact form and e-mail contact</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47411">Form entries</a></li>
+								<!--
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47413">Web analytics with Matomo (formerly PIWIK)</a></li>
+
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47414">Revocation of data collection through Matomo</a></li>
+								 -->
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c54020">Embedding of Videos</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47423">Rights of the data subject</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47424">Right to information pursuant to Article 15 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47425">Right of rectification in accordance with Article 16 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47426">Right to limitation of processing in accordance with Article 18 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47427">Right to cancellation in accordance with Article 17 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47428">Right of information pursuant to Article 19 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47429">Right to data transferability in accordance with Article 20 GDPR</a></li>
+								<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47430">Right of objection according to Article 21 GDPR</a></li>
 							</ol>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47270" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47272" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47270">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">NAME UND ANSCHRIFT DES VERANTWORTLICHEN</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Der Verantwortliche im Sinne der Datenschutz-Grundverordnung und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher Bestimmungen ist
-												die:</p>
-											<p>
-												Gottfried Wilhelm Leibniz Universität Hannover<br/> Welfengarten 1 
-												<br/> 30167 Hannover 
-											</p>
-											<p>
-												Tel. +49 511 762 - 0<br/> Fax +49 511 762 - 3456 
-												<br/>
-												<a href="https://www.uni-hannover.de" target="_blank" class="c-link"><span>www.uni-hannover.de</span></a>&#160;
-											</p>
-											<p>
-												Die Leibniz Universität Hannover ist eine Körperschaft des öffentlichen Rechts und wird durch den <a href="/de/universitaet/praesidium/praesident/" class="c-link"><span>Präsidenten</span></a>,
-												Herrn Prof. Dr. iur. Volker Epping gesetzlich vertreten.
-											</p>
-										</div>
-									</div>
+					<div id="c47400" class="c-section mb-5">
+						<div id="c47399" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47400">
+								<h3 class="h3 text-center">NAME AND ADDRESS OF THE PERSON RESPONSIBLE</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>The person responsible within the meaning of the EU General Data Protection Regulation (GDPR) and other national data protection laws and regulations is:</p>
+									<p>
+										Gottfried Wilhelm Leibniz Universität Hannover<br/>Welfengarten 1
+										<br/>30167 Hannover
+									</p>
+									<p>
+										Tel. +49 511 762 - 0<br/> Fax +49 511 762 - 3456
+										<br/>
+										<a href="https://www.uni-hannover.de" target="_blank" class="c-link"><span>www.uni-hannover.de</span></a>
+									</p>
+									<p>
+										Leibniz Universität Hannover is a corporation under public law and is legally represented by its <a href="https://www.uni-hannover.de/en/universitaet/praesidium/praesident/" class="c-link"><span>President</span></a>,
+										Prof. Dr. iur. Volker Epping.
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47273" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47275" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47273">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">NAME UND ANSCHRIFT DES DATENSCHUTZBEAUFTRAGTEN</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Behördlicher Datenschutzbeauftragter der Leibniz Universität Hannover:</p>
-											<p>
-												Gottfried Wilhelm Leibniz Universität Hannover<br/> - Datenschutzbeauftragter - 
-												<br/> Königsworther Platz 1 
-												<br/> 30167 Hannover 
-											</p>
-											<p>
-												Tel. +49 511 762-8132<br/> Fax +49 511 762-8258 
-												<br/> E-Mail: 
-												<a href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;" class="c-link"><span>datenschutz@uni-hannover.de</span></a>
-											</p>
-											<p>
-												<a href="https://www.uni-hannover.de/de/universitaet/organisation/beauftragte-vertretungen/datenschutz/" class="c-link"><span>Website</span></a>
-											</p>
-										</div>
-									</div>
+					<div id="c47402" class="c-section mb-5">
+						<div id="c47401" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47402">
+								<h3 class="h3 text-center">NAME AND ADDRESS OF THE DATA PROTECTION OFFICER</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>The data protection officer of Leibniz Universität Hannover is:</p>
+									<p>
+										Gottfried Wilhelm Leibniz Universität Hannover<br/> - Datenschutzbeauftragter -
+										<br/> Königsworther Platz 1
+										<br/>D - 30167 Hannover
+									</p>
+									<p>
+										Tel. +49 511 762-8132<br/> Fax +49 511 762-8258
+										<br/>e-mail:
+										<a href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;" class="c-link"><span>datenschutz@uni-hannover.de</span></a>
+									</p>
+									<p>
+										<a href="https://www.uni-hannover.de/en/universitaet/organisation/beauftragte-und-vertretungen/datenschutz/" class="c-link"><span>Website</span></a>
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47276" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47277" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47276">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">ALLGEMEINES ZUR DATENVERARBEITUNG</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Wir verarbeiten personenbezogene Daten unserer Nutzer grundsätzlich nur, soweit dies zur Bereitstellung einer funktionsfähigen Website sowie unserer Inhalte und Leistungen
-												erforderlich ist. Die Verarbeitung personenbezogener Daten unserer Nutzer erfolgt regelmäßig nur nach Einwilligung des Nutzers. Eine Ausnahme gilt in solchen Fällen, in denen eine
-												vorherige Einholung einer Einwilligung aus tatsächlichen Gründen nicht möglich ist und die Verarbeitung der Daten durch gesetzliche Vorschriften gestattet ist.</p>
-										</div>
-									</div>
+					<div id="c47404" class="c-section mb-5">
+						<div id="c47403" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47404">
+								<h3 class="h3 text-center">GENERAL INFORMATION ON DATA PROCESSING</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>We process our users' personal data only insofar as this is necessary to provide a functioning website as well as our content and services. The processing of our users' personal
+										data generally only takes place with the user's consent. An exception applies in those cases where prior consent cannot be obtained for factual reasons and processing of the data is
+										permitted by law.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47278" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47279" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47278">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">BEREITSTELLUNG DER WEBSITE UND ERSTELLUNG VON LOGFILES</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Bei jedem Aufruf unserer Internetseite erfasst unser System automatisiert Daten und Informationen vom Computersystem des aufrufenden Rechners.</p>
-											<p>Folgende Daten werden hierbei erhoben:</p>
-											<ul>
-												<li>Informationen über den Browsertyp und die verwendete Version</li>
-												<li>Das Betriebssystem des Nutzers</li>
-												<li>Den Internet-Service-Provider des Nutzers</li>
-												<li>Die IP-Adresse des Nutzers</li>
-												<li>Datum und Uhrzeit des Zugriffs</li>
-												<li>Websites, von denen das System des Nutzers auf unsere Internetseite gelangt</li>
-												<li>Websites, die vom System des Nutzers über unsere Website aufgerufen werden</li>
-											</ul>
-											<p>Die Daten werden ebenfalls in den Logfiles unseres Systems gespeichert. Eine Speicherung dieser Daten zusammen mit anderen personenbezogenen Daten des Nutzers findet nicht statt.</p>
-											<p>Rechtsgrundlage für die vorübergehende Speicherung der Daten und der Logfiles ist Art. 6 Abs. 1 lit. f DSGVO.</p>
-											<p>Die vorübergehende Speicherung der IP-Adresse durch das System ist notwendig, um eine Auslieferung der Website an den Rechner des Nutzers zu ermöglichen. Hierfür muss die IP-Adresse
-												des Nutzers für die Dauer der Sitzung gespeichert bleiben. Die Speicherung in Logfiles erfolgt, um die Funktionsfähigkeit der Website sicherzustellen. Zudem dienen uns die Daten zur
-												Optimierung der Website und zur Sicherstellung der Sicherheit unserer informationstechnischen Systeme. Eine Auswertung der Daten zu Marketingzwecken findet in diesem Zusammenhang nicht
-												statt. In diesen Zwecken liegt auch unser berechtigtes Interesse an der Datenverarbeitung nach Art. 6 Abs. 1 lit. f DSGVO.</p>
-											<p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind. Im Falle der Erfassung der Daten zur Bereitstellung der Website ist
-												dies der Fall, wenn die jeweilige Sitzung beendet ist.</p>
-											<p>Im Falle der Speicherung der Daten in Logfiles ist dies nach spätestens sieben Tagen der Fall. Eine darüberhinausgehende Speicherung ist möglich. In diesem Fall werden die
-												IP-Adressen der Nutzer gelöscht oder verfremdet, sodass eine Zuordnung des aufrufenden Clients nicht mehr möglich ist.</p>
-											<p>Die Erfassung der Daten zur Bereitstellung der Website und die Speicherung der Daten in Logfiles ist für den Betrieb der Internetseite zwingend erforderlich. Es besteht folglich
-												seitens des Nutzers keine Widerspruchsmöglichkeit.</p>
-										</div>
-									</div>
+					<div id="c47406" class="c-section mb-5">
+						<div id="c47405" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47406">
+								<h3 class="h3 text-center">PROVISION OF THE WEBSITE AND CREATION OF LOG FILES</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Every time you visit our website, our system automatically collects data and information from the computer system of the calling computer.</p>
+									<p>The following data is collected:</p>
+									<ul>
+										<li>information about the browser type and version used</li>
+										<li>the user's operating system</li>
+										<li>the user's Internet service provider</li>
+										<li>the IP address of the user</li>
+										<li>date and time of access</li>
+										<li>the website from which the user's system reaches our website</li>
+										<li>the website accessed by the user's system via our website</li>
+									</ul>
+									<p>The data is also stored in the log files of our system. This data is not stored together with other personal data of the user.</p>
+									<p>The legal basis for the temporary storage of data and log files is Article 6 paragraph 1 letter f GDPR.</p>
+									<p>The temporary storage of the IP address by the system is necessary to enable the website to be delivered to the user's computer. For this the IP address of the user must remain
+										stored for the duration of the session. The data is stored in log files to ensure the functionality of the website. In addition, the data serves us to optimize the website and to ensure
+										the security of our information technology systems. An evaluation of the data for marketing purposes does not take place in this context. Our legitimate interest in data processing
+										pursuant to Article 6 paragraph 1 letter f GDPR also lies in these purposes.</p>
+									<p>The data will be deleted as soon as they are no longer necessary to achieve the purpose for which they were collected. In the case of the collection of data for the provision of the
+										website, this is the case when the respective session has ended.</p>
+									<p>If the data is stored in log files, this is the case after seven days at the latest. Further storage is possible. In this case, the IP addresses of the users are deleted or
+										alienated, so that an assignment of the calling client is no longer possible.</p>
+									<p>The collection of data for the provision of the website and the storage of data in log files is absolutely necessary for the operation of the website. Consequently, there is no
+										possibility of objection on the part of the user.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47280" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47281" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47280">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">KONTAKTFORMULAR UND E-MAIL-KONTAKT</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Auf unserer Internetseite ist ein Kontaktformular vorhanden, welches für die elektronische Kontaktaufnahme genutzt werden kann. Nimmt ein Nutzer diese Möglichkeit wahr, so werden die
-												in der Eingabemaske eingegeben Daten an uns übermittelt und gespeichert. Für die Verarbeitung der Daten wird im Rahmen des Absendevorgangs Ihre Einwilligung eingeholt und auf diese
-												Datenschutzerklärung verwiesen. Alternativ ist eine Kontaktaufnahme über die bereitgestellte E-Mail-Adresse möglich. In diesem Fall werden die mit der E-Mail übermittelten
-												personenbezogenen Daten des Nutzers gespeichert. Es erfolgt in diesem Zusammenhang keine Weitergabe der Daten an Dritte. Die Daten werden ausschließlich für die Verarbeitung der
-												Konversation verwendet. Rechtsgrundlage für die Verarbeitung der Daten ist bei Vorliegen einer Einwilligung des Nutzers Art. 6 Abs. 1 lit. a DSGVO. Rechtsgrundlage für die Verarbeitung der
-												Daten, die im Zuge einer Übersendung einer E-Mail übermittelt werden, ist Art. 6 Abs. 1 lit. f DSGVO. Zielt der E-Mail-Kontakt auf den Abschluss eines Vertrages ab, so ist zusätzliche
-												Rechtsgrundlage für die Verarbeitung Art. 6 Abs. 1 lit. b DSGVO.</p>
-											<p>Die Verarbeitung der personenbezogenen Daten aus der Eingabemaske dient uns allein zur Bearbeitung der Kontaktaufnahme. Im Falle einer Kontaktaufnahme per E-Mail liegt hieran auch
-												das erforderliche berechtigte Interesse an der Verarbeitung der Daten.</p>
-											<p>Die sonstigen während des Absendevorgangs verarbeiteten personenbezogenen Daten dienen dazu, einen Missbrauch des Kontaktformulars zu verhindern und die Sicherheit unserer
-												informationstechnischen Systeme sicherzustellen.</p>
-											<p>Die Daten werden gelöscht, sobald sie für die Erreichung des Zweckes ihrer Erhebung nicht mehr erforderlich sind. Für die personenbezogenen Daten aus der Eingabemaske des
-												Kontaktformulars und diejenigen, die per E-Mail übersandt wurden, ist dies dann der Fall, wenn die jeweilige Konversation mit dem Nutzer beendet ist. Beendet ist die Konversation dann,
-												wenn sich aus den Umständen entnehmen lässt, dass der betroffene Sachverhalt abschließend geklärt ist.</p>
-											<p>Die während des Absendevorgangs zusätzlich erhobenen personenbezogenen Daten werden spätestens nach einer Frist von sieben Tagen gelöscht.</p>
-											<p>Der Nutzer hat jederzeit die Möglichkeit, seine Einwilligung zur Verarbeitung der personenbezogenen Daten zu widerrufen. Nimmt der Nutzer per E-Mail Kontakt mit uns auf, so kann er
-												der Speicherung seiner personenbezogenen Daten jederzeit widersprechen. In einem solchen Fall kann die Konversation nicht fortgeführt werden. Alle personenbezogenen Daten, die im Zuge der
-												Kontaktaufnahme gespeichert wurden, werden in diesem Fall gelöscht.</p>
-										</div>
-									</div>
+					<div id="c47408" class="c-section mb-5">
+						<div id="c47407" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47408">
+								<h3 class="h3 text-center">CONTACT FORM AND E-MAIL CONTACT</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>There is a contact form on our website which can be used for electronic contact. If a user takes advantage of this possibility, the data entered in the input mask will be
+										transmitted to us and stored. Your consent is obtained for the processing of the data within the scope of the sending process and reference is made to this data protection declaration.
+										Alternatively, you can contact us via the e-mail address provided. In this case, the user's personal data transmitted by e-mail will be stored. In this context, the data will not be
+										passed on to third parties. The data is used exclusively for processing the conversation. The legal basis for the processing of data is Article 6 paragraph 1 letter a GDPR if the user has
+										given his consent. The legal basis for the processing of data transmitted in the course of sending an e-mail is Article 6 paragraph 1 letter f GDPR. If the e-mail contact aims at the
+										conclusion of a contract, then additional legal basis for the processing is Article 6 exp. 1 letter b GDPR.</p>
+									<p>The processing of the personal data from the input mask serves us only for the treatment of the establishment of contact. In the event of contact by e-mail, this also constitutes
+										the necessary legitimate interest in the processing of the data.</p>
+									<p>The other personal data processed during the sending process serve to prevent misuse of the contact form and to ensure the security of our information technology systems.</p>
+									<p>The data will be deleted as soon as they are no longer necessary to achieve the purpose for which they were collected. For the personal data from the input mask of the contact form
+										and those that were sent by e-mail, this is the case when the respective conversation with the user is finished. The conversation is terminated when it can be inferred from the
+										circumstances that the facts in question have been finally clarified.</p>
+									<p>The additional personal data collected during the sending process will be deleted after a period of seven days at the latest.</p>
+									<p>The user has the possibility to revoke his consent to the processing of personal data at any time. If the user contacts us by e-mail, he can object to the storage of his personal
+										data at any time. In such a case, the conversation cannot be continued. All personal data stored in the course of contacting us will be deleted in this case.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			
-			<div id="c47284" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47285" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47284">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">FORMULAREINGABEN IN INTERNETAUFTRITTEN DER LEIBNIZ UNIVERSITÄT HANNOVER</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Sofern darüber hinaus innerhalb des Internetangebotes die Möglichkeit zur Eingabe persönlicher oder geschäftlicher Daten (E-Mailadressen, Namen, Anschriften) besteht, so erfolgt die
-												Preisgabe dieser Daten seitens des Nutzers auf ausdrücklich freiwilliger Basis. Rechtsgrundlage für diese Verarbeitungen ist Art. 6 Abs. 1 lit. a) DSGVO. Die Erhebung und Verarbeitung der
-												Daten dient nur dem in jeweiligen Onlineformular genannten Zweck. Eine Preis- oder Weitergabe an Dritte findet nicht statt. Die Inanspruchnahme und Bezahlung aller angebotenen Dienste ist
-												- soweit technisch möglich und zumutbar - auch ohne Angabe solcher Daten bzw. unter Angabe anonymisierter Daten oder eines Pseudonyms gestattet. Die Nutzung der im Rahmen des Impressums
-												oder vergleichbarer Angaben veröffentlichten Kontaktdaten wie Postanschriften, Telefon- und Faxnummern sowie E-Mailadressen durch Dritte zur Übersendung von nicht ausdrücklich
-												angeforderten Informationen ist nicht gestattet. Rechtliche Schritte gegen die Versender von sogenannten Spam-Mails bei Verstößen gegen dieses Verbot sind ausdrücklich vorbehalten.</p>
-										</div>
-									</div>
+					<div id="c47410" class="c-section mb-5">
+						<div id="c47409" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47410">
+								<h3 class="h3 text-center">NEWSLETTER SUBSCRIPTION</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>On some Leibniz Universität websites it is possible to subscribe to a free newsletter using an online form. When registering for the newsletter, the data from the input mask is
+										transmitted to us. In addition, the IP address of the calling computer and the date and time of registration are collected and processed. In the course of the registration process, your
+										consent is obtained for the processing of the data and reference is made to this data protection declaration.</p>
+									<p>In connection with data processing for the dispatch of newsletters, no data is passed on to third parties. The data will be used exclusively for sending the newsletter.</p>
+									<p>The legal basis for the processing of the data after registration for the newsletter by the user is Article 6 paragraph 1 letter a GDPR.</p>
+									<p>The collection of the user's e-mail address serves to send the newsletter. The collection of other personal data as part of the registration process serves to provide proof of
+										registration for the newsletter and, if necessary, to prevent misuse of the services or the e-mail address used. The data will be deleted as soon as they are no longer necessary to
+										achieve the purpose for which they were collected. The user's e-mail address will therefore be stored for as long as the subscription to the newsletter is active.</p>
+									<p>Consent to the sending of the newsletter can be revoked by the user concerned at any time and the newsletter can be cancelled. For this purpose there is a corresponding link in
+										every newsletter.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c47290" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47291" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47290" style="">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">WEBANALYSE DURCH LEARNWEB ANALYTICS</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">	
-											<p>In ausgewählten Kursen, wie deinem, die Teil eines Forschungsprojektes sind, ist es erforderlich detailiertere Nutzungsstatistiken zu erheben.</p>
-											<p>Hierzu können Cookies eingesetzt werden. Bei Cookies handelt es sich um kleine Textdateien, die lokal im Zwischenspeicher des Internet-Browsers des Seitenbesuchers gespeichert
-												werden. Die Cookies ermöglichen unter anderem die Wiedererkennung des Internet-Browsers. Die erhobenen Daten werden auf unseren Servern verarbeitet.</p>
-											<p>Werden Einzelseiten unserer Website aufgerufen, so werden folgende Daten gespeichert:</p>
-											<ul>
-												<li>Die aufgerufene Webseite</li>
-												<li>Die Website, von der der Nutzer auf die aufgerufene Webseite gelangt ist (Referrer)</li>
-												<li>Die Unterseiten, die von der aufgerufenen Webseite aus aufgerufen werden</li>
-												<li>Die Verweildauer auf der Webseite</li>
-												<li>Die Zahl und Zeitpunkt der Benutzerinteraktionen (Mausbewegungen, Tastatureingaben)</li>
-											</ul>
-											<p>Cookies werden auf dem Rechner des Nutzers gespeichert und von diesem an unserer Seite übermittelt. Daher haben Sie als Nutzer auch die volle Kontrolle über die Verwendung von
-												Cookies. Durch eine Änderung der Einstellungen in Ihrem Internetbrowser können Sie die Übertragung von Cookies deaktivieren oder einschränken. Bereits gespeicherte Cookies können jederzeit
-												gelöscht werden. Dies kann auch automatisiert erfolgen. Werden Cookies für unsere Website deaktiviert, können möglicherweise nicht mehr alle Funktionen der Website vollumfänglich genutzt
-												werden.</p>
-										</div>
-									</div>
+					<div id="c47412" class="c-section mb-5">
+						<div id="c47411" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47412">
+								<h3 class="h3 text-center">FORM ENTRIES</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Where internet services allow for the entry of personal or business data (E-mail addresses, names, addresses), disclosing this data is on an expressly voluntary basis on the part of
+										the user. The legal basis for such processing is Article 6 paragraph 1 letter a) GDPR. The collection and processing of data serves only the purpose stated in the respective online form.
+										A discolure or passing on to third parties does not take place. Using and paying for all services offered is - as far as this is technically possible and reasonable - granted also without
+										disclosure of such data or through the use of anonymised data or a pseudonym. The use by third parties of contact data published in the imprint or similar, such as postal addresses,
+										telephone and fax numbers and e-mail addresses, for transmitting not specifically requested information is not allowed. We expressly reserve the right to take legal steps against the
+										senders of so-called spam mails which violate this prohibition.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c54018" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c54019" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-54018">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">EINBINDUNG VON VIDEOS</h2>
+					<ui:fragment rendered="false">
+						<div id="c47417" class="c-section mb-5">
+							<div id="c47413" class="c-section__element">
+								<div class="c-headline__equalizer" data-mh="ce-headline-47417" style="">
+									<h3 class="h3 text-center">WEB ANALYTICS WITH MATOMO (FORMERLY PIWIK)</h3>
+								</div>
+								<div class="c-text-media">
+									<div class="c-text-media__text">
+										<p>We use the open source software tool Matomo (formerly PIWIK) on our website on the basis of our legitimate interest in statistical analysis of user behaviour for optimization and
+											marketing purposes in accordance with Article 6 Paragraph 1 letter f GDPR.</p>
+										<p>Cookies may be used for this purpose. Cookies are small text files that are stored locally in the cache of the visitor's Internet browser. The cookies enable, among other things,
+											the recognition of the Internet browser. The data collected with Matomo technology (including your anonymised IP address) is processed on our servers.</p>
+										<p>If individual pages of our website are accessed, the following data is stored:</p>
+										<ul>
+											<li>Two bytes of the IP address of the user's calling system</li>
+											<li>The accessed website</li>
+											<li>The website from which the user has accessed the accessed website (referrer)</li>
+											<li>The subpages that are accessed from the accessed website</li>
+											<li>the time spent on the website</li>
+											<li>the frequency with which the website is accessed</li>
+										</ul>
+										<p>The software is set so that the IP addresses are not completely stored, but 2 bytes of the IP address are masked (e.g.: 130.75.xxx.xxx). In this way it is no longer possible to
+											associate the shortened IP address with the computer accessing it. By anonymising the IP address, sufficient account is taken of the users' interest in protecting their personal data.</p>
+										<p>Cookies are stored on the user's computer and transmitted to our site. Therefore, you as a user also have full control over the use of cookies. You can deactivate or restrict the
+											transmission of cookies by changing the settings in your Internet browser. Cookies that have already been saved can be deleted at any time. This can also be done automatically. If cookies
+											are deactivated for our website, it may no longer be possible to use all functions of the website in full.</p>
+										<p>We offer our users on our website the possibility of an opt-out from the analysis procedure. In this way, another cookie is placed on your system, which signals to our system not to
+											store the user's data. If the user deletes the corresponding cookie from his own system in the meantime, he must set the opt-out cookie again.</p>
 									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>
-												Wir setzen zum Einbinden von Videos die Anbieter YouTube und Vimeo ein. Wie die meisten Websites verwenden diese Anbieter
-												Cookies, um Informationen über die Besucher ihrer Internetseite zu sammeln. Sie werden unter anderem zur Erfassung von Videostatistiken, zur Vermeidung von Betrug und zur
-												Verbesserung der Userfreundlichkeit verwendet. 
-											</p>
-										</div>
+								</div>
+							</div>
+							<div id="c47414" class="c-section__element">
+								<div class="c-headline__equalizer" data-mh="ce-headline-47417" style="">
+									<h4 class="h4 text-center my-2">Revocation of data collection through Matomo</h4>
+								</div>
+								<div class="c-text-media">
+									<div class="c-text-media__text">
+										<p>
+											Matomo endorses the "Do Not Track" method of current web browsers. If you wish to generally prohibit any analysis of your web behaviour, we recommend that you activate this option in your
+											browser. Alternatively, you can prohibit Matomo web analysis <b>on websites in the uni-hannover.de network</b> area by using the following button.
+										</p>
+									</div>
+								</div>
+							</div>
+							<div id="c47415" class="c-section__element">
+								<iframe scrolling="auto" style="background: #f7f7f7; border: 1px solid #c6c6c6;"
+										src="https://www.piwik.rrzn.uni-hannover.de/optout.php?module=CoreAdminHome&amp;action=optOut&amp;language=en" width="100%" height="300px"
+								></iframe>
+							</div>
+							<div id="c47416" class="c-section__element">
+								<div class="c-headline__equalizer" data-mh="ce-headline-47417" style=""></div>
+								<div class="c-text-media">
+									<div class="c-text-media__text">
+										<p>
+											More information about the privacy settings of the Matomo software can be found at the following link: <a href="https://matomo.org/docs/privacy/" target="_blank"
+																																					  class="c-link c-link--extern"
+										><span>https://matomo.org/docs/privacy/</span></a>.
+										</p>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>	
-			<div id="c47299" class="c-section">
-				<div class="row">
-					<div class="column">
-						<div class="row ">
-							<div class="small-12 medium-8 column c-section-grid__column">
-								<div id="c47300" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h2 class="c-headline c-headline--h2 u-text--hyphens">RECHTE DER BETROFFENEN PERSON</h2>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i.S.d. DSGVO und es stehen Ihnen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47301" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Auskunftsrecht gemäß Art. 15 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Sie können von dem Verantwortlichen eine Bestätigung darüber verlangen, ob personenbezogene Daten, die Sie betreffen, von uns verarbeitet werden.</p>
-											<p>Liegt eine solche Verarbeitung vor, können Sie von dem Verantwortlichen über folgende Informationen Auskunft verlangen:</p>
-											<p>(1) die Zwecke, zu denen die personenbezogenen Daten verarbeitet werden;</p>
-											<p>(2) die Kategorien von personenbezogenen Daten, welche verarbeitet werden;</p>
-											<p>(3) die Empfänger bzw. die Kategorien von Empfängern, gegenüber denen die Sie betreffenden personenbezogenen Daten offengelegt wurden oder noch offengelegt werden;</p>
-											<p>(4) die geplante Dauer der Speicherung der Sie betreffenden personenbezogenen Daten oder, falls konkrete Angaben hierzu nicht möglich sind, Kriterien für die Festlegung der
-												Speicherdauer;</p>
-											<p>(5) das Bestehen eines Rechts auf Berichtigung oder Löschung der Sie betreffenden personenbezogenen Daten, eines Rechts auf Einschränkung der Verarbeitung durch den Verantwortlichen
-												oder eines Widerspruchsrechts gegen diese Verarbeitung;</p>
-											<p>(6) das Bestehen eines Beschwerderechts bei einer Aufsichtsbehörde;</p>
-											<p>(7) alle verfügbaren Informationen über die Herkunft der Daten, wenn die personenbezogenen Daten nicht bei der betroffenen Person erhoben werden;</p>
-											<p>(8) das Bestehen einer automatisierten Entscheidungsfindung einschließlich Profiling gemäß Art. 22 Abs. 1 und 4 DSGVO und - zumindest in diesen Fällen - aussagekräftige Informationen
-												über die involvierte Logik sowie die Tragweite und die angestrebten Auswirkungen einer derartigen Verarbeitung für die betroffene Person.</p>
-											<p>Ihnen steht das Recht zu, Auskunft darüber zu verlangen, ob die Sie betreffenden personenbezogenen Daten in ein Drittland oder an eine internationale Organisation übermittelt werden.
-												In diesem Zusammenhang können Sie verlangen, über die geeigneten Garantien gem. Art. 46 DSGVO im Zusammenhang mit der Übermittlung unterrichtet zu werden.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47302" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Recht auf Berichtigung gemäß Art. 16 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Sie haben ein Recht auf Berichtigung und/oder Vervollständigung gegenüber dem Verantwortlichen, sofern die verarbeiteten personenbezogenen Daten, die Sie betreffen, unrichtig oder
-												unvollständig sind. Der Verantwortliche hat die Berichtigung unverzüglich vorzunehmen.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47303" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Recht auf Einschränkung der Verarbeitung gemäß Art. 18 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Unter den folgenden Voraussetzungen können Sie die Einschränkung der Verarbeitung der Sie betreffenden personenbezogenen Daten verlangen:</p>
-											<p>(1) wenn Sie die Richtigkeit der Sie betreffenden personenbezogenen für eine Dauer bestreiten, die es dem Verantwortlichen ermöglicht, die Richtigkeit der personenbezogenen Daten zu
-												überprüfen;</p>
-											<p>(2) die Verarbeitung unrechtmäßig ist und Sie die Löschung der personenbezogenen Daten ablehnen und stattdessen die Einschränkung der Nutzung der personenbezogenen Daten verlangen;</p>
-											<p>(3) der Verantwortliche die personenbezogenen Daten für die Zwecke der Verarbeitung nicht länger benötigt, Sie diese jedoch zur Geltendmachung, Ausübung oder Verteidigung von
-												Rechtsansprüchen benötigen, oder</p>
-											<p>(4) wenn Sie Widerspruch gegen die Verarbeitung gemäß Art. 21 Abs. 1 DSGVO eingelegt haben und noch nicht feststeht, ob die berechtigten Gründe des Verantwortlichen gegenüber Ihren
-												Gründen überwiegen.</p>
-											<p>Wurde die Verarbeitung der Sie betreffenden personenbezogenen Daten eingeschränkt, dürfen diese Daten - von ihrer Speicherung abgesehen - nur mit Ihrer Einwilligung oder zur
-												Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte einer anderen natürlichen oder juristischen Person oder aus Gründen eines wichtigen öffentlichen
-												Interesses der Union oder eines Mitgliedstaats verarbeitet werden.</p>
-											<p>Wurde die Einschränkung der Verarbeitung nach den o.g. Voraussetzungen eingeschränkt, werden Sie von dem Verantwortlichen unterrichtet bevor die Einschränkung aufgehoben wird.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47304" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Recht auf Löschung gemäß Art. 17 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<h4>a) Löschungspflicht</h4>
-											<p>Sie können von dem Verantwortlichen verlangen, dass die Sie betreffenden personenbezogenen Daten unverzüglich gelöscht werden, und der Verantwortliche ist verpflichtet, diese Daten
-												unverzüglich zu löschen, sofern einer der folgenden Gründe zutrifft:</p>
-											<p>(1) Die Sie betreffenden personenbezogenen Daten sind für die Zwecke, für die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig.</p>
-											<p>(2) Sie widerrufen Ihre Einwilligung, auf die sich die Verarbeitung gem. Art. 6 Abs. 1 lit. a oder Art. 9 Abs. 2 lit. a DSGVO stützte, und es fehlt an einer anderweitigen
-												Rechtsgrundlage für die Verarbeitung.</p>
-											<p>(3) Sie legen gem. Art. 21 Abs. 1 DSGVO Widerspruch gegen die Verarbeitung ein und es liegen keine vorrangigen berechtigten Gründe für die Verarbeitung vor, oder Sie legen gem. Art.
-												21 Abs. 2 DSGVO Widerspruch gegen die Verarbeitung ein.</p>
-											<p>(4) Die Sie betreffenden personenbezogenen Daten wurden unrechtmäßig verarbeitet.</p>
-											<p>(5) Die Löschung der Sie betreffenden personenbezogenen Daten ist zur Erfüllung einer rechtlichen Verpflichtung nach dem Unionsrecht oder dem Recht der Mitgliedstaaten erforderlich,
-												dem der Verantwortliche unterliegt.</p>
-											<p>(6) Die Sie betreffenden personenbezogenen Daten wurden in Bezug auf angebotene Dienste der Informationsgesellschaft gemäß Art. 8 Abs. 1 DSGVO erhoben.</p>
-											<h4>b) Information an Dritte</h4>
-											<p>Hat der Verantwortliche die Sie betreffenden personenbezogenen Daten öffentlich gemacht und ist er gem. Art. 17 Abs. 1 DSGVO zu deren Löschung verpflichtet, so trifft er unter
-												Berücksichtigung der verfügbaren Technologie und der Implementierungskosten angemessene Maßnahmen, auch technischer Art, um für die Datenverarbeitung Verantwortliche, die die
-												personenbezogenen Daten verarbeiten, darüber zu informieren, dass Sie als betroffene Person von ihnen die Löschung aller Links zu diesen personenbezogenen Daten oder von Kopien oder
-												Replikationen dieser personenbezogenen Daten verlangt haben.</p>
-											<h4>c) Ausnahmen</h4>
-											<p>Das Recht auf Löschung besteht nicht, soweit die Verarbeitung erforderlich ist</p>
-											<p>(1) zur Ausübung des Rechts auf freie Meinungsäußerung und Information;</p>
-											<p>(2) zur Erfüllung einer rechtlichen Verpflichtung, die die Verarbeitung nach dem Recht der Union oder der Mitgliedstaaten, dem der Verantwortliche unterliegt, erfordert, oder zur
-												Wahrnehmung einer Aufgabe, die im öffentlichen Interesse liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde;</p>
-											<p>(3) aus Gründen des öffentlichen Interesses im Bereich der öffentlichen Gesundheit gemäß Art. 9 Abs. 2 lit. h und i sowie Art. 9 Abs. 3 DSGVO;</p>
-											<p>(4) für im öffentlichen Interesse liegende Archivzwecke, wissenschaftliche oder historische Forschungszwecke oder für statistische Zwecke gem. Art. 89 Abs. 1 DSGVO, soweit das unter
-												Abschnitt a) genannte Recht voraussichtlich die Verwirklichung der Ziele dieser Verarbeitung unmöglich macht oder ernsthaft beeinträchtigt, oder</p>
-											<p>(5) zur Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47305" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Recht auf Unterrichtung gemäß Art. 19 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Haben Sie das Recht auf Berichtigung, Löschung oder Einschränkung der Verarbeitung gegenüber dem Verantwortlichen geltend gemacht, ist dieser verpflichtet, allen Empfängern, denen
-												die Sie betreffenden personenbezogenen Daten offengelegt wurden, diese Berichtigung oder Löschung der Daten oder Einschränkung der Verarbeitung mitzuteilen, es sei denn, dies erweist sich
-												als unmöglich oder ist mit einem unverhältnismäßigen Aufwand verbunden.</p>
-											<p>Ihnen steht gegenüber dem Verantwortlichen das Recht zu, über diese Empfänger unterrichtet zu werden.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47306" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Recht auf Datenübertragbarkeit gemäß Art. 20 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Sie haben das Recht, die Sie betreffenden personenbezogenen Daten, die Sie dem Verantwortlichen bereitgestellt haben, in einem strukturierten, gängigen und maschinenlesbaren Format
-												zu erhalten. Außerdem haben Sie das Recht diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu
-												übermitteln, sofern</p>
-											<p>(1) die Verarbeitung auf einer Einwilligung gem. Art. 6 Abs. 1 lit. a DSGVO oder Art. 9 Abs. 2 lit. a DSGVO oder auf einem Vertrag gem. Art. 6 Abs. 1 lit. b DSGVO beruht und</p>
-											<p>(2) die Verarbeitung mithilfe automatisierter Verfahren erfolgt.</p>
-											<p>In Ausübung dieses Rechts haben Sie ferner das Recht, zu erwirken, dass die Sie betreffenden personenbezogenen Daten direkt von einem Verantwortlichen einem anderen Verantwortlichen
-												übermittelt werden, soweit dies technisch machbar ist. Freiheiten und Rechte anderer Personen dürfen hierdurch nicht beeinträchtigt werden.</p>
-											<p>Das Recht auf Datenübertragbarkeit gilt nicht für eine Verarbeitung personenbezogener Daten, die für die Wahrnehmung einer Aufgabe erforderlich ist, die im öffentlichen Interesse
-												liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde.</p>
-										</div>
-									</div>
-								</div>
-								<div id="c47307" class="c-section__element">
-									<div class="c-headline__equalizer" data-mh="ce-headline-47299" style="">
-										<h3 class="c-headline c-headline--h3 u-text--hyphens">Widerspruchsrecht gemäß Art. 21 DSGVO</h3>
-									</div>
-									<div class="c-text-media">
-										<div class="c-text-media__text">
-											<p>Sie haben das Recht, aus Gründen, die sich aus ihrer besonderen Situation ergeben, jederzeit gegen die Verarbeitung der Sie betreffenden personenbezogenen Daten, die aufgrund von
-												Art. 6 Abs. 1 lit. e oder f DSGVO erfolgt, Widerspruch einzulegen; dies gilt auch für ein auf diese Bestimmungen gestütztes Profiling.</p>
-											<p>Der Verantwortliche verarbeitet die Sie betreffenden personenbezogenen Daten nicht mehr, es sei denn, er kann zwingende schutzwürdige Gründe für die Verarbeitung nachweisen, die Ihre
-												Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</p>
-											<p>Werden die Sie betreffenden personenbezogenen Daten verarbeitet, um Direktwerbung zu betreiben, haben Sie das Recht, jederzeit Widerspruch gegen die Verarbeitung der Sie betreffenden
-												personenbezogenen Daten zum Zwecke derartiger Werbung einzulegen; dies gilt auch für das Profiling, soweit es mit solcher Direktwerbung in Verbindung steht.</p>
-											<p>Widersprechen Sie der Verarbeitung für Zwecke der Direktwerbung, so werden die Sie betreffenden personenbezogenen Daten nicht mehr für diese Zwecke verarbeitet.</p>
-											<p>Sie haben die Möglichkeit, im Zusammenhang mit der Nutzung von Diensten der Informationsgesellschaft - ungeachtet der Richtlinie 2002/58/EG - Ihr Widerspruchsrecht mittels
-												automatisierter Verfahren auszuüben, bei denen technische Spezifikationen verwendet werden.</p>
-											<h4>Recht auf Widerruf der datenschutzrechtlichen Einwilligungserklärung gemäß Art. 7 Abs. 3 DSGVO</h4>
-											<p>Sie haben das Recht, Ihre datenschutzrechtliche Einwilligungserklärung jederzeit zu widerrufen. Durch den Widerruf der Einwilligung wird die Rechtmäßigkeit der aufgrund der
-												Einwilligung bis zum Widerruf erfolgten Verarbeitung nicht berührt.</p>
-											<h4>Automatisierte Entscheidung im Einzelfall einschließlich Profiling gemäß Art. 22 DSGVO</h4>
-											<p>Sie haben das Recht, nicht einer ausschließlich auf einer automatisierten Verarbeitung - einschließlich Profiling - beruhenden Entscheidung unterworfen zu werden, die Ihnen gegenüber
-												rechtliche Wirkung entfaltet oder Sie in ähnlicher Weise erheblich beeinträchtigt. Dies gilt nicht, wenn die Entscheidung</p>
-											<p>(1) für den Abschluss oder die Erfüllung eines Vertrags zwischen Ihnen und dem Verantwortlichen erforderlich ist,</p>
-											<p>(2) aufgrund von Rechtsvorschriften der Union oder der Mitgliedstaaten, denen der Verantwortliche unterliegt, zulässig ist und diese Rechtsvorschriften angemessene Maßnahmen zur
-												Wahrung Ihrer Rechte und Freiheiten sowie Ihrer berechtigten Interessen enthalten oder</p>
-											<p>(3) mit Ihrer ausdrücklichen Einwilligung erfolgt.</p>
-											<p>Allerdings dürfen diese Entscheidungen nicht auf besonderen Kategorien personenbezogener Daten nach Art. 9 Abs. 1 DSGVO beruhen, sofern nicht Art. 9 Abs. 2 lit. a oder g DSGVO gilt
-												und angemessene Maßnahmen zum Schutz der Rechte und Freiheiten sowie Ihrer berechtigten Interessen getroffen wurden.</p>
-											<p>Hinsichtlich der in (1) und (3) genannten Fälle trifft der Verantwortliche angemessene Maßnahmen, um die Rechte und Freiheiten sowie Ihre berechtigten Interessen zu wahren, wozu
-												mindestens das Recht auf Erwirkung des Eingreifens einer Person seitens des Verantwortlichen, auf Darlegung des eigenen Standpunkts und auf Anfechtung der Entscheidung gehört.</p>
-											<h4>Recht auf Beschwerde bei einer Aufsichtsbehörde</h4>
-											<p>Unbeschadet eines anderweitigen verwaltungsrechtlichen oder gerichtlichen Rechtsbehelfs steht Ihnen das Recht auf Beschwerde bei einer Aufsichtsbehörde, insbesondere in dem
-												Mitgliedstaat ihres Aufenthaltsorts, ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes, zu, wenn Sie der Ansicht sind, dass die Verarbeitung der Sie betreffenden
-												personenbezogenen Daten gegen die DSGVO verstößt.</p>
-											<p>Die Aufsichtsbehörde, bei der die Beschwerde eingereicht wurde, unterrichtet den Beschwerdeführer über den Stand und die Ergebnisse der Beschwerde einschließlich der Möglichkeit
-												eines gerichtlichen Rechtsbehelfs nach Art. 78 DSGVO.</p>
-										</div>
-									</div>
+					</ui:fragment>
+					<div id="c54021" class="c-section mb-5">
+						<div id="c54020" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-54021">
+								<h3 class="h3 text-center">EMBEDDING OF VIDEOS</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>
+										We use the providers Vimeo and YouTube in order to incorporate videos. Like most websites, these providers use cookies to collect information
+										on visitors to its website. They use them to collect video statistics, to prevent fraud and to improve usability.												</p>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="c29112" class="c-section">
-				<div class="row">
-					<div class="column">
-						<h2 class="c-headline c-headline--h2 u-text--hyphens">BEHÖRDLICHER DATENSCHUTZBEAUFTRAGTER DER LEIBNIZ UNIVERSITÄT HANNOVER</h2>
+					<div id="c47431" class="c-section mb-5">
+						<div id="c47423" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h3 class="h3 text-center">RIGHTS OF THE DATA SUBJECT</h3>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>If personal data are processed by you, you are affected within the meaning of the GDPR and you have the following rights towards the person responsible:</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47424" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right to information pursuant to Article 15 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>You can ask the person in charge to confirm whether personal data concerning you will be processed by us.</p>
+									<p>If such processing has taken place, you can request the following information from the person responsible:</p>
+									<p>(1) the purposes for which the personal data are processed;</p>
+									<p>(2) the categories of personal data being processed;</p>
+									<p>(3) the recipients or categories of recipients to whom the personal data concerning you have been or are still being disclosed;</p>
+									<p>(4) the planned duration of the storage of the personal data concerning you or, if specific information on this is not possible, criteria for determining the storage period;</p>
+									<p>(5) the existence of a right to rectification or deletion of personal data concerning you, a right to limitation of processing by the controller or a right to object to such
+										processing;</p>
+									<p>(6) the existence of a right of appeal to a supervisory authority;</p>
+									<p>(7) any available information on the origin of the data if the personal data are not collected from the data subject;</p>
+									<p>(8) the existence of automated decision-making including profiling in accordance with Article 22 paragraph 1 and 4 GDPR and - at least in these cases - meaningful information on the
+										logic involved and the scope and intended effects of such processing for the data subject.</p>
+									<p>You have the right to request information as to whether the personal data concerning you is transferred to a third country or to an international organisation. In this context, you
+										may request to be informed of the appropriate guarantees pursuant to Article 46 GDPR in connection with the transmission.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47425" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right of rectification in accordance with Article 16 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>You have a right of rectification and/or completion towards the data controller if the personal data processed concerning you are incorrect or incomplete. The person responsible
+										shall make the correction without delay.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47426" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right to limitation of processing in accordance with Article 18 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>Under the following conditions, you may request that the processing of personal data concerning you be restricted:</p>
+									<p>(1) if you dispute the accuracy of the personal data concerning you for a period that enables the data controller to verify the accuracy of the personal data;</p>
+									<p>(2) the processing is unlawful and you refuse to delete the personal data and instead request that the use of the personal data be restricted;</p>
+									<p>(3) the data controller no longer needs the personal data for the purposes of the processing, but you do need them to assert, exercise or defend legal claims, or</p>
+									<p>(4) if you have filed an objection to the processing pursuant to Article 21 paragraph 1 GDPR and it has not yet been determined whether the legitimate reasons of the person
+										responsible outweigh your reasons.</p>
+									<p>If the processing of personal data concerning you has been restricted, such data may only be processed - apart from being stored - with your consent or for the purpose of asserting,
+										exercising or defending rights or protecting the rights of another natural or legal person or on grounds of an important public interest of the Union or a Member State.</p>
+									<p>If the processing restriction has been restricted according to the above conditions, you will be informed by the person responsible before the restriction is lifted.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47427" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right to cancellation in accordance with Article 17 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<h5 class="h5 my-1">a) Duty to delete</h5>
+									<p>You may request the data controller to delete the personal data relating to you without delay and the controller is obliged to delete this data without delay if one of the following
+										reasons applies:</p>
+									<p>(1) The personal data concerning you are no longer necessary for the purposes for which they were collected or otherwise processed.</p>
+									<p>(2) You revoke your consent, on which the processing was based pursuant to Article 6 paragraph 1 letter a or Article 9 paragraph 2 letter a GDPR, and there is no other legal basis
+										for the processing.</p>
+									<p>(3) You file an objection against the processing pursuant to Article 21 paragraph 1 GDPR and there are no overriding legitimate reasons for the processing, or you file an objection
+										against the processing pursuant to Article 21 paragraph 2 GDPR.</p>
+									<p>(4) The personal data concerning you have been processed unlawfully.</p>
+									<p>(5) The deletion of personal data relating to you is necessary to fulfil a legal obligation under Union law or the law of the Member States to which the data controller is subject.
+									</p>
+									<p>(6) The personal data concerning you were collected in relation to information society services offered pursuant to Article 8 paragraph 1 GDPR.</p>
+									<h5 class="h5 my-1">b) Information to third parties</h5>
+									<p>If the data controller has made the personal data concerning you public and is obliged to delete it pursuant to Article 17 paragraph 1 GDPR, he shall take appropriate measures,
+										including technical measures, taking into account the available technology and the implementation costs, to inform data processors who process the personal data that you as the data
+										subject have requested the deletion of all links to this personal data or of copies or replications of this personal data.</p>
+									<h5 class="h5 my-1">c) Exceptions</h5>
+									<p>The right to cancellation does not exist insofar as the processing is necessary</p>
+									<p>(1) to exercise freedom of expression and information;</p>
+									<p>(2) for the performance of a legal obligation required for processing under the law of the Union or of the Member States to which the controller is subject or for the performance of
+										a task in the public interest or in the exercise of official authority conferred on the controller;</p>
+									<p>(3) for reasons of public interest in the field of public health pursuant to Article 9 paragraph 2 letter h and i and Article 9 paragraph 3 GDPR;</p>
+									<p>(4) for archiving purposes in the public interest, scientific or historical research purposes or for statistical purposes pursuant to Article 89 paragraph 1 GDPR, insofar as the law
+										referred to under a) is likely to make it impossible or seriously impair the attainment of the objectives of such processing, or</p>
+									<p>(5) to assert, exercise or defend legal claims.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47428" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right of information pursuant to Article 19 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>If you have exercised your right to have the data controller correct, delete or limit the processing, he/she is obliged to inform all recipients to whom the personal data concerning
+										you have been disclosed of this correction or deletion of the data or restriction on processing, unless this proves impossible or involves a disproportionate effort.</p>
+									<p>&#160;</p>
+									<p>The person responsible shall have the right to be informed of such recipients.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47429" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right to data transferability in accordance with Article 20 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>You have the right to receive the personal data concerning you that you have provided to the person responsible in a structured, common and machine-readable format. In addition, you
+										have the right to pass this data on to another person in charge without obstruction by the person in charge to whom the personal data was provided, provided that</p>
+									<p>(1) processing is based on consent pursuant to Article 6 paragraph 1 letter a GDPR or Article 9 paragraph 2 letter a GDPR or on a contract pursuant to Article 6 paragraph 1 letter b
+										GDPR and</p>
+									<p>(2) processing is carried out by means of automated methods.</p>
+									<p>In exercising this right, you also have the right to request that the personal data concerning you be transferred directly from one data controller to another data controller,
+										insofar as this is technically feasible. The freedoms and rights of other persons must not be affected by this.</p>
+									<p>The right to transferability shall not apply to the processing of personal data necessary for the performance of a task in the public interest or in the exercise of official
+										authority conferred on the controller.</p>
+								</div>
+							</div>
+						</div>
+						<div id="c47430" class="c-section__element">
+							<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
+								<h4 class="h4 text-center my-2">Right of objection according to Article 21 GDPR</h4>
+							</div>
+							<div class="c-text-media">
+								<div class="c-text-media__text">
+									<p>You have the right to object at any time, for reasons arising from your particular situation, to the processing of personal data concerning you under Article 6(1)(e) or (f) of the
+										DSBER; this also applies to profiling based on these provisions.</p>
+									<p>The data controller no longer processes the personal data concerning you, unless he can prove compelling reasons worthy of protection for the processing, which outweigh your
+										interests, rights and freedoms, or the processing serves to assert, exercise or defend legal claims.</p>
+									<p>If the personal data concerning you are processed for direct marketing purposes, you have the right to object at any time to the processing of the personal data concerning you for
+										the purpose of such advertising; this also applies to profiling, insofar as it is associated with such direct marketing.</p>
+									<p>If you object to the processing for direct marketing purposes, the personal data concerning you will no longer be processed for these purposes.</p>
+									<p>You have the possibility to exercise your right of objection in connection with the use of Information Society services by means of automated procedures using technical
+										specifications, notwithstanding Directive 2002/58/EC.</p>
+									<h5 class="h5 my-1">Right to revoke the data protection declaration of consent pursuant to Article 7 Paragraph 3 GDPR</h5>
+									<p>You have the right to revoke your data protection declaration of consent at any time. The revocation of consent shall not affect the legality of the processing carried out on the
+										basis of the consent until revocation.</p>
+									<h5 class="h5 my-1">Automated decision in individual cases including profiling according to Article 22 GDPR</h5>
+									<p>You have the right not to be subject to a decision based exclusively on automated processing - including profiling - that has legal effect against you or significantly impairs you
+										in a similar manner. This does not apply if the decision</p>
+									<p>(1) is necessary for the conclusion or performance of a contract between you and the person responsible,</p>
+									<p>(2) the legislation of the Union or of the Member States to which the person responsible is subject is admissible and that legislation contains appropriate measures to safeguard
+										your rights, freedoms and legitimate interests; or</p>
+									<p>(3) with your express consent.</p>
+									<p>However, these decisions may not be based on special categories of personal data pursuant to Article 9 paragraph 1 GDPR, unless Article 9 paragraph 2 letter a or g GDPR applies and
+										appropriate measures have been taken to protect your rights and freedoms and your legitimate interests.</p>
+									<p>In the cases referred to in (1) and (3), the person responsible shall take reasonable measures to safeguard your rights, freedoms and legitimate interests, including at least the
+										right to obtain the intervention of a person by the person responsible, to state his own position and to challenge the decision.</p>
+									<h5 class="h5 my-1">Right of appeal to a supervisory authority</h5>
+									<p>Without prejudice to any other administrative or judicial remedy, you have the right of appeal to a supervisory authority, in particular in the Member State where you reside, work
+										or suspect of infringement, if you believe that the processing of personal data concerning you is contrary to the GDPR.</p>
+									<p>The supervisory authority to which the complaint has been lodged shall inform the complainant of the status and results of the complaint, including the possibility of a judicial
+										remedy under Article 78 GDPR.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="c47432" class="c-section mb-5">
+						<h3 class="h3 text-center">DATA PROTECTION OFFICER AT LEIBNIZ UNIVERSITÄT HANNOVER</h3>
 						<div class="tx-t3luhepv">
 							<div class="c-card  c-card--contact c-card--contact--imageless" data-mh="poc-box" min-width="48rem 30.5555555556rem">
-								<div class="c-card--contact__header-container">
-									<div class="c-card--contact__header">
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--header">
-											<div class="c-card--contact__title">Ass. iur. Simon Graupe, LL.M.</div>
-											<!-- I know, it looks terrible but there is no other way with Fluid. Have I ever mentioned that I hate Fluid. ;) -->
-											<!-- https://stackoverflow.com/questions/41851924/fluid-condition-to-check-if-value-is-null-not-working          -->
-											<div class="c-card--contact__misc"></div>
-										</div>
-									</div>
-								</div>
-							
+								<b>Ass. iur. Simon Graupe, LL.M.</b>
+								<!-- I know, it looks terrible but there is no other way with Fluid. Have I ever mentioned that I hate Fluid. ;) -->
+								<!-- https://stackoverflow.com/questions/41851924/fluid-condition-to-check-if-value-is-null-not-working          -->
 								<div class="c-card--contact__container c-card--contact__container--desktop">
-									<div class="c-card--contact__content c-card--contact__content--desktop">
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Telefon</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
+
+									<table class="table-borderless">
+										<tr>
+											<td class="w-25">
+												Phone
+											</td>
+											<td>
 												<a class="c-link c-link--inline" href="tel:+49 511 762 8132">+49 511 762 8132</a>
-											</div>
-										</div>
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Fax</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Fax
+											</td>
+											<td>
 												<a class="c-link c-link--inline" href="tel:+49 511 762 8258">+49 511 762 8258</a>
-											</div>
-										</div>
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">E-Mail</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
-												<a class="c-link c-link--inline" href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;">datenschutz@uni-hannover.de</a>
-											</div>
-										</div>
-									</div>
-									<div class="c-card--contact__content">
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Adresse</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
-												Königsworther Platz 1<br/> 30167 Hannover 
-											</div>
-										</div>
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Gebäude</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Email
+											</td>
+											<td>
+												<a class="c-link c-link--inline" href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef');return false;">datenschutz@uni-hannover.de</a>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Address
+											</td>
+											<td>
+												Königsworther Platz 1<br/> 30167 Hannover
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Building
+											</td>
+											<td>
 												<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/building/1502">1502</a>
-											</div>
-										</div>
-										<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-											<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Raum</div>
-											<div class="c-card--contact__misc c-card--contact__misc--indented">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Room
+											</td>
+											<td>
 												<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/room/1502/228">228</a>
-											</div>
-										</div>
-									</div>
+											</td>
+										</tr>
+									</table>
 								</div>
 								<div class="resize-sensor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
 									<div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
@@ -666,609 +1022,16 @@ function decryptCharcode(n,start,end,offset){n=n+offset;if(offset>0&&n>end){n=st
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div class="row text-center">
-				<div class="column">
-					<a href="https://www.uni-hannover.de/de/universitaet/organisation/beauftragte-vertretungen/datenschutz/" class="c-button">Zur Website des Datenschutzbeauftragten</a>
-				</div>
-			</div>
-			</ui:fragment>
-			
-			<ui:fragment rendered="#{userBean.localeCode ne 'de'}">
-				<div id="c47398" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="c-contentmenu">
-								<div class="c-contentmenu__title">Content on this page</div>
-								<ol class="c-contentmenu__list c-contentmenu__list--2col">
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47399">Name and address of the person responsible</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47401">Name and address of the data protection officer</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47403">General information on data processing</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47405">Provision of the website and creation of log files</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47407">Contact form and e-mail contact</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47411">Form entries</a></li>
-									<!-- 
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47413">Web analytics with Matomo (formerly PIWIK)</a></li>
-									
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47414">Revocation of data collection through Matomo</a></li>
-									 -->
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c54020">Embedding of Videos</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47423">Rights of the data subject</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47424">Right to information pursuant to Article 15 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47425">Right of rectification in accordance with Article 16 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47426">Right to limitation of processing in accordance with Article 18 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47427">Right to cancellation in accordance with Article 17 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47428">Right of information pursuant to Article 19 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47429">Right to data transferability in accordance with Article 20 GDPR</a></li>
-									<li class="c-contentmenu__item  "><a class="c-contentmenu__link" href="privacy_statement.jsf#c47430">Right of objection according to Article 21 GDPR</a></li>
-								</ol>
-							</div>
+					<div class="row text-center">
+						<div class="col">
+							<a href="https://www.uni-hannover.de/en/universitaet/organisation/beauftragte-und-vertretungen/datenschutz/" class="c-button">Go to DPO website</a>
 						</div>
 					</div>
-				</div>
-				<div id="c47400" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47399" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47400">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">NAME AND ADDRESS OF THE PERSON RESPONSIBLE</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>The person responsible within the meaning of the EU General Data Protection Regulation (GDPR) and other national data protection laws and regulations is:</p>
-												<p>
-													Gottfried Wilhelm Leibniz Universität Hannover<br/>Welfengarten 1
-													<br/>30167 Hannover 
-												</p>
-												<p>
-													Tel. +49 511 762 - 0<br/> Fax +49 511 762 - 3456 
-													<br/>
-													<a href="https://www.uni-hannover.de" target="_blank" class="c-link"><span>www.uni-hannover.de</span></a>
-												</p>
-												<p>
-													Leibniz Universität Hannover is a corporation under public law and is legally represented by its <a href="https://www.uni-hannover.de/en/universitaet/praesidium/praesident/" class="c-link"><span>President</span></a>,
-													Prof. Dr. iur. Volker Epping.
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47402" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47401" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47402">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">NAME AND ADDRESS OF THE DATA PROTECTION OFFICER</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>The data protection officer of Leibniz Universität Hannover is:</p>
-												<p>
-													Gottfried Wilhelm Leibniz Universität Hannover<br/> - Datenschutzbeauftragter -
-													<br/> Königsworther Platz 1
-													<br/>D - 30167 Hannover 
-												</p>
-												<p>
-													Tel. +49 511 762-8132<br/> Fax +49 511 762-8258 
-													<br/>e-mail: 
-													<a href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef'); return false;" class="c-link"><span>datenschutz@uni-hannover.de</span></a>
-												</p>
-												<p>
-													<a href="https://www.uni-hannover.de/en/universitaet/organisation/beauftragte-und-vertretungen/datenschutz/" class="c-link"><span>Website</span></a>
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47404" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47403" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47404">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">GENERAL INFORMATION ON DATA PROCESSING</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>We process our users' personal data only insofar as this is necessary to provide a functioning website as well as our content and services. The processing of our users' personal
-													data generally only takes place with the user's consent. An exception applies in those cases where prior consent cannot be obtained for factual reasons and processing of the data is
-													permitted by law.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47406" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47405" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47406">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">PROVISION OF THE WEBSITE AND CREATION OF LOG FILES</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>Every time you visit our website, our system automatically collects data and information from the computer system of the calling computer.</p>
-												<p>The following data is collected:</p>
-												<ul>
-													<li>information about the browser type and version used</li>
-													<li>the user's operating system</li>
-													<li>the user's Internet service provider</li>
-													<li>the IP address of the user</li>
-													<li>date and time of access</li>
-													<li>the website from which the user's system reaches our website</li>
-													<li>the website accessed by the user's system via our website</li>
-												</ul>
-												<p>The data is also stored in the log files of our system. This data is not stored together with other personal data of the user.</p>
-												<p>The legal basis for the temporary storage of data and log files is Article 6 paragraph 1 letter f GDPR.</p>
-												<p>The temporary storage of the IP address by the system is necessary to enable the website to be delivered to the user's computer. For this the IP address of the user must remain
-													stored for the duration of the session. The data is stored in log files to ensure the functionality of the website. In addition, the data serves us to optimize the website and to ensure
-													the security of our information technology systems. An evaluation of the data for marketing purposes does not take place in this context. Our legitimate interest in data processing
-													pursuant to Article 6 paragraph 1 letter f GDPR also lies in these purposes.</p>
-												<p>The data will be deleted as soon as they are no longer necessary to achieve the purpose for which they were collected. In the case of the collection of data for the provision of the
-													website, this is the case when the respective session has ended.</p>
-												<p>If the data is stored in log files, this is the case after seven days at the latest. Further storage is possible. In this case, the IP addresses of the users are deleted or
-													alienated, so that an assignment of the calling client is no longer possible.</p>
-												<p>The collection of data for the provision of the website and the storage of data in log files is absolutely necessary for the operation of the website. Consequently, there is no
-													possibility of objection on the part of the user.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47408" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47407" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47408">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">CONTACT FORM AND E-MAIL CONTACT</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>There is a contact form on our website which can be used for electronic contact. If a user takes advantage of this possibility, the data entered in the input mask will be
-													transmitted to us and stored. Your consent is obtained for the processing of the data within the scope of the sending process and reference is made to this data protection declaration.
-													Alternatively, you can contact us via the e-mail address provided. In this case, the user's personal data transmitted by e-mail will be stored. In this context, the data will not be
-													passed on to third parties. The data is used exclusively for processing the conversation. The legal basis for the processing of data is Article 6 paragraph 1 letter a GDPR if the user has
-													given his consent. The legal basis for the processing of data transmitted in the course of sending an e-mail is Article 6 paragraph 1 letter f GDPR. If the e-mail contact aims at the
-													conclusion of a contract, then additional legal basis for the processing is Article 6 exp. 1 letter b GDPR.</p>
-												<p>The processing of the personal data from the input mask serves us only for the treatment of the establishment of contact. In the event of contact by e-mail, this also constitutes
-													the necessary legitimate interest in the processing of the data.</p>
-												<p>The other personal data processed during the sending process serve to prevent misuse of the contact form and to ensure the security of our information technology systems.</p>
-												<p>The data will be deleted as soon as they are no longer necessary to achieve the purpose for which they were collected. For the personal data from the input mask of the contact form
-													and those that were sent by e-mail, this is the case when the respective conversation with the user is finished. The conversation is terminated when it can be inferred from the
-													circumstances that the facts in question have been finally clarified.</p>
-												<p>The additional personal data collected during the sending process will be deleted after a period of seven days at the latest.</p>
-												<p>The user has the possibility to revoke his consent to the processing of personal data at any time. If the user contacts us by e-mail, he can object to the storage of his personal
-													data at any time. In such a case, the conversation cannot be continued. All personal data stored in the course of contacting us will be deleted in this case.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47410" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47409" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47410">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">NEWSLETTER SUBSCRIPTION</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>On some Leibniz Universität websites it is possible to subscribe to a free newsletter using an online form. When registering for the newsletter, the data from the input mask is
-													transmitted to us. In addition, the IP address of the calling computer and the date and time of registration are collected and processed. In the course of the registration process, your
-													consent is obtained for the processing of the data and reference is made to this data protection declaration.</p>
-												<p>In connection with data processing for the dispatch of newsletters, no data is passed on to third parties. The data will be used exclusively for sending the newsletter.</p>
-												<p>The legal basis for the processing of the data after registration for the newsletter by the user is Article 6 paragraph 1 letter a GDPR.</p>
-												<p>The collection of the user's e-mail address serves to send the newsletter. The collection of other personal data as part of the registration process serves to provide proof of
-													registration for the newsletter and, if necessary, to prevent misuse of the services or the e-mail address used. The data will be deleted as soon as they are no longer necessary to
-													achieve the purpose for which they were collected. The user's e-mail address will therefore be stored for as long as the subscription to the newsletter is active.</p>
-												<p>Consent to the sending of the newsletter can be revoked by the user concerned at any time and the newsletter can be cancelled. For this purpose there is a corresponding link in
-													every newsletter.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47412" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47411" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47412">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">FORM ENTRIES</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>Where internet services allow for the entry of personal or business data (E-mail addresses, names, addresses), disclosing this data is on an expressly voluntary basis on the part of
-													the user. The legal basis for such processing is Article 6 paragraph 1 letter a) GDPR. The collection and processing of data serves only the purpose stated in the respective online form.
-													A discolure or passing on to third parties does not take place. Using and paying for all services offered is - as far as this is technically possible and reasonable - granted also without
-													disclosure of such data or through the use of anonymised data or a pseudonym. The use by third parties of contact data published in the imprint or similar, such as postal addresses,
-													telephone and fax numbers and e-mail addresses, for transmitting not specifically requested information is not allowed. We expressly reserve the right to take legal steps against the
-													senders of so-called spam mails which violate this prohibition.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<ui:fragment rendered="false">
-				<div id="c47417" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47413" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47417" style="">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">WEB ANALYTICS WITH MATOMO (FORMERLY PIWIK)</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>We use the open source software tool Matomo (formerly PIWIK) on our website on the basis of our legitimate interest in statistical analysis of user behaviour for optimization and
-													marketing purposes in accordance with Article 6 Paragraph 1 letter f GDPR.</p>
-												<p>Cookies may be used for this purpose. Cookies are small text files that are stored locally in the cache of the visitor's Internet browser. The cookies enable, among other things,
-													the recognition of the Internet browser. The data collected with Matomo technology (including your anonymised IP address) is processed on our servers.</p>
-												<p>If individual pages of our website are accessed, the following data is stored:</p>
-												<ul>
-													<li>Two bytes of the IP address of the user's calling system</li>
-													<li>The accessed website</li>
-													<li>The website from which the user has accessed the accessed website (referrer)</li>
-													<li>The subpages that are accessed from the accessed website</li>
-													<li>the time spent on the website</li>
-													<li>the frequency with which the website is accessed</li>
-												</ul>
-												<p>The software is set so that the IP addresses are not completely stored, but 2 bytes of the IP address are masked (e.g.: 130.75.xxx.xxx). In this way it is no longer possible to
-													associate the shortened IP address with the computer accessing it. By anonymising the IP address, sufficient account is taken of the users' interest in protecting their personal data.</p>
-												<p>Cookies are stored on the user's computer and transmitted to our site. Therefore, you as a user also have full control over the use of cookies. You can deactivate or restrict the
-													transmission of cookies by changing the settings in your Internet browser. Cookies that have already been saved can be deleted at any time. This can also be done automatically. If cookies
-													are deactivated for our website, it may no longer be possible to use all functions of the website in full.</p>
-												<p>We offer our users on our website the possibility of an opt-out from the analysis procedure. In this way, another cookie is placed on your system, which signals to our system not to
-													store the user's data. If the user deletes the corresponding cookie from his own system in the meantime, he must set the opt-out cookie again.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47414" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47417" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Revocation of data collection through Matomo</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>
-													Matomo endorses the "Do Not Track" method of current web browsers. If you wish to generally prohibit any analysis of your web behaviour, we recommend that you activate this option in your
-													browser. Alternatively, you can prohibit Matomo web analysis <b>on websites in the uni-hannover.de network</b> area by using the following button.
-												</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47415" class="c-section__element">
-										<iframe scrolling="auto" style="background: #f7f7f7; border: 1px solid #c6c6c6;"
-											src="https://www.piwik.rrzn.uni-hannover.de/optout.php?module=CoreAdminHome&amp;action=optOut&amp;language=en" width="100%" height="300px"
-										></iframe>
-									</div>
-									<div id="c47416" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47417" style=""></div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>
-													More information about the privacy settings of the Matomo software can be found at the following link: <a href="https://matomo.org/docs/privacy/" target="_blank"
-														class="c-link c-link--extern"
-													><span>https://matomo.org/docs/privacy/</span></a>.
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 				</ui:fragment>
-				<div id="c54021" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c54020" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-54021">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">EMBEDDING OF VIDEOS</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>
-													We use the providers Vimeo and YouTube in order to incorporate videos. Like most websites, these providers use cookies to collect information
-													on visitors to its website. They use them to collect video statistics, to prevent fraud and to improve usability.												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47431" class="c-section">
-					<div class="row">
-						<div class="column">
-							<div class="row ">
-								<div class="small-12 medium-8 column c-section-grid__column">
-									<div id="c47423" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h2 class="c-headline c-headline--h2 u-text--hyphens">RIGHTS OF THE DATA SUBJECT</h2>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>If personal data are processed by you, you are affected within the meaning of the GDPR and you have the following rights towards the person responsible:</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47424" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right to information pursuant to Article 15 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>You can ask the person in charge to confirm whether personal data concerning you will be processed by us.</p>
-												<p>If such processing has taken place, you can request the following information from the person responsible:</p>
-												<p>(1) the purposes for which the personal data are processed;</p>
-												<p>(2) the categories of personal data being processed;</p>
-												<p>(3) the recipients or categories of recipients to whom the personal data concerning you have been or are still being disclosed;</p>
-												<p>(4) the planned duration of the storage of the personal data concerning you or, if specific information on this is not possible, criteria for determining the storage period;</p>
-												<p>(5) the existence of a right to rectification or deletion of personal data concerning you, a right to limitation of processing by the controller or a right to object to such
-													processing;</p>
-												<p>(6) the existence of a right of appeal to a supervisory authority;</p>
-												<p>(7) any available information on the origin of the data if the personal data are not collected from the data subject;</p>
-												<p>(8) the existence of automated decision-making including profiling in accordance with Article 22 paragraph 1 and 4 GDPR and - at least in these cases - meaningful information on the
-													logic involved and the scope and intended effects of such processing for the data subject.</p>
-												<p>You have the right to request information as to whether the personal data concerning you is transferred to a third country or to an international organisation. In this context, you
-													may request to be informed of the appropriate guarantees pursuant to Article 46 GDPR in connection with the transmission.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47425" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right of rectification in accordance with Article 16 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>You have a right of rectification and/or completion towards the data controller if the personal data processed concerning you are incorrect or incomplete. The person responsible
-													shall make the correction without delay.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47426" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right to limitation of processing in accordance with Article 18 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>Under the following conditions, you may request that the processing of personal data concerning you be restricted:</p>
-												<p>(1) if you dispute the accuracy of the personal data concerning you for a period that enables the data controller to verify the accuracy of the personal data;</p>
-												<p>(2) the processing is unlawful and you refuse to delete the personal data and instead request that the use of the personal data be restricted;</p>
-												<p>(3) the data controller no longer needs the personal data for the purposes of the processing, but you do need them to assert, exercise or defend legal claims, or</p>
-												<p>(4) if you have filed an objection to the processing pursuant to Article 21 paragraph 1 GDPR and it has not yet been determined whether the legitimate reasons of the person
-													responsible outweigh your reasons.</p>
-												<p>If the processing of personal data concerning you has been restricted, such data may only be processed - apart from being stored - with your consent or for the purpose of asserting,
-													exercising or defending rights or protecting the rights of another natural or legal person or on grounds of an important public interest of the Union or a Member State.</p>
-												<p>If the processing restriction has been restricted according to the above conditions, you will be informed by the person responsible before the restriction is lifted.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47427" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right to cancellation in accordance with Article 17 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<h4>a) Duty to delete</h4>
-												<p>You may request the data controller to delete the personal data relating to you without delay and the controller is obliged to delete this data without delay if one of the following
-													reasons applies:</p>
-												<p>(1) The personal data concerning you are no longer necessary for the purposes for which they were collected or otherwise processed.</p>
-												<p>(2) You revoke your consent, on which the processing was based pursuant to Article 6 paragraph 1 letter a or Article 9 paragraph 2 letter a GDPR, and there is no other legal basis
-													for the processing.</p>
-												<p>(3) You file an objection against the processing pursuant to Article 21 paragraph 1 GDPR and there are no overriding legitimate reasons for the processing, or you file an objection
-													against the processing pursuant to Article 21 paragraph 2 GDPR.</p>
-												<p>(4) The personal data concerning you have been processed unlawfully.</p>
-												<p>(5) The deletion of personal data relating to you is necessary to fulfil a legal obligation under Union law or the law of the Member States to which the data controller is subject.
-												</p>
-												<p>(6) The personal data concerning you were collected in relation to information society services offered pursuant to Article 8 paragraph 1 GDPR.</p>
-												<h4>b) Information to third parties</h4>
-												<p>If the data controller has made the personal data concerning you public and is obliged to delete it pursuant to Article 17 paragraph 1 GDPR, he shall take appropriate measures,
-													including technical measures, taking into account the available technology and the implementation costs, to inform data processors who process the personal data that you as the data
-													subject have requested the deletion of all links to this personal data or of copies or replications of this personal data.</p>
-												<h4>c) Exceptions</h4>
-												<p>The right to cancellation does not exist insofar as the processing is necessary</p>
-												<p>(1) to exercise freedom of expression and information;</p>
-												<p>(2) for the performance of a legal obligation required for processing under the law of the Union or of the Member States to which the controller is subject or for the performance of
-													a task in the public interest or in the exercise of official authority conferred on the controller;</p>
-												<p>(3) for reasons of public interest in the field of public health pursuant to Article 9 paragraph 2 letter h and i and Article 9 paragraph 3 GDPR;</p>
-												<p>(4) for archiving purposes in the public interest, scientific or historical research purposes or for statistical purposes pursuant to Article 89 paragraph 1 GDPR, insofar as the law
-													referred to under a) is likely to make it impossible or seriously impair the attainment of the objectives of such processing, or</p>
-												<p>(5) to assert, exercise or defend legal claims.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47428" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right of information pursuant to Article 19 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>If you have exercised your right to have the data controller correct, delete or limit the processing, he/she is obliged to inform all recipients to whom the personal data concerning
-													you have been disclosed of this correction or deletion of the data or restriction on processing, unless this proves impossible or involves a disproportionate effort.</p>
-												<p>&#160;</p>
-												<p>The person responsible shall have the right to be informed of such recipients.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47429" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right to data transferability in accordance with Article 20 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>You have the right to receive the personal data concerning you that you have provided to the person responsible in a structured, common and machine-readable format. In addition, you
-													have the right to pass this data on to another person in charge without obstruction by the person in charge to whom the personal data was provided, provided that</p>
-												<p>(1) processing is based on consent pursuant to Article 6 paragraph 1 letter a GDPR or Article 9 paragraph 2 letter a GDPR or on a contract pursuant to Article 6 paragraph 1 letter b
-													GDPR and</p>
-												<p>(2) processing is carried out by means of automated methods.</p>
-												<p>In exercising this right, you also have the right to request that the personal data concerning you be transferred directly from one data controller to another data controller,
-													insofar as this is technically feasible. The freedoms and rights of other persons must not be affected by this.</p>
-												<p>The right to transferability shall not apply to the processing of personal data necessary for the performance of a task in the public interest or in the exercise of official
-													authority conferred on the controller.</p>
-											</div>
-										</div>
-									</div>
-									<div id="c47430" class="c-section__element">
-										<div class="c-headline__equalizer" data-mh="ce-headline-47431" style="">
-											<h3 class="c-headline c-headline--h3 u-text--hyphens">Right of objection according to Article 21 GDPR</h3>
-										</div>
-										<div class="c-text-media">
-											<div class="c-text-media__text">
-												<p>You have the right to object at any time, for reasons arising from your particular situation, to the processing of personal data concerning you under Article 6(1)(e) or (f) of the
-													DSBER; this also applies to profiling based on these provisions.</p>
-												<p>The data controller no longer processes the personal data concerning you, unless he can prove compelling reasons worthy of protection for the processing, which outweigh your
-													interests, rights and freedoms, or the processing serves to assert, exercise or defend legal claims.</p>
-												<p>If the personal data concerning you are processed for direct marketing purposes, you have the right to object at any time to the processing of the personal data concerning you for
-													the purpose of such advertising; this also applies to profiling, insofar as it is associated with such direct marketing.</p>
-												<p>If you object to the processing for direct marketing purposes, the personal data concerning you will no longer be processed for these purposes.</p>
-												<p>You have the possibility to exercise your right of objection in connection with the use of Information Society services by means of automated procedures using technical
-													specifications, notwithstanding Directive 2002/58/EC.</p>
-												<h4>Right to revoke the data protection declaration of consent pursuant to Article 7 Paragraph 3 GDPR</h4>
-												<p>You have the right to revoke your data protection declaration of consent at any time. The revocation of consent shall not affect the legality of the processing carried out on the
-													basis of the consent until revocation.</p>
-												<h4>Automated decision in individual cases including profiling according to Article 22 GDPR</h4>
-												<p>You have the right not to be subject to a decision based exclusively on automated processing - including profiling - that has legal effect against you or significantly impairs you
-													in a similar manner. This does not apply if the decision</p>
-												<p>(1) is necessary for the conclusion or performance of a contract between you and the person responsible,</p>
-												<p>(2) the legislation of the Union or of the Member States to which the person responsible is subject is admissible and that legislation contains appropriate measures to safeguard
-													your rights, freedoms and legitimate interests; or</p>
-												<p>(3) with your express consent.</p>
-												<p>However, these decisions may not be based on special categories of personal data pursuant to Article 9 paragraph 1 GDPR, unless Article 9 paragraph 2 letter a or g GDPR applies and
-													appropriate measures have been taken to protect your rights and freedoms and your legitimate interests.</p>
-												<p>In the cases referred to in (1) and (3), the person responsible shall take reasonable measures to safeguard your rights, freedoms and legitimate interests, including at least the
-													right to obtain the intervention of a person by the person responsible, to state his own position and to challenge the decision.</p>
-												<h4>Right of appeal to a supervisory authority</h4>
-												<p>Without prejudice to any other administrative or judicial remedy, you have the right of appeal to a supervisory authority, in particular in the Member State where you reside, work
-													or suspect of infringement, if you believe that the processing of personal data concerning you is contrary to the GDPR.</p>
-												<p>The supervisory authority to which the complaint has been lodged shall inform the complainant of the status and results of the complaint, including the possibility of a judicial
-													remedy under Article 78 GDPR.</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="c47432" class="c-section">
-					<div class="row">
-						<div class="column">
-							<h2 class="c-headline c-headline--h2 u-text--hyphens">DATA PROTECTION OFFICER AT LEIBNIZ UNIVERSITÄT HANNOVER</h2>
-							<div class="tx-t3luhepv">
-								<div class="c-card  c-card--contact c-card--contact--imageless" data-mh="poc-box" min-width="48rem 30.5555555556rem">
-									<div class="c-card--contact__header-container">
-										<div class="c-card--contact__header">
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--header">
-												<div class="c-card--contact__title">Ass. iur. Simon Graupe, LL.M.</div>
-												<!-- I know, it looks terrible but there is no other way with Fluid. Have I ever mentioned that I hate Fluid. ;) -->
-												<!-- https://stackoverflow.com/questions/41851924/fluid-condition-to-check-if-value-is-null-not-working          -->
-												<div class="c-card--contact__misc"></div>
-											</div>
-										</div>
-									</div>
-									<div class="c-card--contact__container c-card--contact__container--desktop">
-										<div class="c-card--contact__content c-card--contact__content--desktop">
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Phone</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													<a class="c-link c-link--inline" href="tel:+49 511 762 8132">+49 511 762 8132</a>
-												</div>
-											</div>
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Fax</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													<a class="c-link c-link--inline" href="tel:+49 511 762 8258">+49 511 762 8258</a>
-												</div>
-											</div>
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Email</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													<a class="c-link c-link--inline" href="#" onclick="linkTo_UnCryptMailto('nbjmup+ebufotdivuaAvoj.iboopwfs\/ef');return false;">datenschutz@uni-hannover.de</a>
-												</div>
-											</div>
-										</div>
-										<div class="c-card--contact__content">
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Address</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													Königsworther Platz 1<br/> 30167 Hannover 
-												</div>
-											</div>
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Building</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/building/1502">1502</a>
-												</div>
-											</div>
-											<div class="c-card--contact__text-wrapper c-card--contact__text-wrapper--content">
-												<div class="c-card--contact__subtitle c-card--contact__subtitle--indented">Room</div>
-												<div class="c-card--contact__misc c-card--contact__misc--indented">
-													<a class="c-link c-link--inline" target="_blank" href="https://info.cafm.uni-hannover.de/room/1502/228">228</a>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="resize-sensor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; z-index: -1; visibility: hidden;">
-										<div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
-											<div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div>
-										</div>
-										<div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;">
-											<div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row text-center">
-					<div class="column">
-						<a href="https://www.uni-hannover.de/en/universitaet/organisation/beauftragte-und-vertretungen/datenschutz/" class="c-button">Go to DPO website</a>
-					</div>
-				</div></ui:fragment>
-		</div>	
+			</p:panel>
+		</div>
+
+
 		
 	</ui:define>		
 </ui:composition>
