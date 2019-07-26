@@ -29,6 +29,8 @@ $transition-duration: .3s;
 * Bootstrap variables
 * check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
 */
+$nav-link-padding-y: .2rem;
+$nav-link-padding-x: .5rem;
 $emphasized-link-hover-darken-percentage: 7.5%;
 $border-radius: 0;
 $body-bg: $lightGray;

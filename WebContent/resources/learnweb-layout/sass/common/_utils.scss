@@ -73,7 +73,7 @@
   height: .9rem;
 }
 
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 
@@ -83,18 +83,9 @@
   }
 }
 
-.content-background-darker{
-  background-color: $gray-200;
-}
-
-.no-paragraph-margin{
-  p, b, i{
-    margin: 0!important;
-  }
-}
-
-.no-list-margin{
-  ul, ol, dl{
-    margin: 0!important;
-  }
+.sticky-column {
+  position: sticky;
+  top: 1rem;
+  height: calc(100vh - 2rem);
+  overflow-y: auto;
 }
