@@ -89,3 +89,11 @@
   height: calc(100vh - 2rem);
   overflow-y: auto;
 }
+
+.break-word{
+  word-break: break-word!important;
+}
+
+.width-inherit{
+  width: inherit!important;
+}

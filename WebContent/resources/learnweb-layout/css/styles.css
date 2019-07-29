@@ -11520,6 +11520,14 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   overflow-y: auto;
 }
 
+.break-word {
+  word-break: break-word !important;
+}
+
+.width-inherit {
+  width: inherit !important;
+}
+
 html {
   font-size: 10px;
 }
