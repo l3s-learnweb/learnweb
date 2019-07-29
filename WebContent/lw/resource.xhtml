@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main.xhtml" 
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -10,10 +10,12 @@
 			<f:viewAction action="#{resourceBean.loadResource}"/>
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:param name="pageTitle" value="#{resourceBean.resource.title}"/>
 	<ui:param name="smallPage" value="true"/>
-	
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{resourceBean.resource.title}" url="resource.jsf?resource_id=#{resourceBean.id}"/>
+	</ui:define>
 	<ui:define name="center_layout">
 
 		<h1><a href="#{resourceBean.resource.learnwebUrl}"><h:outputText value="#{resourceBean.resource.title}" escape="false" /></a></h1>

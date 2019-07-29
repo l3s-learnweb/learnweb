@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main.xhtml" 
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -18,9 +18,7 @@ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 		<h:outputScript name="archive-thumbnail/contentflow.js" target="head" />
 		<h:outputScript name="archive-thumbnail/archive_thumbnail.js" target="head" />
 
-		<h:outputStylesheet name="archive-thumbnail/mycontentflow.css" />
-		<h:outputStylesheet name="archive-thumbnail/styles.css" />
-    	
+    	<div class="section-archive-thumbnail">
     	<h:panelGroup id="maincontent"  layout="block">
     		
     		<h:panelGroup id="contentFlow" styleClass="ContentFlow" layout="block">
@@ -112,6 +110,7 @@ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 					<h:outputText id="no_of_resources2" value="(displaying #{archiveThumbnailBean.selectedArchiveUrls.size()} out of #{archiveThumbnailBean.archiveUrls.size()})" style="color:black"/>
 				</div>
 			</h:form>
+		</div>
 		</div>
 	</ui:define>
 </ui:composition>

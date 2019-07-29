@@ -1,5 +1,5 @@
 <ui:composition 
-	template="/templates/main/main.xhtml" 
+	template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -9,6 +9,9 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Group Log Analysis" />
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="Group Log Analysis" url="admin/user_assessment.jsf"/>
+	</ui:define>
 	<ui:define name="center_layout">
 			
 		<p:tabView cache="true">  

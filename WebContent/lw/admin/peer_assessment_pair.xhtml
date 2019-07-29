@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -17,33 +17,26 @@
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Peer assessment pairing" />
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="Peer assessment pairing" url="admin/peer_assessment_pair.jsf?peer_assessment_id=#{adminPeerAssessmentPairBeen.peerAssessmentId}"/>
+	</ui:define>
 	<ui:define name="center_layout">
 		<c:set var="showEmail" value="false" scope="request" />
 	
 		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
 
-		<ui:fragment rendered="#{userBean.moderator and adminPeerAssessmentPairBeen.peerAssessmentId != 0}">			
-			<div class="page_header" style="margin:5px;">
-				<span>
-					Peer assessment pairing
-				</span>
-			</div>
+		<ui:fragment rendered="#{userBean.moderator and adminPeerAssessmentPairBeen.peerAssessmentId != 0}">
 			
-			<h:form style="margin:5px ;">
-				<p:panel > 
-					<h2>Visualization</h2>
-					<p>
-					<p:selectBooleanButton offLabel="Simplified view" onLabel="Full view" value="#{adminPeerAssessmentPairBeen.fullView}">
-						<p:ajax oncomplete="form.submit()"></p:ajax>
-					</p:selectBooleanButton>					
-					</p>
-					<br/>
-					<hr/><br/>
-					<h2>The meaning of each row</h2>
+			<h:form>
+				<p:panel styleClass="border-0" header="Visualization">
+					<h4>The meaning of each row</h4>
 					<ui:fragment rendered="#{adminPeerAssessmentPairBeen.fullView}"><p><b>Assessor (a student)</b> has assessed the <b>Submission</b> of <b>Assessed</b> with <b>Peer Assessment</b>.</p></ui:fragment>
 					<p>You should grade the <b>Submission</b> of the <b>Assessed</b> user and the evaluation he has submitted for a third user. Click on the <b>Student Id</b> of the <b>Assessed</b> user to see whom he has assessed.</p>
-					
+					<hr/>
+					<p:selectBooleanButton offLabel="Simplified view" onLabel="Full view" value="#{adminPeerAssessmentPairBeen.fullView}">
+						<p:ajax oncomplete="form.submit()"></p:ajax>
+					</p:selectBooleanButton>
+
 				</p:panel>
 		
 			
