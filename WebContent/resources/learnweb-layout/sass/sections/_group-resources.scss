@@ -1,15 +1,9 @@
 .section-group-resources {
   .resources-filters {
-    margin: 0 -0.5rem -0.5rem;
-
     ul {
       list-style: none outside none;
-      margin: 0;
-      padding: 0;
 
       li {
-        float: left;
-        display: block;
         position: relative;
         white-space: nowrap;
 
@@ -17,35 +11,15 @@
           background-color: $gray-400;
         }
       }
-    }
-
-    .filter-name {
-      cursor: pointer;
-      display: inline-block;
-      padding: 0.5rem 0.5rem 0.5rem;
-
-      .trimmed-text {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 200px;
-        float: left;
-      }
-    }
-
-    li:hover .filter-sub-bar {
-      visibility: visible;
-    }
-
-    ul {
       li.disabled {
-        display: none;
+        display: none !important;
       }
-
-      &.filter-sub-bar {
+      li:hover .filter-sub-bar {
+        visibility: visible;
+      }
+      .filter-sub-bar {
         visibility: hidden;
-        position: absolute;
         left: 0;
-        width: auto;
         z-index: 10;
         border: solid 1px $gray-400;
 
@@ -59,7 +33,6 @@
             border: 0;
 
             span {
-              padding: 0.5rem 0.5rem 0.5rem;
               color: $black !important;
               text-align: left;
             }
@@ -69,24 +42,25 @@
             background: $gray-400;
           }
         }
+    }
+
+      .trimmed-text {
+        text-overflow: ellipsis;
+        max-width: 200px;
       }
 
-      .clear-filters {
-        padding: 0.55rem;
 
+      .clear-filters {
         &:hover {
           background: none;
         }
-
         button {
           background: none !important;
-          border: 0;
         }
 
         span {
           cursor: pointer;
-          padding: 0.6rem 0.5rem 0.5rem;
-          color: $black;
+          color: $gray-800;
 
           &:hover {
             text-decoration: underline;
@@ -118,27 +92,13 @@
         display: block;
       }
 
-      img {
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-      }
-
       &.active img {
         display: none;
-      }
-
-      input {
-        margin-top: 1px;
-        width: 18rem;
       }
 
       button {
         background: url("\#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
         background-size: 16px 16px !important;
-        height: 19px;
-        border: none !important;
-        cursor: pointer;
 
         &:hover, &:focus {
           background-color: $gray-100 !important;

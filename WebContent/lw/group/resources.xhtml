@@ -165,15 +165,15 @@
             <c:if test="${userBean.user.organisation.id ne 480}">
                 <!--suppress XmlDuplicatedId -->
                 <h:panelGroup id="resourcesFilters" layout="block">
-                    <h:form styleClass="resources-filters" id="filters">
-                        <ul>
+                    <h:form styleClass="resources-filters m-n2"  id="filters">
+                        <ul class="m-0 p-0">
                             <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
-                                <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
-                                    <span class="filter-name">
-                                        <span class="trimmed-text">#{filter.name}</span>
+                                <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)} d-block float-left position-relative ">
+                                    <span class="cursor-pointer d-inline-block p-2">
+                                        <span class="trimmed-text overflow-hidden float-left">#{filter.name}</span>
                                         <span class="arrow"/>
                                     </span>
-                                    <ul class="filter-sub-bar vCarousel-wrapper filter-vCarousel">
+                                    <ul class="filter-sub-bar  vCarousel-wrapper filter-vCarousel position-absolute w-auto bo">
                                         <h:panelGroup styleClass="vCarousel-container" layout="block">
                                             <li class="#{!filter.active ? 'active' : null}">
                                                 <p:commandButton value="#{filter.anyText}"
@@ -200,21 +200,21 @@
                                 </li>
                             </p:repeat>
 
-                            <li class="search-box #{groupResourcesBean.query != null ? 'active' : null}">
-                                <img src="#{request.contextPath}/resources/main-template/img/search.png" id="search_filter_icon"/>
+                            <li class="search-box #{groupResourcesBean.query != null ? 'active' : null} p-2">
+                                <img src="#{request.contextPath}/resources/main-template/img/search.png" width="16" height="16" class="cursor-pointer" id="search_filter_icon"/>
 
                                 <div id="search_filter_form">
                                     <h:inputText value="#{groupResourcesBean.query}"/>
 
                                     <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true"
-                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
+                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" styleClass="border-0 cursor-pointer"
                                                      process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
                                 </div>
                             </li>
 
                             <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
-                                <li class="filter clear-filters">
-                                    <p:commandButton value="#{msg.clear_filters}"
+                                <li class="filter clear-filters p-2">
+                                    <p:commandButton value="#{msg.clear_filters}" styleClass="border-0"
                                                      action="#{groupResourcesBean.clearFilters()}"
                                                      update=":resourcesView :paginator :resourcesFilters"
                                                      oncomplete="updateCarousel();resourceDND();"/>
