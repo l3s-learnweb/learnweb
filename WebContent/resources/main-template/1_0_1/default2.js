@@ -78,16 +78,7 @@ $(document).ready(function()
 	});
 
 	// initialize search field auto completion
-	if(market)
-	{
-		if(market === "de")
-			myMarket = "de-DE";
-		else if(market === "pt")
-			myMarket = "pt-BR";
-		else if(market === "it")
-			myMarket = "it-IT";
-	}
-
+	var myMarket = PrimeFaces.settings.locale;
 	$("#searchfield").autocomplete({
         source: function (request, response) {
             $.ajax({

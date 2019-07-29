@@ -8,47 +8,13 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         this.wrapper = $(document.body).children('.layout-wrapper');
 
         this.topbar = this.wrapper.children('.layout-topbar');
-        this.topbarMenuButton = this.topbar.find('#topbar-menu-button');
-        this.topbarUserMenu = this.topbar.find('#topbar-usermenu');
         this.menuButton = this.topbar.find('#menu-button');
-
-        this.topbarMenuClick = false;
 
         this._bindEvents();
     },
 
     _bindEvents: function () {
         var $this = this;
-
-        $this.topbarMenuButton.off('click').on('click', function (e) {
-            //TODO: Move to CSS
-            $this.topbarUserMenu.css({top: '60px', right: '0', left: 'auto'});
-            $this.topbarMenuClick = true;
-
-            if ($this.topbarUserMenu.hasClass('usermenu-active')) {
-                $this.topbarUserMenu.removeClass('fadeInDown').addClass('fadeOutUp');
-
-                setTimeout(function () {
-                    $this.topbarUserMenu.removeClass('usermenu-active fadeOutUp');
-                }, 250);
-            } else {
-                $this.topbarUserMenu.addClass('usermenu-active fadeInDown');
-            }
-
-            e.preventDefault();
-        });
-
-        $this.topbarUserMenu.off('click').on('click', function () {
-            $this.topbarMenuClick = true;
-        });
-
-        $(document.body).off('click').on('click', function () {
-            if (!$this.topbarMenuClick && $this.topbarUserMenu.hasClass('usermenu-active')) {
-                $this.topbarUserMenu.removeClass('usermenu-active')
-            }
-
-            $this.topbarMenuClick = false;
-        });
 
         $this.menuButton.off('click').on('click', function (e) {
             if ($this.isDesktop()) {
@@ -68,17 +34,8 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         return this.wrapper.hasClass('layout-wrapper-overlay-sidebar');
     },
 
-    isTablet: function() {
-        var width = window.innerWidth;
-        return width <= 1024 && width > 640;
-    },
-
     isDesktop: function () {
-        return window.innerWidth > 1024;
-    },
-
-    isMobile: function() {
-        return window.innerWidth <= 640;
+        return window.innerWidth > 992;
     }
 });
 
@@ -527,3 +484,13 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 $(function () {
     PrimeFaces.cw("LearnwebTheme", "me", {id: "learnweb"});
 });
+
+/**
+ * Reproducible in PrimeFaces 7.0
+ * https://github.com/primefaces/primefaces/issues/5035
+ * Fix for Primefaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
+ */
+PrimeFaces.widget.Menu.prototype.show = function() {
+    this.align();
+    this.jq.css({"z-index": ++PrimeFaces.zindex}).show();
+};

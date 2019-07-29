@@ -4,86 +4,72 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <div class="layout-topbar">
-        <div class="row align-items-center justify-content-between h-100">
-
-            <div class="col-6 col-sm-2 col-lg-3 col-xl-2">
-                <div class="row align-items-center">
-                    <div class="col-lg-9 d-none d-sm-none d-md-none d-lg-block">
-                        <div class="logo d-flex justify-content-center align-items-center">
-                            <a href="#{request.contextPath}/lw/myhome/welcome.jsf">
-                                <i class="lw lw-logo text-white"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <ui:fragment rendered="#{userBean.loggedIn}">
-                        <div class="col-3 col-lg-2">
-                            <a id="menu-button" class="menu-button" href="#">
-                                <i class="fa fa-align-left"/>
-                            </a>
-                        </div>
-                    </ui:fragment>
-                </div>
-            </div>
-
+    <div class="layout-topbar d-flex flex-row align-items-center bg-primary">
+        <div class="d-flex mr-auto">
             <ui:fragment rendered="#{userBean.loggedIn}">
-                <div class="col-sm-7 col-xl-8 col-lg-7 d-none d-sm-block">
-                    <form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" class="search-form w-100 d-flex justify-content-center" id="searchform">
-                        <input type="hidden" name="action" value="#{searchBean.queryMode}" />
-                        <input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" />
-
-                        <button id="searchbutton" class="search-button" title="#{msg.searchLabel}" type="submit">
-                            <i class="lw lw-search" aria-hidden="true"></i>
-                        </button>
-                    </form>
-                </div>
-
-                <div class="col-6 col-sm-3 col-lg-2">
-                    <div class="row align-items-center justify-content-end">
-                        <div class="col-4 col-sm-5 col-xl-3">
-                            <a class="menu-button" href="#{request.contextPath}/lw/myhome/notification.jsf">
-                                <i class="fa fa-envelope"/>
-                            </a>
-                        </div>
-
-                        <div class="col-5 col-sm-6 col-xl-4">
-                            <a id="topbar-menu-button" class="topbar-menu-button" href="#">
-                                <img id="j_idt24" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt=""/>
-                            </a>
-
-                            <h:form>
-                                <ul id="topbar-usermenu" class="usermenu usermenu-overlay">
-                                    <li>
-                                        <a href="#{request.contextPath}/lw/myhome/profile.jsf">
-                                            <i class="fa fa-fw fa-user"></i><span>#{msg.profile}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{request.contextPath}/lw/admin/dashboard/user.jsf">
-                                            <i class="fa fa-fw fa-table"></i><span>#{msg.myDashboardTitle}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}">
-                                            <i class="fa fa-fw fa-history"></i><span>#{msg.search_history}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <h:commandLink action="#{loginBean.logout}">
-                                            <i class="fa fa-sign-out"></i><span>#{msg.logout}</span>
-                                        </h:commandLink>
-                                    </li>
-                                </ul>
-                            </h:form>
-                        </div>
-                    </div>
-                </div>
+                <a id="menu-button" class="topbar-element" href="#">
+                    <i class="fa fa-align-left"/>
+                </a>
             </ui:fragment>
+            <a href="#{request.contextPath}/lw/myhome/welcome.jsf" class="topbar-element logo">
+                <i class="lw lw-logo"></i>
+            </a>
         </div>
 
-        <script type="text/javascript">
-            var market = '#{userBean.localeCode}';
-        </script>
+        <ui:fragment rendered="#{userBean.loggedIn}">
+            <div class="d-flex order-1 order-md-0 search-wrapper">
+                <form action="#{request.contextPath}/lw/search.jsf" class="topbar-element search-form w-100" onsubmit="removeViewstate(this);">
+                    <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
+                    <input type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
+
+                    <button id="searchbutton" title="#{msg.searchLabel}">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </form>
+            </div>
+        </ui:fragment>
+
+        <h:form styleClass="d-flex">
+            <a href="#{request.contextPath}/lw/myhome/notification.jsf" class="topbar-element">
+                <i class="fa fa-bell"/>
+            </a>
+
+            <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+                <p:commandLink id="languageSwitchButton" styleClass="topbar-element topbar-lang-button">
+                    <img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
+                </p:commandLink>
+
+                <p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-overlay">
+                    <p:menuitem action="#{userBean.setLocaleCode('de')}">
+                        <img src="#{request.contextPath}/resources/images/flags/flag_de.png" alt=""/><span>Deutsch</span>
+                    </p:menuitem>
+                    <p:menuitem action="#{userBean.setLocaleCode('en')}">
+                        <img src="#{request.contextPath}/resources/images/flags/flag_en.png" alt=""/><span>English</span>
+                    </p:menuitem>
+                    <p:menuitem action="#{userBean.setLocaleCode('it')}">
+                        <img src="#{request.contextPath}/resources/images/flags/flag_it.png" alt=""/><span>Italiano</span>
+                    </p:menuitem>
+                    <p:menuitem action="#{userBean.setLocaleCode('pt')}">
+                        <img src="#{request.contextPath}/resources/images/flags/flag_pt.png" alt=""/><span>Português</span>
+                    </p:menuitem>
+                    <p:menuitem action="#{userBean.setLocaleCode('xx')}" rendered="#{userBean.admin}">
+                        <img src="#{request.contextPath}/resources/images/flags/flag_xx.png" alt=""/><span>Developer</span>
+                    </p:menuitem>
+                </p:menu>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+                <p:commandLink id="userMenuButton" styleClass="topbar-element topbar-menu-button">
+                    <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="rounded-circle" alt="Profile"/>
+                </p:commandLink>
+
+                <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-overlay">
+                    <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}" />
+                    <p:menuitem url="#{request.contextPath}/lw/admin/dashboard/user.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}" />
+                    <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}" />
+                    <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}" />
+                </p:menu>
+            </ui:fragment>
+        </h:form>
     </div>
 </ui:composition>

@@ -8,13 +8,17 @@
     top: 0;
     left: 0;
     height: 100%;
-    padding-top: 60px;
+    padding-top: $topbar-height;
     box-sizing: border-box;
     @include transition(left $transition-duration);
 
     @include media-breakpoint-down(lg) {
       left: -$sidebar-width;
       box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    @include media-breakpoint-down($topbar-two-row-display) {
+      padding-top: 2 * $topbar-height;
     }
 
     .sidebar-scroll-content {

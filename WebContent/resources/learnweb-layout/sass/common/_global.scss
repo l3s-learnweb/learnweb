@@ -1,17 +1,5 @@
 html {
-  font-size: 10px;
-
-  @include media-breakpoint-up(sm) { // min-width: 576px
-    font-size: 12px;
-  }
-
-  @include media-breakpoint-up(md) { // min-width: 783px
-    font-size: 14px;
-  }
-
-  @include media-breakpoint-up(lg) { // min-width: 992px
-    font-size: 14px;
-  }
+  font-size: 14px;
 
   @include media-breakpoint-up(xl) { // min-width: 1200px
     font-size: 16px;
