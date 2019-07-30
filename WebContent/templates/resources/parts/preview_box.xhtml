@@ -6,7 +6,7 @@
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-    <h:panelGroup layout="block" styleClass="preview_box" id="preview_box">
+    <h:panelGroup layout="block" styleClass="preview_box p-1 border" id="preview_box">
         <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
             <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
                 <h:outputText value='#{res.embedded}' escape="false"/>

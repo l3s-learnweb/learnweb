@@ -258,9 +258,9 @@
 					#{rightPaneBean.clickedResource.archiveUrls.size()} </span> ):
 			</span>
 
-			<p:commandButton id="list_button" styleClass="greenbutton"
+			<p:commandButton id="list_button"
 				value="#{msg.list_view}" onclick="open_list_view(); return false;" />
-			<p:commandButton id="timeline_button" styleClass="greenbutton"
+			<p:commandButton id="timeline_button"
 				value="#{msg.timeline_view}"
 				onclick="open_timeline_view(); return false;" />
 			<!-- Insert thumbnail link visualization -->
@@ -288,11 +288,11 @@
 
 	<h:form id="tag_form"
 		rendered="${not empty rightPaneBean.clickedResource.tags or rightPaneBean.clickedResource.canEditResource(userBean.user)}">
-		<div class="font-weight-bold" style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
+		<div class="font-weight-bold py-2">#{msg.tags}</div>
 		<div>
 		<ul class="row ml-0 pl-0">
 			<ui:repeat var="tag" value="#{rightPaneBean.clickedResource.tags}">
-				<li class="tag_list pr-2"><h:outputLink
+				<li class="tag_list pr-2" style="list-style-type: none;"><h:outputLink
 						styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
 						value="search.jsf">
 						<span class="ui-button-text"> #{tag.name} </span>
@@ -338,20 +338,19 @@
 		<ui:fragment
 			rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 			<br />
-			<div style="position: relative; padding-left: 60px;">
+			<div  class="position-relative" style="padding-left: 3.25rem;">
 				<img id="userpic"
-					src="${learnwebBean.getProfileImage(userBean.user)}" width="50"
-					height="50" style="position: absolute; left: 0"
+					src="${learnwebBean.getProfileImage(userBean.user)}" class="userpic pr-2"
 					alt="Profile picture" />
 
-				<p:inputTextarea id="commentfield"
-					style="width:100%;min-height:50px;box-sizing:border-box;" rows="2"
+				<p:inputTextarea id="commentfield" styleClass="w-100 mh-25"
+					 rows="2"
 					value="#{resourceDetailBean.newComment}"
 					placeholder="#{msg.addComment}" required="true" />
 				<br />
 			</div>
 			<p:commandButton id="comment_button"
-				styleClass="greenbutton float-right" style="align-self: flex-end;" value="#{msg.addComment}"
+				styleClass="float-right align-self-end mt-1" value="#{msg.addComment}"
 				actionListener="#{resourceDetailBean.addComment()}"
 				update=":resourcesView :comment_input_form :comment_form :growl">
 				<f:setPropertyActionListener
@@ -359,21 +358,20 @@
 			</p:commandButton>
 		</ui:fragment>
 	</h:form>
-	<br class="clear" />
-	<h:form id="comment_form" styleClass="clear" prependId="false"
-		style="margin-bottom:40px;">
+	<br/>
+	<h:form id="comment_form" styleClass="mb-6" prependId="false">
 		<h:panelGroup layout="block"
 			rendered="#{not empty rightPaneBean.clickedResource.comments}"
-			styleClass="comments">
+			styleClass="border-top p-2">
 
 			<ui:repeat var="comment"
 				value="#{rightPaneBean.clickedResource.comments}">
-				<div class="comment">
+				<div class="border-bottom border-top m-2 bg-light">
 					<img class="float-left" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture" />
 					<div class="username_div">
 						<span class="username">
 							<h:link value=" #{comment.user.username} " outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="text-decoration-none" />
-						</span> <span title="#{comment.date}" class="comment_date">
+						</span> <span title="#{comment.date}" class="ml-2">
 							#{userBean.getPrettyDate(comment.date)} </span>
 						<div style="margin-top: 5px;">#{comment.text}</div>
 

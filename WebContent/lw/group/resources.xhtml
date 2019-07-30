@@ -103,17 +103,17 @@
                                     onclick="doAction('create-folder'); PF('add_resource_menu').hide(); return false;"/>
                         <p:separator/>
                         <p:submenu label="#{msg.create}" icon="fa fa-plus-square">
-                            <p:menuitem value="#{msg.office_document}"
+                            <p:menuitem value="#{msg.office_document}" styleClass="bg-primary"
                                         onclick="doAction('new-file', 'document'); PF('add_resource_menu').hide(); return false;"
                                         icon="fa fa-file-word-o" update=":right_pane_wrapper" oncomplete="update_header()"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_spreadsheet}"
+                            <p:menuitem value="#{msg.office_spreadsheet}" styleClass="bg-primary"
                                         onclick="doAction('new-file','spreadsheet'); PF('add_resource_menu').hide(); return false;"
                                         icon="fa fa-file-excel-o" update=":right_pane_wrapper" oncomplete="update_header()"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_presentation}"
+                            <p:menuitem value="#{msg.office_presentation}" styleClass="bg-primary"
                                         onclick="doAction('new-file', 'presentation'); PF('add_resource_menu').hide(); return false;"
                                         icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
                                         oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
@@ -201,7 +201,7 @@
                             </p:repeat>
 
                             <li class="search-box #{groupResourcesBean.query != null ? 'active' : null} p-2">
-                                <img src="#{request.contextPath}/resources/main-template/img/search.png" width="16" height="16" class="cursor-pointer" id="search_filter_icon"/>
+                                <img src="#{request.contextPath}/resources/main-template/img/search.png" class="cursor-pointer" id="search_filter_icon"/>
 
                                 <div id="search_filter_form">
                                     <h:inputText value="#{groupResourcesBean.query}"/>
@@ -227,7 +227,7 @@
 
             <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
                 <ui:fragment rendered="#{not empty groupResourcesBean.breadcrumbs}">
-                    <ul>
+                    <ul class="bg-light">
                         <li data-folderId="0">
                             <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupResourcesBean.group.title}</h:outputLink>
                         </li>
@@ -379,55 +379,55 @@
                 <div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.open}</span>
+                        <span>#{msg.open}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-create-folder" role="menuitem" data-action="create-folder" data-per="canAddResources">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.create_folder}</span>
+                        <span>#{msg.create_folder}</span>
                     </div>
                 </div>
                 <div class="context-menu-item divider action-upload-file" role="menuitem" data-action="upload-file" data-per="canAddResources">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.upload_file}</span>
+                        <span>#{msg.upload_file}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-add-website" role="menuitem" data-action="add-website" data-per="canAddResources">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.upload_url}</span>
+                        <span>#{msg.upload_url}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.addTag}</span>
+                        <span>#{msg.addTag}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.edit}</span>
+                        <span>#{msg.edit}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.copy}</span>
+                        <span>#{msg.copy}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-move" role="menuitem" data-action="move" data-per="canDeleteResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.move}</span>
+                        <span>#{msg.move}</span>
                     </div>
                 </div>
                 <div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
-                        <span class="context-menu-item-content">#{msg.removeFromGroup}</span>
+                        <span>#{msg.removeFromGroup}</span>
                     </div>
                 </div>
             </div>

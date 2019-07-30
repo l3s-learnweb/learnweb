@@ -27,7 +27,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel styleClass="m-0 panel-content no-padding-panel-content" >
+    <p:panel styleClass="m-0 panel-content no-padding-panel-content section-resources" >
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
@@ -70,7 +70,7 @@
                     <p:tieredMenu overlay="true" trigger="add_resource_button" my="left top" at="left bottom" style="width:200px">
                         <p:submenu label="#{msg.create}" icon="fa fa-plus-square">
                             <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o"
-                                        update=":right_pane_wrapper"  process="@form"
+                                        update=":right_pane_wrapper"  process="@form" styleClass="bg-primary"
                                         actionListener="#{addResourceBean.clearForm()}">
                                 <f:setPropertyActionListener
                                         target="#{addResourceBean.resource.storageType}" value="1"/>
@@ -80,7 +80,7 @@
                                         target="#{rightPaneBean.paneAction}" value="newFile"/>
                             </p:menuitem>
                             <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o"
-                                        update=":right_pane_wrapper"
+                                        update=":right_pane_wrapper" styleClass="bg-primary"
                                         actionListener="#{addResourceBean.clearForm()}">
                                 <f:setPropertyActionListener
                                         target="#{addResourceBean.resource.storageType}" value="1"/>
@@ -90,7 +90,7 @@
                                         target="#{rightPaneBean.paneAction}" value="newFile"/>
                             </p:menuitem>
                             <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o"
-                                        update=":right_pane_wrapper"
+                                        update=":right_pane_wrapper" styleClass="bg-primary"
                                         actionListener="#{addResourceBean.clearForm()}">
                                 <f:setPropertyActionListener
                                         target="#{addResourceBean.resource.storageType}" value="1"/>
@@ -221,12 +221,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="folder-title" >
+
                                             <div class="folder-title-wrapper">
                                                 <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name"
                                                               title="#{folder.name}"/>
                                             </div>
-                                        </div>
+
 
                                     </div>
                                 </h:panelGroup>
@@ -248,12 +248,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="folder-title">
+
                                             <div class="folder-title-wrapper">
                                                 <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name"
                                                               title="#{folder.name}"/>
                                             </div>
-                                        </div>
+
 
                                     </div>
                                 </h:panelGroup>
@@ -307,15 +307,14 @@
                                     </h:panelGroup>
                                 </ui:repeat>
                             </div>
-                            <br/>
                             <h:form>
-                                <p:commandButton styleClass="float-right" value="#{msg.show_all_my_resources_in_this_group}"
+                                <p:commandButton styleClass="float-right " value="#{msg.show_all_my_resources_in_this_group}"
                                                  update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
                                                  oncomplete="update_url(0, #{folder.folderId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
                                 </p:commandButton>
+                                <br/>
                             </h:form>
-                            <div class="clear"></div>
                         </ui:repeat>
                     </h:panelGroup>
                 </h:panelGroup>
@@ -386,31 +385,31 @@
             <div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
                 <div class="context-menu-item-wrapper">
                     <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.addTag}</span>
+                    <span>#{msg.addTag}</span>
                 </div>
             </div>
             <div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
                 <div class="context-menu-item-wrapper">
                     <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.edit}</span>
+                    <span>#{msg.edit}</span>
                 </div>
             </div>
             <div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
                 <div class="context-menu-item-wrapper">
                     <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.copy}</span>
+                    <span>#{msg.copy}</span>
                 </div>
             </div>
             <div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
                 <div class="context-menu-item-wrapper">
                     <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.open}</span>
+                    <span>#{msg.open}</span>
                 </div>
             </div>
             <div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
                 <div class="context-menu-item-wrapper">
                     <span class="context-menu-item-icon"/>
-                    <span class="context-menu-item-content">#{msg.delete}</span>
+                    <span>#{msg.delete}</span>
                 </div>
             </div>
         </h:panelGroup>

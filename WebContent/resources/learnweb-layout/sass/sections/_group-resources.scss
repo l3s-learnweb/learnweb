@@ -91,14 +91,17 @@
       &.active #search_filter_form {
         display: block;
       }
-
+      img{
+        width: 1rem;
+        height: 1rem;
+      }
       &.active img {
         display: none;
       }
 
       button {
         background: url("\#{resource['main-template/img/search.png']}") no-repeat scroll center center !important;
-        background-size: 16px 16px !important;
+        background-size: 1rem 1rem !important;
 
         &:hover, &:focus {
           background-color: $gray-100 !important;

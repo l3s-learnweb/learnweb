@@ -14,9 +14,9 @@
         <h:inputHidden id="panel_header_title" value="#{rightPaneBean.panelTitle}"  class="group_menu_header" readonly="true"/>
 
         <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFile'}">
-            <h:panelGroup styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
+            <h:panelGroup styleClass="create-block new-resource pb-5"  layout="block">
                 <h:form id="create_file_form">
-                    <p:fieldset id="create_file_fieldset" style="margin-bottom:20px">
+                    <p:fieldset id="create_file_fieldset" styleClass="mb-3">
                         <p:panelGrid styleClass="full-width">
                             <p:row>
                                 <p:column>
@@ -33,7 +33,7 @@
                                     <h:outputText value="#{msg.file_name}*:"/>
                                 </p:column>
                                 <p:column>
-                                    <p:inputText validator="#{addResourceBean.validateNewDocName}" value="#{addResourceBean.resource.fileName}" styleClass="add_field"/>
+                                    <p:inputText validator="#{addResourceBean.validateNewDocName}" value="#{addResourceBean.resource.fileName}"/>
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
@@ -114,7 +114,7 @@
                                 <h:outputText value="URL:"/>
                             </p:column>
                             <p:column rendered="#{addResourceBean.formStep == 1}">
-                                <p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field"
+                                <p:inputText value="#{addResourceBean.resource.url}"
                                              required="true" requiredmessage="#{msg.mandatory_field}"
                                              id="url_input" validator="#{addResourceBean.validateUrl}"
                                              label="URL"/>
@@ -128,7 +128,7 @@
                                 <h:outputText value="#{msg.title}:"/>
                             </p:column>
                             <p:column rendered="#{addResourceBean.formStep == 1}">
-                                <p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field"
+                                <p:inputText value="#{addResourceBean.resource.title}"
                                              required="true" requiredmessage="#{msg.mandatory_field}"
                                              id="title_input"/>
                             </p:column>
@@ -149,7 +149,7 @@
                                 <h:outputText value="#{msg.title}:"/>
                             </p:column>
                             <p:column rendered="#{addResourceBean.formStep == 1}">
-                                <p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field"
+                                <p:inputText value="#{addResourceBean.resource.title}"
                                              required="true" requiredmessage="#{msg.mandatory_field}"
                                              id="survey_title"/>
                             </p:column>
@@ -160,7 +160,7 @@
                             </p:column>
                             <p:column rendered="#{addResourceBean.formStep == 1}">
                                 <p:inputText value="#{addResourceBean.resource.description}"
-                                             styleClass="add_field" id="survey_desc"/>
+                                              id="survey_desc"/>
                             </p:column>
                         </p:row>
                         <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
@@ -499,7 +499,7 @@
                 </div>
             </ui:fragment>
 
-            <table id="edit_table" class="full-width">
+            <table id="edit_table" class="full-width mt-2">
                 <colgroup>
                     <col span="1" style="width: 10%; min-width: 10rem;"/>
                     <col span="1"/>
@@ -535,7 +535,7 @@
         <!-- Create folder block -->
         <h:panelGroup rendered="#{rightPaneBean.paneAction == 'newFolder'}" styleClass="create-block new-folder" layout="block">
             <h:form id="add_folder_form">
-                <p:fieldset style="margin-bottom:20px">
+                <p:fieldset styleClass="mb-3">
                     <p:panelGrid id="add_folder_table" styleClass="full-width">
                         <p:row rendered="#{addFolderBean.targetGroup != null}">
                             <p:column>
@@ -558,7 +558,7 @@
                                 <h:outputText value="#{msg.title}*:"/>
                             </p:column>
                             <p:column>
-                                <p:inputText value="#{addFolderBean.folder.name}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="folder_title_input"/>
+                                <p:inputText value="#{addFolderBean.folder.name}" required="true" requiredmessage="#{msg.mandatory_field}" id="folder_title_input"/>
                             </p:column>
                         </p:row>
                         <p:row>
@@ -566,18 +566,18 @@
                                 <h:outputText value="#{msg.description}*:"/>
                             </p:column>
                             <p:column>
-                                <p:inputTextarea id="folderDescription" value="#{addFolderBean.folder.description}" autoResize="true" styleClass="add_field" style="min-height:100px;"/>
+                                <p:inputTextarea id="folderDescription" value="#{addFolderBean.folder.description}" autoResize="true" style="min-height:100px;"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
                     * #{msg.mandatory_field}
                 </p:fieldset>
 
-                <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" style="margin-right:0.5em;"
+                <p:commandButton value="#{msg.cancel}" styleClass="float-right mr-2"
                                  update=":right_pane_wrapper" immediate="true" oncomplete="update_header()">
                     <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
                 </p:commandButton>
-                <p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right"
+                <p:commandButton value="#{msg.create_folder}" styleClass="float-right"
                                  update=":folderGrid :growl :right_pane_wrapper"
                                  action="#{addFolderBean.addFolder}" ajax="true" oncomplete="update_header();resourceDND();">
                     <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
@@ -684,10 +684,10 @@
                         <td colspan="2" class="align-right">
                             <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
 
-                            <p:commandButton styleClass="graybutton" style="margin-right:0.5em;" oncomplete="update_header();"
+                            <p:commandButton styleClass="mr-2"  oncomplete="update_header();"
                                              actionListener="#{rightPaneBean.cancelEditClickedResource}"
                                              value="#{msg.cancel}" update=":right_pane_wrapper" immediate="true" />
-                            <p:commandButton styleClass="greenbutton" style="margin-right:0.5em;" oncomplete="update_header();resourceDND();"
+                            <p:commandButton styleClass="mr-2"  oncomplete="update_header();resourceDND();"
                                              value="#{msg.save}" update=":folderGrid :right_pane_wrapper :growl"
                                              actionListener="#{rightPaneBean.editClickedResource}" />
                         </td>
