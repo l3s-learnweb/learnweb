@@ -10,7 +10,7 @@
     <ul class="header-menu row justify-content-end">
         <li><a href="#"><span>Log in</span></a></li>
         <li><a href="#about"><span>About us</span></a></li>
-        <li><a href="#subscriptions"><span>Subscribe</span></a></li>
+        <li><a href="#courses"><span>Subscribe</span></a></li>
     </ul>
 </ui:define>
 
@@ -68,15 +68,15 @@
             </div>
         </div>
 
-        <div id="subscriptions" class="subscriptions px-4 py-5 border-top-0">
+        <div id="courses" class="courses px-4 py-5 border-top-0">
             <div class="container">
                 <h2 class="text-white text-center mb-3">Subscribe</h2>
                 <div class="row align-items-start text-center">
                     <div class="col-md-6">
-                        <div class="subscription-box bg-white h-100 mb-5">
-                            <h6 class="subscription-header py-3 m-0">#{msg.public_courses}</h6>
-                            <h5 class="subscription-subheader py-1 m-0">Playground</h5>
-                            <div class="subscription-content row mx-auto my-3">
+                        <div class="course-single bg-white h-100 mb-5 pb-4">
+                            <h6 class="course-header py-3 m-0">#{msg.public_courses}</h6>
+                            <h5 class="course-subheader py-1 m-0">Playground</h5>
+                            <div class="course-content row mx-auto my-3">
                                 <div class="col-4 col-lg-3">
                                     <h:graphicImage value="/resources/image/icons8-playground-96.png"/>
                                 </div>
@@ -84,16 +84,16 @@
                                     ​<h:outputText value="#{msg.standard_version_description}"/>
                                 </div>
                             </div>
-                            <div class="subscription-footer my-4">
+                            <div class="course-footer mt-3">
                                 <p:commandButton type="button" value="Join"/>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="subscription-box bg-white h-100 mb-5">
-                            <h6 class="subscription-header py-3 m-0">#{msg.specific_courses}</h6>
-                            <h5 class="subscription-subheader py-1 m-0">YELL</h5>
-                            <div class="subscription-content row mx-auto py-3">
+                        <div class="course-single bg-white h-100 mb-5 pb-4">
+                            <h6 class="course-header py-3 m-0">#{msg.specific_courses}</h6>
+                            <h5 class="course-subheader py-1 m-0">YELL</h5>
+                            <div class="course-content row mx-auto py-3">
                                 <div class="col-4 col-lg-3">
                                     <h:graphicImage value="/resources/image/interactive_puzzle.png"/>
                                 </div>
@@ -101,7 +101,7 @@
                                     ​<h:outputText value="#{msg.yell_description}"/>
                                 </div>
                             </div>
-                            <div class="subscription-footer my-4">
+                            <div class="course-footer mt-3">
                                 <p:commandButton type="button" value="Join"/>
                             </div>
                         </div>

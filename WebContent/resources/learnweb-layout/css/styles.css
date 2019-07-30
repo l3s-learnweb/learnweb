@@ -13048,19 +13048,19 @@ body {
 .section-landing .header .header-news-list .ui-datalist-content .news-content {
   font-weight: normal;
 }
-.section-landing .subscriptions {
+.section-landing .courses {
   background-color: #38569C;
 }
-.section-landing .subscriptions .subscription-box .subscription-header {
+.section-landing .courses .course-single .course-header {
   background-color: #2C447B;
   color: #fff;
   letter-spacing: 0.1rem;
 }
-.section-landing .subscriptions .subscription-box .subscription-subheader {
+.section-landing .courses .course-single .course-subheader {
   background-color: #e9ecef;
   color: #2C447B;
 }
-.section-landing .subscriptions .subscription-box .subscription-content img {
+.section-landing .courses .course-single .course-content img {
   width: 100%;
   max-width: 7rem;
 }

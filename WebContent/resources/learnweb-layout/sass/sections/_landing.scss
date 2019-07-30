@@ -47,22 +47,22 @@
     }
   }
 
-  .subscriptions {
+  .courses {
     background-color: $themePrimaryColorDarker;
 
-    .subscription-box {
-      .subscription-header {
+    .course-single {
+      .course-header {
         background-color: $themePrimaryDarkest;
         color: $themeElementTextColor;
         letter-spacing: 0.1rem;
       }
 
-      .subscription-subheader {
+      .course-subheader {
         background-color: $gray-200;
         color: $themePrimaryDarkest;
       }
 
-      .subscription-content {
+      .course-content {
         img {
           width: 100%;
           max-width: 7rem;
