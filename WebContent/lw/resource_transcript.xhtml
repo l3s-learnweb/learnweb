@@ -18,7 +18,7 @@
 
 	<ui:define name="center_layout">
 
-		<h:form class="display-none" id="command_form">
+		<h:form class="d-none" id="command_form">
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this"  update=":growl" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />

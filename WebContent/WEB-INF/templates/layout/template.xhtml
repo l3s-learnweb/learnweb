@@ -98,12 +98,12 @@
 
             <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
-            <h:form styleClass="display-none">
+            <h:form styleClass="d-none">
                 <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this"
                                  partialSubmit="true" global="false"/>
             </h:form>
 
-            <h:form class="display-none">
+            <h:form class="d-none">
                 <p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this"
                                  partialSubmit="true" global="false"/>
             </h:form>

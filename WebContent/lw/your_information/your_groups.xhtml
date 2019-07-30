@@ -47,7 +47,7 @@
                 <a href="#{request.contextPath}/lw/group/resources.jsf?group_id=#{group.id}" title="Visit group"><h:outputText value="#{group.title}"/></a>
             </p:column>
 
-            <p:column styleClass="display-none">
+            <p:column styleClass="d-none">
                 <f:facet name="header"><h:outputText value="#{msg.url}"/></f:facet>
                 <h:outputText value="#{request.contextPath}/lw/group/resources.jsf?group_id=#{group.id}"/>
             </p:column>

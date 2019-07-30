@@ -224,7 +224,7 @@
         </div>
 
         <!-- TODO: all remote commands cause an unintended update of :nextPage  -->
-        <h:form class="display-none">
+        <h:form class="d-none">
             <p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadNextPage')"
                              update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this"
                              partialSubmit="true"/>

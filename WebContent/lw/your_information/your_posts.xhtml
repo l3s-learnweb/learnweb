@@ -52,7 +52,7 @@
                 <h:outputText value="#{post.text}"/>
             </p:column>
 
-            <p:column styleClass="display-none">
+            <p:column styleClass="d-none">
                 <f:facet name="header"><h:outputText value="#{msg.url}"/></f:facet>
                 <h:outputText value="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}"/>
             </p:column>

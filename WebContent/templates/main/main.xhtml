@@ -59,7 +59,7 @@
         </section>
 
         <h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}"
-                      styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
+                      styleClass="#{userBean.getPreference('helptext_hide')? 'd-none':''}">
             <h:outputText value="?" id="footer_question_mark"/>
             <h:outputText value="#{helpText}" escape="false" id="footer_text"/>
             <a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
@@ -69,7 +69,7 @@
             <h:link value="#{msg['imprint.title']}" outcome="/lw/imprint.jsf"/>
         </h:panelGroup>
 
-        <h:form styleClass="display-none">
+        <h:form styleClass="d-none">
             <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this" partialSubmit="true" global="false"/>
         </h:form>
 
