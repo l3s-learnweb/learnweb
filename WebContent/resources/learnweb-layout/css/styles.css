@@ -13058,11 +13058,6 @@ html {
 .section-resource-submission .submission-accordion .ui-accordion-header {
   margin-bottom: 0;
 }
-.section-resource-submission .submission-avatar img {
-  border-radius: 100%;
-  width: 2.8rem;
-  height: 2.8rem;
-}
 @media (min-width: 576px) {
   .section-resource-submission .submission-resource {
     width: 17.5rem;
@@ -14887,16 +14882,7 @@ html {
 }
 
 .unread {
-  border-bottom: 1px solid #4AA382;
-  padding: 0.5rem;
-  cursor: pointer;
-  background-color: #e9ecef;
-}
-
-.read {
-  border-bottom: 1px solid #ced4da;
-  padding: 0.5rem;
-  cursor: pointer;
+  background-color: #e9ecef !important;
 }
 
 .section-archive-thumbnail {
