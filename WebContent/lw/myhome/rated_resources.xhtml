@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
-
-	<ui:composition template="/templates/main/main_old.xhtml">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 	
 		<ui:param name="loginRequired" value="true" />
 		<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}" />
-	
-		<ui:define name="body">
+
+		<ui:define name="sub_breadcrumb">
+			<p:menuitem value="#{msg.myRatedResourcesTitle}" url="myhome/rated_resources.jsf#"/>
+		</ui:define>
+
+		<ui:define name="center_layout">
 	
 			<h:form>
 				<p:dataTable var="res" value="#{userBean.user.ratedResources}" columnClasses="" headerClass="">
@@ -42,8 +47,5 @@
 	
 				</p:dataTable>
 			</h:form>
-	
-	
 		</ui:define>
-	</ui:composition>
-</html>
+</ui:composition>

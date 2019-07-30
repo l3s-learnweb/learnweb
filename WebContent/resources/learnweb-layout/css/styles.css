@@ -11567,7 +11567,13 @@ html {
   margin-bottom: 1rem;
   padding: 0.8rem 0.5rem;
 }
+.layout-wrapper .ui-breadcrumb ul {
+  display: flex;
+  align-items: center;
+}
 .layout-wrapper .ui-breadcrumb ul li {
+  display: flex !important;
+  align-items: center;
   vertical-align: middle !important;
   font-size: 1.2rem !important;
   padding: 0 0.3rem !important;
@@ -13054,6 +13060,7 @@ html {
 
 .section-resource-submission .submission-accordion .ui-accordion-content {
   padding: 0;
+  margin-bottom: 0.4rem;
 }
 .section-resource-submission .submission-accordion .ui-accordion-header {
   margin-bottom: 0;

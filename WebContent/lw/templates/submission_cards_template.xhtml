@@ -7,10 +7,10 @@
 <!--@elvariable id="submissions" type="java.util.List<de.l3s.learnweb.resource.submission.Submission>"-->
 
 	<ui:repeat var="submission" value="#{submissions}">
-		<p:panel styleClass="rounded mt-1 text-break">
-			<div class="submission-card">
-				<div class="row">
-					<div class=" col-12 col-xl-5 ">
+		<p:panel styleClass="rounded mt-1 text-break no-padding-panel-content text-break">
+			<div class="submission-card p-3">
+				<div class="row no-gutters">
+					<div class="col-12 col-xl-5">
 						<h4 class="h4 mb-0">
 							<b>#{submission.title} </b>
 							<h:form styleClass="d-inline-block">
