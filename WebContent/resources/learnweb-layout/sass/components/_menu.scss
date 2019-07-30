@@ -144,7 +144,7 @@
       &.ui-state-active {
         background-color: $menuitemHoverBgColor;
         color: $menuitemHoverTextColor;
-        border-left-color: $green;
+        border-left-color: $themePrimaryColor;
 
         .ui-menuitem-icon {
           color: $white;
