@@ -6,6 +6,7 @@ $topbar-button-padding: 15px;
     position: fixed;
     top: 0;
     left: 0;
+    min-width: $min-width;
     width: 100%;
     z-index: 998;
     height: $topbar-height;
