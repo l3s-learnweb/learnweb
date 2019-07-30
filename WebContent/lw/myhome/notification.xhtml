@@ -35,7 +35,7 @@
 
 			<p:panel styleClass="unread rounded mt-1 text-break no-padding-panel-content p-2">
 				<div class="d-flex">
-					<img class="user-picture rounded-circle mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
+					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
 					<div class="d-flex flex-column">
 						<div>
 							<h:outputText value="Title " escape="false"  />
@@ -54,7 +54,7 @@
 
 			<p:panel styleClass="rounded mt-1 text-break no-padding-panel-content p-2">
 				<div class="d-flex">
-					<img class="user-picture rounded-circle mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
+					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
 					<div class="d-flex flex-column">
 						<div>
 							<h:outputText value="Title" escape="false"  />
@@ -73,7 +73,7 @@
 			<ui:repeat var="message" value="#{messageBean.receivedMessages}">
 				<p:panel styleClass="#{message.read ? 'read' : 'unread'} rounded mt-1 text-break no-padding-panel-content p-2">
 					<div class="d-flex">
-						<img class="user-picture rounded-circle mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
+						<img class="profile-picture mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
 						<div class="d-flex flex-column">
 							<div>
 								<h:outputText value="#{message.title}" escape="false"  />

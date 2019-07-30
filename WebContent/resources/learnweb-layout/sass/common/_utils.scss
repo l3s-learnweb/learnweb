@@ -90,7 +90,8 @@
   overflow-y: auto;
 }
 
-.user-picture {
-  width: 2.8rem;
+.profile-picture {
+  width: 2.8125rem;
+  border-radius: 50%;
+  background: $themeElementTextColor;
 }
-

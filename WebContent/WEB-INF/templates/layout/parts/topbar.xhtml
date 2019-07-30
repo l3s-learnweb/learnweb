@@ -7,8 +7,8 @@
     <div class="layout-topbar d-flex flex-row align-items-center bg-primary">
         <div class="d-flex mr-auto">
             <ui:fragment rendered="#{userBean.loggedIn}">
-                <a id="menu-button" class="topbar-element" href="#">
-                    <i class="fa fa-align-left"/>
+                <a href="#" id="menu-button" class="topbar-element menu-button">
+                    <i class="fa fa-align-left"></i>
                 </a>
             </ui:fragment>
             <a href="#{request.contextPath}/lw/myhome/welcome.jsf" class="topbar-element logo">
@@ -31,11 +31,11 @@
 
         <h:form styleClass="d-flex">
             <a href="#{request.contextPath}/lw/myhome/notification.jsf" class="topbar-element">
-                <i class="fa fa-bell"/>
+                <i class="fa fa-bell"></i>
             </a>
 
             <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
-                <p:commandLink id="languageSwitchButton" styleClass="topbar-element topbar-lang-button">
+                <p:commandLink id="languageSwitchButton" styleClass="topbar-element lang-button">
                     <img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
                 </p:commandLink>
 
@@ -59,8 +59,8 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
-                <p:commandLink id="userMenuButton" styleClass="topbar-element topbar-menu-button">
-                    <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="rounded-circle" alt="Profile"/>
+                <p:commandLink id="userMenuButton" styleClass="topbar-element usermenu-button">
+                    <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="profile-picture" alt="Profile picture"/>
                 </p:commandLink>
 
                 <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-overlay">

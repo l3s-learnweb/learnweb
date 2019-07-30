@@ -33,15 +33,7 @@ $topbar-button-padding: 15px;
         }
       }
 
-      &.topbar-menu-button {
-        img {
-          background: $themeElementTextColor;
-          width: ($topbar-height / 3 * 2);
-          height: ($topbar-height / 3 * 2);
-        }
-      }
-
-      &.topbar-lang-button {
+      &.lang-button {
         img {
           height: $topbar-button-size;
         }
