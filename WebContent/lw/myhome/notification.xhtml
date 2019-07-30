@@ -34,84 +34,61 @@
 
 
 			<p:panel styleClass="unread rounded mt-1 text-break no-padding-panel-content p-2">
-				<div class="row">
-					<div class="col-12">
-						<div class="d-flex">
-							<img class="user-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
-							<div class="d-flex flex-column">
-								<div>
-									<div>
-										<h:outputText value="Title " escape="false"  />
-										<h:outputText value="(#{msg.new_word})" escape="false"  />
-									</div>
-								</div>
-
-								<small>
-									<h:outputText value="#{msg.from_user} " escape="false"  />
-									<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
-									<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
-								</small>
-								<h:outputText escape="false" value="ACDC"/>
-							</div>
+				<div class="d-flex">
+					<img class="user-picture rounded-circle mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
+					<div class="d-flex flex-column">
+						<div>
+							<h:outputText value="Title " escape="false"  />
+							<h:outputText value="(#{msg.new_word})" escape="false"  />
 						</div>
 
+						<small>
+							<h:outputText value="#{msg.from_user} " escape="false"  />
+							<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
+							<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
+						</small>
+						<h:outputText escape="false" value="ACDC"/>
 					</div>
 				</div>
-
 			</p:panel>
 
 			<p:panel styleClass="rounded mt-1 text-break no-padding-panel-content p-2">
-				<div class="row">
-					<div class="col-12">
-						<div class="d-flex">
-							<img class="user-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
-							<div class="d-flex flex-column">
-								<div>
-									<div>
-										<h:outputText value="Title" escape="false"  />
-									</div>
-								</div>
-
-								<small>
-									<h:outputText value="#{msg.from_user} " escape="false"  />
-									<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
-									<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
-								</small>
-								<h:outputText escape="false" value="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
-							</div>
+				<div class="d-flex">
+					<img class="user-picture rounded-circle mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
+					<div class="d-flex flex-column">
+						<div>
+							<h:outputText value="Title" escape="false"  />
 						</div>
 
+						<small>
+							<h:outputText value="#{msg.from_user} " escape="false"  />
+							<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
+							<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
+						</small>
+						<h:outputText escape="false" value="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
 					</div>
 				</div>
-
 			</p:panel>
 
 			<ui:repeat var="message" value="#{messageBean.receivedMessages}">
 				<p:panel styleClass="#{message.read ? 'read' : 'unread'} rounded mt-1 text-break no-padding-panel-content p-2">
-					<div class="row">
-						<div class="col-12">
-							<div class="d-flex">
-								<img class="user-picture mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
-								<div class="d-flex flex-column">
-									<div>
-										<div>
-											<h:outputText value="#{message.title}" escape="false"  />
-											<h:outputText rendered="#{message.read}" value="(#{msg.new_word})" escape="false"  />
-										</div>
-									</div>
-
-									<small>
-										<h:outputText value="#{msg.from_user} " escape="false"  />
-										<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"  />
-										<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
-										<h:outputText value="#{message.time}">
-											<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-										</h:outputText>
-									</small>
-									<h:outputText escape="false" value="#{message.text}"/>
-								</div>
+					<div class="d-flex">
+						<img class="user-picture rounded-circle mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
+						<div class="d-flex flex-column">
+							<div>
+								<h:outputText value="#{message.title}" escape="false"  />
+								<h:outputText rendered="#{message.read}" value="(#{msg.new_word})" escape="false"  />
 							</div>
 
+							<small>
+								<h:outputText value="#{msg.from_user} " escape="false"  />
+								<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"  />
+								<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
+								<h:outputText value="#{message.time}">
+									<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+								</h:outputText>
+							</small>
+							<h:outputText escape="false" value="#{message.text}"/>
 						</div>
 					</div>
 				</p:panel>

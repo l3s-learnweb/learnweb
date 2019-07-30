@@ -72,7 +72,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="d-flex align-items-center">
-                                        <img id="userpic" class="user-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
+                                        <img id="userpic" class="user-picture rounded-circle mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                         <div class="d-flex align-items-center">
                                             <h3 class="h3 mr-1 mb-0">#{userSubmission.user.username}</h3>
                                             <h:form prependId="false">
@@ -96,8 +96,8 @@
                                     <div class="row">
                                         <ui:fragment rendered="#{not empty logEntry.resource.thumbnail3}">
                                             <div class="col-5 col-md-3">
-                                                <h:form styleClass="">
-                                                    <p:commandLink styleClass="" update=":right_pane_wrapper" oncomplete="update_header();">
+                                                <h:form>
+                                                    <p:commandLink update=":right_pane_wrapper" oncomplete="update_header();">
                                                         <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
                                                         <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
                                                     </p:commandLink>
@@ -122,7 +122,7 @@
                                         <p:repeat var="res" value="#{userSubmission.resources}">
                                                 <div class="col-6 col-sm-4 col-md-3 mb-2">
                                                     <h:form>
-                                                        <p:commandLink styleClass="" update=":right_pane_wrapper" oncomplete="update_header();">
+                                                        <p:commandLink update=":right_pane_wrapper" oncomplete="update_header();">
                                                             <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{res}"/>
                                                             <img class="w-100" src="#{res.thumbnail1.url}" alt="#{res.title}"/>
                                                         </p:commandLink>
