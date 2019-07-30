@@ -518,4 +518,11 @@ public class ProfileBean extends ApplicationBean implements Serializable
         this.acceptTermsAndConditions = acceptTermsAndConditions;
     }
 
+    public void validateConsent(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
+    {
+        if(value.equals(Boolean.FALSE))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "consent_is_required"));
+        }
+    }
 }

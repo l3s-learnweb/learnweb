@@ -1,0 +1,17 @@
+.form-group {
+  margin-bottom: $form-group-margin-bottom;
+
+  > p {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  > div,
+  > span,
+  > input,
+  > textarea,
+  > select {
+    display: block !important;
+    width: 100% !important;
+  }
+}
