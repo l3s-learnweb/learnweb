@@ -52,8 +52,8 @@
                                      alt="Profile image" style="max-width: 150px;"/>
 
                                 <div class="form-group text-center">
-                                    <p:outputLabel for="@next" value="#{msg.photo}:"/>
-                                    <p:fileUpload id="profilephoto" fileUploadListener="${profileBean.handleFileUpload}"
+                                    <p:outputLabel for="@next" value="#{msg.photo}"/>
+                                    <p:fileUpload id="profilephoto" fileUploadListener="${profileBean.handleFileUpload}" styleClass="fileupload-minimal"
                                                   mode="advanced" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="10485760"
                                                   update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
                                                   disabled="#{profileBean.anonymizeUsername}"/>

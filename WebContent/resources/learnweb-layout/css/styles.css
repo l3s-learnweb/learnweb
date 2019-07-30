@@ -7717,13 +7717,13 @@ body .ui-button.ui-button-text-icon-left .ui-button-text {
   padding: 4px 12px 4px 28px;
 }
 body .ui-button.ui-button-text-icon-left .ui-icon {
-  margin-top: -8px;
+  margin-top: -6px;
 }
 body .ui-button.ui-button-text-icon-right .ui-button-text {
   padding: 4px 28px 4px 12px;
 }
 body .ui-button.ui-button-text-icon-right .ui-icon {
-  margin-top: -8px;
+  margin-top: -6px;
 }
 body .ui-button.ui-button-icon-only {
   margin-right: 0;
@@ -7732,7 +7732,7 @@ body .ui-button.ui-button-icon-only .ui-button-text {
   padding: 4px;
 }
 body .ui-button.ui-button-icon-only .ui-icon {
-  margin-top: -8px;
+  margin-top: -6px;
 }
 body .ui-button .ui-icon {
   font-size: 16px;
@@ -8178,7 +8178,7 @@ body .ui-selectonemenu-panel {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 }
 body .ui-selectonemenu-panel .ui-selectonemenu-filter-container {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   line-height: 22px;
   width: 100%;
   box-sizing: border-box;
@@ -8306,7 +8306,7 @@ body .ui-selectcheckboxmenu-panel {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 }
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header {
-  padding: 8px;
+  padding: 0.5rem;
   background-color: #dee2e6;
 }
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header span.ui-icon {
@@ -8421,7 +8421,7 @@ body .ui-multiselectlistbox {
   padding: 0;
 }
 body .ui-multiselectlistbox .ui-multiselectlistbox-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
 }
 body .ui-multiselectlistbox .ui-multiselectlistbox-item {
@@ -8657,7 +8657,7 @@ body .ui-datepicker {
   padding: 0;
 }
 body .ui-datepicker .ui-datepicker-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
@@ -8899,7 +8899,7 @@ body .ui-inplace .ui-inplace-display {
   border-radius: 0;
 }
 body .ui-fileupload .ui-fileupload-buttonbar {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
   margin-right: 8px;
@@ -8998,7 +8998,7 @@ body .ui-panel {
 }
 body .ui-panel .ui-panel-titlebar {
   border: 0 none;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
   font-size: 16px;
   border-top-left-radius: 0;
@@ -9027,7 +9027,7 @@ body .ui-panel .ui-panel-content {
   padding: 16px;
 }
 body .ui-panel .ui-panel-footer {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border: 0 none;
   margin: 0;
   border-top: 1px solid #ced4da;
@@ -9069,7 +9069,7 @@ body .ui-notificationbar {
 }
 body .ui-accordion .ui-accordion-header {
   background-color: #e9ecef;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   margin-bottom: 8px;
   color: #212529;
   font-weight: 700;
@@ -9159,7 +9159,7 @@ body .ui-tabs.ui-tabs-bottom .ui-tabs-nav li:last-child, body .ui-tabs.ui-tabs-l
   border-right: 1px solid #ced4da;
 }
 body .ui-tabs.ui-tabs-bottom .ui-tabs-nav li a, body .ui-tabs.ui-tabs-left .ui-tabs-nav li a, body .ui-tabs.ui-tabs-right .ui-tabs-nav li a, body .ui-tabs.ui-tabs-top .ui-tabs-nav li a {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   color: #212529;
   font-weight: bold;
 }
@@ -9241,7 +9241,7 @@ body .ui-scrollpanel .ui-scrollpanel-corner {
   background-color: #f8f9fa;
 }
 body .ui-toolbar {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   background-color: #fff;
   color: #212529;
   border: solid 2px #ced4da;
@@ -9274,7 +9274,7 @@ body .ui-wizard .ui-wizard-step-titles .ui-wizard-step-title {
   background-color: #fff;
   border-left: 1px solid #ced4da;
   margin: 0;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-radius: 0;
 }
 body .ui-wizard .ui-wizard-step-titles .ui-wizard-step-title:first-child {
@@ -9301,7 +9301,7 @@ body .ui-wizard .ui-wizard-step-titles .ui-wizard-step-title.ui-state-highlight 
 body .ui-paginator {
   background-color: #fff;
   border: 1px solid #ced4da;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-paginator a {
   color: #212529;
@@ -9423,7 +9423,7 @@ body .ui-paginator.ui-paginator-bottom .ui-paginator-page.ui-state-active {
 }
 body .ui-datatable .ui-datatable-footer,
 body .ui-datatable .ui-datatable-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 700;
   font-size: 1.25rem;
@@ -9445,7 +9445,7 @@ body .ui-datatable .ui-paginator.ui-paginator-bottom .ui-paginator-pages {
 }
 body .ui-datatable thead th {
   background-color: #fff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-color: #dee2e6;
   color: #212529;
   font-size: 1.25rem;
@@ -9475,7 +9475,7 @@ body .ui-datatable thead th:focus.ui-state-active {
 body .ui-datatable tfoot td {
   font-weight: 700;
   background-color: #fff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-color: #dee2e6;
   color: #212529;
   font-size: 1.25rem;
@@ -9547,7 +9547,7 @@ body .ui-datatable .ui-datatable-scrollable-body::-webkit-scrollbar {
   background-color: #f8f9fa;
 }
 body .ui-datagrid .ui-datagrid-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 700;
   font-size: 1.25rem;
@@ -9597,7 +9597,7 @@ body .ui-datagrid .ui-panel-content td .ui-button span:hover {
   color: #4b6cb7;
 }
 body .ui-datalist .ui-datalist-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
   font-size: 1.25rem;
   text-align: left;
@@ -9618,10 +9618,10 @@ body .ui-datalist .ui-paginator.ui-paginator-bottom .ui-paginator-pages {
   padding: 4px 0 0 0;
 }
 body .ui-datascroller .ui-datascroller-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-dataview .ui-dataview-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
   font-size: 1.25rem;
   text-align: left;
@@ -9757,7 +9757,7 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-caption {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 700;
 }
@@ -9894,7 +9894,7 @@ body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-s:before {
   content: "";
 }
 body .ui-orderlist .ui-orderlist-caption {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   box-sizing: border-box;
   width: 200px;
   font-weight: 700;
@@ -9928,7 +9928,7 @@ body .ui-carousel {
   padding: 0;
 }
 body .ui-carousel .ui-carousel-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   margin: 0;
   font-weight: 700;
   text-align: left;
@@ -9943,7 +9943,7 @@ body .ui-carousel .ui-carousel-header .ui-carousel-dropdown, body .ui-carousel .
   margin-top: 2px;
 }
 body .ui-carousel .ui-carousel-footer {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   background-color: #e9ecef;
   margin: 0;
   color: #212529;
@@ -10029,19 +10029,19 @@ body .ui-carousel .ui-carousel-viewport .ui-carousel-items .ui-carousel-item {
   margin: -1px;
 }
 body .ui-treetable .ui-treetable-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   font-weight: 700;
   text-align: left;
 }
 body .ui-treetable .ui-treetable-footer {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-treetable .ui-paginator {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-treetable thead th {
   background-color: #fff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-color: #dee2e6;
   color: #212529;
 }
@@ -10067,7 +10067,7 @@ body .ui-treetable thead th .ui-treetable-resizer {
 body .ui-treetable tfoot td {
   font-weight: 700;
   background-color: #fff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border-color: #dee2e6;
   font-size: 1.25rem;
 }
@@ -10700,7 +10700,7 @@ body .ui-dialog {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 }
 body .ui-dialog .ui-dialog-titlebar {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-dialog .ui-dialog-titlebar .ui-dialog-title {
   margin: 0;
@@ -10749,7 +10749,7 @@ body .ui-dialog .ui-dialog-footer .ui-confirmdialog-yes.ui-state-active {
   color: #2C447B;
 }
 body .ui-dialog .ui-dialog-buttonpane {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   text-align: right;
 }
 body .ui-dialog .ui-dialog-buttonpane button {
@@ -10791,7 +10791,7 @@ body .ui-lightbox {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 }
 body .ui-lightbox .ui-lightbox-caption {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-lightbox .ui-lightbox-caption .ui-lightbox-caption-text {
   color: #fff;
@@ -10880,7 +10880,7 @@ body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-content.ui-lightbox-
 body .ui-breadcrumb {
   background-color: #fff;
   color: #495057;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border: 1px solid #ced4da;
   border-radius: 3px;
 }
@@ -11163,7 +11163,7 @@ body .ui-menu.ui-megamenu.ui-megamenu-vertical > .ui-menu-list > .ui-menuitem.ui
   padding-left: 4px;
 }
 body .ui-menu.ui-slidemenu .ui-slidemenu-backward {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   width: 100%;
   margin: 0;
   font-weight: 600;
@@ -11213,7 +11213,7 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active {
 }
 body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link {
   color: #fff;
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
   border: 0 none;
 }
 body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link .ui-menuitem-icon,
@@ -11280,7 +11280,7 @@ body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-e:before {
   content: "";
 }
 body .ui-panelmenu .ui-panelmenu-header a {
-  padding: 8px 16px 8px 16px 8px 16px 28px;
+  padding: 0.5rem 1rem 0.5rem 1rem 0.5rem 1rem 28px;
 }
 body .ui-panelmenu .ui-panelmenu-header.ui-state-hover {
   background-color: #38569C;
@@ -11364,7 +11364,7 @@ body .ui-log {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
 }
 body .ui-log .ui-log-header {
-  padding: 8px 16px;
+  padding: 0.5rem 1rem;
 }
 body .ui-log .ui-log-header .ui-log-button {
   display: inline-block;
@@ -11400,15 +11400,9 @@ body .ui-message {
   align-items: center;
   font-size: 0.875rem;
 }
-body .ui-panel .ui-panel-titlebar {
-  padding: 5px 16px;
-}
-body .ui-panel .ui-panel-titlebar .ui-panel-title {
-  line-height: 1.9;
-}
 body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
-  height: 100%;
-  top: 0;
+  text-decoration: none;
+  top: 0.25rem;
 }
 body .ui-menu.ui-menu-overlay {
   background: #4b6cb7;
@@ -12581,6 +12575,13 @@ body {
 }
 .imageupload-button .ui-fileupload-content {
   width: 100%;
+}
+
+.fileupload-minimal .ui-fileupload-buttonbar {
+  background: inherit;
+}
+.fileupload-minimal .ui-fileupload-content {
+  display: none;
 }
 
 .command-button {

@@ -1,4 +1,4 @@
-.imageupload-button { // TODO: remove it, works fine without it, see profile page
+.imageupload-button { // TODO: remove it
   display: flex;
 
   .ui-fileupload-buttonbar {
@@ -17,6 +17,16 @@
 
   .ui-fileupload-content {
     width: 100%;
+  }
+}
+
+.fileupload-minimal {
+  .ui-fileupload-buttonbar {
+    background: inherit;
+  }
+
+  .ui-fileupload-content {
+    display: none;
   }
 }
 

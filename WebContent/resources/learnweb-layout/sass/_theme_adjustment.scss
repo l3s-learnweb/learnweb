@@ -16,15 +16,9 @@ body {
 
   .ui-panel {
     .ui-panel-titlebar {
-      padding: 5px 16px;
-
-      .ui-panel-title {
-        line-height: 1.9;
-      }
-
       .ui-panel-titlebar-icon {
-        height: 100%;
-        top: 0;
+        text-decoration: none;
+        top: 0.25rem;
       }
     }
   }
