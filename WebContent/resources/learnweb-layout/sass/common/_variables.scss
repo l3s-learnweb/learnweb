@@ -1,8 +1,8 @@
 // Load colors
 @import '_colors';
 // change this if you want to use different color schema (see `themes` folder for all alternatives)
-@import 'themes/_emerald';
-//@import 'themes/_noir';
+//@import 'themes/_emerald';
+@import 'themes/_noir';
 
 /* Theme color schema (DO NOT USE $green, $greenDarker, etc USE $themePrimaryColor, $themePrimaryColorDarker, etc VARIABLES INSTEAD!) */
 $themeSidebarDividerColor: $gray-400 !default; // $sidebarMenuitemDividerColor, #e4e2e0
