@@ -57,7 +57,7 @@
   }
 }
 
-.no-padding-panel-content {
+.no-padding-panel-content { // TODO: remove it, don't do stupid things
   .ui-panel-content {
     padding: 0 !important;
   }
@@ -69,7 +69,7 @@
   }
 }
 
-.klapper_zu { /* TODO: remove this */
+.klapper_zu { // TODO: remove it
   height: .9rem;
 }
 
@@ -94,4 +94,5 @@
   width: 2.8125rem;
   border-radius: 50%;
   background: $themeElementTextColor;
+  border: 1px solid $themePrimaryColor;
 }

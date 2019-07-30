@@ -1,11 +1,10 @@
-<ui:composition
-        template="/WEB-INF/templates/layout/template.xhtml"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-        xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
@@ -17,18 +16,13 @@
 
 <ui:define name="center_layout">
     <div class="row flex-column-reverse flex-lg-row">
-        <div class="col-12 col-lg-6 mt-3 mt-lg-0">
-            <p:panel header="#{msg.last_activities}" styleClass="bg-transparent border-0 no-padding-panel-content m-0">
-                <h:panelGroup id="profile_news">
-                    <ui:decorate template="/templates/user/logs.xhtml">
-                        <ui:param name="news" value="#{newsFeedBean.newsList}"/>
-                    </ui:decorate>
-                </h:panelGroup>
+        <div class="col-12 col-lg-6 pr-lg-2">
+            <p:panel header="#{msg.last_activities}" id="profile_news">
+                <ui:decorate template="/templates/user/logs.xhtml"/>
             </p:panel>
         </div>
-        <div class="col-12 col-lg-6">
-            <p:panel header="#{msg.edit_profile}" styleClass="m-0">
-
+        <div class="col-12 col-lg-6 pl-lg-2 mb-3 mb-lg-0">
+            <p:panel header="#{msg.edit_profile}">
                 <h:form enctype="multipart/form-data">
                     <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
 
@@ -143,11 +137,9 @@
                 </h:form>
             </p:panel>
 
-            <ui:fragment rendered="#{not empty profileBean.selectedUser.credits}">
-                <p:panel header="#{msg.awards}">
-                    <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
-                </p:panel>
-            </ui:fragment>
+            <p:panel header="#{msg.awards}" rendered="#{not empty profileBean.selectedUser.credits}">
+                <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
+            </p:panel>
 
             <p:panel header="#{msg.change_password}" styleClass="mt-3">
                 <h:form id="passwordform">

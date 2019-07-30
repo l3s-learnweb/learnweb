@@ -22,14 +22,14 @@
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.myProfileTitle} #{msg.of} #{userDetailBean.user.username}" url="user/detail.jsf?user_id=#{userDetailBean.user.id}"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.last_activities}" styleClass="bg-transparent no-border no-padding-panel-content m-0">
-		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
-		<h:panelGroup id="profile_news" rendered="#{not userDetailBean.pageHidden}">		
-			<ui:decorate template="/templates/user/logs.xhtml">
-				<ui:param name="news" value="#{newsFeedBean.newsList}"/>
-			</ui:decorate >
-		</h:panelGroup>
+		<p:panel header="#{msg.last_activities}" id="profile_news">
+			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
+
+			<ui:fragment rendered="#{not userDetailBean.pageHidden}">
+				<ui:decorate template="/templates/user/logs.xhtml"/>
+			</ui:fragment>
 		</p:panel>
 	</ui:define>
 	

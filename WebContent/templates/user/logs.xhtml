@@ -1,38 +1,30 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-	<!--@elvariable id="news" type="java.util.List<de.l3s.learnweb.LogEntry>"-->
+	<p:repeat value="#{newsFeedBean.newsList}" var="logEntry" varStatus="status">
+		<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+			<img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
-
-	<p:repeat value="#{news}" var="logEntry" id="datagrid">
-		<p:panel styleClass="rounded mt-1 text-break p-2">
-			<div class="row">
-				<div class="col-12">
-					<div class="d-flex align-items-center">
-						<img id="userpic" class="profile-picture mr-4 mr-md-2" src="#{logEntry.userImage}" alt="Profile picture"/>
-						<div class="d-flex flex-column">
-							<div>
-								<h:outputText value="#{logEntry.description}" escape="false"  />
-								<h:panelGroup rendered="#{logEntry.queryNeeded}">
-									<h:outputText value=" #{msg.with_query}" escape="false"  />
-									<h:outputLink value="search.jsf">
-										<h:outputText value=" #{logEntry.resource.query}"/>
-										<f:param name="query" value="#{logEntry.resource.query}"/>
-										<f:param name="action" value="web"/>
-									</h:outputLink>
-									<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
-								</h:panelGroup>
-							</div>
-
-							<small><h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" styleClass="font-weight-light"/></small>
-						</div>
-					</div>
-				</div>
+			<div class="log-details">
+				<p class="mb-0 log-description">
+					<h:outputText value="#{logEntry.description}" escape="false"  />
+					<h:panelGroup rendered="#{logEntry.queryNeeded}">
+						<h:outputText value=" #{msg.with_query}" escape="false"  />
+						<h:outputLink value="search.jsf">
+							<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+							<f:param name="query" value="#{logEntry.resource.query}"/>
+							<f:param name="action" value="web"/>
+						</h:outputLink>
+						<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+					</h:panelGroup>
+				</p>
+				<p class="small font-weight-light mb-0 log-date">
+					<h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
+				</p>
 			</div>
-		</p:panel>
+		</div>
 	</p:repeat>
-				
 </ui:composition>
