@@ -174,7 +174,7 @@
 				<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 			</div>
 
-			<p:accordionPanel  id="submissions">
+			<p:accordionPanel styleClass="submission-accordion" id="submissions">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />

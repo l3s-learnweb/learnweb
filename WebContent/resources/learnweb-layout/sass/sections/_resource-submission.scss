@@ -1,22 +1,16 @@
-.submission-card{
-  margin-top: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid $themeSidebarDividerColor;
-  &:first-child{
-    margin-top: 0;
-  }
-}
+.section-resource-submission {
 
-.section-resource-submission{
-  .submission-avatar{
-    img{
-      border-radius: 100%;
-      width: 2.8rem;
-      height: 2.8rem;
+  .submission-accordion {
+    .ui-accordion-content {
+      padding: 0;
     }
 
+    .ui-accordion-header {
+      margin-bottom: 0;
+    }
   }
-  .submission-resource{
+
+  .submission-resource {
     @include media-breakpoint-up(sm) {
       width: 17.5rem;
     }
@@ -25,17 +19,14 @@
     }
   }
 
-
-
 }
 
-.submission-dialog{
-  .ui-dialog-content{
+.submission-dialog {
+  .ui-dialog-content {
     max-width: 27rem;
   }
-
 }
 
-.add-resource-image{
+.add-resource-image {
   width: 2rem;
 }

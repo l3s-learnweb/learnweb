@@ -13052,15 +13052,12 @@ html {
   max-width: 7rem;
 }
 
-.submission-card {
-  margin-top: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ced4da;
+.section-resource-submission .submission-accordion .ui-accordion-content {
+  padding: 0;
 }
-.submission-card:first-child {
-  margin-top: 0;
+.section-resource-submission .submission-accordion .ui-accordion-header {
+  margin-bottom: 0;
 }
-
 .section-resource-submission .submission-avatar img {
   border-radius: 100%;
   width: 2.8rem;
