@@ -18,12 +18,12 @@ body {
                 }
                 &.ui-breadcrumb-chevron {
                     @include icon_override("/ ");
-                    font-size: $fontSize +8;
+                    font-size: $h3-font-size;
                     margin: 0 6px;
                     vertical-align: top;
                 }
                 &:first-child {
-                    font-size: $fontSize + 2;
+                    font-size: $font-size-lg;
                     a.ui-icon-home {
                         margin: 0;
                     }
@@ -303,7 +303,7 @@ body {
         .ui-panelmenu-header {
             background-color: $primaryColor;
             padding: 0;
-            font-size: $fontSize;
+            font-size: $font-size-base;
             font-weight: 700;
             color: $primaryTextColor;
             margin-top: 4px;

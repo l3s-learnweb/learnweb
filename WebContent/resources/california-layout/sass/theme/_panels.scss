@@ -6,7 +6,7 @@ body {
             padding: $headerPadding;
             font-weight: 700;
             font-size: $headerFontSize;
-            @include border-radius-top($borderRadius);
+            @include border-radius-top($border-radius);
             @include border-radius-bottom(0px);
             .ui-panel-titlebar-icon {
                 position: relative;
@@ -71,7 +71,7 @@ body {
             margin-bottom: 8px;
             color: $headerLightTextColor;
             font-weight: 700;
-            @include transition(background-color $transitionDuration);
+            @include transition(background-color $transition-duration);
             &.ui-state-hover,
             &.ui-tabs-outline {
                 background-color: $headerLightHoverBgColor;
@@ -88,7 +88,7 @@ body {
             .ui-icon {
                 right: 16px;
                 left: auto;
-                @include transition(color $transitionDuration);
+                @include transition(color $transition-duration);
                 @include icon_override("\f067");
                 &.ui-icon-triangle-1-s {
                     @include icon_override("\f068");
@@ -112,7 +112,7 @@ body {
                 background-color: $headerTabBgColor;
                 li {
                     position: relative;
-                    @include transition(background-color $transitionDuration);
+                    @include transition(background-color $transition-duration);
                     @include border-radius(0);
                     @include border-box();
                     margin: 0;
@@ -225,7 +225,7 @@ body {
     .ui-toolbar {
         padding: $headerPadding;
         background-color: $contentBgColor;
-        color: $textColor;
+        color: $body-color;
         border: solid 2px $toolbarBorderColor;
         .ui-button {
             border-radius: 3px;
@@ -265,11 +265,11 @@ body {
                 padding: $headerPadding;
                 @include border-radius(0);
                 &:first-child {
-                    @include border-radius-left($borderRadius);
+                    @include border-radius-left($border-radius);
                     border-right: 1px solid $contentBorderColor;
                 }
                 &:last-child {
-                    @include border-radius-right($borderRadius);
+                    @include border-radius-right($border-radius);
                     border-right: 1px solid $contentBorderColor;
                 }
                 &.ui-state-highlight {

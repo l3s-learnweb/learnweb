@@ -1,7 +1,7 @@
 body {
     .ui-widget,
     .ui-widget .ui-widget {
-        font-family: $fontFamily;
+        font-family: $font-family-base;
         text-decoration: none;
     }
     .ui-widget-content {
@@ -27,19 +27,19 @@ body {
         background-image: none;
     }
     .ui-corner-all {
-        @include border-radius($borderRadius);
+        @include border-radius($border-radius);
     }
     .ui-corner-top {
-        @include border-radius-top($borderRadius);
+        @include border-radius-top($border-radius);
     }
     .ui-corner-bottom {
-        @include border-radius-bottom($borderRadius);
+        @include border-radius-bottom($border-radius);
     }
     .ui-corner-left {
-        @include border-radius-left($borderRadius);
+        @include border-radius-left($border-radius);
     }
     .ui-corner-right {
-        @include border-radius-right($borderRadius);
+        @include border-radius-right($border-radius);
     }
     .ui-widget-overlay {
         background-color: $gray-700;

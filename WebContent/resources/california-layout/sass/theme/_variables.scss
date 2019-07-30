@@ -1,5 +1,3 @@
-@import '../variables';
-
 $primaryColor:$themePrimaryColor;
 $primaryColorDarker:$themePrimaryColorDarker;
 $primaryDarkerAlt:$themePrimaryDarkerAlt;
@@ -87,9 +85,9 @@ $keypadBgColor:$black;
 /*groups*/
 $inputGroupBorderColor:$gray-500;
 $inputGroupBgColor:$white;
-$inputGroupTextColor:$textColor;
-$inputGroupIconColor:$textSecondaryColor;
-$inputGroupAddonMinWidth:2*$fontSize;
+$inputGroupTextColor:$body-color;
+$inputGroupIconColor:$gray-400;
+$inputGroupAddonMinWidth:$h2-font-size;
 $checkboxWidth:20px;
 $checkboxHeight:20px;
 
@@ -165,7 +163,7 @@ $greyButtonTextColor:$white;
 /* List Items */
 $listItemPadding:4px 8px;
 $listItemHoverBgColor:$gray-200;
-$listItemHoverTextColor:$textColor;
+$listItemHoverTextColor:$body-color;
 
 /* Messages */
 $infoMessageBgColor:$lightBlue;

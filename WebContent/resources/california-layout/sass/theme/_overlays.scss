@@ -79,11 +79,11 @@ body {
                     float: none;
                     display: inline-block;
                     vertical-align: middle;
-                    line-height: $fontSize;
+                    line-height: $font-size-base;
                     margin: 0;
                     &.ui-icon {
                         margin-right: 4px;
-                        font-size: $fontSize + 2;
+                        font-size: $font-size-lg;
                     }
                 }
             }

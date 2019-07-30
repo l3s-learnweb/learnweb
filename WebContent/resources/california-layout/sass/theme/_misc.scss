@@ -42,7 +42,7 @@ body {
                 margin-right: 4px;
                 color: $progressbarTextColor;
                 padding: 0;
-                @include transition(color $transitionDuration);
+                @include transition(color $transition-duration);
 
                 &.ui-state-hover {
                     color: $overlayIconHoverColor;

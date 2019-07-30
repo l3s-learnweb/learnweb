@@ -14,7 +14,7 @@ body {
         .ui-paginator-prev {
             height: 20px;
             border-top: 4px solid transparent;
-            @include transition(color $transitionDuration);
+            @include transition(color $transition-duration);
 
             span {
                 display: none;
@@ -85,7 +85,7 @@ body {
             padding: $headerPadding;
             text-align: left;
             font-weight: 700;
-            font-size: $fontSize+2;
+            font-size: $font-size-lg;
         }
 
         .ui-datatable-header {
@@ -114,9 +114,9 @@ body {
             th {
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $dividerColor;
-                color: $textColor;
-                font-size: $fontSize + 2;
+                border-color: $border-color;
+                color: $body-color;
+                font-size: $font-size-lg;
 
                 &.ui-state-hover {
                     @include list-item-hover();
@@ -152,9 +152,9 @@ body {
                 font-weight: 700;
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $dividerColor;
-                color: $textColor;
-                font-size: $fontSize + 2;
+                border-color: $border-color;
+                color: $body-color;
+                font-size: $font-size-lg;
             }
         }
 
@@ -208,7 +208,7 @@ body {
                             width: 17px;
                             height: 17px;
                             color: $primaryTextColor;
-                            font-size: $fontSize + 2;
+                            font-size: $font-size-lg;
                         }
                     }
                 }
@@ -241,7 +241,7 @@ body {
 
             .ui-datatable-scrollable-header-box {
                 td {
-                    color: $textColor;
+                    color: $body-color;
                 }
             }
         }
@@ -256,7 +256,7 @@ body {
             padding: $headerPadding;
             text-align: left;
             font-weight: 700;
-            font-size: $fontSize + 2;
+            font-size: $font-size-lg;
 
             & + .ui-paginator-top {
                 border-top: 0 none;
@@ -290,7 +290,7 @@ body {
 
         .ui-panel-titlebar {
             background-color: $panelTitlebarBgColor;
-            color: $textColor;
+            color: $body-color;
             border-bottom: 1px solid $contentBorderColor;
         }
 
@@ -328,7 +328,7 @@ body {
         .ui-datalist-header {
             padding: $headerPadding;
             font-weight: 700;
-            font-size: $fontSize + 2;
+            font-size: $font-size-lg;
             text-align: left;
 
             & + .ui-paginator-top {
@@ -363,7 +363,7 @@ body {
         .ui-dataview-header {
             padding: $headerPadding;
             font-weight: 700;
-            font-size: $fontSize + 2;
+            font-size: $font-size-lg;
             text-align: left;
 
             & + .ui-paginator-top {
@@ -556,7 +556,7 @@ body {
             margin: 0;
             font-weight: 700;
             text-align: left;
-            font-size: $fontSize+2;
+            font-size: $font-size-lg;
             @include border-radius-bottom(0);
 
             .ui-carousel-header-title {
@@ -650,8 +650,8 @@ body {
             th {
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $dividerColor;
-                color: $textColor;
+                border-color: $border-color;
+                color: $body-color;
 
                 &.ui-state-hover {
                     @include list-item-hover();
@@ -683,8 +683,8 @@ body {
                 font-weight: 700;
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $dividerColor;
-                font-size: $fontSize + 2;
+                border-color: $border-color;
+                font-size: $font-size-lg;
             }
         }
 
@@ -703,7 +703,7 @@ body {
                     padding: 6px 12px;
 
                     .ui-treetable-toggler {
-                        font-size: $fontSize + 2;
+                        font-size: $font-size-lg;
                         vertical-align: middle;
                         display: inline-block;
                         float: none;
@@ -729,7 +729,7 @@ body {
 
                             &.ui-icon-minus {
                                 @include icon_override("\f00c");
-                                color: $textSecondaryColor;
+                                color: $gray-400;
                             }
                         }
                     }
@@ -743,7 +743,7 @@ body {
 
             .ui-treetable-scrollable-header-box {
                 td {
-                    color: $textColor;
+                    color: $body-color;
                 }
             }
         }
@@ -763,7 +763,7 @@ body {
 
             .ui-treenode-content {
                 .ui-tree-toggler {
-                    font-size: $fontSize + 2;
+                    font-size: $font-size-lg;
                     vertical-align: middle;
                     display: inline-block;
                     float: none;
@@ -792,7 +792,7 @@ body {
                     vertical-align: middle;
                     display: inline-block;
                     margin: 0 6px 0 0;
-                    font-size: $fontSize + 2;
+                    font-size: $font-size-lg;
                 }
 
                 .ui-treenode-label {
@@ -821,7 +821,7 @@ body {
 
                     .ui-icon-minus {
                         @include icon_override("\f00c");
-                        color: $textSecondaryColor;
+                        color: $gray-400;
                     }
                 }
 
@@ -928,7 +928,7 @@ body {
         .fc-toolbar {
             background-color: $primaryColor;
             color: $primaryTextColor;
-            font-size: $fontSize+2;
+            font-size: $font-size-lg;
             padding: 12px 12px 0 12px;
             margin: 0;
 

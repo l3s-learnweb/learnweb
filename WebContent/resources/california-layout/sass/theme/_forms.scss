@@ -3,9 +3,9 @@ body {
         background: $inputBgColor;
         padding: $inputPadding;
         border: 1px solid $inputBorderColor;
-        @include transition(border-color $transitionDuration,box-shadow $transitionDuration);
-        @include border-radius($borderRadius);
-        font-size: $fontSize;
+        @include transition(border-color $transition-duration,box-shadow $transition-duration);
+        @include border-radius($border-radius);
+        font-size: $font-size-base;
 
         &.ui-state-hover {
             border: 1px solid $inputHoverBorderColor;
@@ -31,7 +31,7 @@ body {
         background-color: $primaryButtonBgColor;
         border: 1px solid $primaryButtonBgColor;
         border-radius: $buttonBorderRadius;
-        font-size: $fontSize;
+        font-size: $font-size-base;
         font-weight: 700;
 
         &:focus {
@@ -318,7 +318,7 @@ body {
             line-height: 20px;
             text-align: center;
             @include border-box();
-            @include transition(border-color $transitionDuration,background-color $transitionDuration);
+            @include transition(border-color $transition-duration,background-color $transition-duration);
 
             &.ui-state-hover {
                 border: 1px solid $inputHoverBorderColor;
@@ -372,7 +372,7 @@ body {
             text-align: center;
             @include border-box();
             @include border-radius(50%);
-            @include transition(border-color $transitionDuration);
+            @include transition(border-color $transition-duration);
 
             &.ui-state-hover {
                 border-color: $inputHoverBorderColor;
@@ -526,7 +526,7 @@ body {
 
                 .ui-autocomplete-input-token {
                     input {
-                        font-size: $fontSize;
+                        font-size: $font-size-base;
                         padding: 0;
                         margin: 0;
                     }
@@ -557,8 +557,8 @@ body {
 
             .ui-autocomplete-group {
                 padding: $listItemPadding;
-                background-color: $dividerColor;
-                color: $textColor;
+                background-color: $border-color;
+                color: $body-color;
             }
         }
     }
@@ -575,7 +575,7 @@ body {
             .ui-icon-triangle-1-s {
                 margin-top: 6px;
                 @include icon_override("\f0dc");
-                font-size: $fontSize;
+                font-size: $font-size-base;
             }
         }
 
@@ -639,7 +639,7 @@ body {
 
             .ui-selectonemenu-item-group {
                 padding: $listItemPadding;
-                background-color: $dividerColor;
+                background-color: $border-color;
             }
         }
     }
@@ -679,7 +679,7 @@ body {
         .ui-selectcheckboxmenu-label {
             padding: $inputPadding 30px $inputPadding $inputPadding;
             font-weight: normal;
-            font-size: $fontSize;
+            font-size: $font-size-base;
         }
 
         .ui-selectcheckboxmenu-trigger {
@@ -692,7 +692,7 @@ body {
                 position: relative;
                 margin-top: 6px;
                 @include icon_override("\f0dc");
-                font-size: $fontSize;
+                font-size: $font-size-base;
             }
         }
 
@@ -763,7 +763,7 @@ body {
 
             .ui-selectcheckboxmenu-close {
                 color: $iconCloseColor;
-                font-size: $fontSize + 4;
+                font-size: $h4-font-size;
                 margin: 0;
                 position: relative;
                 top: 4px;
@@ -978,7 +978,7 @@ body {
     }
 
     .ui-slider {
-        background-color: $dividerColor;
+        background-color: $border-color;
 
         &.ui-corner-all {
             @include border-radius(6px);
@@ -1069,7 +1069,7 @@ body {
         .ui-buttonset {
             .ui-button {
                 margin-bottom: 1px;
-                @include border-radius($borderRadius);
+                @include border-radius($border-radius);
             }
         }
     }
@@ -1155,17 +1155,17 @@ body {
             td {
                 a {
                     text-align: center;
-                    color: $textColor;
+                    color: $body-color;
                     padding: 5px;
-                    @include border-radius($borderRadius);
+                    @include border-radius($border-radius);
 
                     &.ui-state-hover {
                         background-color: $listItemHoverBgColor;
                     }
 
                     &.ui-state-highlight {
-                        color: $textColor;
-                        background-color: $dividerColor;
+                        color: $body-color;
+                        background-color: $border-color;
                     }
 
                     &.ui-state-active {
@@ -1230,7 +1230,7 @@ body {
             
             select.ui-datepicker-month, 
             select.ui-datepicker-year {
-                font-size: $fontSize;
+                font-size: $font-size-base;
             }
         }
         
@@ -1242,8 +1242,8 @@ body {
                     }
 
                     &.ui-state-highlight {
-                        color: $textColor;
-                        background-color: $dividerColor;
+                        color: $body-color;
+                        background-color: $border-color;
                     }
 
                     &.ui-state-active {
@@ -1259,8 +1259,8 @@ body {
                 
                 &.ui-datepicker-today {
                     a {
-                        background-color: $dividerColor;
-                        color: $textColor;
+                        background-color: $border-color;
+                        color: $body-color;
                     }
                 }
             }
@@ -1289,7 +1289,7 @@ body {
         &.ui-datepicker-monthpicker {
             .ui-monthpicker {
                 .ui-monthpicker-month {
-                    color: $textColor;
+                    color: $body-color;
                     @include box-sizing(border-box);
                     
                     &:hover {
@@ -1362,7 +1362,7 @@ body {
     .ui-inplace {
         .ui-inplace-display {
             padding: $inputPadding;
-            @include border-radius($borderRadius);
+            @include border-radius($border-radius);
         }
     }
 
@@ -1389,7 +1389,7 @@ body {
             padding: 5px;
 
             &:hover {
-                background-color: $dividerColor;
+                background-color: $border-color;
             }
 
             &.keypad-shift {
@@ -1436,11 +1436,11 @@ body {
             min-width: $inputGroupAddonMinWidth;
 
             &:first-child {
-                @include border-radius-left($borderRadius);
+                @include border-radius-left($border-radius);
             }
 
             &:last-child {
-                @include border-radius-left($borderRadius);
+                @include border-radius-left($border-radius);
             }
         }
 
