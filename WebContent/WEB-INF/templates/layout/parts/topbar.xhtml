@@ -30,9 +30,9 @@
         </ui:fragment>
 
         <h:form styleClass="d-flex">
-            <a href="#{request.contextPath}/lw/myhome/notification.jsf" class="topbar-element">
+            <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="topbar-element" rendered="#{userBean.loggedIn}">
                 <i class="fa fa-bell"></i>
-            </a>
+            </h:outputLink>
 
             <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
                 <p:commandLink id="languageSwitchButton" styleClass="topbar-element lang-button">
@@ -58,7 +58,7 @@
                 </p:menu>
             </ui:fragment>
 
-            <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+            <ui:fragment rendered="#{userBean.loggedIn}">
                 <p:commandLink id="userMenuButton" styleClass="topbar-element usermenu-button">
                     <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="profile-picture" alt="Profile picture"/>
                 </p:commandLink>
