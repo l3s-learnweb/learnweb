@@ -23,10 +23,13 @@ $themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActive
 
 // layout variables
 $min-width: 320px;
+$transition-duration: .3s;
+
 $topbar-height: 3.75rem;
 $topbar-two-row-display: sm;
-$sidebar-width: 230px;
-$transition-duration: .3s;
+
+$sidebar-width: 15rem;
+$sidebar-hide-display: lg; // Do not forget to change the JS according
 
 /*
 * Bootstrap variables

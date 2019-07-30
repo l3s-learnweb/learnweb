@@ -12,13 +12,13 @@
     box-sizing: border-box;
     @include transition(left $transition-duration);
 
-    @include media-breakpoint-down(lg) {
-      left: -$sidebar-width;
-      box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
-    }
-
     @include media-breakpoint-down($topbar-two-row-display) {
       padding-top: 2 * $topbar-height;
+    }
+
+    @include media-breakpoint-down($sidebar-hide-display) {
+      left: -$sidebar-width;
+      box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
     }
 
     .sidebar-scroll-content {
@@ -35,20 +35,8 @@
     }
   }
 
-  &.layout-wrapper-overlay-sidebar {
-    .layout-sidebar {
-      left: -$sidebar-width;
-    }
-
-    &.layout-wrapper-overlay-sidebar-active {
-      .layout-sidebar {
-        left: 0;
-      }
-    }
-  }
-
   &.layout-wrapper-sidebar-mobile-active {
-    @include media-breakpoint-down(lg) {
+    @include media-breakpoint-down($sidebar-hide-display) {
       .layout-sidebar {
         left: 0;
       }

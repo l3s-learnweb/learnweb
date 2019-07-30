@@ -14,7 +14,7 @@
       padding-top: 2 * $topbar-height;
     }
 
-    @include media-breakpoint-down(lg) {
+    @include media-breakpoint-down($sidebar-hide-display) {
       margin-left: 0;
     }
 
@@ -100,14 +100,6 @@
   &.layout-wrapper-sidebar-inactive {
     .layout-main {
       margin-left: 0;
-    }
-  }
-
-  &.layout-wrapper-overlay-sidebar {
-    @include media-breakpoint-up(lg) {
-      .layout-main {
-        margin-left: 0;
-      }
     }
   }
 }

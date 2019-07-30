@@ -18,24 +18,19 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
         $this.menuButton.off('click').on('click', function (e) {
             if ($this.isDesktop()) {
-                if ($this.isOverlay())
-                    $this.wrapper.toggleClass('layout-wrapper-overlay-sidebar-active');
-                else
-                    $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+                $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+                $this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
             } else {
                 $this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
+                $this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
             }
 
             e.preventDefault();
         });
     },
 
-    isOverlay: function () {
-        return this.wrapper.hasClass('layout-wrapper-overlay-sidebar');
-    },
-
     isDesktop: function () {
-        return window.innerWidth > 992;
+        return window.innerWidth > 1200; // Do not forget to change scss value according
     }
 });
 
