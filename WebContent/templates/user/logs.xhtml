@@ -7,30 +7,31 @@
 	<!--@elvariable id="news" type="java.util.List<de.l3s.learnweb.LogEntry>"-->
 
 
-	<p:repeat value="#{news}" var="logEntry">
-		<p:panel styleClass="m-0 p-2 d-flex rounded-sm mt-1">
-			<div class="d-flex align-items-center ">
-				<img id="userpic" class="mr-4 mr-md-2 rounded-circle" src="#{logEntry.userImage}" width="45" height="45"  alt="Profile picture"/>
-				<div class="d-flex flex-column">
-					<div>
-						<h:outputText value="#{logEntry.description}" escape="false"  />
-						<h:panelGroup rendered="#{logEntry.queryNeeded}">
-							<h:outputText value=" #{msg.with_query}" escape="false"  />
-							<h:outputLink value="search.jsf">
-								<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
-								<f:param name="query" value="#{logEntry.resource.query}"/>
-								<f:param name="action" value="web"/>
-							</h:outputLink>
-							<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
-						</h:panelGroup>
-					</div>
+	<p:repeat value="#{news}" var="logEntry" id="datagrid">
+		<p:panel styleClass="rounded mt-1 text-break p-2">
+			<div class="row">
+				<div class="col-12">
+					<div class="d-flex align-items-center">
+						<img id="userpic" class="user-picture mr-4 mr-md-2" src="#{logEntry.userImage}" alt="Profile picture"/>
+						<div class="d-flex flex-column">
+							<div>
+								<h:outputText value="#{logEntry.description}" escape="false"  />
+								<h:panelGroup rendered="#{logEntry.queryNeeded}">
+									<h:outputText value=" #{msg.with_query}" escape="false"  />
+									<h:outputLink value="search.jsf">
+										<h:outputText value=" #{logEntry.resource.query}"/>
+										<f:param name="query" value="#{logEntry.resource.query}"/>
+										<f:param name="action" value="web"/>
+									</h:outputLink>
+									<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+								</h:panelGroup>
+							</div>
 
-					<small><h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" styleClass="font-weight-light"/></small>
+							<small><h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" styleClass="font-weight-light"/></small>
+						</div>
+					</div>
 				</div>
 			</div>
-
-
-
 		</p:panel>
 	</p:repeat>
 				

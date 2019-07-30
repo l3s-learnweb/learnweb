@@ -35,7 +35,7 @@
                     <h:panelGroup id="profile_image">
                         <div class="row">
                             <div class="col-12 col-md-2">
-                                <img height="100" width="100" class="d-block   m-auto m-md-0 mb-md-3 rounded-circle" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
+                                <img class="d-block w-100 m-auto m-md-0 mb-md-3 rounded-circle" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
                                      alt="Profile image"/>
                             </div>
                             <div class="col-12 col-md-10">
@@ -139,11 +139,6 @@
                                              update=":growl @form :profile_news"/>
                             <h:outputText value=""/>
                         </div>
-
-
-
-
-
                     </h:panelGroup>
                 </h:form>
             </p:panel>
