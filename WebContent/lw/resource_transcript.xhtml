@@ -30,15 +30,14 @@
 		<h:outputStylesheet name="vendor/spectrum-v1.8.0/spectrum.css" />
 		<h:outputScript name="vendor/spectrum-v1.8.0/spectrum.js" />
 
-		<h:outputStylesheet library="resource-transcript" name="resource_transcript.css" />
-		<h:outputScript library="ted-transcript" name="ted-transcript.js" target="head" />
+		<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="head" />
 
 		<script type="text/javascript">
   			var noteId = #{tedTranscriptBean.noteId};
   			var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
   		</script>
 
-		<div id="ted_content">
+		<div id="ted_content" class="section-resource-transcript">
 			<div id="preview"></div>
 
 			<h:panelGroup layout="block" id="transcript_column" class="right_bar">

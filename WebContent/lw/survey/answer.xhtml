@@ -6,7 +6,7 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
-	
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
@@ -14,19 +14,12 @@
 			<f:viewAction action="#{surveyBean.onLoad}" />
 		</f:metadata>
 	</ui:define>
-		
+
 	<ui:param name="pageTitle" value="Survey" />
 	<ui:param name="loginRequired" value="true" />
 
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="survey" name="survey.css" />
-		<style>
-			#survey .ui-widget,
-			#survey label  { pointer-events: none; }	
-			.radio-buttons td { padding-right: 0.8rem; }			
-		</style>
-		
-		<h:form id="form" prependId="false">
+		<h:form id="form" prependId="false" styleClass="section-survey">
 			<ui:fragment rendered="#{surveyBean.resource != null}">
 				<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
 
@@ -154,7 +147,4 @@
 			</ui:fragment>			
 		</h:form>
 	</ui:define>
-
-
-
 </ui:composition>

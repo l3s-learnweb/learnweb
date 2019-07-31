@@ -11,8 +11,7 @@
 	<h:outputStylesheet name="vendor/slick-v1.8.0/slick-theme.css" />
 	<h:outputScript name="vendor/slick-v1.8.0/slick.min.js" target="head" />
 
-	<h:outputStylesheet library="resource-summary-overview" name="group_summary_overview.css" />
-	<h:outputScript library="resource-summary-overview" name="group_summary_overview.js" target="body" />
+	<h:outputScript library="learnweb-layout" name="js/group-summary-overview.js" target="body" />
 
 	<h:form>
 		<p:remoteCommand name="onAfterChange"
@@ -20,7 +19,7 @@
 			update=":right_pane_wrapper " oncomplete="update_header()" />
 	</h:form>
 
-	<h:form styleClass="section-resources">
+	<h:form styleClass="section-resources section-group-summary-overview">
 		<ui:fragment rendered="#{summary!=null and !summary.isEmpty()}">
 			<h:form class="summary_overview_container">
 

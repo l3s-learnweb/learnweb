@@ -49,15 +49,18 @@
 @import "components/_buttons";
 
 // The styles used only for specific page (or group of pages) should be extracted into section
+@import "sections/_archive-thumbnail";
 @import "sections/_entity-relationship";
 @import "sections/_forum";
 @import "sections/_glossary";
-@import "sections/_group-resources";
 @import "sections/_group-members";
+@import "sections/_group-resources";
+@import "sections/_group-summary-overview";
 @import "sections/_landing";
+@import "sections/_notification";
 @import "sections/_resource-submission";
+@import "sections/_resource-transcript";
 @import "sections/_resources";
 @import "sections/_search";
-@import "sections/_ted-transcriprt";
-@import "sections/_notification";
-@import "sections/_archive-thumbnail";
+@import "sections/_survey";
+@import "sections/_ted-transcript";

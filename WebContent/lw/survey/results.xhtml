@@ -14,9 +14,7 @@
 	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="survey" name="survey.css" />
-
-		<h:form rendered="#{surveyResultBean.questionColumns ne null}">
+		<h:form rendered="#{surveyResultBean.questionColumns ne null}" styleClass="section-survey">
 
 			<div class="page_header">
 				<span> #{surveyResultBean.resource.title}</span>
