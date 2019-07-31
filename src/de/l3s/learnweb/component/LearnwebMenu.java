@@ -6,7 +6,7 @@ import org.primefaces.util.ComponentUtils;
 
 import javax.faces.component.FacesComponent;
 
-@FacesComponent(createTag = true, tagName = "learnwebMenu", namespace = "http://learnweb.l3s.uni-hannover.de/components")
+@FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
 public class LearnwebMenu extends AbstractMenu implements Widget
 {
     public static final String COMPONENT_FAMILY = "de.l3s.learnweb.component";
