@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml">
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Assessment results" />
 	<ui:define name="sub_breadcrumb">
@@ -55,7 +57,5 @@
 
 			</p:repeat>
 		</p:panel>
-
 	</ui:define>
 </ui:composition>
-</html>

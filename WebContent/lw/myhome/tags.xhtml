@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+				xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.myTagsTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
+
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.myTagsTitle}" url="myhome/tags.jsf#"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
 		<h:form prependId="false">
 			<p:dataTable var="tag" value="#{userBean.user.tags}" id="tag_table">
@@ -33,9 +36,8 @@
 							</h:outputLink>
 					</p:repeat>
 				</p:column>
+
 			</p:dataTable>
 		</h:form>
-
 	</ui:define>
 </ui:composition>
-</html>
