@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml" xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
@@ -12,21 +12,18 @@
 	<ui:param name="pageTitle" value="Survey Result" />
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="disableGrowl" value="true" />
-
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{surveyResultBean.resource.title}" url="eumade4all/results.jsf?resource_id=#{surveyResultBean.surveyResourceId}"/>
+	</ui:define>
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="survey" name="survey.css" />
 
 		<h:form rendered="#{surveyResultBean.questionColumns ne null}">
 
-			<div class="page_header">
-				<span> #{surveyResultBean.resource.title}</span>
-			</div>
-
 			<p:dataTable id="survey_result" var="result" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
-				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" style="margin-bottom: 1rem;">
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" styleClass="section-survey-result" >
 				<f:facet name="{Exporters}">
 					<h:commandLink styleClass="excel_export_todo_use">
-						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
+						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" />
 						<p:dataExporter type="xls" target="survey_result" fileName="survey" />
 					</h:commandLink>
 				</f:facet>

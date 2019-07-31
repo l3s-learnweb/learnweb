@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main/main_old.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -21,18 +21,18 @@
 
 	<ui:define name="center_layout">
 		<script type="text/javascript">
-			var googleSignInEnabled = #{groupLinksBean.group.googleDocsSignInEnabled};
+			var googleSignInEnabled = parseInt('#{groupLinksBean.group.googleDocsSignInEnabled}');
 		</script>
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{groupLinksBean.group}" />
 			<ui:param name="active" value="links" />
-			
+
 			<ui:define name="title">
 				<h2>
 					#{msg.links}
-				</h2> 
+				</h2>
 				#{msg.of} #{groupLinksBean.group.title}
-				
+
 				<h:form id="center_header_form">
 					<p:commandLink rendered="#{not groupLinksBean.member}"
 						action="#{groupsBean.joinGroup}"
@@ -189,7 +189,7 @@
 		<h:form style="display:none;">	
 			<p:remoteCommand actionListener="${groupLinksBean.saveGmailId()}" name="saveGmailId" process="@this"/>
 		</h:form>
-
+<!--
 		<script type="text/javascript">
 			function onLinkClick(element) {
 				if(googleSignInEnabled)
@@ -230,6 +230,6 @@
 
 				}
 			});
-		</script>
+		</script>-->
 	</ui:define>
 </ui:composition>

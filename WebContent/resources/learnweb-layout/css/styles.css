@@ -11548,6 +11548,13 @@ body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link img {
   border: 1px solid #4b6cb7;
 }
 
+.excel_export_todo_use {
+  margin-left: 0.2rem;
+}
+.excel_export_todo_use img {
+  width: 1.25rem;
+}
+
 html {
   font-size: 14px;
 }
@@ -15334,6 +15341,10 @@ body {
 }
 .section-archive-thumbnail #info {
   color: white;
+}
+
+.section-survey-result th {
+  width: 14rem;
 }
 
 /*# sourceMappingURL=styles.css.map */
