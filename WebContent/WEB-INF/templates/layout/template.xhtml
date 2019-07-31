@@ -40,16 +40,16 @@
             <ui:insert name="head"/>
         </h:head>
 
-        <h:body styleClass="main-body">
+        <h:body styleClass="layout-body">
             <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
-                <ui:include src="parts/topbar.xhtml"/>
+                <ui:include src="parts/header.xhtml"/>
 
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <ui:include src="parts/sidebar.xhtml"/>
                 </ui:fragment>
 
                 <div class="layout-main d-flex flex-column">
-                    <div class="layout-main-content">
+                    <main class="layout-main-content">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
@@ -78,11 +78,9 @@
                                 </div>
                             </ui:fragment>
                         </ui:fragment>
-                    </div>
+                    </main>
 
-                    <div class="layout-footer bg-dark text-white-50 p-3">
-                        <h:outputText escape="false" value="#{msg.layout_footer_text}"/>
-                    </div>
+                    <ui:include src="parts/footer.xhtml"/>
                 </div>
             </div>
 

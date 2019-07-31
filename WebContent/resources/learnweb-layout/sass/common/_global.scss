@@ -9,3 +9,9 @@ html {
 body {
   min-width: $min-width;
 }
+
+@media (max-width: 420px) {
+  .d-none-mobile {
+    display: none !important;
+  }
+}

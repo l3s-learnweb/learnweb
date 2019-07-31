@@ -1,44 +1,13 @@
-.page-body {
+.template-page {
+  .layout-container {
+    @extend .container;
+  }
+
   .layout-wrapper {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-
-    .top-menu {
-      border-bottom: 1px solid $themeSidebarDividerColor;
-      background: $themeElementTextColor;
-
-      .logo i {
-        font-size: 2rem;
-        line-height: 1;
+    .layout-main {
+      .layout-main-content {
+        padding: 0;
       }
-
-      .header-menu {
-        list-style: none;
-        padding-right: 1rem;
-        margin-bottom: 0;
-
-        a {
-          padding: 1rem;
-          text-decoration: none;
-          border-bottom: 0.2rem solid transparent;
-          color: $body-color;
-
-          &:hover {
-            border-color: $themePrimaryColorDarker;
-          }
-        }
-      }
-    }
-
-    .layout-main-content {
-      flex: 1;
-    }
-
-    .footer {
-      background-color: $themePrimaryDarkest;
-      border-top: 0.2rem solid $white;
-      color: $gray-200;
     }
   }
 }
