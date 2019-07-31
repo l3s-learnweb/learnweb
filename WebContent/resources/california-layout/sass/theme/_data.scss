@@ -113,8 +113,8 @@ body {
         thead {
             th {
                 background-color: $paginatorBgColor;
-                padding: $headerPadding;
-                border-color: $border-color;
+                padding: $datatableCellPadding;
+                border-color: $table-border-color;
                 color: $body-color;
                 font-size: $font-size-lg;
 
@@ -151,8 +151,8 @@ body {
             td {
                 font-weight: 700;
                 background-color: $paginatorBgColor;
-                padding: $headerPadding;
-                border-color: $border-color;
+                padding: $datatableCellPadding;
+                border-color: $table-border-color;
                 color: $body-color;
                 font-size: $font-size-lg;
             }
@@ -191,6 +191,7 @@ body {
 
                 td {
                     padding: $datatableCellPadding;
+                    border-color: $table-border-color;
 
                     &.ui-editable-column {
                         input {
@@ -650,7 +651,7 @@ body {
             th {
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $border-color;
+                border-color: $table-border-color;
                 color: $body-color;
 
                 &.ui-state-hover {
@@ -683,7 +684,7 @@ body {
                 font-weight: 700;
                 background-color: $paginatorBgColor;
                 padding: $headerPadding;
-                border-color: $border-color;
+                border-color: $table-border-color;
                 font-size: $font-size-lg;
             }
         }

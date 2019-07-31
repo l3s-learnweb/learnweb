@@ -1,0 +1,17 @@
+.table {
+  &.table-responsive {
+    table-layout: auto;
+  }
+
+  &.table-sm {
+    thead th {
+      font-size: 1rem;
+    }
+
+    thead th,
+    tfoot td,
+    .ui-datatable-data tr td {
+      padding: $table-cell-padding-sm;
+    }
+  }
+}
