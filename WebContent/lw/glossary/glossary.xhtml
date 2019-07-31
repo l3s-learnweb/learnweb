@@ -28,7 +28,7 @@
 
 				<h:form id="glossary_table_form" prependId="false">
 					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"                                 
-                                 sortBy="#{item.getTimestamp()}" sortOrder="descending">
+                                 sortBy="#{item.getTimestamp()}" sortOrder="descending" stickyHeader="true" stickyTopAt=".header">
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
@@ -117,8 +117,8 @@
 					</p:dataTable>
 
 					<p:panelGrid columns="5" styleClass="ui-noborder datatable_footer" style="align-content:center; border-style:none; padding:none;">
-						<h:outputText value="#{msg['Glossary.total_concept']} = #{glossaryBean.entryCount}" style="text-align:center;"
-                                      styleClass="glossary_footer_text"></h:outputText>
+						<h:outputText value="#{msg['Glossary.total_entries']} = #{glossaryBean.entryCount}" style="text-align:center;"
+									  styleClass="glossary_footer_text"></h:outputText>
                         <!--excel import button-->
                         <p:commandLink rendered="#{userBean.moderator}" styleClass="excel_import"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
                             <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
@@ -140,12 +140,12 @@
 					<br />
 				</h:form>
 				
-				<h:form id="import_form" prependId="false">				
-                    <p:dialog header="Import glossary" widgetVar="excel_import_dialog" min-height="120"
+                    <p:dialog header="#{msg['Glossary.import_glossary']}" widgetVar="excel_import_dialog" min-height="120"
                               min-width="400" closable="true" responsive="true">
                         <div class="p-grid">
-                    		
-							<h:panelGroup rendered="#{userBean.moderator and false}" styleClass="p-col-12">
+
+							<h:form id="import_form" prependId="false">
+							<h:panelGroup rendered="#{userBean.moderator}" styleClass="p-col-12">
 								<!-- disabled until completed -->
                                 <h:outputFormat value="#{msg['Glossary.overwrite_question']}" />
 								 <br/>
@@ -153,7 +153,9 @@
                                 <br/>
                                 <br/>
                                 <p:selectBooleanButton id="overwrite_glossary" value="#{glossaryBean.overwriteGlossary}"
-													   onLabel="#{msg['yes']}" offLabel="#{msg['no']}" style="width:60px" />
+													   onLabel="#{msg['yes']}" offLabel="#{msg['no']}" style="width:60px;">
+									<p:ajax listener="#{glossaryBean.changeOverwriteFlag}"/>
+								</p:selectBooleanButton>
                                 <br/>
                                 <br/>
                             </h:panelGroup>
@@ -162,17 +164,20 @@
 											  allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form" 
 											  oncomplete="PF('excel_import_dialog').hide(); PF('glossaryDlg').show(); groupRow();" />
                             </div>
-                        </div>
+							</h:form>
+
+						</div>
                     </p:dialog>
 
-					<p:dialog header="Import glossary result"  widgetVar="glossaryDlg" modal="false" height="100" id="glossary_dialog">
-
+					<p:dialog header="#{msg['Glossary.import_result']}"  widgetVar="glossaryDlg" modal="false" height="150"
+							  width="600" id="glossary_dialog">
                         <h:outputFormat value="#{msg['Glossary.import_successful']}" rendered="#{glossaryBean.importResponse.successful}">
                             <f:param value="#{glossaryBean.importResponse.entryCount}" />
                         </h:outputFormat>
 
 						<h:outputText value="#{msg['Glossary.import_error']}"
 										rendered="#{not glossaryBean.importResponse.successful}"/>
+						<br/>
 						<p:dataTable var="error" value="#{glossaryBean.importResponse.errors}"
 									 rendered="#{not glossaryBean.importResponse.successful}">
 							<p:column headerText="Excel cell">
@@ -185,8 +190,7 @@
 
 					</p:dialog>
 
-				</h:form>
-				
+
 				<div id="glossform" style="display: none">
 					<h:form id="glossary_add" styleClass="grey_border" prependId="false">
 						<p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
