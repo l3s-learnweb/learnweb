@@ -12068,15 +12068,15 @@ body {
   padding: 6px 0 6px 2px;
 }
 
-.table.table-responsive {
+.ui-datatable .table-responsive {
   table-layout: auto;
 }
-.table.table-sm thead th {
+.ui-datatable .table-sm thead th {
   font-size: 1rem;
 }
-.table.table-sm thead th,
-.table.table-sm tfoot td,
-.table.table-sm .ui-datatable-data tr td {
+.ui-datatable .table-sm thead th,
+.ui-datatable .table-sm tfoot td,
+.ui-datatable .table-sm .ui-datatable-data tr td {
   padding: 0.3rem;
 }
 
