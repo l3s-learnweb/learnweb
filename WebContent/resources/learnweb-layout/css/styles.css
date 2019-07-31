@@ -11079,7 +11079,8 @@ html {
   }
 }
 
-body {
+body,
+.layout-container {
   min-width: 320px;
 }
 
@@ -11162,7 +11163,6 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  min-width: 320px;
   width: 100%;
   z-index: 998;
   height: 3.75rem;
@@ -11234,12 +11234,14 @@ body {
 @media (max-width: 767.98px) {
   .layout-wrapper .layout-topbar {
     height: 7.5rem;
+  }
+  .layout-wrapper .layout-topbar .layout-container {
     flex-wrap: wrap;
   }
-  .layout-wrapper .layout-topbar > div {
+  .layout-wrapper .layout-topbar .layout-container > div {
     max-width: 50%;
   }
-  .layout-wrapper .layout-topbar .search-wrapper {
+  .layout-wrapper .layout-topbar .layout-container .search-wrapper {
     width: 100%;
     max-width: 100%;
   }

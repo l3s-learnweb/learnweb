@@ -6,7 +6,6 @@ $topbar-button-padding: 15px;
     position: fixed;
     top: 0;
     left: 0;
-    min-width: $min-width;
     width: 100%;
     z-index: 998;
     height: $topbar-height;
@@ -87,15 +86,18 @@ $topbar-button-padding: 15px;
 
     @include media-breakpoint-down($topbar-two-row-display) {
       height: 2 * $topbar-height;
-      flex-wrap: wrap;
 
-      > div {
-        max-width: 50%;
-      }
+      .layout-container {
+        flex-wrap: wrap;
 
-      .search-wrapper {
-        width: 100%;
-        max-width: 100%;
+        > div {
+          max-width: 50%;
+        }
+
+        .search-wrapper {
+          width: 100%;
+          max-width: 100%;
+        }
       }
     }
   }

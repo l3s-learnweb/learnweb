@@ -6,7 +6,8 @@ html {
   }
 }
 
-body {
+body,
+.layout-container {
   min-width: $min-width;
 }
 
