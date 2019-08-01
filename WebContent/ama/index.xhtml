@@ -1,91 +1,55 @@
-<ui:composition template="/templates/main/main.xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-						
-	<ui:param name="pageTitle" value="#{msg['ArchiveWeb.homepageTitle']}" />	
-	<ui:param name="disableGrowl" value="true" />
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="center_layout">
-		<h:outputStylesheet name="frontpage/index.css" />
-		<style type="text/css">
-			body{ background-image:url(../resources/frontpage/tib.jpg); }
-		</style>
+<ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
-		<div class="content_box">
-			<h1>
-				Welcome to AMA
-			</h1>
+<ui:define name="header_right">
+    <ul class="header-menu row justify-content-end">
+        <li><a href="#"><span>#{msg.loginLabel}</span></a></li>
+    </ul>
+</ui:define>
 
-			<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur " styleClass="homepage_infotext" />
+<ui:define name="center_layout">
+    <div class="section-landing h-100">
+        <div id="header" class="header h-100" style="background-image:url(../resources/frontpage/tib.jpg);">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="bg-white-90 p-3 mb-4">
+                            <h2 class="m-0">Welcome to AMA</h2>
 
-			<div id="div_left">
+                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur.</p>
+                        </div>
+                    </div>
+                </div>
 
-				<ui:fragment rendered="#{!userBean.loggedIn}">
+                <div class="row row-eq-height">
+                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0" rendered="#{!userBean.loggedIn}">
+                        <div class="bg-white-90 p-3 pb-4 h-100">
+                            <ui:include src="/WEB-INF/templates/forms/login-form.xhtml"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-8">
+                        <div class="header-news-list bg-dark-90 text-white">
+                            <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
-					<h2 class="page_header">
-						#{msg.loginLabel}
-					</h2>
-					<h:form class="grey_border">
-						<p:focus for="username"/>
-						<h:panelGrid columns="3">
-							<h:outputLabel for="username" value="#{msg.username}:"/>
-							<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
-							<p:message styleClass="error" for="username" display="icon"/>
+                            <p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="unordered">
+                                <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
-							<h:outputLabel for="password" value="#{msg.password}:"/>
-							<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
-							<p:message styleClass="error" for="password" display="icon"/>
+                                <h:outputText value="#{news.date}" styleClass="news-date mb-1">
+                                    <f:convertDateTime pattern="dd.MM.yyyy" type="date" timeZone="#{userBean.timeZone}"/>
+                                </h:outputText>
 
-							<h:outputText value="" />
-							<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" 
-								style="margin-top:5px;"/>
-							<h:outputText value="" />
-
-						</h:panelGrid>
-						<br />
-						<h:outputLink class="forgotten_password" value="user/password.jsf">
-							<h:outputText value="#{msg.forgotten_password}" />
-						</h:outputLink>
-					</h:form>
-				<br/>
-				<br/>
-				</ui:fragment>
-				
-
-			</div>
-		
-		
-			
-			<div id="div_right">
-
-				<ui:fragment rendered="#{!userBean.loggedIn}">
-
-					<h2 class="page_header">
-						#{msg['ArchiveWeb.sign_up']}
-					</h2>
-					
-					<div class="grey_border">
-						<h:outputText value="#{msg['ArchiveWeb.sign_up_description']}" />
-					
-					</div>
-					<br/>
-				</ui:fragment>
-				
-
-			</div>
-
-			<br class="clear" />
-
-		</div>
-
-		<div id="index_footer">
-			<h:outputText value="#{msg.index_footer_text} "/>
-			<a href="mailto:#{msg['application.serverAdmin']}" >
-				<h:outputText value="#{msg['application.serverAdmin']}"/>
-			</a>
-		</div>
-	</ui:define>
-
+                                <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>
+                            </p:dataList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:define>
 </ui:composition>

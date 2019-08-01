@@ -11063,6 +11063,14 @@ body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-m
   width: 1.25rem;
 }
 
+.bg-white-90 {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.bg-dark-90 {
+  background: rgba(35, 37, 42, 0.9);
+}
+
 html {
   font-size: 14px;
 }
@@ -13106,24 +13114,13 @@ body,
 }
 
 .section-landing .header {
-  background: url("#{resource['frontpage/luh.jpg']}") center;
+  background-color: #ced4da;
   background-size: cover;
   padding: 5rem 0;
-}
-.section-landing .header .header-login-form {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-.section-landing .header .header-login-form input {
-  margin: 1rem 0;
-}
-.section-landing .header .header-news-list {
-  background: rgba(35, 37, 42, 0.9);
-  color: #fff;
 }
 .section-landing .header .header-news-list > h2 {
   font-size: 1rem;
   padding: 0.5rem 1rem;
-  background: #23252A;
 }
 .section-landing .header .header-news-list .ui-datalist-data {
   padding: 1rem 1rem 0;

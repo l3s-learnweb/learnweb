@@ -8,7 +8,7 @@
 
 <ui:define name="header_right">
     <ul class="header-menu row justify-content-end">
-        <li><a href="#"><span>Log in</span></a></li>
+        <li><a href="#"><span>#{msg.loginLabel}</span></a></li>
         <li><a href="#about"><span>About us</span></a></li>
         <li><a href="#courses"><span>Subscribe</span></a></li>
     </ul>
@@ -16,27 +16,17 @@
 
 <ui:define name="center_layout">
     <div class="section-landing">
-        <div id="header" class="header">
+        <div id="header" class="header" style="background-image:url(../resources/frontpage/luh.jpg);">
             <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                        <div class="header-login-form p-3">
-                            <h:form>
-                                <h:outputText value="#{msg.username}"/>
-                                <p:inputText placeholder="#{msg.username}" value="#{loginBean.username}" styleClass="w-100"/>
-
-                                <h:outputText value="#{msg.password}"/>
-                                <p:password placeholder="#{msg.password}" value="#{loginBean.password}" feedback="false" styleClass="w-100"/>
-
-                                <p:commandButton ajax="false" value="#{msg.loginLabel}" action="#{loginBean.login()}" styleClass="turquoise-btn"/>
-
-                                <a href="#{request.contextPath}/lw/user/password.jsf">#{msg.forgotten_password}</a>
-                            </h:form>
+                <div class="row row-eq-height">
+                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0">
+                        <div class="bg-white-90 p-3 pb-4 h-100">
+                            <ui:include src="/WEB-INF/templates/forms/login-form.xhtml"/>
                         </div>
                     </div>
-                    <div class="col-lg-8">
-                        <div class="header-news-list">
-                            <h2 class="m-0">#{msg.announcements}</h2>
+                    <div class="col-md-6 col-lg-8">
+                        <div class="header-news-list bg-dark-90 text-white">
+                            <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
                             <p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="unordered">
                                 <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>

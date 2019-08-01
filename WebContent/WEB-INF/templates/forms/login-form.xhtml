@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<h:form styleClass="login-form">
+    <div class="form-group">
+        <p:outputLabel for="@next" value="#{msg.username}:"/>
+        <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" required="true"/>
+    </div>
+
+    <div class="form-group">
+        <p:outputLabel for="@next" value="#{msg.password}:"/>
+        <p:password id="password" value="#{loginBean.password}" label="#{msg.password}" required="true"/>
+    </div>
+
+    <h:panelGroup layout="block" styleClass="form-group" rendered="#{loginBean.captchaRequired}">
+        <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
+        <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>
+    </h:panelGroup>
+
+    <p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
+
+    <a href="#{request.contextPath}/lw/user/password.jsf">#{msg.forgotten_password}</a>
+</h:form>
+
+</ui:composition>
