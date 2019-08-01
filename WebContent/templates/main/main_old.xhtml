@@ -16,23 +16,20 @@
 
     <h:head>
         <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
-        <link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
         <base href="#{request.contextPath}/lw/"/>
         <ui:insert name="head-meta"/>
 
         <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
         <h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js"/>
-        <h:outputScript library="main-template" name="default2.js"/>
+        <h:outputScript library="learnweb-layout" name="js/default2.js"/>
 
         <h:outputStylesheet name="vendor/nanoscroller-v0.8.7/nanoscroller.css"/>
         <h:outputScript name="vendor/nanoscroller-v0.8.7/jquery.nanoscroller.min.js"/>
 
- <h:outputStylesheet library="primefaces-omega" name="theme.css"/>
-        
+        <h:outputStylesheet library="primefaces-omega" name="theme.css"/>
         <h:outputStylesheet library="main-template" name="main.css"/>
         <h:outputStylesheet library="main-template" name="responsive_design.css"/>
-        
-       
     </h:head>
 
     <h:body>

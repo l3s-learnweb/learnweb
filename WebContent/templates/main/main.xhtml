@@ -18,20 +18,18 @@
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <title>#{pageTitle} - #{msg['application.name']}</title>
-        <link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
 
-
- <h:outputStylesheet library="primefaces-omega" name="theme.css"/>
+        <h:outputStylesheet library="primefaces-omega" name="theme.css"/>
  
         <h:outputStylesheet library="main-template" name="main.css"/>
         <h:outputStylesheet library="main-template" name="responsive_design.css" />
 
         <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
         <h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
-        <h:outputScript library="main-template" name="default2.js"/>
+        <h:outputScript library="learnweb-layout" name="js/default2.js"/>
 
         <ui:decorate template="/templates/main/tooltips.xhtml"/>
-		
 
         <base href="#{request.contextPath}/lw/"/>
     </h:head>
