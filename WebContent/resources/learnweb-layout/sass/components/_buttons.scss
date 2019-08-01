@@ -7,27 +7,3 @@
     display: none;
   }
 }
-
-.command-button { // TODO: remove it, works fine without it, see profile page
-  background: $themePrimaryColor;
-  color: $themeElementTextColor;
-  border: .1rem solid $themePrimaryColor;
-  border-radius: .2rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 0.2rem 0.4rem;
-  text-decoration: none;
-  vertical-align: middle;
-
-  &:hover {
-    background: $themePrimaryDarkerAlt;
-    border-color: $themePrimaryDarkerAlt;
-    color: $themeElementTextColor;
-    text-decoration: none;
-  }
-}
-
-.admin-element {
-  background-color: $themePrimaryDarkest;
-  border-color: $themePrimaryDarkest;
-}

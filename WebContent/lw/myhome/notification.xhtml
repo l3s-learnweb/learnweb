@@ -31,7 +31,7 @@
 			</p:panel>
 
 
-			<p:panel styleClass="unread rounded mt-1 text-break no-padding-panel-content p-2">
+			<p:panel styleClass="unread rounded mt-1 text-break p-2">
 				<div class="d-flex">
 					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
 					<div class="d-flex flex-column">
@@ -50,7 +50,7 @@
 				</div>
 			</p:panel>
 
-			<p:panel styleClass="rounded mt-1 text-break no-padding-panel-content p-2">
+			<p:panel styleClass="rounded mt-1 text-break  p-2">
 				<div class="d-flex">
 					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
 					<div class="d-flex flex-column">
@@ -69,7 +69,7 @@
 			</p:panel>
 
 			<ui:repeat var="message" value="#{messageBean.receivedMessages}">
-				<p:panel styleClass="#{message.read ? 'read' : 'unread'} rounded mt-1 text-break no-padding-panel-content p-2">
+				<p:panel styleClass="#{message.read ? 'read' : 'unread'} rounded mt-1 text-break  p-2">
 					<div class="d-flex">
 						<img class="profile-picture mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
 						<div class="d-flex flex-column">

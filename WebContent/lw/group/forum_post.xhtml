@@ -23,22 +23,21 @@
 
 <ui:define name="center_layout">
     <h:panelGroup styleClass="section-forum" layout="block">
-        <p:panel styleClass="no-padding-panel-content">
+        <p:outputPanel>
             <ui:decorate template="/templates/group/menu.xhtml">
                 <ui:param name="group" value="#{forumPostBean.group}"/>
                 <ui:param name="active" value="forum"/>
 
                 <ui:define name="title">
                     <div class="row align-items-center">
-            <span class="col mb-2 font-weight-bold">
-                <span class="green-tittle">#{msg['ForumIndex.messages']}</span>
-                #{msg.of} "#{forumPostBean.topic.title}"
-            </span>
+                        <h5 class="col mb-2 py-1">
+                            <span class="text-primary">#{msg['ForumIndex.messages']}</span> #{msg.of} "#{forumPostBean.topic.title}"
+                        </h5>
                         <h:form id="center_header_form" styleClass="col align-self-center">
                             <ui:fragment rendered="#{forumPostBean.member}">
                                 <p:commandButton value="#{msg['ForumIndex.post_reply']}"
                                                  href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
-                                                 styleClass="float-right mb-2"
+                                                 styleClass="float-right mb-3"
                                                  onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow');">
                                 </p:commandButton>
                             </ui:fragment>
@@ -123,7 +122,7 @@
                     </p:column>
                 </p:dataTable>
             </h:form>
-        </p:panel>
+        </p:outputPanel>
         <ui:fragment rendered="#{forumPostBean.member}">
             <p:panel header="#{msg['ForumIndex.reply']}" styleClass="mt-3">
 

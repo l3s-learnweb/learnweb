@@ -25,16 +25,15 @@
     </h:form>
 
     <ui:fragment rendered="#{groupOverviewBean.group ne null}">
-        <p:panel styleClass="no-padding-panel-content">
+        <p:outputPanel styleClass="bg-white">
         <ui:decorate template="/templates/group/menu.xhtml">
             <ui:param name="group" value="#{groupOverviewBean.group}"/>
             <ui:param name="active" value="overview"/>
             <ui:define name="title">
                 <div class="row align-items-center">
-				<span class="col mb-2 font-weight-bold">
-					<span class="green-tittle">#{groupOverviewBean.group.title}</span>
-                    #{msg.created_by} #{groupOverviewBean.group.leader.username} (#{groupOverviewBean.group.resourcesCount} #{msg.resources})
-				</span>
+                    <h5 class="col mb-2 py-1">
+                        <span class="text-primary">#{groupOverviewBean.group.title}</span> #{msg.created_by} #{groupOverviewBean.group.leader.username} (#{groupOverviewBean.group.resourcesCount} #{msg.resources})
+                    </h5>
                     <h:form id="center_header_form">
                         <p:commandLink rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}" action="#{groupsBean.joinGroup}"
                                        styleClass="resource_button greenbutton" update=":growl :group_menu @form :datagrid" partialSubmit="true"
@@ -46,12 +45,7 @@
                 </div>
             </ui:define>
         </ui:decorate>
-        </p:panel>
-        <script type="text/javascript">
-            /* <!-- */
-            //$("#center_pane").prepend($("#group_header"));
-            /* --> */
-        </script>
+
 
         <ui:fragment rendered="${not groupOverviewBean.group.canViewResources(userBean.user)}">
             <h3 class="error">
@@ -158,6 +152,7 @@
         <h:panelGroup id="filters">
 
         </h:panelGroup>
+        </p:outputPanel>
     </ui:fragment>
 </ui:define>
 

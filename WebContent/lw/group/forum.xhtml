@@ -20,26 +20,26 @@
 
 </ui:define>
 <ui:define name="center_layout">
-	<p:panel styleClass="no-padding-panel-content">
+	<p:outputPanel>
 		<ui:decorate template="/templates/group/menu.xhtml">
 			<ui:param name="group" value="#{forumTopicsBean.group}"/>
 			<ui:param name="active" value="forum"/>
 
 			<ui:define name="title">
 				<div class="row align-items-center">
-                    <span class="col mb-2 font-weight-bold">
-                        <span  class="mr-1 green-tittle">#{msg.forum}</span> #{msg.of} #{forumTopicsBean.group.title}
-                    </span>
-					<h:form id="center_header_form" styleClass="col mb-2">
+                    <h5 class="col mb-2 py-1">
+						<span class="text-primary">#{msg.forum}</span> #{msg.of} #{forumTopicsBean.group.title}
+                    </h5>
+					<h:form id="center_header_form" styleClass="col mb-2 mx-1 py-1">
 						<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
 							<p:commandButton value="#{msg['ForumIndex.new_topic']}"
 											 rendered="${forumTopicsBean.group.isMember(userBean.user)}"
-											 class="resource_button float-right"
+											 class="float-right"
 											 onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow'); return false;" />
 						</ui:fragment>
 
 						<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-									   styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true"
+									   update=":growl :group_menu @form" partialSubmit="true"
 									   process="@this" value="#{msg.join_group}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
 						</p:commandLink>
@@ -87,7 +87,7 @@
 
 			</p:dataTable>
 		</h:form>
-	</p:panel>
+	</p:outputPanel>
 
 
 	<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">

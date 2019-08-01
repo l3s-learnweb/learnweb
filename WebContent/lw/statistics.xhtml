@@ -13,7 +13,8 @@
 
 	<ui:define name="center_layout">
 
-        <p:panel header="General Statistics" styleClass="border-0 no-padding-panel-content">
+        <p:outputPanel header="General Statistics" styleClass="border-0">
+
             <div class="ui-datatable ui-widget">
                 <table role="grid" >
                     <thead>
@@ -91,7 +92,7 @@
                     </tbody>
                 </table>
             </div>
-        </p:panel>
+        </p:outputPanel>
 
         <p:dataTable styleClass="mt-3" >
             <f:facet name="header">

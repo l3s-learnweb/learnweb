@@ -26,7 +26,7 @@
     <p:menuitem value="#{msg.resources}" url="" />
 </ui:define>
 <ui:define name="center_layout">
-    <p:panel styleClass="section-group-resources section-resources no-padding-panel-content">
+    <p:outputPanel styleClass="section-group-resources section-resources bg-white">
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
@@ -50,13 +50,10 @@
         </h:form>
 
         <div class="center-header" id="group_header">
-            <div class="row align-items-center mb-2 mw-100">
-                <span class="col mb-2 font-weight-bold">
-                    <span class="green-tittle"> #{msg.resources} </span>
-                        #{msg.of}
-                    #{groupResourcesBean.group.title}
-                    (#{groupResourcesBean.group.resourcesCount} #{msg.resources})
-                </span>
+            <div class="row align-items-center mw-100">
+                <h5 class="col mb-2 py-1">
+                    <span class="text-primary"> #{msg.resources} </span> #{msg.of} #{groupResourcesBean.group.title} (#{groupResourcesBean.group.resourcesCount} #{msg.resources})
+                </h5>
 
                 <c:if test="${userBean.user.organisation.id eq 480}">
                     <h:form  id="group_layout_options" prependId="false">
@@ -92,7 +89,7 @@
                     </p:dialog>
                 </h:form>
 
-                <h:form id="center_header_form" styleClass="m-0 text-right">
+                <h:form id="center_header_form" styleClass="mb-3 text-right">
                     <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test"
                                      iconPos="right"
                                      type="button" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
@@ -501,7 +498,7 @@
                 $("#center_pane .ui-layout-unit-content").height($("#center_pane").height() - $("#center_pane #group_header").outerHeight() - $("#center_pane #paginator").outerHeight());
             });
         </script>
-    </p:panel>
+    </p:outputPanel>
 </ui:define>
 
 <ui:define name="right_layout">

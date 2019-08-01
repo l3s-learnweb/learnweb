@@ -20,15 +20,15 @@
     <p:menuitem value="Members" url="group/members.jsf?group_id=#{groupMembersBean.group.id}"/>
 </ui:define>
 <ui:define name="center_layout">
-    <p:panel  styleClass="no-padding-panel-content section-group-members">
+    <p:outputPanel styleClass="bg-white section-group-members">
     <ui:decorate template="/templates/group/menu.xhtml">
         <ui:param name="group" value="#{groupMembersBean.group}"/>
         <ui:param name="active" value="members"/>
         <ui:define name="title">
             <div class="row align-items-center">
-                 <span class="col mb-2 font-weight-bold mt-0">
-					<span class="green-tittle">#{msg.members}</span> #{msg.of} #{groupMembersBean.group.title}"
-                 </span>
+                <h5 class="col mb-2 py-1">
+					 <span class="text-primary"> #{msg.members} </span>#{msg.of} #{groupMembersBean.group.title}"
+                </h5>
                 <h:form id="center_header_form">
                     <p:commandLink rendered="#{not groupMembersBean.member}" action="#{groupsBean.joinGroup}"
                                    update=":growl :group_menu @form :resource_disp" partialSubmit="true" process="@this"
@@ -40,19 +40,9 @@
         </ui:define>
 
     </ui:decorate>
-
-
-<!--    <script type="text/javascript">
-        /* &lt;!&ndash; */
-        //$("#center_pane").prepend($("#group_header"));
-        /* &ndash;&gt; */
-    </script>-->
-
     <h:panelGrid id="resource_disp" styleClass="mt-2">
         <h:form>
-
                 <p:repeat id="datagrid" var="user" value="#{groupMembersBean.members}">
-
                     <p:commandLink styleClass="resource_command_link" update=":right_form" >
                         <f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
                         <div class="members-panelgrid">
@@ -66,21 +56,13 @@
                         </div>
                     </p:commandLink>
                 </p:repeat>
-
         </h:form>
     </h:panelGrid>
-    </p:panel>
+    </p:outputPanel>
 </ui:define>
 
 <ui:define name="right_layout">
-
             <h:form id="right_form">
-         <!--       <script type="text/javascript">
-                    function update_header() {
-                        //document.getElementById("right_pane_header").hidden = "true";
-                    }
-                </script>-->
-
                 <ui:fragment  rendered="#{groupMembersBean.clickedUser ne null}">
                     <ui:decorate template="/templates/user/profile.xhtml" >
                         <ui:param name="user" value="#{groupMembersBean.clickedUser}"/>
@@ -88,6 +70,5 @@
                     </ui:decorate>
                 </ui:fragment>
             </h:form>
-
 </ui:define>
 </ui:composition>

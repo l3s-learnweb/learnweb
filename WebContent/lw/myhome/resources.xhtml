@@ -27,7 +27,7 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel styleClass="m-0 panel-content no-padding-panel-content section-resources" >
+    <p:outputPanel styleClass="m-0 panel-content bg-white section-resources" >
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
@@ -50,7 +50,7 @@
         <div class="center-header" id="group_header">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-row justify-content-between align-items-center">
-                    <span class="green-tittle mr-2 mb-2">My Resources</span>
+                    <h5 class="text-primary mr-2 mb-0">My Resources</h5>
                     <h:form  id="folder_layout_options" prependId="false">
                         <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" style="background-color: rgb(221, 221, 221);"
                                          update=":resourcesView :folder_layout_options"
@@ -419,7 +419,7 @@
            // $("#center_pane").prepend($("#group_header"));
             update_header();
         </script>
-    </p:panel>
+    </p:outputPanel>
 </ui:define>
 
 <ui:define name="right_layout">

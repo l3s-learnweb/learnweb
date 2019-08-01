@@ -103,8 +103,8 @@
 						</p:selectOneMenu>
 
 						<div class="w-100 mt-3">
-							<p:commandButton value="#{msg.delete}" styleClass="command-button" onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/>
-							<p:commandButton value="#{msg.save}" styleClass="command-button float-right" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submissionBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+							<p:commandButton value="#{msg.delete}"  onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+							<p:commandButton value="#{msg.save}" styleClass="float-right" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submissionBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
 
 				</h:form>
@@ -165,7 +165,7 @@
 					</p:selectOneMenu>
 					<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon" />
 
-					<p:commandButton value="#{msg.save}" styleClass="command-button mt-3 float-right" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
+					<p:commandButton value="#{msg.save}" styleClass="mt-3 float-right" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
 
 				</h:form>
 			</p:dialog>
@@ -235,7 +235,7 @@
 
 				<p:panel styleClass="mt-3">
 					<h:form prependId="false">
-						<p:commandLink styleClass="command-button admin-element" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+						<p:commandLink styleClass="btn btn-primary" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									   process="@this" oncomplete="PF('create_submission_dialog').show();">
 							#{msg['Submission.create_new_submission']}
 						</p:commandLink>
