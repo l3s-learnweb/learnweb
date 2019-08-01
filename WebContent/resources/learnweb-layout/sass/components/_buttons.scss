@@ -1,25 +1,3 @@
-.imageupload-button { // TODO: remove it
-  display: flex;
-
-  .ui-fileupload-buttonbar {
-    width: fit-content;
-    padding: 0 !important;
-    display: flex;
-    align-items: center;
-    .ui-button-text{
-      width: max-content;
-    }
-  }
-
-  .ui-button {
-    margin-right: 0 !important;
-  }
-
-  .ui-fileupload-content {
-    width: 100%;
-  }
-}
-
 .fileupload-minimal {
   .ui-fileupload-buttonbar {
     background: inherit;

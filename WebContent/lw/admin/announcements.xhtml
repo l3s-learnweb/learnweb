@@ -6,113 +6,102 @@
         xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.announcements}"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg.announcements}"/>
 
-<ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
-</ui:define>
-<ui:define name="center_layout">
-    <ui:fragment>
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
+    </ui:define>
+
+    <ui:define name="center_layout">
         <h:form id="add_announcement_form">
-            <div class="row">
-                <div class="col-12">
-                    <p:panel>
-
-                        <p>
-                            <h:outputText value="#{msg.title}: " styleClass="font-weight-bold" />
-                        </p>
-                        <p:inputText styleClass="w-100" value="#{adminAnnouncementsBean.title}"/>
-
-                        <p class="mt-3">
-                            <p:outputLabel for="datepick" value="Date:" styleClass="font-weight-bold mb-0" />
-                        </p>
-                        <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" styleClass="w-100" inputStyleClass="w-100" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
-
-                        <p:textEditor styleClass="mt-4 mb-3" height="184" value="#{adminAnnouncementsBean.text}">
-                            <f:facet name="toolbar">
-									<span class="ql-formats">
-										<select class="ql-font"></select>
-										<select class="ql-size"></select>
-									</span>
-
-                                <span class="ql-formats">
-										<button class="ql-bold"></button>
-										<button class="ql-italic"></button>
-										<button class="ql-underline"></button>
-										<button class="ql-strike"></button>
-                                         <button class="ql-link"></button>
-									</span>
-                            </f:facet>
-                        </p:textEditor>
-                        Hide: <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}"/>
-                        <div class="mt-4">
-                            <h:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@this"
-                                             update=":growl" rendered="#{userBean.admin}"
-                                             styleClass="command-button"
-                                             value="#{msg.add}"/>
-                        </div>
-                    </p:panel>
+            <p:panel>
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.title}:"/>
+                    <p:inputText id="news_title" value="#{adminAnnouncementsBean.title}"/>
+                    <p:message for="@previous"/>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.date}:"/>
+                    <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                    <p:message for="@previous"/>
+                </div>
+
+                <div class="form-group">
+                    <p:textEditor styleClass="mt-4 mb-3" height="400" value="#{adminAnnouncementsBean.text}">
+                        <f:facet name="toolbar">
+                            <span class="ql-formats">
+                                <select class="ql-font"></select>
+                                <select class="ql-size"></select>
+                            </span>
+
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                                <button class="ql-link"></button>
+                            </span>
+                        </f:facet>
+                    </p:textEditor>
+                </div>
+
+                <div class="form-group">
+                    <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}" itemLabel="#{msg.hide}" />
+                </div>
+
+                <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@this" update=":growl" rendered="#{userBean.admin}" value="#{msg.add}"/>
+            </p:panel>
         </h:form>
+
         <h:form id="news_form">
-            <div class="p-grid">
-                <div class="p-col-12 pt-0 mt-1">
-                    <p:blockUI block="news_table" widgetVar="news_form_blocker">
-                        <div class="float-left">#{msg.please_wait}</div>
-                        <div class="loading-animation small float-left">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </p:blockUI>
-                    <p:dataTable id="news_table" var="news" value="#{adminAnnouncementsBean.announcements}">
-                        <p:column headerText="#{msg.title}" sortBy="#{news.title}">
-                            <h:outputText value="#{news.title}"/>
-                        </p:column>
 
-                        <p:column headerText="#{msg.date}" styleClass="m-auto" sortBy="#{news.date}">
-                            <h:outputText  value="#{news.date}">
-                                <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
-                            </h:outputText>
-                        </p:column>
-
-                        <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
-                            <p:selectBooleanCheckbox value="#{news.hidden}" styleClass="m-auto d-block">
-                                <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
-                            </p:selectBooleanCheckbox>
-                        </p:column>
-
-                        <p:column headerText="#{msg.options}">
-                            <f:facet name="header">
-                                #{msg.options}
-                            </f:facet>
-                            <span>
-                                <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
-                                <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
-                                <span><h:outputText value="#{msg.edit}"/></span>
-                                <f:param name="announcement_id" value="#{news.id}" />
-                                </h:outputLink>
-                            </span>
-                            <span>
-                                <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
-                                               update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
-                                <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
-                                <span><h:outputText value="#{msg.delete}"/></span>
-
-                                <p:confirm message="Do you really want to delete '#{news.title}' ?"/>
-                                </p:commandLink>
-                            </span>
-
-
-
-                        </p:column>
-                    </p:dataTable>
+            <p:blockUI block="news_table" widgetVar="news_form_blocker">
+                <div class="float-left">#{msg.please_wait}</div>
+                <div class="loading-animation small float-left">
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
-            </div>
-        </h:form>
-    </ui:fragment>
+            </p:blockUI>
 
-</ui:define>
+            <p:dataTable id="news_table" var="news" tableStyleClass="table-sm table-responsive mt-3" value="#{adminAnnouncementsBean.announcements}">
+                <p:column headerText="#{msg.title}" sortBy="#{news.title}">
+                    <h:outputText value="#{news.title}"/>
+                </p:column>
+
+                <p:column headerText="#{msg.date}" sortBy="#{news.date}">
+                    <h:outputText  value="#{news.date}">
+                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
+                    <p:selectBooleanCheckbox value="#{news.hidden}">
+                        <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
+                    </p:selectBooleanCheckbox>
+                </p:column>
+
+                <p:column headerText="#{msg.options}">
+                    <f:facet name="header">
+                        #{msg.options}
+                    </f:facet>
+
+                    <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}" styleClass="mr-1">
+                        <h:graphicImage value="/resources/icon/silk/pencil.png" alt="#{msg.edit}"/>
+                        <h:outputText value="#{msg.edit}"/>
+                        <f:param name="announcement_id" value="#{news.id}" />
+                    </h:outputLink>
+
+                    <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
+                                   update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
+                        <h:graphicImage value="/resources/icon/silk/delete.png" alt="#{msg.delete}"/>
+                        <h:outputText value="#{msg.delete}"/>
+                        <p:confirm message="#{msg.announcements_delete_question} #{news.title}"/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
 </ui:composition>

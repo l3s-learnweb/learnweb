@@ -15,7 +15,7 @@
 
 	<ui:define name="center_layout">
 		<h:form id="organisationform">
-			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}"  >
+			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-sm table-responsive">
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
 					<h:outputText value="#{organisation.title}" />		
 				</p:column>
@@ -24,17 +24,14 @@
 					<h:outputText value="#{organisation.welcomePage}" />						
 				</p:column>	
 				
-				<p:column headerText="#{msg.edit}">
+				<p:column headerText="#{msg.options}">
 					 <h:link title="#{msg.edit}" outcome="/lw/admin/organisation">
-					 	<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16"  alt="#{msg.edit}" />
-			            <f:param name="organisation_id" value="#{organisation.id}" />
-						 <span><h:outputText value="#{msg.edit}"/></span>
+						 <h:graphicImage value="/resources/icon/silk/pencil.png" alt="#{msg.edit}" />
+						 <f:param name="organisation_id" value="#{organisation.id}" />
+						 <h:outputText value="#{msg.edit}"/>
 			        </h:link>
-				</p:column>	
-				
+				</p:column>
 			</p:dataTable>	
 		</h:form>
-		<br/>
-		
 	</ui:define>
 </ui:composition>
