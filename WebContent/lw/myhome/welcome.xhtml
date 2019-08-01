@@ -1,119 +1,115 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns="http://www.w3.org/1999/xhtml"
-				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:h="http://xmlns.jcp.org/jsf/html"
-				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.welcome}"/>
-		<ui:define name="sub_breadcrumb">
-			<p:menuitem value="#{msg.welcome}" url="myhome/welcome.jsf#"/>
-		</ui:define>
-		<ui:define name="center_layout">
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.welcome}"/>
 
-		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}" >
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.welcome}" url="myhome/welcome.jsf#"/>
+</ui:define>
 
-				<ui:fragment rendered="#{userBean.user.organisationId == 848}">
-					<ui:include src="/aw/guide.xhtml" />
-				</ui:fragment>
-				<ui:fragment rendered="#{userBean.user.organisationId != 848}">
-					<ui:include src="/templates/user/guide.xhtml" />
-				</ui:fragment>
+<ui:define name="center_layout">
+    <p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
+        <ui:fragment rendered="#{userBean.user.organisationId == 848}">
+            <ui:include src="/aw/guide.xhtml"/>
+        </ui:fragment>
+        <ui:fragment rendered="#{userBean.user.organisationId != 848}">
+            <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
+        </ui:fragment>
+    </p:panel>
 
-		</p:panel>
+    <p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
+        <f:facet name="header">
+            #{msg.welcome}
+            <ui:fragment rendered="#{userBean.moderator}">
+                <h:link outcome="/lw/admin/organisation.jsf">
+                    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
+                </h:link>
+            </ui:fragment>
+        </f:facet>
 
-		<p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
-				<f:facet name="header">
-					#{msg.welcome}
-					<ui:fragment rendered="#{userBean.moderator}">
-						<h:link outcome="/lw/admin/organisation.jsf">
-							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-						</h:link>
-					</ui:fragment>
-				</f:facet>
+        <ui:fragment rendered="#{userBean.user.organisationId == 480}">
+            <div>
+                <p>#{msg.share_yell}</p>
+                <iframe src='//www.facebook.com/plugins/like.php?href=http%3A%2F%2Flearnweb.l3s.uni-hannover.de%2FLearnweb-Tomcat%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062'
+                        scrolling='no' frameborder='0' style="border:none; overflow:hidden; height:25px;"></iframe>
+                <div>
+                    Click <h:outputLink value="public/yell.jsf" style="text-decoration:underline;">here</h:outputLink> to view the user guide.
+                </div>
+            </div>
+        </ui:fragment>
 
-				<ui:fragment rendered="#{userBean.user.organisationId == 480}">
-					<div>
-						<p>#{msg.share_yell}</p>
-						<iframe src='//www.facebook.com/plugins/like.php?href=http%3A%2F%2Flearnweb.l3s.uni-hannover.de%2FLearnweb-Tomcat%2Flw%2Fpublic%2Fyell.jsf&amp;width&amp;layout=button&amp;action=like&amp;show_faces=true&amp;share=true&amp;height=80&amp;appId=181712555296062' scrolling='no' frameborder='0' style="border:none; overflow:hidden; height:25px;"></iframe>
-						<div>
-							Click <h:outputLink value="public/yell.jsf" style="text-decoration:underline;">here</h:outputLink> to view the user guide.
-						</div>
-					</div>
-				</ui:fragment>
+        <h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" styleClass="welcometext"/>
+    </p:panel>
 
-				<h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" styleClass="welcometext" />
-			</p:panel>
+    <ui:repeat var="course" value="#{userBean.user.courses}">
+        <p:panel rendered="#{course.welcomeMessage.length() > 5}">
+            <f:facet name="header">
+                <h:outputText value="#{course.title}"/>
+                <h:panelGroup rendered="#{userBean.moderator}">
+                    <h:link outcome="/lw/admin/course.jsf?course_id=#{course.id}">
+                        <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
+                    </h:link>
+                </h:panelGroup>
+            </f:facet>
 
-			<ui:repeat var="course" value="#{userBean.user.courses}">
-				<p:panel rendered="#{course.welcomeMessage.length() > 5}">
-					<f:facet name="header">
-						<h:outputText value="#{course.title}" />
-						<h:panelGroup rendered="#{userBean.moderator}">
-							<h:link outcome="/lw/admin/course.jsf?course_id=#{course.id}">
-								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-							</h:link>
-						</h:panelGroup>
-					</f:facet>
+            <h:outputText value="#{course.welcomeMessage}" escape="false" styleClass="welcometext"/>
+        </p:panel>
+    </ui:repeat>
 
-					<h:outputText value="#{course.welcomeMessage}" escape="false" styleClass="welcometext" />
-					</p:panel>
-			</ui:repeat>
+    <p:panel header="#{msg.myGroups}" toggleable="true" collapsed="true">
+        <h:outputText value="#{msg.should_join_group}" escape="false" rendered="#{empty userBean.user.groups}"/>
 
+        <ui:repeat var="group" value="#{userBean.user.groups}">
+            <h:panelGroup>
+                <h3>
+                    <h:outputLink value="group/overview.jsf">
+                        <f:param name="group_id" value="#{group.id}"/>
+                        <h:outputText value="#{group.title}:"/>
+                    </h:outputLink>
+                </h3>
+                <ul>
+                    <ui:repeat var="entry" value="#{group.logs}">
+                        <li class="#{group.getLastVisit(userBean.user)*1000 lt entry.date.time? 'bold':''}">
+                            <h:outputText value="#{entry.date}">
+                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
+                            </h:outputText> -
+                            <h:outputText value="#{entry.description}" escape="false"/>
+                        </li>
 
+                    </ui:repeat>
+                </ul>
+            </h:panelGroup>
+        </ui:repeat>
+    </p:panel>
 
-			<p:panel header="#{msg.myGroups}" toggleable="true"  collapsed="true">
-				<h:outputText value="#{msg.should_join_group}" escape="false" rendered="#{empty userBean.user.groups}" />
+    <p:panel header="Notifications" rendered="#{not empty submissionBean.activeSubmissions}">
+        <h:panelGroup layout="block">
+            You have
+            <h:outputLink value="myhome/submission_overview.jsf" style="text-decoration:underline;">
+                <f:param name="user_id" value="${userBean.user.id}"/>
+                ${submissionBean.activeSubmissions.size()} ongoing submissions:
+            </h:outputLink>
 
-				<ui:repeat var="group" value="#{userBean.user.groups}">
-					<h:panelGroup>
-						<h3>
-							<h:outputLink value="group/overview.jsf">
-								<f:param name="group_id" value="#{group.id}" />
-								<h:outputText value="#{group.title}:" />
-							</h:outputLink>
-						</h3>
-						<ul>
-							<ui:repeat var="entry" value="#{group.logs}">
-							<li class="#{group.getLastVisit(userBean.user)*1000 lt entry.date.time? 'bold':''}">
-								<h:outputText value="#{entry.date}" >
-									<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
-								</h:outputText> -
-								<h:outputText value="#{entry.description}" escape="false" />
-							</li>
-
-							</ui:repeat>
-						</ul>
-					</h:panelGroup>
-				</ui:repeat>
-
-
-			</p:panel>
-
-			<p:panel header="Notifications" rendered="#{not empty submissionBean.activeSubmissions}">
-				<h:panelGroup layout="block">
-				You have
-				<h:outputLink value="myhome/submission_overview.jsf" style="text-decoration:underline;">
-					<f:param name="user_id" value="${userBean.user.id}" />
-					${submissionBean.activeSubmissions.size()} ongoing submissions:
-				</h:outputLink>
-
-				<ul>
-					<ui:repeat var="submission" value="#{submissionBean.activeSubmissions}">
-						<ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
-						<li>
-							<h:outputLink value="myhome/submission_resources.jsf" style="text-decoration: underline;">
-								<f:param name="user_id" value="${userBean.user.id}" />
-								<f:param name="submission_id" value="${submission.id}" />
-								<b>${submission.title}:</b>
-							</h:outputLink>
-							 ${submission.description}
-						</li>
-						</ui:fragment>
-					</ui:repeat>
-				</ul>
-				</h:panelGroup>
-			</p:panel>
-		</ui:define>
+            <ul>
+                <ui:repeat var="submission" value="#{submissionBean.activeSubmissions}">
+                    <ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
+                        <li>
+                            <h:outputLink value="myhome/submission_resources.jsf" style="text-decoration: underline;">
+                                <f:param name="user_id" value="${userBean.user.id}"/>
+                                <f:param name="submission_id" value="${submission.id}"/>
+                                <b>${submission.title}:</b>
+                            </h:outputLink>
+                            ${submission.description}
+                        </li>
+                    </ui:fragment>
+                </ui:repeat>
+            </ul>
+        </h:panelGroup>
+    </p:panel>
+</ui:define>
 </ui:composition>

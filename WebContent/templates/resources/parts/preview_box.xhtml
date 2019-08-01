@@ -22,7 +22,7 @@
                     <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
                     <input type="hidden" id="ed_can_be_edited" value="#{res.canEditResource(userBean.user)}"/>
                 </form>
-                <ui:decorate template="/templates/resources/editor.xhtml"/>
+                <ui:decorate template="/WEB-INF/templates/blocks/resources/openoffice-editor.xhtml"/>
                 <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
             </div>
         </ui:fragment>

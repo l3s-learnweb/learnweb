@@ -26,7 +26,7 @@
 			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
 
 			<ui:fragment rendered="#{not userDetailBean.pageHidden}">
-				<ui:decorate template="/templates/user/logs.xhtml"/>
+				<ui:decorate template="/WEB-INF/templates/blocks/users/activity-logs.xhtml"/>
 			</ui:fragment>
 		</p:panel>
 	</ui:define>
