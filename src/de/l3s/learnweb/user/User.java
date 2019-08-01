@@ -179,9 +179,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public boolean isEmailConfirmed()
     {
-        // TODO: remove when issue with outgoing mails is resolved
-        // return emailConfirmed;
-        return true;
+        return emailConfirmed;
     }
 
     @Override
