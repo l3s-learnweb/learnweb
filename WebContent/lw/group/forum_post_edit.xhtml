@@ -41,7 +41,7 @@
 							</ui:fragment>
 							<p:textEditor  widgetVar="editorWidget" value="#{forumEditBean.post.text}"
 										   label="#{msg['PostShow.postContent']}" height="184" id="msg_description" />
-							<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="btn btn-primary mt-3"
+							<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="mt-3"
 											 update="@form" ajax="true" validateClient="true" />
 						</table>
 					</h:form>

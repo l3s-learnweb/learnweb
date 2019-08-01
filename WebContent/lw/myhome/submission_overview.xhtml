@@ -235,7 +235,7 @@
 
 				<p:panel styleClass="mt-3">
 					<h:form prependId="false">
-						<p:commandLink styleClass="btn btn-primary" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+						<p:commandLink  title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									   process="@this" oncomplete="PF('create_submission_dialog').show();">
 							#{msg['Submission.create_new_submission']}
 						</p:commandLink>

@@ -69,7 +69,7 @@
 					#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
 						    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 													</h:outputText>
-					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="btn btn-primary ml-3" immediate="true"/>
+					<p:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ml-3" immediate="true"/>
 				</span>
 
 				<p:dataTable var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"

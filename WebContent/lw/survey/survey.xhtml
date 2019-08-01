@@ -156,7 +156,6 @@
                         </div>
 
                         <p:commandButton value="#{msg.submit}"
-							styleClass="btn btn-primary"
 							action="#{surveyBean.onSubmit()}" update=":message @form"
 							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
 							ajax="true">
@@ -166,7 +165,6 @@
 						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
 							rendered="#{surveyBean.resource.saveable}" 
 							actionListener="#{surveyBean.onSave()}"
-							styleClass="btn btn-primary"
 							ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
 	                     	process="@form" 
 	                     	update="@form :message">
@@ -178,13 +176,13 @@
 				<ui:fragment rendered="#{not surveyBean.formEnabled}">
 					<h:outputText value="#{msg['survey.cant_edit']}" />
 
-					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}" styleClass="btn btn-primary">
+					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}">
 						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
 						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
 						<h:outputText value="#{msg['survey.View_answers']}" />
 					</h:outputLink>
 
-					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}" styleClass="btn btn-primary">
+					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}">
 						<h:outputText value="#{surveyBean.goBackPageTitle}" />
 					</h:outputLink>
 				</ui:fragment>	
