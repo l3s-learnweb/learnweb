@@ -15,32 +15,44 @@ body {
     }
   }
 
-  .ui-menu.ui-menu-overlay {
-    background: $themePrimaryColor;
-    border: 0;
+  .ui-menu {
+    &.ui-menu-navbar-submenu {
+      border: 0;
 
-    .ui-menu-list {
-      padding: 0;
+      .ui-menu-list {
+        padding: 0;
 
-      .ui-menuitem {
-        .ui-menuitem-link {
-          border: 0;
-          line-height: 1.5;
-          padding: 0.5rem 0.8rem;
-          color: $themeElementTextColor;
+        .ui-menuitem {
+          .ui-menuitem-link {
+            border: 0;
+            line-height: 1.5;
+            padding: 0.5rem 0.8rem;
 
-          &.ui-state-hover {
-            background-color: $themePrimaryDarkerAlt;
-            color: $themeElementTextColor;
+            img {
+              height: 24px;
+              padding-right: 6px;
+            }
           }
+        }
+      }
+    }
 
-          .ui-menuitem-icon {
+    &.ui-menu-primary {
+      background: $themePrimaryColor;
+
+      .ui-menu-list {
+        .ui-menuitem {
+          .ui-menuitem-link {
             color: $themeElementTextColor;
-          }
 
-          img {
-            height: 24px;
-            padding-right: 6px;
+            &.ui-state-hover {
+              background-color: $themePrimaryDarkerAlt;
+              color: $themeElementTextColor;
+            }
+
+            .ui-menuitem-icon {
+              color: $themeElementTextColor;
+            }
           }
         }
       }

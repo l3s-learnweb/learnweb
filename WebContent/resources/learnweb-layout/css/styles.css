@@ -10919,29 +10919,33 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   text-decoration: none;
   top: 0.25rem;
 }
-body .ui-menu.ui-menu-overlay {
-  background: #4b6cb7;
+body .ui-menu.ui-menu-navbar-submenu {
   border: 0;
 }
-body .ui-menu.ui-menu-overlay .ui-menu-list {
+body .ui-menu.ui-menu-navbar-submenu .ui-menu-list {
   padding: 0;
 }
-body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link {
+body .ui-menu.ui-menu-navbar-submenu .ui-menu-list .ui-menuitem .ui-menuitem-link {
   border: 0;
   line-height: 1.5;
   padding: 0.5rem 0.8rem;
+}
+body .ui-menu.ui-menu-navbar-submenu .ui-menu-list .ui-menuitem .ui-menuitem-link img {
+  height: 24px;
+  padding-right: 6px;
+}
+body .ui-menu.ui-menu-primary {
+  background: #4b6cb7;
+}
+body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link {
   color: #fff;
 }
-body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link.ui-state-hover {
+body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link.ui-state-hover {
   background-color: #415688;
   color: #fff;
 }
-body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
+body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
   color: #fff;
-}
-body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link img {
-  height: 24px;
-  padding-right: 6px;
 }
 
 @font-face {
@@ -10978,13 +10982,6 @@ body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link img {
 
 .lw-file-excel:before {
   content: "";
-}
-
-.green-tittle {
-  /* TODO: we need to avoid such classes */
-  font-size: 2rem;
-  font-weight: 100;
-  color: #4aa564;
 }
 
 .onhover-scrollbar {
@@ -11027,10 +11024,6 @@ body .ui-menu.ui-menu-overlay .ui-menu-list .ui-menuitem .ui-menuitem-link img {
 .no-borders td {
   background: none !important;
   border: none !important;
-}
-
-.no-padding-panel-content .ui-panel-content {
-  padding: 0 !important;
 }
 
 .p-pn-1rem .ui-panel-content {
@@ -12016,53 +12009,11 @@ body,
   background: #fff;
 }
 
-.imageupload-button {
-  display: flex;
-}
-.imageupload-button .ui-fileupload-buttonbar {
-  width: fit-content;
-  padding: 0 !important;
-  display: flex;
-  align-items: center;
-}
-.imageupload-button .ui-fileupload-buttonbar .ui-button-text {
-  width: max-content;
-}
-.imageupload-button .ui-button {
-  margin-right: 0 !important;
-}
-.imageupload-button .ui-fileupload-content {
-  width: 100%;
-}
-
 .fileupload-minimal .ui-fileupload-buttonbar {
   background: inherit;
 }
 .fileupload-minimal .ui-fileupload-content {
   display: none;
-}
-
-.command-button {
-  background: #4b6cb7;
-  color: #fff;
-  border: 0.1rem solid #4b6cb7;
-  border-radius: 0.2rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  padding: 0.2rem 0.4rem;
-  text-decoration: none;
-  vertical-align: middle;
-}
-.command-button:hover {
-  background: #415688;
-  border-color: #415688;
-  color: #fff;
-  text-decoration: none;
-}
-
-.admin-element {
-  background-color: #2C447B;
-  border-color: #2C447B;
 }
 
 .section-archive-thumbnail {

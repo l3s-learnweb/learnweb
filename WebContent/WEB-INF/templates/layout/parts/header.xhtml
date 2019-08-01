@@ -40,7 +40,7 @@
                         <img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
                     </p:commandLink>
 
-                    <p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-overlay">
+                    <p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                         <p:menuitem action="#{userBean.setLocaleCode('de')}">
                             <img src="#{request.contextPath}/resources/images/flags/flag_de.png" alt=""/><span>Deutsch</span>
                         </p:menuitem>
@@ -64,7 +64,7 @@
                         <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="profile-picture" alt="Profile picture"/>
                     </p:commandLink>
 
-                    <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-overlay">
+                    <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                         <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}" />
                         <p:menuitem url="#{request.contextPath}/lw/admin/dashboard/user.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}" />
                         <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}" />

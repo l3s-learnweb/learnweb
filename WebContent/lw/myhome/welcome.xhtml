@@ -22,6 +22,7 @@
 				</ui:fragment>
 
 		</p:panel>
+
 		<p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
 				<f:facet name="header">
 					#{msg.welcome}
@@ -31,7 +32,7 @@
 						</h:link>
 					</ui:fragment>
 				</f:facet>
-				
+
 				<ui:fragment rendered="#{userBean.user.organisationId == 480}">
 					<div>
 						<p>#{msg.share_yell}</p>
@@ -44,7 +45,7 @@
 
 				<h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" styleClass="welcometext" />
 			</p:panel>
-			
+
 			<ui:repeat var="course" value="#{userBean.user.courses}">
 				<p:panel rendered="#{course.welcomeMessage.length() > 5}">
 					<f:facet name="header">
@@ -59,14 +60,14 @@
 					<h:outputText value="#{course.welcomeMessage}" escape="false" styleClass="welcometext" />
 					</p:panel>
 			</ui:repeat>
-			
-			
-			
+
+
+
 			<p:panel header="#{msg.myGroups}" toggleable="true"  collapsed="true">
 				<h:outputText value="#{msg.should_join_group}" escape="false" rendered="#{empty userBean.user.groups}" />
-			
+
 				<ui:repeat var="group" value="#{userBean.user.groups}">
-					<h:panelGroup>					
+					<h:panelGroup>
 						<h3>
 							<h:outputLink value="group/overview.jsf">
 								<f:param name="group_id" value="#{group.id}" />
@@ -77,27 +78,27 @@
 							<ui:repeat var="entry" value="#{group.logs}">
 							<li class="#{group.getLastVisit(userBean.user)*1000 lt entry.date.time? 'bold':''}">
 								<h:outputText value="#{entry.date}" >
-									<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />								
-								</h:outputText> - 
-								<h:outputText value="#{entry.description}" escape="false" /> 
+									<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+								</h:outputText> -
+								<h:outputText value="#{entry.description}" escape="false" />
 							</li>
-							
+
 							</ui:repeat>
 						</ul>
 					</h:panelGroup>
 				</ui:repeat>
-		
-			
+
+
 			</p:panel>
-			
+
 			<p:panel header="Notifications" rendered="#{not empty submissionBean.activeSubmissions}">
 				<h:panelGroup layout="block">
-				You have 
+				You have
 				<h:outputLink value="myhome/submission_overview.jsf" style="text-decoration:underline;">
 					<f:param name="user_id" value="${userBean.user.id}" />
 					${submissionBean.activeSubmissions.size()} ongoing submissions:
 				</h:outputLink>
-				
+
 				<ul>
 					<ui:repeat var="submission" value="#{submissionBean.activeSubmissions}">
 						<ui:fragment rendered="#{submission.isSurveySubmitted(userBean.user.id)}">
