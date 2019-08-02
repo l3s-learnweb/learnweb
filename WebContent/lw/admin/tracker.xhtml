@@ -9,14 +9,17 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Tracker"/>
 
-		<ui:define name="sub_breadcrumb">
-			<p:menuitem value="Tracker" url="admin/tracker.jsf"/>
-		</ui:define>
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="Tracker" url="admin/tracker.jsf"/>
+	</ui:define>
+
 	<ui:define name="center_layout">
-	  	<p:panel header="Tracker Statistic">
 		<h:form>
-			<p:dataTable value="#{dashboard.trackerStatistics}" var="entry">
-			 
+			<p:dataTable tableStyleClass="table-sm table-responsive" value="#{dashboard.trackerStatistics}" var="entry">
+				<f:facet name="header">
+					Tracker Statistic
+				</f:facet>
+
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column colspan="2" headerText="User" />
@@ -24,6 +27,7 @@
 						<p:column colspan="5" headerText="Learnweb" />
 						<p:column colspan="5" headerText="Proxy" />
 					</p:row>
+
 					<p:row>
 						<p:column headerText="User" sortBy="#{entry['user'].username}" />
 						<p:column headerText="Grade" sortBy="#{entry['user'].additionalInformation}" />	
@@ -51,6 +55,7 @@
 				<p:column headerText="User">
 					<h:outputText value="#{entry['user'].id}" />
 				</p:column>
+
 				<p:column headerText="Grade">
 					<h:outputText value="#{entry['user'].additionalInformation}" />
 				</p:column>			
@@ -58,15 +63,19 @@
 				<p:column headerText="Time Stay">
 					<h:outputText value="#{entry['summarized'].timeStayFormatted}" />
 				</p:column>
+
 				<p:column headerText="Time Active">
 					<h:outputText value="#{entry['summarized'].timeActiveFormatted}" />
 				</p:column>
+
 				<p:column headerText="Clicks">
 					<h:outputText value="#{entry['summarized'].clicks}" />
 				</p:column>
+
 				<p:column headerText="Keypresses">
 					<h:outputText value="#{entry['summarized'].keypresses}" />
 				</p:column>
+
 				<p:column headerText="Total Events"  >
 					<h:outputText value="#{entry['summarized'].totalEvents}" />
 				</p:column>		
@@ -74,15 +83,19 @@
 				<p:column headerText="Time Stay">
 					<h:outputText value="#{entry['learnweb'].timeStayFormatted}" />
 				</p:column>
+
 				<p:column headerText="Time Active">
 					<h:outputText value="#{entry['learnweb'].timeActiveFormatted}" />
 				</p:column>
+
 				<p:column headerText="Clicks">
 					<h:outputText value="#{entry['learnweb'].clicks}" />
 				</p:column>
+
 				<p:column headerText="Keypresses">
 					<h:outputText value="#{entry['learnweb'].keypresses}" />
 				</p:column>
+
 				<p:column headerText="Total Events"  >
 					<h:outputText value="#{entry['learnweb'].totalEvents}" />
 				</p:column>		
@@ -90,21 +103,23 @@
 				<p:column headerText="Time Stay">
 					<h:outputText value="#{entry['proxy'].timeStayFormatted}" />
 				</p:column>
+
 				<p:column headerText="Time Active">
 					<h:outputText value="#{entry['proxy'].timeActiveFormatted}" />
 				</p:column>
+
 				<p:column headerText="Clicks">
 					<h:outputText value="#{entry['proxy'].clicks}" />
 				</p:column>
+
 				<p:column headerText="Keypresses">
 					<h:outputText value="#{entry['proxy'].keypresses}" />
 				</p:column>
+
 				<p:column headerText="Total Events"  >
 					<h:outputText value="#{entry['proxy'].totalEvents}" />
 				</p:column>
-				
 			</p:dataTable>
 		</h:form>
-		</p:panel>
 	</ui:define>
 </ui:composition>
