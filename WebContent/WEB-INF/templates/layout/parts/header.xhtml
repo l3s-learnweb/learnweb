@@ -60,8 +60,8 @@
                 </ui:fragment>
 
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <p:commandLink id="userMenuButton" styleClass="topbar-element usermenu-button">
-                        <img src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" class="profile-picture" alt="Profile picture"/>
+                    <p:commandLink id="userMenuButton" styleClass="topbar-element usermenu-button" ariaLabel="Profile">
+                        <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
                     </p:commandLink>
 
                     <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
