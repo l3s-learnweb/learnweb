@@ -8,6 +8,7 @@ import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.Submenu;
 import org.primefaces.util.WidgetBuilder;
 
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import java.io.IOException;
@@ -89,18 +90,10 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         }
 
         //header
-        writer.startElement("div", null);
+        writer.startElement("a", null);
         writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_CLASS, null);
         writer.writeAttribute("role", "tab", null);
         writer.writeAttribute("tabindex", "0", null);
-
-        //icon
-        writer.startElement("span", null);
-        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_ICON_CLASS, null);
-        writer.endElement("span");
-
-        writer.startElement("a", null);
-        writer.writeAttribute("tabindex", "-1", null);
         if(!(submenu instanceof ActiveSubMenu) || submenu.isDisabled())
         {
             writer.writeAttribute("href", "#", null);
@@ -110,10 +103,18 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         {
             setAnchorAttributes(context, (ActiveSubMenu) submenu);
         }
-        writer.writeText(submenu.getLabel(), null);
-        writer.endElement("a");
 
-        writer.endElement("div");
+        //icon
+        writer.startElement("span", null);
+        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_ICON_CLASS, null);
+        writer.endElement("span");
+
+        //icon
+        writer.startElement("span", null);
+        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_TEXT_CLASS, null);
+        writer.writeText(submenu.getLabel(), null);
+        writer.endElement("span");
+        writer.endElement("a");
 
         //content
         writer.startElement("div", null);
@@ -133,6 +134,35 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("div");   //content
 
         writer.endElement("li");   //wrapper
+    }
+
+    protected void encodeMenuItemContent(FacesContext context, AbstractMenu menu, MenuItem menuitem) throws IOException {
+        ResponseWriter writer = context.getResponseWriter();
+        String icon = menuitem.getIcon();
+        Object value = menuitem.getValue();
+
+        if (icon != null) {
+            writer.startElement("span", null);
+            writer.writeAttribute("class", LearnwebMenu.MENUITEM_ICON_CLASS + " " + icon, null);
+            writer.endElement("span");
+        }
+
+        writer.startElement("span", null);
+        writer.writeAttribute("class", LearnwebMenu.MENUITEM_TEXT_CLASS, null);
+
+        if (value != null) {
+            if (menuitem.isEscape()) {
+                writer.writeText(value, "value");
+            }
+            else {
+                writer.write(value.toString());
+            }
+        }
+        else if (menuitem.shouldRenderChildren()) {
+            renderChildren(context, (UIComponent) menuitem);
+        }
+
+        writer.endElement("span");
     }
 
     private void setAnchorAttributes(FacesContext context, ActiveSubMenu activeSubMenu) throws IOException
@@ -210,7 +240,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         if(hasIcon)
         {
             writer.startElement("span", null);
-            writer.writeAttribute("class", "ui-icon " + icon, null);
+            writer.writeAttribute("class", LearnwebMenu.MENUITEM_ICON_CLASS + " " + icon, null);
             writer.endElement("span");
         }
 

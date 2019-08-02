@@ -1,13 +1,14 @@
 // Icon Override Mixin
 @mixin icon-override($icon) {
-    background: none;
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     text-indent: 0px !important;
+    background: none;
     text-align: center;
 
     &:before {
@@ -15,108 +16,128 @@
     }
 }
 
-.ui-icon-carat-1-n { @include icon-override("\f106"); }
-.ui-icon-carat-1-e { @include icon-override("\f105"); }
-.ui-icon-carat-1-s { @include icon-override("\f107"); }
-.ui-icon-carat-1-w { @include icon-override("\f104"); }
-.ui-icon-carat-2-n-s { @include icon-override("\f0dc"); }
-.ui-icon-triangle-1-n { @include icon-override("\f0de"); }
-.ui-icon-triangle-1-e { @include icon-override("\f0da"); }
-.ui-icon-triangle-1-s { @include icon-override("\f0dd"); }
-.ui-icon-triangle-1-w { @include icon-override("\f0d9"); }
-.ui-icon-triangle-2-n-s { @include icon-override("\f0dc"); }
-.ui-icon-arrowrefresh-1-w { @include icon-override("\f021")}
-.ui-icon-arrow-1-n { @include icon-override("\f062"); }
-.ui-icon-arrow-1-e { @include icon-override("\f061"); }
-.ui-icon-arrow-1-s { @include icon-override("\f063"); }
-.ui-icon-arrow-1-w { @include icon-override("\f177"); }
-.ui-icon-arrow-2-n-s { @include icon-override("\f07d"); }
-.ui-icon-arrow-2-e-w { @include icon-override("\f07e"); }
-.ui-icon-arrowthick-1-n { @include icon-override("\f176"); }
-.ui-icon-arrowthick-1-e { @include icon-override("\f178"); }
-.ui-icon-arrowthick-1-s { @include icon-override("\f175"); }
-.ui-icon-arrowthick-1-w { @include icon-override("\f177"); }
-.ui-icon-arrow-4 { @include icon-override("\f047"); }
-.ui-icon-arrow-4-diag { @include icon-override("\f0b2"); }
-.ui-icon-extlink { @include icon-override("\f08e"); }
-.ui-icon-newwin { @include icon-override("\f24d"); }
-.ui-icon-refresh { @include icon-override("\f021"); }
-.ui-icon-shuffle { @include icon-override("\f074"); }
-.ui-icon-transfer-e-w { @include icon-override("\f18d"); }
-.ui-icon-folder-collapsed { @include icon-override("\f07b"); }
-.ui-icon-folder-open { @include icon-override("\f115"); }
-.ui-icon-document { @include icon-override("\f016"); }
-.ui-icon-note { @include icon-override("\f24a"); }
-.ui-icon-mail-open { @include icon-override("\f003"); }
-.ui-icon-suitcase { @include icon-override("\f0f2"); }
-.ui-icon-comment { @include icon-override("\f0e5"); }
-.ui-icon-person { @include icon-override("\f007"); }
-.ui-icon-print { @include icon-override("\f02f"); }
-.ui-icon-trash { @include icon-override("\f1f8"); }
-.ui-icon-locked { @include icon-override("\f023"); }
-.ui-icon-unlocked { @include icon-override("\f09c"); }
-.ui-icon-bookmark { @include icon-override("\f02e"); }
-.ui-icon-tag { @include icon-override("\f02b"); }
-.ui-icon-home { @include icon-override("\f015"); }
-.ui-icon-flag { @include icon-override("\f024"); }
-.ui-icon-calendar { @include icon-override("\f073"); }
-.ui-icon-cart { @include icon-override("\f07a"); }
-.ui-icon-pencil { @include icon-override("\f040"); }
-.ui-icon-clock { @include icon-override("\f017"); }
-.ui-icon-disk { @include icon-override("\f0c7"); }
-.ui-icon-calculator { @include icon-override("\f1ec"); }
-.ui-icon-zoomin { @include icon-override("\f00e"); }
-.ui-icon-zoomout { @include icon-override("\f010");}
-.ui-icon-search { @include icon-override("\f002");}
-.ui-icon-wrench { @include icon-override("\f0ad");}
-.ui-icon-gear { @include icon-override("\f013");}
-.ui-icon-heart { @include icon-override("\f004");}
-.ui-icon-star { @include icon-override("\f005");}
-.ui-icon-link { @include icon-override("\f0c1");}
-.ui-icon-cancel { @include icon-override("\f05e");}
-.ui-icon-plus { @include icon-override("\f067");}
-.ui-icon-plusthick { @include icon-override("\f067"); }
-.ui-icon-minus { @include icon-override("\f068");}
-.ui-icon-minusthick { @include icon-override("\f068"); }
-.ui-icon-closethick { @include icon-override("\f00d"); }
-.ui-icon-close { @include icon-override("\f00d"); }
-.ui-icon-key { @include icon-override("\f084");}
-.ui-icon-lightbulb { @include icon-override("\f0eb");}
-.ui-icon-scissors { @include icon-override("\f0c4");}
-.ui-icon-clipboard { @include icon-override("\f0ea");}
-.ui-icon-copy { @include icon-override("\f0c5");}
-.ui-icon-contact { @include icon-override("\f0c0");}
-.ui-icon-image { @include icon-override("\f1c5");}
-.ui-icon-video { @include icon-override("\f1c8");}
-.ui-icon-music { @include icon-override("\f001");}
-.ui-icon-alert { @include icon-override("\f071");}
-.ui-icon-info { @include icon-override("\f05a");}
-.ui-icon-notice { @include icon-override("\f12a");}
-.ui-icon-help { @include icon-override("\f059");}
-.ui-icon-check { @include icon-override("\f00c");}
-.ui-icon-bullet { @include icon-override("\f111");}
-.ui-icon-radio-off { @include icon-override("\f10c");}
-.ui-icon-radio-on { @include icon-override("\f111");}
-.ui-icon-pin-s { @include icon-override("\f08d");}
-.ui-icon-play { @include icon-override("\f04b");}
-.ui-icon-pause { @include icon-override("\f04c");}
-.ui-icon-seek-next { @include icon-override("\f051");}
-.ui-icon-seek-prev { @include icon-override("\f048");}
-.ui-icon-seek-end { @include icon-override("\f051");}
-.ui-icon-seek-first { @include icon-override("\f048");}
-.ui-icon-stop { @include icon-override("\f04d");}
-.ui-icon-eject { @include icon-override("\f052");}
-.ui-icon-volume-off { @include icon-override("\f026");}
-.ui-icon-volume-on { @include icon-override("\f028");}
-.ui-icon-power { @include icon-override("\f011");}
-.ui-icon-signal { @include icon-override("\f012");}
-.ui-icon-battery-0 { @include icon-override("\f244");}
-.ui-icon-battery-1 { @include icon-override("\f243");}
-.ui-icon-battery-2 { @include icon-override("\f242");}
-.ui-icon-battery-3 { @include icon-override("\f240");}
-.ui-icon-circle-plus { @include icon-override("\f055");}
-.ui-icon-circle-minus { @include icon-override("\f056");}
-.ui-icon-circle-triangle-e { @include icon-override("\f138"); }
-.ui-icon-circle-triangle-s {  @include icon-override("\f13a"); }
-.ui-icon-circle-triangle-w { @include icon-override("\f137"); }
-.ui-icon-circle-triangle-n { @include icon-override("\f139"); }
+//[class^="ui-icon-"]:before,
+//[class*=" ui-icon-"]:before,
+.ui-icon {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    // override PrimeFaces default
+    text-indent: 0 !important;
+}
+
+@mixin icon-simple($icon) {
+    &:before {
+        content: $icon;
+    }
+}
+
+.ui-icon-carat-1-n { @include icon-simple("\f106"); }
+.ui-icon-carat-1-e { @include icon-simple("\f105"); }
+.ui-icon-carat-1-s { @include icon-simple("\f107"); }
+.ui-icon-carat-1-w { @include icon-simple("\f104"); }
+.ui-icon-carat-2-n-s { @include icon-simple("\f0dc"); }
+.ui-icon-triangle-1-n { @include icon-simple("\f0de"); }
+.ui-icon-triangle-1-e { @include icon-simple("\f0da"); }
+.ui-icon-triangle-1-s { @include icon-simple("\f0dd"); }
+.ui-icon-triangle-1-w { @include icon-simple("\f0d9"); }
+.ui-icon-triangle-2-n-s { @include icon-simple("\f0dc"); }
+.ui-icon-arrowrefresh-1-w { @include icon-simple("\f021")}
+.ui-icon-arrow-1-n { @include icon-simple("\f062"); }
+.ui-icon-arrow-1-e { @include icon-simple("\f061"); }
+.ui-icon-arrow-1-s { @include icon-simple("\f063"); }
+.ui-icon-arrow-1-w { @include icon-simple("\f177"); }
+.ui-icon-arrow-2-n-s { @include icon-simple("\f07d"); }
+.ui-icon-arrow-2-e-w { @include icon-simple("\f07e"); }
+.ui-icon-arrowthick-1-n { @include icon-simple("\f176"); }
+.ui-icon-arrowthick-1-e { @include icon-simple("\f178"); }
+.ui-icon-arrowthick-1-s { @include icon-simple("\f175"); }
+.ui-icon-arrowthick-1-w { @include icon-simple("\f177"); }
+.ui-icon-arrow-4 { @include icon-simple("\f047"); }
+.ui-icon-arrow-4-diag { @include icon-simple("\f0b2"); }
+.ui-icon-extlink { @include icon-simple("\f08e"); }
+.ui-icon-newwin { @include icon-simple("\f24d"); }
+.ui-icon-refresh { @include icon-simple("\f021"); }
+.ui-icon-shuffle { @include icon-simple("\f074"); }
+.ui-icon-transfer-e-w { @include icon-simple("\f18d"); }
+.ui-icon-folder-collapsed { @include icon-simple("\f07b"); }
+.ui-icon-folder-open { @include icon-simple("\f115"); }
+.ui-icon-document { @include icon-simple("\f016"); }
+.ui-icon-note { @include icon-simple("\f24a"); }
+.ui-icon-mail-open { @include icon-simple("\f003"); }
+.ui-icon-suitcase { @include icon-simple("\f0f2"); }
+.ui-icon-comment { @include icon-simple("\f0e5"); }
+.ui-icon-person { @include icon-simple("\f007"); }
+.ui-icon-print { @include icon-simple("\f02f"); }
+.ui-icon-trash { @include icon-simple("\f1f8"); }
+.ui-icon-locked { @include icon-simple("\f023"); }
+.ui-icon-unlocked { @include icon-simple("\f09c"); }
+.ui-icon-bookmark { @include icon-simple("\f02e"); }
+.ui-icon-tag { @include icon-simple("\f02b"); }
+.ui-icon-home { @include icon-simple("\f015"); }
+.ui-icon-flag { @include icon-simple("\f024"); }
+.ui-icon-calendar { @include icon-simple("\f073"); }
+.ui-icon-cart { @include icon-simple("\f07a"); }
+.ui-icon-pencil { @include icon-simple("\f040"); }
+.ui-icon-clock { @include icon-simple("\f017"); }
+.ui-icon-disk { @include icon-simple("\f0c7"); }
+.ui-icon-calculator { @include icon-simple("\f1ec"); }
+.ui-icon-zoomin { @include icon-simple("\f00e"); }
+.ui-icon-zoomout { @include icon-simple("\f010");}
+.ui-icon-search { @include icon-simple("\f002");}
+.ui-icon-wrench { @include icon-simple("\f0ad");}
+.ui-icon-gear { @include icon-simple("\f013");}
+.ui-icon-heart { @include icon-simple("\f004");}
+.ui-icon-star { @include icon-simple("\f005");}
+.ui-icon-link { @include icon-simple("\f0c1");}
+.ui-icon-cancel { @include icon-simple("\f05e");}
+.ui-icon-plus { @include icon-simple("\f067");}
+.ui-icon-plusthick { @include icon-simple("\f067"); }
+.ui-icon-minus { @include icon-simple("\f068");}
+.ui-icon-minusthick { @include icon-simple("\f068"); }
+.ui-icon-closethick { @include icon-simple("\f00d"); }
+.ui-icon-close { @include icon-simple("\f00d"); }
+.ui-icon-key { @include icon-simple("\f084");}
+.ui-icon-lightbulb { @include icon-simple("\f0eb");}
+.ui-icon-scissors { @include icon-simple("\f0c4");}
+.ui-icon-clipboard { @include icon-simple("\f0ea");}
+.ui-icon-copy { @include icon-simple("\f0c5");}
+.ui-icon-contact { @include icon-simple("\f0c0");}
+.ui-icon-image { @include icon-simple("\f1c5");}
+.ui-icon-video { @include icon-simple("\f1c8");}
+.ui-icon-music { @include icon-simple("\f001");}
+.ui-icon-alert { @include icon-simple("\f071");}
+.ui-icon-info { @include icon-simple("\f05a");}
+.ui-icon-notice { @include icon-simple("\f12a");}
+.ui-icon-help { @include icon-simple("\f059");}
+.ui-icon-check { @include icon-simple("\f00c");}
+.ui-icon-bullet { @include icon-simple("\f111");}
+.ui-icon-radio-off { @include icon-simple("\f10c");}
+.ui-icon-radio-on { @include icon-simple("\f111");}
+.ui-icon-pin-s { @include icon-simple("\f08d");}
+.ui-icon-play { @include icon-simple("\f04b");}
+.ui-icon-pause { @include icon-simple("\f04c");}
+.ui-icon-seek-next { @include icon-simple("\f051");}
+.ui-icon-seek-prev { @include icon-simple("\f048");}
+.ui-icon-seek-end { @include icon-simple("\f051");}
+.ui-icon-seek-first { @include icon-simple("\f048");}
+.ui-icon-stop { @include icon-simple("\f04d");}
+.ui-icon-eject { @include icon-simple("\f052");}
+.ui-icon-volume-off { @include icon-simple("\f026");}
+.ui-icon-volume-on { @include icon-simple("\f028");}
+.ui-icon-power { @include icon-simple("\f011");}
+.ui-icon-signal { @include icon-simple("\f012");}
+.ui-icon-battery-0 { @include icon-simple("\f244");}
+.ui-icon-battery-1 { @include icon-simple("\f243");}
+.ui-icon-battery-2 { @include icon-simple("\f242");}
+.ui-icon-battery-3 { @include icon-simple("\f240");}
+.ui-icon-circle-plus { @include icon-simple("\f055");}
+.ui-icon-circle-minus { @include icon-simple("\f056");}
+.ui-icon-circle-triangle-e { @include icon-simple("\f138"); }
+.ui-icon-circle-triangle-s {  @include icon-simple("\f13a"); }
+.ui-icon-circle-triangle-w { @include icon-simple("\f137"); }
+.ui-icon-circle-triangle-n { @include icon-simple("\f139"); }

@@ -16,16 +16,19 @@ public class LearnwebMenu extends AbstractMenu implements Widget
     public static final String CONTAINER_CLASS = "ui-lwmenu ui-widget";
 
     public static final String PANEL_CLASS = "ui-lwmenu-panel";
-    public static final String PANEL_HEADER_CLASS = "ui-lwmenu-panel-header ui-state-default ui-corner-all";
+    public static final String PANEL_HEADER_CLASS = "ui-menuitem-link ui-lwmenu-panel-header";
+    public static final String PANEL_HEADER_ICON_CLASS = "ui-menuitem-icon fa fa-fw fa-angle-right";
+    public static final String PANEL_HEADER_TEXT_CLASS = "ui-menuitem-text";
     public static final String PANEL_CONTENT_CLASS = "ui-lwmenu-panel-content ui-helper-hidden";
-    public static final String PANEL_HEADER_ICON_CLASS = "ui-icon ui-icon-triangle-1-e";
 
-    public static final String DESCENDANT_SUBMENU_CLASS = "ui-menuitem ui-corner-all ui-menu-parent";
-    public static final String DESCENDANT_SUBMENU_ICON_CLASS = "ui-lwmenu-icon ui-icon ui-icon-triangle-1-e";
+    public static final String DESCENDANT_SUBMENU_CLASS = "ui-menuitem ui-menu-parent";
+    public static final String DESCENDANT_SUBMENU_ICON_CLASS = "ui-lwmenu-icon fa fa-fw fa-angle-right";
     public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
 
-    public static final String MENUITEM_CLASS = "ui-menuitem ui-corner-all";
-    public static final String MENUITEM_LINK_WITH_ICON_CLASS = "ui-menuitem-link ui-menuitem-link-hasicon ui-corner-all";
+    public static final String MENUITEM_CLASS = "ui-menuitem";
+    public static final String MENUITEM_TEXT_CLASS = "ui-menuitem-text";
+    public static final String MENUITEM_ICON_CLASS = "ui-menuitem-icon";
+    public static final String MENUITEM_LINK_WITH_ICON_CLASS = "ui-menuitem-link ui-menuitem-link-hasicon";
 
     public LearnwebMenu()
     {

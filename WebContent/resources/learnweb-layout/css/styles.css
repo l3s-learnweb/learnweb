@@ -5553,1577 +5553,432 @@ h3 {
 /*misc*/
 /*Data*/
 /*Menu*/
-.ui-icon-carat-1-n {
-  background: none;
+.ui-icon {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
+  text-indent: 0 !important;
 }
+
 .ui-icon-carat-1-n:before {
   content: "";
 }
 
-.ui-icon-carat-1-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-carat-1-e:before {
   content: "";
 }
 
-.ui-icon-carat-1-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-carat-1-s:before {
   content: "";
 }
 
-.ui-icon-carat-1-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-carat-1-w:before {
   content: "";
 }
 
-.ui-icon-carat-2-n-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-carat-2-n-s:before {
   content: "";
 }
 
-.ui-icon-triangle-1-n {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-triangle-1-n:before {
   content: "";
 }
 
-.ui-icon-triangle-1-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-triangle-1-e:before {
   content: "";
 }
 
-.ui-icon-triangle-1-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-triangle-1-s:before {
   content: "";
 }
 
-.ui-icon-triangle-1-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-triangle-1-w:before {
   content: "";
 }
 
-.ui-icon-triangle-2-n-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-triangle-2-n-s:before {
   content: "";
 }
 
-.ui-icon-arrowrefresh-1-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrowrefresh-1-w:before {
   content: "";
 }
 
-.ui-icon-arrow-1-n {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-1-n:before {
   content: "";
 }
 
-.ui-icon-arrow-1-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-1-e:before {
   content: "";
 }
 
-.ui-icon-arrow-1-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-1-s:before {
   content: "";
 }
 
-.ui-icon-arrow-1-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-1-w:before {
   content: "";
 }
 
-.ui-icon-arrow-2-n-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-2-n-s:before {
   content: "";
 }
 
-.ui-icon-arrow-2-e-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-2-e-w:before {
   content: "";
 }
 
-.ui-icon-arrowthick-1-n {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrowthick-1-n:before {
   content: "";
 }
 
-.ui-icon-arrowthick-1-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrowthick-1-e:before {
   content: "";
 }
 
-.ui-icon-arrowthick-1-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrowthick-1-s:before {
   content: "";
 }
 
-.ui-icon-arrowthick-1-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrowthick-1-w:before {
   content: "";
 }
 
-.ui-icon-arrow-4 {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-4:before {
   content: "";
 }
 
-.ui-icon-arrow-4-diag {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-arrow-4-diag:before {
   content: "";
 }
 
-.ui-icon-extlink {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-extlink:before {
   content: "";
 }
 
-.ui-icon-newwin {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-newwin:before {
   content: "";
 }
 
-.ui-icon-refresh {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-refresh:before {
   content: "";
 }
 
-.ui-icon-shuffle {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-shuffle:before {
   content: "";
 }
 
-.ui-icon-transfer-e-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-transfer-e-w:before {
   content: "";
 }
 
-.ui-icon-folder-collapsed {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-folder-collapsed:before {
   content: "";
 }
 
-.ui-icon-folder-open {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-folder-open:before {
   content: "";
 }
 
-.ui-icon-document {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-document:before {
   content: "";
 }
 
-.ui-icon-note {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-note:before {
   content: "";
 }
 
-.ui-icon-mail-open {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-mail-open:before {
   content: "";
 }
 
-.ui-icon-suitcase {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-suitcase:before {
   content: "";
 }
 
-.ui-icon-comment {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-comment:before {
   content: "";
 }
 
-.ui-icon-person {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-person:before {
   content: "";
 }
 
-.ui-icon-print {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-print:before {
   content: "";
 }
 
-.ui-icon-trash {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-trash:before {
   content: "";
 }
 
-.ui-icon-locked {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-locked:before {
   content: "";
 }
 
-.ui-icon-unlocked {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-unlocked:before {
   content: "";
 }
 
-.ui-icon-bookmark {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-bookmark:before {
   content: "";
 }
 
-.ui-icon-tag {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-tag:before {
   content: "";
 }
 
-.ui-icon-home {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-home:before {
   content: "";
 }
 
-.ui-icon-flag {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-flag:before {
   content: "";
 }
 
-.ui-icon-calendar {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-calendar:before {
   content: "";
 }
 
-.ui-icon-cart {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-cart:before {
   content: "";
 }
 
-.ui-icon-pencil {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-pencil:before {
   content: "";
 }
 
-.ui-icon-clock {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-clock:before {
   content: "";
 }
 
-.ui-icon-disk {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-disk:before {
   content: "";
 }
 
-.ui-icon-calculator {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-calculator:before {
   content: "";
 }
 
-.ui-icon-zoomin {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-zoomin:before {
   content: "";
 }
 
-.ui-icon-zoomout {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-zoomout:before {
   content: "";
 }
 
-.ui-icon-search {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-search:before {
   content: "";
 }
 
-.ui-icon-wrench {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-wrench:before {
   content: "";
 }
 
-.ui-icon-gear {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-gear:before {
   content: "";
 }
 
-.ui-icon-heart {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-heart:before {
   content: "";
 }
 
-.ui-icon-star {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-star:before {
   content: "";
 }
 
-.ui-icon-link {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-link:before {
   content: "";
 }
 
-.ui-icon-cancel {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-cancel:before {
   content: "";
 }
 
-.ui-icon-plus {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-plus:before {
   content: "";
 }
 
-.ui-icon-plusthick {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-plusthick:before {
   content: "";
 }
 
-.ui-icon-minus {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-minus:before {
   content: "";
 }
 
-.ui-icon-minusthick {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-minusthick:before {
   content: "";
 }
 
-.ui-icon-closethick {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-closethick:before {
   content: "";
 }
 
-.ui-icon-close {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-close:before {
   content: "";
 }
 
-.ui-icon-key {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-key:before {
   content: "";
 }
 
-.ui-icon-lightbulb {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-lightbulb:before {
   content: "";
 }
 
-.ui-icon-scissors {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-scissors:before {
   content: "";
 }
 
-.ui-icon-clipboard {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-clipboard:before {
   content: "";
 }
 
-.ui-icon-copy {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-copy:before {
   content: "";
 }
 
-.ui-icon-contact {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-contact:before {
   content: "";
 }
 
-.ui-icon-image {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-image:before {
   content: "";
 }
 
-.ui-icon-video {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-video:before {
   content: "";
 }
 
-.ui-icon-music {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-music:before {
   content: "";
 }
 
-.ui-icon-alert {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-alert:before {
   content: "";
 }
 
-.ui-icon-info {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-info:before {
   content: "";
 }
 
-.ui-icon-notice {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-notice:before {
   content: "";
 }
 
-.ui-icon-help {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-help:before {
   content: "";
 }
 
-.ui-icon-check {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-check:before {
   content: "";
 }
 
-.ui-icon-bullet {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-bullet:before {
   content: "";
 }
 
-.ui-icon-radio-off {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-radio-off:before {
   content: "";
 }
 
-.ui-icon-radio-on {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-radio-on:before {
   content: "";
 }
 
-.ui-icon-pin-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-pin-s:before {
   content: "";
 }
 
-.ui-icon-play {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-play:before {
   content: "";
 }
 
-.ui-icon-pause {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-pause:before {
   content: "";
 }
 
-.ui-icon-seek-next {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-seek-next:before {
   content: "";
 }
 
-.ui-icon-seek-prev {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-seek-prev:before {
   content: "";
 }
 
-.ui-icon-seek-end {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-seek-end:before {
   content: "";
 }
 
-.ui-icon-seek-first {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-seek-first:before {
   content: "";
 }
 
-.ui-icon-stop {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-stop:before {
   content: "";
 }
 
-.ui-icon-eject {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-eject:before {
   content: "";
 }
 
-.ui-icon-volume-off {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-volume-off:before {
   content: "";
 }
 
-.ui-icon-volume-on {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-volume-on:before {
   content: "";
 }
 
-.ui-icon-power {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-power:before {
   content: "";
 }
 
-.ui-icon-signal {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-signal:before {
   content: "";
 }
 
-.ui-icon-battery-0 {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-battery-0:before {
   content: "";
 }
 
-.ui-icon-battery-1 {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-battery-1:before {
   content: "";
 }
 
-.ui-icon-battery-2 {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-battery-2:before {
   content: "";
 }
 
-.ui-icon-battery-3 {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-battery-3:before {
   content: "";
 }
 
-.ui-icon-circle-plus {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-plus:before {
   content: "";
 }
 
-.ui-icon-circle-minus {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-minus:before {
   content: "";
 }
 
-.ui-icon-circle-triangle-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-triangle-e:before {
   content: "";
 }
 
-.ui-icon-circle-triangle-s {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-triangle-s:before {
   content: "";
 }
 
-.ui-icon-circle-triangle-w {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-triangle-w:before {
   content: "";
 }
 
-.ui-icon-circle-triangle-n {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
 .ui-icon-circle-triangle-n:before {
   content: "";
 }
@@ -7608,7 +6463,6 @@ body .ui-toggleswitch.ui-toggleswitch-focus .ui-toggleswitch-slider:before {
 }
 body .ui-autocomplete .ui-autocomplete-dropdown .ui-icon-triangle-1-s {
   margin-top: -6px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7616,6 +6470,7 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-autocomplete .ui-autocomplete-dropdown .ui-icon-triangle-1-s:before {
@@ -7665,7 +6520,6 @@ body .ui-selectonemenu .ui-selectonemenu-trigger {
 }
 body .ui-selectonemenu .ui-selectonemenu-trigger .ui-icon-triangle-1-s {
   margin-top: 6px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7673,6 +6527,7 @@ body .ui-selectonemenu .ui-selectonemenu-trigger .ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 1rem;
 }
@@ -7743,7 +6598,6 @@ body .ui-fluid .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
 body .ui-fluid .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger .ui-icon-triangle-1-s {
   position: relative;
   margin-top: 7px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7751,6 +6605,7 @@ body .ui-fluid .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger .ui-icon-tr
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-fluid .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger .ui-icon-triangle-1-s:before {
@@ -7778,7 +6633,6 @@ body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
 body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger .ui-icon-triangle-1-s {
   position: relative;
   margin-top: 6px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7786,6 +6640,7 @@ body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger .ui-icon-triangle-1-s
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 1rem;
 }
@@ -7851,7 +6706,6 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckb
   padding: 0;
   margin-left: 10px;
   right: 4px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7859,6 +6713,7 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckb
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header .ui-selectcheckboxmenu-close:before {
@@ -7959,7 +6814,6 @@ body .ui-rating .ui-rating-cancel {
   display: inline-block;
 }
 body .ui-rating .ui-rating-cancel a {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7967,6 +6821,7 @@ body .ui-rating .ui-rating-cancel a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   display: block;
   transition: color 0.3s;
@@ -7991,7 +6846,6 @@ body .ui-rating .ui-rating-star {
   display: inline-block;
 }
 body .ui-rating .ui-rating-star a {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7999,6 +6853,7 @@ body .ui-rating .ui-rating-star a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   display: block;
   font-size: 20px;
@@ -8014,7 +6869,6 @@ body .ui-rating .ui-rating-star a:hover {
 }
 body .ui-rating .ui-rating-star-on a {
   color: #4b6cb7;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8022,6 +6876,7 @@ body .ui-rating .ui-rating-star-on a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   display: block;
   font-size: 20px;
@@ -8145,7 +7000,6 @@ body .ui-splitbutton.ui-buttonset .ui-button {
 }
 body .ui-splitbutton.ui-buttonset .ui-button .ui-icon-triangle-1-s {
   margin-top: -8px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8153,6 +7007,7 @@ body .ui-splitbutton.ui-buttonset .ui-button .ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-splitbutton.ui-buttonset .ui-button .ui-icon-triangle-1-s:before {
@@ -8184,7 +7039,6 @@ body .ui-datepicker .ui-datepicker-header .ui-datepicker-prev {
   cursor: pointer;
   top: 12px;
   color: #fff;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8192,6 +7046,7 @@ body .ui-datepicker .ui-datepicker-header .ui-datepicker-prev {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   transition: color 0.3s;
   font-size: 20px;
@@ -8215,7 +7070,6 @@ body .ui-datepicker .ui-datepicker-header .ui-datepicker-next {
   cursor: pointer;
   top: 12px;
   color: #fff;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8223,6 +7077,7 @@ body .ui-datepicker .ui-datepicker-header .ui-datepicker-next {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   transition: color 0.3s;
   font-size: 20px;
@@ -8352,7 +7207,6 @@ body .p-datepicker-panel .ui-timepicker {
 }
 body .p-datepicker-panel .ui-timepicker .ui-picker-up {
   color: #fff;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8360,6 +7214,7 @@ body .p-datepicker-panel .ui-timepicker .ui-picker-up {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   display: block;
   margin-bottom: 0.2em;
@@ -8375,7 +7230,6 @@ body .p-datepicker-panel .ui-timepicker .ui-picker-up:hover {
 }
 body .p-datepicker-panel .ui-timepicker .ui-picker-down {
   color: #fff;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8383,6 +7237,7 @@ body .p-datepicker-panel .ui-timepicker .ui-picker-down {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   display: block;
   margin-top: 0.2em;
@@ -8422,7 +7277,6 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
   margin-right: 8px;
 }
 body .ui-fileupload .ui-fileupload-buttonbar .ui-button.ui-fileupload-upload .ui-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8430,6 +7284,7 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button.ui-fileupload-upload .ui
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-fileupload .ui-fileupload-buttonbar .ui-button.ui-fileupload-upload .ui-icon:before {
@@ -8613,7 +7468,6 @@ body .ui-accordion .ui-accordion-header .ui-icon {
   right: 16px;
   left: auto;
   transition: color 0.3s;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8621,6 +7475,7 @@ body .ui-accordion .ui-accordion-header .ui-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -8632,7 +7487,6 @@ body .ui-accordion .ui-accordion-header .ui-icon:before {
   content: "";
 }
 body .ui-accordion .ui-accordion-header .ui-icon.ui-icon-triangle-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8640,6 +7494,7 @@ body .ui-accordion .ui-accordion-header .ui-icon.ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-accordion .ui-accordion-header .ui-icon.ui-icon-triangle-1-s:before {
@@ -8855,7 +7710,6 @@ body .ui-paginator .ui-paginator-current {
   color: #212529;
 }
 body .ui-paginator .ui-paginator-first {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8863,13 +7717,13 @@ body .ui-paginator .ui-paginator-first {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-paginator .ui-paginator-first:before {
   content: "";
 }
 body .ui-paginator .ui-paginator-prev {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8877,13 +7731,13 @@ body .ui-paginator .ui-paginator-prev {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-paginator .ui-paginator-prev:before {
   content: "";
 }
 body .ui-paginator .ui-paginator-next {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8891,13 +7745,13 @@ body .ui-paginator .ui-paginator-next {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-paginator .ui-paginator-next:before {
   content: "";
 }
 body .ui-paginator .ui-paginator-last {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -8905,6 +7759,7 @@ body .ui-paginator .ui-paginator-last {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-paginator .ui-paginator-last:before {
@@ -9163,7 +8018,6 @@ body .ui-dataview .ui-paginator.ui-paginator-bottom .ui-paginator-pages {
   padding: 4px 0 0 0;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-n {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9171,13 +8025,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-n {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-n:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-n {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9185,13 +8039,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-n {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-n:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9199,13 +8053,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-s:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9213,13 +8067,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-s:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-e {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9227,13 +8081,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-e {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-e:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-e {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9241,13 +8095,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-e {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-e:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-w {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9255,13 +8109,13 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-w {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-w:before {
   content: "";
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9269,6 +8123,7 @@ body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w:before {
@@ -9299,7 +8154,6 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
     margin-right: 0;
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-e {
-    background: none;
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -9307,13 +8161,13 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-indent: 0px !important;
+    background: none;
     text-align: center;
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-e:before {
     content: "";
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-e {
-    background: none;
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -9321,13 +8175,13 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-indent: 0px !important;
+    background: none;
     text-align: center;
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-e:before {
     content: "";
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-w {
-    background: none;
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -9335,13 +8189,13 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-indent: 0px !important;
+    background: none;
     text-align: center;
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrow-1-w:before {
     content: "";
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w {
-    background: none;
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
@@ -9349,6 +8203,7 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-indent: 0px !important;
+    background: none;
     text-align: center;
   }
   body .ui-picklist .ui-picklist-buttons .ui-icon-arrowstop-1-w:before {
@@ -9356,7 +8211,6 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
   }
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-n {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9364,13 +8218,13 @@ body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-n {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-n:before {
   content: "";
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-n {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9378,13 +8232,13 @@ body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-n {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-n:before {
   content: "";
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9392,13 +8246,13 @@ body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrow-1-s:before {
   content: "";
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9406,6 +8260,7 @@ body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-orderlist .ui-orderlist-controls .ui-icon-arrowstop-1-s:before {
@@ -9478,7 +8333,6 @@ body .ui-carousel .ui-carousel-button {
   }
 }
 body .ui-carousel .ui-carousel-button.ui-carousel-next-button {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9486,6 +8340,7 @@ body .ui-carousel .ui-carousel-button.ui-carousel-next-button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   margin-left: 4px;
 }
@@ -9493,7 +8348,6 @@ body .ui-carousel .ui-carousel-button.ui-carousel-next-button:before {
   content: "";
 }
 body .ui-carousel .ui-carousel-button.ui-carousel-prev-button {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9501,6 +8355,7 @@ body .ui-carousel .ui-carousel-button.ui-carousel-prev-button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   margin-left: 4px;
 }
@@ -9520,7 +8375,6 @@ body .ui-carousel .ui-carousel-page-links .ui-carousel-page-link {
   padding-right: 3px;
   color: #fff;
   font-size: 12px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9528,6 +8382,7 @@ body .ui-carousel .ui-carousel-page-links .ui-carousel-page-link {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-carousel .ui-carousel-page-links .ui-carousel-page-link:before {
@@ -9623,7 +8478,6 @@ body .ui-treetable .ui-treetable-data tr td .ui-chkbox .ui-chkbox-icon {
   color: #4b6cb7;
 }
 body .ui-treetable .ui-treetable-data tr td .ui-chkbox .ui-chkbox-icon.ui-icon-minus {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9631,6 +8485,7 @@ body .ui-treetable .ui-treetable-data tr td .ui-chkbox .ui-chkbox-icon.ui-icon-m
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   color: #ced4da;
 }
@@ -9663,7 +8518,6 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler {
   float: none;
   margin: 0 4px 0 0;
   height: auto;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9671,13 +8525,13 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler:before {
   content: "";
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-triangle-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9685,13 +8539,13 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-triangl
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-triangle-1-s:before {
   content: "";
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-minus {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9699,6 +8553,7 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-minus {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler.ui-icon-minus:before {
@@ -9737,7 +8592,6 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-chkbox {
   margin: 0 8px 0 0;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-chkbox .ui-icon-minus {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9745,6 +8599,7 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-chkbox .ui-icon-minus {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   color: #ced4da;
 }
@@ -9752,7 +8607,6 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-chkbox .ui-icon-minus:before
   content: "";
 }
 body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :before {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9760,13 +8614,13 @@ body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :before {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :before:before {
   content: "";
 }
 body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :after {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9774,6 +8628,7 @@ body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :after {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-tree .ui-treenode .ui-treenode-content[aria-selected=true] :after:before {
@@ -9852,7 +8707,6 @@ body .fc .fc-toolbar .fc-left .fc-button-group .fc-prev-button {
   outline-color: transparent;
 }
 body .fc .fc-toolbar .fc-left .fc-button-group .ui-icon-circle-triangle-w {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9860,6 +8714,7 @@ body .fc .fc-toolbar .fc-left .fc-button-group .ui-icon-circle-triangle-w {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   position: relative;
   top: 2px;
@@ -9868,7 +8723,6 @@ body .fc .fc-toolbar .fc-left .fc-button-group .ui-icon-circle-triangle-w:before
   content: "";
 }
 body .fc .fc-toolbar .fc-left .fc-button-group .ui-icon-circle-triangle-e {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9876,6 +8730,7 @@ body .fc .fc-toolbar .fc-left .fc-button-group .ui-icon-circle-triangle-e {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   position: relative;
   top: 2px;
@@ -9934,7 +8789,6 @@ body .ui-messages .ui-messages-info {
   color: #212529;
 }
 body .ui-messages .ui-messages-info .ui-messages-info-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9942,6 +8796,7 @@ body .ui-messages .ui-messages-info .ui-messages-info-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 24px;
   margin-top: -2px;
@@ -9955,7 +8810,6 @@ body .ui-messages .ui-messages-warn {
   color: #212529;
 }
 body .ui-messages .ui-messages-warn .ui-messages-warn-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9963,6 +8817,7 @@ body .ui-messages .ui-messages-warn .ui-messages-warn-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 24px;
   margin-top: -2px;
@@ -9976,7 +8831,6 @@ body .ui-messages .ui-messages-error {
   color: #212529;
 }
 body .ui-messages .ui-messages-error .ui-messages-error-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -9984,6 +8838,7 @@ body .ui-messages .ui-messages-error .ui-messages-error-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 24px;
 }
@@ -9996,7 +8851,6 @@ body .ui-messages .ui-messages-fatal {
   color: #212529;
 }
 body .ui-messages .ui-messages-fatal .ui-messages-fatal-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10004,6 +8858,7 @@ body .ui-messages .ui-messages-fatal .ui-messages-fatal-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 24px;
   margin-top: -2px;
@@ -10027,7 +8882,6 @@ body .ui-message.ui-message-info {
   color: #212529;
 }
 body .ui-message.ui-message-info .ui-message-info-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10035,6 +8889,7 @@ body .ui-message.ui-message-info .ui-message-info-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 16px;
   margin-top: 1px;
@@ -10048,7 +8903,6 @@ body .ui-message.ui-message-warn {
   color: #212529;
 }
 body .ui-message.ui-message-warn .ui-message-warn-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10056,6 +8910,7 @@ body .ui-message.ui-message-warn .ui-message-warn-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 16px;
   margin-top: 1px;
@@ -10069,7 +8924,6 @@ body .ui-message.ui-message-error {
   color: #212529;
 }
 body .ui-message.ui-message-error .ui-message-error-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10077,6 +8931,7 @@ body .ui-message.ui-message-error .ui-message-error-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 16px;
   margin-top: 1px;
@@ -10090,7 +8945,6 @@ body .ui-message.ui-message-fatal {
   color: #212529;
 }
 body .ui-message.ui-message-fatal .ui-message-fatal-icon {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10098,6 +8952,7 @@ body .ui-message.ui-message-fatal .ui-message-fatal-icon {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 16px;
   margin-top: 1px;
@@ -10118,7 +8973,6 @@ body .ui-growl .ui-growl-item-container.ui-growl-info {
   color: #212529;
 }
 body .ui-growl .ui-growl-item-container.ui-growl-info .ui-growl-image {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10126,6 +8980,7 @@ body .ui-growl .ui-growl-item-container.ui-growl-info .ui-growl-image {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 36px;
 }
@@ -10138,7 +8993,6 @@ body .ui-growl .ui-growl-item-container.ui-growl-warn {
   color: #212529;
 }
 body .ui-growl .ui-growl-item-container.ui-growl-warn .ui-growl-image {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10146,6 +9000,7 @@ body .ui-growl .ui-growl-item-container.ui-growl-warn .ui-growl-image {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 36px;
 }
@@ -10158,7 +9013,6 @@ body .ui-growl .ui-growl-item-container.ui-growl-error {
   color: #212529;
 }
 body .ui-growl .ui-growl-item-container.ui-growl-error .ui-growl-image {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10166,6 +9020,7 @@ body .ui-growl .ui-growl-item-container.ui-growl-error .ui-growl-image {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 36px;
 }
@@ -10178,7 +9033,6 @@ body .ui-growl .ui-growl-item-container.ui-growl-fatal {
   color: #212529;
 }
 body .ui-growl .ui-growl-item-container.ui-growl-fatal .ui-growl-image {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10186,6 +9040,7 @@ body .ui-growl .ui-growl-item-container.ui-growl-fatal .ui-growl-image {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 36px;
 }
@@ -10332,7 +9187,6 @@ body .ui-lightbox .ui-lightbox-content-wrapper {
   overflow: hidden;
 }
 body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10340,6 +9194,7 @@ body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   transition: all 0.3s;
   font-size: 24px;
@@ -10362,7 +9217,6 @@ body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left span {
   display: none;
 }
 body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-right {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10370,6 +9224,7 @@ body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-right {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   transition: all 0.3s;
   font-size: 24px;
@@ -10414,7 +9269,6 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
   top: -2px;
 }
 body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10422,6 +9276,7 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 1.75rem;
   margin: 0 6px;
@@ -10513,7 +9368,6 @@ body .ui-menu .ui-menu-list .ui-widget-header h3 {
 body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-s {
   margin-top: -6px;
   margin-left: 2px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10521,6 +9375,7 @@ body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-s:before {
@@ -10529,7 +9384,6 @@ body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-s:before {
 body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-e {
   margin-top: -6px;
   margin-left: 2px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10537,6 +9391,7 @@ body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-e {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-menu .ui-menu-list .ui-widget-header h3 .ui-icon-triangle-1-e:before {
@@ -10588,7 +9443,6 @@ body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
   float: none;
 }
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-e {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10596,13 +9450,13 @@ body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-e
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-e:before {
   content: "";
 }
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-s {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10610,6 +9464,7 @@ body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-s
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-icon-triangle-1-s:before {
@@ -10689,7 +9544,6 @@ body .ui-menu.ui-slidemenu .ui-slidemenu-backward {
   border-radius: 0;
 }
 body .ui-menu.ui-slidemenu .ui-slidemenu-backward .ui-icon-triangle-1-w {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10697,6 +9551,7 @@ body .ui-menu.ui-slidemenu .ui-slidemenu-backward .ui-icon-triangle-1-w {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   position: relative;
   top: 2px;
@@ -10768,7 +9623,6 @@ body .ui-panelmenu .ui-panelmenu-header > a {
 body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-s {
   margin-top: -6px;
   margin-left: 2px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10776,6 +9630,7 @@ body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-s {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-s:before {
@@ -10784,7 +9639,6 @@ body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-s:before {
 body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-e {
   margin-top: -7px;
   margin-left: 2px;
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10792,6 +9646,7 @@ body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-e {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
 }
 body .ui-panelmenu .ui-panelmenu-header .ui-icon-triangle-1-e:before {
@@ -10849,7 +9704,6 @@ body .ui-clock {
   padding: 8px 12px;
 }
 body .ui-galleria .ui-galleria-nav-prev {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10857,6 +9711,7 @@ body .ui-galleria .ui-galleria-nav-prev {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 18px;
 }
@@ -10864,7 +9719,6 @@ body .ui-galleria .ui-galleria-nav-prev:before {
   content: "";
 }
 body .ui-galleria .ui-galleria-nav-next {
-  background: none;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -10872,6 +9726,7 @@ body .ui-galleria .ui-galleria-nav-next {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-indent: 0px !important;
+  background: none;
   text-align: center;
   font-size: 18px;
 }
@@ -11051,6 +9906,7 @@ body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-m
 
 .profile-picture {
   width: 2.8125rem;
+  height: 2.8125rem;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #4b6cb7;
@@ -11855,142 +10711,82 @@ body,
 
 .ui-lwmenu {
   padding: 0;
-  width: auto;
   list-style-type: none;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
-  cursor: pointer;
-  position: relative;
-  background-color: #4b6cb7;
-  font-weight: 700;
-  margin-top: 4px;
-  transition: background-color 0.3s;
+.ui-lwmenu a {
+  text-decoration: none;
 }
-@media (prefers-reduced-motion: reduce) {
-  .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
-    transition: none;
-  }
+.ui-lwmenu .ui-menuitem {
+  margin: 1px 0;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header a {
-  display: block;
-  padding: 0.5em 0.5em 0.5em 2.2em;
+.ui-lwmenu .ui-lwmenu-icon,
+.ui-lwmenu .ui-menuitem-icon {
+  min-width: 1.28571429em;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon {
-  position: absolute;
-  top: 50%;
-  margin-top: -7px;
-  margin-left: 2px;
+.ui-lwmenu .ui-menuitem-link {
+  display: flex;
+  align-items: center;
+  color: #212529;
+  border-left: 0.25rem solid transparent;
+  padding: 0.375rem 0.375rem 0.375rem 0.125rem;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > span,
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header > a {
+.ui-lwmenu .ui-menuitem-link .ui-menuitem-icon {
+  margin-left: 0.125rem;
+  margin-right: 0.375rem;
+}
+.ui-lwmenu .ui-menuitem-link .ui-menuitem-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ui-lwmenu .ui-menuitem-link:hover, .ui-lwmenu .ui-menuitem-link.ui-state-active {
   color: #fff;
+  background-color: #2C447B !important;
+  border-left-color: #4b6cb7;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-e {
-  background: none;
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-indent: 0px !important;
-  text-align: center;
-}
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header .ui-icon-triangle-1-e:before {
-  content: "";
-}
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-hover {
-  background-color: #38569C;
-}
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-active {
-  background-color: #38569C;
+.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
+  margin-top: 4px;
+  font-weight: 700;
+  padding: 0.5em 0.375rem 0.5em 0.125rem;
+  color: #fff;
+  background-color: #4b6cb7;
 }
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled {
   cursor: default;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled a {
-  cursor: default;
-}
-.ui-lwmenu .ui-lwmenu-panel.ui-state-expand > .ui-lwmenu-panel-header > .ui-icon:before {
+.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-header > .ui-menuitem-icon:before {
   content: "";
 }
-.ui-lwmenu .ui-lwmenu-panel.ui-state-expand > .ui-lwmenu-panel-content {
+.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-content {
   display: block;
 }
+.ui-lwmenu > .ui-menu-parent > .ui-menu-list > .ui-menu-parent.ui-state-expand {
+  background: #dde3f1;
+  border-left-color: #4b6cb7;
+}
+.ui-lwmenu > .ui-menu-parent > .ui-menu-list > .ui-menu-parent.ui-state-expand > .ui-menuitem-link {
+  color: #fff !important;
+  background-color: #38569C !important;
+  border-left-color: #4b6cb7 !important;
+}
 .ui-lwmenu .ui-menu-parent .ui-menu-list {
-  position: static;
-  margin-left: 18px;
+  margin-left: 1rem;
 }
-.ui-lwmenu .ui-menu-parent > .ui-menuitem-link > .ui-icon {
-  left: 1.5em;
+.ui-lwmenu .ui-menu-parent .ui-menu-list .ui-menu-parent {
+  border-left: 0.25rem solid transparent;
+  margin-left: -0.25rem;
 }
-.ui-lwmenu .ui-menu-parent .ui-menuitem-link-hasicon {
-  padding-left: 2.8em;
-}
-.ui-lwmenu .ui-menu-parent .ui-lwmenu-icon.ui-icon {
-  left: 0.5em;
-}
-.ui-lwmenu .ui-menu-parent .ui-menu-parent .ui-icon {
-  min-width: 18px;
+.ui-lwmenu .ui-menu-parent .ui-menu-list .ui-menu-parent .ui-menu-list {
+  margin-left: 1.2rem;
 }
 .ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menuitem-link > .ui-lwmenu-icon:before {
-  content: "";
+  content: "";
 }
 .ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menu-list {
   display: block;
 }
 .ui-lwmenu .ui-menu-parent.ui-state-empty > .ui-menuitem-link > .ui-lwmenu-icon {
   visibility: hidden;
-}
-.ui-lwmenu .ui-icon {
-  right: auto;
-  top: 0;
-  bottom: 0;
-  left: 0.5em;
-  position: static;
-  line-height: 2;
-  display: inline-block;
-  vertical-align: middle;
-  min-width: 22px;
-  height: 28px;
-  margin: auto 0;
-}
-.ui-lwmenu .ui-menuitem {
-  margin: 1px 0;
-  padding: 0;
-}
-.ui-lwmenu .ui-menuitem .ui-menuitem-link {
-  display: block;
-  outline: 0;
-  text-decoration: none;
-  font-weight: 400;
-  border: solid 1px transparent;
-  line-height: 16px;
-  cursor: pointer;
-  position: relative;
-  color: #212529;
-  border-left: 4px solid transparent;
-  padding: 0 8px 0 2px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-icon {
-  color: #495057;
-}
-.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover, .ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-active {
-  background-color: #2C447B;
-  color: #fff;
-  border-left-color: #4b6cb7;
-}
-.ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-hover .ui-menuitem-icon, .ui-lwmenu .ui-menuitem .ui-menuitem-link.ui-state-active .ui-menuitem-icon {
-  color: #fff;
-}
-.ui-lwmenu .ui-menuitem .ui-menuitem-link .ui-menuitem-text {
-  float: none;
-  display: inline-block;
-  vertical-align: middle;
-  padding: 6px 0 6px 2px;
 }
 
 .ui-datatable .table-responsive {

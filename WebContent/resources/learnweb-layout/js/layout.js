@@ -66,17 +66,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     bindEvents: function () {
         var $this = this;
 
-        this.headers.mouseover(function () {
-            var element = $(this);
-            if (!element.hasClass('ui-state-active')) {
-                element.addClass('ui-state-hover');
-            }
-        }).mouseout(function () {
-            var element = $(this);
-            if (!element.hasClass('ui-state-active')) {
-                element.removeClass('ui-state-hover');
-            }
-        }).click(function (e) {
+        this.headers.click(function (e) {
             if (e.target.tagName === "A") {
                 var href = $(e.target).attr('href');
 
@@ -103,11 +93,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             e.preventDefault();
         });
 
-        this.menuitemLinks.mouseover(function () {
-            $(this).addClass('ui-state-hover');
-        }).mouseout(function () {
-            $(this).removeClass('ui-state-hover');
-        }).click(function (e) {
+        this.menuitemLinks.click(function (e) {
             var currentLink = $(this);
 
             if (e.target.className.indexOf('ui-lwmenu-icon') === -1) {
@@ -148,7 +134,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             $(this).addClass('ui-menuitem-outline');
         })
             .on('blur.lwmenu', function () {
-                $(this).removeClass('ui-menuitem-outline ui-state-hover');
+                $(this).removeClass('ui-menuitem-outline');
             })
             .on('keydown.lwmenu', function (e) {
                 var keyCode = $.ui.keyCode,
@@ -331,7 +317,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
     collapseRootSubmenu: function (header) {
         header.parent().removeClass('ui-state-expand');
-        header.attr('aria-expanded', false).removeClass('ui-state-active').addClass('ui-state-hover');
+        header.attr('aria-expanded', false).removeClass('ui-state-active');
 
         var panel = header.next();
         panel.attr('aria-hidden', true).slideUp('normal', 'easeInOutCirc');
@@ -340,7 +326,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
     expandRootSubmenu: function (header, restoring) {
         header.parent().addClass('ui-state-expand');
-        header.attr('aria-expanded', true).addClass('ui-state-active').removeClass('ui-state-hover');
+        header.attr('aria-expanded', true).addClass('ui-state-active');
 
         var panel = header.next();
         if (restoring) {
@@ -463,12 +449,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     collapseAll: function () {
         this.headers.filter('.ui-state-active').each(function () {
             var header = $(this);
-            header.removeClass('ui-state-active').children('.ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-s');
+            header.removeClass('ui-state-active');
             header.next().addClass('ui-helper-hidden');
         });
 
         this.jq.find('.ui-menu-parent > .ui-menu-list:not(.ui-helper-hidden)').each(function () {
-            $(this).addClass('ui-helper-hidden').prev().children('.ui-lwmenu-icon').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e');
+            $(this).addClass('ui-helper-hidden');
         });
     }
 });
