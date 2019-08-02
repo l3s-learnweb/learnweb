@@ -6,20 +6,20 @@
         xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.text_analysis}"/>
-<ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.text_analysis}" url="admin/text_analysis.jsf#"/>
-</ui:define>
-<ui:define name="center_layout">
-    <h:form id="anlyse_form" styleClass="form">
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="#{msg.text_analysis}" url="admin/text_analysis.jsf#"/>
+    </ui:define>
+
+    <ui:define name="center_layout">
+        <h:form id="anlyse_form">
             <p:panel header="#{msg.select_users}">
-
-                    <ui:include src="/templates/user/user_select_form.xhtml"/>
-                    <p:commandButton styleClass="in-form-button" actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
-                                     value="#{msg.selected_users_comments}"
-                                     process="@form" update=":growl output1"/>
+                <ui:include src="/templates/user/user_select_form.xhtml"/>
+                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
+                                 value="#{msg.selected_users_comments}"
+                                 process="@form" update=":growl output1"/>
             </p:panel>
 
             <p:panel styleClass="mt-3" id="output1" header="#{msg.comments}">
@@ -29,12 +29,8 @@
             </p:panel>
 
             <h:panelGroup id="output" styleClass="d-none">
-                <p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}">
-
-                </p:panel>
+                <p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}"></p:panel>
             </h:panelGroup>
-
-    </h:form>
-
-</ui:define>
+        </h:form>
+    </ui:define>
 </ui:composition>

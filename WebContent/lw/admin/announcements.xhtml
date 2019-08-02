@@ -98,7 +98,7 @@
                                    update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
                         <h:graphicImage value="/resources/icon/silk/delete.png" alt="#{msg.delete}"/>
                         <h:outputText value="#{msg.delete}"/>
-                        <p:confirm message="#{msg.announcements_delete_question} #{news.title}"/>
+                        <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
                     </p:commandLink>
                 </p:column>
             </p:dataTable>

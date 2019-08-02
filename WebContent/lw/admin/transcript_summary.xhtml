@@ -6,26 +6,28 @@
 	
 	<ui:param name="pageTitle" value="#{msg.transcript_summaries}" />
 	<ui:param name="loginRequired" value="true"/>
+
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.transcript_summaries}" url="admin/transcript_summary.jsf#"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
 			<p:panel header="#{msg.select_users}">
-						<ui:include src="/templates/user/user_select_form.xhtml" />
-						<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-										 process="@form" styleClass="in-form-button" update=":transcript_table"/>
+				<ui:include src="/templates/user/user_select_form.xhtml" />
+				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
+								 process="@form" update=":transcript_table"/>
 			</p:panel>
 		</h:form>
 
 		<h:form styleClass="mt-3" prependId="false">
-			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
+			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" tableStyleClass="table-sm table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30">
 				 
 				 <f:facet name="{Exporters}">
-            		<h:commandLink>
-                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="20"/>
+            		<h:commandLink styleClass="excel_export_todo_use">
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
                	 		<p:dataExporter type="xls" target="transcript_table" fileName="transcript_summaries"/>
            	 		</h:commandLink>
         		</f:facet>
@@ -48,6 +50,5 @@
 				
 			</p:dataTable>
 		</h:form>
-		
 	</ui:define>
 </ui:composition>

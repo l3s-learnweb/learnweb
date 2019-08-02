@@ -6,28 +6,28 @@
 	
 	<ui:param name="pageTitle" value="#{msg.transcript_logs}" />
 	<ui:param name="loginRequired" value="true"/>
+
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.transcript_logs}" url="admin/detailed_transcript_log.jsf#"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
-		<h:form id="us_form" prependId="false" styleClass="form">
+		<h:form id="us_form" prependId="false">
 			<p:panel header="#{msg.select_users}">
 				<ui:include src="/templates/user/user_select_form.xhtml" />
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-								 process="@form" styleClass="in-form-button" update=":transcript_table"/>
+								 process="@form" update=":transcript_table"/>
 			</p:panel>
-
-
 		</h:form>
 	
 		<h:form prependId="false" styleClass="mt-3">
-			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
+			<p:dataTable paginatorPosition="bottom" id = "transcript_table" tableStyleClass="table-sm table-responsive" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
 				
 				<f:facet name="{Exporters}">
-            		<h:commandLink>
-                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="20"/>
+            		<h:commandLink styleClass="excel_export_todo_use">
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
                	 		<p:dataExporter type="xls" target="transcript_table" fileName="detailed_transcript_log"/>
            	 		</h:commandLink>
         		</f:facet>
@@ -71,9 +71,7 @@
 				<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
 					<h:outputText value="#{log.timestamp}" />
 				</p:column>
-				
 			</p:dataTable>
 		</h:form>
-		
 	</ui:define>
 </ui:composition>
