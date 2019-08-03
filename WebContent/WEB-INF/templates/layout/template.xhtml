@@ -84,9 +84,13 @@
                 </div>
             </div>
 
-            <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:20px;bottom:20px;font-size:2rem;">
+            <p:ajaxStatus styleClass="ajax-status-screen">
                 <f:facet name="start">
-                    <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+                    <div class="status-overlay">
+                        <div class="status-wrapper">
+                            <i class="fa fa-spinner fa-pulse ajax-loader" aria-hidden="true"></i>
+                        </div>
+                    </div>
                 </f:facet>
 
                 <f:facet name="complete">
