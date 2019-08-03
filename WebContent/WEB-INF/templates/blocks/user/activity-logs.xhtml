@@ -13,7 +13,7 @@
 					<h:outputText value="#{logEntry.description}" escape="false"  />
 					<h:panelGroup rendered="#{logEntry.queryNeeded}">
 						<h:outputText value=" #{msg.with_query}" escape="false"  />
-						<h:outputLink value="search.jsf">
+						<h:outputLink styleClass="log-query" value="search.jsf">
 							<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
 							<f:param name="query" value="#{logEntry.resource.query}"/>
 							<f:param name="action" value="web"/>

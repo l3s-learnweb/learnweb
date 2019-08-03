@@ -45,6 +45,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         this.menuContent = this.jq.find('> .ui-lwmenu-panel > .ui-lwmenu-panel-content');
         this.menuitemLinks = this.jq.find('.ui-menuitem-link:not(.ui-state-disabled)');
         this.menuText = this.menuitemLinks.find('.ui-menuitem-text');
+        this.expandedNodes = [];
 
         //keyboard support
         this.focusedItem = null;
@@ -59,7 +60,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             this.stateKey = 'lwMenu-' + this.id;
         }
 
-        this.restoreState();
+        // this.restoreState();
         this.markCurrentMenuItem();
     },
 
@@ -73,7 +74,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
                 if (href && href !== '#') {
                     window.location.href = href;
                     e.preventDefault();
-                    return;
+                    return false;
                 }
             }
 
@@ -91,6 +92,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             $this.removeFocusedItem();
             header.focus();
             e.preventDefault();
+            return false;
         });
 
         this.menuitemLinks.click(function (e) {
@@ -429,14 +431,14 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             return value !== id;
         });
 
-        this.saveState();
+        // this.saveState();
     },
 
     addAsExpanded: function (element) {
         var id = element.attr('id');
         if (id) {
             this.expandedNodes.push(element.attr('id'));
-            this.saveState();
+            // this.saveState();
         }
     },
 
