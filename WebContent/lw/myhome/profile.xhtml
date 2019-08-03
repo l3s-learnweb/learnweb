@@ -15,13 +15,13 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <div class="row flex-column-reverse flex-lg-row">
-        <div class="col-12 col-lg-6 pr-lg-2">
+    <div class="row s-gutters flex-column-reverse flex-lg-row">
+        <div class="col-12 col-lg-6">
             <p:panel header="#{msg.last_activities}" id="profile_news">
                 <ui:decorate template="/WEB-INF/templates/blocks/users/activity-logs.xhtml"/>
             </p:panel>
         </div>
-        <div class="col-12 col-lg-6 pl-lg-2">
+        <div class="col-12 col-lg-6">
             <p:panel header="#{msg.edit_profile}" styleClass="mb-3">
                 <h:form enctype="multipart/form-data">
                     <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
@@ -48,8 +48,8 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <img class="d-block w-100 m-auto profile-picture" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
-                                     alt="Profile image" style="max-width: 150px;"/>
+                                <img class="d-block w-100 h-auto m-auto profile-picture" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
+                                     alt="Profile image" style="max-width:10rem;"/>
 
                                 <div class="form-group text-center">
                                     <p:outputLabel for="@next" value="#{msg.photo}"/>
