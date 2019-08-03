@@ -1,4 +1,4 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+<ui:composition template="/WEB-INF/templates/blocks/group/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -14,150 +14,79 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{groupOverviewBean.group.title}"/>
 <ui:param name="helpText" value="#{msg.groupOverviewHelp}"/>
+
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/members.jsf?group_id=#{groupOverviewBean.group.id}"/>
 </ui:define>
-<ui:define name="center_layout">
+
+<ui:define name="middle_column">
 
     <h:form>
-        <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
-        <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
+        <p:remoteCommand name="resourceAddedHook" update=":group_middle_column"/>
+        <p:remoteCommand name="resourceUpdatedHook" update=":group_middle_column"/>
     </h:form>
 
-    <ui:fragment rendered="#{groupOverviewBean.group ne null}">
-        <p:outputPanel styleClass="bg-white">
-        <ui:decorate template="/templates/group/menu.xhtml">
-            <ui:param name="group" value="#{groupOverviewBean.group}"/>
-            <ui:param name="active" value="overview"/>
-            <ui:define name="title">
-                <div class="row align-items-center">
-                    <h5 class="col mb-2 py-1">
-                        <span class="text-primary">#{groupOverviewBean.group.title}</span> #{msg.created_by} #{groupOverviewBean.group.leader.username} (#{groupOverviewBean.group.resourcesCount} #{msg.resources})
-                    </h5>
-                    <h:form id="center_header_form">
-                        <p:commandLink rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}" action="#{groupsBean.joinGroup}"
-                                       styleClass="resource_button greenbutton" update=":growl :group_menu @form :datagrid" partialSubmit="true"
-                                       process="@this"
-                                       value="#{msg.join_group}">
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
-                        </p:commandLink>
-                    </h:form>
-                </div>
-            </ui:define>
-        </ui:decorate>
+    <ui:decorate template="/WEB-INF/templates/blocks/group/parts/summary_overview.xhtml">
+        <ui:param name="summary" value="#{groupOverviewBean.getSummaryOverview()}"/>
+        <ui:param name="summaryTitle" value="#{groupOverviewBean.summaryTitle}"/>
+    </ui:decorate>
 
+    <p:panel header="All activities" id="resourcesView">
+        <h:form id="group_activity">
+            <!-- TODO: this section can be reused from user's activity log. The difference only is that here we show a resource and by click we update right panel.-->
+            <p:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
+                <div class="d-flex align-items-start #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+                    <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
-        <ui:fragment rendered="${not groupOverviewBean.group.canViewResources(userBean.user)}">
-            <h3 class="error">
-                #{msg.group_resources_access_denied}
-                <h:outputText
-                        rendered="${groupOverviewBean.group.policyView != 'GROUP_LEADER' and groupOverviewBean.group.canJoinGroup(userBean.user)}"
-                        value="#{msg.group_resources_access_denied_join_first}"/>
-            </h3>
-        </ui:fragment>
+                    <div class="log-details">
+                        <p class="mb-0 log-description">
+                            <h:outputText value="#{logEntry.description}" escape="false"  />
+                            <h:panelGroup rendered="#{logEntry.queryNeeded}">
+                                <h:outputText value=" #{msg.with_query}" escape="false"  />
+                                <h:outputLink styleClass="log-query" value="search.jsf">
+                                    <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+                                    <f:param name="query" value="#{logEntry.resource.query}"/>
+                                    <f:param name="action" value="web"/>
+                                </h:outputLink>
+                                <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+                            </h:panelGroup>
+                        </p>
 
-        <ui:fragment rendered="#{groupOverviewBean.group.canViewResources(userBean.user)}">
-            <h:panelGroup id="resourcesView" layout="block">
-                <ui:decorate template="/templates/group/summary_overview.xhtml">
-                    <ui:param name="summary" value="#{groupOverviewBean.getSummaryOverview()}"/>
-                </ui:decorate>
-                <div id="show_activities" class="closed_activities">
-                    <span><h:outputText value="#{msg.show_activities}"/></span> <i class="fa fa-angle-double-up"/>
-                </div>
+                        <p class="small font-weight-light mb-0 log-date">
+                            <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
+                        </p>
 
-                <div id="all_activities" class="hidden">
+                        <h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
+                            <h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
+                                <p:commandLink update=":group_right_column">
+                                    <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
+                                    <img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
+                                </p:commandLink>
+                            </h:panelGroup>
 
-                    <h:dataTable var="datagrid" value="#{groupOverviewBean.logMessages}" id="datagrid" styleClass="not-selectable"
-                                 style="width: 100%;">
-                        <h:column>
-                            <div>
-                                <img id="userpic" src="#{datagrid.userImage}" alt="profile image" width="30" height="30"/>
-                            </div>
-                            <div class="newsfeed_text">
-                                <h:outputText value="#{datagrid.description}" escape="false"/>
-                                <h:panelGroup rendered="#{datagrid.queryNeeded}">
-                                    <h:outputText value=" #{msg.with_query} " escape="false"/>
+                            <div class="resource-details">
+                                <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
 
-                                    <h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
-                                        <h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-                                        <f:param name="query" value="#{datagrid.resource.query}"/>
-                                        <f:param name="action" value="web"/>
-                                    </h:outputLink>
+                                <h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
+                                    <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+                                    <h:outputText value="#{logEntry.resource.author}"/>
+                                </h:panelGroup>
 
-                                    <h:outputText value=" #{msg.from_source} #{datagrid.resource.source.label} " escape="false"/>
+                                <h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
+                                    <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+                                    <h:outputText value="#{logEntry.resource.tagsAsString}"/>
                                 </h:panelGroup>
                             </div>
-
-                            <h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}"
-                                          escape="false"
-                                          styleClass="newsfeed_date_difference"/>
-
-                            <br></br>
-                            <br></br>
-                            <h:panelGroup rendered="#{datagrid.resource!=null}">
-                                <div class="newsfeed_left">
-
-                                    <h:form>
-                                        <p:commandLink styleClass="newsfeed_query_link" update=":right_pane_wrapper" oncomplete="update_header()">
-                                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{datagrid.resource}"/>
-                                            <ui:fragment rendered="#{not empty datagrid.resource.thumbnail1}">
-                                                <img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}"
-                                                     height="#{datagrid.resource.thumbnail1.height}"
-                                                     width="#{datagrid.resource.thumbnail1.width}"/>
-                                            </ui:fragment>
-                                        </p:commandLink>
-                                    </h:form>
-
-                                </div>
-
-                                <div class="newsfeed_right">
-                                    <h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
-
-
-                                    <br/>
-                                    <h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}"
-                                                  escape="false"
-                                                  styleClass="newsfeed_author"/>
-
-                                </div>
-                            </h:panelGroup>
-
-                            <br class="clear"></br>
-                            <h:panelGroup rendered="#{datagrid.resource!=null}">
-                                <br></br>
-                                <h:outputText value="tags: " escape="false" styleClass="newsfeed_tag"
-                                              rendered="#{not empty datagrid.resource.tagsAsString}"/>
-
-                                <h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}"
-                                              escape="false"
-                                              styleClass="newsfeed_tags"/>
-
-                            </h:panelGroup>
-                            <hr width="auto" class="newsfeed_separator"></hr>
-                        </h:column>
-                    </h:dataTable>
-                    <br></br>
-                    <h:form>
-                        <h:panelGroup id="history" class="newsfeed_history">
-                            <p:commandButton value="#{msg.full_history}" styleClass="blackbutton" rendered="#{not groupOverviewBean.showAllLogs}"
-                                             update=":datagrid history" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
                         </h:panelGroup>
-                    </h:form>
+                    </div>
                 </div>
+            </p:repeat>
+
+            <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
+                <p:commandButton value="#{msg.full_history}" styleClass="grey-btn"
+                                 update="@form" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
             </h:panelGroup>
-        </ui:fragment>
-        <br></br>
-
-
-        <h:panelGroup id="filters">
-
-        </h:panelGroup>
-        </p:outputPanel>
-    </ui:fragment>
-</ui:define>
-
-<ui:define name="right_layout">
-    <ui:decorate template="/templates/resources/right_pane.xhtml">
-    </ui:decorate>
+        </h:form>
+    </p:panel>
 </ui:define>
 </ui:composition>

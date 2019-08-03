@@ -1,0 +1,123 @@
+.resource-log-snippet {
+  display: flex;
+  font-size: $font-size-sm;
+
+  .resource-preview {
+    flex: 0 0 5rem;
+    padding-top: 0.4rem;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .resource-details {
+    padding-left: 0.75rem;
+  }
+}
+
+.resource-snippet {
+  transition: opacity .2s;
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px rgba($themeDarkBgColor, 0.3);
+  background: $themePrimaryColor;
+  color: $themeElementTextColor;
+  max-width: 10rem;
+
+  &:hover {
+    background: $themePrimaryDarkest;
+  }
+
+  .resource-preview {
+    padding-top: 75%;
+    position: relative;
+
+    .resource-preview-wrapper {
+      .resource-preview-wrapper2 {
+        -webkit-transition: opacity 200ms ease-in-out;
+        transition: opacity 200ms ease-in-out;
+        background-color: $white;
+        height: 100%;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+
+        .resource-preview-block {
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+
+        .resource-preview-image {
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+          vertical-align: middle;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .resource-title {
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+    width: 100%;
+
+    .resource-title-wrapper {
+      height: 100%;
+      position: relative;
+      white-space: nowrap;
+
+      .resource-title-text {
+        padding: 2px 8px 3px;
+
+        .resource-title-name {
+          overflow: hidden;
+          display: block;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          line-height: 20px;
+          padding-right: 8px;
+        }
+
+        .resource-title-summary {
+          display: block;
+          font-size: 9px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          > span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .resource-title-icon {
+      display: none;
+      float: left;
+      height: 26px;
+      margin-left: 10px;
+      margin-top: 10px;
+      position: relative;
+      width: 26px;
+    }
+
+    .resource-title-icon-wrapper > img {
+      height: 16px;
+      width: 16px;
+    }
+  }
+}

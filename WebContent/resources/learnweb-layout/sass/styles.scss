@@ -46,6 +46,7 @@
 @import "components/_panels";
 @import "components/_tables";
 @import "components/_requests";
+@import "components/_resources";
 @import "components/_buttons";
 
 // The styles used only for specific page (or group of pages) should be extracted into section
@@ -55,7 +56,6 @@
 @import "sections/_glossary";
 @import "sections/_group-members";
 @import "sections/_group-resources";
-@import "sections/_group-summary-overview";
 @import "sections/_landing";
 @import "sections/_notification";
 @import "sections/_resource-submission";

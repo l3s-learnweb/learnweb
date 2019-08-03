@@ -7,7 +7,6 @@ jspos (lexer, lexicon, POSTagger) - used on admin/wanderer.jsf page
 montage-v1.0.0 - used to create feed on fact_sheet_* pages
 nanoscroller-v0.8.7 - used to create a nice scroller on resources list/etc. // TODO: remove all usages
 responsive-calendar-v1.0.0 (http://w3widgets.com/responsive-calendar/) - used to show archive timeline
-slick-v1.8.0 (https://github.com/kenwheeler/slick) - Carousel slider, used on summary overview page // TODO: probably, should be replaced to primefaces or bootstrap carousel
 spectrum-v1.8.0 (https://github.com/bgrins/spectrum) - color picker, used on transcript page
 tooltipster-v3.3.0 (https://github.com/iamceege/tooltipster) NEW VERSION AVAILABLE - used to create tutorial over website
 video-js-v7.6.1 (https://github.com/videojs/video.js) - A HTML5 video/audio player
