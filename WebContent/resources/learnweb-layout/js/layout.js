@@ -7,8 +7,8 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         this._super(cfg);
         this.wrapper = $(document.body).children('.layout-wrapper');
 
-        this.topbar = this.wrapper.children('.layout-topbar');
-        this.menuButton = this.topbar.find('#menu-button');
+        this.header = this.wrapper.children('.layout-header');
+        this.menuButton = this.header.find('#menu-button');
 
         this._bindEvents();
     },

@@ -2,7 +2,7 @@ $topbar-button-size: 30px;
 $topbar-button-padding: 15px;
 
 .layout-wrapper {
-  .layout-topbar {
+  .layout-header {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@ $topbar-button-padding: 15px;
     height: $topbar-height;
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05);
 
-    .topbar-element {
+    .header-element {
       height: $topbar-height;
       color: $themeElementTextColor;
       font-size: $topbar-button-size;
