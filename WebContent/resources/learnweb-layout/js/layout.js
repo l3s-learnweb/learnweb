@@ -477,3 +477,26 @@ PrimeFaces.widget.Menu.prototype.show = function() {
     this.align();
     this.jq.css({"z-index": ++PrimeFaces.zindex}).show();
 };
+
+// /**
+//  * Uncomment if we don't want to show overlay for fast requests
+//  */
+// var ajaxInProgress;
+// PrimeFaces.widget.AjaxStatus.prototype.trigger = function(event, args) {
+//     var callback = this.cfg[event];
+//     if(callback) {
+//         callback.apply(document, args);
+//     }
+//
+//     if (event === 'start') {
+//         $("body").css("cursor", "progress");
+//         ajaxInProgress = setTimeout(function () {
+//             this.jq.children().hide().filter(this.toFacetId(event)).show();
+//         }.bind(this), 200);
+//     } else {
+//         $("body").css("cursor", "default");
+//         clearTimeout(ajaxInProgress);
+//         ajaxInProgress = null;
+//         this.jq.children().hide().filter(this.toFacetId(event)).show();
+//     }
+// };

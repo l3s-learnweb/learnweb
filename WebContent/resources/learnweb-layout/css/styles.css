@@ -9956,6 +9956,23 @@ body,
     display: none !important;
   }
 }
+.ajax-status-screen .status-overlay {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: rgba(35, 37, 42, 0.75);
+}
+.ajax-status-screen .status-wrapper {
+  font-size: 4rem;
+  color: white;
+}
+
 .layout-wrapper .ui-breadcrumb {
   border: 1px solid #4b6cb7;
   border-left: none;
