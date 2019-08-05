@@ -19,12 +19,39 @@
             <ui:fragment rendered="#{groupOverviewBean.group.canViewResources(userBean.user)}">
                 <div class="row s-gutters">
                     <h:panelGroup layout="block" styleClass="col-12 col-md-4 col-lg-2" id="group_left_column">
-                        <ui:insert name="first_column"/>
+                        <p:panel header="Group details" styleClass="mb-3">
+                            <h5>#{groupOverviewBean.group.title}</h5>
+                            <p class="mb-1">
+                                <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+                                <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                            </p>
+                            <p class="mb-1">
+                                <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
+                                <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                            </p>
+
+                            <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
+                                <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true" process="@this" styleClass="secondary-btn">
+                                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+                                </p:commandButton>
+                            </h:form>
+                        </p:panel>
+                        <p:panel header="Folders" styleClass="mb-3">
+                            <h:form id="group_folders_tree_form">
+                                <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}" datakey="#{node.folderId}"
+                                        animate="true" selectionMode="single" styleClass="ui-tree-responsive">
+
+                                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                        <h:outputText value="#{node.name}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                            </h:form>
+                        </p:panel>
                     </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-8 col-lg-5" id="group_middle_column">
+                    <h:panelGroup layout="block" styleClass="col-12 col-md-8 col-lg-6" id="group_middle_column">
                         <ui:insert name="middle_column"/>
                     </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-12 col-lg-5" id="group_right_column">
+                    <h:panelGroup layout="block" styleClass="col-12 col-md-12 col-lg-4" id="group_right_column">
                         <ui:decorate template="/templates/resources/right_pane.xhtml"></ui:decorate>
                     </h:panelGroup>
                 </div>

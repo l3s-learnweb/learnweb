@@ -14,6 +14,7 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{groupOverviewBean.group.title}"/>
 <ui:param name="helpText" value="#{msg.groupOverviewHelp}"/>
+<ui:param name="group" value="#{groupOverviewBean.group}"/>
 
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/members.jsf?group_id=#{groupOverviewBean.group.id}"/>

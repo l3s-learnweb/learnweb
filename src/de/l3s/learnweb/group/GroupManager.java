@@ -798,6 +798,16 @@ public class GroupManager
         return root;
     }
 
+    public TreeNode getFoldersOnlyTree(Group group, int selectedFolderId) throws SQLException
+    {
+        if(group == null)
+            return null;
+
+        TreeNode root = new DefaultTreeNode("Root", null);
+        getChildNodesRecursively(group.getId(), 0, root, selectedFolderId);
+        return root;
+    }
+
     public void getChildNodesRecursively(int groupId, int parentFolderId, TreeNode parent, int selectedFolderId) throws SQLException
     {
         for(Folder folder : this.getFolders(groupId, parentFolderId))

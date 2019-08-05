@@ -43,4 +43,15 @@ body {
       }
     }
   }
+
+  .ui-tree.ui-tree-responsive {
+    border: 0;
+    padding: 0;
+    background: none;
+    width: auto;
+
+    .ui-tree-container {
+      padding: 0;
+    }
+  }
 }

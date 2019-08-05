@@ -511,6 +511,7 @@ public class UserBean implements Serializable
 
         if(null == sidebarMenuModel || sidebarMenuModelCacheTime + 10000L < System.currentTimeMillis())
         {
+            long start = System.currentTimeMillis();
             final String su = Learnweb.getInstance().getServerUrl();
             DynamicMenuModel model = new DynamicMenuModel();
 
@@ -526,11 +527,18 @@ public class UserBean implements Serializable
             ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, su + "/lw/myhome/groups.jsf");
             for(Group group : getUser().getGroups()) {
                 ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), "fa fa-fw fa-archive", su + "/lw/group/overview.jsf?group_id=" + group.getId());
-                theGroup.addElement(new DefaultMenuItem("Overview", "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem("Resources", "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem("Members", "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem("Forum", "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem("Options", "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
+                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
+                if (!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
+                {
+                    theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("links"), "fa fa-fw fa-link", su + "/lw/group/links.jsf?group_id=" + group.getId()));
+                }
+                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("forum"), "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
+                if (group.getCourse().isModerator(getUser()) || group.isLeader(getUser()))
+                {
+                    theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("options"), "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
+                }
                 myGroups.addElement(theGroup);
             }
             model.addElement(myGroups);
@@ -568,6 +576,8 @@ public class UserBean implements Serializable
 
             sidebarMenuModel = model;
             sidebarMenuModelCacheTime = System.currentTimeMillis();
+            long elapsedMs = System.currentTimeMillis() - start;
+            log.info("Total time to build menu: " + elapsedMs + "ms.");
         }
 
         return sidebarMenuModel;
