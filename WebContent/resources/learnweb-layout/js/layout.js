@@ -478,6 +478,42 @@ PrimeFaces.widget.Menu.prototype.show = function() {
     this.jq.css({"z-index": ++PrimeFaces.zindex}).show();
 };
 
+/**
+ *
+ */
+PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
+    if(this.cfg.breakpoint === -1) {
+        var firstItem = this.items.eq(0);
+        firstItem.css('width', 'auto');
+        var firstItemWidth = firstItem.length ? firstItem.width() : 150; // firstItem.outerWidth(true), firstItem.width()
+        var viewportInnerWidth = this.viewport.innerWidth();
+        this.columns = Math.floor(viewportInnerWidth / firstItemWidth);
+        this.calculateItemWidths();
+        this.totalPages = Math.ceil(this.itemsCount / this.columns);
+        this.responsiveDropdown.hide();
+        this.pageLinks.show();
+    } else {
+        var win = $(window);
+        if(win.width() <= this.cfg.breakpoint) {
+            this.columns = 1;
+            this.calculateItemWidths(this.columns);
+            this.totalPages = this.itemsCount;
+            this.responsiveDropdown.show();
+            this.pageLinks.hide();
+        } else {
+            this.columns = this.cfg.numVisible;
+            this.calculateItemWidths();
+            this.totalPages = Math.ceil(this.itemsCount / this.cfg.numVisible);
+            this.responsiveDropdown.hide();
+            this.pageLinks.show();
+        }
+    }
+
+    this.page = parseInt(this.first / this.columns);
+    this.updateNavigators();
+    this.itemsContainer.css('left', (-1 * (this.viewport.innerWidth() * this.page)));
+};
+
 // /**
 //  * Uncomment if we don't want to show overlay for fast requests
 //  */
