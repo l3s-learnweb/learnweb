@@ -29,6 +29,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void encodeMarkup(FacesContext context, AbstractMenu abstractMenu) throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -73,6 +74,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         writer.endElement("li");
     }
 
+    @SuppressWarnings("unchecked")
     private void encodePanelSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
@@ -203,6 +205,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void encodeDescendantSubmenu(FacesContext context, LearnwebMenu menu, Submenu submenu) throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
