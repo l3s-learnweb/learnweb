@@ -29,7 +29,8 @@ function selectTab(divName) {
         tablinks[i].className = tablinks[i].className.replace(" bg-white text-primary", "");
     }
     document.getElementById(divName).style.display = "block";
-	//document.getElementById('test123:' + divName + '_button').classList.add("bg-white text-primary");
+	document.getElementById('test123:' + divName + '_button').classList.add("bg-white");
+    document.getElementById('test123:' + divName + '_button').classList.add("text-primary");
 }
 
 function openTagsDiv() {
