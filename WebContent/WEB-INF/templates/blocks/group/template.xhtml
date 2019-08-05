@@ -4,49 +4,23 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:p="http://primefaces.org/ui">
 
+    <!--@elvariable id="group" type="de.l3s.learnweb.group.Group"-->
+
     <ui:define name="center_layout">
-        <ui:fragment rendered="#{groupOverviewBean.group ne null}">
-            <ui:fragment rendered="${not groupOverviewBean.group.canViewResources(userBean.user)}">
+        <ui:fragment rendered="#{group ne null}">
+            <ui:fragment rendered="${not group.canViewResources(userBean.user)}">
                 <!-- TODO: Instead of showing empty page if group not exists we need to redirect to 404, if access restricted, redirect to 403 -->
                 <h3 class="error">
                     #{msg.group_resources_access_denied}
-                    <h:outputText
-                            rendered="${groupOverviewBean.group.policyView != 'GROUP_LEADER' and groupOverviewBean.group.canJoinGroup(userBean.user)}"
-                            value="#{msg.group_resources_access_denied_join_first}"/>
+                    <h:outputText rendered="${group.policyView != 'GROUP_LEADER' and group.canJoinGroup(userBean.user)}"
+                                  value="#{msg.group_resources_access_denied_join_first}"/>
                 </h3>
             </ui:fragment>
 
-            <ui:fragment rendered="#{groupOverviewBean.group.canViewResources(userBean.user)}">
+            <ui:fragment rendered="#{group.canViewResources(userBean.user)}">
                 <div class="row s-gutters">
                     <h:panelGroup layout="block" styleClass="col-12 col-md-4 col-lg-2" id="group_left_column">
-                        <p:panel header="Group details" styleClass="mb-3">
-                            <h5>#{groupOverviewBean.group.title}</h5>
-                            <p class="mb-1">
-                                <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
-                                <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-                            </p>
-                            <p class="mb-1">
-                                <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
-                                <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
-                            </p>
-
-                            <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
-                                <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true" process="@this" styleClass="secondary-btn">
-                                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
-                                </p:commandButton>
-                            </h:form>
-                        </p:panel>
-                        <p:panel header="Folders" styleClass="mb-3">
-                            <h:form id="group_folders_tree_form">
-                                <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}" datakey="#{node.folderId}"
-                                        animate="true" selectionMode="single" styleClass="ui-tree-responsive">
-
-                                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                                        <h:outputText value="#{node.name}"/>
-                                    </p:treeNode>
-                                </p:tree>
-                            </h:form>
-                        </p:panel>
+                        <ui:insert name="left_column"/>
                     </h:panelGroup>
                     <h:panelGroup layout="block" styleClass="col-12 col-md-8 col-lg-6" id="group_middle_column">
                         <ui:insert name="middle_column"/>

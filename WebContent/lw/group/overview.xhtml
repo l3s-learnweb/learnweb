@@ -20,6 +20,26 @@
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/members.jsf?group_id=#{groupOverviewBean.group.id}"/>
 </ui:define>
 
+<ui:define name="left_column">
+    <p:panel header="Group details" styleClass="mb-3">
+        <h5>#{groupOverviewBean.group.title}</h5>
+        <p class="mb-1">
+            <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+        </p>
+        <p class="mb-1">
+            <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+        </p>
+
+        <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
+            <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true" process="@this" styleClass="alt-btn">
+                <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+            </p:commandButton>
+        </h:form>
+    </p:panel>
+</ui:define>
+
 <ui:define name="middle_column">
 
     <h:form>
@@ -84,7 +104,7 @@
             </p:repeat>
 
             <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
-                <p:commandButton value="#{msg.full_history}" styleClass="grey-btn"
+                <p:commandButton value="#{msg.full_history}" styleClass="secondary-btn"
                                  update="@form" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
             </h:panelGroup>
         </h:form>
