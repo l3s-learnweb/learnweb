@@ -1,18 +1,9 @@
 .section-ted-transcript {
-  .overlay {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    right: 0;
-    top: 2%;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.5);
-    overflow-x: hidden;
-    transition: 0.3s;
-  }
-
-  .overlay-content {
+  ul.ui-tabs-nav{
+    display: flex;
+    li{
+      width: 100%;
+    };
   }
 
   #selectable {
@@ -34,7 +25,11 @@
     }
   }
 
-
+  #ted_transcript {
+    &::selection, &::-moz-selection {
+      background: yellow;
+    }
+  }
 /*  .highlight {
     background-color: yellow;
   }
@@ -49,16 +44,6 @@
     vertical-align: middle;
     border-radius: 2px;
   }*/
-
-  .note {
-    background-color: yellow;
-  }
-
-  #ted_transcript {
-    &::selection, &::-moz-selection {
-      background: yellow;
-    }
-  }
 
 /*  .noselect {
     -webkit-touch-callout: none;

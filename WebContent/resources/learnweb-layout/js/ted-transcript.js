@@ -3,7 +3,7 @@ var isEditAnnotation = false;
 var selectedNodeId;
 var tags = {}; 
 
-function openTab(evt, divName) {
+/*function openTab(evt, divName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("overlay-content");
     for (i = 0; i < tabcontent.length; i++) {
@@ -11,13 +11,13 @@ function openTab(evt, divName) {
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" bg-white text-primary", "");
+        tablinks[i].className = tablinks[i].className.replace("ui-state-active", "");
     }
     document.getElementById(divName).style.display = "block";
-    $(evt.currentTarget).addClass("bg-white text-primary");
+    $(evt.currentTarget).addClass("ui-state-active");
     
-}
-
+}*/
+/*
 function selectTab(divName) {
 	var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("overlay-content");
@@ -26,29 +26,28 @@ function selectTab(divName) {
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" bg-white text-primary", "");
+        tablinks[i].className = tablinks[i].className.replace("ui-state-active", "");
     }
     document.getElementById(divName).style.display = "block";
-	document.getElementById('test123:' + divName + '_button').classList.add("bg-white");
-    document.getElementById('test123:' + divName + '_button').classList.add("text-primary");
-}
+	document.getElementById('test123:' + divName + '_button').classList.add("ui-state-active");
+}*/
 
-function openTagsDiv() {
+/*function openTagsDiv() {
 	if($('.overlay').width() === 0)
     {
 		$('.overlay').width("256px");
-/*	    $('.embedded').width($('.embedded').width() - 256);
-	    $('.right_bar').css("margin-right","256px");*/
+/!*	    $('.embedded').width($('.embedded').width() - 256);
+	    $('.right_bar').css("margin-right","256px");*!/
     }
 }
 
 function closeTagsDiv() {
-	$('.overlay').width("0px");	
-/*    $('.embedded').width($('.embedded').width() + 256);
-    $('.right_bar').css("margin-right","0px");*/
+	$('.overlay').width("0px");
+/!*    $('.embedded').width($('.embedded').width() + 256);
+    $('.right_bar').css("margin-right","0px");*!/
     $('.note').removeClass('hover');
     $('.ui-selected').removeClass("ui-selected");
-}
+}*/
 
 $(document).ready(function(){
 	//To include embedded TED video
