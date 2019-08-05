@@ -50,7 +50,7 @@
 			<div class="col-md" style="">
 				<h:panelGroup layout="block" id="transcript_column"  class="right_bar">
 					<p:outputPanel id="transcript_options">
-						<div class="center-header noselect">
+						<div class="center-header">
 							<h:form>
 								<p:outputLabel for="select_lang" styleClass="mr-2" value="#{msg.select_transcript_lang}:" />
 								<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}" >
@@ -61,7 +61,6 @@
 								<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
 								<p:commandButton id="submit"  value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 								<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
-								<!-- <p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/> -->
 
 								<p:menuButton value="#{msg.options}" iconPos="right"  rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
 									<p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('summary');">
@@ -77,7 +76,7 @@
 								</p:menuButton>
 							</h:form>
 						</div>
-						<div class="transcript_note noselect">
+						<div class="border border-dark my-2 p-2">
 							<b>Owner of transcript: </b><h:outputText value="#{tedTranscriptBean.tedResource.ownerUser.username}"/><br/>
 							<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 							<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
@@ -85,7 +84,7 @@
 						</div>
 					</p:outputPanel>
 					<h:panelGroup layout="block" id="transcript">
-						<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+						<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="border border-dark my-2 p-2" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 							<h:outputText value="#{tedTranscriptBean.tedResource.transcript}"  escape="false"/>
 						</h:panelGroup>
 						<h:panelGroup layout="block" class="tedTranscript" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
@@ -96,32 +95,36 @@
 
 				<!-- User Annotation Div-->
 				<div id="myNav" class="overlay">
-					<a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()"></a>
-					<ul class="tab row flex-nowrap mr-2">
-						<li class="col"><a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')"><h:outputText value="#{msg.tags}"/></a></li>
-						<li class="col"><a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')"><h:outputText value="#{msg.summary}"/></a></li>
-					</ul>
-					<div id="tags" class="overlay-content">
+					<h:form styleClass="mt-xl-5">
+						<p:commandButton  styleClass=" float-right mr-1 bg-transparent border-0"  icon="fa fa-times" title="Icon Only" onclick="closeTagsDiv()"/>
+					</h:form>
+					<br/>
+					<br/>
+					<h:form id="test123" styleClass="row justify-content-around px-2">
+							<p:commandButton id="tags_button" styleClass="tablinks col-5" onclick="openTab(event, 'tags')" value="#{msg.tags}"/>
+							<p:commandButton id="summary_button" styleClass="tablinks col-5" onclick="openTab(event, 'summary')" value="#{msg.summary}"/>
+					</h:form>
+					<div id="tags" class="overlay-content text-center">
 						<ol id="selectable">
 						</ol>
 					</div>
-					<div id="summary" class="overlay-content mt-2" style="display:none">
+					<div id="summary" class="overlay-content text-center mt-2" style="display:none">
 						<h:form prependId="false" styleClass="mb-2">
-							<h:outputText value="#{msg.brief_summary}"/>
-							<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextS}" /><br/>
-							<h:outputText id="char_s" /><br/>
+							<p:outputLabel for="textarea_s" value="#{msg.brief_summary}" styleClass="text-white"/>
+							<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false"  value="#{tedTranscriptBean.summaryTextS}" /><br/>
+							<h:outputText id="char_s" styleClass="text-white"/><br/>
 							<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitShortSummary()}"/>
 						</h:form>
 						<h:form prependId="false" styleClass="mb-2">
-							<h:outputText value="#{msg.long_summary}"/>
-							<p:inputTextarea id="textarea_m" counter="char_m" maxlength="1500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextM}"/><br/>
-							<h:outputText id="char_m" /><br/>
+							<p:outputLabel for="textarea_m" value="#{msg.long_summary}" styleClass="text-white"/>
+							<p:inputTextarea id="textarea_m" counter="char_m" maxlength="1500" counterTemplate="{0} characters remaining" autoResize="false"  value="#{tedTranscriptBean.summaryTextM}"/><br/>
+							<h:outputText id="char_m" styleClass="text-white"/><br/>
 							<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitLongSummary()}"/>
 						</h:form>
 						<h:form prependId="false" styleClass="mb-2">
-							<h:outputText value="#{msg.detailed_summary}"/>
-							<p:inputTextarea id="textarea_l" counter="char_l" maxlength="2500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextL}"/><br/>
-							<h:outputText id="char_l" /><br/>
+							<p:outputLabel for="textarea_l" value="#{msg.detailed_summary}" styleClass="text-white"/>
+							<p:inputTextarea id="textarea_l" counter="char_l" maxlength="2500" counterTemplate="{0} characters remaining" autoResize="false"  value="#{tedTranscriptBean.summaryTextL}"/><br/>
+							<h:outputText id="char_l" styleClass="text-white"/><br/>
 							<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitDetailedSummary()}"/>
 						</h:form>
 					</div>
@@ -131,7 +134,7 @@
 			<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
 				<h:form id="userinput_form" prependId="false">
 					<h:outputLabel value="#{msg.justify_selection}:" for="text"/>
-					<p:inputText id="text" style="width:97%;"/>
+					<p:inputText id="text"/>
 					<p:commandButton id="userinput_ok" value="Ok" onclick="getUserText('ok');return false;"></p:commandButton>
 					<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel');return false;"></p:commandButton>
 				</h:form>

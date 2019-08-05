@@ -13,11 +13,6 @@
   }
 
   .overlay-content {
-    position: relative;
-    top: 20%;
-    width: 100%;
-    text-align: center;
-    color: $white;
   }
 
   #selectable {
@@ -39,121 +34,8 @@
     }
   }
 
-  .overlay .closebtn {
-    position: absolute;
-    top: 45px;
-    right: 0px;
-    font-size: 60px;
-    width: 26px;
-    height: 26px;
-    background: url("\#{resource['image:cross_white.png']}") center no-repeat;
-  }
 
-  /* When the height of the screen is less than 450 pixels, change the position the close button again*/
-  @media screen and (max-height: 450px) {
-    .overlay .closebtn {
-      font-size: 40px;
-      top: 45px;
-      right: 0px;
-    }
-  }
-
-  ul.tab {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    border-radius: 2px;
-    top: 11%;
-    li {
-      float: left;
-      a {
-        display: inline-block;
-        background-color: black;
-        color: white;
-        text-align: center;
-        padding: 6px 8px;
-        text-decoration: none;
-        transition: 0.3s;
-        font-size: 1.6rem;
-        border: 1px solid $gray-400;
-        border-radius: 4px;
-        &:hover {
-          background-color: $gray-300;
-          color: $black;
-        }
-        &:focus {
-          background-color: $white !important;
-          color: $black !important;
-        }
-      }
-    }
-  }
-
-  /* Style the tablinks inside the list items */
-
-  .active {
-    background-color: $white !important;
-    color: $black !important;
-  }
-
-  #textarea_s {
-    height: 60px;
-    width: 90%;
-  }
-
-  #textarea_m {
-    height: 100px;
-    width: 90%;
-  }
-
-  #textarea_l {
-    height: 180px;
-    width: 90%;
-  }
-
-  .options_button {
-    float: right;
-    position: relative;
-    top: -5px;
-    right: 2px;
-    > button {
-      padding: 6px 26px 6px 12px !important;
-    }
-  }
-
-  .embedded {
-      /*
-      padding-top: 5px;
-      padding-left: 5px;
-        position: absolute;
-
-        height: 92%;
-        max-height: 92%;
-        */
-      box-sizing: border-box;
-      position: fixed;
-      float:left;
-      width: 35%;
-      height: 100%;
-      top: 0px;
-      padding-top: 4.6rem;
-      border-right:5px solid $gray-400;
-      transition: 0.3s;
-  }
-  .embedded iframe {
-      border:10px solid white;
-      box-sizing: border-box;
-      height: auto;
-  }
-
-  .transcript_note {
-    padding: 10px;
-    margin: 20px 0;
-    border: 1px solid $gray-500;
-  }
-
-  .highlight {
+/*  .highlight {
     background-color: yellow;
   }
 
@@ -166,44 +48,10 @@
     border: 1px solid gray;
     vertical-align: middle;
     border-radius: 2px;
-  }
+  }*/
 
   .note {
     background-color: yellow;
-  }
-
-  /*.note:hover{
-      background-color:#c4fcff !important;
-  }*/
-
-  .hover {
-    background-color: $lightBlue !important;
-  }
-
-  .ui-corner-all {
-    border-radius: 0px;
-  }
-
-  .button_position {
-    float: right;
-    bottom: 5px;
-  }
-
-  #transcript_column .ui-layout-unit-header {
-    background: none;
-    background-color: $gray-100 !important;
-    border: 1px solid $gray-300 !important;
-    border-radius: 0px !important;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    padding: 10px;
-    max-height: 100%;
-  }
-
-  .tedTranscript {
-    padding: 15px 5px 0px 15px;
-    text-align: justify;
-    border: 1px solid $gray-500;
   }
 
   #ted_transcript {
@@ -212,17 +60,17 @@
     }
   }
 
-  .noselect {
+/*  .noselect {
     -webkit-touch-callout: none;
-    /* iOS Safari */
+    !* iOS Safari *!
     -webkit-user-select: none;
-    /* Chrome/Safari/Opera */
+    !* Chrome/Safari/Opera *!
     -khtml-user-select: none;
-    /* Konqueror */
+    !* Konqueror *!
     -moz-user-select: none;
-    /* Firefox */
+    !* Firefox *!
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
+    !* Internet Explorer/Edge *!
     user-select: none;
-  }
+  }*/
 }

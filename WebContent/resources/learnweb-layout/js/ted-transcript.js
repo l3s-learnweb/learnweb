@@ -11,10 +11,10 @@ function openTab(evt, divName) {
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].className = tablinks[i].className.replace(" bg-white text-primary", "");
     }
     document.getElementById(divName).style.display = "block";
-    $(evt.currentTarget).addClass("active");
+    $(evt.currentTarget).addClass("bg-white text-primary");
     
 }
 
@@ -26,10 +26,10 @@ function selectTab(divName) {
     }
     tablinks = document.getElementsByClassName("tablinks");
     for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].className = tablinks[i].className.replace(" bg-white text-primary", "");
     }
     document.getElementById(divName).style.display = "block";
-    $('#' + divName + "_button").addClass("active");
+	//document.getElementById('test123:' + divName + '_button').classList.add("bg-white text-primary");
 }
 
 function openTagsDiv() {

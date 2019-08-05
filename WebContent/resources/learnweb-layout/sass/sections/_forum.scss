@@ -7,44 +7,12 @@
       min-width: 100px !important;
       /* doesn't work?!*/
     }
-
-    td {
-      &:first-child {
-        width: 13%;
-        /* doesn't work?!*/
-        vertical-align: top;
-
-        div {
-          margin-bottom: 1rem;
-        }
-      }
-
-      &:last-child {
-        vertical-align: top;
-      }
     }
-  }
   @media (min-width: 360px) and (max-width: 767.98px) {
     #forum_post_table tr {
       th:first-child {
         width: 30%;
         /* doesn't work?!*/
-      }
-
-      td {
-        &:first-child {
-          width: 30%;
-          /* doesn't work?!*/
-          vertical-align: top;
-
-          div {
-            margin-bottom: 1rem;
-          }
-        }
-
-        &:last-child {
-          vertical-align: top;
-        }
       }
     }
   }
