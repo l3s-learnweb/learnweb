@@ -6,243 +6,292 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Group Log Analysis" />
+
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="Group Log Analysis" url="admin/user_assessment.jsf"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
-			
-		<p:tabView cache="true">  
+		<p:tabView cache="true" styleClass="tab-view">
 			<p:tab title="#{msg.FormativeAssessment_coursePersp}">
 				<h:form id="form1">
-					<h:panelGrid columns="2" cellspacing="1" id="pg1">
-				    	<f:facet name="header">
-				        	<h:outputText value="#{msg.FormativeAssessment_compClasses}" /> 
-				    	</f:facet>
-				    	
-				    	<p:outputLabel for="selectCourse20" value="#{msg.FormativeAssessment_selectClass1}" /> 
-				        <p:selectOneMenu id="selectCourse20" value="#{userAssessmentBean.selectCourse20}" style="width:250px">
-							<f:selectItem itemLabel="-" itemValue="" />
-		            		<f:selectItems value="#{userAssessmentBean.courses}" var="c20" itemLabel="#{c20.title}" itemValue="#{c20.id}"/>
-						</p:selectOneMenu>
-							    
-						<p:outputLabel for="selectCourse21" value="#{msg.FormativeAssessment_selectClass2}" /> 
-				        <p:selectOneMenu id="selectCourse21" value="#{userAssessmentBean.selectCourse21}" style="width:250px">
-							<f:selectItem itemLabel="-" itemValue="" />
-		            		<f:selectItems value="#{userAssessmentBean.courses}" var="c21" itemLabel="#{c21.title}" itemValue="#{c21.id}"/>
-						</p:selectOneMenu>
-				                
-				        <p:outputLabel for="graph2" value="#{msg.FormativeAssessment_chartType}" />
-						<p:selectOneMenu id="graph2" value="#{userAssessmentBean.selectChart2}" style="width:250px">
-							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
-						</p:selectOneMenu>
-						
-						<p:outputLabel for="phase2" value="#{msg.FormativeAssessment_learnWebPhase}" />
-						<p:selectOneMenu id="phase2" value="#{userAssessmentBean.phaseLW}" style="width:250px">
-							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
-						</p:selectOneMenu>
-						        
-				        <p:commandButton value="#{msg.FormativeAssessment_compareClButton}" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
-				        
-						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="#{msg.FormativeAssessment_coursePersp}" showEffect="clip" maximizable="true">
-							<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:1500px"/>
-							<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:1500px"/>
-							<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
-							<p:chart type="pie" model="#{userAssessmentBean.pieModel21}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
-						
-							<p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg11').show()" update="dia11"/>
-						</p:dialog>
-						
-						<p:dialog id="dia11" modal="true" resizable="true" widgetVar="dlg11" header="#{msg.FormativeAssessment_feedback}" showEffect="clip">
-							<h:panelGrid columns="2" cellspacing="1" id="pg12">
-								
-								<p:outputLabel value="#{msg.FormativeAssessment_title}" />
-								<p:inputText id="op11" value="#{userAssessmentBean.title}"/>
-								
-								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback1" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
-	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback1" />
-							
-								<p:outputLabel value="#{msg.FormativeAssessment_class}" />
-						        <p:selectOneMenu id="op13" value="#{userAssessmentBean.classFeedback}">
-						            <p:ajax update="param" listener="#{userAssessmentBean.selectListUserClass}" /> 
-						            <f:selectItem itemLabel="-" itemValue="" />
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse20_name}" itemValue="#{userAssessmentBean.selectCourse20}" />
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse21_name}" itemValue="#{userAssessmentBean.selectCourse21}" /> 
-						        </p:selectOneMenu>
+					<div class="form-group">
+						<h:outputText value="#{msg.FormativeAssessment_compClasses}" />
+					</div>
 
-						     	<f:param id="param" name="selected_users" value="#{userAssessmentBean.listUserClass}" /> 	
-						     	<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedback}" />			        
-					        </h:panelGrid>
-						</p:dialog>
-						
-				    </h:panelGrid>
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectClass1}"/>
+						<p:selectOneMenu id="selectCourse20" value="#{userAssessmentBean.selectCourse20}" >
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.courses}" var="c20" itemLabel="#{c20.title}" itemValue="#{c20.id}"/>
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="selectCourse21" value="#{msg.FormativeAssessment_selectClass2}" />
+						<p:selectOneMenu id="selectCourse21" value="#{userAssessmentBean.selectCourse21}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.courses}" var="c21" itemLabel="#{c21.title}" itemValue="#{c21.id}"/>
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="graph2" value="#{msg.FormativeAssessment_chartType}" />
+						<p:selectOneMenu id="graph2" value="#{userAssessmentBean.selectChart2}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="phase2" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:selectOneMenu id="phase2" value="#{userAssessmentBean.phaseLW}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<p:commandButton value="#{msg.FormativeAssessment_compareClButton}" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
+
+					<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="#{msg.FormativeAssessment_coursePersp}" showEffect="clip" hideEffect="clip" maximizable="true">
+						<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:1500px"/>
+						<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:1500px"/>
+						<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
+						<p:chart type="pie" model="#{userAssessmentBean.pieModel21}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
+
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg11').show()" update="dia11"/>
+					</p:dialog>
+
+					<p:dialog id="dia11" modal="true" resizable="true" widgetVar="dlg11" header="#{msg.FormativeAssessment_feedback}" showEffect="clip">
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_title}:" />
+							<p:inputText id="op11" value="#{userAssessmentBean.title}"/>
+							<p:message for="@previous"/>
+						</div>
+
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_message}:" />
+							<p:inputTextarea rows="5" cols="30" counter="displayFeedback1" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
+							<h:outputText value="" />
+							<h:outputText id="displayFeedback1" />
+							<p:message for="@previous"/>
+						</div>
+
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_class}" />
+							<p:selectOneMenu id="op13" value="#{userAssessmentBean.classFeedback}">
+								<p:ajax update="param" listener="#{userAssessmentBean.selectListUserClass}" />
+								<f:selectItem itemLabel="-" itemValue="" />
+								<f:selectItem itemLabel="#{userAssessmentBean.selectCourse20_name}" itemValue="#{userAssessmentBean.selectCourse20}" />
+								<f:selectItem itemLabel="#{userAssessmentBean.selectCourse21_name}" itemValue="#{userAssessmentBean.selectCourse21}" />
+							</p:selectOneMenu>
+							<p:message for="@previous"/>
+						</div>
+
+						<f:param id="param" name="selected_users" value="#{userAssessmentBean.listUserClass}" />
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedback}" />
+					</p:dialog>
 			    </h:form>
 			</p:tab>
 			
 			<p:tab title="#{msg.FormativeAssessment_classPersp}">
 				<h:form id="form2">
-					<h:panelGrid columns="2" cellspacing="1" id="pg2">
-						<f:facet name="header"> 
-							<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_compGroups}" /> 
-						</f:facet>
-				            	
-						<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_class}" /> 
-						<p:selectOneMenu id="selectCourse1" value="#{userAssessmentBean.selectCourse1}" style="width:250px">
-							<p:ajax update="selectGroup,selectGroup1" listener="#{userAssessmentBean.changeGroup}" /> 
+					<div class="form-group">
+						<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_compGroups}" />
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_class}" />
+						<p:selectOneMenu id="selectCourse1" value="#{userAssessmentBean.selectCourse1}">
+							<p:ajax update="selectGroup,selectGroup1" listener="#{userAssessmentBean.changeGroup}" />
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItems value="#{userAssessmentBean.courses}" var="c1" itemLabel="#{c1.title}" itemValue="#{c1.id}"/>
 						</p:selectOneMenu>
-						
-						<p:outputLabel for="selectGroup" value="#{msg.FormativeAssessment_selectGroup1}" />
-				    	<p:selectOneMenu id="selectGroup" value="#{userAssessmentBean.selectedGroup1}" style="width:250px">  
-	                    			<f:selectItem itemLabel="-" itemValue="" />  
-	                    			<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
-				    	</p:selectOneMenu>
-				    	
-				    	<p:outputLabel for="selectGroup1" value="#{msg.FormativeAssessment_selectGroup2}" />
-				    	<p:selectOneMenu id="selectGroup1" value="#{userAssessmentBean.selectedGroup2}" style="width:250px">  
-	                    			<f:selectItem itemLabel="-" itemValue="" />  
-	                    			<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
-				    	</p:selectOneMenu>
-				    	
-				    	<p:outputLabel for="graph1" value="#{msg.FormativeAssessment_chartType}" />
-				    	<p:selectOneMenu id="graph1" value="#{userAssessmentBean.selectChart1}" style="width:250px">
-						        	<f:selectItem itemLabel="-" itemValue="" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
-				    	</p:selectOneMenu>
-				    	
-				    	<p:outputLabel for="phase1" value="#{msg.FormativeAssessment_learnWebPhase}" />
-						<p:selectOneMenu id="phase1" value="#{userAssessmentBean.phaseLW0}" style="width:250px">
-							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
-						</p:selectOneMenu>
-				    	
-				    	<p:commandButton value="#{msg.FormativeAssessment_compareGlButton}" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
-						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="#{msg.FormativeAssessment_classPersp}" showEffect="clip" maximizable="true">
-							<p:chart type="bar" model="#{userAssessmentBean.barModel0}" rendered="#{userAssessmentBean.showb1}" style="height:300px;width:1500px"/>
-							<p:chart type="line" model="#{userAssessmentBean.lineModel0}" rendered="#{userAssessmentBean.showl1}" style="height:300px;width:1500px"/>
-							<p:chart type="pie" model="#{userAssessmentBean.pieModel00}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
-							<p:chart type="pie" model="#{userAssessmentBean.pieModel01}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
-						
-							<p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg21').show()" update="dia21"/>
-						</p:dialog>
-				    	
-				    	<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="#{msg.FormativeAssessment_feedback}" showEffect="clip">
-							<h:panelGrid columns="2" cellspacing="1" id="pg22">
-								
-								<p:outputLabel value="#{msg.FormativeAssessment_title}" />
-								<p:inputText id="op21" value="#{userAssessmentBean.title}" />
-								
-								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback2" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
-	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback2" />
-							
-								<p:outputLabel value="#{msg.FormativeAssessment_selectGroup}" />
-						        <p:selectOneMenu id="op23" value="#{userAssessmentBean.groupFeedback}">
-						            <p:ajax update="param2" listener="#{userAssessmentBean.selectListUserGroup}" /> 
-						            <f:selectItem itemLabel="-" itemValue="" />
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectedGroup1_name}" itemValue="#{userAssessmentBean.selectedGroup1}" />
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectedGroup2_name}" itemValue="#{userAssessmentBean.selectedGroup2}" /> 
-						        </p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
 
-						     	<f:param id="param2" name="selected_users" value="#{userAssessmentBean.listUserGroup}" /> 	
-						     	<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedback}" />			        
-					        </h:panelGrid>
-						</p:dialog>	   
-					</h:panelGrid>
+					<div class="form-group">
+						<p:outputLabel for="selectGroup" value="#{msg.FormativeAssessment_selectGroup1}" />
+						<p:selectOneMenu id="selectGroup" value="#{userAssessmentBean.selectedGroup1}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="selectGroup1" value="#{msg.FormativeAssessment_selectGroup2}" />
+						<p:selectOneMenu id="selectGroup1" value="#{userAssessmentBean.selectedGroup2}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="graph1" value="#{msg.FormativeAssessment_chartType}" />
+						<p:selectOneMenu id="graph1" value="#{userAssessmentBean.selectChart1}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="phase1" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:selectOneMenu id="phase1" value="#{userAssessmentBean.phaseLW0}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+				    	
+					<p:commandButton value="#{msg.FormativeAssessment_compareGlButton}" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
+
+					<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="#{msg.FormativeAssessment_classPersp}" showEffect="clip" maximizable="true">
+						<p:chart type="bar" model="#{userAssessmentBean.barModel0}" rendered="#{userAssessmentBean.showb1}" style="height:300px;width:1500px"/>
+						<p:chart type="line" model="#{userAssessmentBean.lineModel0}" rendered="#{userAssessmentBean.showl1}" style="height:300px;width:1500px"/>
+						<p:chart type="pie" model="#{userAssessmentBean.pieModel00}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
+						<p:chart type="pie" model="#{userAssessmentBean.pieModel01}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
+
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg21').show()" update="dia21"/>
+					</p:dialog>
+
+					<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="#{msg.FormativeAssessment_feedback}" showEffect="clip" hideEffect="clip">
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_title}:" />
+							<p:inputText id="op21" value="#{userAssessmentBean.title}" />
+							<p:message for="@previous"/>
+						</div>
+
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_message}:" />
+							<p:inputTextarea rows="5" cols="30" counter="displayFeedback2" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
+							<h:outputText value="" />
+							<h:outputText id="displayFeedback2" />
+							<p:message for="@previous"/>
+						</div>
+
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_selectGroup}" />
+							<p:selectOneMenu id="op23" value="#{userAssessmentBean.groupFeedback}">
+								<p:ajax update="param2" listener="#{userAssessmentBean.selectListUserGroup}" />
+								<f:selectItem itemLabel="-" itemValue="" />
+								<f:selectItem itemLabel="#{userAssessmentBean.selectedGroup1_name}" itemValue="#{userAssessmentBean.selectedGroup1}" />
+								<f:selectItem itemLabel="#{userAssessmentBean.selectedGroup2_name}" itemValue="#{userAssessmentBean.selectedGroup2}" />
+							</p:selectOneMenu>
+							<p:message for="@previous"/>
+						</div>
+
+						<f:param id="param2" name="selected_users" value="#{userAssessmentBean.listUserGroup}" />
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedback}" />
+					</p:dialog>
 				</h:form>
 			</p:tab>
 			
 			<p:tab title="#{msg.FormativeAssessment_courseStd}">
 				<h:form id="form3">
-					<h:panelGrid columns="2" cellspacing="1" id="pg3">
-				    	<f:facet name="header" > 
-				        	<p:outputLabel value="#{msg.FormativeAssessment_details}" /> 
-						</f:facet>
-				    	<p:outputLabel for="selectCourse3" value="#{msg.FormativeAssessment_class}" />
-				    	<p:selectOneMenu id="selectCourse3" value="#{userAssessmentBean.selectCourse3}" style="width:250px">
-							    	<p:ajax update="selectUser3" listener="#{userAssessmentBean.changeCourse}" /> 
-							    	<f:selectItem itemLabel="-" itemValue="" />
-							    	<f:selectItems value="#{userAssessmentBean.courses}" var="c3" itemLabel="#{c3.title}" itemValue="#{c3.id}"/>
-				    	</p:selectOneMenu>
-							    
-				    	<p:outputLabel for="selectUser3" value="#{msg.FormativeAssessment_selectStudent}" />
-				    	<p:selectOneMenu id="selectUser3" value="#{userAssessmentBean.selectedUser}" style="width:250px">  
-	                    			<f:selectItem itemLabel="-" itemValue="" />  
-	                    			<f:selectItems value="#{userAssessmentBean.users}" var="u3" itemLabel="#{u3.username}" itemValue="#{u3.id}" />
-				    	</p:selectOneMenu>
-	                			 
-				    	<p:outputLabel for="graph3" value="#{msg.FormativeAssessment_chartType}" />
-				    	<p:selectOneMenu id="graph3" value="#{userAssessmentBean.selectChart3}" style="width:250px">
-						        	<f:selectItem itemLabel="-" itemValue="" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
-						            <f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
-				    	</p:selectOneMenu>
-				    	
-				    	<p:outputLabel for="phase3" value="#{msg.FormativeAssessment_learnWebPhase}" />
-						<p:selectOneMenu id="phase3" value="#{userAssessmentBean.phaseLW2}" style="width:250px">
+					<div class="form-group">
+						<p:outputLabel value="#{msg.FormativeAssessment_details}" />
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="selectCourse3" value="#{msg.FormativeAssessment_class}" />
+						<p:selectOneMenu id="selectCourse3" value="#{userAssessmentBean.selectCourse3}">
+							<p:ajax update="selectUser3" listener="#{userAssessmentBean.changeCourse}" />
 							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
-						    <f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
+							<f:selectItems value="#{userAssessmentBean.courses}" var="c3" itemLabel="#{c3.title}" itemValue="#{c3.id}"/>
 						</p:selectOneMenu>
-						        
-						
-				    	<p:commandButton id="button33" value="#{msg.FormativeAssessment_details}" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
-				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="#{msg.FormativeAssessment_details}" showEffect="clip" maximizable="true">
-						   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; text-align:center"/>
-						   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
-						   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
+						<p:message for="@previous"/>
+					</div>
 
-						   <br /><br />
-						   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px;text-align:center;">
-							   <p:column headerText="#{msg.FormativeAssessment_mA}">
-								  <h:outputLabel value="#{infoMean.nameE}" />
-							   </p:column>
-							   <p:column headerText="#{msg.FormativeAssessment_mS}">
-								   <h:outputLabel value="#{infoMean.valueD}" />
-							   </p:column>
-						  </p:dataTable>
+					<div class="form-group">
+						<p:outputLabel for="selectUser3" value="#{msg.FormativeAssessment_selectStudent}" />
+						<p:selectOneMenu id="selectUser3" value="#{userAssessmentBean.selectedUser}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.users}" var="u3" itemLabel="#{u3.username}" itemValue="#{u3.id}" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
 
-						  <p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg31').show()" update="dia31"/>
-				    	</p:dialog> 
-				    	
-				    	<p:dialog id="dia31" modal="true" resizable="true" widgetVar="dlg31" header="#{msg.FormativeAssessment_feedback}" showEffect="bounce" hideEffect="bounce">
-							<h:panelGrid columns="2" cellspacing="1" id="pg32">
-								<p:outputLabel value="#{msg.FormativeAssessment_title}" />
-								<p:inputText id="op31" value="#{userAssessmentBean.title}" />
-								
-								<p:outputLabel value="#{msg.FormativeAssessment_message}" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback3" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
-	    						<h:outputText value="" />
-	    						<h:outputText id="displayFeedback3" />
-					        </h:panelGrid>
-					        
-					        <p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedbackUser}" >
-					        	<f:param name="selected_users" value="#{userAssessmentBean.selectedUser}" />
-					        </p:commandButton>   		
-						</p:dialog>
-									    	
-					</h:panelGrid>
+					<div class="form-group">
+						<p:outputLabel for="graph3" value="#{msg.FormativeAssessment_chartType}" />
+						<p:selectOneMenu id="graph3" value="#{userAssessmentBean.selectChart3}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart2}" itemValue="pie" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart3}" itemValue="line" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<div class="form-group">
+						<p:outputLabel for="phase3" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:selectOneMenu id="phase3" value="#{userAssessmentBean.phaseLW2}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase2}" itemValue="Annotation and description" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase3}" itemValue="negotiation" />
+							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase4}" itemValue="agregation" />
+						</p:selectOneMenu>
+						<p:message for="@previous"/>
+					</div>
+
+					<p:commandButton id="button33" value="#{msg.FormativeAssessment_details}" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
+
+					<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="#{msg.FormativeAssessment_details}" showEffect="clip" maximizable="true">
+					   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; text-align:center"/>
+					   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
+					   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
+
+					   <br /><br />
+					   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px;text-align:center;">
+						   <p:column headerText="#{msg.FormativeAssessment_mA}">
+							  <h:outputLabel value="#{infoMean.nameE}" />
+						   </p:column>
+						   <p:column headerText="#{msg.FormativeAssessment_mS}">
+							   <h:outputLabel value="#{infoMean.valueD}" />
+						   </p:column>
+					  </p:dataTable>
+
+					  <p:commandButton value="#{msg.FormativeAssessment_feedback}" oncomplete="PF('dlg31').show()" update="dia31"/>
+					</p:dialog>
+
+					<p:dialog id="dia31" modal="true" resizable="true" widgetVar="dlg31" header="#{msg.FormativeAssessment_feedback}" showEffect="clip" hideEffect="clip">
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_title}" />
+							<p:inputText id="op31" value="#{userAssessmentBean.title}" />
+							<p:message for="@previous"/>
+						</div>
+
+						<div class="form-group">
+							<p:outputLabel value="#{msg.FormativeAssessment_message}" />
+							<p:inputTextarea rows="5" cols="30" counter="displayFeedback3" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+							<h:outputText value="" />
+							<h:outputText id="displayFeedback3" />
+							<p:message for="@previous"/>
+						</div>
+
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedbackUser}" >
+							<f:param name="selected_users" value="#{userAssessmentBean.selectedUser}" />
+						</p:commandButton>
+					</p:dialog>
 				</h:form>
 			</p:tab>
 			

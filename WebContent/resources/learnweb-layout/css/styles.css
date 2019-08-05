@@ -9937,6 +9937,17 @@ body .ui-menu.ui-menu-primary .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-m
   padding-left: 0.5rem;
 }
 
+.tab-view {
+  background-color: transparent !important;
+}
+.tab-view .ui-tabs-nav {
+  background: #fff;
+  width: fit-content;
+}
+.tab-view .ui-tabs-panels {
+  background: #fff;
+}
+
 html {
   font-size: 14px;
 }
@@ -10863,18 +10874,6 @@ body .ui-carousel.ui-carousel-light .ui-carousel-viewport .ui-carousel-item {
 .ui-datatable .table-sm tfoot td,
 .ui-datatable .table-sm .ui-datatable-data tr td {
   padding: 0.3rem;
-}
-
-.request-tables {
-  /* TODO: why it should be different from other tables? */
-  background-color: transparent !important;
-}
-.request-tables .ui-tabs-nav {
-  background: #fff;
-  width: fit-content;
-}
-.request-tables .ui-tabs-panels {
-  background: #fff;
 }
 
 .resource-log-snippet {

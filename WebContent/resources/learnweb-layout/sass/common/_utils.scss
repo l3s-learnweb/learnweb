@@ -111,3 +111,16 @@
     padding-left: $grid-gutter-width / 4;
   }
 }
+
+.tab-view {
+  background-color: transparent !important;
+
+  .ui-tabs-nav {
+    background: $themeElementTextColor;
+    width: fit-content;
+  }
+
+  .ui-tabs-panels {
+    background: $themeElementTextColor;
+  }
+}
