@@ -218,7 +218,7 @@ body {
 
         > .ui-icon-arrowthick-1-s {
             color: $primaryColorDarker;
-            font-size: 16px;
+            font-size: $font-size-base;
             padding-top: 0;
 
             &:before {
@@ -228,7 +228,7 @@ body {
 
         > .ui-icon-arrowthick-1-n {
             color: $primaryColorDarker;
-            font-size: 16px;
+            font-size: $font-size-base;
             padding-top: 10px;
 
             &:before {
@@ -313,7 +313,7 @@ body {
 
                     span {
                         color:$panelHeaderTextColor;
-                        font-size: 16px;
+                        font-size: $font-size-base;
 
                         &:hover {
                             color: $primaryColor;
@@ -673,7 +673,7 @@ body {
                 }
 
                 .ui-treetable-resizer {
-                    margin: -8px -16px 0 0;
+                    margin: -0.5rem -1rem 0 0;
                     height: 24px;
                 }
             }

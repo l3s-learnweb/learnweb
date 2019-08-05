@@ -48,7 +48,7 @@ $focusOutlineColor:$blue;
 /* Headers */
 $headerPadding:0.5rem 1rem;
 $inputListHeaderPadding:0.5rem;
-$headerFontSize:16px;
+$headerFontSize:$font-size-base;
 $headerBgColor:$primaryColor;
 $headerTextColor:$primaryTextColor;
 $headerLightBgColor:$gray-200;
@@ -57,15 +57,15 @@ $headerLightHoverBgColor:$gray-400;
 $headerLightBorderColor:$gray-400;
 
 /* Contents */
-$contentPadding:16px;
+$contentPadding:$font-size-base;
 $contentBgColor:$white;
 $contentBorderColor:$gray-400;
 $contentLighterBorderColor:$gray-200;
 
 /* Forms */
-$buttonBorderRadius:3px;
-$inputPadding:4px;
-$inputBgColor:$white;
+$buttonBorderRadius:$btn-border-radius;
+$inputPadding:$input-padding-x;
+$inputBgColor:$input-bg;
 $inputBorderColor:$gray-500;
 $inputHoverBorderColor:$gray-600;
 $inputInvalidBorderColor:$red;
@@ -92,7 +92,7 @@ $checkboxWidth:20px;
 $checkboxHeight:20px;
 
 /* Buttons */
-$buttonPadding:4px;
+$buttonPadding:$input-btn-padding-x;
 
 //$secondaryButtonBgColor: $gray-600;
 //$secondaryButtonHoverBgColor:$gray-800;

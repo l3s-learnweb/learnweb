@@ -1,7 +1,7 @@
 body {
     .ui-inputfield {
         background: $inputBgColor;
-        padding: $inputPadding;
+        padding: $input-padding-y $input-padding-x;
         border: 1px solid $inputBorderColor;
         @include transition(border-color $transition-duration,box-shadow $transition-duration);
         @include border-radius($border-radius);
@@ -50,27 +50,27 @@ body {
 
         &.ui-button-text-only {
             .ui-button-text {
-                padding: $buttonPadding $buttonPadding*3 $buttonPadding $buttonPadding*3;
+                padding: $input-btn-padding-y $input-btn-padding-x;
             }
         }
 
         &.ui-button-text-icon-left {
             .ui-button-text {
-                padding: $buttonPadding $buttonPadding*3 $buttonPadding $buttonPadding*7;
+                padding: $input-btn-padding-y $input-btn-padding-x $input-btn-padding-y $input-btn-padding-x*2.333;
             }
 
             .ui-icon {
-                margin-top: -1*($buttonPadding*1.5);
+                margin-top: -1*($input-btn-padding-y*1.5);
             }
         }
 
         &.ui-button-text-icon-right {
             .ui-button-text {
-                padding: $buttonPadding $buttonPadding*7 $buttonPadding $buttonPadding*3;
+                padding: $input-btn-padding-y $input-btn-padding-x*2.333 $input-btn-padding-y $input-btn-padding-x;
             }
 
             .ui-icon {
-                margin-top: -1*($buttonPadding*1.5);
+                margin-top: -1*($input-btn-padding-y*1.5);
             }
         }
 
@@ -78,16 +78,16 @@ body {
             margin-right: 0;
 
             .ui-button-text {
-                padding: $buttonPadding;
+                padding: $input-btn-padding-y;
             }
 
             .ui-icon {
-                margin-top: -1*($buttonPadding*1.5);
+                margin-top: -1*($input-btn-padding-y*1.5);
             }
         }
 
         .ui-icon {
-          font-size: 16px;
+          font-size: $font-size-base;
         }
 
         .ui-icon.ui-icon-triangle-1-s {
@@ -522,7 +522,7 @@ body {
 
         &.ui-autocomplete-multiple {
             .ui-autocomplete-multiple-container {
-                padding: $inputPadding;
+                padding: $input-padding-y $input-padding-x;
 
                 .ui-autocomplete-input-token {
                     input {
@@ -677,7 +677,7 @@ body {
         border: 1px solid $inputBorderColor;
 
         .ui-selectcheckboxmenu-label {
-            padding: $inputPadding 30px $inputPadding $inputPadding;
+            padding: $input-padding-y 30px $input-padding-y $input-padding-x;
             font-weight: normal;
             font-size: $font-size-base;
         }
@@ -850,7 +850,7 @@ body {
     }
 
     .ui-selectlistbox-filter-container {
-        padding: $inputPadding;
+        padding: $input-padding-y $input-padding-x;
         margin: 0;
 
         .ui-selectlistbox-filter {
@@ -1108,7 +1108,7 @@ body {
         .ui-datepicker-header {
             padding: $headerPadding;
             font-weight: bold;
-            font-size: 16px;
+            font-size: $font-size-base;
             line-height: 20px;
             @include border-radius(0);
 
@@ -1150,7 +1150,7 @@ body {
         }
 
         table {
-            font-size: 16px;
+            font-size: $font-size-base;
 
             td {
                 a {
@@ -1361,7 +1361,7 @@ body {
 
     .ui-inplace {
         .ui-inplace-display {
-            padding: $inputPadding;
+            padding: $input-padding-y $input-padding-x;
             @include border-radius($border-radius);
         }
     }
@@ -1429,7 +1429,7 @@ body {
     .ui-inputgroup {
         .ui-inputgroup-addon,
         .ui-inputgroup-addon-checkbox {
-            padding: $inputPadding;
+            padding: $input-padding-y $input-padding-x;
             border-color: $inputGroupBorderColor;
             background-color: $inputGroupBgColor;
             color: $inputGroupTextColor;

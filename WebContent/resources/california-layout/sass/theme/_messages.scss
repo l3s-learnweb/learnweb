@@ -41,7 +41,7 @@ body {
             }
         }
         .ui-messages-close {
-            font-size: 16px;
+            font-size: $font-size-base;
             color: $messageCloseIconColor;
             &:hover {
                 color: $infoMessageTextColor;
@@ -58,7 +58,7 @@ body {
             color: $infoMessageTextColor;
             .ui-message-info-icon {
                 @include icon_override("\f05a");
-                font-size: 16px;
+                font-size: $font-size-base;
                 margin-top: 1px;
             }
         }
@@ -68,7 +68,7 @@ body {
             color: $warnMessageTextColor;
             .ui-message-warn-icon {
                 @include icon_override("\f071");
-                font-size: 16px;
+                font-size: $font-size-base;
                 margin-top: 1px;
             }
         }
@@ -78,7 +78,7 @@ body {
             color: $errorMessageTextColor;
             .ui-message-error-icon {
                 @include icon_override("\f06a");
-                font-size: 16px;
+                font-size: $font-size-base;
                 margin-top: 1px;
             }
         }
@@ -88,7 +88,7 @@ body {
             color: $fatalMessageTextColor;
             .ui-message-fatal-icon {
                 @include icon_override("\f06a");
-                font-size: 16px;
+                font-size: $font-size-base;
                 margin-top: 1px;
             }
         }

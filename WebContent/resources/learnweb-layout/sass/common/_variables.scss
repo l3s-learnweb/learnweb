@@ -25,6 +25,11 @@ $themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActive
 $min-width: 320px;
 $grid-gutter-width: 2rem;
 $transition-duration: .3s;
+$border-radius: .2rem;
+$input-padding-y: .25rem;
+$input-padding-x: .25rem;
+$input-btn-padding-y: .25rem;
+$input-btn-padding-x: $input-btn-padding-y * 3;
 
 $topbar-height: 3.75rem;
 $topbar-two-row-display: sm;

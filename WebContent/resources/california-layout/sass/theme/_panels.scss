@@ -86,7 +86,7 @@ body {
                 }
             }
             .ui-icon {
-                right: 16px;
+                right: $font-size-base;
                 left: auto;
                 @include transition(color $transition-duration);
                 @include icon_override("\f067");

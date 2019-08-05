@@ -46,8 +46,8 @@ body {
         @include opacity(.7);
     }
     .ui-icon {
-        min-width: 16px;
-        height: 16px;
+        min-width: $font-size-base;
+        height: $font-size-base;
     }
     //a {
     //    color: $primaryColor;

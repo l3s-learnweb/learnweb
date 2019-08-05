@@ -76,7 +76,7 @@ $profileTextColor: $gray-900;
 
     .overview-title {
       line-height: 20px;
-      font-size: 16px;
+      font-size: $font-size-base;
       letter-spacing: 0.8px;
       text-align: left;
       margin-bottom: 5px;
@@ -86,7 +86,7 @@ $profileTextColor: $gray-900;
       line-height: 31px;
       font-size: 24px;
       text-align: left;
-      margin-bottom: 8px;
+      margin-bottom: 0.5rem;
     }
 
     .overview-ratios {
@@ -216,7 +216,7 @@ $profileTextColor: $gray-900;
       list-style-type: none;
 
       li {
-        padding: 8px 0;
+        padding: 0.5rem 0;
 
         &:first-child {
           padding-top: 0;
@@ -242,7 +242,7 @@ $profileTextColor: $gray-900;
             font-size: 13px;
             color: $gray-400;
             margin-left: 4px;
-            width: 16px;
+            width: $font-size-base;
           }
 
           .day {
@@ -258,7 +258,7 @@ $profileTextColor: $gray-900;
   }
 
   .resolution-center {
-    padding-bottom: 8px;
+    padding-bottom: 0.5rem;
 
     .ui-inputfield {
       display: block;
@@ -287,7 +287,7 @@ $profileTextColor: $gray-900;
       padding: 0;
 
       li {
-        padding: 16px;
+        padding: 1rem;
         border-left: 3px solid rgba(0, 0, 0, 0);
         @include clearfix();
 
@@ -356,7 +356,7 @@ $profileTextColor: $gray-900;
       list-style-type: none;
 
       li {
-        padding: 16px 0;
+        padding: 1rem 0;
         @include clearfix();
         font-size: 0;
 
@@ -366,7 +366,7 @@ $profileTextColor: $gray-900;
           box-sizing: border-box;
           display: inline-block;
           vertical-align: top;
-          padding: 8px;
+          padding: 0.5rem;
           text-align: left;
 
           img {
@@ -401,7 +401,7 @@ $profileTextColor: $gray-900;
 
             img {
               float: left;
-              margin-right: 8px;
+              margin-right: 0.5rem;
             }
           }
         }
@@ -412,7 +412,7 @@ $profileTextColor: $gray-900;
 
             img {
               float: right;
-              margin-left: 8px;
+              margin-left: 0.5rem;
             }
           }
         }
@@ -428,7 +428,7 @@ $profileTextColor: $gray-900;
         font-size: 24px;
         color: $messageIconColor;
         position: absolute;
-        left: 8px;
+        left: 0.5rem;
         top: 50%;
         margin-top: -14px;
       }
@@ -462,7 +462,7 @@ $profileTextColor: $gray-900;
       background-color: $white;
 
       th {
-        padding: 8px 16px;
+        padding: 0.5rem 1rem;
       }
     }
 
@@ -477,7 +477,7 @@ $profileTextColor: $gray-900;
 
       td {
         border-color: transparent;
-        padding: 8px 16px;
+        padding: 0.5rem 1rem;
       }
     }
 
@@ -505,7 +505,7 @@ $profileTextColor: $gray-900;
       img {
         width: 26px;
         height: 26px;
-        padding: 8px;
+        padding: 0.5rem;
         vertical-align: middle;
       }
 
@@ -613,7 +613,7 @@ $profileTextColor: $gray-900;
           .timeline-icon {
             position: absolute;
             left: 50%;
-            margin-left: -16px;
+            margin-left: -1rem;
 
             span {
               float: right;
@@ -639,7 +639,7 @@ $profileTextColor: $gray-900;
           .timeline-icon {
             position: absolute;
             right: 50%;
-            margin-right: -16px;
+            margin-right: -1rem;
             text-align: right;
 
             span {
@@ -702,7 +702,7 @@ $profileTextColor: $gray-900;
     }
 
     .ui-button {
-      margin-top: 16px;
+      margin-top: 1rem;
       padding: 0px 35px;
       margin-right: 0;
     }
@@ -714,7 +714,7 @@ $profileTextColor: $gray-900;
 
       .profile-statistics {
         font-weight: 600;
-        font-size: 16px;
+        font-size: 1rem;
         display: block;
       }
 
