@@ -1,8 +1,10 @@
 body {
-  .ui-accordion.ui-accordion-content-tp-0 {
-    .ui-accordion-content {
-      padding-top: 0;
-    }
+  .ui-widget.ui-widget-content-p-0 > .ui-widget-content {
+    padding: 0;
+  }
+
+  .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
+    padding-top: 0;
   }
 
   .ui-carousel.ui-carousel-light {
