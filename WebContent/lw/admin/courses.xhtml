@@ -13,7 +13,7 @@
     <p:menuitem value="#{msg.courses}" url="admin/courses.jsf#"/>
 </ui:define>
 <ui:define name="center_layout">
-    <div class="row">
+    <div class="row s-gutters">
         <div class="col-12 col-sm-6">
             <p:panel header="#{msg.add_new_course}" >
                 <h:form id="addcourse">
@@ -53,55 +53,58 @@
             </div>
         </p:blockUI>
 
-        <p:dataTable tableStyleClass="table-sm table-responsive mt-3" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
-            <p:column headerText="#{msg.title}" sortBy="#{course.title}">
-                <h:outputText value="#{course.title}"/>
-            </p:column>
+        <p:panel styleClass="mt-3" header="All courses">
+            <p:dataTable tableStyleClass="table-sm table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+                <p:column headerText="#{msg.title}" sortBy="#{course.title}">
+                    <h:outputText value="#{course.title}"/>
+                </p:column>
 
-            <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
-                <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
-            </p:column>
+                <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
+                    <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
+                </p:column>
 
-            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-                <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
-            </p:column>
+                <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+                    <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
+                </p:column>
 
-            <p:column headerText="#{msg.options}">
-                <f:facet name="header">
-                    #{msg.options}
-                </f:facet>
+                <p:column headerText="#{msg.options}">
+                    <f:facet name="header">
+                        #{msg.options}
+                    </f:facet>
 
-                <h:outputLink styleClass="mr-1" value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
-                    <h:graphicImage value="/resources/icon/silk/pencil.png" alt="#{msg.edit}"/>
-                    <h:outputText value="#{msg.edit}"/>
-                </h:outputLink>
+                    <div class="text-right">
+                        <h:outputLink styleClass="mr-2" value="admin/course.jsf?course_id=#{course.id}" title="#{msg.edit}">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.edit}"/>
+                        </h:outputLink>
 
-                <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
-                               update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
-                               onclick="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
-                    <h:graphicImage value="/resources/icon/silk/delete.png" alt="#{msg.delete}"/>
-                    <h:outputText value="#{msg.delete}"/>
-                    <p:confirm
-                            message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses."/>
-                </p:commandLink>
+                        <p:commandLink styleClass="mr-2" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
+                                       update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
+                                       onclick="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.delete}"/>
+                            <p:confirm
+                                    message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses."/>
+                        </p:commandLink>
 
-                <p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
-                               update="@form :growl" rendered="#{userBean.admin}"
-                               onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
-                    <h:graphicImage value="/resources/icon/silk/delete.png" alt="#{msg.delete}"/>
-                    <h:outputText value="Anonymise"/>
-                    <p:confirm
-                            message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected."/>
-                </p:commandLink>
+                        <p:commandLink styleClass="mr-2" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
+                                       update="@form :growl" rendered="#{userBean.admin}"
+                                       onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                            <h:outputText value="Anonymise"/>
+                            <p:confirm
+                                    message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected."/>
+                        </p:commandLink>
 
-                <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" alt="user_submissions"
-                              title="#{msg['Submission.view_user_submissions']}">
-                    <h:graphicImage value="/resources/icon/user_submission.png"
-                                    alt="#{msg['Submission.view_user_submissions']}"/>
-                    <h:outputText value="user_submissions"/>
-                </h:outputLink>
-            </p:column>
-        </p:dataTable>
+                        <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" alt="user_submissions"
+                                      title="#{msg['Submission.view_user_submissions']}">
+                            <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                            <h:outputText value="user_submissions"/>
+                        </h:outputLink>
+                    </div>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
     </h:form>
 
 </ui:define>
