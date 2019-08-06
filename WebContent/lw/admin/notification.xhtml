@@ -10,17 +10,17 @@
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="#{msg.notification}" url="admin/notification.jsf#"/>
+		<p:menuitem value="Send notification" url="admin/notification.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel  rendered="#{not (userBean.moderator)}" >
+		<p:panel rendered="#{not (userBean.moderator)}" >
 			<h:outputText value="Missing authentication"/>
 		</p:panel>
 
 		<ui:fragment rendered="#{userBean.moderator}">
 			<h:form id="us_form">
-				<p:panel>
+				<p:panel  header="Create notification" >
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
 						<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
@@ -29,7 +29,7 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.description}:"/>
-						<p:textEditor height="400" value="#{adminNotificationBean.text}" id="msg_description">
+						<p:textEditor height="200" value="#{adminNotificationBean.text}" id="msg_description">
 							<f:facet name="toolbar">
 								<span class="ql-formats">
 									<select class="ql-font"></select>
@@ -47,9 +47,7 @@
 						</p:textEditor>
 						<p:message for="@previous"/>
 					</div>
-				</p:panel>
 
-				<p:panel header="#{msg.select_users}" styleClass="mt-3">
 					<ui:include src="/templates/user/user_select_form.xhtml" />
 
 					<div class="form-group">
@@ -59,12 +57,12 @@
 					<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
 						<h4 class="h4">You have to <a href="#{request.contextPath}/lw/myhome/profile.jsf">set up</a> a valid email address to send mails to your users.</h4>
 					</ui:fragment>
-				</p:panel>
 
-				<div class="my-4">
-					<p:commandButton value="#{msg.clear}" styleClass="mr-2" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
-					<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
-				</div>
+					<div class="mt-3">
+						<p:commandButton value="#{msg.clear}" styleClass="mr-2" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
+						<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
+					</div>
+				</p:panel>
 			</h:form>
 		</ui:fragment>
 	</ui:define>
