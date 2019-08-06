@@ -14,9 +14,9 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
+		<p:panel header="#{msg.myCommentsTitle}">
 			<h:form prependId="false">
-				<p:dataTable var="comment" value="#{userBean.user.comments}" id="comment_table">
-
+				<p:dataTable var="comment" value="#{userBean.user.comments}" id="comment_table" tableStyleClass="table-sm table-responsive">
 					<p:column>
 						<f:facet name="header">
 							#{msg.comment}
@@ -45,5 +45,6 @@
 					</p:column>
 				</p:dataTable>
 			</h:form>
+		</p:panel>
 	</ui:define>
 </ui:composition>
