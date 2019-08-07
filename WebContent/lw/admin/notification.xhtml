@@ -10,17 +10,17 @@
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="Send notification" url="admin/notification.jsf#"/>
+		<p:menuitem value="#{msg.send_notification}" url="admin/notification.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
 		<p:panel rendered="#{not (userBean.moderator)}" >
-			<h:outputText value="Missing authentication"/>
+			<h:outputText value="#{msg.missing_authentication}"/>
 		</p:panel>
 
 		<ui:fragment rendered="#{userBean.moderator}">
 			<h:form id="us_form">
-				<p:panel  header="Create notification" >
+				<p:panel header="#{msg.create_notification}">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
 						<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>

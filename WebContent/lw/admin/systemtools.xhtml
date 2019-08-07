@@ -7,67 +7,67 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="System Tools" />
+	<ui:param name="pageTitle" value="#{msg.system_tools}" />
 
 	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="Database connections" url="admin/systemtools.jsf"/>
+		<p:menuitem value="#{msg.system_tools}" url="admin/systemtools.jsf"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
 		<p:panel rendered="#{not userBean.admin}">
-			<h:outputText value="Missing authentication"/>
+			<h:outputText value="#{msg.missing_authentication}"/>
 		</p:panel>
 
 		<ui:fragment rendered="#{userBean.admin}">
-			<h:form>
-				<p:dataTable tableStyleClass="table-sm table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
-					<p:column headerText="id" sortBy="#{process.id}">
-						<h:outputText value="#{process.id}" />
-					</p:column>
+			<p:panel header="#{msg.database_connections}">
+				<h:form>
+					<p:dataTable tableStyleClass="table-sm table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
+						<p:column headerText="#{msg.id}" sortBy="#{process.id}">
+							<h:outputText value="#{process.id}" />
+						</p:column>
 
-					<p:column headerText="#{msg.username}" sortBy="#{process.user}">
-						<h:outputText value="#{process.user}" />
-					</p:column>
+						<p:column headerText="#{msg.username}" sortBy="#{process.user}">
+							<h:outputText value="#{process.user}" />
+						</p:column>
 
-					<p:column headerText="host" sortBy="#{process.host}">
-						<h:outputText value="#{process.host}" />
-					</p:column>
+						<p:column headerText="#{msg.host}" sortBy="#{process.host}">
+							<h:outputText value="#{process.host}" />
+						</p:column>
 
-					<p:column headerText="db" sortBy="#{process.db}">
-						<h:outputText value="#{process.db}" />
-					</p:column>
+						<p:column headerText="#{msg.db}" sortBy="#{process.db}">
+							<h:outputText value="#{process.db}" />
+						</p:column>
 
-					<p:column headerText="command" sortBy="#{process.command}">
-						<h:outputText value="#{process.command}" />
-					</p:column>
+						<p:column headerText="#{msg.command}" sortBy="#{process.command}">
+							<h:outputText value="#{process.command}" />
+						</p:column>
 
-					<p:column headerText="time" sortBy="#{process.time}">
-						<h:outputText value="#{process.time}" />
-					</p:column>
+						<p:column headerText="#{msg.time}" sortBy="#{process.time}">
+							<h:outputText value="#{process.time}" />
+						</p:column>
 
-					<p:column headerText="state" sortBy="#{process.state}">
-						<h:outputText value="#{process.state}" />
-					</p:column>
+						<p:column headerText="${msg.state}" sortBy="#{process.state}">
+							<h:outputText value="#{process.state}" />
+						</p:column>
 
-					<p:column headerText="#{msg.info}" sortBy="#{process.info}">
-						<h:outputText value="#{process.info}" />
-					</p:column>
+						<p:column headerText="#{msg.info}" sortBy="#{process.info}">
+							<h:outputText value="#{process.info}" />
+						</p:column>
 
-					<p:column headerText="progress" sortBy="#{process.progress}">
-						<h:outputText value="#{process.progress}" />
-					</p:column>
+						<p:column headerText="#{msg.progress}" sortBy="#{process.progress}">
+							<h:outputText value="#{process.progress}" />
+						</p:column>
 
-					<p:column headerText="Terminate">
-						<p:commandButton styleClass="m-auto d-block" value="terminate"
-							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable">
-						</p:commandButton>
-					</p:column>
-				</p:dataTable>
-			</h:form>
+						<p:column headerText="#{msg.terminate}">
+							<p:commandButton styleClass="m-auto d-block text-lowercase" value="#{msg.terminate}"
+											 actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable">
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
 
-			<h:form styleClass="my-4">
-				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" value="Clear caches" />
-			</h:form>
+					<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="mt-3" value="#{msg.clear_caches}" />
+				</h:form>
+			</p:panel>
 		</ui:fragment>
 	</ui:define>
 </ui:composition> 
