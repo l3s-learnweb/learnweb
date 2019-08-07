@@ -77,13 +77,15 @@
                         <f:facet name="header">
                             #{msg.options}
                         </f:facet>
-                        <p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-                                       update=":banlistform :growl"
-									   title="#{msg.unban}">
-							<h:graphicImage value="/resources/icon/Remove.png" alt="#{msg.unban}" />
-							<h:outputText value="#{msg.unban}"/>
-                            <p:confirm message="#{msg.unban} #{accessData.name}?" />
-                        </p:commandLink>
+                        <div class="text-right">
+                            <p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
+                                           update=":banlistform :growl"
+                                           title="#{msg.unban}">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                <h:outputText value="#{msg.unban}"/>
+                                <p:confirm message="#{msg.unban} #{accessData.name}?" />
+                            </p:commandLink>
+                        </div>
                     </p:column>
                 </p:dataTable>
             </h:form>
@@ -151,19 +153,18 @@
                         <f:facet name="header">
                             #{msg.options}
                         </f:facet>
+                        <div class="text-right">
+                            <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this" styleClass="mr-2"
+                                update=":suspiciouslistform :growl" title="#{msg.ban}">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                            </p:commandLink>
 
-                        <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this"
-                            update=":suspiciouslistform :growl"
-                            style="text-decoration:none;" title="#{msg.ban}">
-                            <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.ban}" />
-                        </p:commandLink>
-
-                        <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
-                                       update=":suspiciouslistform :growl"
-                                       style="text-decoration:none;" title="#{msg.remove}">
-                            <p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
-                            <h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.remove}" />
-                        </p:commandLink>
+                            <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
+                                           update=":suspiciouslistform :growl" title="#{msg.remove}">
+                                <p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </p:commandLink>
+                        </div>
                     </p:column>
                 </p:dataTable>
             </h:form>

@@ -132,17 +132,19 @@
             </p:column>
 
             <p:column headerText="#{msg.options}">
-                <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this"
-                               update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                    <h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}"/>
-                    <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
-                </p:commandLink>
+                <div class="text-right">
+                    <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{groupsBean.canDeleteGroup(group)}">
+                        <f:param name="group_id" value="#{group.id}"/>
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </h:outputLink>
 
-                <h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
-                    <f:param name="group_id" value="#{group.id}"/>
-                    <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
-                </h:outputLink>
+                    <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
+                                   update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
+                    </p:commandLink>
+                </div>
             </p:column>
 
 
@@ -194,17 +196,18 @@
 									#{msg.options}
 								</span>
                     </f:facet>
-                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
-                                   process="@this" styleClass="optionIcon" title="#{msg.join}" oncomplete="applyTooltip()">
-                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}"/>
-                    </p:commandLink>
+                    <div class="text-right">
+                        <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{userBean.moderator}">
+                            <f:param name="group_id" value="#{group.id}"/>
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </h:outputLink>
 
-                    <h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
-                        <f:param name="group_id" value="#{group.id}"/>
-                        <h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}"/>
-                    </h:outputLink>
-
+                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
+                                       process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        </p:commandLink>
+                    </div>
                 </p:column>
 
             </p:dataTable>

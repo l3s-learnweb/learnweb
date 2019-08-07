@@ -14,24 +14,28 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:form id="organisationform">
-			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-sm table-responsive">
-				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
-					<h:outputText value="#{organisation.title}" />		
-				</p:column>
+		<p:panel header="#{msg.organizations_all}">
+			<h:form id="organisationform">
+				<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-sm table-responsive">
+					<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
+						<h:outputText value="#{organisation.title}" />
+					</p:column>
 
-				<p:column headerText="Welcome Page" >
-					<h:outputText value="#{organisation.welcomePage}" />						
-				</p:column>	
-				
-				<p:column headerText="#{msg.options}">
-					 <h:link title="#{msg.edit}" outcome="/lw/admin/organisation">
-						 <h:graphicImage value="/resources/icon/silk/pencil.png" alt="#{msg.edit}" />
-						 <f:param name="organisation_id" value="#{organisation.id}" />
-						 <h:outputText value="#{msg.edit}"/>
-			        </h:link>
-				</p:column>
-			</p:dataTable>	
-		</h:form>
+					<p:column headerText="Welcome Page" >
+						<h:outputText value="#{organisation.welcomePage}" />
+					</p:column>
+
+					<p:column headerText="#{msg.options}">
+						<div class="text-right">
+							<h:link title="#{msg.edit}" outcome="/lw/admin/organisation">
+								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<f:param name="organisation_id" value="#{organisation.id}" />
+								<h:outputText value="#{msg.edit}"/>
+							</h:link>
+						</div>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
 	</ui:define>
 </ui:composition>
