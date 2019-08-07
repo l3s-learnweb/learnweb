@@ -1,4 +1,7 @@
 .section-search {
+  .ui-carousel-header {
+    display: none !important;
+  }
   #search_loading_more_results {
     line-height: 3rem;
 
@@ -165,7 +168,7 @@
 
     ul li.disabled {
       opacity: 0.4;
-
+      display: none;
       .filter-name {
         cursor: default;
       }
@@ -618,7 +621,7 @@
       .navigate {
         position: absolute;
         height: 100%;
-        width: 4rem;
+        width: 2rem;
         top: 0;
         z-index: 24;
 
@@ -672,13 +675,9 @@
 
     .group-menu-block {
       display: inline-block;
-      padding: 0.6rem 1rem 1rem;
-      margin-right: 2rem;
-      text-align: left;
-      vertical-align: top;
-      max-width: 80rem;
-      text-decoration: none;
-
+      padding: 0.5rem 0.5rem;
+      background-color: $gray-600;
+      height: 300px;
       &:hover {
         background-color: $gray-500;
         border-radius: 1px;

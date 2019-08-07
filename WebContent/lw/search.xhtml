@@ -67,7 +67,48 @@
                 </h:outputFormat>
             </h:panelGroup>
 
-            <h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
+            <h:form id="form" styleClass="group-menu-panel justify-content-center flex-nowrap px-2 mx-1">
+       <!--         <p:commandButton styleClass="col-sm-1 border-0" icon="fa fa-chevron-left"  type="button" onclick="CarouselPrev('carousel');" />-->
+                <span class="navigate left arrow" onclick="CarouselPrev('carousel');"><span class="arrow"></span></span>
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" headerText="Responsive" styleClass="bg-light mx-4" var="gr" numVisible="1">
+                            <h:link outcome="search" styleClass="col-12 group-menu-block source_#{gr.groupAlias}" >
+                                <f:param name="service" value="#{gr.groupAlias}"/>
+                                <f:param name="action" value="#{searchBean.searchMode}"/>
+                                <f:param name="query" value="#{searchBean.query}"/>
+
+                                <h4 class="group-menu-title">
+                                    <h:outputFormat value="#{msg.search_groups_title}" escape="false">
+                                        <f:param value="#{gr.groupName}"/>
+                                        <f:param value="#{gr.totalResources}"/>
+                                    </h:outputFormat>
+                                </h4>
+                                <div class="group-menu-content group-content-#{searchBean.searchMode}">
+                                    <h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
+                                        <p:repeat value="#{gr.resources}" var="res">
+                                            <div class="article-wrapper">
+                                                <h6>
+                                                    <span><h:outputText value="#{res.title}" escape="false"/></span>
+                                                    <span class="url">#{res.url}</span>
+                                                </h6>
+
+                                                <p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
+                                            </div>
+                                        </p:repeat>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
+                                        <p:repeat value="#{gr.resources}" var="res">
+                                            <div class="image-wrapper">
+                                                <img src="${res.thumbnail2.url}"/>
+                                            </div>
+                                        </p:repeat>
+                                    </h:panelGroup>
+                                </div>
+                            </h:link>
+            </p:carousel>
+                <span class="navigate right" onclick="CarouselNext('carousel');"><span class="arrow"></span></span>
+     <!--           <p:commandButton styleClass="col-sm-1 border-0" icon="fa fa-chevron-right" type="button" onclick="CarouselNext('carousel');" />-->
+            </h:form>
+          <!--  <h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
                 <span class="navigate left"><a id="scrollLeft" href="#"><span class="arrow"></span></a></span>
 
                 <div class="group-menu-container">
@@ -109,7 +150,7 @@
                 </div>
 
                 <span class="navigate right"><a id="scrollRight" href="#"><span class="arrow"></span></a></span>
-            </h:panelGroup>
+            </h:panelGroup>-->
         </h:panelGroup>
 
         <div id="filters_menu_bar_wrapper">
@@ -184,6 +225,32 @@
         <script type="text/javascript">
             var view = '#{searchBean.view}';
             var userId = '#{userBean.user.id}';
+            function CarouselNext(carousel)
+            {
+                var currentPage = PF(carousel).page;
+                var totalPages = PF(carousel).totalPages - 1;
+                var c = (currentPage === (totalPages));
+                if (!c)
+                {
+                    PF(carousel).setPage(currentPage + 1);
+                }
+                else{
+                    PF(carousel).setPage(0);
+                }
+            }
+
+            function CarouselPrev(carousel)
+            {
+                var currentPage = PF(carousel).page;
+                if (currentPage !== 0)
+                {
+                    PF(carousel).setPage(currentPage - 1)
+                }
+                else{
+                    PF(carousel).setPage(PF(carousel).totalPages - 1);
+                }
+            }
+
         </script>
 
         <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
