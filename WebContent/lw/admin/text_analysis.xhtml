@@ -15,17 +15,25 @@
 
     <ui:define name="center_layout">
         <h:form id="anlyse_form">
-            <p:panel header="#{msg.select_users}">
+            <p:panel id="output1" header="#{msg.select_users}">
                 <ui:include src="/templates/user/user_select_form.xhtml"/>
-                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
-                                 value="#{msg.selected_users_comments}"
-                                 process="@form" update=":growl output1"/>
-            </p:panel>
 
-            <p:panel styleClass="mt-3" id="output1" header="#{msg.comments}">
-                    <p>#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}"/></p>
-                    <h:link value="#{msg.comments_analyse}" outcome="/lw/admin/wanderer.jsf" target="_blank"/>
-                    <h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
+                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
+                                     value="#{msg.selected_users_comments}"
+                                     process="@form" update=":growl output1"/>
+
+                <div class="my-3">
+                    <p:outputLabel value="#{adminTextAnalysisBean.commentCount} comments from #{adminTextAnalysisBean.selectedUsers.size()} total selected users"/>
+                    <div>
+                        <p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}" />
+                    </div>
+                </div>
+
+                <p:dataTable var="comment" value="#{adminTextAnalysisBean.comments}">
+                    <p:column headerText="#{msg.comments}">
+                        <h:outputText value="#{comment.text}" />
+                    </p:column>
+                </p:dataTable>
             </p:panel>
 
             <h:panelGroup id="output" styleClass="d-none">

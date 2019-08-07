@@ -20,14 +20,9 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
 {
     private static final long serialVersionUID = -3957625443067966969L;
 
-    private String textBR;
     private String textNL;
     private int commentCount = 0;
-
-    public String getTextBR()
-    {
-        return textBR;
-    }
+    private List<Comment> comments;
 
     public String getTextNL()
     {
@@ -38,6 +33,8 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
     {
         return commentCount;
     }
+
+    public List<Comment> getComments() { return comments; }
 
     public TreeSet<Integer> getSelectedUsers() throws SQLException
     {
@@ -71,7 +68,7 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
             if(null == selectedUsers)
                 return;
 
-            List<Comment> comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
+            comments = getLearnweb().getResourceManager().getCommentsByUserIds(selectedUsers);
 
             commentCount = comments.size();
 
@@ -88,7 +85,6 @@ public class AdminTextAnalysisBean extends ApplicationBean implements Serializab
             }
 
             textNL = sbNL.toString();
-            textBR = sbBR.toString();
 
         }
         catch(SQLException e)
