@@ -6,7 +6,7 @@
   }
 }
 
-.center-header {
+.center-header { // TODO: it is definitely not looks like a util
   background-color: $gray-100;
   padding: 0.5rem;
 
@@ -51,24 +51,12 @@
   }
 }
 
-.p-pn-1rem {
-  .ui-panel-content {
-    padding: 1rem !important;
-  }
-}
-
 .klapper_zu { // TODO: remove it
   height: .9rem;
 }
 
-.cursor-pointer {
+.cursor-pointer { // TODO: remove it
   cursor: pointer;
-}
-
-.ui-widget-danger {
-  .ui-widget-header {
-    background-color: $red;
-  }
 }
 
 .sticky-column {
@@ -86,7 +74,7 @@
   border: 1px solid $themePrimaryColor;
 }
 
-.excel_export_todo_use {
+.excel_export_todo_use { // TODO: remove it
   margin-left: .2rem;
   img {
     width: 1.25rem;
@@ -109,18 +97,5 @@
   > [class*="col-"] {
     padding-right: $grid-gutter-width / 4;
     padding-left: $grid-gutter-width / 4;
-  }
-}
-
-.tab-view {
-  background-color: transparent !important;
-
-  .ui-tabs-nav {
-    background: $themeElementTextColor;
-    width: fit-content;
-  }
-
-  .ui-tabs-panels {
-    background: $themeElementTextColor;
   }
 }

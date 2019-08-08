@@ -14,7 +14,7 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:tabView styleClass="tab-view">
+		<p:tabView styleClass="ui-tabs-transparent">
 			<p:tab title="#{msg.requests}">
 				<h:form id="requestform" >
 					<p:dataTable tableStyleClass="table-sm table-responsive" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"

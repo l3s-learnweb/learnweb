@@ -7,6 +7,12 @@ body {
     padding-top: 0;
   }
 
+  .ui-widget-danger {
+    .ui-widget-header {
+      background-color: $red;
+    }
+  }
+
   .ui-carousel.ui-carousel-light {
     border: 0;
     position: relative;
@@ -54,6 +60,18 @@ body {
 
     .ui-tree-container {
       padding: 0;
+    }
+  }
+
+  .ui-tabs.ui-tabs-transparent {
+    &,
+    .ui-tabs-nav {
+      background: none;
+    }
+
+    .ui-tabs-nav li,
+    .ui-tabs-panels {
+      background: $contentBgColor;
     }
   }
 }
