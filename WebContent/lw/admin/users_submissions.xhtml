@@ -10,60 +10,44 @@
 	<ui:param name="pageTitle" value="#{msg.user_submissions}"/>
 
     <ui:define name="sub_breadcrumb">
-        <p:menuitem value="#{msg.user_submissions}" url="admin/user_submissions.jsf" />
+        <p:menuitem value="#{msg.user_submissions}" url="admin/user_submissions.jsf"/>
     </ui:define>
 
 	<ui:define name="center_layout">
-        <p:panel header="#{msg.submissions}">
-            <h:form>
-                <p:dataTable var="user" tableStyleClass="table-sm table-responsive" paginatorPosition="bottom" value="#{submissionBean.getUsers()}" rows="50" paginator="true" rowsPerPageTemplate="50,100,500"
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-                    <p:column filterBy="#{user.username}" headerText="#{msg.username}" sortBy="#{user.username}">
-                        <p:link outcome="/lw/myhome/profile" value="#{user.username}">
-                            <f:param name="user_id" value="#{user.id}" />
-                        </p:link>
-                    </p:column>
+        <p:panel header="#{msg.submissions}" styleClass="ui-widget-content-p-0 ui-widget-no-border">
+            <p:dataTable value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-sm table-responsive"
+                         rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                <p:column sortBy="#{user.username}" filterBy="#{user.username}" headerText="#{msg.username}">
+                    <h:outputLink value="myhome/profile.jsf">
+                        <f:param name="user_id" value="#{user.id}"/>
+                        <h:outputText value="#{user.username}"/>
+                    </h:outputLink>
+                </p:column>
 
-                    <p:column sortBy="#{user.studentId}" sortable="true" filterBy="#{user.studentId}">
-                        <f:facet name="header">
-                            #{msg.student_id}
-                        </f:facet>
-                        <h:outputText value="#{user.studentId}" />
-                    </p:column>
+                <p:column sortBy="#{user.studentId}" filterBy="#{user.studentId}" headerText="#{msg.student_id}">
+                    <h:outputText value="#{user.studentId}"/>
+                </p:column>
 
-                    <p:column sortBy="#{user.email}" filterBy="#{user.email}" sortable="true">
-                        <f:facet name="header">
-                            #{msg.email_address}
-                        </f:facet>
-                        <h:outputText value="#{user.email}" />
-                    </p:column>
+                <p:column sortBy="#{user.email}" filterBy="#{user.email}" headerText="#{msg.email_address}">
+                    <h:outputText value="#{user.email}"/>
+                </p:column>
 
-                    <p:column sortBy="#{user.organisation.title}" sortable="true" filterBy="#{user.organisation.title}">
-                        <f:facet name="header">
-                            #{msg.organization}
-                        </f:facet>
-                        <h:outputText value="#{user.organisation.title}" />
-                    </p:column>
+                <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" headerText="#{msg.organization}">
+                    <h:outputText value="#{user.organisation.title}"/>
+                </p:column>
 
+                <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}" headerText="#{msg['Submission.no_of_submissions']}">
+                    <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
+                </p:column>
 
-                    <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}"  sortable="true">
-                        <f:facet name="header">
-                            #{msg['Submission.no_of_submissions']}
-                        </f:facet>
-                        <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
-                    </p:column>
-
-                    <p:column>
-                        <f:facet name="header">
-                            #{msg.links}
-                        </f:facet>
-                        <h:outputLink value="myhome/submission_overview.jsf">
-                            <f:param name="user_id" value="#{user.id}"/>
-                            #{msg['Submission.view_submissions']}
-                        </h:outputLink>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
+                <p:column headerText="#{msg.links}">
+                    <h:outputLink value="myhome/submission_overview.jsf">
+                        <f:param name="user_id" value="#{user.id}"/>
+                        <h:outputText value="#{msg['Submission.view_submissions']}"/>
+                    </h:outputLink>
+                </p:column>
+            </p:dataTable>
         </p:panel>
 	</ui:define>
 </ui:composition>

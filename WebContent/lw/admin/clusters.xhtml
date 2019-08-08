@@ -6,39 +6,37 @@
 		xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 		xmlns:p="http://primefaces.org/ui">
 
-	<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
-	<h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
+	<h:outputScript library="primefaces" target="head" name="jquery/jquery.js"/>
+	<h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js"/>
 
 	<h:form>
-		<div class="form-group">
-			<h:outputText value="#{msg.FormativeAssessment_visualiseGroups}" />
-		</div>
+		<p><h:outputText value="#{msg.FormativeAssessment_visualiseGroups}"/></p>
 
 		<div class="form-group">
-			<p:outputLabel value="#{msg.FormativeAssessment_class}" for="classCluster"/>
+			<p:outputLabel for="@next" value="#{msg.FormativeAssessment_class}"/>
 			<p:selectOneMenu id="classCluster" value="#{clusterBean.classId}">
-				<p:ajax update="group" listener="#{clusterBean.changeGroup}" />
-				<f:selectItem itemLabel="-" itemValue="" />
+				<p:ajax update="group" listener="#{clusterBean.changeGroup}"/>
+				<f:selectItem itemLabel="-" itemValue=""/>
 				<f:selectItems value="#{userAssessmentBean.courses}" var="cl21" itemLabel="#{cl21.title}" itemValue="#{cl21.id}"/>
 			</p:selectOneMenu>
 			<p:message for="@previous"/>
 		</div>
 
 		<div class="form-group">
-			<p:outputLabel for="group" value="#{msg.FormativeAssessment_selectGroup}" />
+			<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectGroup}"/>
 			<p:selectOneMenu id="group" value="#{clusterBean.groupId}">
-				<f:selectItem itemLabel="#{msg.FormativeAssessment_allGroups}" itemValue="0" />
-				<f:selectItems value="#{clusterBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
+				<f:selectItem itemLabel="#{msg.FormativeAssessment_allGroups}" itemValue="0"/>
+				<f:selectItems value="#{clusterBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}"/>
 			</p:selectOneMenu>
 			<p:message for="@previous"/>
 		</div>
 
 		<div class="form-group">
-			<p:outputLabel value="#{msg.FormativeAssessment_numCl}" for="nCl"/>
+			<p:outputLabel for="@next" value="#{msg.FormativeAssessment_numCl}"/>
 			<p:selectOneRadio id="nCl" value="#{clusterBean.numCluster}">
-				<f:selectItem itemLabel="3" itemValue="3" />
-				<f:selectItem itemLabel="4" itemValue="4" />
-				<f:selectItem itemLabel="5" itemValue="5" />
+				<f:selectItem itemLabel="3" itemValue="3"/>
+				<f:selectItem itemLabel="4" itemValue="4"/>
+				<f:selectItem itemLabel="5" itemValue="5"/>
 			</p:selectOneRadio>
 			<p:message for="@previous"/>
 		</div>
@@ -50,13 +48,13 @@
 			<!-- <p:chart type="bubble" model="{clusterBean.bubbleModel}" rendered="{clusterBean.showBubble}" style="height:650px;width:1500px"/> -->
 
 			<svg class="bubble" height="650" width="1500">
-			<c:forEach items="#{clusterBean.listData}" var="user">
-				<g transform="translate(#{user.cx},#{user.cy})" class="node">
-					<title>#{user.info}</title>
-					<circle r="#{user.radius}" fill="#{user.color}"></circle>
-					<text style="text-anchor: middle; font: 15px sans-serif;" dy=".3em">#{user.nome}</text>
-				</g>
-			</c:forEach>
+				<c:forEach items="#{clusterBean.listData}" var="user">
+					<g transform="translate(#{user.cx},#{user.cy})" class="node">
+						<title>#{user.info}</title>
+						<circle r="#{user.radius}" fill="#{user.color}"></circle>
+						<text style="text-anchor: middle; font: 15px sans-serif;" dy=".3em">#{user.nome}</text>
+					</g>
+				</c:forEach>
 			</svg>
 		</p:dialog>
 	</h:form>
