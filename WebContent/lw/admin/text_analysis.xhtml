@@ -1,10 +1,8 @@
-<ui:composition
-        template="/WEB-INF/templates/layout/template.xhtml"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.text_analysis}"/>
@@ -14,31 +12,26 @@
     </ui:define>
 
     <ui:define name="center_layout">
-        <h:form id="anlyse_form">
-            <p:panel id="output1" header="#{msg.select_users}">
+        <p:panel header="#{msg.select_users}">
+            <h:form id="anlyse_form">
                 <ui:include src="/templates/user/user_select_form.xhtml"/>
 
-                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}"
-                                     value="#{msg.selected_users_comments}"
-                                     process="@form" update=":growl output1"/>
+                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
+                                 update=":growl anlyse_form"/>
 
-                <div class="my-3">
-                    <p:outputLabel value="#{adminTextAnalysisBean.commentCount} comments from #{adminTextAnalysisBean.selectedUsers.size()} total selected users"/>
-                    <div>
-                        <p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}" />
-                    </div>
-                </div>
+                <p class="my-3"><p:outputLabel value="#{adminTextAnalysisBean.commentCount} comments from #{adminTextAnalysisBean.selectedUsers.size()} total selected users"/></p>
 
                 <p:dataTable var="comment" value="#{adminTextAnalysisBean.comments}">
-                    <p:column headerText="#{msg.comments}">
-                        <h:outputText value="#{comment.text}" />
+                    <p:column>
+                        <f:facet name="header">
+                            <span class="float-left">#{msg.comments}</span>
+                            <span class="float-right"><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></span>
+                        </f:facet>
+
+                        <h:outputText value="#{comment.text}"/>
                     </p:column>
                 </p:dataTable>
-            </p:panel>
-
-            <h:panelGroup id="output" styleClass="d-none">
-                <p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}"></p:panel>
-            </h:panelGroup>
-        </h:form>
+            </h:form>
+        </p:panel>
     </ui:define>
 </ui:composition>
