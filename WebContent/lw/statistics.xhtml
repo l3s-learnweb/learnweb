@@ -14,7 +14,7 @@
 	<ui:define name="center_layout">
         <p:panel header="#{msg.general_statistics}">
             <div class="ui-datatable ui-widget">
-                <table role="grid" >
+                <table role="grid" class="table-sm table-responsive">
                     <thead>
                         <tr role="row">
                             <th class="ui-state-default" role="columnheader">
@@ -101,7 +101,7 @@
         </p:panel>
 
         <p:panel styleClass="mt-3" header="#{msg.active_users_per_month}">
-            <p:dataTable var="month" value="#{statisticsBean.activeUsersPerMonth}" >
+            <p:dataTable tableStyleClass="table-sm table-responsive" var="month" value="#{statisticsBean.activeUsersPerMonth}" >
                 <p:column headerText="#{msg.month}">
                     <h:outputText value="#{month.key}" />
                 </p:column>
@@ -113,7 +113,7 @@
         </p:panel>
 
         <p:panel styleClass="mt-3" header="#{msg.resource_count_per_source}" footer="#{msg.resources_created_by_crawlers}">
-            <p:dataTable  var="row" value="#{statisticsBean.resourcesPerSource}">
+            <p:dataTable tableStyleClass="table-sm table-responsive" var="row" value="#{statisticsBean.resourcesPerSource}">
                 <p:column headerText="#{msg.source}">
                     <h:outputText value="#{row.key}"/>
                 </p:column>

@@ -8,17 +8,15 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
+
 	<ui:define name="sub_breadcrumb">
 		<p:menuitem value="#{msg.discussion_activity}" url="admin/group_discussion_activity.jsf"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-
-
-
+		<p:panel>
 			<p:dataTable var="entry" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
+						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
 					<h:outputText value="#{entry.name}" />
 				</p:column>
@@ -38,8 +36,7 @@
 				<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
 					<h:outputText value="#{entry.time}"/>
 				</p:column>
-
 			</p:dataTable>
-
+		</p:panel>
 	</ui:define>
 </ui:composition>
