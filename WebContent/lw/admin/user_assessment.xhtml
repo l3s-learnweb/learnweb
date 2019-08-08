@@ -17,9 +17,7 @@
 		<p:tabView cache="true" styleClass="ui-tabs-transparent">
 			<p:tab title="#{msg.FormativeAssessment_coursePersp}">
 				<h:form id="form1">
-					<div class="form-group">
-						<h:outputText value="#{msg.FormativeAssessment_compClasses}" />
-					</div>
+					<p><h:outputText value="#{msg.FormativeAssessment_compClasses}" /></p>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectClass1}"/>
@@ -31,7 +29,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="selectCourse21" value="#{msg.FormativeAssessment_selectClass2}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectClass2}" />
 						<p:selectOneMenu id="selectCourse21" value="#{userAssessmentBean.selectCourse21}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItems value="#{userAssessmentBean.courses}" var="c21" itemLabel="#{c21.title}" itemValue="#{c21.id}"/>
@@ -40,7 +38,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="graph2" value="#{msg.FormativeAssessment_chartType}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_chartType}" />
 						<p:selectOneMenu id="graph2" value="#{userAssessmentBean.selectChart2}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
@@ -51,7 +49,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="phase2" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_learnWebPhase}" />
 						<p:selectOneMenu id="phase2" value="#{userAssessmentBean.phaseLW}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
@@ -75,21 +73,20 @@
 
 					<p:dialog id="dia11" modal="true" resizable="true" widgetVar="dlg11" header="#{msg.FormativeAssessment_feedback}" showEffect="clip">
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_title}:" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_title}:" />
 							<p:inputText id="op11" value="#{userAssessmentBean.title}"/>
 							<p:message for="@previous"/>
 						</div>
 
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_message}:" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_message}:" />
 							<p:inputTextarea rows="5" cols="30" counter="displayFeedback1" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
-							<h:outputText value="" />
 							<h:outputText id="displayFeedback1" />
 							<p:message for="@previous"/>
 						</div>
 
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_class}" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_class}" />
 							<p:selectOneMenu id="op13" value="#{userAssessmentBean.classFeedback}">
 								<p:ajax update="param" listener="#{userAssessmentBean.selectListUserClass}" />
 								<f:selectItem itemLabel="-" itemValue="" />
@@ -107,12 +104,10 @@
 			
 			<p:tab title="#{msg.FormativeAssessment_classPersp}">
 				<h:form id="form2">
-					<div class="form-group">
-						<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_compGroups}" />
-					</div>
+					<p><h:outputText for="selectCourse1" value="#{msg.FormativeAssessment_compGroups}"/></p>
 
 					<div class="form-group">
-						<p:outputLabel for="selectCourse1" value="#{msg.FormativeAssessment_class}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_class}" />
 						<p:selectOneMenu id="selectCourse1" value="#{userAssessmentBean.selectCourse1}">
 							<p:ajax update="selectGroup,selectGroup1" listener="#{userAssessmentBean.changeGroup}" />
 							<f:selectItem itemLabel="-" itemValue="" />
@@ -122,7 +117,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="selectGroup" value="#{msg.FormativeAssessment_selectGroup1}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectGroup1}" />
 						<p:selectOneMenu id="selectGroup" value="#{userAssessmentBean.selectedGroup1}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
@@ -131,7 +126,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="selectGroup1" value="#{msg.FormativeAssessment_selectGroup2}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectGroup2}" />
 						<p:selectOneMenu id="selectGroup1" value="#{userAssessmentBean.selectedGroup2}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItems value="#{userAssessmentBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
@@ -140,7 +135,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="graph1" value="#{msg.FormativeAssessment_chartType}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_chartType}" />
 						<p:selectOneMenu id="graph1" value="#{userAssessmentBean.selectChart1}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
@@ -151,7 +146,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="phase1" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_learnWebPhase}" />
 						<p:selectOneMenu id="phase1" value="#{userAssessmentBean.phaseLW0}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
@@ -175,21 +170,20 @@
 
 					<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="#{msg.FormativeAssessment_feedback}" showEffect="clip" hideEffect="clip">
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_title}:" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_title}:" />
 							<p:inputText id="op21" value="#{userAssessmentBean.title}" />
 							<p:message for="@previous"/>
 						</div>
 
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_message}:" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_message}:" />
 							<p:inputTextarea rows="5" cols="30" counter="displayFeedback2" maxlength="300" counterTemplate="#{msg.FormativeAssessment_messageText}" autoResize="false" value="#{userAssessmentBean.message}"/>
-							<h:outputText value="" />
 							<h:outputText id="displayFeedback2" />
 							<p:message for="@previous"/>
 						</div>
 
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_selectGroup}" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectGroup}" />
 							<p:selectOneMenu id="op23" value="#{userAssessmentBean.groupFeedback}">
 								<p:ajax update="param2" listener="#{userAssessmentBean.selectListUserGroup}" />
 								<f:selectItem itemLabel="-" itemValue="" />
@@ -207,12 +201,10 @@
 			
 			<p:tab title="#{msg.FormativeAssessment_courseStd}">
 				<h:form id="form3">
-					<div class="form-group">
-						<p:outputLabel value="#{msg.FormativeAssessment_details}" />
-					</div>
+					<p><h:outputText value="#{msg.FormativeAssessment_details}"/></p>
 
 					<div class="form-group">
-						<p:outputLabel for="selectCourse3" value="#{msg.FormativeAssessment_class}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_class}" />
 						<p:selectOneMenu id="selectCourse3" value="#{userAssessmentBean.selectCourse3}">
 							<p:ajax update="selectUser3" listener="#{userAssessmentBean.changeCourse}" />
 							<f:selectItem itemLabel="-" itemValue="" />
@@ -222,7 +214,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="selectUser3" value="#{msg.FormativeAssessment_selectStudent}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectStudent}" />
 						<p:selectOneMenu id="selectUser3" value="#{userAssessmentBean.selectedUser}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItems value="#{userAssessmentBean.users}" var="u3" itemLabel="#{u3.username}" itemValue="#{u3.id}" />
@@ -231,7 +223,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="graph3" value="#{msg.FormativeAssessment_chartType}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_chartType}" />
 						<p:selectOneMenu id="graph3" value="#{userAssessmentBean.selectChart3}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_chart1}" itemValue="bar" />
@@ -242,7 +234,7 @@
 					</div>
 
 					<div class="form-group">
-						<p:outputLabel for="phase3" value="#{msg.FormativeAssessment_learnWebPhase}" />
+						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_learnWebPhase}" />
 						<p:selectOneMenu id="phase3" value="#{userAssessmentBean.phaseLW2}">
 							<f:selectItem itemLabel="-" itemValue="" />
 							<f:selectItem itemLabel="#{msg.FormativeAssessment_phase1}" itemValue="Search and exploration" />
@@ -259,7 +251,7 @@
 					   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; text-align:center"/>
 					   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
 					   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
-
+<!--                        TODO: Remove `br` tags and inline styles-->
 					   <br /><br />
 					   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px;text-align:center;">
 						   <p:column headerText="#{msg.FormativeAssessment_mA}">
@@ -275,15 +267,14 @@
 
 					<p:dialog id="dia31" modal="true" resizable="true" widgetVar="dlg31" header="#{msg.FormativeAssessment_feedback}" showEffect="clip" hideEffect="clip">
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_title}" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_title}" />
 							<p:inputText id="op31" value="#{userAssessmentBean.title}" />
 							<p:message for="@previous"/>
 						</div>
 
 						<div class="form-group">
-							<p:outputLabel value="#{msg.FormativeAssessment_message}" />
+							<p:outputLabel for="@next" value="#{msg.FormativeAssessment_message}" />
 							<p:inputTextarea rows="5" cols="30" counter="displayFeedback3" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
-							<h:outputText value="" />
 							<h:outputText id="displayFeedback3" />
 							<p:message for="@previous"/>
 						</div>
