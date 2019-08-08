@@ -135,13 +135,13 @@
                 <div class="text-right">
                     <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{groupsBean.canDeleteGroup(group)}">
                         <f:param name="group_id" value="#{group.id}"/>
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
                     </h:outputLink>
 
                     <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
                                    update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <i class="fa fa-sign-out text-danger" aria-hidden="true"></i>
                         <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
                     </p:commandLink>
                 </div>
@@ -199,13 +199,13 @@
                     <div class="text-right">
                         <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{userBean.moderator}">
                             <f:param name="group_id" value="#{group.id}"/>
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
                         </h:outputLink>
 
                         <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
                                        process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                            <i class="fa fa-sign-in text-success" aria-hidden="true"></i>
                         </p:commandLink>
                     </div>
                 </p:column>

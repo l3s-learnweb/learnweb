@@ -91,7 +91,7 @@
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
 								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
-								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<i class="fa fa-pencil text-warning" aria-hidden="true"></i>
 								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupLinksBean.groupId}" />
 							</p:commandLink> 
@@ -101,7 +101,7 @@
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
 								rendered="${(userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
-								<i class="fa fa-trash" aria-hidden="true"></i>
+								<i class="fa fa-trash text-danger" aria-hidden="true"></i>
 							</p:commandLink>
 						</p:column>
 					</p:dataList>
@@ -122,7 +122,7 @@
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink" 
 								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isMember(userBean.user))}">
-								<i class="fa fa-pencil" aria-hidden="true"></i>
+								<i class="fa fa-pencil text-warning" aria-hidden="true"></i>
 								<f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupLinksBean.groupId}" />
 							</p:commandLink>
@@ -132,7 +132,7 @@
 								onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
 								rendered="${link.id != -1 and (userBean.moderator || groupLinksBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupLinksBean.group.id}"/>
-								<i class="fa fa-trash" aria-hidden="true"></i>
+								<i class="fa fa-trash text-danger" aria-hidden="true"></i>
 							</p:commandLink>
 						</p:column>
 					</p:dataList>

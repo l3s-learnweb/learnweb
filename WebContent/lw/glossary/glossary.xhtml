@@ -52,12 +52,12 @@
 							<div class="text-right">
 								<p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" styleClass="mr-2" process="@this">
 									<!--								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl" />-->
-									<i class="fa fa-trash" aria-hidden="true" update=":growl"></i>
+									<i class="fa fa-trash text-danger" aria-hidden="true" update=":growl"></i>
 									<p:confirm message="#{msg.delete_entry_confirm_message}" />
 								</p:commandLink>
 
 								<p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add">
-									<i class="fa fa-pencil" aria-hidden="true"></i>
+									<i class="fa fa-pencil text-warning" aria-hidden="true"></i>
 								</p:commandLink>
 							</div>
 						</p:column>
@@ -282,7 +282,7 @@
 							<p:column width="20" rendered="#{not term.deleted}">
 								<p:commandLink id="delete_term" actionListener="#{glossaryBean.deleteTerm(term)}" update=":glossgrowl :lang_terms :growl">
 									<f:ajax execute="@this lang_terms" />
-									<i class="fa fa-trash" aria-hidden="true"></i>
+									<i class="fa fa-trash text-danger" aria-hidden="true"></i>
 								</p:commandLink>
 								<p:tooltip for="delete_term" value="#{msg['Glossary.remove_row']}" position="bottom" />
 							</p:column>

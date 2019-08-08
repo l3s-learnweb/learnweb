@@ -174,12 +174,12 @@
 												<h:outputText value="+#{result.resource.thumbUp}" />
 												<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl">
 													<f:param name="resource_id" value="#{result.resource.id}" />
-													<i class="fa fa-thumbs-up" aria-hidden="true"></i>
+													<i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
 												</p:commandLink>
 				
 												<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl">
 													<f:param name="resource_id" value="#{result.resource.id}" />
-													<i class="fa fa-thumbs-down" aria-hidden="true"></i>
+													<i class="fa fa-thumbs-down text-danger" aria-hidden="true"></i>
 												</p:commandLink>
 												<h:outputText value="-#{result.resource.thumbDown}" />
 											</h:panelGrid>

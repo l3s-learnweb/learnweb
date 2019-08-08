@@ -79,12 +79,12 @@
                                                 <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
                                                                 process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
                                                     <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                    <i class="fa fa-lock text-dark" aria-hidden="true"></i>
                                                 </p:commandLink>
                                                 <p:commandLink  title="lock submission" rendered="#{not userSubmission.submitStatus}"
                                                                 process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
                                                     <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-                                                    <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                    <i class="fa fa-unlock text-dark" aria-hidden="true"></i>
                                                 </p:commandLink>
                                             </h:form>
                                         </div>

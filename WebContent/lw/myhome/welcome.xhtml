@@ -27,7 +27,7 @@
             #{msg.welcome}
             <ui:fragment rendered="#{userBean.moderator}">
                 <h:link outcome="/lw/admin/organisation.jsf">
-                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
                 </h:link>
             </ui:fragment>
         </f:facet>
@@ -52,7 +52,7 @@
                 <h:outputText value="#{course.title}"/>
                 <h:panelGroup rendered="#{userBean.moderator}">
                     <h:link outcome="/lw/admin/course.jsf?course_id=#{course.id}">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
                     </h:link>
                 </h:panelGroup>
             </f:facet>
