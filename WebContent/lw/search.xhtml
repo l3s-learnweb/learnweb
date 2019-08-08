@@ -24,33 +24,28 @@
     <h:outputStylesheet library="lightbox" name="lightbox.css"/>
     <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
     <div class="section-search">
-    <div id="sub_menu_bar">
-        <h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-            #{msg.back_to}
-            <i>#{userBean.user.activeGroup.title}</i>
-            <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
-        </h:outputLink>
+    <p:outputPanel id="sub_menu_bar" styleClass="py-1 bg-white border">
+        <h:form styleClass="d-flex">
+                <h:outputLink value="group/overview.jsf" id="backtogroup"  styleClass="align-self-stretch fa fa-angle-left border-right px-sm-1 custom-underline" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+                    #{msg.back_to}
+                    <i>#{userBean.user.activeGroup.title}</i>
+                    <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
+                </h:outputLink>
+                <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 #{searchBean.searchMode == 'text' ? 'disabled text-uppercase' : 'custom-underline'}">
+                    <f:param name="action" value="text"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
+                <h:link value="#{msg.Images}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1  #{searchBean.searchMode == 'image' ? 'disabled text-uppercase' : 'custom-underline'}">
+                    <f:param name="action" value="image"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
 
-        <h:form styleClass="links">
-            <h:outputText value="Web" styleClass="activeResource" rendered="#{searchBean.searchMode == 'text'}"/>
-            <h:link value="Web" outcome="search" rendered="#{searchBean.searchMode != 'text'}">
-                <f:param name="action" value="text"/>
-                <f:param name="query" value="#{searchBean.query}"/>
-            </h:link>
-
-            <h:outputText value="#{msg.Images}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'image'}"/>
-            <h:link value="#{msg.Images}" outcome="search" rendered="#{searchBean.searchMode != 'image'}">
-                <f:param name="action" value="image"/>
-                <f:param name="query" value="#{searchBean.query}"/>
-            </h:link>
-
-            <h:outputText value="#{msg.Videos}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'video'}"/>
-            <h:link value="#{msg.Videos}" outcome="search" rendered="#{searchBean.searchMode != 'video'}">
-                <f:param name="action" value="video"/>
-                <f:param name="query" value="#{searchBean.query}"/>
-            </h:link>
+                <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 #{searchBean.searchMode == 'video' ? 'disabled text-uppercase' : 'custom-underline'}">
+                    <f:param name="action" value="video"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+                </h:link>
         </h:form>
-    </div>
+    </p:outputPanel>
 
     <h:panelGroup  layout="block">
         <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
