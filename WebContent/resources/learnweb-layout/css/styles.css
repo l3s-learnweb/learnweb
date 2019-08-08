@@ -5236,7 +5236,7 @@ button.bg-dark:focus {
   text-align: left !important;
 }
 
-.text-right {
+.text-right, td.td-text-right {
   text-align: right !important;
 }
 
@@ -10834,13 +10834,6 @@ body,
 
 body .ui-widget.ui-widget-content-p-0 > .ui-widget-content {
   padding: 0;
-}
-body .ui-widget.ui-widget-no-border {
-  border: 0;
-}
-body .ui-widget.ui-widget-no-border > .ui-widget-header {
-  border: 1px solid #ced4da;
-  border-bottom: 0;
 }
 body .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
   padding-top: 0;
