@@ -9774,6 +9774,17 @@ body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   text-decoration: none;
   top: 0.25rem;
 }
+body .ui-datatable .ui-datatable-footer,
+body .ui-datatable .ui-datatable-header {
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+}
+body .ui-datatable .ui-datatable-header {
+  border-bottom: 0;
+}
+body .ui-datatable .ui-datatable-footer {
+  border-top: 0;
+}
 
 @font-face {
   font-family: "Learnweb";

@@ -14,30 +14,22 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.myTags}">
-			<h:form prependId="false">
-				<p:dataTable var="tag" value="#{userBean.user.tags}" id="tag_table" tableStyleClass="table-sm table-responsive">
-					<p:column>
-						<f:facet name="header">
-							#{msg.tags}
-						</f:facet>
-						<h:outputText value="#{tag.name}" />
-					</p:column>
+		<p:dataTable var="tag" value="#{userBean.user.tags}" tableStyleClass="table-sm table-responsive">
+			<f:facet name="header">#{msg.myTags}</f:facet>
 
-					<p:column>
-						<f:facet name="header">
-							#{msg.resource}
-						</f:facet>
-						<p:repeat var="res" value="#{tag.resources}">
-								<h:outputLink value="myhome/resources.jsf">
-									<f:param name="resource_id" value="#{res.id}" />
-									<f:param name="group_id" value="#{res.groupId}" />
-									<h:outputText value="#{res.title}" escape="false" />
-								</h:outputLink>
-						</p:repeat>
-					</p:column>
-				</p:dataTable>
-			</h:form>
-		</p:panel>
+			<p:column headerText="#{msg.tags}">
+				<h:outputText value="#{tag.name}" />
+			</p:column>
+
+			<p:column headerText="#{msg.resource}">
+				<p:repeat var="res" value="#{tag.resources}">
+					<h:outputLink value="myhome/resources.jsf" styleClass="mr-1">
+						<f:param name="resource_id" value="#{res.id}" />
+						<f:param name="group_id" value="#{res.groupId}" />
+						<h:outputText value="#{res.title}" escape="false" />
+					</h:outputLink>
+				</p:repeat>
+			</p:column>
+		</p:dataTable>
 	</ui:define>
 </ui:composition>

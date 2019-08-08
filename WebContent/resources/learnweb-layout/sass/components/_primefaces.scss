@@ -3,15 +3,6 @@ body {
     padding: 0;
   }
 
-  .ui-widget.ui-widget-no-border {
-    border: 0;
-
-    > .ui-widget-header {
-      border: 1px solid $contentBorderColor;
-      border-bottom: 0;
-    }
-  }
-
   .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
     padding-top: 0;
   }

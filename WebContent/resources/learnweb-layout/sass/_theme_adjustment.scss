@@ -14,4 +14,20 @@ body {
       }
     }
   }
+
+  .ui-datatable {
+    .ui-datatable-footer,
+    .ui-datatable-header {
+      font-size: 1rem;
+      border: 1px solid $contentBorderColor;
+    }
+
+    .ui-datatable-header {
+      border-bottom: 0;
+    }
+
+    .ui-datatable-footer {
+      border-top: 0;
+    }
+  }
 }

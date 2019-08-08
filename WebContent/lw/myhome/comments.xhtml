@@ -5,8 +5,8 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 	
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}" />
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}"/>
 	<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>
 
 	<ui:define name="sub_breadcrumb">
@@ -14,37 +14,26 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.myCommentsTitle}">
-			<h:form prependId="false">
-				<p:dataTable var="comment" value="#{userBean.user.comments}" id="comment_table" tableStyleClass="table-sm table-responsive">
-					<p:column>
-						<f:facet name="header">
-							#{msg.comment}
-						</f:facet>
-						<h:outputText value="#{comment.text}" />
-					</p:column>
+		<p:dataTable var="comment" value="#{userBean.user.comments}" tableStyleClass="table-sm table-responsive">
+			<f:facet name="header">#{msg.myCommentsTitle}</f:facet>
 
-					<p:column>
-						<f:facet name="header">
-							#{msg.resource}
-						</f:facet>
-						<h:outputLink value="myhome/resources.jsf">
-							<f:param name="resource_id" value="#{comment.resource.id}" />
-							<f:param name="group_id" value="#{comment.resource.groupId}" />
-							<h:outputText value="#{comment.resource.title}" escape="false" />
-						</h:outputLink>
-					</p:column>
+			<p:column headerText="#{msg.comment}">
+				<h:outputText value="#{comment.text}"/>
+			</p:column>
 
-					<p:column>
-						<f:facet name="header">
-							#{msg.date}
-						</f:facet>
-						<h:outputText value="#{comment.date}" >
-							<f:convertDateTime dateStyle="default" type="both" />
-						</h:outputText>
-					</p:column>
-				</p:dataTable>
-			</h:form>
-		</p:panel>
+			<p:column headerText="#{msg.resource}">
+				<h:outputLink value="myhome/resources.jsf">
+					<f:param name="resource_id" value="#{comment.resource.id}"/>
+					<f:param name="group_id" value="#{comment.resource.groupId}"/>
+					<h:outputText value="#{comment.resource.title}" escape="false"/>
+				</h:outputLink>
+			</p:column>
+
+			<p:column headerText="#{msg.date}">
+				<h:outputText value="#{comment.date}" >
+					<f:convertDateTime dateStyle="default" type="both"/>
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
 	</ui:define>
 </ui:composition>

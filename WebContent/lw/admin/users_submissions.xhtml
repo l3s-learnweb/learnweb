@@ -14,40 +14,40 @@
     </ui:define>
 
 	<ui:define name="center_layout">
-        <p:panel header="#{msg.submissions}" styleClass="ui-widget-content-p-0 ui-widget-no-border">
-            <p:dataTable value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-sm table-responsive"
-                         rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-                <p:column sortBy="#{user.username}" filterBy="#{user.username}" headerText="#{msg.username}">
-                    <h:outputLink value="myhome/profile.jsf">
-                        <f:param name="user_id" value="#{user.id}"/>
-                        <h:outputText value="#{user.username}"/>
-                    </h:outputLink>
-                </p:column>
+        <p:dataTable value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-sm table-responsive"
+                     rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">#{msg.submissions}</f:facet>
 
-                <p:column sortBy="#{user.studentId}" filterBy="#{user.studentId}" headerText="#{msg.student_id}">
-                    <h:outputText value="#{user.studentId}"/>
-                </p:column>
+            <p:column sortBy="#{user.username}" filterBy="#{user.username}" headerText="#{msg.username}">
+                <h:outputLink value="myhome/profile.jsf">
+                    <f:param name="user_id" value="#{user.id}"/>
+                    <h:outputText value="#{user.username}"/>
+                </h:outputLink>
+            </p:column>
 
-                <p:column sortBy="#{user.email}" filterBy="#{user.email}" headerText="#{msg.email_address}">
-                    <h:outputText value="#{user.email}"/>
-                </p:column>
+            <p:column sortBy="#{user.studentId}" filterBy="#{user.studentId}" headerText="#{msg.student_id}">
+                <h:outputText value="#{user.studentId}"/>
+            </p:column>
 
-                <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" headerText="#{msg.organization}">
-                    <h:outputText value="#{user.organisation.title}"/>
-                </p:column>
+            <p:column sortBy="#{user.email}" filterBy="#{user.email}" headerText="#{msg.email_address}">
+                <h:outputText value="#{user.email}"/>
+            </p:column>
 
-                <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}" headerText="#{msg['Submission.no_of_submissions']}">
-                    <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
-                </p:column>
+            <p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}" headerText="#{msg.organization}">
+                <h:outputText value="#{user.organisation.title}"/>
+            </p:column>
 
-                <p:column headerText="#{msg.links}">
-                    <h:outputLink value="myhome/submission_overview.jsf">
-                        <f:param name="user_id" value="#{user.id}"/>
-                        <h:outputText value="#{msg['Submission.view_submissions']}"/>
-                    </h:outputLink>
-                </p:column>
-            </p:dataTable>
-        </p:panel>
+            <p:column sortBy="${submissionBean.getNumberOfSubmissions(user.id)}" headerText="#{msg['Submission.no_of_submissions']}">
+                <h:outputText value="${submissionBean.getNumberOfSubmissions(user.id)}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.links}">
+                <h:outputLink value="myhome/submission_overview.jsf">
+                    <f:param name="user_id" value="#{user.id}"/>
+                    <h:outputText value="#{msg['Submission.view_submissions']}"/>
+                </h:outputLink>
+            </p:column>
+        </p:dataTable>
 	</ui:define>
 </ui:composition>
