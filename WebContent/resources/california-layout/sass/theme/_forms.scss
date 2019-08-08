@@ -96,7 +96,7 @@ body {
 
         &.alt-btn {
             background-color: $primaryAltButtonBgColor;
-            border: 2px solid $primaryAltButtonBgColor;
+            border: 1px solid $primaryAltButtonBgColor;
 
             &.ui-state-hover, &.ui-state-focus {
                 background-color: $primaryAltButtonHoverBgColor;
@@ -111,7 +111,7 @@ body {
 
         &.secondary-btn {
             background-color: $secondaryButtonBgColor;
-            border: 2px solid $secondaryButtonBgColor;
+            border: 1px solid $secondaryButtonBgColor;
 
             &.ui-state-hover, &.ui-state-focus {
                 background-color: $secondaryButtonHoverBgColor;
@@ -126,7 +126,7 @@ body {
 
         &.outline-btn {
             background-color: $outlineButtonBgColor;
-            border: 2px solid $outlineButtonBorderColor;
+            border: 1px solid $outlineButtonBorderColor;
             color: $outlineButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -144,7 +144,7 @@ body {
 
         &.blue-btn {
             background-color: $blueButtonBgColor;
-            border: 2px solid $blueButtonBgColor;
+            border: 1px solid $blueButtonBgColor;
             color: $blueButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -160,7 +160,7 @@ body {
 
         &.cyan-btn {
             background-color: $cyanButtonBgColor;
-            border: 2px solid $cyanButtonBgColor;
+            border: 1px solid $cyanButtonBgColor;
             color: $cyanButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -176,7 +176,7 @@ body {
 
         &.green-btn {
             background-color: $greenButtonBgColor;
-            border: 2px solid $greenButtonBgColor;
+            border: 1px solid $greenButtonBgColor;
             color: $greenButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -192,7 +192,7 @@ body {
 
         &.yellow-btn {
           background-color: $yellowButtonBgColor;
-          border: 2px solid $yellowButtonBgColor;
+          border: 1px solid $yellowButtonBgColor;
           color: $yellowButtonTextColor;
 
           &.ui-state-hover, &.ui-state-focus {
@@ -208,7 +208,7 @@ body {
 
         &.purple-btn {
             background-color: $purpleButtonBgColor;
-            border: 2px solid $purpleButtonBgColor;
+            border: 1px solid $purpleButtonBgColor;
             color: $purpleButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -224,7 +224,7 @@ body {
 
         &.pink-btn {
             background-color: $pinkButtonBgColor;
-            border: 2px solid $pinkButtonBgColor;
+            border: 1px solid $pinkButtonBgColor;
             color: $pinkButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -240,7 +240,7 @@ body {
 
         &.bluegrey-btn {
             background-color: $bluegreyButtonBgColor;
-            border: 2px solid $bluegreyButtonBgColor;
+            border: 1px solid $bluegreyButtonBgColor;
             color: $bluegreyButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -256,7 +256,7 @@ body {
 
         &.teal-btn {
             background-color: $tealButtonBgColor;
-            border: 2px solid $tealButtonBgColor;
+            border: 1px solid $tealButtonBgColor;
             color: $tealButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -272,7 +272,7 @@ body {
 
         &.orange-btn {
             background-color: $orangeButtonBgColor;
-            border: 2px solid $orangeButtonBgColor;
+            border: 1px solid $orangeButtonBgColor;
             color: $orangeButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -288,7 +288,7 @@ body {
 
         &.grey-btn {
             background-color: $greyButtonBgColor;
-            border: 2px solid $greyButtonBgColor;
+            border: 1px solid $greyButtonBgColor;
             color: $greyButtonTextColor;
 
             &.ui-state-hover, &.ui-state-focus {
@@ -1014,21 +1014,21 @@ body {
     .ui-selectbooleanbutton {
         background-color: $primaryButtonBgColor;
         color: $primaryButtonTextColor;
-        border: 2px solid $primaryButtonBgColor;
+        border: 1px solid $primaryButtonBgColor;
 
         &.ui-state-hover {
             background-color: $primaryButtonHoverBgColor;
-            border: 2px solid $primaryButtonHoverBgColor;
+            border: 1px solid $primaryButtonHoverBgColor;
         }
 
         &.ui-state-active {
             background-color: $primaryButtonActiveBgColor;
             color: $primaryButtonTextColor;
-            border: 2px solid $primaryButtonActiveBgColor;
+            border: 1px solid $primaryButtonActiveBgColor;
 
             &.ui-state-focus {
                 background-color: $primaryButtonHoverBgColor;
-                border: 2px solid $primaryButtonHoverBgColor;
+                border: 1px solid $primaryButtonHoverBgColor;
             }
         }
     }

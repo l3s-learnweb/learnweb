@@ -6114,7 +6114,7 @@ body .ui-button .ui-icon.ui-icon-triangle-1-s {
 }
 body .ui-button.alt-btn {
   background-color: #F9C642;
-  border: 2px solid #F9C642;
+  border: 1px solid #F9C642;
 }
 body .ui-button.alt-btn.ui-state-hover, body .ui-button.alt-btn.ui-state-focus {
   background-color: #FDB81E;
@@ -6126,7 +6126,7 @@ body .ui-button.alt-btn.ui-state-active {
 }
 body .ui-button.secondary-btn {
   background-color: #6c757d;
-  border: 2px solid #6c757d;
+  border: 1px solid #6c757d;
 }
 body .ui-button.secondary-btn.ui-state-hover, body .ui-button.secondary-btn.ui-state-focus {
   background-color: #343a40;
@@ -6138,7 +6138,7 @@ body .ui-button.secondary-btn.ui-state-active {
 }
 body .ui-button.outline-btn {
   background-color: transparent;
-  border: 2px solid #4b6cb7;
+  border: 1px solid #4b6cb7;
   color: #4b6cb7;
 }
 body .ui-button.outline-btn.ui-state-hover, body .ui-button.outline-btn.ui-state-focus {
@@ -6153,7 +6153,7 @@ body .ui-button.outline-btn.ui-state-active {
 }
 body .ui-button.blue-btn {
   background-color: #0071bc;
-  border: 2px solid #0071bc;
+  border: 1px solid #0071bc;
   color: #fff;
 }
 body .ui-button.blue-btn.ui-state-hover, body .ui-button.blue-btn.ui-state-focus {
@@ -6166,7 +6166,7 @@ body .ui-button.blue-btn.ui-state-active {
 }
 body .ui-button.cyan-btn {
   background-color: #00bfe7;
-  border: 2px solid #00bfe7;
+  border: 1px solid #00bfe7;
   color: #fff;
 }
 body .ui-button.cyan-btn.ui-state-hover, body .ui-button.cyan-btn.ui-state-focus {
@@ -6179,7 +6179,7 @@ body .ui-button.cyan-btn.ui-state-active, body .ui-button.cyan-btn.ui-state-focu
 }
 body .ui-button.green-btn {
   background-color: #4aa564;
-  border: 2px solid #4aa564;
+  border: 1px solid #4aa564;
   color: #fff;
 }
 body .ui-button.green-btn.ui-state-hover, body .ui-button.green-btn.ui-state-focus {
@@ -6192,7 +6192,7 @@ body .ui-button.green-btn.ui-state-active {
 }
 body .ui-button.yellow-btn {
   background-color: #F9C642;
-  border: 2px solid #F9C642;
+  border: 1px solid #F9C642;
   color: #fff;
 }
 body .ui-button.yellow-btn.ui-state-hover, body .ui-button.yellow-btn.ui-state-focus {
@@ -6205,7 +6205,7 @@ body .ui-button.yellow-btn.ui-state-active {
 }
 body .ui-button.purple-btn {
   background-color: #6A4AA5;
-  border: 2px solid #6A4AA5;
+  border: 1px solid #6A4AA5;
   color: #fff;
 }
 body .ui-button.purple-btn.ui-state-hover, body .ui-button.purple-btn.ui-state-focus {
@@ -6218,7 +6218,7 @@ body .ui-button.purple-btn.ui-state-active {
 }
 body .ui-button.pink-btn {
   background-color: #9f4488;
-  border: 2px solid #9f4488;
+  border: 1px solid #9f4488;
   color: #fff;
 }
 body .ui-button.pink-btn.ui-state-hover, body .ui-button.pink-btn.ui-state-focus {
@@ -6231,7 +6231,7 @@ body .ui-button.pink-btn.ui-state-active {
 }
 body .ui-button.bluegrey-btn {
   background-color: #4B6D7E;
-  border: 2px solid #4B6D7E;
+  border: 1px solid #4B6D7E;
   color: #fff;
 }
 body .ui-button.bluegrey-btn.ui-state-hover, body .ui-button.bluegrey-btn.ui-state-focus {
@@ -6244,7 +6244,7 @@ body .ui-button.bluegrey-btn.ui-state-active {
 }
 body .ui-button.teal-btn {
   background-color: #07A089;
-  border: 2px solid #07A089;
+  border: 1px solid #07A089;
   color: #fff;
 }
 body .ui-button.teal-btn.ui-state-hover, body .ui-button.teal-btn.ui-state-focus {
@@ -6257,7 +6257,7 @@ body .ui-button.teal-btn.ui-state-active {
 }
 body .ui-button.orange-btn {
   background-color: #fe875d;
-  border: 2px solid #fe875d;
+  border: 1px solid #fe875d;
   color: #fff;
 }
 body .ui-button.orange-btn.ui-state-hover, body .ui-button.orange-btn.ui-state-focus {
@@ -6270,7 +6270,7 @@ body .ui-button.orange-btn.ui-state-active {
 }
 body .ui-button.grey-btn {
   background-color: #6c757d;
-  border: 2px solid #6c757d;
+  border: 1px solid #6c757d;
   color: #fff;
 }
 body .ui-button.grey-btn.ui-state-hover, body .ui-button.grey-btn.ui-state-focus {
@@ -6945,20 +6945,20 @@ body .ui-slider .ui-slider-range.ui-widget-header {
 body .ui-selectbooleanbutton {
   background-color: #4b6cb7;
   color: #fff;
-  border: 2px solid #4b6cb7;
+  border: 1px solid #4b6cb7;
 }
 body .ui-selectbooleanbutton.ui-state-hover {
   background-color: #38569C;
-  border: 2px solid #38569C;
+  border: 1px solid #38569C;
 }
 body .ui-selectbooleanbutton.ui-state-active {
   background-color: #2C447B;
   color: #fff;
-  border: 2px solid #2C447B;
+  border: 1px solid #2C447B;
 }
 body .ui-selectbooleanbutton.ui-state-active.ui-state-focus {
   background-color: #38569C;
-  border: 2px solid #38569C;
+  border: 1px solid #38569C;
 }
 body .ui-buttonset .ui-button {
   background-color: #4b6cb7;
