@@ -33,12 +33,12 @@
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
 
             <p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}"
-                             update=":folder_layout_options :breadcrumb :context-menu :resourcesView :right_pane_wrapper :right_pane :growl"
+                             update=":folder_layout_options :breadcrumbs :context-menu :resourcesView :right_pane_wrapper :right_pane :growl"
                              oncomplete="resourceDND();"/>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}"
                              update=":right_pane_wrapper :right_pane :growl" oncomplete="resourceDND(); "/>
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
-                             update=":breadcrumb :resourcesView :right_pane_wrapper :right_pane :growl " oncomplete="resourceDND();"/>
+                             update=":breadcrumbs :resourcesView :right_pane_wrapper :right_pane :growl " oncomplete="resourceDND();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}"
                              update=":right_pane_wrapper :right_pane :growl" />
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}"
@@ -123,26 +123,21 @@
                 </h:form>
 
             </div>
-            <h:panelGroup id="breadcrumb" styleClass="breadcrumbs" layout="block">
-                <h:form rendered="#{not empty myResourcesBean.breadcrumb}">
-                    <ul>
-                        <li>
-                            <h:link value="#{msg.myResourcesTitle}" styleClass="m-1" outcome="/lw/myhome/resources.jsf"/>
+
+            <h:panelGroup id="breadcrumbs" styleClass="bg-light" layout="block" rendered="#{not empty myResourcesBean.breadcrumb}">
+                <ul class="res-breadcrumbs">
+                    <li data-folderId="0">
+                        <h:link value="#{msg.myResourcesTitle}" outcome="/lw/myhome/resources.jsf"/>
+                    </li>
+                    <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}">
+                        <li data-folderId="#{folder.id}">
+                            <p:commandLink update=":breadcrumbs :resourcesView :right_pane_wrapper" oncomplete="update_url(0,0,#{folder.groupId});resourceDND();">
+                                <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
+                                <h:outputText value="#{folder.name}" escape="false"/>
+                            </p:commandLink>
                         </li>
-
-                        <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
-                            <li>
-                                <p:commandLink rendered="#{not status.last}" update=":breadcrumb :resourcesView :right_pane_wrapper"
-                                               oncomplete="update_url(0,0,#{folder.groupId});resourceDND();">
-                                    <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
-                                    <h:outputText value="#{folder.name}" escape="false"/>
-                                </p:commandLink>
-
-                                <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
-                            </li>
-                        </p:repeat>
-                    </ul>
-                </h:form>
+                    </p:repeat>
+                </ul>
             </h:panelGroup>
         </div>
 
@@ -267,7 +262,7 @@
                             <hr/>
                             <h:form>
                                 <p:commandLink styleClass="resource_command_link"
-                                               update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
+                                               update=":breadcrumbs :resourcesView :right_pane_wrapper :folder_layout_options"
                                                oncomplete="update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
                                     <h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
@@ -309,7 +304,7 @@
                             </div>
                             <h:form>
                                 <p:commandButton styleClass="float-right " value="#{msg.show_all_my_resources_in_this_group}"
-                                                 update=":breadcrumb :resourcesView :right_pane_wrapper :folder_layout_options"
+                                                 update=":breadcrumbs :resourcesView :right_pane_wrapper :folder_layout_options"
                                                  oncomplete="update_url(0, #{folder.folderId});resourceDND();">
                                     <f:setPropertyActionListener target="#{myResourcesBean.selectedFolder}" value="#{folder}"/>
                                 </p:commandButton>

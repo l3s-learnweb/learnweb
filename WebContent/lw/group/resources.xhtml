@@ -222,22 +222,17 @@
                 </h:panelGroup>
             </c:if>
 
-            <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
-                <ui:fragment rendered="#{not empty groupResourcesBean.breadcrumbs}">
-                    <ul class="bg-light">
-                        <li data-folderId="0">
-                            <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupResourcesBean.group.title}</h:outputLink>
+            <h:panelGroup id="breadcrumbs" styleClass="bg-light" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
+                <ul class="res-breadcrumbs">
+                    <li data-folderId="0">
+                        <h:outputLink value="#" onclick="openFolder(0);return false;">#{groupResourcesBean.group.title}</h:outputLink>
+                    </li>
+                    <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}">
+                        <li data-folderId="#{folder.id}">
+                            <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.name}</h:outputLink>
                         </li>
-
-                        <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}" varStatus="status">
-                            <li data-folderId="#{folder.id}">
-                                <h:outputLink rendered="#{not status.last}" value="#"
-                                              onclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
-                                <h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
-                            </li>
-                        </p:repeat>
-                    </ul>
-                </ui:fragment>
+                    </p:repeat>
+                </ul>
             </h:panelGroup>
         </div>
 
