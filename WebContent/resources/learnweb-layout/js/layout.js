@@ -536,3 +536,37 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
 //         this.jq.children().hide().filter(this.toFacetId(event)).show();
 //     }
 // };
+
+PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
+    init: function (cfg) {
+        this._super(cfg);
+
+        this.targetLists = $('.js-limited-list');
+        this.targetLists.each(this._init);
+    },
+
+    _init: function () {
+        var $list = $(this);
+        var visibleItems = $list.data('visible-items');
+        var $items = $list.find('li:not(.expand-list)');
+        var $expandBtn = $list.find('li.expand-list');
+
+        var totalRecords = $items.length;
+        if (visibleItems < totalRecords) {
+            $list.addClass('list-collapsed');
+            $expandBtn.show();
+            for (var i = visibleItems; i < totalRecords; ++i) {
+                $($items[i]).hide();
+            }
+
+            $expandBtn.on('click', function (e) {
+                $list.removeClass('list-collapsed');
+                $expandBtn.hide();
+                $items.show();
+
+                e.preventDefault();
+                return false;
+            });
+        }
+    }
+});

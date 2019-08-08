@@ -26,7 +26,7 @@
     <p:menuitem value="#{msg.resources}" url="" />
 </ui:define>
 <ui:define name="center_layout">
-    <p:outputPanel styleClass="section-group-resources section-resources bg-white">
+    <p:outputPanel styleClass="section-resources bg-white">
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView :paginator :resourcesFilters" oncomplete="resourceDND();"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView :resourcesFilters" oncomplete="resourceDND();"/>
@@ -161,65 +161,61 @@
 
             <c:if test="${userBean.user.organisation.id ne 480}">
                 <!--suppress XmlDuplicatedId -->
-                <h:panelGroup id="resourcesFilters" layout="block">
-                    <h:form styleClass="resources-filters m-n2"  id="filters">
-                        <ul class="m-0 p-0">
-                            <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
-                                <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)} d-block float-left position-relative ">
-                                    <span class="cursor-pointer d-inline-block p-2">
-                                        <span class="trimmed-text overflow-hidden float-left">#{filter.name}</span>
-                                        <span class="arrow"/>
-                                    </span>
-                                    <ul class="filter-sub-bar  vCarousel-wrapper filter-vCarousel position-absolute w-auto bo">
-                                        <h:panelGroup styleClass="vCarousel-container" layout="block">
-                                            <li class="#{!filter.active ? 'active' : null}">
-                                                <p:commandButton value="#{filter.anyText}"
-                                                                 action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
-                                                                 update=":resourcesView :paginator :resourcesFilters"
-                                                                 oncomplete="updateCarousel();resourceDND();"/>
-                                            </li>
-
-                                            <p:repeat value="#{filter.items}" var="item">
-                                                <li class="#{item.active ? 'active' : null}">
-                                                    <p:commandButton
-                                                            value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}"
-                                                            action="#{groupResourcesBean.changeFilters(item.url)}"
-                                                            update=":resourcesView :paginator :resourcesFilters"
-                                                            oncomplete="updateCarousel();resourceDND();"/>
-                                                </li>
-                                            </p:repeat>
-
-                                        </h:panelGroup>
-                                        <li class="vCarousel-expand">
-                                            <p:commandButton value="#{msg.filter_carousel_all}"/>
+                <h:form id="resourcesFilters" styleClass="bg-light">
+                    <ul class="res-filters">
+                        <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
+                            <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
+                            <span class="filter-title">
+                                <span class="text-truncate">#{filter.name}</span>
+                                <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                            </span>
+                                <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
+                                    <li class="#{!filter.active ? 'active' : null}">
+                                        <p:commandLink value="#{filter.anyText}" action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
+                                                       update=":resourcesView :paginator :resourcesFilters"
+                                                       oncomplete="updateCarousel2();resourceDND();"/>
+                                    </li>
+                                    <p:repeat value="#{filter.items}" var="item">
+                                        <li class="#{item.active ? 'active' : null}">
+                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.url)}"
+                                                           update=":resourcesView :paginator :resourcesFilters"
+                                                           oncomplete="updateCarousel2();resourceDND();">
+                                                <span class="text-truncate">#{item.name}</span>
+                                                <h:outputText rendered="#{item.counter != null}" value=" (#{item.counter})"/>
+                                            </p:commandLink>
                                         </li>
-                                    </ul>
-                                </li>
-                            </p:repeat>
-
-                            <li class="search-box #{groupResourcesBean.query != null ? 'active' : null} p-2">
-                                <img src="#{request.contextPath}/resources/main-template/img/search.png" class="cursor-pointer" id="search_filter_icon"/>
-
-                                <div id="search_filter_form">
-                                    <h:inputText value="#{groupResourcesBean.query}"/>
-
-                                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true"
-                                                     oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" styleClass="border-0 cursor-pointer"
-                                                     process="@form" update=":resourcesView :paginator :resourcesFilters" value=""/>
-                                </div>
+                                    </p:repeat>
+                                    <li class="expand-list collapse">
+                                        <a href="#">#{msg.filter_carousel_all}</a>
+                                    </li>
+                                </ul>
                             </li>
+                        </p:repeat>
 
-                            <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
-                                <li class="filter clear-filters p-2">
-                                    <p:commandButton value="#{msg.clear_filters}" styleClass="border-0"
-                                                     action="#{groupResourcesBean.clearFilters()}"
-                                                     update=":resourcesView :paginator :resourcesFilters"
-                                                     oncomplete="updateCarousel();resourceDND();"/>
-                                </li>
-                            </h:panelGroup>
-                        </ul>
-                    </h:form>
-                </h:panelGroup>
+                        <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
+                            <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
+                                           onclick="$('#search_filter_form').animate({width: 'toggle'}, 500, 'swing').find('input').trigger('focus');$(this).hide();return false;">
+                                <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
+                            </p:commandLink>
+
+                            <div id="search_filter_form" class="res-search-form">
+                                <h:inputText value="#{groupResourcesBean.query}"/>
+
+                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
+                                                 styleClass="text-body" update=":resourcesView :paginator :resourcesFilters"
+                                                 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" icon="fa fa-fw fa-search-plus"/>
+                            </div>
+                        </li>
+
+                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
+                            <li class="clear-filters">
+                                <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body" action="#{groupResourcesBean.clearFilters()}"
+                                               update=":resourcesView :paginator :resourcesFilters"
+                                               oncomplete="updateCarousel2();resourceDND();"/>
+                            </li>
+                        </h:panelGroup>
+                    </ul>
+                </h:form>
             </c:if>
 
             <h:panelGroup id="breadcrumbs" styleClass="bg-light" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
@@ -479,13 +475,7 @@
         </p:dialog>
 
         <script type="text/javascript">
-            $(document).on("click", "#search_filter_icon", function () {
-                $("#search_filter_form").animate({width: "toggle"}, 500, 'swing');
-                $("#search_filter_form input").trigger('focus');
-                $("#search_filter_icon").hide();
-            });
-
-            updateCarousel();
+            updateCarousel2();
 
             //$("#center_pane").prepend($("#group_header")).append($("#paginator"));
 

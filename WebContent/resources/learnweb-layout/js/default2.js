@@ -55,6 +55,10 @@ function updateCarousel() {
 	});
 }
 
+function updateCarousel2() {
+	PrimeFaces.cw("LimitedList", "me", {id: "learnweb"});
+}
+
 // store preferences in user account settings
 function setPreference(prefKey, prefValue)
 {
