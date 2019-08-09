@@ -13,6 +13,16 @@ body {
     }
   }
 
+  .ui-panel.ui-panel-header-btn {
+    .ui-panel-titlebar {
+      padding: 0.25rem 1rem;
+    }
+
+    .ui-panel-title {
+      line-height: 2;
+    }
+  }
+
   .ui-carousel.ui-carousel-light {
     border: 0;
     position: relative;

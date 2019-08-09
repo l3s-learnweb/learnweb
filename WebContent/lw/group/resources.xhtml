@@ -64,7 +64,7 @@
                          update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
     </h:form>
 
-    <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 section-resources">
+    <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 ui-panel-header-btn section-resources">
         <f:facet name="actions">
             <h:form>
                 <p:commandButton rendered="#{true or groupResourcesBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"
@@ -97,32 +97,25 @@
                     <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" type="button" styleClass="green-btn"/>
 
                     <p:tieredMenu trigger="add_group_resource_button" my="left top" at="left bottom" overlay="true">
-                        <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed"
-                                    onclick="doAction('create-folder');return false;"/>
+                        <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed" onclick="doAction('create-folder');return false;"/>
                         <p:submenu label="#{msg.create_document}" icon="fa fa-plus-square">
-                            <p:menuitem value="#{msg.office_document}"
-                                        icon="fa fa-file-word-o" update=":right_pane_wrapper"
+                            <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" update=":right_pane_wrapper"
                                         onclick="doAction('new-file', 'document');return false;" oncomplete="update_header()"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_spreadsheet}"
-                                        icon="fa fa-file-excel-o" update=":right_pane_wrapper"
+                            <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" update=":right_pane_wrapper"
                                         onclick="doAction('new-file','spreadsheet');return false;" oncomplete="update_header()"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_presentation}"
-                                        icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
+                            <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
                                         onclick="doAction('new-file', 'presentation');return false;" oncomplete="update_header()"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
                         </p:submenu>
                         <p:separator/>
-                        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk"
-                                    onclick="doAction('upload-file'); return false;"/>
-                        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link"
-                                    onclick="doAction('add-website'); return false;"/>
-                        <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link"
-                                    onclick="doAction('add-glossary2'); return false;"/>
+                        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
+                        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
+                        <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
                     </p:tieredMenu>
                 </ui:fragment>
 
@@ -143,16 +136,15 @@
         <ui:fragment rendered="${not groupResourcesBean.group.canViewResources(userBean.user)}">
             <h3 class="error">
                 <h:outputText value="#{msg.group_resources_access_denied}"/>
-                <h:outputText
-                        rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"
-                        value="#{msg.group_resources_access_denied_join_first}"/>
+                <h:outputText value="#{msg.group_resources_access_denied_join_first}"
+                              rendered="${groupResourcesBean.group.policyView != 'GROUP_LEADER' and groupResourcesBean.group.canJoinGroup(userBean.user)}"/>
             </h3>
         </ui:fragment>
 
         <h:panelGroup id="resourcesWrapper" layout="block" rendered="#{groupResourcesBean.group.canViewResources(userBean.user)}">
             <c:if test="${userBean.user.organisation.id ne 480}">
                 <!--suppress XmlDuplicatedId -->
-                <h:form id="resourcesFilters" styleClass="bg-light">
+                <h:form id="resourcesFilters" styleClass="bg-gray200">
                     <ul class="res-filters">
                         <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
@@ -163,14 +155,12 @@
                                 <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                                     <li class="#{!filter.active ? 'active' : null}">
                                         <p:commandLink value="#{filter.anyText}" action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
-                                                       update=":resourcesWrapper"
-                                                       oncomplete="updateCarousel2();resourceDND();"/>
+                                                       update=":resourcesWrapper" oncomplete="updateCarousel2();resourceDND();"/>
                                     </li>
                                     <p:repeat value="#{filter.items}" var="item">
                                         <li class="#{item.active ? 'active' : null}">
                                             <p:commandLink action="#{groupResourcesBean.changeFilters(item.url)}"
-                                                           update=":resourcesWrapper"
-                                                           oncomplete="updateCarousel2();resourceDND();">
+                                                           update=":resourcesWrapper" oncomplete="updateCarousel2();resourceDND();">
                                                 <span class="text-truncate">#{item.name}</span>
                                                 <h:outputText rendered="#{item.counter != null}" value=" (#{item.counter})"/>
                                             </p:commandLink>
@@ -185,7 +175,7 @@
 
                         <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
                             <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
-                                           onclick="$('#search_filter_form').animate({width: 'toggle'}, 500, 'swing').find('input').trigger('focus');$(this).hide();return false;">
+                                           onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
                                 <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
                             </p:commandLink>
 
@@ -193,16 +183,15 @@
                                 <h:inputText value="#{groupResourcesBean.query}"/>
 
                                 <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
-                                                 styleClass="text-body" update=":resourcesWrapper"
-                                                 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" icon="fa fa-fw fa-search-plus"/>
+                                                 styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
+                                                 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"/>
                             </div>
                         </li>
 
                         <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
                             <li class="clear-filters">
                                 <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
-                                               action="#{groupResourcesBean.clearFilters()}"
-                                               update=":resourcesWrapper"
+                                               action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
                                                oncomplete="updateCarousel2();resourceDND();"/>
                             </li>
                         </h:panelGroup>
@@ -216,13 +205,11 @@
                     <!-- from here begins the new metadata visualization -->
                     <h:form id="yell-filters-tabs">
                         <h:form id="header_query_form" prependId="false">
-                            <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}"
-                                         id="input_query_form"
+                            <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}" id="input_query_form"
                                          onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
-                            <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false"
-                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
-                                             process="@form" update=":resourcesWrapper"
+                            <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false" process="@form"
+                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" update=":resourcesWrapper"
                                              value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
                         </h:form>
                         <br/>
@@ -235,20 +222,16 @@
 
                                             <h:panelGroup>
                                                 <h:outputLabel for="alist" value="Author:  "/>
-                                                <p:selectCheckboxMenu id="alist"
-                                                                      value="#{groupResourcesBean.selectedAuthors}"
-                                                                      label="Authors" multiple="true" filter="true"
-                                                                      filterMatchMode="startsWith">
+                                                <p:selectCheckboxMenu id="alist" value="#{groupResourcesBean.selectedAuthors}"
+                                                                      label="Authors" multiple="true" filter="true" filterMatchMode="startsWith">
                                                     <f:selectItems value="#{groupResourcesBean.authors}"/>
                                                 </p:selectCheckboxMenu>
                                             </h:panelGroup>
 
                                             <h:panelGroup>
                                                 <h:outputLabel for="llist" value="Language:"/>
-                                                <p:selectCheckboxMenu id="llist"
-                                                                      value="#{groupResourcesBean.selectedLanguages}"
-                                                                      label="Languages" multiple="true" filter="true"
-                                                                      filterMatchMode="startsWith"
+                                                <p:selectCheckboxMenu id="llist" value="#{groupResourcesBean.selectedLanguages}"
+                                                                      label="Languages" multiple="true" filter="true" filterMatchMode="startsWith"
                                                                       panelStyle="width:250px">
                                                     <f:selectItems value="#{searchFilterBean.langs}"/>
                                                 </p:selectCheckboxMenu>
@@ -256,10 +239,8 @@
 
                                             <h:panelGroup>
                                                 <h:outputLabel for="levlist" value="Language Level:"/>
-                                                <p:selectCheckboxMenu id="levlist"
-                                                                      value="#{groupResourcesBean.selectedLevels}"
-                                                                      label="Levels" multiple="true" filter="true"
-                                                                      filterMatchMode="startsWith"
+                                                <p:selectCheckboxMenu id="levlist" value="#{groupResourcesBean.selectedLevels}"
+                                                                      label="Levels" multiple="true" filter="true" filterMatchMode="startsWith"
                                                                       panelStyle="width:250px">
                                                     <f:selectItems value="#{searchFilterBean.levels}"/>
                                                 </p:selectCheckboxMenu>
@@ -267,10 +248,8 @@
 
                                             <h:panelGroup>
                                                 <h:outputLabel for="aglist" value="Target Learner:"/>
-                                                <p:selectCheckboxMenu id="aglist"
-                                                                      value="#{groupResourcesBean.selectedTargets}"
-                                                                      label="Target Learners" multiple="true"
-                                                                      filter="true" filterMatchMode="startsWith"
+                                                <p:selectCheckboxMenu id="aglist" value="#{groupResourcesBean.selectedTargets}" multiple="true"
+                                                                      label="Target Learners" filter="true" filterMatchMode="startsWith"
                                                                       panelStyle="width:250px">
                                                     <f:selectItems value="#{searchFilterBean.targets}"/>
                                                 </p:selectCheckboxMenu>
@@ -278,10 +257,8 @@
 
                                             <h:panelGroup>
                                                 <h:outputLabel for="aclist" value="Purpose of Use:"/>
-                                                <p:selectCheckboxMenu id="aclist"
-                                                                      value="#{groupResourcesBean.selectedPurposes}"
-                                                                      label="Purposes of Use" multiple="true"
-                                                                      filter="true" filterMatchMode="startsWith"
+                                                <p:selectCheckboxMenu id="aclist" value="#{groupResourcesBean.selectedPurposes}" multiple="true"
+                                                                      label="Purposes of Use" filter="true" filterMatchMode="startsWith"
                                                                       panelStyle="width:250px">
                                                     <f:selectItems value="#{searchFilterBean.purposes}"/>
                                                 </p:selectCheckboxMenu>
@@ -289,10 +266,8 @@
 
 
                                             <p:commandButton styleClass="greenbutton" value="Filter"
-                                                             actionListener="#{groupResourcesBean.onMetadataFilterClick}"
-                                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"
-                                                             process="@form"
-                                                             update=":resourcesWrapper"/>
+                                                             actionListener="#{groupResourcesBean.onMetadataFilterClick}" update=":resourcesWrapper"
+                                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" process="@form"/>
                                         </p:panelGrid>
                                     </h:form>
                                 </p:tab>
@@ -457,12 +432,6 @@
 
             <script type="text/javascript">
                 updateCarousel2();
-
-                //$("#center_pane").prepend($("#group_header")).append($("#paginator"));
-
-                $(function () {
-                    $("#center_pane .ui-layout-unit-content").height($("#center_pane").height() - $("#center_pane #group_header").outerHeight() - $("#center_pane #paginator").outerHeight());
-                });
             </script>
         </h:panelGroup>
     </p:panel>

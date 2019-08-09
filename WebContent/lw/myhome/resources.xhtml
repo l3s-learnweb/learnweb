@@ -51,15 +51,14 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <h5 class="text-primary mr-2 mb-0">My Resources</h5>
-                    <h:form  id="folder_layout_options" prependId="false">
-                        <p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" style="background-color: rgb(221, 221, 221);"
-                                         update=":resourcesView :folder_layout_options"
-                                         rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
+                    <h:form id="folder_layout_options" prependId="false">
+                        <p:commandButton value="#{msg.list_view}" icon="fa fa-list" styleClass="secondary-btn" ariaLabel="#{msg.list_view}"
+                                         update=":resourcesView @form" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'grid'}">
                             <f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="list"/>
                         </p:commandButton>
-                        <p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" style="background-color: rgb(221, 221, 221); "
-                                         update=":resourcesView :folder_layout_options"
-                                         rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
+
+                        <p:commandButton value="#{msg.grid_view}" icon="fa fa-th" styleClass="secondary-btn" ariaLabel="#{msg.grid_view}"
+                                         update=":resourcesView @form" rendered="#{myResourcesBean.rootFolder and myResourcesBean.resourcesView == 'list'}">
                             <f:setPropertyActionListener target="#{myResourcesBean.resourcesView}" value="grid"/>
                         </p:commandButton>
                     </h:form>
