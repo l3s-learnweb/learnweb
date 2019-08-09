@@ -59,9 +59,9 @@
 
             <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
                 <hr/>
-                <h:panelGroup id="resourceGrid2" layout="block">
+                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid">
                     <p:repeat var="res" value="#{submissionBean.selectedResources}" >
-                        <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+                        <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                             <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
                                 <ui:fragment>
                                     <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
@@ -72,34 +72,10 @@
                                     </div>
                                 </ui:fragment>
                             </h:panelGroup>
-                            <div class="resource-block">
 
-                                <div class="resource-preview">
-                                    <div class="resource-preview-wrapper">
-                                        <img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-                                    </div>
-                                    <h:form class="resource-controls" rendered="#{not submissionBean.submitted}">
-                                        <h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
-                                            <h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
-                                        </h:outputLink>
-                                    </h:form>
-                                </div>
-
-                                <div class="resource-title">
-                                    <div class="resource-title-wrapper">
-                                        <!--<div class="resource-title-icon">
-                                                <div class="resource-title-icon-wrapper">
-                                                    <img src="img.png" alt="Title" />
-                                                </div>
-                                            </div>-->
-                                        <div class="resource-title-text">
-                                            <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-                                            <span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+								<ui:param name="res" value="#{res}" />
+							</ui:decorate>
                         </h:panelGroup>
                     </p:repeat>
 
@@ -107,7 +83,7 @@
 
                     <h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
 
-                        <div class="resource-block">
+                        <div>
                             <h:graphicImage value="/resources/image/add_sign.png" styleClass="add-resource-image" alt="select a resource" />
                         </div>
                     </h:panelGroup>
@@ -141,29 +117,13 @@
 						<a href="#" onclick="select_res_lightbox.close(); return false;" id="lightbox_close" title="close"></a>
 					</div>
 					<div id="lightbox_content" style="overflow-y:auto;overflow-x:hidden;background: white;">
-						<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
+						<h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
 							<p:repeat var="res" value="#{submissionBean.resources}" >
 
-								<h:panelGroup styleClass="resource-item2 group-resources-item2" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-									<div class="resource-block">
-
-										<div class="resource-preview">
-											<div class="resource-preview-wrapper">
-												<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-											</div>
-										</div>
-
-										<div class="resource-title">
-											<div class="resource-title-wrapper">
-												<div class="resource-title-text">
-													<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-													<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
-												</div>
-											</div>
-										</div>
-
-									</div>
-
+								<h:panelGroup styleClass="res-grid-item resource-item2 group-resources-item2" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+										<ui:param name="res" value="#{res}" />
+									</ui:decorate>
 								</h:panelGroup>
 							</p:repeat>
 							<h:panelGroup style="background-color:white;height:100%;" rendered="#{empty submissionBean.resources}" layout="block">

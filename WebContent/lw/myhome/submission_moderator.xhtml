@@ -128,8 +128,8 @@
                                                         </p:commandLink>
                                                     </h:form>
                                                     <div class="text-center d-flex flex-column align-items-center">
-                                                        <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-                                                        <span class="resource-title-summary"><span class="font-weight-bold">#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+                                                        <h:outputText value="#{res.title}" escape="false" styleClass="text-truncate" title="#{res.title}" />
+                                                        <span class="text-truncate text-muted small"><span class="font-weight-bold">#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
                                                     </div>
                                                 </div>
                                         </p:repeat>

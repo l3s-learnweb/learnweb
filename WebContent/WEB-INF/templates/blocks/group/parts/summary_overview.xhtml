@@ -21,23 +21,10 @@
 							<p:commandLink update=":group_right_column">
 								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
-								<div class="resource-snippet mx-auto">
-									<div class="resource-preview">
-										<div class="resource-preview-wrapper">
-											<div class="resource-preview-wrapper2">
-												<div class="resource-preview-block"></div>
-												<img class="resource-preview-image" src="#{item.resource.thumbnail1.url}" alt="#{item.resource.title}" />
-											</div>
-										</div>
-									</div>
-									<div class="resource-title">
-										<div class="resource-title-wrapper">
-											<div class="resource-title-text">
-												<h:outputText value="#{item.resource.title}" escape="false" styleClass="resource-title-name" title="#{item.resource.title}" />
-												<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(item.resource.type)}</span>#{msg.added_by} <span>#{item.resource.getOwnerUser().username}</span></span>
-											</div>
-										</div>
-									</div>
+								<div class="mx-auto" style="min-width:10rem;">
+									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+										<ui:param name="res" value="#{item.resource}" />
+									</ui:decorate>
 								</div>
 							</p:commandLink>
 						</p:carousel>
@@ -70,23 +57,10 @@
 							<p:commandLink update=":group_right_column">
 								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
-								<div class="resource-snippet mx-auto">
-									<div class="resource-preview">
-										<div class="resource-preview-wrapper">
-											<div class="resource-preview-wrapper2">
-												<div class="resource-preview-block"></div>
-												<img class="resource-preview-image" src="#{item.resource.thumbnail1.url}" alt="#{item.resource.title}" />
-											</div>
-										</div>
-									</div>
-									<div class="resource-title">
-										<div class="resource-title-wrapper">
-											<div class="resource-title-text">
-												<h:outputText value="#{item.resource.title}" escape="false" styleClass="resource-title-name" title="#{item.resource.title}" />
-												<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(item.resource.type)}</span>#{msg.added_by} <span>#{item.resource.getOwnerUser().username}</span></span>
-											</div>
-										</div>
-									</div>
+								<div class="mx-auto" style="min-width:10rem;">
+									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+										<ui:param name="res" value="#{item.resource}" />
+									</ui:decorate>
 								</div>
 							</p:commandLink>
 						</p:carousel>

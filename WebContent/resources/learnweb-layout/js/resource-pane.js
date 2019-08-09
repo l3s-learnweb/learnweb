@@ -223,7 +223,7 @@ function resourceDND() {
                 $(ui.helper).append("<div class='selected-icon'>" + selected.getSize() + "</div>");
             }
 
-            var newWidth = $('.resource-item').width();
+            var newWidth = $('.res-grid-item').width();
             $(ui.helper).addClass("ui-draggable-helper").width(newWidth + "px");
         },
         stop: function () {
@@ -261,7 +261,7 @@ function resourceDND() {
                 $(el).addClass("ui-draggable-greyscale");
             });
 
-            var newWidth = $('.resource-item').width();
+            var newWidth = $('.res-grid-item').width();
             $(ui.helper).addClass("ui-draggable-helper").width(newWidth + "px");
         },
         stop: function () {
@@ -579,9 +579,8 @@ $(document).ready(function () {
         selected.clearAndAdd(element);
         doAction(action);
     });
-    
 
-    $(document).on('dblclick', '.group-resources-item.folder-item', function () {
+    $(document).on('dblclick', '.group-resources-item[data-itemtype="folder"]', function () {
         var folderId = $(this).attr("data-itemId");
         var folderType = $(this).attr("data-itemType");
         if(folderId && folderType === "folder") {

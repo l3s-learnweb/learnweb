@@ -6,100 +6,58 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:panelGroup id="datagrid" styleClass="datagrid res-container-grid" layout="block">
-        <h:panelGroup styleClass="search-results-header" layout="block" rendered="#{groupResourcesBean.query != null}">
-            #{msg.search_results}
+        <h:panelGroup styleClass="mx-3" layout="block" rendered="#{groupResourcesBean.query != null}">
+            <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>
         </h:panelGroup>
-        <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
+
+        <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
             <p:repeat value="#{groupResourcesBean.subFolders}" var="folder">
-                <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
+                <h:panelGroup styleClass="group-resources-item res-grid-item" layout="block"
                               pt:data-itemType="folder"
                               pt:data-itemId="#{folder.folderId}"
                               pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
                               pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
                               pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
-                    <div class="folder-block">
-
-                        <div class="folder-icon">
-                            <div class="folder-icon-wrapper">
-                                <span class="icon icon-folder"/>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="folder-title-wrapper">
-                                <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}"/>
+                    <div class="res-block res-block-folder">
+                        <div class="res-bl-details">
+                            <div class="res-bl-icon">
+                                <i class="fa fa-folder" aria-hidden="true"></i>
                             </div>
 
-                            <h:panelGroup class="resource-controls" layout="block" rendered="${folder.canEditResource(userBean.user)}">
-                                <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
-                                    <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+                            <div class="res-bl-desc">
+                                <h:outputText value="#{folder.name}" escape="false" styleClass="res-bl-title"/>
+                            </div>
+
+                            <h:panelGroup class="resource-controls" layout="block">
+                                <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" rendered="${folder.canEditResource(userBean.user)}">
+                                    <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
                                 </h:outputLink>
-                            </h:panelGroup>
-                            <h:panelGroup class="resource-controls" layout="block" rendered="${folder.canDeleteResource(userBean.user)}">
-                                <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-                                    <h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
+
+                                <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete" rendered="${folder.canDeleteResource(userBean.user)}">
+                                    <i class="fa text-danger fa-times" aria-hidden="true"></i>
                                 </h:outputLink>
                             </h:panelGroup>
                         </div>
-
                     </div>
                 </h:panelGroup>
             </p:repeat>
         </h:panelGroup>
 
-        <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
+        <h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block">
             <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
                 <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
-                <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
+                <h:panelGroup styleClass="group-resources-item res-grid-item" layout="block"
                               pt:data-itemType="resource"
                               pt:data-itemId="#{res.resource.id}"
                               pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
                               pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
                               pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
                               pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
-                    <div class="resource-block">
 
-                        <div class="resource-preview">
-                            <div class="resource-preview-wrapper">
-                                <div class="resource-preview-wrapper2">
-                                    <div class="resource-preview-block"></div>
-                                    <img class="resource-preview-image" src="#{res.resource.smallThumbnail.url}" alt="#{res.title}"
-                                         title="#{res.title}"></img>
-                                </div>
-                            </div>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                        <ui:param name="res" value="#{res.resource}" />
+                    </ui:decorate>
 
-                            <h:panelGroup class="resource-controls #{res.isEditLocked() ? 'edit-locked' : ''}" layout="block">
-                                <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-                                    <h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
-                                </h:outputLink>
-
-                                <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
-                                    <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
-                                        <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
-                                    </h:outputLink>
-                                </ui:fragment>
-
-                                <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
-                                    <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-                                        <h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
-                                    </h:outputLink>
-                                </ui:fragment>
-                            </h:panelGroup>
-                        </div>
-
-                        <div class="resource-title">
-                            <div class="resource-title-wrapper">
-                                <div class="resource-title-text">
-                                    <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}"/>
-                                    <span class="resource-title-summary">
-                                        <span>#{utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by}
-                                        <span>#{res.ownerUser.username}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
                 </h:panelGroup>
             </p:repeat>
         </h:panelGroup>
@@ -109,7 +67,5 @@
 
         <h:outputText value="#{msg.no_results_found}" class="nothing_found"
                       rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
-
     </h:panelGroup>
-
 </ui:composition>

@@ -90,7 +90,7 @@
 		</p:panel>	
 	
 		<h:panelGroup id="datagrid" layout="block">
-			<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
+			<h:panelGroup id="resourceGrid" layout="block">
 				<p:repeat value="#{advSearchBean.paginator.currentPage}" var="result">
 					<div style="margin-bottom:1rem;">
 						<h3>
@@ -100,11 +100,11 @@
 						</h3>
 						
 						<a href="group/resources.jsf?group_id=#{result.resource.groupId}&amp;resource_id=#{result.resource.id}&amp;folder_id=#{result.resource.folderId}">
-							<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"></img>							
+							<img src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" class="res-image-simple"/>
 						</a>
 					
-						<div class="resource-title-text">
-							<span class="resource-title-summary"><span>#{utilBean.getLocaleMessage(result.resource.type)}</span> #{msg.added_by} <span>#{result.resource.ownerUser.username}</span></span>
+						<div>
+							<span><span>#{utilBean.getLocaleMessage(result.resource.type)}</span> #{msg.added_by} <span>#{result.resource.ownerUser.username}</span></span>
 						</div>
 						
 							
