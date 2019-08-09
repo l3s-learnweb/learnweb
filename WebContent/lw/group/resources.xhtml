@@ -325,16 +325,16 @@
 
                 <c:if test="${userBean.user.organisation.id eq 480}">
                     <ui:fragment rendered="#{!groupResourcesBean.gridView}">
-                        <ui:decorate template="/lw/group/resources_list_view.xhtml"></ui:decorate>
+                        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
                     </ui:fragment>
 
                     <ui:fragment rendered="#{groupResourcesBean.gridView}">
-                        <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
+                        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_grid_view.xhtml"></ui:decorate>
                     </ui:fragment>
                 </c:if>
 
                 <c:if test="${userBean.user.organisation.id ne 480}">
-                    <ui:decorate template="/lw/group/resources_grid_view.xhtml"></ui:decorate>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_grid_view.xhtml"></ui:decorate>
                 </c:if>
             </h:panelGroup>
 
