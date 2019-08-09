@@ -7,7 +7,7 @@
 
 <h:panelGroup styleClass="res-container-list" layout="block">
     <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-        <h:panelGroup styleClass="group-resources2-item res-item-list" layout="block"
+        <h:panelGroup styleClass="group-resources2-item res-list-item" layout="block"
                       pt:data-itemType="resource"
                       pt:data-itemId="#{res.resource.id}"
                       pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
@@ -15,121 +15,123 @@
                       pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
                       pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
 
-            <div class="res-col res-col-type">
-                <ui:fragment rendered="#{res.type == 'website'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/web.png" alt=""/>
-                </ui:fragment>
-                <ui:fragment rendered="#{res.type == 'pdf'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/pdf.png" alt=""/>
-                </ui:fragment>
-                <ui:fragment rendered="#{res.type == 'image'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/image.png" alt=""/>
-                </ui:fragment>
-                <ui:fragment rendered="#{res.type == 'audio'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/audio.png" alt=""/>
-                </ui:fragment>
-                <ui:fragment rendered="#{res.type == 'video'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/video.png" alt=""/>
-                </ui:fragment>
-                <ui:fragment rendered="#{res.type == 'file'}">
-                    <img src="#{request.contextPath}/resources/resources/img-chloe/file.png" alt=""/>
-                </ui:fragment>
-            </div>
+            <div class="res-row">
+                <div class="res-col res-col-type">
+                    <ui:fragment rendered="#{res.type == 'website'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/web.png" alt=""/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type == 'pdf'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/pdf.png" alt=""/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type == 'image'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/image.png" alt=""/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type == 'audio'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/audio.png" alt=""/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type == 'video'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/video.png" alt=""/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type == 'file'}">
+                        <img src="#{request.contextPath}/resources/resources/img-chloe/file.png" alt=""/>
+                    </ui:fragment>
+                </div>
 
-            <div class="res-col res-col-preview">
-                <img class="res-image-simple" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"/>
-            </div>
+                <div class="res-col res-col-preview">
+                    <img class="res-image-simple" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"/>
+                </div>
 
-            <div class="metadata-block res-col res-col-description">
-                <h6>#{res.title}</h6>
-                <ui:fragment rendered="#{not empty res.language}">
-                    <p class="text-muted small mb-0"><b>Language:</b> #{res.language}</p>
-                </ui:fragment>
-                <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
-                    <p class="text-muted small mb-0"><b>Level (stats):</b> #{res.extendedMetadata.lCount}</p>
-                </ui:fragment>
-                <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
-                    <p class="text-muted small mb-0">
-                        <b>Target learner (stats):</b>
-                        <p:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
-                            <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
-                                <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
-                                <h:outputText value="Pre-school"/>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
-                                <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
-                                <h:outputText value="Young learners"/>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{t.key == 'teenage learners'}">
-                                <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
-                                <h:outputText value="Teens"/>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{t.key == 'teachers'}">
-                                <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                                <h:outputText value="Teachers"/>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{t.key == 'adult learners'}">
-                                <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                                <h:outputText value="Adult learners"/>
-                            </ui:fragment>
+                <div class="metadata-block res-col res-col-description">
+                    <h6>#{res.title}</h6>
+                    <ui:fragment rendered="#{not empty res.language}">
+                        <p class="text-muted small mb-0"><b>Language:</b> #{res.language}</p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
+                        <p class="text-muted small mb-0"><b>Level (stats):</b> #{res.extendedMetadata.lCount}</p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
+                        <p class="text-muted small mb-0">
+                            <b>Target learner (stats):</b>
+                            <p:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                                <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
+                                    <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+                                    <h:outputText value="Pre-school"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
+                                    <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+                                    <h:outputText value="Young learners"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'teenage learners'}">
+                                    <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+                                    <h:outputText value="Teens"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'teachers'}">
+                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                                    <h:outputText value="Teachers"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'adult learners'}">
+                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                                    <h:outputText value="Adult learners"/>
+                                </ui:fragment>
 
-                            <h:outputText value="[#{t.value}] "/>
-                        </p:repeat>
-                    </p>
-                </ui:fragment>
-                <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
-                    <p class="text-muted small mb-0">
-                        <b>Purpose of use (stats):</b>
-                        <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
-                            <span class="text-nowrap d-inline-block">
-                                <span class="bg-highlight">
-                                    <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
-                                         <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
-                                         <h:outputText value="Speaking [#{p.value}]"/>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
-                                         <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
-                                         <h:outputText value="Listening [#{p.value}]"/>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
-                                         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-                                         <h:outputText value="Writing [#{p.value}]"/>
-                                    </ui:fragment>
-                                    <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
-                                        <i class="fa fa-fw fa-book" aria-hidden="true"></i>
-                                         <h:outputText value="Reading [#{p.value}]"/>
-                                    </ui:fragment>
+                                <h:outputText value="[#{t.value}] "/>
+                            </p:repeat>
+                        </p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
+                        <p class="text-muted small mb-0">
+                            <b>Purpose of use (stats):</b>
+                            <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                <span class="text-nowrap d-inline-block">
+                                    <span class="bg-highlight">
+                                        <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
+                                             <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+                                             <h:outputText value="Speaking [#{p.value}]"/>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
+                                             <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
+                                             <h:outputText value="Listening [#{p.value}]"/>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
+                                             <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
+                                             <h:outputText value="Writing [#{p.value}]"/>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
+                                            <i class="fa fa-fw fa-book" aria-hidden="true"></i>
+                                             <h:outputText value="Reading [#{p.value}]"/>
+                                        </ui:fragment>
 
-                                    <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
-                                                             not 'listening skills'.equalsIgnoreCase(p.key) and
-                                                             not 'writing skills'.equalsIgnoreCase(p.key) and
-                                                             not 'reading skills'.equalsIgnoreCase(p.key)}">
-                                        #{p.key}
-                                    </ui:fragment>
+                                        <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
+                                                                 not 'listening skills'.equalsIgnoreCase(p.key) and
+                                                                 not 'writing skills'.equalsIgnoreCase(p.key) and
+                                                                 not 'reading skills'.equalsIgnoreCase(p.key)}">
+                                            #{p.key}
+                                        </ui:fragment>
+                                    </span>
                                 </span>
-                            </span>
-                        </p:repeat>
-                    </p>
-                </ui:fragment>
+                            </p:repeat>
+                        </p>
+                    </ui:fragment>
+                </div>
+
+                <h:panelGroup class="res-col res-col-controls" layout="block">
+                    <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
+                        <i class="fa text-success fa-plus" aria-hidden="true"></i>
+                    </h:outputLink>
+
+                    <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
+                        <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
+                            <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
+                        </h:outputLink>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
+                        <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
+                            <i class="fa text-danger fa-times" aria-hidden="true"></i>
+                        </h:outputLink>
+                    </ui:fragment>
+                </h:panelGroup>
             </div>
-
-            <h:panelGroup class="res-col res-col-controls" layout="block">
-                <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-                    <i class="fa text-success fa-plus" aria-hidden="true"></i>
-                </h:outputLink>
-
-                <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
-                    <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
-                        <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
-                    </h:outputLink>
-                </ui:fragment>
-
-                <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
-                    <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-                        <i class="fa text-danger fa-times" aria-hidden="true"></i>
-                    </h:outputLink>
-                </ui:fragment>
-            </h:panelGroup>
         </h:panelGroup>
     </p:repeat>
 
@@ -142,5 +144,4 @@
     <!--<h:outputText value="#{msg.no_results_found}" class="nothing_found"
         rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" /> -->
 </h:panelGroup>
-
 </ui:composition>
