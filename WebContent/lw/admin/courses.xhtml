@@ -32,7 +32,7 @@
             <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
                 <h:form id="addorganisation" >
                     <div class="form-group">
-                        <p:outputLabel value="#{msg.organization_title}:"/>
+                        <p:outputLabel for="@next" value="#{msg.organization_title}:"/>
                         <h:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>
                         <p:message for="@previous"/>
                     </div>
@@ -45,7 +45,7 @@
 
     <h:form id="courses_form">
         <p:blockUI block="courses_table" widgetVar="courses_form_blocker">
-            <div class="float-left">#{msg.please_wait}. This action may take several minutes for big courses.</div>
+            <div class="float-left">#{msg.please_wait}. #{msg.courses_wait_message}</div>
             <div class="loading-animation small float-left">
                 <div></div>
                 <div></div>
@@ -54,7 +54,7 @@
         </p:blockUI>
 
         <p:dataTable styleClass="mt-3" tableStyleClass="table-sm table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
-            <f:facet name="header">All courses</f:facet>
+            <f:facet name="header">#{msg.all_courses}</f:facet>
 
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
@@ -79,15 +79,15 @@
                                onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
-                    <p:confirm message="Do you really want to delete course '#{course.title}'? All users and their resources will be deleted. Except for users who are also member of other courses."/>
+                    <p:confirm message="${utilBean.getLocaleMessage('courses_delete_question', course.title)}"/>
                 </p:commandLink>
 
                 <p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
                                update="@form :growl" rendered="#{userBean.admin}"
                                onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
                     <i class="fa fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
-                    <h:outputText value="Anonymise"/>
-                    <p:confirm message="Do you really want to anonymise course '#{course.title}'? The personal information of all course members will be removed and they won't be able to login anymore. Users who are also member of other courses are not affected."/>
+                    <h:outputText value="#{msg.anonymise}"/>
+                    <p:confirm message="${utilBean.getLocaleMessage('courses_anonymise_question', course.title)}"/>
                 </p:commandLink>
 
                 <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}">
