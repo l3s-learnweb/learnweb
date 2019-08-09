@@ -24,49 +24,19 @@
     <h:outputStylesheet library="lightbox" name="lightbox.css"/>
     <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
     <div class="section-search">
-    <p:outputPanel id="sub_menu_bar" styleClass="py-1 bg-white border">
-        <h:form styleClass="d-flex">
-                <h:outputLink value="group/overview.jsf" id="backtogroup"  styleClass="align-self-stretch fa fa-angle-left border-right px-sm-1 custom-underline" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-                    #{msg.back_to}
-                    <i>#{userBean.user.activeGroup.title}</i>
-                    <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
-                </h:outputLink>
-                <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 #{searchBean.searchMode == 'text' ? 'disabled text-uppercase' : 'custom-underline'}">
-                    <f:param name="action" value="text"/>
-                    <f:param name="query" value="#{searchBean.query}"/>
-                </h:link>
-                <h:link value="#{msg.Images}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1  #{searchBean.searchMode == 'image' ? 'disabled text-uppercase' : 'custom-underline'}">
-                    <f:param name="action" value="image"/>
-                    <f:param name="query" value="#{searchBean.query}"/>
-                </h:link>
-
-                <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 #{searchBean.searchMode == 'video' ? 'disabled text-uppercase' : 'custom-underline'}">
-                    <f:param name="action" value="video"/>
-                    <f:param name="query" value="#{searchBean.query}"/>
-                </h:link>
-        </h:form>
-    </p:outputPanel>
-
     <h:panelGroup  layout="block">
         <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
-            <h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
-                <h:outputFormat value="#{msg.search_groups_header_empty}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() == 1}">
+            <p:outputPanel styleClass="group-menu-header text-center" layout="block" rendered="#{searchBean.searchService != null}">
+                <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
                     <f:param value="#{searchBean.searchService.name()}"/>
                     <f:param value="#{searchBean.searchService}"/>
                 </h:outputFormat>
-                <h:outputFormat value="#{msg.search_groups_header}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() != 1}">
-                    <f:param value="#{searchBean.totalFromCurrentService}"/>
-                    <f:param value="#{searchBean.searchService.name()}"/>
-                    <f:param value="#{searchBean.searchService}"/>
-                </h:outputFormat>
-            </h:panelGroup>
+            </p:outputPanel>
 
-            <h:form id="form" styleClass="group-menu-panel justify-content-center flex-nowrap px-2 mx-1">
-       <!--         <p:commandButton styleClass="col-sm-1 border-0" icon="fa fa-chevron-left"  type="button" onclick="CarouselPrev('carousel');" />-->
-                <span class="navigate left arrow" onclick="CarouselPrev('carousel');"><span class="arrow"></span></span>
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" headerText="Responsive" styleClass="bg-light mx-4" var="gr" numVisible="1">
-                            <h:link outcome="search" styleClass="col-12 group-menu-block source_#{gr.groupAlias}" >
+            <h:form>
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" styleClass="ui-carousel-light"  circular="true"  var="gr" numVisible="2">
+                            <h:link outcome="search" styleClass="source_#{gr.groupAlias}" >
                                 <f:param name="service" value="#{gr.groupAlias}"/>
                                 <f:param name="action" value="#{searchBean.searchMode}"/>
                                 <f:param name="query" value="#{searchBean.query}"/>
@@ -100,63 +70,45 @@
                                 </div>
                             </h:link>
             </p:carousel>
-                <span class="navigate right" onclick="CarouselNext('carousel');"><span class="arrow"></span></span>
-     <!--           <p:commandButton styleClass="col-sm-1 border-0" icon="fa fa-chevron-right" type="button" onclick="CarouselNext('carousel');" />-->
             </h:form>
-          <!--  <h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
-                <span class="navigate left"><a id="scrollLeft" href="#"><span class="arrow"></span></a></span>
 
-                <div class="group-menu-container">
-                    <p:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
-                        <h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{searchBean.searchService.name() != gr.groupAlias}">
-                            <f:param name="service" value="#{gr.groupAlias}"/>
-                            <f:param name="action" value="#{searchBean.searchMode}"/>
-                            <f:param name="query" value="#{searchBean.query}"/>
-
-                            <h4 class="group-menu-title">
-                                <h:outputFormat value="#{msg.search_groups_title}" escape="false">
-                                    <f:param value="#{gr.groupName}"/>
-                                    <f:param value="#{gr.totalResources}"/>
-                                </h:outputFormat>
-                            </h4>
-                            <div class="group-menu-content group-content-#{searchBean.searchMode}">
-                                <h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
-                                    <p:repeat value="#{gr.resources}" var="res">
-                                        <div class="article-wrapper">
-                                            <h6>
-                                                <span><h:outputText value="#{res.title}" escape="false"/></span>
-                                                <span class="url">#{res.url}</span>
-                                            </h6>
-
-                                            <p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
-                                        </div>
-                                    </p:repeat>
-                                </h:panelGroup>
-                                <h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                                    <p:repeat value="#{gr.resources}" var="res">
-                                        <div class="image-wrapper">
-                                            <img src="${res.thumbnail2.url}"/>
-                                        </div>
-                                    </p:repeat>
-                                </h:panelGroup>
-                            </div>
-                        </h:link>
-                    </p:repeat>
-                </div>
-
-                <span class="navigate right"><a id="scrollRight" href="#"><span class="arrow"></span></a></span>
-            </h:panelGroup>-->
         </h:panelGroup>
-
-        <div id="filters_menu_bar_wrapper">
-            <div class="filters_menu_bar">
+            <div class="filters_menu_bar text-center">
                 <h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
                     <ul>
-                        <li class="filter sources active" id="source_filter">
-                                <span class="filter-name">
-                                    <span class="trimmed-text">#{searchBean.searchService.toString()}</span>
-                                    <span class="arrow"></span>
-                                </span>
+                        <li class="filter">
+                            <h:outputLink value="group/overview.jsf" id="backtogroup"  styleClass="d-inline-block p-2 text-body custom-underline fa fa-angle-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+                                #{msg.back_to}
+                                <i>#{userBean.user.activeGroup.title}</i>
+                                <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
+                            </h:outputLink>
+                        </li>
+                        <li class="filter">
+                            <span class="p-2 d-inline-block fa fa-angle-down">
+                                #{msg.Search_type}
+                            </span>
+                            <h:panelGroup styleClass="filter-sub-bar" layout="block" >
+                                <h:form styleClass="text-center">
+                                    <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 text-decoration-none">
+                                        <f:param name="action" value="text"/>
+                                        <f:param name="query" value="#{searchBean.query}"/>
+                                    </h:link>
+                                    <h:link value="#{msg.Images}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1  text-decoration-none">
+                                        <f:param name="action" value="image"/>
+                                        <f:param name="query" value="#{searchBean.query}"/>
+                                    </h:link>
+
+                                    <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 text-decoration-none">
+                                        <f:param name="action" value="video"/>
+                                        <f:param name="query" value="#{searchBean.query}"/>
+                                    </h:link>
+                                </h:form>
+                            </h:panelGroup>
+                        </li>
+                        <li class="filter sources" id="source_filter">
+                            <span class="p-2 d-inline-block fa fa-angle-down">
+                                #{searchBean.searchService.toString()}
+                            </span>
                             <h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
                                 <p:repeat value="#{searchBean.availableSources}" var="item">
                                     <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
@@ -175,9 +127,8 @@
                         </li>
                         <p:repeat value="#{searchBean.availableFilters}" var="filter">
                             <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
-                                    <span class="filter-name">
-                                        <span class="trimmed-text">#{filter.name}</span>
-                                        <span class="arrow"></span>
+                                    <span class="p-2 d-inline-block fa fa-angle-down">
+                                        #{filter.name}
                                     </span>
                                 <h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
                                     <h:panelGroup styleClass="vCarousel-container" layout="block">
@@ -209,43 +160,16 @@
                             </li>
                         </p:repeat>
                     </ul>
-                    <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
+                    <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="d-inline-block p-2 text-body custom-underline">
                         <f:param name="action" value="#{searchBean.searchMode}"/>
                         <f:param name="query" value="#{searchBean.query}"/>
                     </h:link>
                 </h:panelGroup>
             </div>
-        </div>
 
         <script type="text/javascript">
             var view = '#{searchBean.view}';
             var userId = '#{userBean.user.id}';
-            function CarouselNext(carousel)
-            {
-                var currentPage = PF(carousel).page;
-                var totalPages = PF(carousel).totalPages - 1;
-                var c = (currentPage === (totalPages));
-                if (!c)
-                {
-                    PF(carousel).setPage(currentPage + 1);
-                }
-                else{
-                    PF(carousel).setPage(0);
-                }
-            }
-
-            function CarouselPrev(carousel)
-            {
-                var currentPage = PF(carousel).page;
-                if (currentPage !== 0)
-                {
-                    PF(carousel).setPage(currentPage - 1)
-                }
-                else{
-                    PF(carousel).setPage(PF(carousel).totalPages - 1);
-                }
-            }
-
         </script>
 
         <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
