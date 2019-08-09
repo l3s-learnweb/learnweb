@@ -538,7 +538,7 @@ $(document).ready(function () {
             var current = selected.getItem(selected.getSize() - 1);
             if (previous.id !== current.id) {
                 var isFound = false;
-                $('#rdetail').find('.group-resources2-item').each(function (i, el) {
+                $('.group-resources2-item').each(function (i, el) {
                     var elId = el.getAttribute("data-itemId");
                     var elType = el.getAttribute("data-itemType");
                     if ((elId === previous.id && elType === previous.type) || (elId === current.id && elType === current.type)) {

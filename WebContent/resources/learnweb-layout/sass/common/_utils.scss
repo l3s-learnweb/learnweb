@@ -103,3 +103,11 @@
 td.td-text-right {
   @extend .text-right;
 }
+
+.bg-highlight {
+  color: $white;
+  background-color: $gray-600;
+  border: 1px solid $gray-600;
+  border-radius: $btn-border-radius;
+  padding: 0 $btn-border-radius;
+}
