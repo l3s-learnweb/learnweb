@@ -5,178 +5,122 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
-<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
-<ui:param name="rightPane" value="true"/>
-<ui:define name="sub_breadcrumb">
-    <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
-</ui:define>
-<ui:define name="right_layout">
-    <p:panel header="#{msg.createGroup}">
-        <h:form id="addgroupform" prependId="false">
-            <style type="text/css">
-                .other_groups_course_title > input {
-                    max-width: 100%;
-                    box-sizing: border-box;
-                }
-            </style>
-            <div>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg.groupsTitle}"/>
+    <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
+    <ui:param name="rightPane" value="true"/>
 
-                <h:panelGrid columns="3">
+    <ui:define name="sub_breadcrumb">
+        <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
+    </ui:define>
 
-                    <h:outputText value="#{msg.title}*:"/>
-                    <p:inputText id="new_title" style="width:22rem;" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}"
-                                  label="#{msg.title}"/>
-                    <p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
+    <ui:define name="right_layout">
+        <p:panel header="#{msg.createGroup}">
+            <h:form id="addgroupform" prependId="false">
+                <style type="text/css">
+                    .other_groups_course_title > input {
+                        max-width: 100%;
+                        box-sizing: border-box;
+                    }
+                </style>
+                <div>
 
-                    <h:outputText value="#{msg.course}*:"/>
-                    <h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">
-                        <f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
-                    </h:selectOneMenu>
-                    <h:outputText value=""/>
+                    <h:panelGrid columns="3">
 
-                    <h:outputText value="#{msg.description}:"/>
-                    <p:textEditor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" style="width:22rem;">
-                        <f:facet name="toolbar">
-									<span class="ql-formats">
-										<button class="ql-bold"></button>
-										<button class="ql-italic"></button>
-										<button class="ql-underline"></button>
-										<button class="ql-strike"></button>
-									</span>
-                        </f:facet>
-                    </p:textEditor>
-                    <p:message for="new_description" showSummary="true" showDetail="false"/>
+                        <h:outputText value="#{msg.title}*:"/>
+                        <p:inputText id="new_title" style="width:22rem;" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}"
+                                      label="#{msg.title}"/>
+                        <p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 
-                    <ui:fragment rendered="false">
-                        <h:outputText value="#{msg.language}:"/>
-                        <p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
-                        <p:message for="new_language" showSummary="true" showDetail="false"/>
-                    </ui:fragment>
-                </h:panelGrid>
+                        <h:outputText value="#{msg.course}*:"/>
+                        <h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">
+                            <f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+                        </h:selectOneMenu>
+                        <h:outputText value=""/>
+
+                        <h:outputText value="#{msg.description}:"/>
+                        <p:textEditor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" style="width:22rem;">
+                            <f:facet name="toolbar">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                            </f:facet>
+                        </p:textEditor>
+                        <p:message for="new_description" showSummary="true" showDetail="false"/>
+
+                        <ui:fragment rendered="false">
+                            <h:outputText value="#{msg.language}:"/>
+                            <p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
+                            <p:message for="new_language" showSummary="true" showDetail="false"/>
+                        </ui:fragment>
+                    </h:panelGrid>
+                    <br/>
+
+                    <span>
+                                * #{msg.mandatory_field}
+                            </span>
+                </div>
                 <br/>
 
-                <span>
-							* #{msg.mandatory_field}
-						</span>
-            </div>
-            <br/>
+                <p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
+                                 oncomplete="applyTooltip()"
+                                  process="@form" update="@form :my_groups :growl"/>
 
-            <p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
-                             oncomplete="applyTooltip()"
-                              process="@form" update="@form :my_groups :growl"/>
+            </h:form>
+        </p:panel>
+    </ui:define>
 
-        </h:form>
-    </p:panel>
-</ui:define>
+    <ui:define name="center_layout">
+        <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
+        <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 
-<ui:define name="center_layout">
-    <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
-    <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
+        <script type="text/javascript">
+            function applyTooltip()
+            {
+                $('.tooltip').tooltipster({
 
-    <script type="text/javascript">
-        function applyTooltip()
-        {
-            $('.tooltip').tooltipster({
+                    contentAsHTML:true,
+                    //maxWidth: 400,
+                    position:'top',
+                    //hideOnClick: true;,
+                    interactive:true,
+                    interactiveTolerance:150 // increase to debug
+                });
+            }
+            $(document).ready(function() {
+                applyTooltip();
 
-                contentAsHTML:true,
-                //maxWidth: 400,
-                position:'top',
-                //hideOnClick: true;,
-                interactive:true,
-                interactiveTolerance:150 // increase to debug
             });
-        }
-        $(document).ready(function() {
-            applyTooltip();
+        </script>
 
-        });
-
-
-    </script>
-    <h:form id="my_groups" >
-        <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
-            <f:facet name="header">
-                #{msg.myGroups}
-            </f:facet>
-            <p:ajax event="sort" oncomplete="applyTooltip()"/>
-
-            <p:column headerText="#{msg.title}" sortBy="#{group.title}">
-
-                <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
-
-                    <f:param name="group_id" value="#{group.id}"/>
-                    <h:outputText value="#{group.longTitle}"/>
-                </h:outputLink>
-
-                <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
-
-            </p:column>
-
-            <p:column headerText="#{msg.description}" sortBy="#{group.description}">
-                <h:outputText value="#{group.description}" escape="false" />
-            </p:column>
-
-            <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}">
-                <h:outputText value="#{group.leader.username}"/>
-            </p:column>
-
-            <p:column headerText="#{msg.course}" sortBy="#{group.course.title}">
-                <h:outputText value="#{group.course.title}"/>
-            </p:column>
-
-            <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}">
-                <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
-                <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
-            </p:column>
-
-            <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                <h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
-                    <f:param name="group_id" value="#{group.id}"/>
-                    <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
-                </h:outputLink>
-
-                <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
-                               update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                    <i class="fa fa-sign-out text-danger" aria-hidden="true"></i>
-                    <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
-                </p:commandLink>
-            </p:column>
-        </p:dataTable>
-
-    </h:form>
-    <h:form id="other_groups">
-        <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-            <p:dataTable tableStyleClass="table-sm table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
-                         value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
+        <h:form id="my_groups" >
+            <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-sm table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
-                    #{msg.otherGroups}
+                    #{msg.myGroups}
                 </f:facet>
-                <p:ajax event="filter" oncomplete="applyTooltip()"/>
                 <p:ajax event="sort" oncomplete="applyTooltip()"/>
 
-                <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
-                          filterMatchMode="contains">
-
+                <p:column headerText="#{msg.title}" sortBy="#{group.title}">
                     <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.longTitle}"/>
                     </h:outputLink>
 
-                    <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
+                    <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains">
-                    <h:outputText value="#{group.description}" escape="false"/>
+                <p:column headerText="#{msg.description}" sortBy="#{group.description}">
+                    <h:outputText value="#{group.description}" escape="false" />
                 </p:column>
 
-                <p:column headerText="#{msg.language}" rendered="false">
-                    <h:outputText value="#{group.language}"/>
+                <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}">
+                    <h:outputText value="#{group.leader.username}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains">
+                <p:column headerText="#{msg.course}" sortBy="#{group.course.title}">
                     <h:outputText value="#{group.course.title}"/>
                 </p:column>
 
@@ -186,20 +130,73 @@
                 </p:column>
 
                 <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                    <h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
+                    <h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
                     </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
-                                   process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
+                    <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
+                                   update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <i class="fa fa-sign-in text-success" aria-hidden="true"></i>
+                        <i class="fa fa-sign-out text-danger" aria-hidden="true"></i>
+                        <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
                     </p:commandLink>
                 </p:column>
             </p:dataTable>
-        </ui:fragment>
-    </h:form>
+        </h:form>
 
-</ui:define>
+        <h:form id="other_groups">
+            <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
+                <p:dataTable tableStyleClass="table-sm table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
+                             value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
+                    <f:facet name="header">
+                        #{msg.otherGroups}
+                    </f:facet>
+
+                    <p:ajax event="filter" oncomplete="applyTooltip()"/>
+                    <p:ajax event="sort" oncomplete="applyTooltip()"/>
+
+                    <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
+                              filterMatchMode="contains">
+                        <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                            <f:param name="group_id" value="#{group.id}"/>
+                            <h:outputText value="#{group.longTitle}"/>
+                        </h:outputLink>
+
+                        <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains">
+                        <h:outputText value="#{group.description}" escape="false"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.language}" rendered="false">
+                        <h:outputText value="#{group.language}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains">
+                        <h:outputText value="#{group.course.title}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}">
+                        <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
+                        <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                        <h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
+                            <f:param name="group_id" value="#{group.id}"/>
+                            <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
+                        </h:outputLink>
+
+                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
+                                       process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                            <i class="fa fa-sign-in text-success" aria-hidden="true"></i>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </ui:fragment>
+        </h:form>
+    </ui:define>
 </ui:composition>

@@ -52,7 +52,7 @@
 					<p:outputPanel id="transcript_options">
 						<div class="center-header">
 							<h:form>
-								<p:outputLabel for="select_lang" styleClass="mr-2" value="#{msg.select_transcript_lang}:" />
+								<p:outputLabel for="@next" styleClass="mr-2" value="#{msg.select_transcript_lang}:" />
 								<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}" >
 									<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 									<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
