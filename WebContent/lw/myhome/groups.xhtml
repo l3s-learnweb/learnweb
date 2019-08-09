@@ -131,30 +131,25 @@
                 <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
             </p:column>
 
-            <p:column headerText="#{msg.options}">
-                <div class="text-right">
-                    <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{groupsBean.canDeleteGroup(group)}">
-                        <f:param name="group_id" value="#{group.id}"/>
-                        <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
-                    </h:outputLink>
+            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                <h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
+                    <f:param name="group_id" value="#{group.id}"/>
+                    <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
+                </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
-                                   update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
-                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <i class="fa fa-sign-out text-danger" aria-hidden="true"></i>
-                        <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
-                    </p:commandLink>
-                </div>
+                <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
+                               update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
+                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                    <i class="fa fa-sign-out text-danger" aria-hidden="true"></i>
+                    <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
+                </p:commandLink>
             </p:column>
-
-
         </p:dataTable>
 
     </h:form>
     <h:form id="other_groups">
         <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-
-            <p:dataTable rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
+            <p:dataTable tableStyleClass="table-sm table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
                          value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
                 <f:facet name="header">
                     #{msg.otherGroups}
@@ -190,26 +185,18 @@
                     <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                 </p:column>
 
-                <p:column styleClass="ui-column-title">
-                    <f:facet name="header">
-								<span id="option_join_group">
-									#{msg.options}
-								</span>
-                    </f:facet>
-                    <div class="text-right">
-                        <h:outputLink value="group/options.jsf" styleClass="mr-2" rendered="#{userBean.moderator}">
-                            <f:param name="group_id" value="#{group.id}"/>
-                            <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
-                        </h:outputLink>
+                <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                    <h:outputLink value="group/options.jsf" rendered="#{userBean.moderator}">
+                        <f:param name="group_id" value="#{group.id}"/>
+                        <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
+                    </h:outputLink>
 
-                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
-                                       process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                            <i class="fa fa-sign-in text-success" aria-hidden="true"></i>
-                        </p:commandLink>
-                    </div>
+                    <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
+                                   process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                        <i class="fa fa-sign-in text-success" aria-hidden="true"></i>
+                    </p:commandLink>
                 </p:column>
-
             </p:dataTable>
         </ui:fragment>
     </h:form>

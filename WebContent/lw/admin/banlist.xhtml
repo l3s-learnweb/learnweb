@@ -73,19 +73,14 @@
                         <h:outputText value="#{accessData.attempts}"/>
                     </p:column>
 
-                    <p:column styleClass="column-button" headerText="#{msg.options}">
-                        <f:facet name="header">
-                            #{msg.options}
-                        </f:facet>
-                        <div class="text-right">
-                            <p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-                                           update=":banlistform :growl"
-                                           title="#{msg.unban}">
-                                <i class="fa fa-ban text-danger" aria-hidden="true"></i>
-                                <h:outputText value="#{msg.unban}"/>
-                                <p:confirm message="#{msg.unban} #{accessData.name}?" />
-                            </p:commandLink>
-                        </div>
+                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                        <p:commandLink actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
+                                       update=":banlistform :growl"
+                                       title="#{msg.unban}">
+                            <i class="fa fa-ban text-danger" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.unban}"/>
+                            <p:confirm message="#{msg.unban} #{accessData.name}?" />
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>
             </h:form>
@@ -149,22 +144,17 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="#{msg.options}">
-                        <f:facet name="header">
-                            #{msg.options}
-                        </f:facet>
-                        <div class="text-right">
-                            <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this" styleClass="mr-2"
-                                update=":suspiciouslistform :growl" title="#{msg.ban}">
-                                <i class="fa fa-ban text-danger" aria-hidden="true"></i>
-                            </p:commandLink>
+                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                        <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this"
+                            update=":suspiciouslistform :growl" title="#{msg.ban}">
+                            <i class="fa fa-ban text-danger" aria-hidden="true"></i>
+                        </p:commandLink>
 
-                            <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
-                                           update=":suspiciouslistform :growl" title="#{msg.remove}">
-                                <p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
-                                <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                            </p:commandLink>
-                        </div>
+                        <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
+                                       update=":suspiciouslistform :growl" title="#{msg.remove}">
+                            <p:confirm message="#{msg.remove} #{aggrReqData.IP}?" />
+                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>
             </h:form>

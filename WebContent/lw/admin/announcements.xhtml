@@ -83,24 +83,19 @@
                         </p:selectBooleanCheckbox>
                     </p:column>
 
-                    <p:column headerText="#{msg.options}">
-                        <f:facet name="header">
-                            #{msg.options}
-                        </f:facet>
-                        <div class="text-right">
-                            <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}" styleClass="mr-2">
-                                <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
-                                <h:outputText value="#{msg.edit}"/>
-                                <f:param name="announcement_id" value="#{news.id}" />
-                            </h:outputLink>
+                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                        <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
+                            <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.edit}"/>
+                            <f:param name="announcement_id" value="#{news.id}" />
+                        </h:outputLink>
 
-                            <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
-                                           update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
-                                <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                                <h:outputText value="#{msg.delete}"/>
-                                <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
-                            </p:commandLink>
-                        </div>
+                        <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
+                                       update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
+                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.delete}"/>
+                            <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>
             </h:form>
