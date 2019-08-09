@@ -32,6 +32,11 @@ $topbar-button-padding: 15px;
         }
       }
 
+      &.ajax-status {
+        width: 4rem;
+        padding: 0;
+      }
+
       &.lang-button {
         img {
           height: $topbar-button-size;

@@ -15,6 +15,20 @@
                 <a href="#{request.contextPath}/lw/myhome/welcome.jsf" class="header-element logo d-none-mobile">
                     <i class="lw lw-logo"></i>
                 </a>
+                <p:ajaxStatus styleClass="ajax-status-screen">
+                    <f:facet name="start">
+                        <div class="header-element no-hover-bg ajax-status">
+                            <div class="la-pacman text-secondary">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:ajaxStatus>
             </div>
 
             <ui:fragment rendered="#{userBean.loggedIn}">
