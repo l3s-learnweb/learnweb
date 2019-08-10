@@ -20,34 +20,28 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:panelGroup styleClass="section-forum" layout="block">
+		<p:panel rendered="#{forumEditBean.canEditPost()}">
+			<h:form>
+				<table id="answer_table">
+					<ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
+						<div class="mb-3">
+							<h:panelGroup>
+								<p  class="mb-0"><h:outputText styleClass="font-weight-bold" value="#{msg.category}: "/></p>
+								<p:message for="post_category"/>
+							</h:panelGroup>
 
-			<ui:fragment rendered="#{forumEditBean.canEditPost()}">
-				<p:panel>
-					<h:form>
-						<table id="answer_table">
-							<ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
-								<div class="mb-3">
-									<h:panelGroup>
-										<p  class="mb-0"><h:outputText styleClass="font-weight-bold" value="#{msg.category}: "/></p>
-										<p:message for="post_category"/>
-									</h:panelGroup>
-
-									<p:selectOneMenu id="post_category" value="#{forumEditBean.post.category}" editable="true"
-													 label="#{msg.category}" required="#{forumEditBean.group.restrictionForumCategoryRequired}">
-										<f:selectItems value="#{forumEditBean.categories}" />
-									</p:selectOneMenu>
-								</div>
-							</ui:fragment>
-							<p:textEditor  widgetVar="editorWidget" value="#{forumEditBean.post.text}"
-										   label="#{msg['PostShow.postContent']}" height="184" id="msg_description" />
-							<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="mt-3"
-											 update="@form" ajax="true" validateClient="true" />
-						</table>
-					</h:form>
-				</p:panel>
-			</ui:fragment>
-
-		</h:panelGroup>
+							<p:selectOneMenu id="post_category" value="#{forumEditBean.post.category}" editable="true"
+											 label="#{msg.category}" required="#{forumEditBean.group.restrictionForumCategoryRequired}">
+								<f:selectItems value="#{forumEditBean.categories}" />
+							</p:selectOneMenu>
+						</div>
+					</ui:fragment>
+					<p:textEditor  widgetVar="editorWidget" value="#{forumEditBean.post.text}"
+								   label="#{msg['PostShow.postContent']}" height="184" id="msg_description" />
+					<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="mt-3"
+									 update="@form" ajax="true" validateClient="true" />
+				</table>
+			</h:form>
+		</p:panel>
 	</ui:define>
 </ui:composition>
