@@ -36,6 +36,17 @@
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="learnweb-layout" name="js/default2.js"/>
 
+            <ui:fragment rendered="#{userBean.trackingEnabled}">
+                <script src="https://learnweb.l3s.uni-hannover.de/tracker/js/init.js" async="async"></script>
+                <script>
+                    window.wapsTrackerData = {
+                        start: new Date(),
+                        apiKey: '#{learnwebBean.trackerApiKey}',
+                        externalUserId: '#{userBean.getUser().getId()}'
+                    };
+                </script>
+            </ui:fragment>
+
             <base href="#{request.contextPath}/lw/"/>
 
             <ui:insert name="head"/>
