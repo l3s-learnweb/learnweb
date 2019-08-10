@@ -50,18 +50,10 @@
                     </div>
                 </ui:define>
             </ui:decorate>
-            <!--
-                <script type="text/javascript">
-                    /* &lt;!&ndash; */
-                   // $("#center_pane").prepend($("#group_header"));
-                    /* &ndash;&gt; */
-                </script>-->
 
             <h:form prependId="false">
                 <p:dataTable var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" lazy="false" paginatorPosition="bottom"
                              id="forum_post_table" style="margin-top: 0 !important;" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
-                    <p:ajax event="page" onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
 
                     <p:column headerText="#{msg.author}" styleClass="col text-center">
                         <div>
@@ -115,8 +107,7 @@
                                     #{msg.edit}
                                 </h:outputLink>
                                 <p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}"
-                                               oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message"
-                                               ajax="true" styleClass="float-right mr-2 p-2"/>
+                                               update=":post_form:post_message" ajax="true" styleClass="float-right mr-2 p-2"/>
                             </div>
                         </div>
                     </p:column>

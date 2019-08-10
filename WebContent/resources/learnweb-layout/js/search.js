@@ -549,8 +549,6 @@ $(document).ready(function()
 		else if (event.which === 27)
 			lightbox_close();		
 	});
-	
-	//$('#center_pane > div').scroll(testIfResultsFillPage);	
 
 	$(document).bind("scroll", function(){
 		testIfResultsFillPage();

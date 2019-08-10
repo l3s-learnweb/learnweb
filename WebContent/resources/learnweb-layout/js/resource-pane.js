@@ -8,8 +8,7 @@
 
 
 function scrollToElement(element) {
-    //$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
-    //console.log(element.offset().top, element.position().top, $('#center_pane .content').height(), element.height());
+    // TODO: remove the method
 }
 
 function open_timeline_view() {

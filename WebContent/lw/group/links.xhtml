@@ -46,12 +46,6 @@
 			</ui:define>
 		</ui:decorate>
 		
-		<script type="text/javascript">
-		/* <!-- */
-			$("#center_pane").prepend($("#group_header"));
-		/* --> */
-		</script>
-		
 		<p:dialog appendTo="@(body)" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
 			<h:form id="link_edit_form">
 				<h:panelGrid columns="2" rendered="#{groupLinksBean.selectedLink != null}">

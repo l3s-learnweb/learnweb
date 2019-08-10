@@ -184,7 +184,7 @@
 
                                 <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
                                                  styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
-                                                 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();"/>
+                                                 oncomplete="resourceDND();"/>
                             </div>
                         </li>
 
@@ -209,7 +209,7 @@
                                          onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
                             <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false" process="@form"
-                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" update=":resourcesWrapper"
+                                             oncomplete="resourceDND();" update=":resourcesWrapper"
                                              value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
                         </h:form>
                         <br/>
@@ -267,7 +267,7 @@
 
                                             <p:commandButton styleClass="greenbutton" value="Filter"
                                                              actionListener="#{groupResourcesBean.onMetadataFilterClick}" update=":resourcesWrapper"
-                                                             oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();" process="@form"/>
+                                                             oncomplete="resourceDND();" process="@form"/>
                                         </p:panelGrid>
                                     </h:form>
                                 </p:tab>

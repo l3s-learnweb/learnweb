@@ -48,19 +48,10 @@
 			</ui:define>
 		</ui:decorate>
 
-		<!--<script type="text/javascript">
-			/* &lt;!&ndash; */
-			$("#center_pane").prepend($("#group_header"));
-			/* &ndash;&gt; */
-		</script>-->
-
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 						 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
-
-				<p:ajax event="page"
-						onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);"/>
 
 				<p:column headerText="#{msg['ForumIndex.topic']}" styleClass="text-center" sortBy="#{topic.title}">
 					<h:link value="#{topic.title}" outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}"
