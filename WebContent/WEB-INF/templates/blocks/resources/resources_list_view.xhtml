@@ -17,24 +17,7 @@
 
             <div class="res-row">
                 <div class="res-col res-col-type">
-                    <ui:fragment rendered="#{res.type == 'website'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/web.png" alt=""/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{res.type == 'pdf'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/pdf.png" alt=""/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{res.type == 'image'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/image.png" alt=""/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{res.type == 'audio'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/audio.png" alt=""/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{res.type == 'video'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/video.png" alt=""/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{res.type == 'file'}">
-                        <img src="#{request.contextPath}/resources/resources/img-chloe/file.png" alt=""/>
-                    </ui:fragment>
+                    <i class="fa res-t-icon t-#{res.type}" aria-hidden="true"></i>
                 </div>
 
                 <div class="res-col res-col-preview">
