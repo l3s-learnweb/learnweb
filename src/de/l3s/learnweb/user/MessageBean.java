@@ -19,7 +19,7 @@ public class MessageBean extends ApplicationBean implements Serializable // TODO
     private static final Logger log = Logger.getLogger(MessageBean.class);
 
     private ArrayList<Message> receivedMessages;
-    private String howManyNewMessages;
+    private Integer howManyNewMessages;
 
     public MessageBean()
     {
@@ -42,16 +42,11 @@ public class MessageBean extends ApplicationBean implements Serializable // TODO
         return receivedMessages;
     }
 
-    public String getHowManyNewMessages() throws SQLException
+    public Integer getHowManyNewMessages() throws SQLException
     {
         if(howManyNewMessages == null)
         {
-            int i = Message.howManyNotSeenMessages(getUser());
-
-            if(i == 0)
-                howManyNewMessages = "0";
-            else
-                howManyNewMessages = "" + i;
+            howManyNewMessages = Message.howManyNotSeenMessages(getUser());
         }
         return howManyNewMessages;
     }

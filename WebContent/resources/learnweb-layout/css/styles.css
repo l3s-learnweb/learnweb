@@ -9822,6 +9822,25 @@ body .ui-datatable .ui-datatable-footer {
   content: "";
 }
 
+.has-badge {
+  position: relative;
+}
+.has-badge:after {
+  position: absolute;
+  right: 0;
+  top: 0;
+  content: attr(data-count);
+  font-size: 0.7rem;
+  padding: 0.5em;
+  border-radius: 50%;
+  line-height: 0.75em;
+  color: #fff;
+  background: rgba(205, 32, 38, 0.85);
+  text-align: center;
+  min-width: 1.75em;
+  font-weight: bold;
+}
+
 .onhover-scrollbar {
   overflow-y: hidden;
 }
@@ -10001,7 +10020,7 @@ body,
   background-color: inherit;
 }
 .layout-wrapper .layout-header .header-element.ajax-status {
-  width: 6rem;
+  width: 4rem;
   padding: 0;
 }
 .layout-wrapper .layout-header .header-element.lang-button img {

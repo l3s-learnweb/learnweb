@@ -46,7 +46,7 @@
 
             <h:form styleClass="d-flex">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
-                    <i class="fa fa-bell"></i>
+                    <i class="fa fa-bell #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}"></i>
                 </h:outputLink>
 
                 <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
