@@ -18,27 +18,11 @@
                               pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
                               pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
                               pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
-                    <div class="res-block res-block-folder">
-                        <div class="res-bl-details">
-                            <div class="res-bl-icon">
-                                <i class="fa fa-folder" aria-hidden="true"></i>
-                            </div>
 
-                            <div class="res-bl-desc">
-                                <h:outputText value="#{folder.name}" escape="false" styleClass="res-bl-title"/>
-                            </div>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
+                        <ui:param name="folder" value="#{folder}" />
+                    </ui:decorate>
 
-                            <h:panelGroup class="resource-controls" layout="block">
-                                <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" rendered="${folder.canEditResource(userBean.user)}">
-                                    <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
-                                </h:outputLink>
-
-                                <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete" rendered="${folder.canDeleteResource(userBean.user)}">
-                                    <i class="fa text-danger fa-times" aria-hidden="true"></i>
-                                </h:outputLink>
-                            </h:panelGroup>
-                        </div>
-                    </div>
                 </h:panelGroup>
             </p:repeat>
         </h:panelGroup>
