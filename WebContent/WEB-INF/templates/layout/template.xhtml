@@ -21,20 +21,22 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
                 <meta name="apple-mobile-web-app-capable" content="yes"/>
 
+                <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
                 <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
             </f:facet>
 
-            <title>
-                <h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}
-            </title>
+            <base href="#{request.contextPath}/lw/"/>
 
             <h:outputStylesheet library="learnweb-layout" name="css/styles.css"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
+            <h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
             <h:outputScript name="vendor/cq-prolyfill-v0.4.0/cq-prolyfill.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="learnweb-layout" name="js/default2.js"/>
+
+            <ui:insert name="head"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script src="https://learnweb.l3s.uni-hannover.de/tracker/js/init.js" async="async"></script>
@@ -46,10 +48,6 @@
                     };
                 </script>
             </ui:fragment>
-
-            <base href="#{request.contextPath}/lw/"/>
-
-            <ui:insert name="head"/>
         </h:head>
 
         <h:body styleClass="layout-body">
@@ -78,7 +76,7 @@
                                 </ui:insert>
 
                                 <div class="row flex-nowrap">
-                                    <div class="col" id="center_pane">
+                                    <div class="col">
                                         <ui:insert name="center_layout"/>
                                     </div>
 
@@ -90,6 +88,9 @@
                                 </div>
                             </ui:fragment>
                         </ui:fragment>
+                        <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
+                            <h2 class="text-danger">#{msg.service_unavailable}</h2>
+                        </ui:fragment>
                     </main>
 
                     <ui:include src="parts/footer.xhtml"/>
@@ -99,13 +100,8 @@
             <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
             <h:form styleClass="d-none">
-                <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this"
-                                 partialSubmit="true" global="false"/>
-            </h:form>
-
-            <h:form class="d-none">
-                <p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this"
-                                 partialSubmit="true" global="false"/>
+                <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this" partialSubmit="true" global="false"/>
+                <p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false"/>
             </h:form>
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">

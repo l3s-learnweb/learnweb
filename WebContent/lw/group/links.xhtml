@@ -5,19 +5,20 @@
 				xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
-	<ui:define name="head-meta">
-		<meta name="google-signin-client_id" content="948054065586-oh9uobccisi7lkt832q9n2hmk4mk410s.apps.googleusercontent.com" />
-		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
-	</ui:define>
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{groupLinksBean.group.title}" />
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupLinksBean.groupId}" />
 			<f:viewAction action="#{groupLinksBean.onLoad}"/>
 		</f:metadata>
-	</ui:define>			
+	</ui:define>
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{groupLinksBean.group.title}" />
+	<ui:define name="head">
+		<meta name="google-signin-client_id" content="948054065586-oh9uobccisi7lkt832q9n2hmk4mk410s.apps.googleusercontent.com" />
+		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
+	</ui:define>
 
 	<ui:define name="center_layout">
 		<script type="text/javascript">
