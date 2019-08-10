@@ -55,9 +55,8 @@
                                  action="#{cbean.cleanAndUpdateStoredData()}">
                 </p:commandButton>
             </p:ajaxStatus>
-            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false"
-                      showHeader="false">
-                <p:graphicImage value="/resources/learnweb-layout/images/ajax-loader.gif"/>
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+                <i class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i>
             </p:dialog>
         </div>
     </p:outputPanel>

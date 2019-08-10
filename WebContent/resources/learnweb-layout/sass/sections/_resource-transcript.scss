@@ -29,11 +29,7 @@
   .overlay .closebtn {
     position: absolute;
     top: 45px;
-    right: 0px;
-    font-size: 60px;
-    width:26px;
-    height:26px;
-    background:url("\#{resource['image:cross_white.png']}") center no-repeat;
+    right: 5px;
   }
 
   /* When the height of the screen is less than 450 pixels, change the position the close button again*/
