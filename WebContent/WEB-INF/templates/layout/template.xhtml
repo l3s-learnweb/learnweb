@@ -99,6 +99,30 @@
 
             <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
+            <h:form>
+                <!-- TODO: check if we need it -->
+                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();" />
+                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+
+                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog" resizable="true">
+                    <p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
+
+                    <div id="stacktrace" class="d-none">
+                        <h:outputText value="Message:#{pfExceptionHandler.message}" />
+                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+                    </div>
+                </p:dialog>
+
+                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog" modal="true">
+                    <div class="error" style="font-size:1.4rem">
+                        #{msg.reload_page}
+                    </div>
+                    <br/>
+                    <br/>
+                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}" />
+                </p:dialog>
+            </h:form>
+
             <h:form styleClass="d-none">
                 <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" process="@this" partialSubmit="true" global="false"/>
                 <p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false"/>
