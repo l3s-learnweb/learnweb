@@ -1,9 +1,10 @@
 package de.l3s.learnweb.user.loginProtection;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,7 +56,6 @@ public class ProtectionManager
     private final static int CAPTCHA_THRESHOLD = 3;
     private final static int MINUTES_ANALYZED = 10;
     private final static int BAN_THRESHOLD = 100;
-    private final static Path WHITELIST_PATH = Paths.get("whitelist.txt"); // TODO: probably should be changed
 
     public ProtectionManager(Learnweb learnweb)
     {
@@ -72,30 +72,17 @@ public class ProtectionManager
 
     private void loadWhitelist()
     {
-        if(Files.exists(WHITELIST_PATH))
+        try(InputStream inputStream = getClass().getClassLoader().getResourceAsStream("whitelist.txt"))
         {
-            try(Stream<String> stream = Files.lines(WHITELIST_PATH))
-            {
-                stream.forEach(whitelist::add);
-            }
-            catch(IOException e)
-            {
-                log.error("Failed to load whitelist. IOException: ", e);
-            }
+            Stream<String> stream = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines();
+            stream.forEach(whitelist::add);
+        }
+        catch(IOException e)
+        {
+            log.error("Failed to load whitelist. IOException: ", e);
+        }
 
-            log.debug("Whitelist loaded. Entries: " + whitelist.size());
-        }
-        else
-        {
-            try
-            {
-                Files.createFile(WHITELIST_PATH);
-            }
-            catch(IOException e)
-            {
-                log.error("Failed to create new whitelist. IOException: ", e);
-            }
-        }
+        log.debug("Whitelist loaded. Entries: " + whitelist.size());
     }
 
     /**
