@@ -70,8 +70,8 @@ public class DownloadServlet extends HttpServlet
             this.fileManager = learnweb.getFileManager();
 
             // quick and dirty fix
-            URL fileNotFoundResource = getServletContext().getResource("/resources/resources/img/file-not-found.png");
-            //URL fileNotFoundResource = getClass().getResource("/resources/resources/img/file-not-found.png");
+            URL fileNotFoundResource = getServletContext().getResource("/resources/images/file-not-found.png");
+            //URL fileNotFoundResource = getClass().getResource("/resources/images/file-not-found.png");
             if(null == fileNotFoundResource)
                 throw new RuntimeException("Can't find file-not-found.png");
             else

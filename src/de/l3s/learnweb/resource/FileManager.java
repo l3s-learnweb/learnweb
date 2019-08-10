@@ -366,7 +366,7 @@ public class FileManager
 
     public static void main(String[] args) throws SQLException
     {
-        URL fileNotFoundResource = FileManager.class.getResource("/resources/resources/img/file-not-found.png");
+        URL fileNotFoundResource = FileManager.class.getResource("/resources/images/file-not-found.png");
 
         if(null == fileNotFoundResource)
             throw new RuntimeException("Can't find file-not-found.png");
