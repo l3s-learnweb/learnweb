@@ -108,7 +108,7 @@ public class LearnwebBean implements Serializable
             if(null != url)
                 return url;
         }
-        return getContextPath() + "/resources/image/no_profile.jpg";
+        return getContextPath() + "/resources/images/no-profile-picture.jpg";
     }
 
     public boolean isMaintenanceMode()

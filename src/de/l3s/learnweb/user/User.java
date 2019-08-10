@@ -610,7 +610,7 @@ public class User implements Comparable<User>, Serializable, HasId
         if(fileId > 0)
             return learnweb.getFileManager().createUrl(fileId, "user_icon.png");
 
-        return learnweb.getSecureServerUrl() + "/resources/image/no_profile.jpg";
+        return learnweb.getSecureServerUrl() + "/resources/images/no-profile-picture.jpg";
     }
 
     public void setId(int id)
