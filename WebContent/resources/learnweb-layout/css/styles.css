@@ -10928,6 +10928,43 @@ body .ui-tabs.ui-tabs-transparent .ui-tabs-panels {
   flex: 1 1 auto;
 }
 
+.res-t-icon:before {
+  content: "";
+}
+.res-t-icon.t-text:before {
+  content: "";
+}
+.res-t-icon.t-video:before {
+  content: "";
+}
+.res-t-icon.t-image:before {
+  content: "";
+}
+.res-t-icon.t-audio:before {
+  content: "";
+}
+.res-t-icon.t-pdf:before {
+  content: "";
+}
+.res-t-icon.t-website:before {
+  content: "";
+}
+.res-t-icon.t-spreadsheet:before {
+  content: "";
+}
+.res-t-icon.t-presentation:before {
+  content: "";
+}
+.res-t-icon.t-document:before {
+  content: "";
+}
+.res-t-icon.t-survey:before {
+  content: "";
+}
+.res-t-icon.t-glossary2:before {
+  content: "";
+}
+
 img.res-image-simple {
   max-height: 100%;
   max-width: 100%;
@@ -11091,9 +11128,9 @@ ul.res-filters .clear-filters:hover a {
 }
 .res-row .res-col-type {
   flex: 0 0 4rem;
-}
-.res-row .res-col-type img {
-  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 2.5rem;
 }
 .res-row .res-col-preview {
   flex: 0 0 10rem;
@@ -12178,26 +12215,6 @@ ul.res-filters .clear-filters:hover a {
   background: #6c757d;
 }
 
-.section-forum {
-  /*forum_post_page*/
-}
-.section-forum #forum_post_table tr th:first-child {
-  width: 13%;
-  min-width: 100px !important;
-  /* doesn't work?!*/
-}
-@media (min-width: 360px) and (max-width: 767.98px) {
-  .section-forum #forum_post_table tr th:first-child {
-    width: 30%;
-    /* doesn't work?!*/
-  }
-}
-.section-forum .new-topic-title {
-  background: url("#{resource['main-template/img/message.png']}") left no-repeat;
-  background-size: 18px 18px;
-  padding-left: 26px;
-}
-
 .section-glossary {
   /*
     !*change primefaces ui*!
@@ -12318,10 +12335,6 @@ ul.res-filters .clear-filters:hover a {
   }
 }
 
-.add-resource-image {
-  width: 2rem;
-}
-
 .section-resource-transcript {
   /* When the height of the screen is less than 450 pixels, change the position the close button again*/
   /* Style the tablinks inside the list items */
@@ -12367,11 +12380,7 @@ ul.res-filters .clear-filters:hover a {
 .section-resource-transcript .overlay .closebtn {
   position: absolute;
   top: 45px;
-  right: 0px;
-  font-size: 60px;
-  width: 26px;
-  height: 26px;
-  background: url("#{resource['image:cross_white.png']}") center no-repeat;
+  right: 5px;
 }
 @media screen and (max-height: 450px) {
   .section-resource-transcript .overlay .closebtn {
@@ -12574,7 +12583,23 @@ ul.res-filters .clear-filters:hover a {
   height: 100%;
   box-sizing: border-box;
   background-color: #fff !important;
-  background: url("#{resource['image:default-loader.gif']}") center center no-repeat;
+  position: relative;
+}
+.section-resources #archive_iframe_div i {
+  color: #212529;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -0.5em;
+  z-index: 1;
+}
+.section-resources #archive_iframe_div iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 .section-resources #archive_timestamp_overlay {
   position: absolute;
@@ -12812,14 +12837,6 @@ ul.res-filters .clear-filters:hover a {
   text-align: center;
   z-index: 1;
   clear: both;
-}
-.section-search #search_loading_more_results .loading-icon {
-  display: inline-block;
-  width: 1.6rem;
-  height: 1.6rem;
-  margin-bottom: -0.4rem;
-  margin-left: 0.4rem;
-  background-image: url("#{resource['image:loading.gif']}");
 }
 .section-search #search_loading_more_results img {
   vertical-align: bottom;
