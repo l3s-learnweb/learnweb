@@ -6042,7 +6042,7 @@ body .ui-inputfield {
   background: #fff;
   padding: 0.25rem 0.25rem;
   border: 1px solid #adb5bd;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.2s, box-shadow 0.2s;
   border-radius: 0;
   font-size: 1rem;
 }
@@ -6296,7 +6296,7 @@ body .ui-chkbox .ui-chkbox-box {
   line-height: 20px;
   text-align: center;
   box-sizing: border-box;
-  transition: border-color 0.3s, background-color 0.3s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-chkbox .ui-chkbox-box {
@@ -6346,7 +6346,7 @@ body .ui-radiobutton .ui-radiobutton-box {
   text-align: center;
   box-sizing: border-box;
   border-radius: 50%;
-  transition: border-color 0.3s;
+  transition: border-color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-radiobutton .ui-radiobutton-box {
@@ -7445,7 +7445,7 @@ body .ui-accordion .ui-accordion-header {
   margin-bottom: 8px;
   color: #212529;
   font-weight: 700;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-accordion .ui-accordion-header {
@@ -7467,7 +7467,7 @@ body .ui-accordion .ui-accordion-header.ui-state-active.ui-tabs-outline {
 body .ui-accordion .ui-accordion-header .ui-icon {
   right: 1rem;
   left: auto;
-  transition: color 0.3s;
+  transition: color 0.2s;
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -7514,7 +7514,7 @@ body .ui-tabs.ui-tabs-bottom .ui-tabs-nav, body .ui-tabs.ui-tabs-left .ui-tabs-n
 }
 body .ui-tabs.ui-tabs-bottom .ui-tabs-nav li, body .ui-tabs.ui-tabs-left .ui-tabs-nav li, body .ui-tabs.ui-tabs-right .ui-tabs-nav li, body .ui-tabs.ui-tabs-top .ui-tabs-nav li {
   position: relative;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
   border-radius: 0;
   box-sizing: border-box;
   margin: 0;
@@ -7684,7 +7684,7 @@ body .ui-paginator .ui-paginator-next,
 body .ui-paginator .ui-paginator-prev {
   height: 20px;
   border-top: 4px solid transparent;
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-paginator .ui-paginator-first,
@@ -9745,7 +9745,7 @@ body .ui-log .ui-log-header .ui-log-button {
   margin-right: 4px;
   color: #fff;
   padding: 0;
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-log .ui-log-header .ui-log-button {
@@ -10005,7 +10005,7 @@ body,
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-header .header-element {
@@ -10080,8 +10080,75 @@ body,
   }
 }
 
+.layout-main-pane {
+  transition: max-width 0.2s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layout-main-pane {
+    transition: none;
+  }
+}
+
+.layout-right-pane {
+  transition: all 0.2s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layout-right-pane {
+    transition: none;
+  }
+}
+@media (max-width: 991.98px) {
+  .layout-right-pane {
+    display: block !important;
+    position: fixed;
+    right: -80%;
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 80%;
+    z-index: 1001;
+    padding: 0;
+    background: #f2f5fa;
+  }
+  .layout-right-pane > .ui-widget-content {
+    border: 0;
+  }
+}
+@media (max-width: 575.98px) {
+  .layout-right-pane {
+    right: -90%;
+    width: 90%;
+  }
+}
+
+@media (min-width: 992px) {
+  body.right-pane-open .layout-main-pane {
+    flex: 0 0 66.6666666667%;
+    max-width: 66.6666666667%;
+  }
+  body.right-pane-open .layout-right-pane {
+    display: block;
+    padding-left: 1rem;
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+  }
+}
+@media (max-width: 991.98px) {
+  body.right-pane-open {
+    overflow-y: hidden;
+  }
+  body.right-pane-open .layout-overlay {
+    display: block;
+    opacity: 1;
+  }
+  body.right-pane-open .layout-right-pane {
+    right: 0;
+  }
+}
+
 .layout-wrapper .layout-sidebar {
-  width: 15rem;
+  width: 14rem;
   background-color: #fff;
   border-right: solid 1px #ced4da;
   position: fixed;
@@ -10091,7 +10158,7 @@ body,
   height: 100%;
   padding-top: 3.75rem;
   box-sizing: border-box;
-  transition: left 0.3s;
+  transition: all 0.2s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-sidebar {
@@ -10105,7 +10172,7 @@ body,
 }
 @media (max-width: 1199.98px) {
   .layout-wrapper .layout-sidebar {
-    left: -15rem;
+    left: -14rem;
     box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
   }
 }
@@ -10116,7 +10183,7 @@ body,
   overflow-y: auto;
 }
 .layout-wrapper.layout-wrapper-sidebar-inactive .layout-sidebar {
-  left: -15rem;
+  left: -14rem;
 }
 @media (max-width: 1199.98px) {
   .layout-wrapper.layout-wrapper-sidebar-mobile-active .layout-sidebar {
@@ -10124,12 +10191,29 @@ body,
   }
 }
 
+.layout-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: rgba(35, 37, 42, 0.85);
+  transition: all 0.2s ease-in-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .layout-overlay {
+    transition: none;
+  }
+}
+
 .layout-wrapper .layout-main {
   position: relative;
   padding-top: 3.75rem;
-  margin-left: 15rem;
+  margin-left: 14rem;
   min-height: 100vh;
-  transition: margin-left 0.3s;
+  transition: margin-left 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-main {
@@ -10838,18 +10922,6 @@ body,
   color: #fff;
 }
 
-.ui-datatable .table-responsive {
-  table-layout: auto;
-}
-.ui-datatable .table-sm thead th {
-  font-size: 1rem;
-}
-.ui-datatable .table-sm thead th,
-.ui-datatable .table-sm tfoot td,
-.ui-datatable .table-sm .ui-datatable-data tr td {
-  padding: 0.3rem;
-}
-
 body .ui-widget.ui-widget-content-p-0 > .ui-widget-content {
   padding: 0;
 }
@@ -10864,6 +10936,17 @@ body .ui-panel.ui-panel-header-btn .ui-panel-titlebar {
 }
 body .ui-panel.ui-panel-header-btn .ui-panel-title {
   line-height: 2;
+}
+body .ui-datatable .table-responsive {
+  table-layout: auto;
+}
+body .ui-datatable .table-sm thead th {
+  font-size: 1rem;
+}
+body .ui-datatable .table-sm thead th,
+body .ui-datatable .table-sm tfoot td,
+body .ui-datatable .table-sm .ui-datatable-data tr td {
+  padding: 0.3rem;
 }
 body .ui-carousel.ui-carousel-light {
   border: 0;
@@ -10969,10 +11052,10 @@ img.res-image-simple {
   max-height: 100%;
   max-width: 100%;
   border-radius: 0.2rem;
-  animation: fadein 0.3s;
+  animation: fadein 0.2s;
   box-sizing: border-box;
   border: 1px solid #ced4da;
-  transition: max-height 0.15s ease, max-width 0.15s ease;
+  transition: max-height 0.2s ease, max-width 0.2s ease;
   transform-origin: center;
 }
 
@@ -11197,7 +11280,7 @@ ul.res-filters .clear-filters:hover a {
   position: relative;
 }
 .res-block .res-bl-preview .res-bl-preview-wrap {
-  transition: opacity 200ms ease-in-out;
+  transition: opacity 0.2s ease-in-out;
   background-color: #fff;
   height: 100%;
   overflow: hidden;
@@ -11330,7 +11413,7 @@ ul.res-filters .clear-filters:hover a {
 
 .context-menu {
   border-radius: 0;
-  transition: opacity 0.218s;
+  transition: opacity 0.2s;
   background: #fff;
   cursor: default;
   font-size: 13px;
@@ -12099,7 +12182,7 @@ ul.res-filters .clear-filters:hover a {
   margin: 0;
   padding: 0;
   position: relative;
-  transition: all 0.5s linear;
+  transition: all 0.2s linear;
   top: 0;
 }
 .section-entity-relationship .box ul:last-of-type {
@@ -12255,7 +12338,7 @@ ul.res-filters .clear-filters:hover a {
   text-align: center;
   width: 130px;
   height: 130px;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.2s;
 }
 .section-group-members .members-panelgrid > .member-star {
   position: absolute;
@@ -12349,7 +12432,7 @@ ul.res-filters .clear-filters:hover a {
   background-color: black;
   background-color: rgba(0, 0, 0, 0.5);
   overflow-x: hidden;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 .section-resource-transcript .overlay-content {
   position: relative;
@@ -12408,7 +12491,7 @@ ul.res-filters .clear-filters:hover a {
   text-align: center;
   padding: 6px 8px;
   text-decoration: none;
-  transition: 0.3s;
+  transition: 0.2s;
   font-size: 1.6rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -12447,7 +12530,7 @@ ul.res-filters .clear-filters:hover a {
   display: block;
   padding: 15px;
   box-sizing: border-box;
-  transition: 0.5s;
+  transition: 0.2s;
   margin: auto;
 }
 .section-resource-transcript .transcript {
@@ -12469,7 +12552,7 @@ ul.res-filters .clear-filters:hover a {
   top: 0px;
   padding-top: 4.6rem;
   border-right: 5px solid #ccc;
-  transition: 0.3s;
+  transition: 0.2s;
 }
 .section-resource-transcript .embedded iframe {
   border: 10px solid white;
@@ -13271,7 +13354,7 @@ ul.res-filters .clear-filters:hover a {
   background-position: bottom left;
   background-repeat: no-repeat;
   background-size: 0% 1.5px;
-  transition: background-size 0.5s ease;
+  transition: background-size 0.2s ease;
 }
 .section-search .custom-underline:hover {
   background-size: 100% 1.5px;

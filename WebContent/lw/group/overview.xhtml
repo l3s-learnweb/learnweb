@@ -43,8 +43,8 @@
 <ui:define name="middle_column">
 
     <h:form>
-        <p:remoteCommand name="resourceAddedHook" update=":group_middle_column"/>
-        <p:remoteCommand name="resourceUpdatedHook" update=":group_middle_column"/>
+        <p:remoteCommand name="resourceAddedHook" update=":summary_overview_form :group_activity"/>
+        <p:remoteCommand name="resourceUpdatedHook" update=":summary_overview_form :group_activity"/>
     </h:form>
 
     <ui:decorate template="/WEB-INF/templates/blocks/group/parts/summary_overview.xhtml">
@@ -79,7 +79,7 @@
 
                         <h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
                             <h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
-                                <p:commandLink update=":group_right_column">
+                                <p:commandLink update=":right_pane">
                                     <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
                                     <img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
                                 </p:commandLink>

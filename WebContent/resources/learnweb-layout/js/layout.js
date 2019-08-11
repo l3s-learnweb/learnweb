@@ -5,16 +5,28 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     init: function (cfg) {
         this._super(cfg);
-        this.wrapper = $(document.body).children('.layout-wrapper');
+        this.body = $(document.body);
+        this.overlay = this.body.find('.layout-overlay');
+        this.wrapper = this.body.children('.layout-wrapper');
 
         this.header = this.wrapper.children('.layout-header');
         this.menuButton = this.header.find('#menu-button');
+
+        this.mainPane = this.body.find('.layout-main-pane');
+        this.rightPane = this.body.find('.layout-right-pane');
+        this.isRightPaneOpen = false;
 
         this._bindEvents();
     },
 
     _bindEvents: function () {
         var $this = this;
+
+        $this.overlay.on('mouseup', function(e) {
+            if ($this.isRightPaneOpen) {
+                $this.hideRightPane();
+            }
+        });
 
         $this.menuButton.off('click').on('click', function (e) {
             if ($this.isDesktop()) {
@@ -27,6 +39,26 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
             e.preventDefault();
         });
+
+        $this.rightPane.on('click', '.layout-right-pane-close', function (e) {
+            $this.hideRightPane();
+
+            e.preventDefault();
+        });
+
+        if ($this.rightPane.find('#panel_header_title').length) {
+            $this.showRightPane();
+        }
+    },
+
+    showRightPane: function () {
+        this.body.addClass('right-pane-open');
+        this.isRightPaneOpen = true;
+    },
+
+    hideRightPane: function () {
+        this.body.removeClass('right-pane-open');
+        this.isRightPaneOpen = false;
     },
 
     isDesktop: function () {
@@ -465,7 +497,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
  * On document ready events
  */
 $(function () {
-    PrimeFaces.cw("LearnwebTheme", "me", {id: "learnweb"});
+    PrimeFaces.cw("LearnwebTheme", "learnweb", {id: "learnweb"});
 });
 
 /**

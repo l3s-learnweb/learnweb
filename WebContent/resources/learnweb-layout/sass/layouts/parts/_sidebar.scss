@@ -10,7 +10,7 @@
     height: 100%;
     padding-top: $topbar-height;
     box-sizing: border-box;
-    @include transition(left $transition-duration);
+    @include transition();
 
     @include media-breakpoint-down($topbar-two-row-display) {
       padding-top: 2 * $topbar-height;

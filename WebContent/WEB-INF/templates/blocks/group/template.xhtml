@@ -19,17 +19,19 @@
 
             <ui:fragment rendered="#{group.canViewResources(userBean.user)}">
                 <div class="row s-gutters">
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-4 col-lg-2" id="group_left_column">
+                    <h:panelGroup layout="block" styleClass="col-12 col-md-4">
                         <ui:insert name="left_column"/>
                     </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-8 col-lg-6" id="group_middle_column">
+
+                    <h:panelGroup layout="block" styleClass="col-12 col-md-8">
                         <ui:insert name="middle_column"/>
-                    </h:panelGroup>
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-12 col-lg-4" id="group_right_column">
-                        <ui:decorate template="/templates/resources/right_pane.xhtml"/>
                     </h:panelGroup>
                 </div>
             </ui:fragment>
         </ui:fragment>
+    </ui:define>
+
+    <ui:define name="right_layout">
+        <ui:decorate template="/templates/resources/right_pane.xhtml"/>
     </ui:define>
 </ui:composition>

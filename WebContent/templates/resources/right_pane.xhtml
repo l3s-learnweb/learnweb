@@ -5,9 +5,13 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<!--    <p:layoutUnit rendered="#{userBean.loggedIn}" header="#{rightPaneBean.panelTitle}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="height: 100%;" id="right_pane">-->
-
 <p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="m-0">
+    <f:facet name="actions">
+        <a href="#" class="layout-right-pane-close" aria-label="#{msg.close}">
+            <i class="fa fa-times fa-inverse" aria-hidden="true"></i>
+        </a>
+    </f:facet>
+
     <h:outputScript library="learnweb-layout" name="js/resource-pane.js" target="head"/>
 
     <h:panelGroup layout="block" id="right_pane_wrapper" styleClass="right-panel section-resources">
@@ -752,5 +756,4 @@
         </script>
     </h:panelGroup>
 </p:panel>
-<!--    </p:layoutUnit>-->
 </ui:composition>

@@ -51,6 +51,8 @@
         </h:head>
 
         <h:body styleClass="layout-body">
+            <div class="layout-overlay collapse"></div>
+
             <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
                 <ui:include src="parts/header.xhtml"/>
 
@@ -75,16 +77,14 @@
                                     </p:breadCrumb>
                                 </ui:insert>
 
-                                <div class="row flex-nowrap">
-                                    <div class="col">
+                                <div class="row no-gutters">
+                                    <div class="col layout-main-pane">
                                         <ui:insert name="center_layout"/>
                                     </div>
 
-                                    <ui:fragment rendered="#{rightPane}">
-                                        <div class="col-6 d-none d-lg-block">
-                                            <ui:insert name="right_layout"/>
-                                        </div>
-                                    </ui:fragment>
+                                    <div class="col-12 layout-right-pane collapse">
+                                        <ui:insert name="right_layout"/>
+                                    </div>
                                 </div>
                             </ui:fragment>
                         </ui:fragment>

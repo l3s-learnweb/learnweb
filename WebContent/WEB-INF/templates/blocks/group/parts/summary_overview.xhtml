@@ -18,7 +18,7 @@
 
 					<div class="activity-feed-slider activity-feed-added-resources">
 						<p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-							<p:commandLink update=":group_right_column">
+							<p:commandLink update=":right_pane">
 								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
 								<div class="mx-auto" style="min-width:10rem;">
@@ -54,7 +54,7 @@
 
 					<div class="activity-feed-slider activity-feed-updated-resources">
 						<p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-							<p:commandLink update=":group_right_column">
+							<p:commandLink update=":right_pane">
 								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
 								<div class="mx-auto" style="min-width:10rem;">

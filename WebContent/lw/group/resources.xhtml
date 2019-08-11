@@ -47,7 +47,7 @@
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" oncomplete="resourceDND();"/>
 
         <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();"/>
+                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
                          update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
         <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"

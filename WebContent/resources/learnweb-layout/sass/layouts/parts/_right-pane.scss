@@ -1,0 +1,59 @@
+.layout-main-pane {
+  @include transition(max-width $transition-duration ease-in-out);
+}
+
+.layout-right-pane {
+  @include transition();
+
+  @include media-breakpoint-down(md) {
+    display: block !important;
+    position: fixed;
+    right: -80%;
+    top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    width: 80%;
+    z-index: 1001;
+    padding: 0;
+    background: $body-bg;
+
+    > .ui-widget-content {
+      border: 0;
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    right: -90%;
+    width: 90%;
+  }
+}
+
+body.right-pane-open {
+  @include media-breakpoint-up(lg) {
+    .layout-main-pane {
+      flex: 0 0 66.6666666667%;
+      max-width: 66.6666666667%;
+    }
+
+    .layout-right-pane {
+      display: block;
+      padding-left: 1rem;
+      flex: 0 0 33.3333333333%;
+      max-width: 33.3333333333%;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    overflow-y: hidden;
+
+    .layout-overlay {
+      display: block;
+      opacity: 1;
+    }
+
+    .layout-right-pane {
+      right: 0;
+    }
+  }
+}
