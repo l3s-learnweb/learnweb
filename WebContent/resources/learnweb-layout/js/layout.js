@@ -383,6 +383,13 @@ PrimeFaces.widget.California = PrimeFaces.widget.BaseWidget.extend({
 
 });
 
+/**
+ * On document ready events
+ */
+$(function () {
+    PrimeFaces.cw("California", "california", {id: "learnweb"});
+});
+
 /*!
  * jQuery Cookie Plugin v1.4.1
  * https://github.com/carhartl/jquery-cookie
