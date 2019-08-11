@@ -16,24 +16,8 @@
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>primefaces.FONT_AWESOME</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>none</param-value> <!-- california-green -->
-    </context-param>
-    <context-param>
-        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
-        <param-value>false</param-value> <!-- To use it, we need to remove defining JS variables in <script> blocks of xhtml  -->
-    </context-param>
-    <context-param>
         <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-        <param-value>false</param-value> <!-- can't be enabled as long as we use comments on the search page to lazy load content. -->
+        <param-value>false</param-value> <!-- can't be enabled as long as we use comments on the search page to lazy load content. TODO: we need to change that now -->
     </context-param>
     <context-param>
         <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
@@ -41,6 +25,23 @@
         <param-value>server</param-value>
     </context-param>
 
+    <!-- PrimeFaces-->
+    <context-param>
+        <param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
+        <param-value>true</param-value> <!-- TODO: we need to remove it now -->
+    </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>none</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
+        <param-value>false</param-value> <!-- To use it, we need to remove defining JS variables in <script> blocks of xhtml  -->
+    </context-param>
     <context-param>
         <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
         <param-value>***REMOVED***</param-value>
@@ -70,6 +71,7 @@
         <error-code>503</error-code>
         <location>/lw/error-server.jsf</location>
     </error-page>
+
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
@@ -78,30 +80,31 @@
             <param-value>ERROR</param-value>
         </init-param>
     </filter>
-    <filter-mapping>
-        <filter-name>UrlRewriteFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     <filter>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
     </filter>
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
-    <session-config>
-        <session-timeout>100</session-timeout>
-    </session-config>
-
     <filter>
         <filter-name>RequestFilter</filter-name>
         <filter-class>de.l3s.learnweb.web.RequestFilter</filter-class>
     </filter>
+
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>RequestFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <session-config>
+        <session-timeout>100</session-timeout>
+    </session-config>
 
     <context-param>
         <param-name>com.sun.faces.numberOfViewsInSession</param-name>
@@ -134,20 +137,21 @@
         <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
         <param-value>false</param-value>
     </context-param>
-
     <context-param>
         <param-name>javax.faces.validator.ENABLE_VALIDATE_WHOLE_BEAN</param-name>
         <param-value>true</param-value>
     </context-param>
-
     <context-param>
         <param-name>javax.faces.ENABLE_CDI_RESOLVER_CHAIN</param-name>
         <param-value>true</param-value>
     </context-param>
-
     <context-param>
         <param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
     </context-param>
 
     <servlet>
@@ -159,10 +163,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
     </servlet-mapping>
-    <context-param>
-        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-        <param-value>.xhtml</param-value>
-    </context-param>
     <servlet>
         <description>Simple Servlet for Streaming Files to the Clients Browser</description>
         <display-name>Simple DownloadServlet</display-name>
@@ -203,6 +203,7 @@
         <servlet-class>de.l3s.learnweb.resource.office.HistoryServlet</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>historyServlet</servlet-name>
         <url-pattern>/history</url-pattern>
