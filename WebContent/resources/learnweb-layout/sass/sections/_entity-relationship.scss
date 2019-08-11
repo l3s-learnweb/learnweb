@@ -108,7 +108,7 @@
       margin: 0;
       padding: 0;
       position: relative;
-      transition: all 0.5s linear;
+      transition: all $transition-duration linear;
       top: 0;
 
       &:last-of-type {

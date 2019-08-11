@@ -576,7 +576,7 @@
     background-position: bottom left;
     background-repeat: no-repeat;
     background-size: 0% 1.5px;
-    transition: background-size .5s ease;
+    transition: background-size $transition-duration ease;
     &:hover{
       background-size: 100% 1.5px;
     }

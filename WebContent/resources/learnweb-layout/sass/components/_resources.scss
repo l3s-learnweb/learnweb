@@ -35,7 +35,7 @@ img.res-image-simple {
   animation: fadein $transition-duration;
   box-sizing: border-box;
   border: 1px solid $themeSidebarDividerColor;
-  transition: max-height .15s ease, max-width .15s ease;
+  transition: max-height $transition-duration ease, max-width $transition-duration ease;
   transform-origin: center;
 }
 
@@ -312,7 +312,7 @@ ul.res-filters {
     position: relative;
 
     .res-bl-preview-wrap {
-      transition: opacity 200ms ease-in-out;
+      transition: opacity $transition-duration ease-in-out;
       background-color: $white;
       height: 100%;
       overflow: hidden;
@@ -462,7 +462,7 @@ ul.res-filters {
   display: flex;
   flex-direction: column;
   background: rgba($gray-300, 0.75);
-  transition: opacity 0.2s ease-in-out;
+  transition: opacity $transition-duration ease-in-out;
   align-items: center;
   justify-content: center;
   line-height: 1.25;
@@ -474,7 +474,7 @@ ul.res-filters {
 
 .context-menu {
   border-radius: 0;
-  transition: opacity .218s;
+  transition: opacity $transition-duration;
   background: $white;
   cursor: default;
   font-size: 13px;
