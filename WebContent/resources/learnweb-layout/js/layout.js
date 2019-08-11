@@ -23,7 +23,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         var $this = this;
 
         $(window).on('beforeunload', function() {
-            if (typeof onUnloadCommand !== 'undefined') {
+            if (typeof onUnloadCommand === 'function') {
                 onUnloadCommand();
             }
         });
@@ -60,15 +60,27 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     showRightPane: function () {
         this.body.addClass('right-pane-open');
         this.isRightPaneOpen = true;
+        this.resize();
     },
 
     hideRightPane: function () {
         this.body.removeClass('right-pane-open');
         this.isRightPaneOpen = false;
+        this.resize();
     },
 
     isDesktop: function () {
         return window.innerWidth > 1200; // Do not forget to change scss value according
+    },
+
+    resize: function () {
+        if (window.cqApi && typeof window.cqApi.reevaluate === 'function') {
+            window.cqApi.reevaluate(false);
+
+            setTimeout(function () {
+                window.cqApi.reevaluate(false);
+            }, 200);
+        }
     }
 });
 
@@ -437,7 +449,9 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
     markCurrentMenuItem: function () {
         var currentPath = window.location.href;
-        var activeMenuLinks = this.menuitemLinks.filter('a[href="' + currentPath + '"]');
+        var activeMenuLinks = this.menuitemLinks.filter(function() {
+            return currentPath.indexOf(this.href) === 0;
+        });
 
         if (activeMenuLinks.length) {
             var that = this;
