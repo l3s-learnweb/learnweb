@@ -9950,6 +9950,10 @@ body .ui-datatable .ui-datatable-footer {
   }
 }
 
+.mw-0 {
+  min-width: 0;
+}
+
 html {
   font-size: 14px;
 }
