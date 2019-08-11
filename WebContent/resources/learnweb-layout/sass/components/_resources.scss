@@ -274,12 +274,20 @@ ul.res-filters {
     padding: 0.5rem;
     width: 50%;
 
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(lg) {
+      width: 25%;
+    }
+
+    @include media-breakpoint-up(md) {
       width: 33.333%;
     }
 
-    @include media-breakpoint-up(lg) {
-      width: 25%;
+    &[data-cq~="min-width:0px"] {
+      width: 100%; // 3 columns
+    }
+
+    &[data-cq~="min-width:200px"] {
+      width: 50%; // 3 columns
     }
 
     &[data-cq~="min-width:450px"] {
