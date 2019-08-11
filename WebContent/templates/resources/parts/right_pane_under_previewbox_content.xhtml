@@ -300,7 +300,7 @@
 						<f:param name="query" value="#{tag.name}" />
 					</h:outputLink> <p:commandButton styleClass="tag_x float-right"
 						action="#{resourceDetailBean.onDeleteTag}" value="x"
-						update=":right_pane_wrapper :growl" process="@form"
+						update=":right_pane :growl" process="@form"
 						rendered="#{rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 						<f:setPropertyActionListener
 							target="#{resourceDetailBean.selectedTag}" value="#{tag}" />
@@ -392,7 +392,7 @@
 							style="margin-right: 5px; font-size: 10px !important; color: red"
 							value="#{msg.delete}"
 							onstart="return confirm('#{msg.delete_message_comments}');"
-							ajax="true" update=":right_pane_wrapper :growl">
+							ajax="true" update=":right_pane :growl">
 							<f:setPropertyActionListener
 								target="#{resourceDetailBean.clickedComment}" value="#{comment}" />
 						</p:commandLink>
@@ -415,7 +415,7 @@
 				style="width:100%;" />
 
 			<p:commandButton actionListener="#{resourceDetailBean.onEditComment}"
-				update=":right_pane_wrapper :growl" title="#{msg.save}"
+				update=":right_pane :growl" title="#{msg.save}"
 				value="#{msg.save}" onsuccess="PF('comment_dialog').hide();"
 				style="display:block; margin-top:5px;" />
 		</h:form>

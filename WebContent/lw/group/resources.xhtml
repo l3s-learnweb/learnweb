@@ -47,21 +47,21 @@
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" oncomplete="resourceDND();"/>
 
         <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header();PF('learnweb').showRightPane();"/>
+                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
+                         update=":right_pane :growl"/>
         <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
-                         update=":right_pane_wrapper :right_pane  :growl" oncomplete="update_header();"/>
+                         update=":right_pane  :growl"/>
         <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
-                         update=":resourcesWrapper :right_pane :right_pane_wrapper :growl"
-                         oncomplete="update_header();resourceDND();"/>
+                         update=":resourcesWrapper :right_pane :growl"
+                         oncomplete="resourceDND();"/>
         <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesWrapper :right_pane :right_pane_wrapper :growl"
-                         oncomplete="resourceDND();update_header();"/>
+                         update=":resourcesWrapper :right_pane :growl"
+                         oncomplete="resourceDND();"/>
         <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
-                         update=":right_pane_wrapper :right_pane :growl" oncomplete="update_header()"/>
+                         update=":right_pane :growl"/>
         <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                         update=":right_pane_wrapper :right_pane :resourcesView :growl" oncomplete="update_header();resourceDND();"/>
+                         update=":right_pane :resourcesView :growl" oncomplete="resourceDND();"/>
     </h:form>
 
     <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 ui-panel-header-btn section-resources">
@@ -99,16 +99,16 @@
                     <p:tieredMenu trigger="add_group_resource_button" my="left top" at="left bottom" overlay="true">
                         <p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed" onclick="doAction('create-folder');return false;"/>
                         <p:submenu label="#{msg.create_document}" icon="fa fa-plus-square">
-                            <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" update=":right_pane_wrapper"
-                                        onclick="doAction('new-file', 'document');return false;" oncomplete="update_header()"
+                            <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" update=":right_pane"
+                                        onclick="doAction('new-file', 'document');return false;"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" update=":right_pane_wrapper"
-                                        onclick="doAction('new-file','spreadsheet');return false;" oncomplete="update_header()"
+                            <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" update=":right_pane"
+                                        onclick="doAction('new-file','spreadsheet');return false;"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
-                            <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" update=":right_pane_wrapper"
-                                        onclick="doAction('new-file', 'presentation');return false;" oncomplete="update_header()"
+                            <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" update=":right_pane"
+                                        onclick="doAction('new-file', 'presentation');return false;"
                                         actionListener="#{addResourceBean.clearForm()}">
                             </p:menuitem>
                         </p:submenu>

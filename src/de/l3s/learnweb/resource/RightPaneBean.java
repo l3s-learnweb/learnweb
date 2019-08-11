@@ -229,7 +229,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             if (!clickedAbstractResource.lockerUpdate(getUser())) {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditInterrupt");
                 setViewResource(clickedAbstractResource);
-                PrimeFaces.current().ajax().update(":right_pane_wrapper");
+                PrimeFaces.current().ajax().update(":right_pane");
 
                 if (clickedAbstractResource instanceof Resource) {
                     log(Action.lock_interrupted_returned_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());

@@ -22,6 +22,12 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     _bindEvents: function () {
         var $this = this;
 
+        $(window).on('beforeunload', function() {
+            if (typeof onUnloadCommand !== 'undefined') {
+                onUnloadCommand();
+            }
+        });
+
         $this.overlay.on('mouseup', function(e) {
             if ($this.isRightPaneOpen) {
                 $this.hideRightPane();
@@ -46,7 +52,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
             e.preventDefault();
         });
 
-        if ($this.rightPane.find('#panel_header_title').length) {
+        if ($this.rightPane.find('#right_pane_content div').length) {
             $this.showRightPane();
         }
     },

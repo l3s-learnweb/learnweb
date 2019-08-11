@@ -26,7 +26,7 @@
 		<h:form>
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="update_header();load_editor(); " />
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="load_editor(); " />
 		</h:form>
 
 		<h:panelGroup id="resourcesView" layout="block">
@@ -97,7 +97,7 @@
                                         <ui:fragment rendered="#{not empty logEntry.resource.thumbnail3}">
                                             <div class="col-5 col-md-3">
                                                 <h:form>
-                                                    <p:commandLink update=":right_pane_wrapper" oncomplete="update_header();">
+                                                    <p:commandLink update=":right_pane">
                                                         <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
                                                         <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
                                                     </p:commandLink>
@@ -122,7 +122,7 @@
                                         <p:repeat var="res" value="#{userSubmission.resources}">
                                                 <div class="col-6 col-sm-4 col-md-3 mb-2">
                                                     <h:form>
-                                                        <p:commandLink update=":right_pane_wrapper" oncomplete="update_header();">
+                                                        <p:commandLink update=":right_pane">
                                                             <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{res}"/>
                                                             <img class="w-100" src="#{res.thumbnail1.url}" alt="#{res.title}"/>
                                                         </p:commandLink>
