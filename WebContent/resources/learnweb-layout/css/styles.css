@@ -9943,6 +9943,13 @@ body .ui-datatable .ui-datatable-footer {
   padding: 0 0.2rem;
 }
 
+@media (min-width: 768px) {
+  .col-md-fixed {
+    flex: 0 0 15rem;
+    max-width: 15rem;
+  }
+}
+
 html {
   font-size: 14px;
 }
@@ -11245,15 +11252,21 @@ ul.res-filters .clear-filters:hover a {
   padding: 0.5rem;
   width: 50%;
 }
-@media (min-width: 576px) {
-  .res-grid .res-grid-item {
-    width: 33.333%;
-  }
-}
 @media (min-width: 992px) {
   .res-grid .res-grid-item {
     width: 25%;
   }
+}
+@media (min-width: 768px) {
+  .res-grid .res-grid-item {
+    width: 33.333%;
+  }
+}
+.res-grid .res-grid-item[data-cq~="min-width:0px"] {
+  width: 100%;
+}
+.res-grid .res-grid-item[data-cq~="min-width:200px"] {
+  width: 50%;
 }
 .res-grid .res-grid-item[data-cq~="min-width:450px"] {
   width: 33.333%;

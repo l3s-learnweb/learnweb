@@ -19,11 +19,11 @@
 
             <ui:fragment rendered="#{group.canViewResources(userBean.user)}">
                 <div class="row s-gutters">
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-4">
+                    <h:panelGroup layout="block" styleClass="col-md col-md-fixed">
                         <ui:insert name="left_column"/>
                     </h:panelGroup>
 
-                    <h:panelGroup layout="block" styleClass="col-12 col-md-8">
+                    <h:panelGroup layout="block" styleClass="col-md">
                         <ui:insert name="middle_column"/>
                     </h:panelGroup>
                 </div>

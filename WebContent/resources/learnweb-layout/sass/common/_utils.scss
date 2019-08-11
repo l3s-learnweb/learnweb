@@ -115,3 +115,10 @@ td.td-text-right {
   border-radius: $btn-border-radius;
   padding: 0 $btn-border-radius;
 }
+
+.col-md-fixed {
+  @include media-breakpoint-up(md) {
+    flex: 0 0 15rem;
+    max-width: 15rem;
+  }
+}
