@@ -6,8 +6,8 @@
     text-decoration: none;
   }
 
-  .ui-menuitem {
-    margin: 1px 0;
+  .ui-menuitem-group {
+    font-size: $font-size-base * 0.9;
   }
 
   .ui-lwmenu-icon,
@@ -43,7 +43,7 @@
 
   .ui-lwmenu-panel {
     .ui-lwmenu-panel-header {
-      margin-top: 4px;
+      margin-top: 2px;
       font-weight: 700;
       padding: .5em 0.375rem .5em 0.125rem;
       color: $themeElementTextColor;
@@ -85,7 +85,7 @@
         margin-left: -0.25rem;
 
         .ui-menu-list {
-          margin-left: 1.2rem;
+          margin-left: 0;
         }
       }
     }

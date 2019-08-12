@@ -526,7 +526,7 @@ public class UserBean implements Serializable
             // My groups
             ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, su + "/lw/myhome/groups.jsf");
             for(Group group : getUser().getGroups()) {
-                ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), "fa fa-fw fa-archive", su + "/lw/group/overview.jsf?group_id=" + group.getId());
+                ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), null, su + "/lw/group/overview.jsf?group_id=" + group.getId());
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
@@ -539,6 +539,7 @@ public class UserBean implements Serializable
                 {
                     theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("options"), "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
                 }
+                theGroup.setStyleClass("ui-menuitem-group");
                 myGroups.addElement(theGroup);
             }
             model.addElement(myGroups);

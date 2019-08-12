@@ -10159,7 +10159,7 @@ body,
 }
 
 .layout-wrapper .layout-sidebar {
-  width: 14rem;
+  width: 15rem;
   background-color: #fff;
   border-right: solid 1px #ced4da;
   position: fixed;
@@ -10183,7 +10183,7 @@ body,
 }
 @media (max-width: 1199.98px) {
   .layout-wrapper .layout-sidebar {
-    left: -14rem;
+    left: -15rem;
     box-shadow: 2px 0 1px 0 rgba(0, 0, 0, 0.16);
   }
 }
@@ -10194,7 +10194,7 @@ body,
   overflow-y: auto;
 }
 .layout-wrapper.layout-wrapper-sidebar-inactive .layout-sidebar {
-  left: -14rem;
+  left: -15rem;
 }
 @media (max-width: 1199.98px) {
   .layout-wrapper.layout-wrapper-sidebar-mobile-active .layout-sidebar {
@@ -10222,7 +10222,7 @@ body,
 .layout-wrapper .layout-main {
   position: relative;
   padding-top: 3.75rem;
-  margin-left: 14rem;
+  margin-left: 15rem;
   min-height: 100vh;
   transition: margin-left 0.2s;
 }
@@ -10831,8 +10831,8 @@ body,
 .ui-lwmenu a {
   text-decoration: none;
 }
-.ui-lwmenu .ui-menuitem {
-  margin: 1px 0;
+.ui-lwmenu .ui-menuitem-group {
+  font-size: 0.9rem;
 }
 .ui-lwmenu .ui-lwmenu-icon,
 .ui-lwmenu .ui-menuitem-icon {
@@ -10860,7 +10860,7 @@ body,
   border-left-color: #4b6cb7;
 }
 .ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
-  margin-top: 4px;
+  margin-top: 2px;
   font-weight: 700;
   padding: 0.5em 0.375rem 0.5em 0.125rem;
   color: #fff;
@@ -10892,7 +10892,7 @@ body,
   margin-left: -0.25rem;
 }
 .ui-lwmenu .ui-menu-parent .ui-menu-list .ui-menu-parent .ui-menu-list {
-  margin-left: 1.2rem;
+  margin-left: 0;
 }
 .ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menuitem-link > .ui-lwmenu-icon:before {
   content: "";
@@ -12191,7 +12191,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-entity-relationship .box {
   overflow-y: scroll;
-  padding: 0 0 0 80px;
+  padding: 0 0 0 74px;
   height: calc(100vh - 180px);
 }
 .section-entity-relationship .box ul {
@@ -12213,7 +12213,7 @@ ul.res-filters .clear-filters:hover a {
   border: 1px dashed #4b6cb7;
   position: absolute;
   top: 0;
-  left: 2px;
+  left: -7px;
 }
 .section-entity-relationship .box ul li {
   margin: 20px 10px 60px;
@@ -12232,7 +12232,7 @@ ul.res-filters .clear-filters:hover a {
   border: 1px solid #4b6cb7;
   position: absolute;
   top: 0;
-  left: -8px;
+  left: -17px;
 }
 .section-entity-relationship .box ul li > span:before, .section-entity-relationship .box ul li > span:after {
   content: "";
@@ -12287,7 +12287,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-entity-relationship .box .time span {
   position: absolute;
-  left: -90px;
+  left: -85px;
   color: black;
   /*font-size: 80%;*/
   font-weight: bold;
