@@ -64,7 +64,7 @@ public class GlossaryRowBuilder
             {
                 topicThreeHeaderPosition = cellPosition;
             }
-            else if(isEqualForSomeLocale(cellValue, "Glossary.description"))
+            else if(isEqualForSomeLocale(cellValue, "Glossary.Definition"))
             {
                 descriptionHeaderPosition = cellPosition;
             }
@@ -120,16 +120,18 @@ public class GlossaryRowBuilder
 
     protected String getStringValueForCell(Cell cell)
     {
+        if(cell == null)
+            return "";
         switch(cell.getCellType())
         {
-        case STRING:
-            return cell.getStringCellValue();
-        case NUMERIC:
-            return String.valueOf(cell.getNumericCellValue());
-        case FORMULA:
-            return cell.getCellFormula();
-        default:
-            return "";
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
         }
     }
 

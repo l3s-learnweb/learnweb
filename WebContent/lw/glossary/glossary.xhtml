@@ -28,7 +28,7 @@
 
 				<h:form id="glossary_table_form" prependId="false">
 					<p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"                                 
-                                 sortBy="#{item.getTimestamp()}" sortOrder="descending" stickyHeader="true" stickyTopAt=".header">
+                                 sortBy="#{item.getTimestamp()}" sortOrder="descending">
 
 						<p:ajax event="filter" oncomplete="groupRow()" />
 						<p:ajax event="page" oncomplete="groupRow()" />
