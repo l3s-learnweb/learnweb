@@ -12191,7 +12191,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-entity-relationship .box {
   overflow-y: scroll;
-  padding: 0 0 0 74px;
+  padding: 0 0 0 80px;
   height: calc(100vh - 180px);
 }
 .section-entity-relationship .box ul {
@@ -12213,7 +12213,7 @@ ul.res-filters .clear-filters:hover a {
   border: 1px dashed #4b6cb7;
   position: absolute;
   top: 0;
-  left: -7px;
+  left: 2px;
 }
 .section-entity-relationship .box ul li {
   margin: 20px 10px 60px;
@@ -12232,7 +12232,7 @@ ul.res-filters .clear-filters:hover a {
   border: 1px solid #4b6cb7;
   position: absolute;
   top: 0;
-  left: -17px;
+  left: -8px;
 }
 .section-entity-relationship .box ul li > span:before, .section-entity-relationship .box ul li > span:after {
   content: "";
@@ -12287,7 +12287,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-entity-relationship .box .time span {
   position: absolute;
-  left: -85px;
+  left: -90px;
   color: black;
   /*font-size: 80%;*/
   font-weight: bold;
