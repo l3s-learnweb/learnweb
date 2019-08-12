@@ -16,7 +16,7 @@
     <h:form id="yourinformationform">
         <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyle="table-layout: auto">
+                     tableStyleClass="table-sm table-responsive">
             <f:facet name="header">
                 <h:outputText value="#{msg['forum.posts']}"/>
             </f:facet>
@@ -40,35 +40,29 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column>
-                <f:facet name="header">Forum thread</f:facet>
+            <p:column headerText="Forum thread">
                 <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{yourPostsBean.postThreadTopics[post.topicId]}"/></a>
             </p:column>
 
-            <p:column exportFunction="#{post.getText()}">
-                <f:facet name="header"><h:outputText value="#{msg.text}"/></f:facet>
+            <p:column exportFunction="#{post.getText()}" headerText="#{msg.text}">
                 <h:outputText value="#{post.text}"/>
             </p:column>
 
-            <p:column styleClass="d-none">
-                <f:facet name="header"><h:outputText value="#{msg.url}"/></f:facet>
+            <p:column styleClass="d-none" headerText="#{msg.url}">
                 <h:outputText value="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.category}"/></f:facet>
+            <p:column headerText="#{msg.category}">
                 <h:outputText value="#{post.category}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.posted_on}"/></f:facet>
+            <p:column headerText="#{msg.posted_on}">
                 <h:outputText value="#{post.date}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
                 </h:outputText>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.last_edited}"/></f:facet>
+            <p:column headerText="#{msg.last_edited}">
                 <h:outputText value="#{post.lastEditDate}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
                 </h:outputText>

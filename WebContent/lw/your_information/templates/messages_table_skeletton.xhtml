@@ -7,7 +7,7 @@
     <h:form>
         <p:dataTable id="messages_tbl" value="#{messages}" var="message" rows="20" paginator="true" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     style="margin-bottom:20px" tableStyle="table-layout: auto">
+                     tableStyleClass="table-sm table-responsive">
 
             <f:facet name="header">#{table_name}</f:facet>
 
@@ -30,28 +30,23 @@
                 </h:panelGroup>
             </f:facet>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.title}"/></f:facet>
+            <p:column headerText="#{msg.title}">
                 <h:outputText value="#{message.title}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.name}"/></f:facet>
+            <p:column headerText="#{msg.name}">
                 <h:outputText value="#{message.text}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{target_user_category_msg}"/></f:facet>
+            <p:column headerText="#{target_user_category_msg}">
                 <h:outputText value="#{which_messages}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.seen}"/></f:facet>
+            <p:column headerText="#{msg.seen}">
                 <h:outputText value="#{message.seen}"/>
             </p:column>
 
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.date}"/></f:facet>
+            <p:column headerText="#{msg.date}">
                 <h:outputText value="#{message.time}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
                 </h:outputText>

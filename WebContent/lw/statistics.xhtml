@@ -100,28 +100,30 @@
             </div>
         </p:panel>
 
-        <p:panel styleClass="mt-3" header="#{msg.active_users_per_month}">
-            <p:dataTable tableStyleClass="table-sm table-responsive" var="month" value="#{statisticsBean.activeUsersPerMonth}" >
-                <p:column headerText="#{msg.month}">
-                    <h:outputText value="#{month.key}" />
-                </p:column>
+        <p:dataTable tableStyleClass="table-sm table-responsive" styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}" >
+            <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
-                <p:column headerText="#{msg.active_users}">
-                    <h:outputText value="#{month.value}" />
-                </p:column>
-            </p:dataTable>
-        </p:panel>
+            <p:column headerText="#{msg.month}">
+                <h:outputText value="#{month.key}" />
+            </p:column>
 
-        <p:panel styleClass="mt-3" header="#{msg.resource_count_per_source}" footer="#{msg.resources_created_by_crawlers}">
-            <p:dataTable tableStyleClass="table-sm table-responsive" var="row" value="#{statisticsBean.resourcesPerSource}">
-                <p:column headerText="#{msg.source}">
-                    <h:outputText value="#{row.key}"/>
-                </p:column>
+            <p:column headerText="#{msg.active_users}">
+                <h:outputText value="#{month.value}" />
+            </p:column>
+        </p:dataTable>
 
-                <p:column headerText="#{msg.resources}">
-                    <h:outputText value="#{row.value}"/>
-                </p:column>
-            </p:dataTable>
-        </p:panel>
+        <p:dataTable tableStyleClass="table-sm table-responsive" styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
+            <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
+
+            <p:column headerText="#{msg.source}">
+                <h:outputText value="#{row.key}"/>
+            </p:column>
+
+            <p:column headerText="#{msg.resources}">
+                <h:outputText value="#{row.value}"/>
+            </p:column>
+
+            <f:facet name="footer">#{msg.resources_created_by_crawlers}</f:facet>
+        </p:dataTable>
 	</ui:define>		
 </ui:composition>

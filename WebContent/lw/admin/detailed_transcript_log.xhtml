@@ -20,60 +20,59 @@
 			</p:panel>
 		</h:form>
 
-		<p:panel styleClass="mt-3" header="#{msg.transcript_logs}">
-			<h:form prependId="false" >
-				<p:dataTable paginatorPosition="bottom" id = "transcript_table" tableStyleClass="table-sm table-responsive" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
-							 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-							 rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
+		<h:form prependId="false" styleClass="mt-3">
+			<p:dataTable paginatorPosition="bottom" id = "transcript_table" tableStyleClass="table-sm table-responsive" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
+						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+						 rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
+				<f:facet name="{Exporters}">
+					<h:commandLink styleClass="excel_export_todo_use">
+						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
+						<p:dataExporter type="xls" target="transcript_table" fileName="detailed_transcript_log"/>
+					</h:commandLink>
+				</f:facet>
 
-					<f:facet name="{Exporters}">
-						<h:commandLink styleClass="excel_export_todo_use">
-							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
-							<p:dataExporter type="xls" target="transcript_table" fileName="detailed_transcript_log"/>
-						</h:commandLink>
+				<f:facet name="header">#{msg.transcript_logs}</f:facet>
+
+				<p:column headerText="#{msg.student}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
+					<h:outputText value="#{log.user.username}" />
+				</p:column>
+
+				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
+					<h:outputText value="#{log.resource.title}" />
+				</p:column>
+
+				<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.ownerUser.username}" sortBy="#{log.resource.ownerUser.username}">
+					<h:outputText value="#{log.resource.ownerUser.username}" />
+				</p:column>
+
+				<p:column headerText="#{msg.word}">
+					<h:outputText value="#{log.wordsSelected}" />
+				</p:column>
+
+				<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
+					<h:outputText value="#{log.userAnnotation}" />
+				</p:column>
+
+				<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
+							<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItem itemLabel="Selection" itemValue="selection" />
+							<f:selectItem itemLabel="Deselection" itemValue="deselection" />
+							<f:selectItem itemLabel="Add Annotation" itemValue="add annotation" />
+							<f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation" />
+							<f:selectItem itemLabel="Display Definition" itemValue="display definition" />
+							<f:selectItem itemLabel="Save Transcript" itemValue="save transcript" />
+							<f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript" />
+						</p:selectOneMenu>
 					</f:facet>
+					<h:outputText value="#{log.action}" />
+				</p:column>
 
-					<p:column headerText="#{msg.student}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-						<h:outputText value="#{log.user.username}" />
-					</p:column>
-
-					<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
-						<h:outputText value="#{log.resource.title}" />
-					</p:column>
-
-					<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.ownerUser.username}" sortBy="#{log.resource.ownerUser.username}">
-						<h:outputText value="#{log.resource.ownerUser.username}" />
-					</p:column>
-
-					<p:column headerText="#{msg.word}">
-						<h:outputText value="#{log.wordsSelected}" />
-					</p:column>
-
-					<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
-						<h:outputText value="#{log.userAnnotation}" />
-					</p:column>
-
-					<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
-						<f:facet name="filter">
-							<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
-								<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
-								<f:selectItem itemLabel="Selection" itemValue="selection" />
-								<f:selectItem itemLabel="Deselection" itemValue="deselection" />
-								<f:selectItem itemLabel="Add Annotation" itemValue="add annotation" />
-								<f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation" />
-								<f:selectItem itemLabel="Display Definition" itemValue="display definition" />
-								<f:selectItem itemLabel="Save Transcript" itemValue="save transcript" />
-								<f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript" />
-							</p:selectOneMenu>
-						</f:facet>
-						<h:outputText value="#{log.action}" />
-					</p:column>
-
-					<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
-						<h:outputText value="#{log.timestamp}" />
-					</p:column>
-				</p:dataTable>
-			</h:form>
-		</p:panel>
+				<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
+					<h:outputText value="#{log.timestamp}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>

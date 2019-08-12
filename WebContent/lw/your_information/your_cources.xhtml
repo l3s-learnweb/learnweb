@@ -17,7 +17,7 @@
 	    <h:form>
 	        <p:dataTable id="cources_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-	                     style="margin-bottom:20px" tableStyle="table-layout: auto">
+						 tableStyleClass="table-sm table-responsive">
 	            <f:facet name="header">
 					<h:outputText value="#{msg['courses']}"/>
 	            </f:facet>
@@ -41,23 +41,19 @@
 					</h:panelGroup>
 	            </f:facet>
 	
-	            <p:column>
-	                <f:facet name="header"><h:outputText value="#{msg.name}"/></f:facet>
+	            <p:column headerText="#{msg.name}">
 	                <h:outputText value="#{course.title}"/>
 	            </p:column>
 	
-	            <p:column>
-	                <f:facet name="header"><h:outputText value="#{msg.members} #{msg.count}"/></f:facet>
+	            <p:column headerText="#{msg.members} #{msg.count}">
 	                <h:outputText value="#{course.memberCount}"/>
 	            </p:column>
 	
-	            <p:column>
-	                <f:facet name="header"><h:outputText value="#{msg.organization}"/></f:facet>
+	            <p:column headerText="#{msg.organization}">
 	                <h:outputText value="#{course.organisation.title}"/>
 	            </p:column>
 	
-	            <p:column>
-	                <f:facet name="header"><h:outputText value="#{msg.welcome_message}"/></f:facet>
+	            <p:column headerText="#{msg.welcome_message}">
 	                <h:outputText value="#{course.welcomeMessage}"/>
 	            </p:column>
 	        </p:dataTable>

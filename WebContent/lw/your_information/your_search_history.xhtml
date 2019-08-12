@@ -16,7 +16,7 @@
     <h:form>
         <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyle="table-layout: auto">
+                     tableStyleClass="table-sm table-responsive">
             <f:facet name="header">
                 <h:outputText value="#{msg.search_history}"/>
             </f:facet>
@@ -40,16 +40,15 @@
                 </h:panelGroup>
             </f:facet>
 
-             <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.query} #{msg.text}"/></f:facet>
+             <p:column headerText="#{msg.query} #{msg.text}">
                 <h:outputText value="#{query.query}"/>
             </p:column>
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.service}"/></f:facet>
+
+            <p:column headerText="#{msg.service}">
                 <h:outputText value="#{query.service}"/>
             </p:column>
-            <p:column>
-                <f:facet name="header"><h:outputText value="#{msg.date}"/></f:facet>
+
+            <p:column headerText="#{msg.date}">
                 <h:outputText value="#{query.timestamp}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
                 </h:outputText>

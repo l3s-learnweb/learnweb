@@ -55,50 +55,50 @@
             </p:panel>
         </h:form>
 
-        <p:panel styleClass="mt-3" header="#{msg.announcements_all}">
-            <h:form id="news_form">
-                <p:blockUI block="news_table" widgetVar="news_form_blocker">
-                    <div class="float-left">#{msg.please_wait}</div>
-                    <div class="loading-animation small float-left">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                </p:blockUI>
+        <h:form id="news_form" styleClass="mt-3">
+            <p:blockUI block="news_table" widgetVar="news_form_blocker">
+                <div class="float-left">#{msg.please_wait}</div>
+                <div class="loading-animation small float-left">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </p:blockUI>
 
-                <p:dataTable id="news_table" var="news" tableStyleClass="table-sm table-responsive" value="#{adminAnnouncementsBean.announcements}">
-                    <p:column headerText="#{msg.title}" sortBy="#{news.title}">
-                        <h:outputText value="#{news.title}"/>
-                    </p:column>
+            <p:dataTable id="news_table" var="news" tableStyleClass="table-sm table-responsive" value="#{adminAnnouncementsBean.announcements}">
+                <f:facet name="header">#{msg.announcements_all}</f:facet>
 
-                    <p:column headerText="#{msg.date}" sortBy="#{news.date}">
-                        <h:outputText  value="#{news.date}">
-                            <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
-                        </h:outputText>
-                    </p:column>
+                <p:column headerText="#{msg.title}" sortBy="#{news.title}">
+                    <h:outputText value="#{news.title}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
-                        <p:selectBooleanCheckbox value="#{news.hidden}">
-                            <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
-                        </p:selectBooleanCheckbox>
-                    </p:column>
+                <p:column headerText="#{msg.date}" sortBy="#{news.date}">
+                    <h:outputText  value="#{news.date}">
+                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                    </h:outputText>
+                </p:column>
 
-                    <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                        <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
-                            <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
-                            <h:outputText value="#{msg.edit}"/>
-                            <f:param name="announcement_id" value="#{news.id}" />
-                        </h:outputLink>
+                <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
+                    <p:selectBooleanCheckbox value="#{news.hidden}">
+                        <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
+                    </p:selectBooleanCheckbox>
+                </p:column>
 
-                        <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
-                                       update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
-                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                            <h:outputText value="#{msg.delete}"/>
-                            <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
-                        </p:commandLink>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </p:panel>
+                <p:column headerText="#{msg.options}" styleClass="td-text-right">
+                    <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
+                        <i class="fa fa-pencil text-warning" aria-hidden="true"></i>
+                        <h:outputText value="#{msg.edit}"/>
+                        <f:param name="announcement_id" value="#{news.id}" />
+                    </h:outputLink>
+
+                    <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
+                                   update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}">
+                        <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                        <h:outputText value="#{msg.delete}"/>
+                        <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 </ui:composition>

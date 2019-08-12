@@ -29,7 +29,7 @@
 
 		<ui:fragment rendered="#{userBean.moderator and adminPeerAssessmentPairBeen.peerAssessmentId != 0}">
 			<h:form>
-				<p:panel header="#{msg.visualization}">
+				<p:panel header="#{msg.visualization}" styleClass="mb-3">
 					<h4>#{msg.peer_assessment_pairing_meaning}</h4>
 					<ui:fragment rendered="#{adminPeerAssessmentPairBeen.fullView}"><p><h:outputText escape="false" value="#{msg.peer_assessment_pairing_description_full}"/></p></ui:fragment>
 					<p><h:outputText escape="false" value="#{msg.peer_assessment_pairing_description}"/></p>
@@ -39,141 +39,141 @@
 					</p:selectBooleanButton>
 				</p:panel>
 
-				<p:panel styleClass="mt-3" header="#{msg.pairsTitle}">
-					<p:dataTable id="processTable" var="pair" value="#{adminPeerAssessmentPairBeen.pairs}" tableStyleClass="table-sm table-responsive" emptyMessage="#{msg.no_pairs_found}">
-						<p:columnGroup type="header">
-							<p:row>
-								<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessor}" rendered="#{adminPeerAssessmentPairBeen.fullView}"/>
-								<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessed}"/>
-								<p:column colspan="3" headerText="#{msg.assessment}"/>
-							</p:row>
+				<p:dataTable id="processTable" var="pair" value="#{adminPeerAssessmentPairBeen.pairs}" tableStyleClass="table-sm table-responsive" emptyMessage="#{msg.no_pairs_found}">
+					<f:facet name="header">#{msg.pairsTitle}</f:facet>
 
-							<p:row>
-								<p:column headerText="#{msg.course}" rendered="#{adminPeerAssessmentPairBeen.fullView}"
-										  sortBy="#{pair.assessorUser.courses[0].title}">
-								</p:column>
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessor}" rendered="#{adminPeerAssessmentPairBeen.fullView}"/>
+							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessed}"/>
+							<p:column colspan="3" headerText="#{msg.assessment}"/>
+						</p:row>
 
-								<p:column headerText="#{msg.student_id}" rendered="#{adminPeerAssessmentPairBeen.fullView}"
-										  sortBy="#{pair.assessorUser.studentId}">
-								</p:column>
+						<p:row>
+							<p:column headerText="#{msg.course}" rendered="#{adminPeerAssessmentPairBeen.fullView}"
+									  sortBy="#{pair.assessorUser.courses[0].title}">
+							</p:column>
 
-								<p:column headerText="#{msg.email_address}" rendered="${showEmail and adminPeerAssessmentPairBeen.fullView}"
-										  sortBy="#{pair.assessorUser.email}">
-								</p:column>
+							<p:column headerText="#{msg.student_id}" rendered="#{adminPeerAssessmentPairBeen.fullView}"
+									  sortBy="#{pair.assessorUser.studentId}">
+							</p:column>
 
-								<p:column headerText="#{msg.course}"
-										  sortBy="#{pair.assessedUser.courses[0].title}">
-								</p:column>
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail and adminPeerAssessmentPairBeen.fullView}"
+									  sortBy="#{pair.assessorUser.email}">
+							</p:column>
 
-								<p:column headerText="#{msg.student_id}"
-										  sortBy="#{pair.assessedUser.studentId}">
-								</p:column>
+							<p:column headerText="#{msg.course}"
+									  sortBy="#{pair.assessedUser.courses[0].title}">
+							</p:column>
 
-								<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
-										  sortBy="#{pair.assessedUser.email}">
-								</p:column>
+							<p:column headerText="#{msg.student_id}"
+									  sortBy="#{pair.assessedUser.studentId}">
+							</p:column>
 
-								<p:column headerText="#{msg.submission}">
-								</p:column>
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
+									  sortBy="#{pair.assessedUser.email}">
+							</p:column>
 
-								<p:column headerText="#{msg.peer_assessment}" sortBy="#{pair.peerAssessmentSurveyResourceId}" rendered="#{adminPeerAssessmentPairBeen.fullView}">
-								</p:column>
+							<p:column headerText="#{msg.submission}">
+							</p:column>
 
-								<p:column headerText="#{msg.teachers_assessments}">
-								</p:column>
-							</p:row>
-						</p:columnGroup>
+							<p:column headerText="#{msg.peer_assessment}" sortBy="#{pair.peerAssessmentSurveyResourceId}" rendered="#{adminPeerAssessmentPairBeen.fullView}">
+							</p:column>
 
-						<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
-							<h:outputText value="#{pair.assessorUser.courses[0].title}" />
-						</p:column>
+							<p:column headerText="#{msg.teachers_assessments}">
+							</p:column>
+						</p:row>
+					</p:columnGroup>
 
-						<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
-							<h:outputText value="#{pair.assessorUser.studentId}" />
-						</p:column>
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
+						<h:outputText value="#{pair.assessorUser.courses[0].title}" />
+					</p:column>
 
-						<p:column rendered="#{showEmail and adminPeerAssessmentPairBeen.fullView}">
-							<h:outputText value="#{pair.assessorUser.email}" />
-							<h:outputText value="#{pair.assessorUser.id}" />
-						</p:column>
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
+						<h:outputText value="#{pair.assessorUser.studentId}" />
+					</p:column>
 
-						<p:column>
-							<h:outputText value="#{pair.assessedUser.courses[0].title}" />
-						</p:column>
+					<p:column rendered="#{showEmail and adminPeerAssessmentPairBeen.fullView}">
+						<h:outputText value="#{pair.assessorUser.email}" />
+						<h:outputText value="#{pair.assessorUser.id}" />
+					</p:column>
 
-						<p:column>
-							<a href="#" onclick="$(this).next().toggle(); return false;"><h:outputText value="#{pair.assessedUser.studentId}" /></a>
-							<span class="d-none">
-							<p:repeat var="subpair" value="#{pair.assessedUser.assessorPeerAssessment}">
-								<p>
-									#{msg.has_assessed} <h:outputText value="#{subpair.assessedUser.courses[0].title} " /> <h:outputText value="#{subpair.assessedUser.studentId} " />
+					<p:column>
+						<h:outputText value="#{pair.assessedUser.courses[0].title}" />
+					</p:column>
 
-									<h:outputLink value="survey/answer.jsf">
-										<f:param name="resource_id" value="#{subpair.peerAssessmentSurveyResourceId}" />
-										<f:param name="user_id" value="#{subpair.assessorUserId}" />
-										<h:outputText value="#{subpair.peerAssessment.title}" />
-									</h:outputLink>
+					<p:column>
+						<a href="#" onclick="$(this).next().toggle(); return false;"><h:outputText value="#{pair.assessedUser.studentId}" /></a>
+						<span class="d-none">
+						<p:repeat var="subpair" value="#{pair.assessedUser.assessorPeerAssessment}">
+							<p>
+								#{msg.has_assessed} <h:outputText value="#{subpair.assessedUser.courses[0].title} " /> <h:outputText value="#{subpair.assessedUser.studentId} " />
 
-									<h:outputText value="#{msg.not_done}" rendered="#{not subpair.peerAssessmentUserAnswers.saved}"
-												   />
-									<h:outputText value="#{msg.saved}" rendered="#{subpair.peerAssessmentUserAnswers.saved and not subpair.peerAssessmentUserAnswers.submitted}"
-												   />
-									<h:outputText value="#{msg.submitted}" rendered="#{subpair.peerAssessmentUserAnswers.submitted}"  />
-								</p>
-							</p:repeat>
-						</span>
-						</p:column>
+								<h:outputLink value="survey/answer.jsf">
+									<f:param name="resource_id" value="#{subpair.peerAssessmentSurveyResourceId}" />
+									<f:param name="user_id" value="#{subpair.assessorUserId}" />
+									<h:outputText value="#{subpair.peerAssessment.title}" />
+								</h:outputLink>
 
-						<p:column rendered="#{showEmail}">
-							<h:outputText value="#{pair.assessedUser.email}" />
-							<h:outputText value="#{pair.assessedUser.id}" />
-						</p:column>
+								<h:outputText value="#{msg.not_done}" rendered="#{not subpair.peerAssessmentUserAnswers.saved}"
+											   />
+								<h:outputText value="#{msg.saved}" rendered="#{subpair.peerAssessmentUserAnswers.saved and not subpair.peerAssessmentUserAnswers.submitted}"
+											   />
+								<h:outputText value="#{msg.submitted}" rendered="#{subpair.peerAssessmentUserAnswers.submitted}"  />
+							</p>
+						</p:repeat>
+					</span>
+					</p:column>
 
-						<p:column>
-							<h:outputLink value="myhome/submission_resources.jsf">
-								<f:param name="user_id" value="#{pair.assessedUserId}"/>
-								<f:param name="submission_id" value="#{pair.submissionId}"/>
-								#{msg.submission}
-							</h:outputLink>
-						</p:column>
+					<p:column rendered="#{showEmail}">
+						<h:outputText value="#{pair.assessedUser.email}" />
+						<h:outputText value="#{pair.assessedUser.id}" />
+					</p:column>
 
-						<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
-							<h:outputLink value="survey/answer.jsf">
-								<f:param name="resource_id" value="#{pair.peerAssessmentSurveyResourceId}" />
-								<f:param name="user_id" value="#{pair.assessorUserId}" />
-								<h:outputText value="#{pair.peerAssessment.title}" />
-							</h:outputLink>
+					<p:column>
+						<h:outputLink value="myhome/submission_resources.jsf">
+							<f:param name="user_id" value="#{pair.assessedUserId}"/>
+							<f:param name="submission_id" value="#{pair.submissionId}"/>
+							#{msg.submission}
+						</h:outputLink>
+					</p:column>
 
-							<h:outputText value="#{msg.saved}" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"  />
+					<p:column rendered="#{adminPeerAssessmentPairBeen.fullView}">
+						<h:outputLink value="survey/answer.jsf">
+							<f:param name="resource_id" value="#{pair.peerAssessmentSurveyResourceId}" />
+							<f:param name="user_id" value="#{pair.assessorUserId}" />
+							<h:outputText value="#{pair.peerAssessment.title}" />
+						</h:outputLink>
 
-							<h:outputText value="#{msg.submitted}" rendered="#{pair.peerAssessmentUserAnswers.submitted}"  />
-						</p:column>
+						<h:outputText value="#{msg.saved}" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"  />
 
-						<p:column>
-							<h:outputLink value="survey/survey.jsf">
-								<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
-								<h:outputText value="#{msg.my}" />
-							</h:outputLink>
+						<h:outputText value="#{msg.submitted}" rendered="#{pair.peerAssessmentUserAnswers.submitted}"  />
+					</p:column>
 
-							<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+					<p:column>
+						<h:outputLink value="survey/survey.jsf">
+							<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
+							<h:outputText value="#{msg.my}" />
+						</h:outputLink>
 
-							<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+						<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
 
-							<p:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
-								<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
-									<h:outputText value=", " />
-									<h:outputLink value="survey/answer.jsf">
-										<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
-										<f:param name="user_id" value="#{user.id}" />
-										<h:outputText value="#{user.realUsername}" />
-									</h:outputLink>
-									<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"  />
-									<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"  />
-								</ui:fragment>
-							</p:repeat>
-						</p:column>
-					</p:dataTable>
-				</p:panel>
+						<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+
+						<p:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
+							<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
+								<h:outputText value=", " />
+								<h:outputLink value="survey/answer.jsf">
+									<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
+									<f:param name="user_id" value="#{user.id}" />
+									<h:outputText value="#{user.realUsername}" />
+								</h:outputLink>
+								<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"  />
+								<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"  />
+							</ui:fragment>
+						</p:repeat>
+					</p:column>
+				</p:dataTable>
 			</h:form>
 		</ui:fragment>
 	</ui:define>

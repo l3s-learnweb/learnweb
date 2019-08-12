@@ -13,38 +13,26 @@
 		</ui:define>
 
 		<ui:define name="center_layout">
-	
 			<h:form>
-				<p:dataTable var="res" value="#{userBean.user.ratedResources}" columnClasses="" headerClass="">
-				
+				<p:dataTable var="res" value="#{userBean.user.ratedResources}" tableStyleClass="table-sm table-responsive">
 					<f:facet name="header">
 						#{msg.myRatedResourcesTitle}
 					</f:facet>
 					
-					<p:column>
-						<f:facet name="header">
-							#{msg.title}
-						</f:facet>
+					<p:column headerText="#{msg.title}">
 						<h:outputLink value="resource.jsf">
 							<f:param name="resource_id" value="#{res.id}" />
 							#{res.title}
 						</h:outputLink>
 					</p:column>
 					
-					<p:column>
-						<f:facet name="header">
-							#{msg.description}
-						</f:facet>
+					<p:column headerText="#{msg.description}">
 						<h:outputText value="#{res.descriptionHTML}" escape="false" />
 					</p:column>
 					
-					<p:column>
-						<f:facet name="header">
-							#{msg.type}
-						</f:facet>
+					<p:column headerText="#{msg.type}">
 						#{res.type}
 					</p:column>
-	
 				</p:dataTable>
 			</h:form>
 		</ui:define>

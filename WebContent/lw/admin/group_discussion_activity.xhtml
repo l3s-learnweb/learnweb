@@ -14,29 +14,28 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel>
-			<p:dataTable var="entry" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
-						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
-					<h:outputText value="#{entry.name}" />
-				</p:column>
+		<p:dataTable var="entry" tableStyleClass="table-sm table-responsive" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
+					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+			<f:facet name="header">#{msg.discussion_activity}</f:facet>
+			<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
+				<h:outputText value="#{entry.name}" />
+			</p:column>
 
-				<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
-					<h:outputText value="#{entry.annotation}" />
-				</p:column>
+			<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
+				<h:outputText value="#{entry.annotation}" />
+			</p:column>
 
-				<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
-					<h:outputText value="#{entry.snippet}" />
-				</p:column>
+			<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
+				<h:outputText value="#{entry.snippet}" />
+			</p:column>
 
-				<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
-					<h:outputText value="#{entry.url}" />
-				</p:column>
+			<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
+				<h:outputText value="#{entry.url}" />
+			</p:column>
 
-				<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
-					<h:outputText value="#{entry.time}"/>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
+			<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
+				<h:outputText value="#{entry.time}"/>
+			</p:column>
+		</p:dataTable>
 	</ui:define>
 </ui:composition>

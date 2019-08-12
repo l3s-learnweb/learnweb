@@ -79,13 +79,12 @@
                          style="height:300px;" responsive="true"/>
             </p:panel>
 
-            <p:panel rendered="#{!empty activityDashboardBean.interactionsTable}" header="Activities Table">
-                <p:dataTable var="row" value="#{activityDashboardBean.interactionsTable}">
-                    <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                        <h:outputText value="#{row[key]}"/>
-                    </p:columns>
-                </p:dataTable>
-            </p:panel>
+            <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
+                <f:facet name="header">Activities Table</f:facet>
+                <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
+                    <h:outputText value="#{row[key]}"/>
+                </p:columns>
+            </p:dataTable>
         </p:outputPanel>
     </h:panelGroup>
 

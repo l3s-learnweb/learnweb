@@ -20,48 +20,47 @@
             </p:panel>
         </h:form>
 
-        <p:panel styleClass="mt-3" header="#{msg.transcript_logs}">
-            <h:form prependId="false">
-                <p:dataTable paginatorPosition="bottom" id="transcript_table" tableStyleClass="table-sm table-responsive" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
-                             paginator="true"
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-                             rowsPerPageTemplate="20,25,30">
+        <h:form prependId="false" styleClass="mt-3">
+            <p:dataTable paginatorPosition="bottom" id="transcript_table" tableStyleClass="table-sm table-responsive" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                         rowsPerPageTemplate="20,25,30">
+                <f:facet name="{Exporters}">
+                    <h:commandLink styleClass="excel_export_todo_use">
+                        <p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
+                        <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
+                    </h:commandLink>
+                </f:facet>
 
-                    <f:facet name="{Exporters}">
-                        <h:commandLink styleClass="excel_export_todo_use">
-                            <p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
-                            <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
-                        </h:commandLink>
-                    </f:facet>
+                <f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-                    <p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-                        <h:outputText value="#{log.user.username}"/>
-                    </p:column>
+                <p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
+                    <h:outputText value="#{log.user.username}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
-                        <h:outputText value="#{log.resource.title}"/>
-                    </p:column>
+                <p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
+                    <h:outputText value="#{log.resource.title}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
-                        <h:outputText value="#{log.selectionCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
+                    <h:outputText value="#{log.selectionCount}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.deselection_count}" sortBy="#{log.deselectionCount}">
-                        <h:outputText value="#{log.deselectionCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.deselection_count}" sortBy="#{log.deselectionCount}">
+                    <h:outputText value="#{log.deselectionCount}"/>
+                </p:column>
 
-                    <p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
-                        <h:outputText value="#{log.userAnnotationCount}"/>
-                    </p:column>
+                <p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
+                    <h:outputText value="#{log.userAnnotationCount}"/>
+                </p:column>
 
-                    <p:column headerText="Link">
-                        <h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank">
-                            <h:outputText value="link"/>
-                            <f:param name="resource_id" value="#{log.resource.id}"/>
-                        </h:outputLink>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </p:panel>
+                <p:column headerText="Link">
+                    <h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank">
+                        <h:outputText value="link"/>
+                        <f:param name="resource_id" value="#{log.resource.id}"/>
+                    </h:outputLink>
+                </p:column>
+            </p:dataTable>
+        </h:form>
     </ui:define>
 </ui:composition>
