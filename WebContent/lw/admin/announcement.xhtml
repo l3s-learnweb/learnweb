@@ -12,7 +12,7 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="Missing organisation parameter" />
+			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}" />
 			<f:viewAction action="#{adminAnnouncementBean.onLoad}" />
 		</f:metadata>
 	</ui:define>
@@ -38,7 +38,7 @@
 				</div>
 
 				<div class="form-group">
-					<p:textEditor height="400" value="#{adminAnnouncementBean.announcement.text}">
+					<p:textEditor height="200" value="#{adminAnnouncementBean.announcement.text}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>

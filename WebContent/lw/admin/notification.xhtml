@@ -16,8 +16,8 @@
 			<h:outputText value="#{msg.missing_authentication}"/>
 		</p:panel>
 
-		<p:panel header="#{msg.create_notification}" rendered="#{userBean.moderator}">
-			<h:form>
+		<h:form>
+			<p:panel header="#{msg.create_notification}" rendered="#{userBean.moderator}">
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
 					<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
@@ -58,8 +58,8 @@
 
 				<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
 				<p:commandButton value="#{msg.clear}" styleClass="secondary-btn" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
-			</h:form>
-		</p:panel>
+			</p:panel>
+		</h:form>
 	</ui:define>
 </ui:composition>
 

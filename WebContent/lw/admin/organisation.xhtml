@@ -13,7 +13,7 @@
 
 	<ui:define name="metadata">
 	    <f:metadata>
-	        <f:viewParam name="organisation_id" value="#{adminOrganisationBean.organisationId}" required="false" requiredMessage="Missing organisation parameter" />
+	        <f:viewParam name="organisation_id" value="#{adminOrganisationBean.organisationId}" required="false" requiredMessage="#{msg.missing_parameter}" />
 	        <f:viewAction action="#{adminOrganisationBean.onLoad}" />
 	    </f:metadata>
 	</ui:define>
@@ -29,23 +29,23 @@
                 <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
                     <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">
                         <f:facet name="toolbar">
-                                    <span class="ql-formats">
-                                        <select class="ql-font"></select>
-                                        <select class="ql-size"></select>
-                                    </span>
                             <span class="ql-formats">
-                                        <button class="ql-bold"></button>
-                                        <button class="ql-italic"></button>
-                                        <button class="ql-underline"></button>
-                                        <button class="ql-strike"></button>
-                                        <button class="ql-link"></button>
-                                    </span>
+                                <select class="ql-font"></select>
+                                <select class="ql-size"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                                <button class="ql-link"></button>
+                            </span>
                         </f:facet>
                     </p:textEditor>
                 </p:panel>
                 <div class="row s-gutters">
                     <div class="col-12 col-md-6">
-                        <p:panel header="Common settings">
+                        <p:panel header="#{msg.common} #{msg.settings}">
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                                 <p:inputText id="c_title" value="#{adminOrganisationBean.selectedOrganisation.title}"/>
@@ -53,13 +53,13 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Banner image:"/>
+                                <p:outputLabel for="@next" value="#{msg.banner} #{msg.image}:"/>
                                 <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="fileupload-minimal" mode="simple" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Welcome Page:"/>
+                                <p:outputLabel for="@next" value="#{msg.welcome} #{msg.page}:"/>
                                 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
                                     <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
                                     <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Logout Page:"/>
+                                <p:outputLabel for="@next" value="#{msg.logout} #{msg.page}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
                                     <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
                                     <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
@@ -78,9 +78,9 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Default language:"/>
+                                <p:outputLabel for="@next" value="#{msg.default_msg} #{msg.language}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
-                                    <f:selectItem itemLabel="No default" itemValue="#{null}" />
+                                    <f:selectItem itemLabel="#{msg.no} #{msg.default_msg}" itemValue="#{null}" />
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
                                                    itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -88,9 +88,9 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Language variant:"/>
+                                <p:outputLabel for="@next" value="#{msg.language} #{msg.variant}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
-                                    <f:selectItem itemValue="" itemLabel="No variant" />
+                                    <f:selectItem itemValue="" itemLabel="#{msg.no} #{msg.variant}" />
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
                                                    itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="Glossary languages:"/>
+                                <p:outputLabel for="@next" value="#{msg.glossary} #{msg.languages}:"/>
                                 <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                                       label="#{msg.language}" multiple="true" converter="#{localeConverter}">
                                     <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <p:panel header="Additional settings">
+                        <p:panel header="#{msg.additional} #{msg.settings}">
                             <p:accordionPanel autoHeight="false" id="courseoptions">
                                 <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
                                     <p:tab title="${adminOrganisationBean.optionGroups[status.index].title}">
