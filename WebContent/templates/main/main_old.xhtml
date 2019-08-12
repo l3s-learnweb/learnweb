@@ -113,7 +113,7 @@
             <p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" immediate="true" process="@this"/>
         </h:form>
 
-        <p:growl id="growl" rendered="#{userBean.loggedIn and not disableGrowl}"/>
+        <p:growl id="growl" rendered="#{not disableGrowl}"/>
     </h:body>
 </f:view>
 
