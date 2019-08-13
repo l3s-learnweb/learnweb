@@ -15,9 +15,11 @@
 			<f:viewAction action="#{glossaryBean.onLoad()}" />
 		</f:metadata>
 	</ui:define>
+
     <ui:define name="sub_breadcrumb">
         <p:menuitem value="#{msg['Glossary.glossary']}" url=""/>
     </ui:define>
+
 	<ui:define name="center_layout">
         <!-- responsive voice API-->
         <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
@@ -124,14 +126,14 @@
                                       styleClass="text-center text-primary"></h:outputText>
                         <!--excel import button-->
                         <p:commandLink rendered="#{userBean.moderator}" styleClass="text-center"  ajax="false"  onclick="PF('excel_import_dialog').show(); return false;">
-                            <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24" styleClass="text-center" />
+							<i class="fa fa-fw fa-file-excel-o text-primary" aria-hidden="true"></i>
                         </p:commandLink>
 						<p:commandLink   styleClass="text-center" ajax="false">
-							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" styleClass="text-center" />
+							<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
 							<p:dataExporter type="xls" target="glossary_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}" />
 						</p:commandLink>
 						<p:commandLink  styleClass="text-center" ajax="false">
-							<p:graphicImage library="default" value="/resources/icon/pdf_icon.png"  width="24"  />
+							<i class="fa fa-fw fa-file-pdf-o text-danger" aria-hidden="true"></i>
 							<p:dataExporter type="pdf" fileName="glossary" target="glossary_table" preProcessor="#{glossaryBean.rotatePDF}"></p:dataExporter>
 						</p:commandLink>
 					</p:panelGrid>

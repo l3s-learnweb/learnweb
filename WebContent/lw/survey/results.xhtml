@@ -27,8 +27,8 @@
 			<p:dataTable id="survey_result" var="result" tableStyleClass="table-sm table-responsive" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
 						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 				<f:facet name="{Exporters}">
-					<h:commandLink styleClass="excel_export_todo_use">
-						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
+					<h:commandLink>
+						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
 						<p:dataExporter type="xls" target="survey_result" fileName="survey" />
 					</h:commandLink>
 				</f:facet>

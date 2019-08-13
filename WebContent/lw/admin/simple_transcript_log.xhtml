@@ -26,8 +26,8 @@
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
                          rowsPerPageTemplate="20,25,30">
                 <f:facet name="{Exporters}">
-                    <h:commandLink styleClass="excel_export_todo_use">
-                        <p:graphicImage library="default" value="/resources/icon/excel_icon.jpg"/>
+                    <h:commandLink>
+                        <i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
                         <p:dataExporter type="xls" target="transcript_table" fileName="simple_transcript_log"/>
                     </h:commandLink>
                 </f:facet>

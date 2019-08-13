@@ -113,9 +113,9 @@
 						<p:ajax listener="#{eUMade4AllStatisticsBean.onLoad()}" update="@form data"></p:ajax>
 					</p:selectOneMenu>
 					<br/>
-					<h:commandLink rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}" styleClass="excel_export_todo_use">
+					<h:commandLink rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}">
 						Download data
-						<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"  />
+						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
 						<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
 					</h:commandLink>
 				</p:panel>
@@ -126,9 +126,9 @@
 					rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}" style="margin-bottom: 1rem;">
 					
 					<f:facet name="footer">
-						<h:commandLink styleClass="excel_export_todo_use">
+						<h:commandLink>
 							Download data
-							<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24" style="top:7px;left:3px;position:relative;" />
+							<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
 							<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
 						</h:commandLink>
 					</f:facet>
