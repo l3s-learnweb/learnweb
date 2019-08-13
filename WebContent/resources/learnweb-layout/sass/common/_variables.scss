@@ -36,18 +36,10 @@ $sidebar-hide-display: lg; // Do not forget to change the JS according
 * Bootstrap variables
 * check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
 */
-$nav-link-padding-y: .2rem;
-$nav-link-padding-x: .5rem;
-$emphasized-link-hover-darken-percentage: 7.5%;
-$border-radius: 0;
-$btn-border-radius: .2rem;
-$input-padding-y: .25rem;
-$input-padding-x: .25rem;
-$input-btn-padding-y: .25rem;
-$input-btn-padding-x: $input-btn-padding-y * 3;
 $body-bg: $lightGray;
 $body-color: $gray-900;
 $border-color: $gray-300;
+$emphasized-link-hover-darken-percentage: 7.5%;
 
 $primary: $themePrimaryColor;
 $secondary: $themePrimaryAltColor;
@@ -57,3 +49,17 @@ $warning: $yellow;
 $danger: $red;
 $light: $gray-100;
 $dark: $themeDarkBgColor;
+
+$font-size-base: .875rem; // Assuming the browser default (typically `16px`), then base font size is `14px`.
+$font-size-lg: $font-size-base * 1.14285714; // 16px
+$font-size-sm: $font-size-base * .857142857; // 12px
+
+$border-radius: 0;
+$btn-border-radius: .2rem;
+
+$nav-link-padding-y: .2rem;
+$nav-link-padding-x: .5rem;
+$input-padding-y: .25rem;
+$input-padding-x: .25rem;
+$input-btn-padding-y: .25rem;
+$input-btn-padding-x: $input-btn-padding-y * 3;

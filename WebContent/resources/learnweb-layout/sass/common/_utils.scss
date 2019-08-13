@@ -119,3 +119,9 @@ td.td-text-right {
 .mw-0 {
   min-width: 0;
 }
+
+@media (max-width: 420px) {
+  .d-none-mobile {
+    display: none !important;
+  }
+}

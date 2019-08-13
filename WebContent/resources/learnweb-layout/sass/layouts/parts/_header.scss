@@ -45,7 +45,7 @@ $topbar-button-padding: 15px;
 
       &.search-form {
         min-width: 20rem;
-        font-size: 1rem;
+        font-size: $font-size-base;
 
         input {
           width: 100%;
@@ -75,7 +75,7 @@ $topbar-button-padding: 15px;
       list-style: none;
       padding-right: 1rem;
       margin-bottom: 0;
-      font-size: 1rem;
+      font-size: $font-size-base;
 
       a {
         padding: 1rem;

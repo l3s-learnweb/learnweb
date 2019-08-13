@@ -19,6 +19,10 @@
     height: 130px;
     transition: box-shadow $transition-duration;
 
+    img {
+      max-width: 100%;
+    }
+
     > .member-star {
       position: absolute;
       right: 5px;

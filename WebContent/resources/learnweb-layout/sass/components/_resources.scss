@@ -75,13 +75,13 @@ ul.res-breadcrumbs {
       margin-right: 1rem;
 
       &:after {
-        position: absolute;
-        font-family: FontAwesome;
-        top: -5px;
-        right: -14px;
         content: "\f105";
+        position: absolute;
         display: inline-block;
-        font-size: 2rem;
+        font-family: FontAwesome;
+        font-size: 2em;
+        top: -0.1em;
+        right: -0.5em;
       }
     }
   }
@@ -383,7 +383,7 @@ ul.res-filters {
 
       .res-bl-author {
         color: $gray-600;
-        font-size: 0.625rem;
+        font-size: $font-size-sm;
       }
     }
   }
@@ -485,7 +485,7 @@ ul.res-filters {
   transition: opacity $transition-duration;
   background: $white;
   cursor: default;
-  font-size: 13px;
+  font-size: $font-size-base;
   margin: 0;
   outline: none;
   position: fixed;

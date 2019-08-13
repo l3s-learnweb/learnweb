@@ -6,7 +6,7 @@
 
     .header-news-list {
       > h2 {
-        font-size: 1rem;
+        font-size: $font-size-base;
         padding: .5rem 1rem;
       }
 
@@ -24,7 +24,7 @@
 
         .news-date {
           display: block;
-          font-size: 0.8rem;
+          font-size: $font-size-sm;
           color: rgba(255, 255, 255, 0.6);
         }
 

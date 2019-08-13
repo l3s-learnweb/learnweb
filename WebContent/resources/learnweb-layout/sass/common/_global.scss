@@ -1,18 +1,4 @@
-html {
-  font-size: 14px;
-
-  @include media-breakpoint-up(xl) { // min-width: 1200px
-    font-size: 16px;
-  }
-}
-
 body,
 .layout-container {
   min-width: $min-width;
-}
-
-@media (max-width: 420px) {
-  .d-none-mobile {
-    display: none !important;
-  }
 }

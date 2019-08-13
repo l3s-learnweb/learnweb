@@ -18,7 +18,7 @@ body {
   .ui-datatable {
     .ui-datatable-footer,
     .ui-datatable-header {
-      font-size: 1rem;
+      font-size: $font-size-base;
       border: 1px solid $contentBorderColor;
     }
 
