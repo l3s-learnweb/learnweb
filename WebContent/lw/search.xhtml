@@ -23,8 +23,7 @@
 <ui:define name="center_layout">
     <h:outputStylesheet library="lightbox" name="lightbox.css"/>
     <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
-    <div class="section-search">
-    <h:panelGroup  layout="block">
+    <div   class="container-fluid section-search">
         <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
             <p:outputPanel styleClass="group-menu-header text-center" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
@@ -34,9 +33,9 @@
                 </h:outputFormat>
             </p:outputPanel>
 
-            <h:form>
+            <h:form >
                 <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" styleClass="ui-carousel-light"  circular="true"  var="gr" numVisible="2">
-                            <h:link outcome="search" styleClass="source_#{gr.groupAlias}" >
+                            <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
                                 <f:param name="service" value="#{gr.groupAlias}"/>
                                 <f:param name="action" value="#{searchBean.searchMode}"/>
                                 <f:param name="query" value="#{searchBean.query}"/>
@@ -73,100 +72,99 @@
             </h:form>
 
         </h:panelGroup>
-            <div class="filters_menu_bar text-center">
-                <h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
-                    <ul>
-                        <li class="filter">
-                            <h:outputLink value="group/overview.jsf" id="backtogroup"  styleClass="d-inline-block p-2 text-body custom-underline fa fa-angle-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-                                #{msg.back_to}
-                                <i>#{userBean.user.activeGroup.title}</i>
-                                <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
-                            </h:outputLink>
-                        </li>
-                        <li class="filter">
+        <div class="filters_menu_bar text-center">
+                    <h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
+                        <ul>
+                            <li class="filter">
+                                <h:outputLink value="group/overview.jsf" id="backtogroup"  styleClass="d-inline-block p-2 text-body custom-underline fa fa-angle-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+                                    #{msg.back_to}
+                                    <i>#{userBean.user.activeGroup.title}</i>
+                                    <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
+                                </h:outputLink>
+                            </li>
+                            <li class="filter">
                             <span class="p-2 d-inline-block fa fa-angle-down">
                                 #{msg.Search_type}
                             </span>
-                            <h:panelGroup styleClass="filter-sub-bar" layout="block" >
-                                <h:form styleClass="text-center">
-                                    <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 text-decoration-none">
-                                        <f:param name="action" value="text"/>
-                                        <f:param name="query" value="#{searchBean.query}"/>
-                                    </h:link>
-                                    <h:link value="#{msg.Images}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1  text-decoration-none">
-                                        <f:param name="action" value="image"/>
-                                        <f:param name="query" value="#{searchBean.query}"/>
-                                    </h:link>
+                                <h:panelGroup styleClass="filter-sub-bar" layout="block" >
+                                    <h:form styleClass="text-center">
+                                        <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 text-decoration-none">
+                                            <f:param name="action" value="text"/>
+                                            <f:param name="query" value="#{searchBean.query}"/>
+                                        </h:link>
+                                        <h:link value="#{msg.Images}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1  text-decoration-none">
+                                            <f:param name="action" value="image"/>
+                                            <f:param name="query" value="#{searchBean.query}"/>
+                                        </h:link>
 
-                                    <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 text-decoration-none">
-                                        <f:param name="action" value="video"/>
-                                        <f:param name="query" value="#{searchBean.query}"/>
-                                    </h:link>
-                                </h:form>
-                            </h:panelGroup>
-                        </li>
-                        <li class="filter sources" id="source_filter">
+                                        <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 text-decoration-none">
+                                            <f:param name="action" value="video"/>
+                                            <f:param name="query" value="#{searchBean.query}"/>
+                                        </h:link>
+                                    </h:form>
+                                </h:panelGroup>
+                            </li>
+                            <li class="filter sources" id="source_filter">
                             <span class="p-2 d-inline-block fa fa-angle-down">
                                 #{searchBean.searchService.toString()}
                             </span>
-                            <h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
-                                <p:repeat value="#{searchBean.availableSources}" var="item">
-                                    <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
-                                        <h:outputText value="#{item.name}"/>
+                                <h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
+                                    <p:repeat value="#{searchBean.availableSources}" var="item">
+                                        <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+                                            <h:outputText value="#{item.name}"/>
 
-                                        <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-                                            <f:param value="#{item.counter}"/>
-                                        </h:outputFormat>
+                                            <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+                                                <f:param value="#{item.counter}"/>
+                                            </h:outputFormat>
 
-                                        <f:param name="action" value="#{searchBean.searchMode}"/>
-                                        <f:param name="service" value="#{item.url}"/>
-                                        <f:param name="query" value="#{searchBean.query}"/>
-                                    </h:outputLink>
-                                </p:repeat>
-                            </h:panelGroup>
-                        </li>
-                        <p:repeat value="#{searchBean.availableFilters}" var="filter">
-                            <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
+                                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                                            <f:param name="service" value="#{item.url}"/>
+                                            <f:param name="query" value="#{searchBean.query}"/>
+                                        </h:outputLink>
+                                    </p:repeat>
+                                </h:panelGroup>
+                            </li>
+                            <p:repeat value="#{searchBean.availableFilters}" var="filter">
+                                <li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
                                     <span class="p-2 d-inline-block fa fa-angle-down">
                                         #{filter.name}
                                     </span>
-                                <h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
-                                    <h:panelGroup styleClass="vCarousel-container" layout="block">
-                                        <h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
-                                            <h:outputText value="#{filter.anyText}"/>
-
-                                            <f:param name="action" value="#{searchBean.searchMode}"/>
-                                            <f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}"/>
-                                            <f:param name="service" value="#{searchBean.queryService}"/>
-                                            <f:param name="query" value="#{searchBean.query}"/>
-                                        </h:outputLink>
-                                        <p:repeat value="#{filter.items}" var="item">
-                                            <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
-                                                <h:outputText value="#{item.name}"/>
-
-                                                <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-                                                    <f:param value="#{item.counter}"/>
-                                                </h:outputFormat>
+                                    <h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
+                                        <h:panelGroup styleClass="vCarousel-container" layout="block">
+                                            <h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
+                                                <h:outputText value="#{filter.anyText}"/>
 
                                                 <f:param name="action" value="#{searchBean.searchMode}"/>
-                                                <f:param name="filter" value="#{item.url}"/>
+                                                <f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}"/>
                                                 <f:param name="service" value="#{searchBean.queryService}"/>
                                                 <f:param name="query" value="#{searchBean.query}"/>
                                             </h:outputLink>
-                                        </p:repeat>
-                                    </h:panelGroup>
-                                    <h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
-                                </h:panelGroup>
-                            </li>
-                        </p:repeat>
-                    </ul>
-                    <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="d-inline-block p-2 text-body custom-underline">
-                        <f:param name="action" value="#{searchBean.searchMode}"/>
-                        <f:param name="query" value="#{searchBean.query}"/>
-                    </h:link>
-                </h:panelGroup>
-            </div>
+                                            <p:repeat value="#{filter.items}" var="item">
+                                                <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+                                                    <h:outputText value="#{item.name}"/>
 
+                                                    <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+                                                        <f:param value="#{item.counter}"/>
+                                                    </h:outputFormat>
+
+                                                    <f:param name="action" value="#{searchBean.searchMode}"/>
+                                                    <f:param name="filter" value="#{item.url}"/>
+                                                    <f:param name="service" value="#{searchBean.queryService}"/>
+                                                    <f:param name="query" value="#{searchBean.query}"/>
+                                                </h:outputLink>
+                                            </p:repeat>
+                                        </h:panelGroup>
+                                        <h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
+                                    </h:panelGroup>
+                                </li>
+                            </p:repeat>
+                        </ul>
+                        <h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="d-inline-block p-2 text-body custom-underline">
+                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
+                        </h:link>
+                    </h:panelGroup>
+            </div>
         <script type="text/javascript">
             var view = '#{searchBean.view}';
             var userId = '#{userBean.user.id}';
@@ -175,13 +173,10 @@
         <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
 
         <div id="results" class="#{searchBean.view}_view mt-3">
-            <div class="resources">
                 <ui:decorate template="/templates/search/resources.xhtml">
                     <ui:param name="resources" value="#{searchBean.search.resources}"/>
                     <ui:param name="view" value="#{searchBean.view}"/>
                 </ui:decorate>
-            </div>
-            <div class="clear"></div>
         </div>
 
         <h:panelGroup id="factsheet">
@@ -310,7 +305,6 @@
                 </ui:fragment>
             </h:form>
         </p:dialog>
-    </h:panelGroup>
     </div>
 </ui:define>
 </ui:composition>

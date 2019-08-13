@@ -167,9 +167,9 @@
   .list_view {
     &#results {
       float: left;
-      width: 61%;
+/*      width: 61%;
       min-width: 54rem;
-      max-width: 70rem;
+      max-width: 70rem;*/
     }
 
     &#explore_resultset {
@@ -178,35 +178,35 @@
       min-width: 63rem;
     }
 
-    .resource {
+/*    .resource {
       margin: 2rem 1.5rem;
 
       &:hover {
         background: rgba(204, 204, 204, 0.03);
       }
-    }
+    }*/
 
-    .description {
+/*    .description {
       display: block;
       width: 94%;
       padding-bottom: 0.4rem;
-    }
+    }*/
 
-    .metadata-field {
+/*    .metadata-field {
       display: inline-block;
       max-width: 94%;
-    }
+    }*/
 
-    a {
+/*    a {
       text-decoration: none;
       color: $blue;
 
       &:hover {
         text-decoration: underline;
       }
-    }
+    }*/
 
-    .add_resource_link {
+/*    .add_resource_link {
       margin-right: 1rem;
       display: inline-block;
 
@@ -228,17 +228,16 @@
         vertical-align: top;
         margin-right: 3px;
       }
-    }
+    }*/
 
     a {
       &.resourceWebLink {
         &:link {
-          font-size: 1.6rem;
-          font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+          font-size: 1.4rem;
+    /*      font-family: "Segoe UI", Arial, Helvetica, sans-serif;*/
         }
-
-        font-size: 1.6rem;
-        font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+        font-size: 1.4rem;
+/*        font-family: "Segoe UI", Arial, Helvetica, sans-serif;*/
 
         &:visited {
           color: $blueDarkest;
@@ -247,10 +246,10 @@
 
       &.resourceReferenceUrl {
         color: $themePrimaryColor;
-        overflow: hidden;
+/*        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        display: block;
+        display: block;*/
       }
     }
   }
@@ -585,4 +584,24 @@
   .filter-sub-bar {
     box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
   }
+  .ui-datalist-content{
+    border: 0;
+    background-color: transparent;
+    width: 100%;
+    .ui-datalist-data{
+      list-style-type:none;
+      padding-left: 0;
+    }
+  }
+  .ui-paginator-bottom{
+    background-color: transparent;
+    border: 0;
+    .ui-paginator-pages {
+      .ui-state-active {
+        background-color: transparent !important;
+      }
+    }
+  }
 }
+
+
