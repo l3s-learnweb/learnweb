@@ -18,15 +18,17 @@
             </ui:fragment>
 
             <ui:fragment rendered="#{group.canViewResources(userBean.user)}">
-                <div class="row s-gutters">
-                    <h:panelGroup layout="block" styleClass="col-md col-md-fixed">
-                        <ui:insert name="left_column"/>
-                    </h:panelGroup>
+                <ui:insert name="group_layout">
+                    <div class="row s-gutters">
+                        <h:panelGroup layout="block" styleClass="col-md col-md-fixed">
+                            <ui:insert name="left_column"/>
+                        </h:panelGroup>
 
-                    <h:panelGroup layout="block" styleClass="col-md mw-0">
-                        <ui:insert name="middle_column"/>
-                    </h:panelGroup>
-                </div>
+                        <h:panelGroup layout="block" styleClass="col-md mw-0">
+                            <ui:insert name="middle_column"/>
+                        </h:panelGroup>
+                    </div>
+                </ui:insert>
             </ui:fragment>
         </ui:fragment>
     </ui:define>

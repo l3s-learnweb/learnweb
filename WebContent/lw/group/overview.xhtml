@@ -20,94 +20,118 @@
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/members.jsf?group_id=#{groupOverviewBean.group.id}"/>
 </ui:define>
 
-<ui:define name="left_column">
-    <p:panel header="Group details" styleClass="mb-3">
-        <h5>#{groupOverviewBean.group.title}</h5>
-        <p class="mb-1">
-            <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
-            <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-        </p>
-        <p class="mb-1">
-            <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
-            <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
-        </p>
-
-        <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
-            <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true" process="@this" styleClass="alt-btn">
-                <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
-            </p:commandButton>
-        </h:form>
-    </p:panel>
-</ui:define>
-
-<ui:define name="middle_column">
-
+<ui:define name="group_layout">
     <h:form>
         <p:remoteCommand name="resourceAddedHook" update=":summary_overview_form :group_activity"/>
         <p:remoteCommand name="resourceUpdatedHook" update=":summary_overview_form :group_activity"/>
     </h:form>
 
-    <ui:decorate template="/WEB-INF/templates/blocks/group/parts/summary_overview.xhtml">
-        <ui:param name="summary" value="#{groupOverviewBean.getSummaryOverview()}"/>
-        <ui:param name="summaryTitle" value="#{groupOverviewBean.summaryTitle}"/>
-    </ui:decorate>
+    <div class="row s-gutters">
+        <div class="col-md-6">
+            <p:panel header="Group details" styleClass="mb-3">
+                <h5>#{groupOverviewBean.group.title}</h5>
+                <p class="mb-1">
+                    <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                </p>
+                <p class="mb-1">
+                    <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                </p>
 
-    <p:panel header="All activities" id="resourcesView">
-        <h:form id="group_activity">
-            <!-- TODO: this section can be reused from user's activity log. The difference only is that here we show a resource and by click we update right panel.-->
-            <p:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
-                <div class="d-flex align-items-start #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                    <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
+                <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
+                    <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true"
+                                     process="@this" styleClass="alt-btn">
+                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+                    </p:commandButton>
+                </h:form>
+            </p:panel>
 
-                    <div class="log-details">
-                        <p class="mb-0 log-description">
-                            <h:outputText value="#{logEntry.description}" escape="false"  />
-                            <h:panelGroup rendered="#{logEntry.queryNeeded}">
-                                <h:outputText value=" #{msg.with_query}" escape="false"  />
-                                <h:outputLink styleClass="log-query" value="search.jsf">
-                                    <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
-                                    <f:param name="query" value="#{logEntry.resource.query}"/>
-                                    <f:param name="action" value="web"/>
-                                </h:outputLink>
-                                <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
-                            </h:panelGroup>
-                        </p>
+            <p:panel header="#{msg.members}" styleClass="mb-3 section-group-members">
+                <h:form>
+                    <h:panelGrid id="resource_disp" styleClass="mt-2">
+                        <p:repeat id="datagrid" var="user" value="#{groupOverviewBean.members}">
+                            <p:commandLink styleClass="resource_command_link" update=":right_pane" onclick="PF('learnweb').showRightPane();">
+                                <f:setPropertyActionListener target="#{groupOverviewBean.clickedUser}" value="#{user}"/>
+                                <div class="members-panelgrid">
+                                    <img src="#{user.image}" alt="#{user.fullName}"/>
+                                    <ui:fragment rendered="#{not empty user.credits}">
+                                        <div class="member-star"></div>
+                                    </ui:fragment>
+                                    <div class="member-username-small">#{user.username}</div>
+                                </div>
+                            </p:commandLink>
+                        </p:repeat>
+                    </h:panelGrid>
+                </h:form>
+            </p:panel>
+        </div>
 
-                        <p class="small font-weight-light mb-0 log-date">
-                            <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
-                        </p>
+        <div class="col-md-6">
+            <ui:decorate template="/WEB-INF/templates/blocks/group/parts/summary_overview.xhtml">
+                <ui:param name="summary" value="#{groupOverviewBean.getSummaryOverview()}"/>
+                <ui:param name="summaryTitle" value="#{groupOverviewBean.summaryTitle}"/>
+            </ui:decorate>
 
-                        <h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
-                            <h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
-                                <p:commandLink update=":right_pane">
-                                    <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
-                                    <img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
-                                </p:commandLink>
-                            </h:panelGroup>
+            <p:panel header="All activities" id="resourcesView" styleClass="mb-3">
+                <h:form id="group_activity">
+                    <!-- TODO: this section can be reused from user's activity log. The difference only is that here we show a resource and by click we update right panel.-->
+                    <p:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
+                        <div class="d-flex align-items-start #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+                            <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
-                            <div class="resource-details pl-3">
-                                <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
+                            <div class="log-details">
+                                <p class="mb-0 log-description">
+                                    <h:outputText value="#{logEntry.description}" escape="false"/>
+                                    <h:panelGroup rendered="#{logEntry.queryNeeded}">
+                                        <h:outputText value=" #{msg.with_query}" escape="false"/>
+                                        <h:outputLink styleClass="log-query" value="search.jsf">
+                                            <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+                                            <f:param name="query" value="#{logEntry.resource.query}"/>
+                                            <f:param name="action" value="web"/>
+                                        </h:outputLink>
+                                        <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"/>
+                                    </h:panelGroup>
+                                </p>
 
-                                <h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
-                                    <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
-                                    <h:outputText value="#{logEntry.resource.author}"/>
-                                </h:panelGroup>
+                                <p class="small font-weight-light mb-0 log-date">
+                                    <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}"
+                                                  escape="false"/>
+                                </p>
 
-                                <h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
-                                    <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
-                                    <h:outputText value="#{logEntry.resource.tagsAsString}"/>
+                                <h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
+                                    <h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
+                                        <p:commandLink update=":right_pane">
+                                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
+                                            <img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
+                                        </p:commandLink>
+                                    </h:panelGroup>
+
+                                    <div class="resource-details pl-3">
+                                        <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
+
+                                        <h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
+                                            <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+                                            <h:outputText value="#{logEntry.resource.author}"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
+                                            <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+                                            <h:outputText value="#{logEntry.resource.tagsAsString}"/>
+                                        </h:panelGroup>
+                                    </div>
                                 </h:panelGroup>
                             </div>
-                        </h:panelGroup>
-                    </div>
-                </div>
-            </p:repeat>
+                        </div>
+                    </p:repeat>
 
-            <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
-                <p:commandButton value="#{msg.full_history}" styleClass="secondary-btn"
-                                 update="@form" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
-            </h:panelGroup>
-        </h:form>
-    </p:panel>
+                    <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
+                        <p:commandButton value="#{msg.full_history}" styleClass="secondary-btn"
+                                         update="@form" actionListener="#{groupOverviewBean.fetchAllLogs()}"/>
+                    </h:panelGroup>
+                </h:form>
+            </p:panel>
+        </div>
+    </div>
 </ui:define>
 </ui:composition>

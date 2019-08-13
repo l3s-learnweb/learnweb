@@ -1,4 +1,4 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+<ui:composition template="/WEB-INF/templates/blocks/group/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -14,6 +14,7 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="disableGrowl" value="true"/>
 <ui:param name="pageTitle" value="#{forumPostBean.topic.title}"/>
+<ui:param name="group" value="#{forumPostBean.group}"/>
 
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{forumPostBean.group.title}" url="group/overview.jsf?group_id=#{forumPostBean.group.id}"/>
@@ -21,7 +22,7 @@
     <p:menuitem value="#{forumPostBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumPostBean.topicId}"/>
 </ui:define>
 
-<ui:define name="center_layout">
+<ui:define name="group_layout">
     <h:panelGroup layout="block">
         <ui:decorate template="/templates/group/menu.xhtml">
             <ui:param name="group" value="#{forumPostBean.group}"/>

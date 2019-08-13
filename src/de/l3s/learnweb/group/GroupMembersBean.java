@@ -11,6 +11,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 
+// TODO: remove it later (merged with GroupOverviewBean)
 @Named
 @ViewScoped
 public class GroupMembersBean extends ApplicationBean implements Serializable

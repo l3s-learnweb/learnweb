@@ -1,4 +1,4 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+<ui:composition template="/WEB-INF/templates/blocks/group/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -14,74 +14,60 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="disableGrowl" value="true"/>
 <ui:param name="pageTitle" value="#{msg.forum}"/>
+<ui:param name="group" value="#{forumTopicsBean.group}"/>
+
 <ui:define name="sub_breadcrumb">
 	<p:menuitem value="#{forumTopicsBean.group.title}" url="group/overview.jsf?group_id=#{forumTopicsBean.group.id}"/>
 	<p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumTopicsBean.group.id}"/>
-
 </ui:define>
-<ui:define name="center_layout">
-	<ui:decorate template="/templates/group/menu.xhtml">
-		<ui:param name="group" value="#{forumTopicsBean.group}"/>
-		<ui:param name="active" value="forum"/>
 
-		<ui:define name="title">
-			<div class="row align-items-center">
-				<h5 class="col mb-2 py-1">
-					<span class="text-primary">#{msg.forum}</span> #{msg.of} #{forumTopicsBean.group.title}
-				</h5>
-				<h:form id="center_header_form" styleClass="col mb-2 mx-1 py-1">
-					<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-						<p:commandButton value="#{msg['ForumIndex.new_topic']}"
-										 rendered="${forumTopicsBean.group.isMember(userBean.user)}"
-										 class="float-right"
-										 onclick="$('html, body').animate({scrollTop:$(document).height()}, 'slow'); return false;" />
-					</ui:fragment>
+<ui:define name="group_layout">
+	<p:panel header="#{msg.forum}" styleClass="ui-panel-header-btn">
+		<f:facet name="actions">
+			<h:form id="center_header_form" styleClass="col mb-2 mx-1 py-1">
+				<p:commandButton value="#{msg['ForumIndex.new_topic']}" rendered="${forumTopicsBean.group.isMember(userBean.user)}" styleClass="secondary-btn"/>
 
-					<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-								   update=":growl :group_menu @form" partialSubmit="true"
-								   process="@this" value="#{msg.join_group}">
-						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-					</p:commandLink>
-				</h:form>
-			</div>
-		</ui:define>
-	</ui:decorate>
+				<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+							   update=":growl @form" partialSubmit="true" styleClass="secondary-btn" process="@this" value="#{msg.join_group}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+				</p:commandLink>
+			</h:form>
+		</f:facet>
 
-	<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
-		<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
-					 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-					 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
+		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
+			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
+						 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
 
-			<p:column headerText="#{msg['ForumIndex.topic']}" styleClass="text-center" sortBy="#{topic.title}">
-				<h:link outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}">
-					<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate}">
-						<i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
-					</ui:fragment>
-					<h:outputText value="#{topic.title}"/>
-				</h:link>
-			</p:column>
-			<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
-				<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-			</p:column>
-			<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
-				<h:outputText value="#{topic.replies}"/>
-			</p:column>
-			<p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}">
-				<h:outputText value="#{topic.views}"/>
-			</p:column>
-			<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
-				<h:outputText value="#{topic.lastPostDate}"
-							  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'font-weight-bold':''}">
-					<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
-				</h:outputText>
-				<br/>
-				<h:outputText value="#{msg.by} "/>
-				<h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-			</p:column>
-
-		</p:dataTable>
-	</h:form>
-
+				<p:column headerText="#{msg['ForumIndex.topic']}" styleClass="text-center" sortBy="#{topic.title}">
+					<h:link outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}">
+						<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate}">
+							<i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
+						</ui:fragment>
+						<h:outputText value="#{topic.title}"/>
+					</h:link>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
+					<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
+					<h:outputText value="#{topic.replies}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}">
+					<h:outputText value="#{topic.views}"/>
+				</p:column>
+				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
+					<h:outputText value="#{topic.lastPostDate}"
+								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'font-weight-bold':''}">
+						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
+					</h:outputText>
+					<br/>
+					<h:outputText value="#{msg.by} "/>
+					<h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
 
 	<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
 		<p:panel styleClass="mt-3" header="#{msg['ForumIndex.new_topic']}">
@@ -144,10 +130,7 @@
 						</tr>
 					</table>
 				</h:form>
-
 		</p:panel>
 	</ui:fragment>
-
-
 </ui:define>
 </ui:composition>

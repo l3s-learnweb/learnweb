@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.user.Organisation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 
@@ -37,15 +38,18 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     private int groupId;
     private Group group;
 
-    @Inject
-    private RightPaneBean rightPaneBean;
-
-    private List<LogEntry> logMessages;
+    private String summaryTitle;
     private boolean showAllLogs = false;
 
+    private List<LogEntry> logMessages;
     private SummaryOverview groupSummary;
+    private List<User> members;
+
     private Resource clickedResource;
-    private String summaryTitle;
+    private User clickedUser;
+
+    @Inject
+    private RightPaneBean rightPaneBean;
 
     public void onLoad() throws SQLException
     {
@@ -208,5 +212,47 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
         this.rightPaneBean = rightPaneBean;
+    }
+
+    public User getClickedUser()
+    {
+        return clickedUser;
+    }
+
+    public void setClickedUser(User clickedUser)
+    {
+        this.clickedUser = clickedUser;
+    }
+
+    public boolean isMember() throws SQLException
+    {
+        User user = getUser();
+
+        if(null == user)
+            return false;
+
+        if(null == group)
+            return false;
+
+        return group.isMember(user);
+    }
+
+    public List<User> getMembers() throws SQLException
+    {
+        if(null == members && group != null)
+        {
+            members = group.getMembers();
+        }
+        return members;
+    }
+
+    public boolean isUserDetailsHidden()
+    {
+        User user = getUser();
+        if(user == null)
+            return false;
+        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames))
+            return true;
+        return false;
     }
 }
