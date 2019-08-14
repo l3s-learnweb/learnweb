@@ -517,13 +517,15 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
  * On document ready events
  */
 $(function () {
+    // We created a PrimeFaces widget without an active element, so we need manually tell PrimeFaces to run it
+    // After that, we can access any method of it by using `PF('learnweb')`, like `PF('learnweb').showRightPane();`
     PrimeFaces.cw("LearnwebTheme", "learnweb", {id: "learnweb"});
 });
 
 /**
  * Reproducible in PrimeFaces 7.0
- * https://github.com/primefaces/primefaces/issues/5035
- * Fix for Primefaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
+ * https://github.com/primefaces/primefaces/issues/5035 (the issue was resolved and should be released in PF 7.1)
+ * Fix for PrimeFaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
  */
 PrimeFaces.widget.Menu.prototype.show = function() {
     this.align();
@@ -531,7 +533,10 @@ PrimeFaces.widget.Menu.prototype.show = function() {
 };
 
 /**
- *
+ * This is used for adaptive PrimeFaces Carousel.
+ * By default you can set only fixed amount of column and it will be changed only on mobile phones to single column.
+ * But this script allows to set dynamic number of column based on the size of first element.
+ * To use it, set `breakpoint` property of `p:carousel` to `-1`.
  */
 PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
     if(this.cfg.breakpoint === -1) {
@@ -589,6 +594,10 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
 //     }
 // };
 
+/**
+ * This is a new implementation of old script which changes size of filters list.
+ * If list contains more than N items, then all after N will be hidden and "Show more" will be displayed instead.
+ */
 PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     init: function (cfg) {
         this._super(cfg);
@@ -604,7 +613,7 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
         var $expandBtn = $list.find('li.expand-list');
 
         var totalRecords = $items.length;
-        if (visibleItems < totalRecords) {
+        if (visibleItems + 1 < totalRecords) {
             $list.addClass('list-collapsed');
             $expandBtn.show();
             for (var i = visibleItems; i < totalRecords; ++i) {
