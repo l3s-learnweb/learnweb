@@ -19,13 +19,9 @@
 
         <h:head>
             <f:facet name="first">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-                <meta name="apple-mobile-web-app-capable" content="yes"/>
-
-                <title><h:outputText value="#{pageTitle}" escape="false"/> - #{msg['application.name']}</title>
-                <link rel="shortcut icon" type="image/x-icon" href="#{resource['images:favicon.ico']}"/>
+                <ui:include src="parts/head.xhtml">
+                    <ui:param name="pageTitle" value="#{pageTitle}"/>
+                </ui:include>
             </f:facet>
 
             <base href="#{request.contextPath}/lw/"/>
