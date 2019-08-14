@@ -9,12 +9,25 @@
 
 -->
 <urlrewrite use-query-string="true">
-<!-- 
-	<rule>
-		<from>/new/(.*)</from>
-		<to type="redirect">/$1</to>
+
+	<!-- rules for scss source map --> 
+	<rule>  
+		<from>/javax.faces.resource/learnweb-layout/css/styles.css.map</from>
+		<to>/javax.faces.resource/learnweb-layout/css/styles.css.map.jsf</to>
 	</rule>
-	 -->
+
+	<rule>  
+		<from>/javax.faces.resource/learnweb-layout/sass/(.*)</from>
+		<to>/javax.faces.resource/learnweb-layout/sass/$1.jsf</to>
+	</rule>	
+
+	<rule>  
+		<from>/javax.faces.resource/california-layout/sass/(.*)</from>
+		<to>/javax.faces.resource/california-layout/sass/$1.jsf</to>
+	</rule>
+	
+
+	<!-- short links to the wizard -->	
 	<rule>
 		<from>/lw/wizard=(.*)</from>
 		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
