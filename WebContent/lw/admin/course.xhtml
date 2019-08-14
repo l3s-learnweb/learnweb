@@ -48,7 +48,7 @@
 				<div class="col-12 mt-3">
 					<div class="row s-gutters">
 						<div class="col">
-							<p:panel header="#{msg.common} #{msg.settings}:">
+							<p:panel header="#{msg.common_settings}:">
 								<div class="form-group">
 									<p:outputLabel for="@next" value="#{msg.title}:"/>
 									<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
@@ -58,7 +58,7 @@
 								</div>
 
 								<div class="form-group">
-									<p:outputLabel for="@next" value="#{msg.wizard} #{msg.parameter}:"/>
+									<p:outputLabel for="@next" value="#{msg.wizard_parameter}:"/>
 									<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
 <!--										<p:ajax update="message_c_param"/>-->
 									</p:inputText>
@@ -68,7 +68,7 @@
 								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
 									<p:outputLabel for="@next" value="#{msg.organization}:"/>
 									<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}">
-										<f:selectItem itemLabel="#{msg.no} #{msg.organization}" itemValue="0" />
+										<f:selectItem itemLabel="#{msg.no_organization}" itemValue="0" />
 										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
 										<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
 									</p:selectOneMenu>
@@ -76,9 +76,9 @@
 								</h:panelGroup>
 
 								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
-									<p:outputLabel for="@next" value="#{msg.default_msg} #{msg.group}:"/>
+									<p:outputLabel for="@next" value="#{msg.default_group}:"/>
 									<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
-										<f:selectItem itemLabel="#{msg.no} #{msg.default_msg} #{msg.group}" itemValue="0" />
+										<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0" />
 										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
 										<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 									</p:selectOneMenu>
@@ -92,7 +92,7 @@
 						</div>
 
 						<div class="col">
-							<p:panel header="Additional settings">
+							<p:panel header="#{msg.additional_settings}">
                                 <p:accordionPanel autoHeight="false" id="courseoptions">
                                     <c:forEach items="#{adminCourseBean.optionGroups}" var="group" varStatus="status">
                                         <p:tab title="#{adminCourseBean.optionGroups[status.index].title}">

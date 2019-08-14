@@ -19,9 +19,13 @@
                 <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                                  update=":growl anlyse_form"/>
 
-                <p class="my-3"><h:outputText value="#{adminTextAnalysisBean.commentCount} #{msg.comments_from} #{adminTextAnalysisBean.selectedUsers.size()} #{msg.total_selected_users}"/></p>
 
-<!--                <p class="my-3"><h:outputText value="${utilBean.getLocaleMessage('text_analysis_comments_count', adminTextAnalysisBean.commentCount, adminTextAnalysisBean.selectedUsers.size())}"/></p>-->
+                <p class="my-3">
+                    <h:outputFormat value="#{msg.text_analysis_comments_count}">
+                        <f:param value="#{adminTextAnalysisBean.commentCount}" />
+                        <f:param value="#{adminTextAnalysisBean.selectedUsers.size()}" />
+                    </h:outputFormat>
+                </p>
 
                 <p:dataTable var="comment" tableStyleClass="table-sm table-responsive" value="#{adminTextAnalysisBean.comments}">
                     <p:column>

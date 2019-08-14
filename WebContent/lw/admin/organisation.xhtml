@@ -45,7 +45,7 @@
                 </p:panel>
                 <div class="row s-gutters">
                     <div class="col-12 col-md-6">
-                        <p:panel header="#{msg.common} #{msg.settings}">
+                        <p:panel header="#{msg.common_settings}">
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.title}:"/>
                                 <p:inputText id="c_title" value="#{adminOrganisationBean.selectedOrganisation.title}"/>
@@ -53,13 +53,13 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.banner} #{msg.image}:"/>
+                                <p:outputLabel for="@next" value="#{msg.banner_image}:"/>
                                 <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="fileupload-minimal" mode="simple" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />
                                 <p:message for="@previous"/>
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.welcome} #{msg.page}:"/>
+                                <p:outputLabel for="@next" value="#{msg.welcome_page}:"/>
                                 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
                                     <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
                                     <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.logout} #{msg.page}:"/>
+                                <p:outputLabel for="@next" value="#{msg.logout_page}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
                                     <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
                                     <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
@@ -78,9 +78,9 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.default_msg} #{msg.language}:"/>
+                                <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
-                                    <f:selectItem itemLabel="#{msg.no} #{msg.default_msg}" itemValue="#{null}" />
+                                    <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}" />
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
                                                    itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -88,9 +88,9 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.language} #{msg.variant}:"/>
+                                <p:outputLabel for="@next" value="#{msg.lang_variant}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
-                                    <f:selectItem itemValue="" itemLabel="#{msg.no} #{msg.variant}" />
+                                    <f:selectItem itemValue="" itemLabel="#{msg.no_lang_variant}" />
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
                                                    itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="form-group">
-                                <p:outputLabel for="@next" value="#{msg.glossary} #{msg.languages}:"/>
+                                <p:outputLabel for="@next" value="#{msg.glossary_languages}:"/>
                                 <p:selectCheckboxMenu value="#{adminOrganisationBean.selectedOrganisation.glossaryLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
                                                       label="#{msg.language}" multiple="true" converter="#{localeConverter}">
                                     <f:selectItems value="#{adminOrganisationBean.availableGlossaryLanguages}"></f:selectItems>
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <p:panel header="#{msg.additional} #{msg.settings}">
+                        <p:panel header="#{msg.additional_settings}">
                             <p:accordionPanel autoHeight="false" id="courseoptions">
                                 <c:forEach items="#{adminOrganisationBean.optionGroups}" var="group" varStatus="status">
                                     <p:tab title="${adminOrganisationBean.optionGroups[status.index].title}">
