@@ -6,29 +6,27 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <p:repeat var="res" value="#{resources}">
-        <div class="resource" id="resource_${res.tempId}" style="max-width:${res.thumbnail2b.width}px">
-            <h:panelGroup styleClass="#{res.newResource ? 'float_newResource' : 'oldResource'}">
-                <img src="${res.thumbnail2b.url}" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}" class="smallImage"/>
-            </h:panelGroup>
-            <div class="preview" style="max-width:${res.thumbnail2.width > 160 ? res.thumbnail2.width : 180}px;">
-                <img src="${res.thumbnail2.url}" height="${res.thumbnail2.height}" width="${res.thumbnail2.width}" class="mediumImage"/>
 
-                <div class="title"><h:outputText value="${res.title}" escape="false"/></div>
-                <div class="description">
-                    <h:outputText value="${res.shortSnippet}" escape="false"/>
+    <div class="d-flex flex-wrap align-items-center justify-content-between">
+        <p:repeat var="res" value="#{resources}">
+            <div  id="resource_${res.tempId}" class="resource px-1">
+                <div class="img-container">
+                    <div>
+                        <img src="${res.thumbnail2b.url}" alt="Responsive image" class="m-0 py-1 img-responsive" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}"/>
+                    </div>
+                    <div class="overlay">
+                        <div class="overlay-content pl-1">
+                            <p  class="text-truncate overflow-hidden font-weight-bold">${res.title}</p>
+                                <h:outputLink value="${res.urlProxied}">
+                                    <img src="#{request.contextPath}#{res.serviceIcon}" alt="${res.location}" style="height: 0.8rem; width: 0.8rem;"/>
+                                </h:outputLink>
+                        </div>
+                    </div>
                 </div>
-                <div class="location">
-                    <h:outputLink value="${res.urlProxied}">
-                        <img src="#{request.contextPath}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/>
-                        <h:outputText value="${res.location}"/>
-                    </h:outputLink>
-                </div>
+                <ui:decorate template="/templates/search/resource_metadata.xhtml">
+                    <ui:param name="res" value="#{res}"/>
+                </ui:decorate>
             </div>
-
-            <ui:decorate template="/templates/search/resource_metadata.xhtml">
-                <ui:param name="res" value="#{res}"/>
-            </ui:decorate>
-        </div>
-    </p:repeat>
+        </p:repeat>
+    </div>
 </ui:composition>

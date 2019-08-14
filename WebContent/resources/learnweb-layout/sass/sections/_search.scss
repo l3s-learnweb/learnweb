@@ -265,32 +265,6 @@
     outline-color: $themeLightBgColor;
   }
 
-  /* ---------------------- Float view ------------------------*/
-
-  div.float_view {
-    padding: 1px 6px;
-    text-align: justify;
-    max-width: 100%;
-    /* width:75%; enable for search history, but has side effects */
-    position: relative;
-
-    .resource {
-      display: inline;
-      text-align: left;
-      z-index: 2;
-    }
-
-    .smallImage:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
-  }
-
-  .float_newResource img {
-    outline: 5px solid;
-    //outline-color: rgb(89, 255, 24);
-    outline-color: $themeLightBgColor;
-  }
-
   /* ---------------------- Grid view ------------------------*/
 
   div {
@@ -386,7 +360,7 @@
     }
   }
 
-  .preview {
+/*  .preview {
     position: absolute;
     display: none;
     background-color: $white;
@@ -425,7 +399,7 @@
         color: $black;
       }
     }
-  }
+  }*/
 
   /*------------------- Fact sheet -------------------------*/
 
@@ -600,6 +574,30 @@
       .ui-state-active {
         background-color: transparent !important;
       }
+    }
+  }
+
+  .img-container {
+    position: relative;
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 500ms ease-in-out;
+      .overlay-content {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background-color: $gray-400;
+      }
+    }
+    &:hover .overlay {
+      opacity: 1;
     }
   }
 }

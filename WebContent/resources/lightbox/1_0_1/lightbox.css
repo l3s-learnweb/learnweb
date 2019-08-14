@@ -1,6 +1,6 @@
 #lightbox {
 	display:none;
-    position:fixed; 
+    position:absolute;
     top: 0px;
     left:0;
     height:100%; 

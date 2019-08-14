@@ -39,7 +39,7 @@
         </div>
         <div>
             <p:outputLabel for="@next" value="#{msg.options}: " styleClass="font-weight-bold"/>
-            <h:outputLink value="#" rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}" styleClass="fa fa-plus-circle mr-2"
+            <h:outputLink value="#" rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}" styleClass="fa fa-plus-circle mr-2 fa-fw text-decoration-none"
                           onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
             </h:outputLink>
             <h:panelGroup rendered="#{not empty res.group}" styleClass="mr-2">
