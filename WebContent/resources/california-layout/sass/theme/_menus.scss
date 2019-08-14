@@ -17,10 +17,10 @@ body {
                     top: -2px;
                 }
                 &.ui-breadcrumb-chevron {
-                    @include icon_override("/ ");
-                    font-size: $h3-font-size;
-                    margin: 0 6px;
-                    vertical-align: top;
+                    @include icon_override("\f105");
+                    font-size: 1.25em;
+                    margin: 0 0.2rem;
+                    //vertical-align: middle;
                 }
                 &:first-child {
                     font-size: $font-size-lg;

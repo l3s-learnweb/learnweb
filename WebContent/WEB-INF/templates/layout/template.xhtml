@@ -70,8 +70,8 @@
 
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
                                 <ui:insert name="breadcrumb_bar">
-                                    <p:breadCrumb>
-                                        <p:menuitem value="#" url="#{userBean.bannerLink}"/>
+                                    <p:breadCrumb styleClass="mb-3">
+                                        <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
                                         <ui:insert name="sub_breadcrumb"/>
                                     </p:breadCrumb>
                                 </ui:insert>

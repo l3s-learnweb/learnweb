@@ -7798,7 +7798,7 @@ body .ui-datatable .ui-datatable-header {
   padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 700;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-datatable .ui-datatable-header + .ui-paginator-top {
   border-top: 0 none;
@@ -7820,7 +7820,7 @@ body .ui-datatable thead th {
   padding: 0.75rem;
   border-color: #dee2e6;
   color: #212529;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-datatable thead th.ui-state-hover {
   background-color: #e9ecef;
@@ -7850,7 +7850,7 @@ body .ui-datatable tfoot td {
   padding: 0.75rem;
   border-color: #dee2e6;
   color: #212529;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-datatable .ui-datatable-data tr.ui-datatable-even {
   background-color: #f8f9fa;
@@ -7890,7 +7890,7 @@ body .ui-datatable .ui-datatable-data tr td a.ui-rowgroup-toggler .ui-rowgroup-t
   width: 17px;
   height: 17px;
   color: #fff;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-datatable > .ui-icon-arrowthick-1-s {
   color: #38569C;
@@ -7923,7 +7923,7 @@ body .ui-datagrid .ui-datagrid-header {
   padding: 0.5rem 1rem;
   text-align: left;
   font-weight: 700;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-datagrid .ui-datagrid-header + .ui-paginator-top {
   border-top: 0 none;
@@ -7972,7 +7972,7 @@ body .ui-datagrid .ui-panel-content td .ui-button span:hover {
 body .ui-datalist .ui-datalist-header {
   padding: 0.5rem 1rem;
   font-weight: 700;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   text-align: left;
 }
 body .ui-datalist .ui-datalist-header + .ui-paginator-top {
@@ -7996,7 +7996,7 @@ body .ui-datascroller .ui-datascroller-header {
 body .ui-dataview .ui-dataview-header {
   padding: 0.5rem 1rem;
   font-weight: 700;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   text-align: left;
 }
 body .ui-dataview .ui-dataview-header + .ui-paginator-top {
@@ -8305,7 +8305,7 @@ body .ui-carousel .ui-carousel-header {
   margin: 0;
   font-weight: 700;
   text-align: left;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -8442,7 +8442,7 @@ body .ui-treetable tfoot td {
   background-color: #fff;
   padding: 0.5rem 1rem;
   border-color: #dee2e6;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-treetable .ui-treetable-data tr.ui-state-hover {
   background-color: #e9ecef;
@@ -8455,7 +8455,7 @@ body .ui-treetable .ui-treetable-data tr td {
   padding: 6px 12px;
 }
 body .ui-treetable .ui-treetable-data tr td .ui-treetable-toggler {
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   vertical-align: middle;
   display: inline-block;
   float: none;
@@ -8512,7 +8512,7 @@ body .ui-tree .ui-treenode {
   padding: 2px 0;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-tree-toggler {
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   vertical-align: middle;
   display: inline-block;
   float: none;
@@ -8569,7 +8569,7 @@ body .ui-tree .ui-treenode .ui-treenode-content .ui-treenode-icon {
   vertical-align: middle;
   display: inline-block;
   margin: 0 6px 0 0;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-tree .ui-treenode .ui-treenode-content .ui-treenode-label {
   margin: 0;
@@ -8692,7 +8692,7 @@ body .fc .fc-event {
 body .fc .fc-toolbar {
   background-color: #4b6cb7;
   color: #fff;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   padding: 12px 12px 0 12px;
   margin: 0;
 }
@@ -9143,7 +9143,7 @@ body .ui-dialog.ui-confirm-dialog .ui-dialog-content > span {
 }
 body .ui-dialog.ui-confirm-dialog .ui-dialog-content > span.ui-icon {
   margin-right: 4px;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-tooltip .ui-tooltip-text {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.15);
@@ -9254,7 +9254,7 @@ body .ui-breadcrumb {
   background-color: #fff;
   color: #495057;
   padding: 0.5rem 1rem;
-  border: 1px solid #ced4da;
+  border: 1px solid #4b6cb7;
   border-radius: 3px;
 }
 body .ui-breadcrumb ul li {
@@ -9278,15 +9278,14 @@ body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
   text-indent: 0px !important;
   background: none;
   text-align: center;
-  font-size: 1.53125rem;
-  margin: 0 6px;
-  vertical-align: top;
+  font-size: 1.25em;
+  margin: 0 0.2rem;
 }
 body .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
-  content: "/ ";
+  content: "";
 }
 body .ui-breadcrumb ul li:first-child {
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
 }
 body .ui-breadcrumb ul li:first-child a.ui-icon-home {
   margin: 0;
@@ -9768,7 +9767,7 @@ body .ui-message {
   margin: 0.25rem 0;
   display: flex;
   align-items: center;
-  font-size: 0.7499999999rem;
+  font-size: 0.75rem;
 }
 body .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon {
   text-decoration: none;
@@ -9955,32 +9954,6 @@ body .ui-datatable .ui-datatable-footer {
 body,
 .layout-container {
   min-width: 320px;
-}
-
-.layout-wrapper .ui-breadcrumb {
-  border: 1px solid #4b6cb7;
-  border-left: none;
-  border-right: none;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  padding: 0.8rem 0.5rem;
-}
-.layout-wrapper .ui-breadcrumb ul li {
-  vertical-align: middle !important;
-  font-size: 0.9999999975rem !important;
-  padding: 0 0.3rem !important;
-}
-.layout-wrapper .ui-breadcrumb ul li.ui-breadcrumb-chevron:before {
-  content: "";
-}
-.layout-wrapper .ui-breadcrumb ul li:first-child span {
-  display: none;
-}
-.layout-wrapper .ui-breadcrumb ul li:last-child {
-  pointer-events: none;
-}
-.layout-wrapper .ui-breadcrumb ul li .ui-menuitem-link {
-  top: 0;
 }
 
 .layout-wrapper .layout-header {
@@ -10808,6 +10781,29 @@ body,
   width: 100% !important;
 }
 
+body .ui-breadcrumb {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+}
+body .ui-breadcrumb ul li {
+  font-size: 1rem;
+  padding: 0 0.3rem;
+  font-weight: bold;
+}
+body .ui-breadcrumb ul li:first-child span {
+  display: none;
+}
+body .ui-breadcrumb ul li:last-child {
+  pointer-events: none;
+}
+body .ui-breadcrumb ul li.ui-breadcrumb-chevron {
+  height: auto;
+}
+body .ui-breadcrumb ul li .ui-menuitem-link {
+  top: -1px;
+}
+
 .ui-lwmenu {
   padding: 0;
   list-style-type: none;
@@ -10997,7 +10993,7 @@ body .ui-tabs.ui-tabs-transparent .ui-tabs-panels {
 .resource-log-snippet {
   display: flex;
   flex-wrap: nowrap;
-  font-size: 0.7499999999rem;
+  font-size: 0.75rem;
 }
 .resource-log-snippet .resource-preview {
   flex: 0 0 7rem;
@@ -11317,7 +11313,7 @@ ul.res-filters .clear-filters:hover a {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.9999999975rem;
+  font-size: 1rem;
   color: #6c757d;
   background: #dee2e6;
 }
@@ -11338,7 +11334,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .res-block .res-bl-details .res-bl-desc .res-bl-author {
   color: #6c757d;
-  font-size: 0.7499999999rem;
+  font-size: 0.75rem;
 }
 .res-block:hover {
   color: #fff;
@@ -12377,7 +12373,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-landing .header .header-news-list .ui-datalist-content .news-date {
   display: block;
-  font-size: 0.7499999999rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.6);
 }
 .section-landing .header .header-news-list .ui-datalist-content .news-content {

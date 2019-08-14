@@ -1,3 +1,35 @@
+body {
+  .ui-breadcrumb {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+
+    ul {
+      li {
+        font-size: $font-size-lg;
+        padding: 0 0.3rem;
+        font-weight: bold;
+
+        &:first-child span {
+          display: none;
+        }
+
+        &:last-child {
+          pointer-events: none;
+        }
+
+        &.ui-breadcrumb-chevron {
+          height: auto;
+        }
+
+        .ui-menuitem-link {
+          top: -1px;
+        }
+      }
+    }
+  }
+}
+
 .ui-lwmenu {
   padding: 0;
   list-style-type: none;

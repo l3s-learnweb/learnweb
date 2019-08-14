@@ -50,9 +50,9 @@ $danger: $red;
 $light: $gray-100;
 $dark: $themeDarkBgColor;
 
-$font-size-base: .875rem; // Assuming the browser default (typically `16px`), then base font size is `14px`.
-$font-size-lg: $font-size-base * 1.14285714; // 16px
-$font-size-sm: $font-size-base * .857142857; // 12px
+$font-size-sm: .75rem; // 12px
+$font-size-base: .875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
+$font-size-lg: 1rem; // 16px
 
 $border-radius: 0;
 $btn-border-radius: .2rem;
