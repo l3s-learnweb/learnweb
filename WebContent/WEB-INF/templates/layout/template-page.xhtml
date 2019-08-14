@@ -30,25 +30,25 @@
 
         <h:body styleClass="layout-body template-page">
             <div class="layout-wrapper layout-wrapper-sidebar-inactive">
-                <header class="layout-header bg-white">
+                <header class="layout-header bg-primary">
                     <div class="layout-container d-flex flex-row align-items-center">
                         <div class="d-flex mr-auto">
-                            <a href="#{request.contextPath}/lw/index.jsf" class="header-element logo text-primary">
-                                <i class="lw lw-logo"></i>
+                            <a href="#{request.contextPath}/lw/index.jsf" class="header-element header-logo no-hover-bg">
+                                <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo"/>
                             </a>
                         </div>
 
-                        <div class="d-flex">
+                        <h:form styleClass="d-flex">
                             <div class="header-element no-hover-bg row justify-content-end">
                                 <ui:insert name="header_right"/>
                             </div>
 
-                            <h:form rendered="#{userBean.languageSwitchEnabled}">
+                            <ui:fragment rendered="#{userBean.languageSwitchEnabled}">
                                 <h:outputLink id="languageSwitchButton" styleClass="header-element lang-button" onclick="return false;">
                                     <img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
                                 </h:outputLink>
 
-                                <p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu">
+                                <p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                                     <p:menuitem action="#{userBean.setLocaleCode('de')}">
                                         <img src="#{request.contextPath}/resources/images/flags/flag_de.png" alt=""/><span>Deutsch</span>
                                     </p:menuitem>
@@ -65,8 +65,8 @@
                                         <img src="#{request.contextPath}/resources/images/flags/flag_xx.png" alt=""/><span>Developer</span>
                                     </p:menuitem>
                                 </p:menu>
-                            </h:form>
-                        </div>
+                            </ui:fragment>
+                        </h:form>
                     </div>
                 </header>
 

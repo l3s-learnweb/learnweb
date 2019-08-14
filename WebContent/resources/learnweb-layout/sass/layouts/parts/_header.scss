@@ -1,5 +1,6 @@
-$topbar-button-size: 30px;
-$topbar-button-padding: 15px;
+$topbar-button-size: 1.875rem;
+$topbar-button-lg-size: 2.5rem;
+$topbar-button-padding: 1rem;
 
 .layout-wrapper {
   .layout-header {
@@ -9,7 +10,7 @@ $topbar-button-padding: 15px;
     width: 100%;
     z-index: 998;
     height: $topbar-height;
-    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, .2);
 
     .header-element {
       height: $topbar-height;
@@ -25,50 +26,58 @@ $topbar-button-padding: 15px;
         background-color: $themePrimaryDarkerAlt;
       }
 
-      &.logo {
-        &:hover {
-          color: $light;
-          background-color: inherit;
-        }
-      }
-
       &.ajax-status {
         width: 4rem;
         padding: 0;
       }
+    }
 
-      &.lang-button {
-        img {
-          height: $topbar-button-size;
-        }
+    .menu-button {
+      padding: 0;
+      width: $topbar-button-size + $topbar-button-padding * 2;
+    }
+
+    .header-logo {
+      padding: 0 $topbar-button-padding / 2;
+      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding * 2);
+    }
+
+    .lang-button {
+      img {
+        height: $topbar-button-size;
+      }
+    }
+
+    .search-form {
+      min-width: 20rem;
+      font-size: $font-size-base;
+
+      input {
+        width: 100%;
+        height: $topbar-button-size;
+        border: 0;
+        outline: none;
+        padding: 0 3px 0 6px;
       }
 
-      &.search-form {
-        min-width: 20rem;
-        font-size: $font-size-base;
+      button {
+        border: 0;
+        display: flex;
+        align-items: center;
+        height: $topbar-button-size;
+        background: $themeElementTextColor;
+        color: $themeSidebarHoverBgColor;
 
-        input {
-          width: 100%;
-          height: $topbar-button-size;
-          border: 0;
-          outline: none;
-          padding: 0 3px 0 6px;
-        }
-
-        button {
-          border: 0;
-          display: flex;
-          align-items: center;
-          height: $topbar-button-size;
-          background: $themeElementTextColor;
-          color: $themeSidebarHoverBgColor;
-
-          &:hover {
-            background: $themePrimaryDarkerAlt;
-            color: $themeElementTextColor;
-          }
+        &:hover {
+          background: $themePrimaryDarkerAlt;
+          color: $themeElementTextColor;
         }
       }
+    }
+
+    .profile-picture {
+      width: $topbar-button-lg-size;
+      height: $topbar-button-lg-size;
     }
 
     .header-menu {
@@ -78,13 +87,14 @@ $topbar-button-padding: 15px;
       font-size: $font-size-base;
 
       a {
-        padding: 1rem;
+        padding: 0.7rem 1rem;
+        font-size: $font-size-lg;
         text-decoration: none;
         border-bottom: 0.2rem solid transparent;
-        color: $body-color;
+        color: $themeElementTextColor;
 
         &:hover {
-          border-color: $themePrimaryColorDarker;
+          border-color: $themeElementTextColor;
         }
       }
     }
