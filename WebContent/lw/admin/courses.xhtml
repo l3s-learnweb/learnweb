@@ -54,7 +54,7 @@
         </p:blockUI>
 
         <p:dataTable styleClass="mt-3" tableStyleClass="table-sm table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
-            <f:facet name="header">#{msg.all_courses}</f:facet>
+            <f:facet name="header">#{msg.courses}</f:facet>
 
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>

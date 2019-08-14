@@ -44,8 +44,8 @@
 
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessor}" rendered="#{adminPeerAssessmentPairBeen.fullView}"/>
-							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.assessed}"/>
+							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.peer_assessment_assessor}" rendered="#{adminPeerAssessmentPairBeen.fullView}"/>
+							<p:column colspan="${showEmail? 3:2}" headerText="#{msg.peer_assessment_assessed}"/>
 							<p:column colspan="3" headerText="#{msg.assessment}"/>
 						</p:row>
 
@@ -115,10 +115,8 @@
 									<h:outputText value="#{subpair.peerAssessment.title}" />
 								</h:outputLink>
 
-								<h:outputText value="#{msg.not_done}" rendered="#{not subpair.peerAssessmentUserAnswers.saved}"
-											   />
-								<h:outputText value="#{msg.saved}" rendered="#{subpair.peerAssessmentUserAnswers.saved and not subpair.peerAssessmentUserAnswers.submitted}"
-											   />
+								<h:outputText value="#{msg.not_done}" rendered="#{not subpair.peerAssessmentUserAnswers.saved}" />
+								<h:outputText value="#{msg.saved}" rendered="#{subpair.peerAssessmentUserAnswers.saved and not subpair.peerAssessmentUserAnswers.submitted}" />
 								<h:outputText value="#{msg.submitted}" rendered="#{subpair.peerAssessmentUserAnswers.submitted}"  />
 							</p>
 						</p:repeat>
@@ -145,9 +143,9 @@
 							<h:outputText value="#{pair.peerAssessment.title}" />
 						</h:outputLink>
 
-						<h:outputText value="#{msg.saved}" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"  />
+						<h:outputText value=" #{msg.saved}" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"  />
 
-						<h:outputText value="#{msg.submitted}" rendered="#{pair.peerAssessmentUserAnswers.submitted}"  />
+						<h:outputText value=" #{msg.submitted}" rendered="#{pair.peerAssessmentUserAnswers.submitted}"  />
 					</p:column>
 
 					<p:column>
@@ -156,9 +154,9 @@
 							<h:outputText value="#{msg.my}" />
 						</h:outputLink>
 
-						<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+						<h:outputText value=" #{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
 
-						<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+						<h:outputText value=" #{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
 
 						<p:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
 							<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
