@@ -9785,61 +9785,6 @@ body .ui-datatable .ui-datatable-footer {
   border-top: 0;
 }
 
-@font-face {
-  font-family: "Learnweb";
-  src: url("#{resource['learnweb-layout:fonts/learnweb.eot']}");
-  src: url("#{resource['learnweb-layout:fonts/learnweb.eot']}#iefix") format("embedded-opentype"), url("#{resource['learnweb-layout:fonts/learnweb.woff2']}") format("woff2"), url("#{resource['learnweb-layout:fonts/learnweb.woff']}") format("woff"), url("#{resource['learnweb-layout:fonts/learnweb.ttf']}") format("truetype"), url("#{resource['learnweb-layout:fonts/learnweb.svg']}#Learnweb") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
-.lw {
-  display: inline-block;
-  font: normal normal normal 14px/1 Learnweb;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.lw-logo::before {
-  content: "";
-}
-
-.lw-search:before {
-  content: "";
-}
-
-.lw-file-pdf:before {
-  content: "";
-}
-
-.lw-file-csv:before {
-  content: "";
-}
-
-.lw-file-excel:before {
-  content: "";
-}
-
-.has-badge {
-  position: relative;
-}
-.has-badge:after {
-  position: absolute;
-  right: 0;
-  top: 0;
-  content: attr(data-count);
-  font-size: 0.7rem;
-  padding: 0.5em;
-  border-radius: 50%;
-  line-height: 0.75em;
-  color: #fff;
-  background: rgba(205, 32, 38, 0.85);
-  text-align: center;
-  min-width: 1.75em;
-  font-weight: bold;
-}
-
 .onhover-scrollbar {
   overflow-y: hidden;
 }
@@ -9951,6 +9896,25 @@ body .ui-datatable .ui-datatable-footer {
     display: none !important;
   }
 }
+.has-badge {
+  position: relative;
+}
+.has-badge:after {
+  position: absolute;
+  right: 0;
+  top: 0;
+  content: attr(data-count);
+  font-size: 0.7rem;
+  padding: 0.5em;
+  border-radius: 50%;
+  line-height: 0.75em;
+  color: #fff;
+  background: rgba(205, 32, 38, 0.85);
+  text-align: center;
+  min-width: 1.75em;
+  font-weight: bold;
+}
+
 body,
 .layout-container {
   min-width: 320px;
