@@ -27,7 +27,7 @@
 @import 'vendor/bootstrap';
 
 // California theme for PrimeFaces components
-@import '../../california-layout/sass/theme/_theme';
+@import 'california/theme/_theme';
 @import '_theme_adjustment';
 
 // Load common utils and helpers
