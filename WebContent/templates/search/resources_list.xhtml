@@ -9,8 +9,8 @@
 <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
 <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 <h:form>
-<p:dataList var="res"  value="#{resources}"  paginator="true" rows="10" paginatorPosition="bottom">
-    <div class="resource m-2 col-12 d-flex flex-column border-bottom" id="resource_${res.tempId}">
+<p:dataList var="res"  value="#{resources}" paginator="true" styleClass="row d-flex flex-column" rows="10" paginatorPosition="bottom">
+    <div class="resource m-2 border-bottom" id="resource_${res.tempId}">
         <div>
             <div>
                 <h:outputLink class="resourceWebLink" target="_blank" value="#{res.urlProxied}">
@@ -18,10 +18,7 @@
                 </h:outputLink>
             </div>
             <div>
-                <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id != -1}">#{msg['application.name']}
-                    <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
-                <h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="#{res.id == -1}"
-                              target="_blank">#{res.url}</h:outputLink>
+                <h:outputLink class="resourceReferenceUrl" value="#{res.id != -1 ? res.learnwebUrl : res.url}" target="_blank">#{res.url}</h:outputLink>
                 <ui:fragment rendered="${res.archived}">
                     <div>#{msg['Archive.captured_between']}
                         <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
@@ -35,7 +32,7 @@
                     </div>
                 </ui:fragment>
             </div>
-            <h:outputText value="#{res.snippet}" styleClass="description" escape="false"></h:outputText>
+            <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
         </div>
         <div>
             <p:outputLabel for="@next" value="#{msg.options}: " styleClass="font-weight-bold"/>

@@ -6,10 +6,22 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-
-    <div class="d-flex flex-wrap align-items-center justify-content-between">
+    <div class="container">
+    <div class="row text-center text-lg-left">
         <p:repeat var="res" value="#{resources}">
-            <div  id="resource_${res.tempId}" class="resource px-1">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="d-block mb-4 h-100 img-container">
+                    <div class="content">
+                            <div class="content-overlay"></div>
+                            <img class="content-image" src="${res.thumbnail2b.url}"/>
+                            <div class="content-details fadeIn-bottom">
+                                <h3 class="content-title text-truncate overflow-hidden">${res.title}</h3>
+                                <p class="content-text text-truncate overflow-hidden">${res.description}</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+           <!-- <div  id="resource_${res.tempId}" class="resource px-1">
                 <div class="img-container">
                     <div>
                         <img src="${res.thumbnail2b.url}" alt="Responsive image" class="m-0 py-1 img-responsive" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}"/>
@@ -26,7 +38,8 @@
                 <ui:decorate template="/templates/search/resource_metadata.xhtml">
                     <ui:param name="res" value="#{res}"/>
                 </ui:decorate>
-            </div>
+            </div>-->
         </p:repeat>
+    </div>
     </div>
 </ui:composition>

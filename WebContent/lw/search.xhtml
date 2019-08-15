@@ -34,36 +34,37 @@
             </p:outputPanel>
 
             <h:form >
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" styleClass="ui-carousel-light"  circular="true"  var="gr" numVisible="2">
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" numVisible="2" styleClass="ui-carousel-light" style="border-radius: 1rem;"  circular="true"  var="gr">
                             <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
                                 <f:param name="service" value="#{gr.groupAlias}"/>
                                 <f:param name="action" value="#{searchBean.searchMode}"/>
                                 <f:param name="query" value="#{searchBean.query}"/>
 
-                                <h4 class="group-menu-title">
+                                <div class="group-menu-title font-weight-bold">
                                     <h:outputFormat value="#{msg.search_groups_title}" escape="false">
                                         <f:param value="#{gr.groupName}"/>
                                         <f:param value="#{gr.totalResources}"/>
                                     </h:outputFormat>
-                                </h4>
-                                <div class="group-menu-content group-content-#{searchBean.searchMode}">
-                                    <h:panelGroup styleClass="group-menu-web" layout="block" rendered="#{searchBean.searchMode == 'text'}">
+                                </div>
+                                <div>
+                                    <h:panelGroup  layout="block" styleClass="d-flex flex-wrap align-items-start" rendered="#{searchBean.searchMode == 'text'}">
                                         <p:repeat value="#{gr.resources}" var="res">
-                                            <div class="article-wrapper">
-                                                <h6>
-                                                    <span><h:outputText value="#{res.title}" escape="false"/></span>
-                                                    <span class="url">#{res.url}</span>
-                                                </h6>
-
-                                                <p><h:outputText value="#{res.snippet}" escape="false"></h:outputText></p>
+                                            <div>
+                                                <div>
+                                                    <h:outputLink class="resourceWebLink" target="_blank" value="#{res.id != -1 ? res.learnwebUrl : res.url}">
+                                                        <h:outputText value="#{res.title}" escape="false"/>
+                                                    </h:outputLink>
+                                                </div>
+                                                <div>
+                                                        <h:outputText value="#{res.url}" escape="false"/>
+                                                </div>
+                                                <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
                                             </div>
                                         </p:repeat>
                                     </h:panelGroup>
-                                    <h:panelGroup styleClass="group-menu-images" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
+                                    <h:panelGroup styleClass="d-flex flex-row justify-content-around" layout="block" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
                                         <p:repeat value="#{gr.resources}" var="res">
-                                            <div class="image-wrapper">
-                                                <img src="${res.thumbnail2.url}"/>
-                                            </div>
+                                                <img src="${res.thumbnail2.url}" class="img-responsive p-1"/>
                                         </p:repeat>
                                     </h:panelGroup>
                                 </div>
@@ -164,6 +165,7 @@
                             <f:param name="query" value="#{searchBean.query}"/>
                         </h:link>
                     </h:panelGroup>
+
             </div>
         <script type="text/javascript">
             var view = '#{searchBean.view}';
