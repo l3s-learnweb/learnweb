@@ -59,13 +59,13 @@
 
                     <p:column headerText="#{msg.bandate}" sortBy="#{accessData.banDate}">
                         <h:outputText value="#{accessData.banDate}">
-                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="both" />
                         </h:outputText>
                     </p:column>
 
                     <p:column headerText="#{msg.bannedon}" sortBy="#{accessData.bannedOn}">
                         <h:outputText value="#{accessData.bannedOn}">
-                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="both" />
                         </h:outputText>
                     </p:column>
 
@@ -140,7 +140,7 @@
 
                     <p:column headerText="#{msg.time_stamp}" sortBy="#{aggrReqData.time}">
                         <h:outputText value="#{aggrReqData.time}">
-                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
                         </h:outputText>
                     </p:column>
 

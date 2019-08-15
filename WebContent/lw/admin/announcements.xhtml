@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.date}:"/>
-                    <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                    <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" timeZone="#{userBean.timeZone}" />
                     <p:message for="@previous"/>
                 </div>
 
@@ -74,7 +74,7 @@
 
                 <p:column headerText="#{msg.date}" sortBy="#{news.date}">
                     <h:outputText  value="#{news.date}">
-                        <f:convertDateTime pattern="dd.MM.yyyy" timeZone="#{userBean.timeZone}" />
+                        <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
                     </h:outputText>
                 </p:column>
 

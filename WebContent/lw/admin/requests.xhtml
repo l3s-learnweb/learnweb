@@ -26,7 +26,7 @@
 
 						<p:column headerText="#{msg.time}" sortBy="#{reqData.time}" filterBy="#{reqData.time}" filterFunction="#{adminRequestListBean.filterByDate}">
 							<h:outputText value="#{reqData.time}">
-								<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss"/>
+								<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
 							</h:outputText>
 						</p:column>
 
@@ -61,7 +61,7 @@
 				<h:form id="aggrrequestform">
 					<span>
 						#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
-														<f:convertDateTime pattern="dd.MM.yyyy HH:mm"/>
+														<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
 														</h:outputText>
 						<p:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ml-3" immediate="true"/>
 					</span>
@@ -85,7 +85,7 @@
 
 						<p:column headerText="#{msg.time_stamp}" sortBy="#{aRequest.time}" filterBy="#{aRequest.time}" filterFunction="#{adminRequestListBean.filterByDate}">
 							<h:outputText value="#{aRequest.time}">
-								<f:convertDateTime pattern="dd.MM.yyyy HH:mm"/>
+								<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
 							</h:outputText>
 						</p:column>
 					</p:dataTable>
