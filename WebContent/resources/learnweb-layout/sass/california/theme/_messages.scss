@@ -49,6 +49,8 @@ body {
         }
     }
     .ui-message {
+        margin: 0.25rem 0;
+        font-size: $font-size-sm;
         &.ui-message-icon-only {
             min-height: 19px;
         }
@@ -59,7 +61,7 @@ body {
             .ui-message-info-icon {
                 @include icon_override("\f05a");
                 font-size: $font-size-base;
-                margin-top: 1px;
+                margin-top: 2px;
             }
         }
         &.ui-message-warn {
@@ -69,7 +71,7 @@ body {
             .ui-message-warn-icon {
                 @include icon_override("\f071");
                 font-size: $font-size-base;
-                margin-top: 1px;
+                margin-top: 2px;
             }
         }
         &.ui-message-error {
@@ -79,7 +81,7 @@ body {
             .ui-message-error-icon {
                 @include icon_override("\f06a");
                 font-size: $font-size-base;
-                margin-top: 1px;
+                margin-top: 2px;
             }
         }
         &.ui-message-fatal {
@@ -89,7 +91,7 @@ body {
             .ui-message-fatal-icon {
                 @include icon_override("\f06a");
                 font-size: $font-size-base;
-                margin-top: 1px;
+                margin-top: 2px;
             }
         }
     }

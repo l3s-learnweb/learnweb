@@ -101,6 +101,10 @@ td.td-text-right {
   @extend .text-right;
 }
 
+.table-responsive {
+  table-layout: auto;
+}
+
 .bg-highlight {
   color: $white;
   background-color: $gray-600;

@@ -85,13 +85,20 @@ body {
             padding: $headerPadding;
             text-align: left;
             font-weight: 700;
-            font-size: $font-size-lg;
+            font-size: $font-size-base;
+            border: 1px solid $contentBorderColor;
         }
 
         .ui-datatable-header {
+            border-bottom: 0;
+
             & + .ui-paginator-top {
                 border-top: 0 none;
             }
+        }
+
+        .ui-datatable-footer {
+            border-top: 0;
         }
 
         .ui-paginator {
@@ -116,7 +123,7 @@ body {
                 padding: $datatableCellPadding;
                 border-color: $table-border-color;
                 color: $body-color;
-                font-size: $font-size-lg;
+                font-size: $font-size-base;
 
                 &.ui-state-hover {
                     @include list-item-hover();

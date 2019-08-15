@@ -23,24 +23,6 @@ body {
     }
   }
 
-  .ui-datatable {
-    .table-responsive {
-      table-layout: auto;
-    }
-
-    .table-sm {
-      thead th {
-        font-size: $font-size-base;
-      }
-
-      thead th,
-      tfoot td,
-      .ui-datatable-data tr td {
-        padding: $table-cell-padding-sm;
-      }
-    }
-  }
-
   .ui-carousel.ui-carousel-light {
     border: 0;
     position: relative;

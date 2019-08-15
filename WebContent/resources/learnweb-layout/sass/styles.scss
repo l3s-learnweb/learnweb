@@ -23,12 +23,9 @@
 // Load variables
 @import 'common/_variables';
 
-// Vendor styles, from 3rd-part developers
-@import 'vendor/bootstrap';
-
-// California theme for PrimeFaces components
-@import 'california/theme/_theme';
-@import '_theme_adjustment';
+// Styles from 3rd-part developers
+@import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
+@import 'california/theme/_theme'; // California theme for PrimeFaces components
 
 // Load common utils and helpers
 @import 'common/_utils';
