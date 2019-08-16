@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+		<h:outputLink id="languageSwitchButton" styleClass="header-element lang-button" onclick="return false;">
+			<img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch" />
+		</h:outputLink>
+
+		<p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
+
+			<p:menuitem action="#{userBean.setLocaleCode('de')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_de.png" alt="" />
+				<span>Deutsch</span>
+			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('en')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_en.png" alt="" />
+				<span>English</span>
+			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('es')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_es.png" alt="" />
+				<span>Español</span>
+			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('it')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_it.png" alt="" />
+				<span>Italiano</span>
+			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('pt')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_pt.png" alt="" />
+				<span>Português</span>
+			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('xx')}" rendered="#{userBean.admin}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_xx.png" alt="" />
+				<span>Developer</span>
+			</p:menuitem>
+		</p:menu>
+	</ui:fragment>
+
+</ui:composition>
