@@ -18,6 +18,7 @@
             <supported-locale>en_UK_Archive</supported-locale>
             <supported-locale>it</supported-locale>
             <supported-locale>pt</supported-locale>
+            <supported-locale>es</supported-locale>
         </locale-config>
 
         <resource-bundle>

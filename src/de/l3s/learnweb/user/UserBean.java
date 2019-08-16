@@ -20,18 +20,20 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import de.l3s.learnweb.component.ActiveSubMenu;
-import de.l3s.learnweb.component.ResourceContainerMenuItem;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.menu.*;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.DynamicMenuModel;
+import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.FrontpageServlet;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -221,26 +223,29 @@ public class UserBean implements Serializable
 
         switch(localeCode)
         {
-            case "de":
-                locale = new Locale("de", "DE", languageVariant);
-                break;
-            case "en":
-                locale = new Locale("en", "UK", languageVariant);
-                break;
-            case "it":
-                locale = new Locale("it", "IT", languageVariant);
-                break;
-            case "pt":
-                locale = new Locale("pt", "BR", languageVariant);
-                break;
-            case "xx":
-                // only for translation editors
-                locale = new Locale("xx");
-                break;
-            default:
-                locale = new Locale("en", "UK");
-                log.error("Unsupported language: " + localeCode);
-                break;
+        case "de":
+            locale = new Locale("de", "DE", languageVariant);
+            break;
+        case "en":
+            locale = new Locale("en", "UK", languageVariant);
+            break;
+        case "it":
+            locale = new Locale("it", "IT", languageVariant);
+            break;
+        case "pt":
+            locale = new Locale("pt", "BR", languageVariant);
+            break;
+        case "es":
+            locale = new Locale("es", "ES", languageVariant);
+            break;
+        case "xx":
+            // only for translation editors
+            locale = new Locale("xx");
+            break;
+        default:
+            locale = new Locale("en", "UK");
+            log.error("Unsupported language: " + localeCode);
+            break;
         }
 
         localePrettyTime = null; // reset date formatter
@@ -525,17 +530,18 @@ public class UserBean implements Serializable
 
             // My groups
             ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, su + "/lw/myhome/groups.jsf");
-            for(Group group : getUser().getGroups()) {
+            for(Group group : getUser().getGroups())
+            {
                 ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), null, su + "/lw/group/overview.jsf?group_id=" + group.getId());
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
-                if (!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
+                if(!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
                 {
                     theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("links"), "fa fa-fw fa-link", su + "/lw/group/links.jsf?group_id=" + group.getId()));
                 }
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("forum"), "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
-                if (group.getCourse().isModerator(getUser()) || group.isLeader(getUser()))
+                if(group.getCourse().isModerator(getUser()) || group.isLeader(getUser()))
                 {
                     theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("options"), "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
                 }
@@ -583,7 +589,6 @@ public class UserBean implements Serializable
 
         return sidebarMenuModel;
     }
-
 
     /**
      * Returns true when there is any tooltip message to show
