@@ -5,8 +5,14 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <footer class="layout-footer bg-dark text-white-50">
-        <div class="layout-container p-3">
-            <h:outputText escape="false" value="#{msg.layout_footer_text}"/>
+        <div class="layout-container p-3">            
+            <a href="imprint.jsf">#{msg['imprint.title']}</a> - 
+			<a href="privacy_statement.jsf">#{msg['privacy_statement']}</a> - 
+			
+			<h:outputText value="#{msg.index_footer_text} "/>
+			<a href="mailto:#{msg['application.serverAdmin']}" >
+				<h:outputText value="#{msg['application.serverAdmin']}"/>
+			</a>
         </div>
     </footer>
 
