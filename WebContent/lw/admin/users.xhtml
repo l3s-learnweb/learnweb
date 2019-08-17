@@ -14,7 +14,7 @@
     </ui:define>
 
     <ui:define name="center_layout">
-        <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" tableStyleClass="table-sm table-responsive" paginatorPosition="bottom"
+        <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" tableStyleClass="table-responsive" paginatorPosition="bottom"
                      rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                      rendered="#{userBean.user.organisationId ne 1249}">
@@ -53,7 +53,7 @@
         </p:dataTable>
 
         <!-- special view for eumade4all -->
-        <p:dataTable var="user" value="#{adminUserBean.users}" tableStyleClass="table-sm table-responsive" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
+        <p:dataTable var="user" value="#{adminUserBean.users}" tableStyleClass="table-responsive" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                      rendered="#{userBean.user.organisationId eq 1249}">
             <f:facet name="header">#{msg.users_info}</f:facet>

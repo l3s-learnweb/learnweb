@@ -97,7 +97,7 @@
         </script>
 
         <h:form id="my_groups" >
-            <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-sm table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+            <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
                     #{msg.myGroups}
                 </f:facet>
@@ -147,7 +147,7 @@
 
         <h:form id="other_groups">
             <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-                <p:dataTable tableStyleClass="table-sm table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
+                <p:dataTable tableStyleClass="table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
                              value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
                     <f:facet name="header">
                         #{msg.otherGroups}

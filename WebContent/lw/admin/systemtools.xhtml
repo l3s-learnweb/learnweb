@@ -20,7 +20,7 @@
 
 		<ui:fragment rendered="#{userBean.admin}">
 			<h:form>
-				<p:dataTable tableStyleClass="table-sm table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
+				<p:dataTable tableStyleClass="table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
 					<f:facet name="header">#{msg.database_connections}</f:facet>
 
 					<p:column headerText="#{msg.id}" sortBy="#{process.id}">

@@ -15,7 +15,7 @@
 
 	<ui:define name="center_layout">
 		<h:form id="organisationform">
-			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-sm table-responsive">
+			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-responsive">
 				<f:facet name="header">#{msg.organizations_all}</f:facet>
 
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">

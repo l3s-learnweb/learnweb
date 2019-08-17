@@ -65,7 +65,7 @@
                 </div>
             </p:blockUI>
 
-            <p:dataTable id="news_table" var="news" tableStyleClass="table-sm table-responsive" value="#{adminAnnouncementsBean.announcements}">
+            <p:dataTable id="news_table" var="news" tableStyleClass="table-responsive" value="#{adminAnnouncementsBean.announcements}">
                 <f:facet name="header">#{msg.announcements_all}</f:facet>
 
                 <p:column headerText="#{msg.title}" sortBy="#{news.title}">

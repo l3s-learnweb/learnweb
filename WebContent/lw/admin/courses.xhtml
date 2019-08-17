@@ -19,7 +19,7 @@
                 <h:form id="addcourse">
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.course_title}:"/>
-                        <h:inputText value="#{adminCoursesBean.newCourseTitle}"/>
+                        <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
                         <p:message for="@previous"/>
                     </div>
 
@@ -53,7 +53,7 @@
             </div>
         </p:blockUI>
 
-        <p:dataTable styleClass="mt-3" tableStyleClass="table-sm table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+        <p:dataTable styleClass="mt-3" tableStyleClass="table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
             <f:facet name="header">#{msg.courses}</f:facet>
 
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">

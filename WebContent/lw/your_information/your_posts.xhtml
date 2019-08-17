@@ -16,7 +16,7 @@
     <h:form id="yourinformationform">
         <p:dataTable id="posts_tbl" value="#{yourPostsBean.userPosts}" var="post" paginator="true" paginatorPosition="bottom" rows="30"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyleClass="table-sm table-responsive">
+                     tableStyleClass="table-responsive">
             <f:facet name="header">
                 <h:outputText value="#{msg['forum.posts']}"/>
             </f:facet>

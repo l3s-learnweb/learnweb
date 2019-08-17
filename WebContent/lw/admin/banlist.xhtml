@@ -51,7 +51,7 @@
             </div>
 
             <h:form styleClass="mt-3" id="banlistform" >
-                <p:dataTable var="accessData" tableStyleClass="table-sm table-responsive" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+                <p:dataTable var="accessData" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
                         <h:outputText value="#{accessData.name}" />
@@ -120,7 +120,7 @@
 			</p:dialog>
 
 			<h:form id="suspiciouslistform" >
-                <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" tableStyleClass="table-sm table-responsive" rows="50" paginator="true"
+                <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" tableStyleClass="table-responsive" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="IP" sortBy="#{aggrReqData.IP}" >
                         <h:outputText value="#{aggrReqData.IP}" />

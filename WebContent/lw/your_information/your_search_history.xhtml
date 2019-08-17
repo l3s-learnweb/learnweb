@@ -16,7 +16,7 @@
     <h:form>
         <p:dataTable id="query_tbl" value="#{yourSearchHistoryBean.userQueries}" var="query" paginator="true" rows="30" paginatorPosition="bottom"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyleClass="table-sm table-responsive">
+                     tableStyleClass="table-responsive">
             <f:facet name="header">
                 <h:outputText value="#{msg.search_history}"/>
             </f:facet>

@@ -14,7 +14,7 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:dataTable var="entry" tableStyleClass="table-sm table-responsive" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
+		<p:dataTable var="entry" tableStyleClass="table-responsive" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
 					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			<f:facet name="header">#{msg.discussion_activity}</f:facet>
 			<p:column headerText="#{msg.name}" sortBy="#{entry.name}">

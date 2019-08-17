@@ -17,7 +17,7 @@
 		<p:tabView styleClass="ui-tabs-transparent">
 			<p:tab title="#{msg.requests}">
 				<h:form id="requestform" >
-					<p:dataTable tableStyleClass="table-sm table-responsive" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
+					<p:dataTable tableStyleClass="table-responsive" paginatorPosition="bottom" var="reqData" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
 						   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
 						<p:column headerText="IP" sortBy="#{reqData.IP}" filterBy="#{reqData.IP}" filterMatchMode="contains">
@@ -39,7 +39,7 @@
 
 			<p:tab title="#{msg.logins}">
 				<h:form id="loginform">
-					<p:dataTable var="login" tableStyleClass="table-sm table-responsive" paginatorPosition="bottom" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
+					<p:dataTable var="login" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
 						   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
 						<p:column headerText="IP" sortBy="#{login.key}"  filterBy="#{login.key}" filterMatchMode="contains">
@@ -65,7 +65,7 @@
 														</h:outputText>
 						<p:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ml-3" immediate="true"/>
 					</span>
-					<p:dataTable tableStyleClass="table-sm table-responsive mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
+					<p:dataTable tableStyleClass="table-responsive mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
 						  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						<p:column headerText="IP" sortBy="#{aRequest.IP}"  filterBy="#{aRequest.IP}" filterMatchMode="contains">
 							<h:outputText value="#{aRequest.IP}"/>
