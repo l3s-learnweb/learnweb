@@ -405,49 +405,40 @@ ul.res-filters {
       opacity: 1;
     }
   }
-}
 
-.group-resources-item {
-  &.selected, &.ui-selected, &.ui-selecting {
-    color: $white;
-    background-color: $themePrimaryColor;
+  .selected &, // TODO: should be removed, always use .ui-selected
+  .ui-selected &,
+  .ui-selecting & {
+    color: $themeElementTextColor;
+    background: $themePrimaryDarkerAlt;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
+
+    .res-bl-icon {
+      color: $themePrimaryDarkerAlt;
+    }
+
+    .res-bl-author {
+      color: $themeElementTextColor !important;
+    }
   }
 
-  &.selected .folder-icon,
-  &.ui-selected .folder-icon,
-  &.ui-selecting .folder-icon,
-  &.ui-draggable-helper .folder-icon,
-  &.selected .folder-title,
-  &.ui-selected .folder-title,
-  &.ui-selecting .folder-title,
-  &.ui-draggable-helper .folder-title {
-    color: $white;
-    background-color: $themePrimaryColor;
-  }
-
-  &.ui-draggable-greyscale {
-    -webkit-transition-duration: .15s;
-    transition-duration: .15s;
-    -webkit-transition-property: opacity;
-    transition-property: opacity;
-    -webkit-transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  .ui-draggable-greyscale & { // TODO: investigate
+    transition: opacity .15s cubic-bezier(0.4, 0, 1, 1);
     pointer-events: none;
   }
 
-  &.ui-state-active {
+  .ui-state-active & { // TODO: investigate
     border: 0;
     font-weight: normal;
     text-shadow: none;
     box-shadow: none;
   }
 
-  &.ui-state-highlight {
+  .ui-state-highlight & { // TODO: investigate
     outline: 2px solid $themePrimaryColor;
   }
 
-  &.ui-draggable-helper {
+  .ui-draggable-helper & { // TODO: investigate
     background-color: $themePrimaryColor;
     color: $white;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);

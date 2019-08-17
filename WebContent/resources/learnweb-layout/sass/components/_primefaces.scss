@@ -7,6 +7,13 @@ body {
     padding-top: 0;
   }
 
+  .ui-accordion-mb-0 {
+    .ui-accordion-content,
+    .ui-accordion-header {
+      margin-bottom: 0;
+    }
+  }
+
   .ui-widget-danger {
     .ui-widget-header {
       background-color: $red;

@@ -36,13 +36,14 @@
 @import "layouts/_template_page";
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
+@import "components/_buttons";
 @import "components/_dashboard";
+@import "components/_fancybox";
 @import "components/_forms";
 @import "components/_menu";
 @import "components/_primefaces";
 @import "components/_resources";
 @import "components/_spinner";
-@import "components/_buttons";
 
 // The styles used only for specific page (or group of pages) should be extracted into section
 @import "sections/_archive-thumbnail";
@@ -51,7 +52,6 @@
 @import "sections/_group-members";
 @import "sections/_landing";
 @import "sections/_notification";
-@import "sections/_resource-submission";
 @import "sections/_resource-transcript";
 @import "sections/_resources";
 @import "sections/_search";

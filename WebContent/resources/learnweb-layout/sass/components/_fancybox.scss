@@ -1,0 +1,13 @@
+.fancybox-slide--html {
+  padding: 2.5rem !important;
+}
+
+.ui-panel-scroll-content {
+  .ui-panel-content {
+    overflow-y: auto;
+
+    @media (min-height: 500px) {
+      max-height: 70vh !important;
+    }
+  }
+}

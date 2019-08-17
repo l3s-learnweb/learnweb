@@ -29,7 +29,7 @@
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
 		</h:form>-->
 
-		<h:panelGroup styleClass="section-resource-submission" layout="block">
+		<h:panelGroup layout="block">
 			<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
 				<p:panel>
 					Links to the resources that you have submitted:
@@ -185,7 +185,7 @@
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:accordionPanel styleClass="submission-accordion" id="submissions">
+			<p:accordionPanel styleClass="ui-widget-content-p-0 ui-accordion-mb-0" id="submissions">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
 					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />

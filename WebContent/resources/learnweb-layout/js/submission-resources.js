@@ -1,32 +1,6 @@
 /* global updateSelectedItemsCommand, selectGroupItemCommand, resourceUpdatedHook, resourceAddedHook */
 /* global max_resources, resources_to_select */
 
-function LightboxUtils() {
-    this.box = undefined;
-
-    this.load = function () {
-        this.box = $('.submit-resources');
-    };
-
-    this.close = function () {
-        this.box.hide();
-        this.box.detach();
-    };
-
-    this.open = function () {
-        this.box.appendTo(document.body);
-        this.resize_container();
-        this.box.show();
-    };
-
-    this.resize_container = function () {
-        var height = $(window).height() - 167;
-        $('#lightbox_container').height(height < 200 ? 200 : height);
-    }
-}
-
-var select_res_lightbox = new LightboxUtils();
-
 function confirmSubmitMessage() {
     var confirmMessage = "Are you sure you want to submit? You will no longer be able to submit any more resources."
     //var no_selected_resources = $('.group-resources-item').length;
@@ -45,7 +19,7 @@ function selectResources() {
         {name: 'items', value: selectedResources.getItemsAsJson()}
     ]);
     selectedResources.clear();
-    select_res_lightbox.close();
+    $.fancybox.close();
 }
 
 function updateMaxResources() {
@@ -55,10 +29,6 @@ function updateMaxResources() {
         $('#add_resource_sign').hide();
     if (no_selected_resources > 0)
         $('#submit_resources_button').show();
-
-    $('#add_resource_sign').on('click', function () {
-        select_res_lightbox.open();
-    });
 }
 
 function selectResourceDND() {
@@ -88,23 +58,12 @@ function selectResourceDND() {
         stop: function () {
             selectedResources.add($(".ui-selected"));
         },
-        cancel: 'a'
+        cancel: 'input,textarea,button,select,option,a,.cancel'
     });
 }
 
 $(document).ready(function () {
     selectResourceDND();
-    select_res_lightbox.load();
-    $(window).resize(select_res_lightbox.resize_container);
-    $('#add_resource_sign').on('click', function () {
-        select_res_lightbox.open();
-    });
-
-    // register esc key
-    $(document).keydown(function (e) {
-        if (e.which === 27)
-            select_res_lightbox.close();
-    });
 
     $(document).on('click', '.resource-controls2 a', function (e) {
         var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
@@ -112,10 +71,19 @@ $(document).ready(function () {
         e.preventDefault();
         e.stopPropagation();
 
-
         selected.clearAndAdd(element);
         if (action === "delete")
             doAction("remove");
+    }).on('click', '#add_resource_sign', function () {
+        $.fancybox.open({
+            src: '#select_resources_modal',
+            type: 'inline'
+        }, {
+            // modal: true,
+            touch: false,
+            smallBtn: false,
+            buttons: false
+        });
     });
 
     updateMaxResources();

@@ -189,7 +189,7 @@ function resourceDND() {
     // disable drag and drop for the activity log
     if($dataGrid.hasClass("not-selectable"))
     	return;
-    
+
     $dataGrid.selectable({
         filter: 'div.group-resources-item',
         cancel: 'div.group-resources-item',
@@ -200,7 +200,8 @@ function resourceDND() {
         },
         stop: function () {
             selected.add($(".ui-selected"));
-        }
+        },
+        cancel: "input,textarea,button,select,option,.cancel"
     });
 
     if (!$dataGrid || !$dataGrid.closest('#resourcesView').attr('data-canMoveResources')) {

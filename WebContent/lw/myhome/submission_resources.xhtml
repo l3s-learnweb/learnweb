@@ -5,8 +5,6 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-
-    <ui:param name="rightPane" value="true"/>
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
@@ -22,25 +20,29 @@
         <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
 
+	<ui:param name="rightPane" value="true"/>
 	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
 	<ui:param name="loginRequired" value="true" />
 
 	<ui:define name="center_layout">
 
-		<h:form>
+		<h:form styleClass="d-none">
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="selectResourceDND(); load_editor(); "/>
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=" :resourceGrid2" oncomplete="selectResourceDND(); updateMaxResources();"/>
 		</h:form>
 
+		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+		<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+
+		<h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
+		<h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
+
 		<script>
 			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
 			var resources_to_select = max_resources;
 		</script>
-        <h:outputStylesheet library="lightbox" name="lightbox.css" />
-        <h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
-        <h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
 
 		<!-- only for eumade4all -->
 		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
@@ -55,7 +57,6 @@
             <ui:fragment rendered="#{submissionBean.submitted}">
                 <h4 class="h4">The submitted resources</h4>
             </ui:fragment>
-
 
             <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
                 <hr/>
@@ -82,11 +83,10 @@
                     <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
 
                     <h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-
-                        <div>
+                        <a href="#" class="cancel" onclick="return false;">
 							<i class="fa fa-3x fa-plus" aria-hidden="true"></i>
 							<span class="sr-only">Select a resource</span>
-                        </div>
+                        </a>
                     </h:panelGroup>
 
                     <div class="clear"></div>
@@ -98,54 +98,41 @@
             </h:panelGroup>
         </p:panel>
 
-
-
-
 		<h:panelGroup id="resourcesView" layout="block">
 			<!-- dummy for right pane -->
 		</h:panelGroup>
 
-		<h:panelGroup styleClass="section-resource-submission" layout="block">
+		<h:panelGroup styleClass="collapse p-0" layout="block" id="select_resources_modal">
+			<p:panel styleClass="ui-panel-scroll-content">
+				<f:facet name="header">
+					<h:outputFormat value="#{msg['Submission.lightbox_header']}">
+						<f:param value="#{submissionBean.selectedSubmission.noOfResources}"/>
+					</h:outputFormat>
+				</f:facet>
+				<f:facet name="actions">
+					<a href="#" data-fancybox-close="true" class="text-white"><i class="fa fa-times" aria-hidden="true"></i></a>
+				</f:facet>
+				<f:facet name="footer">
+					<p:commandButton value="#{msg.add}" onclick="selectResources();"/>
+				</f:facet>
 
-			<div id="lightbox" class="submit-resources">
-				<div id="lightbox_background" onclick="select_res_lightbox.close();"></div>
+				<h:panelGroup layout="block" rendered="#{empty submissionBean.resources}">
+					<h:outputText value="#{msg.no_resources_found}" class="nothing_found"/>
+					First, add resources to <h:outputLink value="myhome/resources.jsf">#{msg.myResourcesTitle}.</h:outputLink>
+				</h:panelGroup>
 
-				<div id="lightbox_container">
-					<div id="lightbox_title">
-						<h:outputFormat value="#{msg['Submission.lightbox_header']}">
-							<f:param value="#{submissionBean.selectedSubmission.noOfResources}"/>
-						</h:outputFormat>
-						<a href="#" onclick="select_res_lightbox.close(); return false;" id="lightbox_close" title="close"></a>
-					</div>
-					<div id="lightbox_content" style="overflow-y:auto;overflow-x:hidden;background: white;">
-						<h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
-							<p:repeat var="res" value="#{submissionBean.resources}" >
-
-								<h:panelGroup styleClass="res-grid-item resource-item2 group-resources-item2" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{res}" />
-									</ui:decorate>
-								</h:panelGroup>
-							</p:repeat>
-							<h:panelGroup style="background-color:white;height:100%;" rendered="#{empty submissionBean.resources}" layout="block">
-								<h:outputText value="#{msg.no_resources_found}" class="nothing_found" style="color:black;"/>
-								<span style="color:black;" class="nothing_found">
-						First add resources to
-						<h:outputLink value="myhome/resources.jsf" style="text-decoration:underline;color:black;">
-						#{msg.myResourcesTitle}.
-						</h:outputLink>
-					</span>
-							</h:panelGroup>
+				<h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block" rendered="#{!empty submissionBean.resources}">
+					<p:repeat var="res" value="#{submissionBean.resources}">
+						<h:panelGroup styleClass="res-grid-item resource-item2 group-resources-item2"
+									  pt:data-itemType="resource"
+									  pt:data-itemId="#{res.id}" layout="block">
+							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+								<ui:param name="res" value="#{res}"/>
+							</ui:decorate>
 						</h:panelGroup>
-
-					</div>
-					<div id="lightbox_footer">
-					<span class="archive_timestamp_overlay_text">
-						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
-					</span>
-					</div>
-				</div>
-			</div>
+					</p:repeat>
+				</h:panelGroup>
+			</p:panel>
 		</h:panelGroup>
 	</ui:define>
 
