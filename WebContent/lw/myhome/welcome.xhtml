@@ -22,7 +22,7 @@
         </ui:fragment>
     </p:panel>
 
-    <p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}">
+    <p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}" styleClass="mb-3">
         <f:facet name="header">
             #{msg.welcome}
             <ui:fragment rendered="#{userBean.moderator}">
@@ -47,7 +47,7 @@
     </p:panel>
 
     <ui:repeat var="course" value="#{userBean.user.courses}">
-        <p:panel rendered="#{course.welcomeMessage.length() > 5}">
+        <p:panel rendered="#{course.welcomeMessage.length() > 5}" styleClass="mb-3">
             <f:facet name="header">
                 <h:outputText value="#{course.title}"/>
                 <h:panelGroup rendered="#{userBean.moderator}">
