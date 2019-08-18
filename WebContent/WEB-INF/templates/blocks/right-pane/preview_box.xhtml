@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+    <h:panelGroup layout="block" styleClass="preview_box p-1 border" id="preview_box">
+        <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
+            <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
+                <h:outputText value='#{res.embedded}' escape="false"/>
+            </div>
+        </ui:fragment>
+        <ui:fragment rendered="#{res.type eq 'website' and not empty res.thumbnail3}">
+            <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+        </ui:fragment>
+        <ui:fragment rendered="#{res.isOfficeResource() and not (res.isOffline())}">
+            <div class="preview_box_wrapper editor_preview">
+                <form id="editor_user_info">
+                    <input type="hidden" id="ed_user_id" value="#{userBean.user.id}"/>
+                    <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
+                    <input type="hidden" id="ed_can_be_edited" value="#{res.canEditResource(userBean.user)}"/>
+                </form>
+                <ui:decorate template="/WEB-INF/templates/blocks/resources/openoffice-editor.xhtml"/>
+                <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
+            </div>
+        </ui:fragment>
+        <ui:fragment rendered="#{not empty res.thumbnail3 and res.type ne 'video' and res.type ne 'website' and not res.isOfficeResource()}">
+            <div class="preview_box_wrapper">
+                <img src="#{res.thumbnail3.url}" onmouseup="lightbox_open();"
+                     height="#{res.thumbnail3.height}" width="#{res.thumbnail3.width}"
+                     style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+            </div>
+        </ui:fragment>
+    </h:panelGroup>
+</ui:composition>

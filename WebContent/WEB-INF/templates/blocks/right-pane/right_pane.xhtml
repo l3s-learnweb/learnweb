@@ -274,11 +274,11 @@
 
             <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or rightPaneBean.clickedResource.type eq 'presentation' or rightPaneBean.clickedResource.type eq 'document' or rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'audio' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'glossary2' or rightPaneBean.clickedResource.type eq 'survey'}">
                 <div class="align-center" style="margin-top: 5px;">
-                    <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/lightbox.xhtml">
                         <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                     </ui:decorate>
 
-                    <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
                         <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                     </ui:decorate>
                 </div>
@@ -469,10 +469,10 @@
             </c:if>
             <c:choose>
                 <c:when test="#{rightPaneBean.paneAction =='viewUpdatedResource'}">
-                    <ui:decorate template="/templates/group/summary_right_pane.xhtml" />
+                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/summary_right_pane.xhtml" />
                 </c:when>
                 <c:otherwise>
-                    <ui:decorate template="/templates/resources/parts/right_pane_under_previewbox_content.xhtml" />
+                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml" />
                 </c:otherwise>
             </c:choose>
         </ui:fragment>
@@ -486,11 +486,11 @@
         <ui:fragment
                 rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'audio'}">
             <div class="align-center" style="margin-top: 5px;">
-                <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/lightbox.xhtml">
                     <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                 </ui:decorate>
 
-                <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
                     <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
                 </ui:decorate>
             </div>
