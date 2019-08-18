@@ -391,30 +391,28 @@
 
             <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
                       minWidth="540" modal="true">
-                <h:panelGrid columns="2">
-                    <h:outputText value="#{msg.add_to}:"/>
 
-                    <h:form>
-                        <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
-                                selectionMode="single"
-                                selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
-                            <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
+                <h:outputText value="#{msg.add_to}:"/>
 
-                            <p:treeNode type="group">
-                                <h:outputText id="group" value="#{node.title}"/>
-                            </p:treeNode>
+                <h:form>
+                    <p:tree value="#{userBean.writeAbleGroupsTree}" var="node" styleClass="ui-tree-responsive" animate="true"
+                            selectionMode="single" selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
+                        <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
 
-                            <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                                <h:outputText value="#{node.name}"/>
-                            </p:treeNode>
-                        </p:tree>
-                    </h:form>
-                </h:panelGrid>
+                        <p:treeNode type="group">
+                            <h:outputText id="group" value="#{node.title}"/>
+                        </p:treeNode>
 
-                <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-                    <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('selectDestination').hide(); return false;"/>
-                    <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false;"/>
-                </h:panelGroup>
+                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                            <h:outputText value="#{node.name}"/>
+                        </p:treeNode>
+                    </p:tree>
+                </h:form>
+
+                <div class="text-right mt-3">
+                    <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide();return false;"/>
+                    <p:button value="#{msg.save}" styleClass="confirm" onclick="return false;"/>
+                </div>
             </p:dialog>
 
             <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
