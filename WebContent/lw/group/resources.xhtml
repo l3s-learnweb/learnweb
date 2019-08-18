@@ -49,19 +49,17 @@
         <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
                          update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
-                         update=":right_pane :growl"/>
+                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
-                         update=":right_pane  :growl"/>
+                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
-                         update=":resourcesWrapper :right_pane :growl"
-                         oncomplete="resourceDND();"/>
+                         update=":resourcesWrapper :right_pane :growl" oncomplete="resourceDND();PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesWrapper :right_pane :growl"
-                         oncomplete="resourceDND();"/>
+                         update=":resourcesWrapper :right_pane :growl" oncomplete="resourceDND();PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
-                         update=":right_pane :growl"/>
+                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                         update=":right_pane :resourcesView :growl" oncomplete="resourceDND();"/>
+                         update=":right_pane :resourcesView :growl" oncomplete="resourceDND();PF('learnweb').showRightPane();"/>
     </h:form>
 
     <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 ui-panel-header-btn section-resources">

@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<h:form id="new_file_form">
+    <div class="form-group row">
+        <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8 align-self-center">
+            <p:commandLink onstart="selectNewResourceLocation();">
+                <h:outputText value="#{addResourceBean.currentPath}"/>
+            </p:commandLink>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <p:outputLabel for="@next" value="#{msg.file_name}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8">
+            <p:inputText id="file_name_input" value="#{addResourceBean.resource.fileName}" required="true"/>
+        </div>
+        <div class="col-sm-12">
+            <p:message for="@previous"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h:outputText value="* #{msg.mandatory_field}"/>
+        </div>
+        <div class="col text-right">
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true"
+                             actionListener="#{addResourceBean.clearForm}">
+                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+            </p:commandButton>
+
+            <p:commandButton id="create_file_button" value="#{msg.create}"
+                             update=":growl :right_pane" actionListener="#{addResourceBean.createFile}" ajax="true"
+                             oncomplete="resourceAddedHook();load_lightbox_editor();load_editor();">
+                <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
+                <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
+            </p:commandButton>
+        </div>
+    </div>
+
+    <p:blockUI block="right_pane" trigger="create_file_button" widgetVar="bui">
+        <i class="fa fa-cog fa-spin fa-3x fa-fw text-white" aria-hidden="true"></i>
+        <p class="text-white text-center">#{msg.please_wait}</p>
+    </p:blockUI>
+</h:form>
+
+</ui:composition>

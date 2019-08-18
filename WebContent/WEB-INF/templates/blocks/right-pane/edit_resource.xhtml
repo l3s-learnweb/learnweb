@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<!-- Edit resource block -->
+<h:form id="edit_form">
+
+    <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+
+    <ui:fragment
+            rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'audio'}">
+        <div class="align-center" style="margin-top: 5px;">
+            <ui:decorate template="/WEB-INF/templates/blocks/right-pane/lightbox.xhtml">
+                <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+            </ui:decorate>
+
+            <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
+                <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+            </ui:decorate>
+        </div>
+        <div class="align-center" style="padding-top: 10px">
+            <a class="hyperlink" href="#{rightPaneBean.clickedResource.urlProxied}"
+               target="_blank">
+                <h:outputText styleClass="hyperlink"
+                              rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
+                              value="#{rightPaneBean.clickedResource.url}"/>
+            </a>
+            <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}">
+                <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);"
+                   title="#{msg['Archive.change_thumbnail']}?" aria-label="#{msg['Archive.change_thumbnail']}?">
+                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                </a>
+            </ui:fragment>
+        </div>
+    </ui:fragment>
+
+    <table id="edit_table" class="full-width mt-2">
+        <colgroup>
+            <col span="1" style="width: 10%; min-width: 10rem;"/>
+            <col span="1"/>
+        </colgroup>
+        <ui:decorate template="/templates/resources/edit.xhtml">
+            <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
+        </ui:decorate>
+
+        <tr>
+            <td colspan="2">
+                <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+
+                <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
+                                 actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane"
+                                 oncomplete="resourceUpdatedHook();" style="margin-right:0;" />
+                <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
+                                 actionListener="#{rightPaneBean.cancelEditClickedResource}" update=":right_pane"
+                                 style="margin-right:0.5em" immediate="true" />
+            </td>
+        </tr>
+    </table>
+
+    <p:commandButton styleClass="graybutton" value="Recreate thumbnail"
+                     actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+                     update=":right_pane" immediate="true" rendered="#{userBean.admin}">
+        <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewResource"/>
+        <f:setPropertyActionListener target="#{rightPaneBean.clickedResource}"
+                                     value="#{rightPaneBean.clickedAbstractResource}"/>
+    </p:commandButton>
+</h:form>
+
+</ui:composition>

@@ -293,6 +293,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.resource = glossaryResource;
     }
 
+    /**
+     * TODO: remove it, use default validation instead
+     */
     public void validateNewDocName(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
         String fileName = (String) value;
@@ -307,6 +310,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         try
         {
+            if (resource.getType().equals(ResourceType.survey)) {
+                addSurvey();
+                return;
+            }
+
             log.debug("addResource; res=" + resource);
 
             if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN) && !resource.getType().equals(ResourceType.glossary2))
@@ -368,14 +376,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             addErrorMessage(e);
         }
-    }
-
-    public void cancelUpload()
-    {
-        resource = new Resource();
-        resource.setSource(SERVICE.internet);
-        resource.setLocation("Learnweb");
-        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
     }
 
     public String getNewUrl()

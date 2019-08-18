@@ -672,13 +672,16 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             break;
         case "file":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setType(ResourceType.file);
             break;
         case "url":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setType(ResourceType.website);
             addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
             break;
         case "glossary2":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            addResourceBean.getResource().setType(ResourceType.glossary2);
             addResourceBean.setResourceAsGlossary();
             break;
         case "survey":

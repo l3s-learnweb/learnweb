@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<h:form id="new_folder_form">
+    <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addFolderBean.targetGroup != null}">
+        <h:outputText value="#{msg.group}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8 align-self-center">
+            <h:outputText value="#{addFolderBean.targetGroup.title}"/>
+        </div>
+    </h:panelGroup>
+
+    <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addFolderBean.targetFolder != null}">
+        <h:outputText value="#{msg.path}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8 align-self-center">
+            <h:outputText value="#{addFolderBean.targetFolder.prettyPath}"/>
+        </div>
+    </h:panelGroup>
+
+    <div class="form-group row">
+        <p:outputLabel for="@next" value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8">
+            <p:inputText id="folder_title_input" value="#{addFolderBean.folder.name}" required="true" requiredmessage="#{msg.mandatory_field}"/>
+        </div>
+        <div class="col-sm-12">
+            <p:message for="@previous"/>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <p:outputLabel for="@next" value="#{msg.description}:" styleClass="col-sm-4 col-form-label"/>
+        <div class="col-sm-8">
+            <p:inputTextarea id="folderDescription" value="#{addFolderBean.folder.description}" autoResize="true"/>
+        </div>
+        <div class="col-sm-12">
+            <p:message for="@previous"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h:outputText value="* #{msg.mandatory_field}"/>
+        </div>
+        <div class="col text-right">
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true">
+                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+            </p:commandButton>
+            <p:commandButton value="#{msg.create_folder}" update=":folderGrid :growl :right_pane"
+                             action="#{addFolderBean.addFolder}" ajax="true" oncomplete="resourceDND();">
+                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+            </p:commandButton>
+        </div>
+    </div>
+</h:form>
+
+</ui:composition>

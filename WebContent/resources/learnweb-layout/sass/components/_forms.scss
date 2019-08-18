@@ -8,10 +8,16 @@
 
   > div,
   > span,
-  > input,
-  > textarea,
-  > select {
+  input,
+  textarea,
+  select {
     display: block !important;
     width: 100% !important;
   }
+}
+
+.col-form-label {
+  padding-top: calc(#{$input-padding-y} + #{$input-border-width});
+  padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
+  margin-bottom: 0; // Override the `<label>/<legend>` default
 }

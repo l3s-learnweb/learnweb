@@ -14,6 +14,12 @@ body {
     }
   }
 
+  .ui-blockui-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
   .ui-widget-danger {
     .ui-widget-header {
       background-color: $red;

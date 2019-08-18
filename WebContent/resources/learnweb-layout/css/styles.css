@@ -10760,11 +10760,17 @@ body,
 }
 .form-group > div,
 .form-group > span,
-.form-group > input,
-.form-group > textarea,
-.form-group > select {
+.form-group input,
+.form-group textarea,
+.form-group select {
   display: block !important;
   width: 100% !important;
+}
+
+.col-form-label {
+  padding-top: calc(0.25rem + 1px);
+  padding-bottom: calc(0.25rem + 1px);
+  margin-bottom: 0;
 }
 
 body .ui-breadcrumb {
@@ -10908,6 +10914,14 @@ body .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
 body .ui-accordion-mb-0 .ui-accordion-content,
 body .ui-accordion-mb-0 .ui-accordion-header {
   margin-bottom: 0;
+}
+body .ui-steps.ui-steps-50 .ui-steps-item {
+  width: 50%;
+}
+body .ui-blockui-content {
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 body .ui-widget-danger .ui-widget-header {
   background-color: #cd2026;

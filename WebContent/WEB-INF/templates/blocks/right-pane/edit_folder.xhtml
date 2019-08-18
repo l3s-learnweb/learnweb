@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<!-- Edit folder block -->
+<h:panelGroup layout="block">
+    <h:form id="edit_folder_form">
+
+        <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+
+        <table id="edit_folder_table" class="full-width">
+            <tr>
+                <td>
+                    #{msg.group}:
+                </td>
+                <td>
+                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.group.title}"/>
+                </td>
+            </tr>
+            <ui:fragment rendered="#{rightPaneBean.clickedFolder.parentFolder != null}">
+                <tr>
+                    <td>
+                        #{msg.path}:
+                    </td>
+                    <td>
+                        <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.parentFolder.prettyPath}"/>
+                    </td>
+                </tr>
+            </ui:fragment>
+            <tr>
+                <td>
+                    #{msg.title}:
+                </td>
+                <td>
+                    <p:inputText style="width: 96%" value="#{rightPaneBean.clickedFolder.name}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    #{msg.description}:
+                </td>
+                <td>
+                    <p:inputTextarea style="width: 96%" value="#{rightPaneBean.clickedFolder.description}" autoResize="true"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="align-right">
+                    <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+
+                    <p:commandButton styleClass="mr-2"
+                                     actionListener="#{rightPaneBean.cancelEditClickedResource}"
+                                     value="#{msg.cancel}" update=":right_pane" immediate="true" />
+                    <p:commandButton styleClass="mr-2"  oncomplete="resourceDND();"
+                                     value="#{msg.save}" update=":folderGrid :right_pane :growl"
+                                     actionListener="#{rightPaneBean.editClickedResource}" />
+                </td>
+            </tr>
+        </table>
+    </h:form>
+</h:panelGroup>
+
+</ui:composition>

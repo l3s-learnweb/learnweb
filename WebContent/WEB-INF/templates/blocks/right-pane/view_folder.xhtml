@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<!-- View folder block -->
+<h:panelGroup rendered="#{rightPaneBean.paneAction == 'viewFolder' and rightPaneBean.clickedFolder != null}" layout="block">
+    <table id="view_folder_table" class="full-width">
+        <tr>
+            <td>
+                #{msg.group}:
+            </td>
+            <td>
+                <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.group.title}"/>
+            </td>
+        </tr>
+        <ui:fragment rendered="#{rightPaneBean.clickedFolder.parentFolder != null}">
+            <tr>
+                <td>
+                    #{msg.path}:
+                </td>
+                <td>
+                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.parentFolder.prettyPath}"/>
+                </td>
+            </tr>
+        </ui:fragment>
+        <tr>
+            <td>
+                #{msg.title}:
+            </td>
+            <td>
+                <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.name}"/>
+            </td>
+        </tr>
+        <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.description}">
+            <tr>
+                <td>
+                    #{msg.description}:
+                </td>
+                <td>
+                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.description}" escape="false"/>
+                </td>
+            </tr>
+        </ui:fragment>
+        <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.user}">
+            <tr>
+                <td>
+                    #{msg.created_by}:
+                </td>
+                <td>
+                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.user.username}" escape="false"/>
+                </td>
+            </tr>
+        </ui:fragment>
+    </table>
+</h:panelGroup>
+
+</ui:composition>

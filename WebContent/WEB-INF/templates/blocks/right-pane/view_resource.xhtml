@@ -1,0 +1,223 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<h:panelGroup rendered="#{rightPaneBean.paneAction == 'viewResource' or rightPaneBean.paneAction =='viewUpdatedResource'}" layout="block">
+
+    <h:outputText value="This resource has been removed" rendered="${(not rightPaneBean.clickedResource.canViewResource(userBean.user)) and (rightPaneBean.clickedResource.deleted or rightPaneBean.clickedResource.groupId eq 0)}"/>
+
+    <h:outputText value="#{msg.group_resources_access_denied}" rendered="${not rightPaneBean.clickedResource.canViewResource(userBean.user) and not (rightPaneBean.clickedResource.deleted or rightPaneBean.clickedResource.groupId eq 0)}"/>
+
+    <ui:fragment rendered="#{rightPaneBean.clickedAbstractResource.canViewResource(userBean.user)}">
+
+        <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or rightPaneBean.clickedResource.type eq 'presentation' or rightPaneBean.clickedResource.type eq 'document' or rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'audio' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'glossary2' or rightPaneBean.clickedResource.type eq 'survey'}">
+            <div class="align-center" style="margin-top: 5px;">
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/lightbox.xhtml">
+                    <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+                </ui:decorate>
+
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
+                    <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+                </ui:decorate>
+            </div>
+
+            <div class="text-center pt-2">
+                <a class="hyperlink" href="#{rightPaneBean.clickedResource.urlProxied}"
+                   target="_blank">
+                    <h:outputText styleClass="hyperlink"
+                                  rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
+                                  value="#{rightPaneBean.clickedResource.url}"/>
+                </a>
+                <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}">
+                    <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);"
+                       title="#{msg['Archive.change_thumbnail']}?" aria-label="#{msg['Archive.change_thumbnail']}?">
+                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    </a>
+                </ui:fragment>
+                <h:outputLink value="glossary/glossary.jsf"
+                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                              rendered="#{rightPaneBean.clickedResource.type eq 'glossary2'}">
+                    <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+                    #{msg["Glossary.open"]}
+                </h:outputLink>
+                <h:outputLink value="../lw/survey/survey.jsf"
+                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                              rendered="#{rightPaneBean.clickedResource.type eq 'survey'}">
+                    <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+                    Open survey
+                </h:outputLink>
+
+                <h:outputLink id="survey_esult" value="../lw/survey/results.jsf"
+                              style="margin-left:5px"
+                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                              rendered="#{rightPaneBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }">
+                    <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+                    Results
+                </h:outputLink>
+            </div>
+        </ui:fragment>
+
+        <c:if test="${userBean.user.organisation.id eq 480}">
+            <ui:fragment rendered="#{not empty rightPaneBean.clickedResource}">
+                <div id="eMetaDetail">
+                    <hr/>
+                    <div class="detailList">
+                        <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.lCount}">
+                            <label class="rdlabel"><b>Level (stats): </b></label>#{rightPaneBean.clickedResource.extendedMetadata.lCount}
+                            <br/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.lCount}">
+                            <label class="rdlabel"><b>Level (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                            <br/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.targetCount}">
+                            <label class="rdlabel"><b>Target learner (stats): </b></label>
+                            <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                                <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
+                                    <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+                                    <h:outputText value="Pre-school"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
+                                    <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+                                    <h:outputText value="Young learners"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'teenage learners'}">
+                                    <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+                                    <h:outputText value="Teens"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'teachers'}">
+                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                                    <h:outputText value="Teachers"/>
+                                </ui:fragment>
+                                <ui:fragment rendered="#{t.key == 'adult learners'}">
+                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                                    <h:outputText value="Adult learners"/>
+                                </ui:fragment>
+
+                                <h:outputText value="[#{t.value}] "/>
+                            </p:repeat>
+                            <br/>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.targetCount}">
+                            <label class="rdlabel"><b>Target Learner (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                            <br/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.purposeCount}">
+                            <label class="rdlabel"><b>Purpose of use (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                            <br/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.purposeCount}">
+                            <label class="rdlabel"><b>Purpose of use (stats): </b></label>
+                            <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                                    <span class="text-nowrap d-inline-block">
+                                        <span class="bg-highlight">
+                                            <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
+                                                 <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+                                                 <h:outputText value="Speaking [#{p.value}]"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
+                                                 <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
+                                                 <h:outputText value="Listening [#{p.value}]"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
+                                                 <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
+                                                 <h:outputText value="Writing [#{p.value}]"/>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
+                                                <i class="fa fa-fw fa-book" aria-hidden="true"></i>
+                                                 <h:outputText value="Reading [#{p.value}]"/>
+                                            </ui:fragment>
+
+                                            <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
+                                                                     not 'listening skills'.equalsIgnoreCase(p.key) and
+                                                                     not 'writing skills'.equalsIgnoreCase(p.key) and
+                                                                     not 'reading skills'.equalsIgnoreCase(p.key)}">
+                                                #{p.key}
+                                            </ui:fragment>
+                                        </span>
+                                    </span>
+                            </p:repeat>
+                        </ui:fragment>
+
+                    </div> <!-- detailList -->
+                    <br/>
+
+                    <div id="detailAdd">
+                        <!-- add the button to show div detailBox -->
+                        <h:form>
+                            <p:commandButton id="detailAdd_button" styleClass="greenbutton text-center"
+                                             value="Add your own" update=":add_metadata_form"
+                                             onsuccess="PF('adlg').show();" ajax="true" process="@form"
+                                             partialSubmit="true"
+                                             actionListener="{rightPaneBean.onOpenExtendedMetadataDialog}"/>
+                        </h:form>
+                    </div>
+
+                    <hr/>
+                </div>
+            </ui:fragment>
+
+            <script>
+                /**
+                 * Checks if the selectedPurposes contains "Other" then we need to show another input element
+                 */
+                function onChangePurpose(input) {
+                    console.log($(input).val());
+                    return true;
+                }
+            </script>
+            <p:dialog id="addDetailDlg" header="Add Your Own Categorization" widgetVar="adlg" minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="true">
+                <h:outputText value="Please, add your own categorization: this will help you and other users find resources easily and efficiently."/>
+                <br/>
+                <h:outputText value="Select the most appropriate tags or type them; then, click on the &quot;SAVE&quot; button."/>
+                <br/>
+                <br/>
+                <b><h:outputText value="Resource Title: #{rightPaneBean.clickedResource.title}"/></b>
+                <br/>
+                <br/>
+                <h:form id="add_metadata_form">
+                    <h:panelGrid columns="4" cellpadding="10">
+                        <p:outputLabel for="levlist" value="Language Level: "/>
+                        <p:selectCheckboxMenu id="levlist" value="#{resourceDetailBean.selectedLevels}"
+                                              label="Levels" multiple="true" filter="false"
+                                              filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{searchFilterBean.levels}"/>
+                        </p:selectCheckboxMenu>
+                        <p:outputLabel for="aglist" value="Target Learner:"/>
+                        <p:selectCheckboxMenu id="aglist" value="#{resourceDetailBean.selectedTargets}"
+                                              label="Target Learners" multiple="true" filter="false"
+                                              filterMatchMode="startsWith" panelStyle="width:250px">
+                            <f:selectItems value="#{searchFilterBean.targets}"/>
+                        </p:selectCheckboxMenu>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" cellpadding="10" id="purposes">
+                        <p:outputLabel for="aclist" value="Purpose of Use:" />
+                        <p:autoComplete id="aclist" dropdown="true" multiple="true" value="#{resourceDetailBean.selectedPurposes}" completeMethod="#{searchFilterBean.completePurpose}"
+                                        label="Purposes of Use" />
+                    </h:panelGrid>
+
+                    <br/>
+                    <br/>
+                    <p:commandButton value="Save" actionListener="#{resourceDetailBean.addNewMetadata}"
+                                     update=":right_pane :growl" onsuccess="adlg.hide();resourceUpdatedHook();"/>
+                    <p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
+                </h:form>
+            </p:dialog>
+        </c:if>
+        <c:choose>
+            <c:when test="#{rightPaneBean.paneAction =='viewUpdatedResource'}">
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/summary_right_pane.xhtml" />
+            </c:when>
+            <c:otherwise>
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml" />
+            </c:otherwise>
+        </c:choose>
+    </ui:fragment>
+</h:panelGroup>
+
+</ui:composition>
