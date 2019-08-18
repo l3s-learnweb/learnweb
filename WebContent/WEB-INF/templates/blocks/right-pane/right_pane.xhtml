@@ -290,11 +290,12 @@
                                       rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
                                       value="#{rightPaneBean.clickedResource.url}"/>
                     </a>
-                    <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);" title="#{msg['Archive.change_thumbnail']}?">
-                        <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
-                                        width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
-                                        rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}"/>
-                    </a>
+                    <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}">
+                        <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);"
+                           title="#{msg['Archive.change_thumbnail']}?" aria-label="#{msg['Archive.change_thumbnail']}?">
+                                <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                        </a>
+                    </ui:fragment>
                     <h:outputLink value="glossary/glossary.jsf"
                                   styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
                                   rendered="#{rightPaneBean.clickedResource.type eq 'glossary2'}">
@@ -501,12 +502,12 @@
                                   rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
                                   value="#{rightPaneBean.clickedResource.url}"/>
                 </a>
-                <a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);"
-                   style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
-                    <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
-                                    width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
-                                    rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}"/>
-                </a>
+                <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}">
+                    <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);"
+                       title="#{msg['Archive.change_thumbnail']}?" aria-label="#{msg['Archive.change_thumbnail']}?">
+                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                    </a>
+                </ui:fragment>
             </div>
         </ui:fragment>
 

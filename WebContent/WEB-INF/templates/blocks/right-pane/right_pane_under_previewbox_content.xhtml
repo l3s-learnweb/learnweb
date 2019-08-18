@@ -100,19 +100,16 @@
 						<h:panelGrid columns="4">
 							<h:outputText value="+#{rightPaneBean.clickedResource.thumbUp}" />
 							<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}"
-								update="thumbrating :growl">
+								update="thumbrating :growl" ariaLabel="Rate thump up">
 								<f:param name="resource_id"
 									value="#{rightPaneBean.clickedResource.id}" />
-								<h:graphicImage value="/resources/icon/thumb_up.png" width="16"
-									height="16" alt="Rate thump up" />
+								<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 							</p:commandLink>
 
 							<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}"
-								update="thumbrating :growl">
-								<f:param name="resource_id"
-									value="#{rightPaneBean.clickedResource.id}" />
-								<h:graphicImage value="/resources/icon/thumb_dw.png" width="16"
-									height="16" alt="Rate thump down" />
+								update="thumbrating :growl" ariaLabel="Rate thump down">
+								<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}" />
+								<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 							</p:commandLink>
 							<h:outputText value="-#{rightPaneBean.clickedResource.thumbDown}" />
 						</h:panelGrid>

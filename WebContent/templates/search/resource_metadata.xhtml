@@ -78,13 +78,9 @@
                 <h:outputText value="#{msg.loginLabel}"/>
             </h:outputLink>
 
-            <h:outputLink value="#"
-                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
-                          rendered="#{userBean.loggedIn}"
-                          title="#{msg.addToMyResources}">
-
-                <h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}"
-                                style="vertical-align: middle; margin-right:4px;"/>#{msg.addToMyResources}
+            <h:outputLink value="#" title="#{msg.addToMyResources}" rendered="#{userBean.loggedIn}"
+                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
+                <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.addToMyResources}
             </h:outputLink>
         </div>
     </div>
