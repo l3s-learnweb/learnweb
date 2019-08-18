@@ -65,7 +65,13 @@
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
                             <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
-                                <ui:include src="/templates/user/login.xhtml"/>
+                                <p:panel header="#{msg.loginTitle}">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
+                                        </div>
+                                    </div>
+                                </p:panel>
                             </ui:fragment>
 
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">

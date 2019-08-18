@@ -8,21 +8,24 @@
     <div class="form-group">
         <p:outputLabel for="@next" value="#{msg.username}:"/>
         <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" required="true"/>
+		<p:message for="@previous"/>
     </div>
 
     <div class="form-group">
         <p:outputLabel for="@next" value="#{msg.password}:"/>
         <p:password id="password" value="#{loginBean.password}" label="#{msg.password}" required="true"/>
+		<p:message for="@previous"/>
     </div>
 
     <h:panelGroup layout="block" styleClass="form-group" rendered="#{loginBean.captchaRequired}">
         <p:outputLabel for="@next" value="#{msg.captcha}:" styleClass="d-none"/>
         <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>
+        <p:message for="@previous"/>
     </h:panelGroup>
 
     <p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
 
-    <a href="#{request.contextPath}/lw/user/password.jsf">#{msg.forgotten_password}</a>
+    <h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block">#{msg.forgotten_password}</h:outputLink>
 </h:form>
 
 </ui:composition>
