@@ -165,3 +165,20 @@ td.td-text-right {
 .primary-border-right {
   border-right: 1px solid $themePrimaryColor;
 }
+
+body {
+  .moderator-btn {
+    background-color: #1D4350;
+    background-image: linear-gradient(to right, #1D4350 0%, #A43931 51%, #1D4350 100%);
+    background-size: 200% auto;
+    transition: 0.5s;
+    border: 1px solid #1D4350;
+    color: $cyanButtonTextColor;
+
+    &.ui-state-hover,
+    &.ui-state-active,
+    &.ui-state-focus {
+      background-position: right center;
+    }
+  }
+}

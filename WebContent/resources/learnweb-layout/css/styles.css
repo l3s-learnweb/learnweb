@@ -20,7 +20,14 @@
   - Sass documentation https://sass-lang.com/documentation
   - Bootstrap documentation (see Layout, Content, Utilities sections) https://getbootstrap.com/docs/
 */
-/* Theme color schema (DO NOT USE $green, $greenDarker, etc USE $themePrimaryColor, $themePrimaryColorDarker, etc VARIABLES INSTEAD!) */
+/**
+* Theme color schema (This is NOT bootstrap colors)
+* These colors are defined by a California theme imported above.
+* !default means that if the variable already defined, it would not be overridden. Also these variables used by IDE to show colors of elements.
+* Not all themes includes all these variables (for example only 4 color themes use different value of $themeSidebarDividerColor), do not remove them!
+*
+* DO NOT USE $green, $greenDarker, $greenDarkerAlt, etc use these (like $themePrimaryColor) variables instead!
+*/
 /*
 * Bootstrap variables
 * check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
@@ -9898,6 +9905,18 @@ body .ui-log .ui-log-content {
   border-right: 1px solid #4b6cb7;
 }
 
+body .moderator-btn {
+  background-color: #1D4350;
+  background-image: linear-gradient(to right, #1D4350 0%, #A43931 51%, #1D4350 100%);
+  background-size: 200% auto;
+  transition: 0.5s;
+  border: 1px solid #1D4350;
+  color: #fff;
+}
+body .moderator-btn.ui-state-hover, body .moderator-btn.ui-state-active, body .moderator-btn.ui-state-focus {
+  background-position: right center;
+}
+
 .layout-wrapper .layout-header {
   position: fixed;
   top: 0;
@@ -9927,6 +9946,7 @@ body .ui-log .ui-log-content {
 }
 .layout-wrapper .layout-header .menu-button {
   padding: 0;
+  flex-shrink: 0;
   width: 3.875rem;
 }
 .layout-wrapper .layout-header .header-logo {
@@ -11270,14 +11290,6 @@ ul.res-filters .clear-filters:hover a {
   width: 100%;
   left: 0;
   top: 0;
-}
-.res-block .res-bl-preview .res-bl-preview-wrap .res-bl-preview-mock {
-  position: absolute;
-  box-sizing: border-box;
-  height: 100%;
-  left: 0;
-  top: 0;
-  width: 100%;
 }
 .res-block .res-bl-preview .res-bl-preview-wrap .res-bl-preview-image {
   display: inline-block;
