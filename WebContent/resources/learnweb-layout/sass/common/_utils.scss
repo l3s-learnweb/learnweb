@@ -149,3 +149,19 @@ td.td-text-right {
     font-weight: bold;
   }
 }
+
+.primary-border-bottom {
+  border-bottom: 1px solid $themePrimaryColor;
+}
+
+.primary-border-top {
+  border-top: 1px solid $themePrimaryColor;
+}
+
+.primary-border-left {
+  border-left: 1px solid $themePrimaryColor;
+}
+
+.primary-border-right {
+  border-right: 1px solid $themePrimaryColor;
+}

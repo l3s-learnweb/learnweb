@@ -7,7 +7,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
-            <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
+			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
@@ -62,6 +62,8 @@
 
 
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+				<f:attribute name="contentSwatch" value="e" />
+
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -118,11 +120,14 @@
 					</div>
 
 					<p:commandButton value="#{msg.delete}"  onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+
 					<p:commandButton value="#{msg.save}" styleClass="float-right" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submissionBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
 				</h:form>
 			</p:dialog>
 
 			<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" responsive="true" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
+				<f:attribute name="contentSwatch" value="e" />
+
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -164,11 +169,11 @@
 						<p:message for="@previous" display="icon" />
 					</div>
 
-                    <div class="form-group">
-                        <p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="surveyCheckBox" id="survey_checkbox">
-                            <p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
-                        </p:selectBooleanCheckbox>
-                    </div>
+					<div class="form-group">
+						<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="surveyCheckBox" id="survey_checkbox">
+							<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
+						</p:selectBooleanCheckbox>
+					</div>
 
 					<div class="form-group" id="create_dialog_survey_text" style="display:none;">
 						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:" />
@@ -185,32 +190,32 @@
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:accordionPanel styleClass="ui-widget-content-p-0 ui-accordion-mb-0" id="submissions">
-				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
-					</ui:decorate>
-				</p:tab>
+			<p:panel header="Submissions">
+				<h:form prependId="false" styleClass="mb-3" >
+					<p:commandButton value="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
+				</h:form>
 
-				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
-					</ui:decorate>
-				</p:tab>
+				<p:accordionPanel id="submissions">
+					<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
+						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+							<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
+						</ui:decorate>
+					</p:tab>
 
-				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />
-					</ui:decorate>
-				</p:tab>
-			</p:accordionPanel>
+					<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
+						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+							<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
+						</ui:decorate>
+					</p:tab>
 
-			<h:form prependId="false" styleClass="mt-3" >
-				<p:commandLink title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-							   process="@this" oncomplete="PF('create_submission_dialog').show();">
-					#{msg['Submission.create_new_submission']}
-				</p:commandLink>
-			</h:form>
+					<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
+						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+							<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />
+						</ui:decorate>
+					</p:tab>
+				</p:accordionPanel>
+			</p:panel>
 
 			<h:panelGroup id="datagrid" class="not-selectable d-none"></h:panelGroup>
 		</h:panelGroup>

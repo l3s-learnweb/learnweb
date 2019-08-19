@@ -9908,6 +9908,22 @@ body .ui-log .ui-log-content {
   font-weight: bold;
 }
 
+.primary-border-bottom {
+  border-bottom: 1px solid #4b6cb7;
+}
+
+.primary-border-top {
+  border-top: 1px solid #4b6cb7;
+}
+
+.primary-border-left {
+  border-left: 1px solid #4b6cb7;
+}
+
+.primary-border-right {
+  border-right: 1px solid #4b6cb7;
+}
+
 body,
 .layout-container {
   min-width: 320px;
@@ -10184,6 +10200,38 @@ body,
 }
 .fileupload-minimal .ui-fileupload-content {
   display: none;
+}
+
+.moderator-button {
+  border-radius-left: 0.2rem;
+}
+.moderator-button:hover:after {
+  content: "moderator";
+  color: #4b6cb7;
+  position: absolute;
+  left: 0;
+  font-size: 8px !important;
+}
+
+.moderator-button-outline {
+  color: #4b6cb7 !important;
+  border: 1px solid #4b6cb7 !important;
+  background: #fff !important;
+}
+.moderator-button-outline:hover {
+  color: #38569C !important;
+  border: 1px solid #38569C !important;
+  background: #fff !important;
+}
+.moderator-button-outline:hover:after {
+  content: "moderator";
+  color: #4b6cb7;
+  position: absolute;
+  left: 0;
+  font-size: 8px !important;
+}
+.moderator-button-outline:hover .ui-button-icon-left {
+  color: #38569C;
 }
 
 /*Overview*/
@@ -10914,9 +10962,6 @@ body .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
 body .ui-accordion-mb-0 .ui-accordion-content,
 body .ui-accordion-mb-0 .ui-accordion-header {
   margin-bottom: 0;
-}
-body .ui-steps.ui-steps-50 .ui-steps-item {
-  width: 50%;
 }
 body .ui-blockui-content {
   background: transparent;
