@@ -1,5 +1,7 @@
 body {
     .ui-panel {
+    	border:0;
+    	
         padding: 0;
         .ui-panel-titlebar {
             border: 0 none;
@@ -18,11 +20,15 @@ body {
                     color: $dialogTitlebarIconHover;
                 }
             }
+        }        
+        .ui-panel-titlebar+.ui-panel-content {
+            border-top: 0; /* hide top border if panel has a header */
         }
         .ui-panel-content {
-            height: 100%;
+            /* height: 100%; causes problems on the dashboard. let's see if it is needed anywhere*/
             box-sizing: border-box;
             padding: $contentPadding;
+            border: 1px solid $contentBorderColor;
         }
         .ui-panel-footer {
             padding: $headerPadding;
