@@ -30,13 +30,18 @@
         <div class="col-md-6">
             <p:panel header="Group details" styleClass="mb-3">
                 <h5>#{groupOverviewBean.group.title}</h5>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-                </p>
+                <p>#{groupOverviewBean.group.description}</p>
                 <p class="mb-1">
                     <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
                     <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                </p>
+                <p class="mb-1">
+                    <h:outputText value="#{msg.members}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
+                </p>
+                <p class="mb-1">
+                    <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
                 </p>
 
                 <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">

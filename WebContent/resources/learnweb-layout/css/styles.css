@@ -12344,6 +12344,22 @@ ul.res-filters .clear-filters:hover a {
   border: 1px solid #dee2e6;
 }
 
+.mem-block .container, .mem-block .template-page .layout-container, .template-page .mem-block .layout-container {
+  background-color: red;
+  width: 100%;
+  padding-top: 100%;
+  /* 1:1 Aspect Ratio */
+  position: relative;
+  /* If you want text inside of it */
+}
+.mem-block .text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 .section-landing .header {
   background-color: #ced4da;
   background-size: cover;

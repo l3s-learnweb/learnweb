@@ -7,8 +7,6 @@
 <!--@elvariable id="userDetailsHidden" type="java.lang.Boolean"-->
 
 <ui:composition>
-
-
 	<p:panel header="#{groupMembersBean.clickedUser eq null ? msg.user_details : groupMembersBean.clickedUser.username}" id="right_pane">
 
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
@@ -50,12 +48,12 @@
 	<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 
 	<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{user.username}">
-		<p:repeat var="group" value="#{user.groups}">
+		<p:repeat var="g" value="#{user.groups}">
 			<h:panelGrid>
 			<div class="float-left" style="float:left;">
 				<h:outputLink value="group/overview.jsf">
-					<f:param name="group_id" value="#{group.id}" />
-					<h:outputText value="#{group.title}" />
+					<f:param name="group_id" value="#{g.id}" />
+					<h:outputText value="#{g.title}" />
 				</h:outputLink>
 			</div>
 			</h:panelGrid>
