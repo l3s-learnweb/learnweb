@@ -9963,7 +9963,7 @@ body .ui-log .ui-log-content {
   height: 1.875rem;
 }
 .layout-wrapper .layout-header .search-form {
-  min-width: 20rem;
+  max-width: 30rem;
   font-size: 0.875rem;
 }
 .layout-wrapper .layout-header .search-form input {
@@ -10012,11 +10012,13 @@ body .ui-log .ui-log-content {
   .layout-wrapper .layout-header .layout-container {
     flex-wrap: wrap;
   }
-  .layout-wrapper .layout-header .layout-container > div {
+  .layout-wrapper .layout-header .layout-container > *:not(.search-wrapper) {
     max-width: 50%;
   }
   .layout-wrapper .layout-header .layout-container .search-wrapper {
     width: 100%;
+  }
+  .layout-wrapper .layout-header .search-form {
     max-width: 100%;
   }
 }

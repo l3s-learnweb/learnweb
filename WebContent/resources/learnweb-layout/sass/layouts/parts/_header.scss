@@ -44,7 +44,7 @@ $topbar-button-padding: 1rem;
     }
 
     .search-form {
-      min-width: 20rem;
+      max-width: 30rem;
       font-size: $font-size-base;
 
       input {
@@ -100,14 +100,17 @@ $topbar-button-padding: 1rem;
       .layout-container {
         flex-wrap: wrap;
 
-        > div {
+        > *:not(.search-wrapper) {
           max-width: 50%;
         }
 
         .search-wrapper {
           width: 100%;
-          max-width: 100%;
         }
+      }
+
+      .search-form {
+        max-width: 100%;
       }
     }
   }

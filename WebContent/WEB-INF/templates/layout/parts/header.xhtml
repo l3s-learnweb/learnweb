@@ -5,8 +5,8 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <header class="layout-header bg-primary">
-        <div class="layout-container d-flex flex-row align-items-center">
-            <div class="d-flex mr-auto">
+        <div class="layout-container d-flex">
+            <div class="d-flex">
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <a href="#" id="menu-button" class="header-element menu-button">
                         <i class="fa fa-bars mx-auto"></i>
@@ -18,7 +18,7 @@
             </div>
 
             <ui:fragment rendered="#{userBean.loggedIn}">
-                <div class="d-flex order-1 order-md-0 search-wrapper">
+                <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
                     <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100" onsubmit="removeViewstate(this);">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
                         <input type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
@@ -30,7 +30,7 @@
                 </div>
             </ui:fragment>
 
-            <h:form styleClass="d-flex">
+            <h:form styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
                     <i class="fa fa-bell #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}"></i>
                 </h:outputLink>
