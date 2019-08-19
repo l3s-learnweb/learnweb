@@ -90,10 +90,10 @@
                     </h:panelGroup>
 
                     <div class="clear"></div>
+				</h:panelGroup>
 
-                </h:panelGroup>
                 <h:form id="submit_resources_form" prependId="false">
-                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
                 </h:form>
             </h:panelGroup>
         </p:panel>

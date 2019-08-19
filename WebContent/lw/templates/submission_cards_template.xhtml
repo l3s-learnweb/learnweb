@@ -32,35 +32,35 @@
 				</h:form>
 			</div>
 
-			<div class="p-2 mb-3 text-right primary-border-bottom">
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2"
+			<div class="p-2 mb-3 text-right primary-border-bottom d-flex flex-sm-row flex-column justify-content-end my-2 my-sm-0">
+				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2 my-1 my-sm-0"
 							  rendered="#{submission.pastSubmission and (not userBean.moderator || submissionBean.submissionOverviewReadOnly)}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
 					#{msg['Submission.view_submission']}
 				</h:outputLink>
 
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2"
+				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2 my-1 my-sm-0"
 							  rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
 					#{msg['Submission.submit_resources']}
 				</h:outputLink>
 
-				<h:outputLink  value="../templates/resources/survey.jsf" styleClass="primary-border-right px-2"
+				<h:outputLink  value="../templates/resources/survey.jsf" styleClass="primary-border-right px-2 my-1 my-sm-0"
 							   rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 					<f:param name="resource_id" value="#{submission.surveyResourceId}" />
 					<h:outputText class="survey_submit_message" value="Please submit the survey first"/>
 				</h:outputLink>
 
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2"
+				<h:outputLink value="myhome/submission_resources.jsf" styleClass="primary-border-right px-2 my-1 my-sm-0"
 							  rendered="#{submission.currentSubmission and userBean.moderator and submissionBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
 					#{msg['Submission.view_submission']}
 				</h:outputLink>
 
-				<h:outputLink value="myhome/submission_moderator.jsf" styleClass="primary-border-right px-2"
+				<h:outputLink value="myhome/submission_moderator.jsf" styleClass="primary-border-right px-2 my-1 my-sm-0"
 							  rendered="#{userBean.moderator}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					#{msg['Submission.view_user_submissions']}

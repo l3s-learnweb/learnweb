@@ -112,7 +112,7 @@
 
 					<div class="form-group" id="edit_dialog_survey_text" style="display:none;">
 						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:"/>
-						<p:selectOneMenu styleClass="w-100 mb-3" id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}" required="#{submissionBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
+						<p:selectOneMenu id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}" required="#{submissionBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
 							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
 							<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
 						</p:selectOneMenu>
@@ -194,6 +194,10 @@
 				<h:form prependId="false" styleClass="mb-3" >
 					<p:commandButton value="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
+                   <!-- <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
+                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button-outline" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/> -->
 				</h:form>
 
 				<p:accordionPanel id="submissions">
