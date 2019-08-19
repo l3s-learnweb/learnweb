@@ -1,20 +1,15 @@
-<ui:composition
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 <!--@elvariable id="showControls" type="java.lang.Boolean"-->
 
 <div class="res-block">
     <div class="res-bl-preview">
-        <div class="res-bl-preview-cont">
-            <div class="res-bl-preview-wrap">
-                <div class="res-bl-preview-mock"></div>
-                <img class="res-bl-preview-image" src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}"/>
-            </div>
+        <div class="res-bl-preview-wrap">
+            <img class="res-bl-preview-image" src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}"/>
         </div>
 
         <h:panelGroup class="resource-controls #{res.editLocked ? 'edit-locked' : ''}" layout="block" rendered="#{showControls}">
@@ -42,4 +37,5 @@
         </div>
     </div>
 </div>
+
 </ui:composition>
