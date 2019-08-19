@@ -4,10 +4,29 @@
 //@import 'themes/_emerald';
 @import 'themes/_noir';
 
-/* Theme color schema (DO NOT USE $green, $greenDarker, etc USE $themePrimaryColor, $themePrimaryColorDarker, etc VARIABLES INSTEAD!) */
+/**
+* Theme color schema (This is NOT bootstrap colors)
+* These colors are defined by a California theme imported above.
+* !default means that if the variable already defined, it would not be overridden. Also these variables used by IDE to show colors of elements.
+* Not all themes includes all these variables (for example only 4 color themes use different value of $themeSidebarDividerColor), do not remove them!
+*
+* DO NOT USE $green, $greenDarker, $greenDarkerAlt, etc use these (like $themePrimaryColor) variables instead!
+*/
 $themeSidebarDividerColor: $gray-400 !default; // $sidebarMenuitemDividerColor, #e4e2e0
 $themeSidebarHoverBgColor: $gray-500 !default; // $sidebarMenuitemHoverBgColor, #f1f1f1
 $themeElementTextColor: $white !default; // $primaryTextColor, #ffffff
+
+$themeDarkBgColor: #242725 !default; // $gradientSidebarTopBgColor
+$themeLightBgColor: #446A51 !default; // $gradientSidebarBottomBgColor
+
+$themePrimaryColor: $green !default; // $primaryColor
+$themePrimaryColorDarker: $greenDarker !default; // $primaryColorDarker
+$themePrimaryDarkerAlt: $greenDarkerAlt !default; // $primaryDarkerAlt
+$themePrimaryDarkest: $greenDarkest !default; // $primaryDarkest
+
+$themePrimaryAltColor: $yellow !default; // $primaryAltButtonBgColor
+$themePrimaryAltColorDarker: $yellowDarker !default; // $primaryAltButtonHoverBgColor
+$themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActiveBgColor
 
 // layout variables
 $min-width: 320px;
