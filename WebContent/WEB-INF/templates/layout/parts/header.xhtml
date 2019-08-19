@@ -15,20 +15,6 @@
                 <a href="#{request.contextPath}/lw/myhome/welcome.jsf" class="header-element header-logo no-hover-bg">
                     <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo"/>
                 </a>
-                <p:ajaxStatus styleClass="ajax-status-screen">
-                    <f:facet name="start">
-                        <div class="header-element no-hover-bg ajax-status">
-                            <div class="la-pacman text-secondary">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </div>
-                    </f:facet>
-                </p:ajaxStatus>
             </div>
 
             <ui:fragment rendered="#{userBean.loggedIn}">

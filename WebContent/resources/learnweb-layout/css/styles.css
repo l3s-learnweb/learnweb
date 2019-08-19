@@ -9924,11 +9924,6 @@ body .ui-log .ui-log-content {
   border-right: 1px solid #4b6cb7;
 }
 
-body,
-.layout-container {
-  min-width: 320px;
-}
-
 .layout-wrapper .layout-header {
   position: fixed;
   top: 0;
@@ -9955,10 +9950,6 @@ body,
 }
 .layout-wrapper .layout-header .header-element:hover:not(.no-hover-bg) {
   background-color: #415688;
-}
-.layout-wrapper .layout-header .header-element.ajax-status {
-  width: 4rem;
-  padding: 0;
 }
 .layout-wrapper .layout-header .menu-button {
   padding: 0;
@@ -10141,21 +10132,32 @@ body,
   }
 }
 
+body,
+.layout-container {
+  min-width: 320px;
+}
+
 .layout-overlay {
   position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  opacity: 0;
   top: 0;
   left: 0;
   z-index: 1000;
-  background: rgba(35, 37, 42, 0.85);
+  background: rgba(35, 37, 42, 0.75);
   transition: all 0.2s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
   .layout-overlay {
     transition: none;
   }
+}
+.layout-overlay:not(.show) {
+  display: none;
+  opacity: 0;
 }
 
 .layout-wrapper .layout-main {
@@ -10200,38 +10202,6 @@ body,
 }
 .fileupload-minimal .ui-fileupload-content {
   display: none;
-}
-
-.moderator-button {
-  border-radius-left: 0.2rem;
-}
-.moderator-button:hover:after {
-  content: "moderator";
-  color: #4b6cb7;
-  position: absolute;
-  left: 0;
-  font-size: 8px !important;
-}
-
-.moderator-button-outline {
-  color: #4b6cb7 !important;
-  border: 1px solid #4b6cb7 !important;
-  background: #fff !important;
-}
-.moderator-button-outline:hover {
-  color: #38569C !important;
-  border: 1px solid #38569C !important;
-  background: #fff !important;
-}
-.moderator-button-outline:hover:after {
-  content: "moderator";
-  color: #4b6cb7;
-  position: absolute;
-  left: 0;
-  font-size: 8px !important;
-}
-.moderator-button-outline:hover .ui-button-icon-left {
-  color: #38569C;
 }
 
 /*Overview*/

@@ -25,11 +25,6 @@ $topbar-button-padding: 1rem;
       &:hover:not(.no-hover-bg) {
         background-color: $themePrimaryDarkerAlt;
       }
-
-      &.ajax-status {
-        width: 4rem;
-        padding: 0;
-      }
     }
 
     .menu-button {
