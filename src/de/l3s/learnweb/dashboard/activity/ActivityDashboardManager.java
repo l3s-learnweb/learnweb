@@ -42,26 +42,4 @@ public class ActivityDashboardManager
 
         return actionsPerDay;
     }
-
-    public Map<String, Integer> getActionsCountPerDay(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
-    {
-        // action name, count
-        Map<String, Integer> actionsPerDay = new TreeMap<>();
-
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log " +
-                        "WHERE user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
-                        "AND timestamp BETWEEN ? AND ?  GROUP BY day"))
-        {
-            select.setTimestamp(1, new Timestamp(startDate.getTime()));
-            select.setTimestamp(2, new Timestamp(endDate.getTime()));
-            ResultSet rs = select.executeQuery();
-
-            while(rs.next())
-                actionsPerDay.put(rs.getString("day"), rs.getInt("count"));
-        }
-
-        return actionsPerDay;
-    }
-
 }

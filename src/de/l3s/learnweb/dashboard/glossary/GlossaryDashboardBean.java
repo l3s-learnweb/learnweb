@@ -9,11 +9,12 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.PieChartModel;
-
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.util.Misc;
+import org.primefaces.model.charts.bar.BarChartModel;
+import org.primefaces.model.charts.line.LineChartModel;
+import org.primefaces.model.charts.pie.PieChartModel;
 
 @Named
 @SessionScoped
@@ -26,6 +27,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     private transient Integer totalConcepts = null;
     private transient Integer totalTerms = null;
+    private transient Integer totalSources = null;
     private transient List<GlossaryUserTermsSummary> glossaryFieldsSummeryPerUser;
     private transient Map<Integer, GlossaryUserActivity> glossaryStatisticPerUser;
     private transient Map<String, Integer> glossaryConceptsCountPerUser;
@@ -40,9 +42,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     private transient BarChartModel usersGlossaryChart;
     private transient PieChartModel usersSourcesChart;
 
-    public GlossaryDashboardBean()
-    {
-    }
+    private List<Resource> glossaryResources;
 
     public void onLoad()
     {
@@ -66,26 +66,45 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         usersGlossaryChart = null;
         usersSourcesChart = null;
 
-        if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
-        {
-            fetchDataFromManager();
-        }
+        totalConcepts = null;
+        totalTerms = null;
+        totalSources = null;
+        glossaryFieldsSummeryPerUser = null;
+        glossaryStatisticPerUser = null;
+        glossaryConceptsCountPerUser = null;
+        glossarySourcesWithCounters = null;
+        glossaryTermsCountPerUser = null;
+        actionsWithCounters = null;
+        actionsCountPerDay = null;
+        descFieldsStatistic = null;
+
+        fetchDataFromManager();
     }
 
     private void fetchDataFromManager() throws SQLException
     {
-        List<Integer> selectedUsersIds = getSelectedUsersIds();
-        totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
-        totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
+        if (!Misc.nullOrEmpty(getSelectedUsersIds())) {
+            List<Integer> selectedUsersIds = getSelectedUsersIds();
+            totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
+            totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
+            totalSources = dashboardManager.getTotalSources(selectedUsersIds, startDate, endDate);
 
-        descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
-        glossaryFieldsSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUsersIds, startDate, endDate);
-        glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(selectedUsersIds, startDate, endDate);
-        glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
-        glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(selectedUsersIds, startDate, endDate);
-        actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
-        actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
-        glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(selectedUsersIds, startDate, endDate);
+            descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
+            glossaryFieldsSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUsersIds, startDate, endDate);
+            glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(selectedUsersIds, startDate, endDate);
+            glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
+            glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(selectedUsersIds, startDate, endDate);
+            actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
+            actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
+            glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(selectedUsersIds, startDate, endDate);
+
+            glossaryResources = getLearnweb().getResourceManager().getGlossaryResourcesByUserId(selectedUsersIds.get(0));
+        }
+    }
+
+    public List<Resource> getGlossaryResources()
+    {
+        return glossaryResources;
     }
 
     public LineChartModel getInteractionsChart() throws SQLException
@@ -159,6 +178,16 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         return totalTerms;
     }
 
+    public float getTermsToConcepts()
+    {
+        return ((float)totalConcepts / totalTerms);
+    }
+
+    public Integer getTotalSources()
+    {
+        return totalSources;
+    }
+
     public List<GlossaryUserTermsSummary> getGlossaryFieldsSummeryPerUser()
     {
         return glossaryFieldsSummeryPerUser;
@@ -173,14 +202,4 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
     {
         return descFieldsStatistic;
     }
-
-    @Override
-    public void onSubmitSelectedUsers() throws SQLException
-    {
-        if(getSelectedUsersIds() != null)
-        {
-            cleanAndUpdateStoredData();
-        }
-    }
-
 }

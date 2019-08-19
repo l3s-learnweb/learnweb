@@ -8,12 +8,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import de.l3s.learnweb.dashboard.ChartJsUtils;
 import org.apache.commons.collections4.map.LinkedMap;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.CategoryAxis;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.line.LineChartDataSet;
+import org.primefaces.model.charts.line.LineChartModel;
 
 public class ActivityDashboardChartsFactory
 {
@@ -22,11 +21,20 @@ public class ActivityDashboardChartsFactory
     public static LineChartModel createActivitiesChart(List<ActivityGraphData> data, Date startDate, Date endDate)
     {
         LineChartModel model = new LineChartModel();
+        ChartData chartData = new ChartData();
 
         for(ActivityGraphData activityData : data)
         {
-            LineChartSeries interactions = new LineChartSeries();
-            interactions.setLabel(activityData.getName());
+            LineChartDataSet dataSet = new LineChartDataSet();
+
+            List<Number> values = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
+
+            dataSet.setData(values);
+            dataSet.setFill(false);
+            dataSet.setBorderColor(ChartJsUtils.getRandColor());
+            dataSet.setLabel(activityData.getName());
+            dataSet.setLineTension(0.1);
 
             Calendar start = Calendar.getInstance();
             start.setTime(startDate);
@@ -36,18 +44,15 @@ public class ActivityDashboardChartsFactory
             for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
             {
                 String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
-                interactions.set(dateKey, activityData.getActionsPerDay().getOrDefault(dateKey, 0));
+                labels.add(dateKey);
+                values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
-            model.addSeries(interactions);
+
+                chartData.addChartDataSet(dataSet);
+                chartData.setLabels(labels);
         }
-        model.setLegendPosition("e");
-        model.setShowPointLabels(true);
-        model.getAxes().put(AxisType.X, new CategoryAxis("Days"));
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Activities");
-        yAxis.setMin(0);
+
+        model.setData(chartData);
         return model;
     }
 

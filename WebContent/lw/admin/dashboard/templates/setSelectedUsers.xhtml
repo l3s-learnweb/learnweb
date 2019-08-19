@@ -7,35 +7,34 @@
 <!--@elvariable id="cbean" type="de.l3s.learnweb.dashboard.CommonDashboardUserBean"-->
 
 <h:form>
-    <p:outputPanel id="usersSelectPanel" styleClass="row align-items-end my-2" rendered="#{!cbean.readOnly}">
+    <p:outputPanel styleClass="row align-items-end my-2" rendered="#{!cbean.singleUser}">
         <div class="col">
-            <p:selectOneRadio widgetVar="widgetSorType" layout="grid" columns="1" required="true" styleClass="no-borders"
-                              value="#{cbean.selectedType}">
-                <p:ajax event="valueChange" global="false" update="usersSelectorPanel usersCountPanel"/>
-                <f:selectItem itemLabel="Users" itemValue="1"/>
-                <f:selectItem itemLabel="Groups" itemValue="2"/>
+            <p:selectOneRadio layout="grid" columns="1" required="true" styleClass="no-borders" value="#{cbean.selectedType}">
+                <p:ajax event="valueChange" update="usersSelectorPanel usersCountPanel"/>
+
+                <f:selectItem itemLabel="#{msg.users}" itemValue="1"/>
+                <f:selectItem itemLabel="#{msg.groupsTitle}" itemValue="2"/>
             </p:selectOneRadio>
         </div>
         <p:outputPanel id="usersSelectorPanel" styleClass="col">
-            <p:selectCheckboxMenu value="#{cbean.selectedUsersIds}" rendered="#{cbean.selectedType == 1}"
-                                  label="Users" filter="true" filterMatchMode="startsWith" styleClass="no-borders"
-                                  var="user" itemValue="#{user.id}" itemLabel="#{user.username}" >
-                <p:ajax event="toggleSelect" global="false" update="dateAndSubmitPanel usersCountPanel"/>
-                <f:selectItems value="#{cbean.getAllUsers()}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
+            <p:selectCheckboxMenu id="selectedUsersIds" value="#{cbean.selectedUsersIds}" var="user" label="#{msg.users}"
+                                  filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 1}" styleClass="no-borders">
+                <p:ajax event="change" update="dateAndSubmitPanel usersCountPanel"/>
+                <p:ajax event="toggleSelect" update="dateAndSubmitPanel usersCountPanel"/>
+
+                <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
             </p:selectCheckboxMenu>
 
-            <p:selectCheckboxMenu value="#{cbean.selectedGroupsIds}" rendered="#{cbean.selectedType == 2}"
-                                  label="Groups" filter="true" filterMatchMode="startsWith" styleClass="no-borders"
-                                  var="group">
-                <p:ajax event="toggleSelect" global="false" update="dateAndSubmitPanel usersCountPanel"/>
-                <f:selectItems value="#{cbean.getAllGroups()}" var="group" itemValue="#{group.id}"/>
+            <p:selectCheckboxMenu id="selectedGroupsIds" value="#{cbean.selectedGroupsIds}" var="group" label="#{msg.groupsTitle}"
+                                  filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 2}" styleClass="no-borders">
+                <p:ajax event="change" update="dateAndSubmitPanel usersCountPanel"/>
+                <p:ajax event="toggleSelect" update="dateAndSubmitPanel usersCountPanel"/>
+
+                <f:selectItems value="#{cbean.allGroups}" var="group" itemValue="#{group.id}" itemLabel="#{group.title}"/>
             </p:selectCheckboxMenu>
         </p:outputPanel>
         <p:outputPanel id="usersCountPanel" styleClass="col">
-            <div class="ui-inputgroup">
-                <h:outputText value="Users selected: #{cbean.getSelectedUsersIds().size()}"
-                              rendered="#{!empty(cbean.getSelectedUsersIds())}"/>
-            </div>
+            <p><h:outputText value="Users selected: #{cbean.selectedUsersIds.size()}" rendered="#{not empty cbean.selectedUsersIds}"/></p>
         </p:outputPanel>
     </p:outputPanel>
 
@@ -49,15 +48,9 @@
             <p:calendar id="dateEnd" var="date" value="#{cbean.endDate}" showOn="button"/>
         </div>
         <div class="col">
-            <p:ajaxStatus onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()">
-                <p:commandButton value="Update" icon="ui-icon-check" update=":content"
-                                 disabled="#{empty(cbean.getSelectedUsersIds())}"
-                                 action="#{cbean.cleanAndUpdateStoredData()}">
-                </p:commandButton>
-            </p:ajaxStatus>
-            <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-                <i class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i>
-            </p:dialog>
+            <p:commandButton value="Update" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
+                             disabled="#{empty cbean.selectedUsersIds}">
+            </p:commandButton>
         </div>
     </p:outputPanel>
 </h:form>

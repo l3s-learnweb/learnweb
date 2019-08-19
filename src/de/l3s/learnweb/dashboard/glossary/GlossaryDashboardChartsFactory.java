@@ -2,27 +2,24 @@ package de.l3s.learnweb.dashboard.glossary;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import de.l3s.learnweb.dashboard.ChartJsUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.BarChartSeries;
-import org.primefaces.model.chart.CategoryAxis;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.LegendPlacement;
-import org.primefaces.model.chart.LineChartModel;
-import org.primefaces.model.chart.LineChartSeries;
-import org.primefaces.model.chart.PieChartModel;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.bar.BarChartDataSet;
+import org.primefaces.model.charts.bar.BarChartModel;
 
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.MapHelper;
+import org.primefaces.model.charts.bar.BarChartOptions;
+import org.primefaces.model.charts.line.LineChartDataSet;
+import org.primefaces.model.charts.line.LineChartModel;
+import org.primefaces.model.charts.optionconfig.tooltip.Tooltip;
+import org.primefaces.model.charts.pie.PieChartDataSet;
+import org.primefaces.model.charts.pie.PieChartModel;
 
 class GlossaryDashboardChartsFactory
 {
@@ -60,51 +57,76 @@ class GlossaryDashboardChartsFactory
             }
         }
 
-        ChartSeries activity = new ChartSeries();
-        activity.setLabel(UtilBean.getLocaleMessage("interactions"));
-        activity.set(UtilBean.getLocaleMessage("glossary"), glossary);
-        activity.set(UtilBean.getLocaleMessage("Search"), search);
-        activity.set(UtilBean.getLocaleMessage("system"), system);
-        activity.set(UtilBean.getLocaleMessage("resource"), resource);
+        ChartData data = new ChartData();
+        List<String> labels = new ArrayList<>();
+        labels.add(UtilBean.getLocaleMessage("glossary"));
+        labels.add(UtilBean.getLocaleMessage("Search"));
+        labels.add(UtilBean.getLocaleMessage("system"));
+        labels.add(UtilBean.getLocaleMessage("resource"));
+        data.setLabels(labels);
 
-        model.addSeries(activity);
-        model.setLegendPosition("ne");
+        BarChartDataSet barDataSet = new BarChartDataSet();
+        barDataSet.setLabel(UtilBean.getLocaleMessage("interactions"));
+        List<Number> values = new ArrayList<>();
+        values.add(glossary);
+        values.add(search);
+        values.add(system);
+        values.add(resource);
+        barDataSet.setData(values);
+        barDataSet.setBackgroundColor(ChartJsUtils.getColorList(4));
+        data.addChartDataSet(barDataSet);
 
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-
+        model.setData(data);
         return model;
     }
 
     public static PieChartModel createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
     {
         PieChartModel model = new PieChartModel();
-        model.setDataFormat("percent");
-        model.setShowDataLabels(true);
-        model.setDataLabelThreshold(3);
-        model.setLegendPosition("s");
-        model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-        model.setLegendCols(2);
+
+        ChartData data = new ChartData();
+        PieChartDataSet dataSet = new PieChartDataSet();
+
+        List<Number> values = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
 
         if(glossarySourcesWithCounters.isEmpty())
         {
-            model.set("", 0);
+            labels.add("");
+            values.add(0);
         }
         else
         {
-            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
-                model.set(source.getKey(), source.getValue());
+            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet()) {
+
+                labels.add(source.getKey());
+                values.add(source.getValue());
+            }
         }
 
+        dataSet.setData(values);
+        data.setLabels(labels);
+        data.addChartDataSet(dataSet);
+        dataSet.setBackgroundColor(ChartJsUtils.getColorList(4));
+
+        model.setData(data);
         return model;
     }
 
     public static LineChartModel createInteractionsChart(Map<String, Integer> actionsCountPerDay, Date startDate, Date endDate)
     {
         LineChartModel model = new LineChartModel();
+        ChartData data = new ChartData();
+        LineChartDataSet dataSet = new LineChartDataSet();
 
-        LineChartSeries interactions = new LineChartSeries();
-        interactions.setLabel("interactions");
+        List<Number> values = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+
+        dataSet.setData(values);
+        dataSet.setFill(false);
+        dataSet.setBorderColor("rgb(75, 192, 192)");
+        dataSet.setLabel("interactions");
+        dataSet.setLineTension(0.1);
 
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
@@ -114,65 +136,67 @@ class GlossaryDashboardChartsFactory
         for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
         {
             String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
-            interactions.set(dateKey, actionsCountPerDay.getOrDefault(dateKey, 0));
+            labels.add(dateKey);
+            values.add(actionsCountPerDay.getOrDefault(dateKey, 0));
         }
 
-        model.addSeries(interactions);
-        model.setLegendPosition("e");
-        model.setShowPointLabels(true);
-        model.getAxes().put(AxisType.X, new CategoryAxis("Days"));
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Interactions");
-        yAxis.setMin(0);
+        data.addChartDataSet(dataSet);
+        data.setLabels(labels);
+
+        model.setData(data);
         return model;
     }
 
     public static BarChartModel createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser)
     {
         BarChartModel model = new BarChartModel();
+        ChartData data = new ChartData();
 
-        ChartSeries concepts = new ChartSeries();
+        List<String> labels = new ArrayList<>();
+
+        BarChartDataSet concepts = new BarChartDataSet();
         concepts.setLabel("Concepts");
 
-        ChartSeries terms = new ChartSeries();
-        terms.setLabel("Terms");
-
+        List<Number> conceptsData = new ArrayList<>();
         if(glossaryConceptsCountPerUser.isEmpty())
         {
-            concepts.set("", 0);
+            conceptsData.add(0);
+            labels.add("");
         }
         else
         {
             for(String key : glossaryConceptsCountPerUser.keySet())
             {
-                concepts.set(key, glossaryConceptsCountPerUser.getOrDefault(key, 0));
+                labels.add(key);
+                conceptsData.add(glossaryConceptsCountPerUser.getOrDefault(key, 0));
             }
         }
+        concepts.setData(conceptsData);
+        concepts.setBackgroundColor(ChartJsUtils.getColorList(4));
 
+        BarChartDataSet terms = new BarChartDataSet();
+        terms.setLabel("Terms");
+
+        List<Number> termsData = new ArrayList<>();
         if(glossaryTermsCountPerUser.isEmpty())
         {
-            terms.set("", 0);
+            conceptsData.add(0);
         }
         else
         {
             for(String key : glossaryTermsCountPerUser.keySet())
             {
-                terms.set(key, glossaryTermsCountPerUser.getOrDefault(key, 0));
+                conceptsData.add(glossaryTermsCountPerUser.getOrDefault(key, 0));
             }
         }
+        terms.setData(termsData);
+        terms.setBackgroundColor(ChartJsUtils.getColorList(4));
 
-        model.addSeries(concepts);
-        model.addSeries(terms);
-        model.setLegendPosition("ne");
-        model.setStacked(true);
+        data.setLabels(labels);
+        data.addChartDataSet(terms);
+        data.addChartDataSet(concepts);
 
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setMin(0);
+        model.setData(data);
 
         return model;
     }
@@ -180,53 +204,73 @@ class GlossaryDashboardChartsFactory
     public static BarChartModel createProxySourcesChart(Map<String, Integer> proxySourcesWithCounters)
     {
         BarChartModel model = new BarChartModel();
-        BarChartSeries proxySource = new BarChartSeries();
+        ChartData data = new ChartData();
+
+        BarChartDataSet barDataSet = new BarChartDataSet();
+
+        List<Number> values = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
 
         if(proxySourcesWithCounters.isEmpty())
         {
-            proxySource.set("", 0);
+            labels.add("");
+            values.add(0);
         }
         else
         {
             for(Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet())
             {
-                proxySource.set(e.getKey(), e.getValue());
+                labels.add(e.getKey());
+                values.add(e.getValue());
             }
         }
 
-        model.addSeries(proxySource);
+        barDataSet.setData(values);
+        data.setLabels(labels);
 
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
+        data.addChartDataSet(barDataSet);
 
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("sources");
-
+        model.setData(data);
         return model;
     }
 
     public static BarChartModel createUserFieldsChart(List<GlossaryUserTermsSummary> glossaryFieldSummeryPerUser)
     {
         BarChartModel model = new BarChartModel();
-        ChartSeries activity = new ChartSeries();
+        ChartData data = new ChartData();
 
-        if(glossaryFieldSummeryPerUser.isEmpty())
-        {
-            activity.set("", 0);
-        }
-        else
+        BarChartDataSet pronounciation = new BarChartDataSet();
+        pronounciation.setLabel("pronounciation");
+
+        BarChartDataSet acronym = new BarChartDataSet();
+        acronym.setLabel("acronym");
+
+        BarChartDataSet phraseology = new BarChartDataSet();
+        phraseology.setLabel("phraseology");
+
+        BarChartDataSet uses = new BarChartDataSet();
+        uses.setLabel("uses");
+
+        BarChartDataSet source = new BarChartDataSet();
+        source.setLabel("source");
+
+        if(!glossaryFieldSummeryPerUser.isEmpty())
         {
             GlossaryUserTermsSummary gfs = glossaryFieldSummeryPerUser.get(0);
-            activity.set("pronounciation", gfs.getPronounciation());
-            activity.set("acronym", gfs.getAcronym());
-            activity.set("phraseology", gfs.getPhraseology());
-            activity.set("uses", gfs.getUses());
-            activity.set("source", gfs.getSource());
+            pronounciation.setData(Collections.singletonList(gfs.getPronounciation()));
+            acronym.setData(Collections.singletonList(gfs.getAcronym()));
+            phraseology.setData(Collections.singletonList(gfs.getPhraseology()));
+            uses.setData(Collections.singletonList(gfs.getUses()));
+            source.setData(Collections.singletonList(gfs.getSource()));
         }
 
-        model.addSeries(activity);
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
+        data.addChartDataSet(pronounciation);
+        data.addChartDataSet(acronym);
+        data.addChartDataSet(phraseology);
+        data.addChartDataSet(uses);
+        data.addChartDataSet(source);
+        model.setData(data);
+
         return model;
     }
 }

@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.util.Collection;
 import java.util.Comparator;
 
 import javax.faces.model.SelectItem;
@@ -8,6 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Misc
 {
+    public static boolean nullOrEmpty(Collection collection) {
+        return collection == null || collection.size() == 0;
+    }
+
     public static void sleep(long millis)
     {
         try

@@ -7,14 +7,21 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
+import scala.util.control.Exception;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean
 {
-    private int selectedType = 1;
+    private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
+    private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
+
+    private Integer paramUserId;
+
+    private int selectedType = 1; // Users = 1, Groups = 2
+    private boolean singleUser = true;
     private List<Integer> selectedUsersIds;
     private List<Integer> selectedGroupsIds;
-    protected Date startDate = null;
-    protected Date endDate = null;
+    protected Date startDate;
+    protected Date endDate;
 
     // caches:
     private transient List<Group> allGroups;
@@ -23,9 +30,13 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     public CommonDashboardUserBean()
     {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MONTH, -6); // load data from last 3 month until now
-        startDate = new Date(cal.getTimeInMillis());
-        endDate = new Date(new Date().getTime());
+        cal.add(Calendar.MONTH, -6); // load data from last 6 month until now
+
+        String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
+        String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
+
+        startDate = new Date(Long.parseLong(savedStartDate));
+        endDate = new Date(Long.parseLong(savedEndDate));
     }
 
     public void onLoad()
@@ -34,17 +45,63 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         if(user == null) // not logged in or no privileges
             return;
 
-        if(isReadOnly()) {
-            selectedUsersIds = Collections.singletonList(getUser().getId());
+        if(!user.isModerator()) { // can see only their own statistic
+            singleUser = true;
+            selectedUsersIds = Collections.singletonList(user.getId());
+        } else if (paramUserId != null) { // statistic for one user from parameter
+            try
+            {
+                singleUser = true;
+                user = Learnweb.getInstance().getUserManager().getUser(paramUserId);
+                selectedUsersIds = Collections.singletonList(user.getId());
+            }
+            catch(SQLException e)
+            {
+                throw new RuntimeException("User not found.");
+            }
+        } else {
+            singleUser = false;
         }
     }
 
-    public boolean isReadOnly()
+    public abstract void cleanAndUpdateStoredData() throws SQLException;
+
+    /**
+     * @return all groups the current user can moderate
+     * @throws SQLException
+     */
+    public List<Group> getAllGroups() throws SQLException
     {
-        return !getUser().isModerator();
+        if(null == allGroups)
+            allGroups = getUser().getOrganisation().getGroups();
+        return allGroups;
     }
 
-    public abstract void cleanAndUpdateStoredData() throws SQLException;
+    /**
+     * @return all users the current user can moderate
+     * @throws SQLException
+     */
+    public List<User> getAllUsers() throws SQLException
+    {
+        if(null == allUsers)
+            allUsers = getUser().getOrganisation().getUsers();
+        return allUsers;
+    }
+
+    public Integer getParamUserId()
+    {
+        return paramUserId;
+    }
+
+    public void setParamUserId(final Integer paramUserId)
+    {
+        this.paramUserId = paramUserId;
+    }
+
+    public boolean isSingleUser()
+    {
+        return singleUser;
+    }
 
     public int getSelectedType()
     {
@@ -66,18 +123,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         return selectedUsersIds;
     }
 
-    /**
-     *
-     * @return all groups the current user can moderate
-     * @throws SQLException
-     */
-    public List<Group> getAllGroups() throws SQLException
-    {
-        if(null == allGroups)
-            allGroups = getUser().getOrganisation().getGroups();
-        return allGroups;
-    }
-
     public List<Integer> getSelectedGroupsIds()
     {
         return selectedGroupsIds;
@@ -96,18 +141,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         this.setSelectedUsersIds(selectedUsers);
     }
 
-    /**
-     *
-     * @return all users the current user can moderate
-     * @throws SQLException
-     */
-    public List<User> getAllUsers() throws SQLException
-    {
-        if(null == allUsers)
-            allUsers = getUser().getOrganisation().getUsers();
-        return allUsers;
-    }
-
     public Date getStartDate()
     {
         return startDate;
@@ -116,6 +149,7 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     public void setStartDate(Date startDate)
     {
         this.startDate = startDate;
+        setPreference(PREFERENCE_STARTDATE, Long.toString(startDate.getTime()));
     }
 
     public Date getEndDate()
@@ -126,10 +160,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
-    }
-
-    public void onSubmitSelectedUsers() throws SQLException
-    {
-
+        setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 }

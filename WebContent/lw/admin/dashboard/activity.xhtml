@@ -14,7 +14,8 @@
 </ui:define>
 
 <ui:define name="sub_breadcrumb">
-    <p:menuitem value="Activity Dashboard" url="admin/statistics.jsf#"/>
+    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
+    <p:menuitem value="#{msg.activity_dashboard}" url=""/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -25,93 +26,78 @@
             </ui:decorate>
         </p:outputPanel>
 
-        <div class="p-col-9 no-padding">
-            <h:form>
-                <div id="grouped_activities" class="p-col-12">
+        <h:form>
+            <div id="grouped_activities">
+                <p:selectManyCheckbox layout="responsive" columns="3" value="#{activityDashboardBean.selectedActionItems}" var="action">
+                    <p:ajax event="valueChange" global="false" process="@this"/>
 
-                    <p:selectManyCheckbox id="grid1" widgetVar="grid1"
-                                          value="#{activityDashboardBean.selectedActionItems}"
-                                          layout="responsive" columns="3"
-                                          var="action" itemLabel="#{action}" itemValue="#{action}"
-                                          onchange="unselectAllCheckBoxes(PF('grid2'))">
-                        <f:selectItems
-                                value="#{activityDashboardBean.actions.keySet()}"
-                                var="action" itemLabel="#{action}" itemValue="#{action}"/>
-                        <p:ajax event="valueChange" global="false" process="@this"/>
-                    </p:selectManyCheckbox>
+                    <f:selectItems value="#{activityDashboardBean.actions.keySet()}" var="action" itemLabel="#{action}" itemValue="#{action}"/>
+                </p:selectManyCheckbox>
+            </div>
 
-                </div>
+            <div id="advanced_options" class="py-1">
+                <a href="#"><h:outputText value="Advanced options"/> <i class="fa fa-fw fa-angle-double-up"/></a>
+            </div>
 
-                <div class="p-col-4 no-padding-bottom">
-                    <div id="advanced_options" class="py-1">
-                        <a href="#"><h:outputText value="Advanced options"/> <i class="fa fa-fw fa-angle-double-up"/></a>
-                    </div>
-                </div>
-                <div id="all_activities" class="p-col-12 collapse">
-                    <p:selectManyCheckbox id="grid2" widgetVar="grid2"
-                                          value="#{activityDashboardBean.selectedGroupedActions}"
-                                          layout="responsive" columns="3"
-                                          onchange="unselectAllCheckBoxes(PF('grid1'))">
-                        <p:ajax event="valueChange" global="false" process="@this"/>
-                        <f:selectItems value="#{activityDashboardBean.groupedActions}"
-                                       var="groupedAction" itemLabel="#{groupedAction}"
-                                       itemValue="#{groupedAction}"/>
-                    </p:selectManyCheckbox>
+            <div id="all_activities" class="collapse">
+                <p:selectManyCheckbox layout="responsive" columns="3" value="#{activityDashboardBean.selectedGroupedActions}">
+                    <p:ajax event="valueChange" global="false" process="@this"/>
 
-                </div>
-            </h:form>
-        </div>
+                    <f:selectItems value="#{activityDashboardBean.groupedActions}" var="groupedAction" itemLabel="#{groupedAction}" itemValue="#{groupedAction}"/>
+                </p:selectManyCheckbox>
+            </div>
+        </h:form>
     </p:panel>
-
 
     <h:panelGroup id="content">
         <p:outputPanel id="activityPanel" styleClass="dashboard">
-            <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="Activities">
-                <f:facet name="actions">
-                    <p:button id="interactions"
-                              styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                              icon="ui-icon-help" onclick="return false;"/>
-                    <p:tooltip for="interactions"
-                               value="Number of selected activities (of all selected users) per day"/>
-                </f:facet>
-                <p:chart type="line"
-                         model="#{activityDashboardBean.interactionsChart}"
-                         style="height:300px;" responsive="true"/>
-            </p:panel>
-
-            <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
-                <f:facet name="header">Activities Table</f:facet>
-                <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                    <h:outputText value="#{row[key]}"/>
-                </p:columns>
-            </p:dataTable>
+            <div class="row my-3">
+                <div class="col">
+                    <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="Activities">
+                        <f:facet name="actions">
+                            <p:button id="interactions"
+                                      styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                                      icon="ui-icon-help" onclick="return false;"/>
+                            <p:tooltip for="interactions"
+                                       value="Number of selected activities (of all selected users) per day"/>
+                        </f:facet>
+                        <p:lineChart model="#{activityDashboardBean.interactionsChart}"
+                                 style="height:300px;" responsive="true"/>
+                    </p:panel>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
+                        <f:facet name="header">Activities Table</f:facet>
+                        <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
+                            <h:outputText value="#{row[key]}"/>
+                        </p:columns>
+                    </p:dataTable>
+                </div>
+            </div>
         </p:outputPanel>
     </h:panelGroup>
 
     <script type="text/javascript">
-        var $allActivities = $('#all_activities');
-        var $groupedActivities = $('#grouped_activities');
+        var allActivities = $('#all_activities');
+        var groupedActivities = $('#grouped_activities');
 
         $('#advanced_options').on('click', function (e) {
             $(this).find('i').toggleClass('fa-angle-double-down');
 
-            $groupedActivities.stop(true).slideToggle(200);
-            if ($groupedActivities.is(':visible')) {
-                $groupedActivities.find('div.ui-chkbox-box').removeClass('ui-state-active')
-                    .find('span.ui-chkbox-icon').removeClass('ui-icon-check').addClass('ui-icon-blank');
-            }
-
-            $allActivities.stop(true).slideToggle(200);
-            if ($allActivities.is(':visible')) {
-                $allActivities.find('div.ui-chkbox-box').removeClass('ui-state-active')
-                    .find('span.ui-chkbox-icon').removeClass('ui-icon-check').addClass('ui-icon-blank');
-            }
+            allActivities.stop(true).slideToggle(200);
+            groupedActivities.stop(true).slideToggle(200);
+            unselectAllCheckBoxes(groupedActivities.is(':visible') ? groupedActivities : allActivities);
 
             e.preventDefault();
         });
 
         function unselectAllCheckBoxes(manyCheckBoxes) {
-            manyCheckBoxes.inputs.each(function () {
+            manyCheckBoxes.find('div.ui-chkbox-box').removeClass('ui-state-active')
+                .find('span.ui-chkbox-icon').removeClass('ui-icon-check').addClass('ui-icon-blank');
+
+            manyCheckBoxes.find('input').each(function () {
                 $(this).prop('checked', false);
             });
         }

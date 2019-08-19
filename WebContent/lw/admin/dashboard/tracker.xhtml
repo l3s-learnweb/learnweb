@@ -1,0 +1,88 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+<ui:define name="metadata">
+    <f:metadata>
+        <f:viewParam name="userId" value="#{trackerDashboardBean.paramUserId}"/>
+        <f:viewAction action="#{trackerDashboardBean.onLoad}"/>
+    </f:metadata>
+</ui:define>
+
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.dashboard}"/>
+<ui:param name="center_pane_styles" value="border: none;background-color: transparent;"/>
+<ui:define name="sub_breadcrumb">
+    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
+    <p:menuitem value="#{msg.tracker_dashboard}" url=""/>
+</ui:define>
+
+<ui:define name="center_layout" >
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
+
+    <p:panel header="#{msg.users_activities}" styleClass="mb-3">
+        <ui:decorate template="templates/setSelectedUsers.xhtml">
+            <ui:param name="cbean" value="#{trackerDashboardBean}"/>
+        </ui:decorate>
+    </p:panel>
+
+    <h:panelGroup id="content" layout="block">
+        <ui:fragment rendered="#{not empty trackerDashboardBean.selectedUsersIds}">
+            <p:panel id="table_sources_list" header="#{msg.users_proxy_sources_list}" widgetVar="panel" stickyHeader="true"
+                     rendered="#{trackerDashboardBean.usersProxySourcesList != null}">
+                <f:facet name="actions">
+                    <p:button id="sourcesListTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
+                              icon="ui-icon-help" onclick="return false;"/>
+                    <p:tooltip for="sourcesListTable" value="The ratio between how many times user visited the web page"/>
+                </f:facet>
+
+                <h:form>
+                    <p:dataTable var="pll" value="#{trackerDashboardBean.usersProxySourcesList}" styleClass="countries_list">
+                        <p:column headerText="#{msg.website}">
+                            <h:outputText value="#{pll.key}"/>
+                        </p:column>
+
+                        <p:column headerText="#{msg.occurrences}">
+                            <h:outputText value="#{pll.value}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:panel>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p:dataTable tableStyleClass="optimized-table" value="#{trackerDashboardBean.trackerStatistics}"
+                                 var="ts" styleClass="table-responsive my-2"
+                                 emptyMessage="Nothing was found for the user(s) in the date range that you selected.">
+
+                    <f:facet name="header">
+                        #{msg.data}
+                    </f:facet>
+
+                    <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.username}">
+                        <a href="admin/dashboard/tracker.jsf?userId=#{ts.userId}"> #{ts.user.username}</a>
+                    </p:column>
+                    <p:column styleClass="ui-column-title" headerText="#{msg.total_events}" sortBy="#{ts.totalEvents}" sortable="true">
+                        #{ts.totalEvents}
+                    </p:column>
+                    <p:column styleClass="ui-column-title" headerText="#{msg.time_stay}" sortBy="#{ts.timeStayFormatted}" sortable="true">
+                        #{ts.timeStayFormatted}
+                    </p:column>
+                    <p:column styleClass="ui-column-title" headerText="#{msg.time_active}" sortBy="#{ts.timeActiveFormatted}" sortable="true">
+                        #{ts.timeActiveFormatted}
+                    </p:column>
+                    <p:column styleClass="ui-column-title" headerText="#{msg.clicks}" sortBy="#{ts.clicks}" sortable="true">
+                        #{ts.clicks}
+                    </p:column>
+                    <p:column styleClass="ui-column-title" headerText="#{msg.keypresses}" sortBy="#{ts.keyPresses}" sortable="true">
+                        #{ts.keyPresses}
+                    </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </ui:fragment>
+    </h:panelGroup>
+</ui:define>
+</ui:composition>

@@ -16,13 +16,13 @@ import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.inject.Named;
 
-import org.primefaces.model.chart.LineChartModel;
+import de.l3s.util.Misc;
+import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.learnweb.dashboard.activity.ActivityDashboardChartsFactory.ActivityGraphData;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
-import de.l3s.learnweb.user.User;
 
 @Named
 @SessionScoped
@@ -30,19 +30,15 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 {
     private static final long serialVersionUID = 3326736281893564706L;
 
-    private ActivityDashboardManager activityDashboardManager;
+    private ActivityDashboardManager dashboardManager;
 
     private Map<String, String> actions;
-    private List<String> selectedActionItems;
     private List<SelectItemGroup> groupedActions;
+    private List<String> selectedActionItems;
     private List<Integer> selectedGroupedActions;
 
     private transient LineChartModel interactionsChart = null;
     private transient List<Map<String, Object>> interactionsTable = null;
-
-    public ActivityDashboardBean()
-    {
-    }
 
     @PostConstruct
     public void init()
@@ -61,11 +57,6 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         groupedActions.add(createGroupCheckboxes("Login/Logout actions", Action.getActionsByCategory(ActionCategory.USER)));
         groupedActions.add(createGroupCheckboxes("Search actions", Action.getActionsByCategory(ActionCategory.SEARCH)));
         groupedActions.add(createGroupCheckboxes("Group actions", Action.getActionsByCategory(ActionCategory.GROUP)));
-    }
-
-    public void onGroupedActivitiesClick()
-    {
-        selectedGroupedActions = null;
     }
 
     private SelectItemGroup createGroupCheckboxes(String name, Set<Action> actions)
@@ -94,7 +85,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
         try
         {
-            activityDashboardManager = new ActivityDashboardManager();
+            dashboardManager = new ActivityDashboardManager();
             cleanAndUpdateStoredData();
         }
         catch(SQLException e)
@@ -108,49 +99,39 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         interactionsChart = null;
         interactionsTable = null;
 
-        if(getSelectedUsersIds() != null && getSelectedUsersIds().size() != 0)
-        {
-            fetchDataFromManager();
-        }
+        fetchDataFromManager();
     }
 
     private void fetchDataFromManager() throws SQLException
     {
-        List<Integer> selectedUsersIds = getSelectedUsersIds();
-        if(selectedActionItems != null)
-        {
-            List<ActivityGraphData> data = new ArrayList<>();
-            for(String activityGroupName : selectedActionItems)
+        if(!Misc.nullOrEmpty(getSelectedUsersIds())) {
+            List<Integer> selectedUsersIds = getSelectedUsersIds();
+            if(selectedActionItems != null)
             {
-                ActivityGraphData activityData = new ActivityGraphData();
-                activityData.setName(activityGroupName);
-                activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
-                data.add(activityData);
+                List<ActivityGraphData> data = new ArrayList<>();
+                for(String activityGroupName : selectedActionItems)
+                {
+                    ActivityGraphData activityData = new ActivityGraphData();
+                    activityData.setName(activityGroupName);
+                    activityData.setActionsPerDay(dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, actions.get(activityGroupName)));
+                    data.add(activityData);
+                }
+                interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+                interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
             }
-            interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
-            interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
-        }
-        else if(selectedGroupedActions != null)
-        {
-            List<ActivityGraphData> data = new ArrayList<>();
-            for(Integer activityGroupName : selectedGroupedActions)
+            else if(selectedGroupedActions != null)
             {
-                ActivityGraphData activityData = new ActivityGraphData();
-                activityData.setName(Action.values()[activityGroupName].name());
-                activityData.setActionsPerDay(activityDashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
-                data.add(activityData);
+                List<ActivityGraphData> data = new ArrayList<>();
+                for(Integer activityGroupName : selectedGroupedActions)
+                {
+                    ActivityGraphData activityData = new ActivityGraphData();
+                    activityData.setName(Action.values()[activityGroupName].name());
+                    activityData.setActionsPerDay(dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate, activityGroupName.toString()));
+                    data.add(activityData);
+                }
+                interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
+                interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
             }
-            interactionsChart = ActivityDashboardChartsFactory.createActivitiesChart(data, startDate, endDate);
-            interactionsTable = ActivityDashboardChartsFactory.createActivitiesTable(data, startDate, endDate);
-        }
-    }
-
-    @Override
-    public void onSubmitSelectedUsers() throws SQLException
-    {
-        if(getSelectedUsersIds() != null)
-        {
-            cleanAndUpdateStoredData();
         }
     }
 
@@ -181,11 +162,6 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         return selectedActionItems;
     }
 
-    public void setSelectedActionItems(List<String> selectedActionItems)
-    {
-        this.selectedActionItems = selectedActionItems;
-    }
-
     public List<SelectItemGroup> getGroupedActions()
     {
         return groupedActions;
@@ -196,6 +172,12 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         this.groupedActions = groupedActions;
     }
 
+    public void setSelectedActionItems(List<String> selectedActionItems)
+    {
+        this.selectedGroupedActions = null;
+        this.selectedActionItems = selectedActionItems;
+    }
+
     public List<Integer> getSelectedGroupedActions()
     {
         return selectedGroupedActions;
@@ -203,6 +185,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     public void setSelectedGroupedActions(List<Integer> selectedGroupedActions)
     {
+        this.selectedActionItems = null;
         this.selectedGroupedActions = selectedGroupedActions;
     }
 
