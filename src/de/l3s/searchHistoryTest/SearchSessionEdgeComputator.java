@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,6 @@ public class SearchSessionEdgeComputator
 
     private static SearchSessionEdgeComputator instance = null;
 
-    private final String wikipediaSolrUrl;
     private final HttpSolrClient wikipediaSolrClient;
 
     private Learnweb learnweb;
@@ -34,7 +31,7 @@ public class SearchSessionEdgeComputator
     private SearchSessionEdgeComputator(Learnweb learnweb)
     {
         instance = this;
-        this.wikipediaSolrUrl = learnweb.getProperties().getProperty("WIKIPEDIA_SOLR_URL");
+        String wikipediaSolrUrl = learnweb.getProperties().getProperty("WIKIPEDIA_SOLR_URL");
         this.wikipediaSolrClient = new HttpSolrClient.Builder(wikipediaSolrUrl).build();
         this.learnweb = learnweb;
     }
@@ -47,7 +44,7 @@ public class SearchSessionEdgeComputator
         return instance;
     }
 
-    public HttpSolrClient getWikipediaSolrClient()
+    private HttpSolrClient getWikipediaSolrClient()
     {
         return wikipediaSolrClient;
     }
