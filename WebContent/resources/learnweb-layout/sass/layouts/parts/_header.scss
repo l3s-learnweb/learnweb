@@ -29,6 +29,7 @@ $topbar-button-padding: 1rem;
 
     .menu-button {
       padding: 0;
+      flex-shrink: 0;
       width: $topbar-button-size + $topbar-button-padding * 2;
     }
 
