@@ -7,9 +7,9 @@
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
     <div class="container">
-    <div class="row text-center text-lg-left">
+    <div id="image-container" class="row text-center text-lg-left">
         <p:repeat var="res" value="#{resources}">
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div id="resource_${res.tempId}" class="col-lg-3 col-md-4 col-sm-6 col-xs-12 resource">
                 <div class="d-block mb-4 h-100 img-container">
                     <div class="content">
                             <div class="content-overlay"></div>

@@ -35,30 +35,30 @@
 
             <h:form >
                 <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" numVisible="2" styleClass="ui-carousel-light" style="border-radius: 1rem;"  circular="true"  var="gr">
-                            <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
-                                <f:param name="service" value="#{gr.groupAlias}"/>
-                                <f:param name="action" value="#{searchBean.searchMode}"/>
-                                <f:param name="query" value="#{searchBean.query}"/>
-
-                                <div class="group-menu-title font-weight-bold">
-                                    <h:outputFormat value="#{msg.search_groups_title}" escape="false">
-                                        <f:param value="#{gr.groupName}"/>
-                                        <f:param value="#{gr.totalResources}"/>
-                                    </h:outputFormat>
-                                </div>
+                                <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
+                                    <f:param name="service" value="#{gr.groupAlias}"/>
+                                    <f:param name="action" value="#{searchBean.searchMode}"/>
+                                    <f:param name="query" value="#{searchBean.query}"/>
+                                            <div class="group-menu-title font-weight-bold">
+                                                <h:outputFormat value="#{msg.search_groups_title}" escape="false">
+                                                    <f:param value="#{gr.groupName}"/>
+                                                    <f:param value="#{gr.totalResources}"/>
+                                                </h:outputFormat>
+                                            </div>
+                                </h:link>
                                 <div>
                                     <h:panelGroup  layout="block" styleClass="d-flex flex-wrap align-items-start" rendered="#{searchBean.searchMode == 'text'}">
                                         <p:repeat value="#{gr.resources}" var="res">
                                             <div>
                                                 <div>
                                                     <h:outputLink class="resourceWebLink" target="_blank" value="#{res.id != -1 ? res.learnwebUrl : res.url}">
-                                                        <h:outputText value="#{res.title}" escape="false"/>
+                                                        <h:outputText value="#{res.title}"  escape="false"/>
                                                     </h:outputLink>
                                                 </div>
                                                 <div>
-                                                        <h:outputText value="#{res.url}" escape="false"/>
+                                                    <h:outputText value="#{res.url}" style="font-size: 0.8rem;" escape="false"/>
                                                 </div>
-                                                <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
+                                                <h:outputText value="#{res.snippet}" style="font-size: 0.8rem;" escape="false"></h:outputText>
                                             </div>
                                         </p:repeat>
                                     </h:panelGroup>
@@ -68,7 +68,7 @@
                                         </p:repeat>
                                     </h:panelGroup>
                                 </div>
-                            </h:link>
+
             </p:carousel>
             </h:form>
 

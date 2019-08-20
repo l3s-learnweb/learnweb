@@ -234,7 +234,7 @@ function loadNextPage()
 
 function displayNextPage(xhr, status, args)
 {
-	var results = $('#new_results > div > div');  // this can include additional html like the "Page x:" on textsearch
+	var results = $('#new_results > div > div > div > div');  // this can include additional html like the "Page x:" on textsearch
 	var resources = results.filter('.resource');
 
 	$('#search_loading_more_results').hide();
@@ -243,7 +243,6 @@ function displayNextPage(xhr, status, args)
 	{
 		if(status !== "success")
 			console.log('fehler', status);
-
 		if($('#results .resource').length > 0)
 			$('#search_no_more_results').show();
 		else
@@ -253,7 +252,7 @@ function displayNextPage(xhr, status, args)
 		return;
 	}
 
-	$('#results > .resources').append(results);
+	$('#image-container').append(results);
 
 	prepareResources(resources);
 
@@ -267,13 +266,8 @@ function displayNextPage(xhr, status, args)
 
 function testIfResultsFillPage()
 {
-	var contentAreaHeight = $( window ).height() - $('#header').height();
-
-	//console.log($(window).scrollTop() , $(document).first().scrollTop() ,  $('#results').height() , $('#header').height(), $( window ).height(), contentAreaHeight);
-
-	// if results don't fill the page -> load more results
-	if($(document).scrollTop() > $('#results').height() - contentAreaHeight*1.5 - loadAheadPx)
-    {
+	if($(window).scrollTop() + $(window).height() > $(document).height() - 100)
+	{
 		loadNextPage();
     }
 

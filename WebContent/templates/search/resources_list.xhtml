@@ -13,12 +13,12 @@
     <div class="resource m-2 border-bottom" id="resource_${res.tempId}">
         <div>
             <div>
-                <h:outputLink class="resourceWebLink" target="_blank" value="#{res.urlProxied}">
+                <h:outputLink styleClass="resourceWebLink" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
                     <h:outputText value="#{res.title}" escape="false"/>
                 </h:outputLink>
             </div>
             <div>
-                <h:outputLink class="resourceReferenceUrl" value="#{res.id != -1 ? res.learnwebUrl : res.url}" target="_blank">#{res.url}</h:outputLink>
+                <h:outputLink styleClass="resourceWebLink" value="#{res.id != -1 ? res.learnwebUrl : res.url}" target="_blank">#{res.id != -1 ? res.learnwebUrl : res.url}</h:outputLink>
                 <ui:fragment rendered="${res.archived}">
                     <div>#{msg['Archive.captured_between']}
                         <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
