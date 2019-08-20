@@ -15,7 +15,7 @@ public class LearnwebMenu extends AbstractMenu implements Widget
 
     public static final String CONTAINER_CLASS = "ui-lwmenu ui-widget";
 
-    public static final String PANEL_CLASS = "ui-lwmenu-panel";
+    public static final String PANEL_CLASS = "ui-lwmenu-panel ui-menu-parent";
     public static final String PANEL_HEADER_CLASS = "ui-menuitem-link ui-lwmenu-panel-header";
     public static final String PANEL_HEADER_ICON_CLASS = "ui-menuitem-icon fa fa-fw fa-angle-right";
     public static final String PANEL_HEADER_TEXT_CLASS = "ui-menuitem-text";

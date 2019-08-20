@@ -93,6 +93,10 @@ body {
 
       .ui-lwmenu-panel-content {
         display: block;
+
+        .ui-menu-list {
+          margin-left: 0;
+        }
       }
     }
   }

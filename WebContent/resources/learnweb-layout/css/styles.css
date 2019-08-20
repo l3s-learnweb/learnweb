@@ -6021,6 +6021,7 @@ body .ui-inputfield {
   transition: border-color 0.2s, box-shadow 0.2s;
   border-radius: 0;
   font-size: 0.875rem;
+  line-height: normal;
 }
 @media (prefers-reduced-motion: reduce) {
   body .ui-inputfield {
@@ -6271,7 +6272,6 @@ body .ui-chkbox .ui-chkbox-box {
   height: 20px;
   line-height: 20px;
   text-align: center;
-  box-sizing: border-box;
   transition: border-color 0.2s, background-color 0.2s;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -6320,7 +6320,6 @@ body .ui-radiobutton .ui-radiobutton-box {
   height: 20px;
   line-height: 20px;
   text-align: center;
-  box-sizing: border-box;
   border-radius: 50%;
   transition: border-color 0.2s;
 }
@@ -6759,7 +6758,6 @@ body .ui-selectlistbox-filter-container {
 }
 body .ui-selectlistbox-filter-container .ui-selectlistbox-filter {
   width: 100%;
-  box-sizing: border-box;
 }
 body .ui-selectlistbox-filter-container .ui-icon {
   top: 10px;
@@ -6871,7 +6869,6 @@ body .ui-spinner .ui-spinner-button {
 body .ui-spinner .ui-spinner-button .ui-button-text {
   height: 100%;
   display: block;
-  box-sizing: border-box;
   position: relative;
 }
 body .ui-spinner .ui-spinner-button .ui-button-text .ui-icon {
@@ -7347,7 +7344,8 @@ body .ui-panel {
 }
 body .ui-panel .ui-panel-titlebar {
   border: 0 none;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+  line-height: 2;
   font-weight: 700;
   font-size: 0.875rem;
   border-top-left-radius: 0;
@@ -7498,7 +7496,6 @@ body .ui-tabs.ui-tabs-bottom .ui-tabs-nav li, body .ui-tabs.ui-tabs-left .ui-tab
   position: relative;
   transition: background-color 0.2s;
   border-radius: 0;
-  box-sizing: border-box;
   margin: 0;
   border: 1px solid #ced4da;
   border-right: 0 none;
@@ -7777,7 +7774,8 @@ body .ui-paginator.ui-paginator-bottom .ui-paginator-page.ui-state-active {
 }
 body .ui-datatable .ui-datatable-footer,
 body .ui-datatable .ui-datatable-header {
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+  line-height: 2;
   text-align: left;
   font-weight: 700;
   font-size: 0.875rem;
@@ -8494,7 +8492,6 @@ body .ui-treetable .ui-treetable-scrollable-body::-webkit-scrollbar {
 body .ui-tree {
   padding: 6px 12px;
   color: #6c757d;
-  box-sizing: border-box;
 }
 body .ui-tree .ui-treenode {
   padding: 2px 0;
@@ -9296,7 +9293,6 @@ body .ui-steps .ui-steps-item {
   background-color: #e7f4e4;
   color: #378D4F;
   border-top: 4px solid #378D4F;
-  box-sizing: border-box;
   opacity: 1;
 }
 body .ui-steps .ui-steps-item .ui-steps-number {
@@ -9342,7 +9338,6 @@ body .ui-menu .ui-menu-list .ui-widget-header {
   width: 100%;
   float: none;
   background-color: #4b6cb7;
-  box-sizing: border-box;
   border-radius: 0;
   transition: background-color 0.3s;
 }
@@ -9410,7 +9405,6 @@ body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link {
   border-left: 4px solid transparent;
   font-weight: 400;
   color: #212529;
-  box-sizing: border-box;
   border-radius: 0;
 }
 body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link.ui-state-hover {
@@ -10078,7 +10072,6 @@ body .moderator-btn.ui-state-hover, body .moderator-btn.ui-state-active, body .m
   left: 0;
   height: 100%;
   padding-top: 3.125rem;
-  box-sizing: border-box;
   transition: all 0.2s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -10247,7 +10240,6 @@ body,
 .dashboard .overview-box.monthly-sales {
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
   position: relative;
   padding: 10px 10px 10px 20px;
   background: #9f4488;
@@ -10257,7 +10249,6 @@ body,
 .dashboard .overview-box.monthly-views {
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
   position: relative;
   padding: 10px 10px 10px 20px;
   background: #00bfe7;
@@ -10267,7 +10258,6 @@ body,
 .dashboard .overview-box.monthly-users {
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
   position: relative;
   padding: 10px 10px 10px 20px;
   background: #00a6d2;
@@ -10283,7 +10273,6 @@ body,
   border-right: solid 1px #ced4da;
   border-left: solid 1px #ced4da;
   text-align: center;
-  box-sizing: border-box;
 }
 .dashboard .stats .stats-icon {
   display: inline-block;
@@ -10473,7 +10462,6 @@ body,
 .dashboard .chat ul li .message-meta {
   font-size: inherit;
   width: 160px;
-  box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
   padding: 0.5rem;
@@ -10493,7 +10481,6 @@ body,
 }
 .dashboard .chat ul li .message {
   font-size: inherit;
-  box-sizing: border-box;
   width: calc(100% - 160px);
   padding: 12px;
   background-color: #e9ecef;
@@ -10528,7 +10515,6 @@ body,
   margin-top: -14px;
 }
 .dashboard .chat .write-message input {
-  box-sizing: border-box;
   border: 0 none;
   width: 100%;
   height: 40px;
@@ -10859,6 +10845,9 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
 .ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-content {
   display: block;
 }
+.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-content .ui-menu-list {
+  margin-left: 0;
+}
 .ui-lwmenu > .ui-menu-parent > .ui-menu-list > .ui-menu-parent.ui-state-expand {
   background: #dde3f1;
   border-left-color: #4b6cb7;
@@ -10934,12 +10923,6 @@ body .ui-blockui-content {
 }
 body .ui-widget-danger .ui-widget-header {
   background-color: #cd2026;
-}
-body .ui-panel.ui-panel-header-btn .ui-panel-titlebar {
-  padding: 0.25rem 1rem;
-}
-body .ui-panel.ui-panel-header-btn .ui-panel-title {
-  line-height: 2;
 }
 body .ui-carousel.ui-carousel-light {
   border: 0;
@@ -11046,7 +11029,6 @@ img.res-image-simple {
   max-width: 100%;
   border-radius: 0.2rem;
   animation: fadein 0.2s;
-  box-sizing: border-box;
   border: 1px solid #ced4da;
   transition: max-height 0.2s ease, max-width 0.2s ease;
   transform-origin: center;
@@ -11410,7 +11392,6 @@ ul.res-filters .clear-filters:hover a {
   height: auto !important;
   overflow-y: auto;
   padding: 8px 0;
-  box-sizing: border-box;
   border: 1px solid transparent;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   z-index: 2300;
@@ -11477,7 +11458,6 @@ ul.res-filters .clear-filters:hover a {
 .la-pacman,
 .la-pacman > div {
   position: relative;
-  box-sizing: border-box;
 }
 .la-pacman > div {
   display: inline-block;
@@ -12087,7 +12067,6 @@ ul.res-filters .clear-filters:hover a {
   /* Style northward tooltips differently */
 }
 .section-entity-relationship .d3-tip:after {
-  box-sizing: border-box;
   display: inline;
   font-size: 10px;
   width: 100%;
@@ -12518,7 +12497,6 @@ ul.res-filters .clear-filters:hover a {
   width: 75%;
   display: block;
   padding: 15px;
-  box-sizing: border-box;
   transition: 0.2s;
   margin: auto;
 }
@@ -12534,7 +12512,6 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-resource-transcript .embedded {
   width: 49%;
-  box-sizing: border-box;
   position: fixed;
   float: left;
   height: 100%;
@@ -12545,7 +12522,6 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-resource-transcript .embedded iframe {
   border: 10px solid white;
-  box-sizing: border-box;
 }
 .section-resource-transcript .highlight {
   background-color: yellow;
@@ -12653,7 +12629,6 @@ ul.res-filters .clear-filters:hover a {
   float: right;
   width: 83%;
   height: 100%;
-  box-sizing: border-box;
   background-color: #fff !important;
   position: relative;
 }
@@ -13035,12 +13010,6 @@ ul.res-filters .clear-filters:hover a {
   color: #000;
   display: inline-block;
   padding: 0.4rem 1.4rem 0.3rem;
-}
-.section-search .resourceWebLink {
-  font-size: 1.2rem;
-}
-.section-search .resourceWebLink:link {
-  font-size: 1.2rem;
 }
 .section-search .resourceWebLink:visited {
   color: #112e51;

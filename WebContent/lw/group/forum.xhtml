@@ -22,7 +22,7 @@
 </ui:define>
 
 <ui:define name="group_layout">
-	<p:panel header="#{msg.forum}" styleClass="ui-panel-header-btn">
+	<p:panel header="#{msg.forum}">
 		<f:facet name="actions">
 			<h:form id="center_header_form" styleClass="col mb-2 mx-1 py-1">
 				<p:commandButton value="#{msg['ForumIndex.new_topic']}" rendered="${forumTopicsBean.group.isMember(userBean.user)}" styleClass="secondary-btn"/>

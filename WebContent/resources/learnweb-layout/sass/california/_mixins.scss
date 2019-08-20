@@ -90,7 +90,7 @@
 @mixin border-box() {
     //-webkit-box-sizing: border-box;
     //-moz-box-sizing: border-box;
-    box-sizing: border-box;
+    //box-sizing: border-box; // reboot.scss applies this to all elements by default
 }
 
 @mixin list-item-hover {

@@ -62,7 +62,7 @@
                          update=":right_pane :resourcesView :growl" oncomplete="resourceDND();PF('learnweb').showRightPane();"/>
     </h:form>
 
-    <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 ui-panel-header-btn section-resources">
+    <p:panel header="Resources" styleClass="mb-3 ui-widget-content-p-0 section-resources">
         <f:facet name="actions">
             <h:form>
                 <p:commandButton rendered="#{true or groupResourcesBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}"

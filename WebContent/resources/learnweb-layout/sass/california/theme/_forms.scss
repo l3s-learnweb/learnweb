@@ -6,6 +6,7 @@ body {
         @include transition(border-color $transition-duration,box-shadow $transition-duration);
         @include border-radius($border-radius);
         font-size: $font-size-base;
+        line-height: normal;
 
         &.ui-state-hover {
             border: 1px solid $inputHoverBorderColor;
@@ -315,7 +316,7 @@ body {
             background-color: $inputBgColor;
             width: 20px;
             height: 20px;
-            line-height: 20px;
+            line-height: 18px;
             text-align: center;
             @include border-box();
             @include transition(border-color $transition-duration,background-color $transition-duration);
@@ -368,7 +369,7 @@ body {
             background-color: $inputBgColor;
             width: 20px;
             height: 20px;
-            line-height: 20px;
+            line-height: 18px;
             text-align: center;
             @include border-box();
             @include border-radius(50%);

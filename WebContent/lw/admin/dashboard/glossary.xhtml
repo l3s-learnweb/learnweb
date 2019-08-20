@@ -172,10 +172,13 @@
                                  emptyMessage="Nothing was found for the users in the date range that you selected.">
 
                         <f:facet name="header">
-                            Fields
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="The number of fields that were filled in by users.
-                         We started to record the 'was pasted' flag on 5.11.2018."/>
+                            <div class="ui-helper-clearfix">
+                                Fields
+                                <div class="float-right">
+                                    <p:button icon="ui-icon-help" onclick="return false;"/>
+                                    <p:tooltip for="@previous" value="The number of fields that were filled in by users. We started to record the 'was pasted' flag on 5.11.2018."/>
+                                </div>
+                            </div>
                         </f:facet>
 
                         <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"

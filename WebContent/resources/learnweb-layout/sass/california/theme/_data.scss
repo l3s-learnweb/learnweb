@@ -82,7 +82,8 @@ body {
     .ui-datatable {
         .ui-datatable-footer,
         .ui-datatable-header {
-            padding: $headerPadding;
+            padding: $headerPaddingReduced;
+            line-height: 2;
             text-align: left;
             font-weight: 700;
             font-size: $font-size-base;

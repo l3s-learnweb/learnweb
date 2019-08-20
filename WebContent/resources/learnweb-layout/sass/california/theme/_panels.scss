@@ -5,7 +5,8 @@ body {
         padding: 0;
         .ui-panel-titlebar {
             border: 0 none;
-            padding: $headerPadding;
+            padding: $headerPaddingReduced;
+            line-height: 2;
             font-weight: 700;
             font-size: $headerFontSize;
             @include border-radius-top($border-radius);

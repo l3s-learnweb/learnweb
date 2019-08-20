@@ -109,7 +109,6 @@
     width: 75%;
     display: block;
     padding: 15px;
-    box-sizing: border-box;
     transition: $transition-duration;
     margin: auto;
   }
@@ -129,7 +128,6 @@
 
   .embedded {
     width: 49%;
-    box-sizing: border-box;
     position: fixed;
     float:left;
     height: 100%;
@@ -140,7 +138,6 @@
   }
   .embedded iframe {
     border:10px solid white;
-    box-sizing: border-box;
   }
 
   .highlight {
