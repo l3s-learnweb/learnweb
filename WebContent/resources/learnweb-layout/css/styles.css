@@ -9889,22 +9889,6 @@ body .ui-log .ui-log-content {
   font-weight: bold;
 }
 
-.primary-border-bottom {
-  border-bottom: 1px solid #4b6cb7;
-}
-
-.primary-border-top {
-  border-top: 1px solid #4b6cb7;
-}
-
-.primary-border-left {
-  border-left: 1px solid #4b6cb7;
-}
-
-.primary-border-right {
-  border-right: 1px solid #4b6cb7;
-}
-
 body .moderator-btn {
   background-color: #1D4350;
   background-image: linear-gradient(to right, #1D4350 0%, #A43931 51%, #1D4350 100%);
@@ -10198,6 +10182,20 @@ body,
 }
 .fileupload-minimal .ui-fileupload-content {
   display: none;
+}
+
+.moderator-button-outline {
+  color: #4b6cb7 !important;
+  border: 1px solid #4b6cb7 !important;
+  background: #fff !important;
+}
+.moderator-button-outline:hover {
+  color: #38569C !important;
+  border: 1px solid #38569C !important;
+  background: #fff !important;
+}
+.moderator-button-outline:hover .ui-button-icon-left {
+  color: #38569C;
 }
 
 /*Overview*/

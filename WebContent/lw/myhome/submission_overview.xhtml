@@ -62,8 +62,6 @@
 
 
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
-				<f:attribute name="contentSwatch" value="e" />
-
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -126,8 +124,6 @@
 			</p:dialog>
 
 			<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" responsive="true" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
-				<f:attribute name="contentSwatch" value="e" />
-
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -192,12 +188,10 @@
 
 			<p:panel header="Submissions">
 				<h:form prependId="false" styleClass="mb-3" >
-					<p:commandButton value="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+					<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-                   <!-- <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
                     <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button-outline" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/> -->
+                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
 				</h:form>
 
 				<p:accordionPanel id="submissions">

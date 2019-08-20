@@ -151,7 +151,7 @@
 					<p:column>
 						<h:outputLink value="survey/survey.jsf">
 							<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />
-							<h:outputText value="#{msg.my}" />
+							<h:outputText value="My" />
 						</h:outputLink>
 
 						<h:outputText value=" #{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
@@ -166,8 +166,8 @@
 									<f:param name="user_id" value="#{user.id}" />
 									<h:outputText value="#{user.realUsername}" />
 								</h:outputLink>
-								<h:outputText value="#{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"  />
-								<h:outputText value="#{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"  />
+								<h:outputText value=" #{msg.saved}" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"  />
+								<h:outputText value=" #{msg.submitted}" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"  />
 							</ui:fragment>
 						</p:repeat>
 					</p:column>

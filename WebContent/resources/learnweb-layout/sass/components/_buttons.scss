@@ -7,3 +7,18 @@
     display: none;
   }
 }
+
+.moderator-button-outline {
+  color: $themePrimaryColor !important;
+  border: 1px solid $themePrimaryColor!important;
+  background: $themeElementTextColor !important;
+  &:hover {
+    color: $themePrimaryColorDarker !important;
+    border: 1px solid $themePrimaryColorDarker!important;
+    background: $themeElementTextColor !important;
+
+    .ui-button-icon-left {
+      color: $themePrimaryColorDarker;
+    }
+  }
+}
