@@ -7,9 +7,9 @@
 <!--@elvariable id="submissions" type="java.util.List<de.l3s.learnweb.resource.submission.Submission>"-->
 
 	<ui:repeat var="submission" varStatus="status" value="#{submissions}">
-		<div class="shadow-sm #{status.first ? (status.last ? '' : 'mb-3') : status.last ? 'mt-3' : 'my-3' } ">
+		<div class="#{status.first ? (status.last ? '' : 'mb-5') : status.last ? 'mt-5' : 'my-5' }">
 			<div class="d-flex align-items-center p-2 bg-light">
-				<h3 class="mb-0">
+				<h3 class="mb-0 mr-1">
 					<b>#{submission.title}</b>
 				</h3>
 
@@ -32,43 +32,38 @@
 				</h:form>
 			</div>
 
-			<div class="p-2 mb-3 text-right border-bottom border-primary d-flex flex-sm-row flex-column justify-content-end my-2 my-sm-0">
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="border-right border-primary px-2 my-1 my-sm-0"
+			<div class="d-flex text-right flex-sm-row flex-column">
+				<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="mt-3 moderator-button" icon="fa fa fa-cog"
 							  rendered="#{submission.pastSubmission and (not userBean.moderator || submissionBean.submissionOverviewReadOnly)}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
-					#{msg['Submission.view_submission']}
-				</h:outputLink>
+				</p:button>
 
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="border-right border-primary px-2 my-1 my-sm-0"
+				<p:button outcome="submission_resources" value="#{msg['Submission.submit_resources']}" styleClass="mt-3 moderator-button" icon="fa fa fa-cog"
 							  rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
-					#{msg['Submission.submit_resources']}
-				</h:outputLink>
+				</p:button>
 
-				<h:outputLink  value="../templates/resources/survey.jsf" styleClass="border-right border-primary px-2 my-1 my-sm-0"
+				<p:button outcome="../survey/survey" value="Please submit the survey first" styleClass="mt-3 moderator-button2" icon="fa fa fa-cog"
 							   rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 					<f:param name="resource_id" value="#{submission.surveyResourceId}" />
-					<h:outputText class="survey_submit_message" value="Please submit the survey first"/>
-				</h:outputLink>
+				</p:button>
 
-				<h:outputLink value="myhome/submission_resources.jsf" styleClass="border-right border-primary px-2 my-1 my-sm-0"
+				<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="mt-3 moderator-button" icon="fa fa fa-cog"
 							  rendered="#{submission.currentSubmission and userBean.moderator and submissionBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submissionBean.userId}" />
-					#{msg['Submission.view_submission']}
-				</h:outputLink>
+				</p:button>
 
-				<h:outputLink value="myhome/submission_moderator.jsf" styleClass="border-right border-primary px-2 my-1 my-sm-0"
-							  rendered="#{userBean.moderator}">
+				<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="mt-3 moderator-button" icon="fa fa fa-cog"
+						  rendered="#{userBean.moderator}">
 					<f:param name="submission_id" value="#{submission.id}" />
-					#{msg['Submission.view_user_submissions']}
-				</h:outputLink>
+				</p:button>
 			</div>
 
-			<div class="p-2">
-				<div class="form-group">
+			<div class="p-1">
+				<div class="form-group mt-3">
 					<span class="font-weight-lighter">#{msg['Submission.open_date']}:
 						<h:outputText styleClass="font-weight-light" value="#{submission.openDatetime}">
 							<f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
@@ -86,7 +81,8 @@
 					</span>
 				</div>
 
-				<p class="font-weight-lighter">#{submission.description}</p>
+				<p class="font-weight-lighter mb-3">#{submission.description}</p>
+				<hr/>
 			</div>
 
 			<h:panelGroup layout="block" rendered="#{not empty submission.submittedResources}">

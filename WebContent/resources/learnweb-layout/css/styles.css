@@ -6270,7 +6270,7 @@ body .ui-chkbox .ui-chkbox-box {
   background-color: #fff;
   width: 20px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   text-align: center;
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -6318,7 +6318,7 @@ body .ui-radiobutton .ui-radiobutton-box {
   background-color: #fff;
   width: 20px;
   height: 20px;
-  line-height: 20px;
+  line-height: 18px;
   text-align: center;
   border-radius: 50%;
   transition: border-color 0.2s;
@@ -10177,18 +10177,27 @@ body,
   display: none;
 }
 
-.moderator-button-outline {
-  color: #4b6cb7 !important;
-  border: 1px solid #4b6cb7 !important;
-  background: #fff !important;
-}
-.moderator-button-outline:hover {
-  color: #38569C !important;
+.moderator-button {
+  color: #fff;
   border: 1px solid #38569C !important;
-  background: #fff !important;
 }
-.moderator-button-outline:hover .ui-button-icon-left {
-  color: #38569C;
+.moderator-button .ui-icon {
+  color: #F9C642;
+}
+
+.moderator-button2 {
+  background-color: #4b6cb7;
+  background-image: linear-gradient(to right, #38569C, #4b6cb7, #38569C, #38569C);
+  background-size: 300% 100%;
+  border: 1px solid #38569C;
+  color: #fff;
+  moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.moderator-button2.ui-state-hover, .moderator-button2.ui-state-active, .moderator-button2.ui-state-focus {
+  background-position: 100% 0;
 }
 
 /*Overview*/

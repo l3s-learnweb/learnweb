@@ -186,34 +186,35 @@
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:panel header="Submissions">
+			<p:panel header="Submissions" styleClass="d-none">
 				<h:form prependId="false" styleClass="mb-3" >
 					<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button-outline" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
                                      process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
 				</h:form>
-
-				<p:accordionPanel id="submissions">
-					<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
-						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-							<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
-						</ui:decorate>
-					</p:tab>
-
-					<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-							<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
-						</ui:decorate>
-					</p:tab>
-
-					<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
-						<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-							<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />
-						</ui:decorate>
-					</p:tab>
-				</p:accordionPanel>
 			</p:panel>
+
+			<p:tabView id="submissions" styleClass="ui-tabs-transparent">
+				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
+					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
+					</ui:decorate>
+				</p:tab>
+
+				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
+					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />
+					</ui:decorate>
+				</p:tab>
+
+				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
+					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
+					</ui:decorate>
+				</p:tab>
+			</p:tabView>
+
 
 			<h:panelGroup id="datagrid" class="not-selectable d-none"></h:panelGroup>
 		</h:panelGroup>

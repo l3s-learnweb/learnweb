@@ -57,7 +57,7 @@
 
                 <h:panelGroup layout="block" id="user_submissions">
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-                        <div class="shadow-sm #{status.last ? 'mt-5' : 'my-5' } ">
+                        <div class="#{status.first ? (status.last ? '' : 'mb-5') : status.last ? 'mt-5' : 'my-5' } ">
                             <div class="d-flex align-items-center p-2 bg-light">
                                 <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center">
@@ -116,6 +116,7 @@
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </h:panelGroup>
+                            <hr/>
                         </div>
                     </p:repeat>
                 </h:panelGroup>
