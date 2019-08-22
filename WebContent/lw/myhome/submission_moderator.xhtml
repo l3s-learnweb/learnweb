@@ -57,11 +57,11 @@
 
                 <h:panelGroup layout="block" id="user_submissions">
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-                        <div class="#{status.first ? (status.last ? '' : 'mb-5') : status.last ? 'mt-5' : 'my-5' } ">
+                        <div class="#{status.last ? '' : 'mb-4' } border-bottom">
                             <div class="d-flex align-items-center p-2 bg-light">
                                 <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center">
-                                    <h3 class="h3 mr-1 mb-0">#{userSubmission.user.username}</h3>
+                                    <h3 class="mr-1 mb-0">#{userSubmission.user.username}</h3>
                                     <h:form prependId="false">
                                         <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
@@ -103,7 +103,7 @@
 
                             <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
 
-                            <h:panelGroup styleClass="py-3" layout="block" rendered="#{not empty userSubmission.resources}">
+                            <h:panelGroup styleClass="mt-5" layout="block" rendered="#{not empty userSubmission.resources}">
                                 <h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
                                     <h:panelGroup styleClass="res-grid" layout="block">
                                         <ui:repeat var="res" value="#{userSubmission.resources}" >
@@ -116,7 +116,6 @@
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </h:panelGroup>
-                            <hr/>
                         </div>
                     </p:repeat>
                 </h:panelGroup>

@@ -59,8 +59,7 @@
             </ui:fragment>
 
             <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
-                <hr/>
-                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid">
+                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid border-top">
                     <p:repeat var="res" value="#{submissionBean.selectedResources}" >
                         <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                             <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">

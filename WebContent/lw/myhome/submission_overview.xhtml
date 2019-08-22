@@ -190,8 +190,8 @@
 				<h:form prependId="false" styleClass="mb-3" >
 					<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
+                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator2-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
 				</h:form>
 			</p:panel>
 

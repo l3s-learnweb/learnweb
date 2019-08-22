@@ -10177,15 +10177,15 @@ body,
   display: none;
 }
 
-.moderator-button {
+.moderator2-btn {
   color: #fff;
   border: 1px solid #38569C !important;
 }
-.moderator-button .ui-icon {
+.moderator2-btn .ui-icon {
   color: #F9C642;
 }
 
-.moderator-button2 {
+.moderator3-btn {
   background-color: #4b6cb7;
   background-image: linear-gradient(to right, #38569C, #4b6cb7, #38569C, #38569C);
   background-size: 300% 100%;
@@ -10196,7 +10196,7 @@ body,
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
 }
-.moderator-button2.ui-state-hover, .moderator-button2.ui-state-active, .moderator-button2.ui-state-focus {
+.moderator3-btn.ui-state-hover, .moderator3-btn.ui-state-active, .moderator3-btn.ui-state-focus {
   background-position: 100% 0;
 }
 
