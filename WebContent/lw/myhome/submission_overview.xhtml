@@ -24,10 +24,15 @@
 
 	<ui:define name="center_layout">
 
-		<!--<h:form>
+		<h:form>
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
-		</h:form>-->
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
+		</h:form>
+
+		<h:panelGroup id="resourcesView" layout="block">
+			<!-- dummy for right pane -->
+		</h:panelGroup>
 
 		<h:panelGroup layout="block">
 			<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
@@ -214,7 +219,6 @@
 					</ui:decorate>
 				</p:tab>
 			</p:tabView>
-
 
 			<h:panelGroup id="datagrid" class="not-selectable d-none"></h:panelGroup>
 		</h:panelGroup>

@@ -26,7 +26,7 @@
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
-            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="load_editor(); " />
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
 
         <h:panelGroup id="resourcesView" layout="block">
@@ -103,7 +103,7 @@
 
                             <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
 
-                            <h:panelGroup styleClass="mt-5" layout="block" rendered="#{not empty userSubmission.resources}">
+                            <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                                 <h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
                                     <h:panelGroup styleClass="res-grid" layout="block">
                                         <ui:repeat var="res" value="#{userSubmission.resources}" >
