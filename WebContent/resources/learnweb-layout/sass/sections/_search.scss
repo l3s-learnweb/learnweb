@@ -1,64 +1,7 @@
 .section-search {
-/*  .ui-carousel-header {
-    display: none !important;
-  }*/
-  #search_loading_more_results {
-    line-height: 3rem;
-
-    img {
-      vertical-align: bottom;
-      margin-left: 0.3rem;
-    }
-
-    font-weight: bold;
+  #search_loading_more_results, #search_nothing_found, #search_no_more_results {
     display: none;
-    border: 0.1rem solid black;
-    background-color: $gray-700;
-    padding: 0.5rem;
-    color: $white;
-    margin: 1rem;
-    text-align: center;
-    z-index: 1;
-    clear: both;
   }
-
-  #search_nothing_found, #search_no_more_results {
-    font-weight: bold;
-    display: none;
-    border: 0.1rem solid black;
-    background-color: $gray-700;
-    padding: 0.5rem;
-    color: $white;
-    margin: 1rem;
-    text-align: center;
-    z-index: 1;
-    clear: both;
-  }
-
-  #tabView, #exploretabView {
-    height: 99%;
-    overflow: auto;
-  }
-
-  .right_bar {
-    float: right;
-    height: 91%;
-    position: fixed;
-    width: 24%;
-    right: 8px;
-    top: 75px;
-  }
-
-  .web_right_bar {
-    float: right;
-    height: 91%;
-    width: 31%;
-    position: fixed;
-    right: 8px;
-    top: 100px;
-    overflow: auto;
-  }
-
   .resources {
     position: relative;
   }
@@ -410,43 +353,14 @@
     }
   }
 
-/*  .img-container {
-    position: relative;
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 500ms ease-in-out;
-      .overlay-content {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        height: 50%;
-        background-color: $gray-400;
-      }
-    }
-    &:hover .overlay {
-      opacity: 1;
-    }
-  }*/
 
   .content {
-    position: relative;
-    width: 90%;
-    max-width: 400px;
-    margin: auto;
     overflow: hidden;
   }
 
   .content .content-overlay {
     background: rgba(0,0,0,0.7);
     position: absolute;
-    height: 99%;
-    width: 100%;
     left: 0;
     top: 0;
     bottom: 0;
@@ -470,7 +384,6 @@
     text-align: center;
     padding-left: 1em;
     padding-right: 1em;
-    width: 100%;
     top: 50%;
     left: 50%;
     opacity: 0;
@@ -486,19 +399,6 @@
     top: 50%;
     left: 50%;
     opacity: 1;
-  }
-
-  .content-details h3{
-    color: #fff;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.5em;
-    text-transform: uppercase;
-  }
-
-  .content-details p{
-    color: #fff;
-    font-size: 0.8em;
   }
 
 }

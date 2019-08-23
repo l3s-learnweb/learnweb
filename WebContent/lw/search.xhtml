@@ -34,7 +34,7 @@
             </p:outputPanel>
 
             <h:form >
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" numVisible="2" styleClass="ui-carousel-light" style="border-radius: 1rem;"  circular="true"  var="gr">
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" widgetVar="carousel" responsive="true" numVisible="2" styleClass="ui-carousel-light" circular="true"  var="gr">
                                 <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
                                     <f:param name="service" value="#{gr.groupAlias}"/>
                                     <f:param name="action" value="#{searchBean.searchMode}"/>
@@ -172,7 +172,6 @@
             var userId = '#{userBean.user.id}';
         </script>
 
-        <ui:decorate template="/templates/search/resource_lightbox.xhtml"/>
 
         <div id="results" class="#{searchBean.view}_view mt-3">
                 <ui:decorate template="/templates/search/resources.xhtml">
@@ -187,13 +186,13 @@
             </ui:fragment>
         </h:panelGroup>
 
-        <div id="search_loading_more_results">
+        <div id="search_loading_more_results" class="text-center font-weight-bold m-2">
             #{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i>
         </div>
-        <div id="search_no_more_results">
+        <div id="search_no_more_results" class="text-center font-weight-bold m-2">
             #{msg.no_more_results}
         </div>
-        <div id="search_nothing_found">
+        <div id="search_nothing_found" class="text-center font-weight-bold m-2">
             #{msg.nothingFound}
         </div>
 
@@ -222,7 +221,7 @@
 
             <p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true"
                              onstart="console.log('loadInterwebCounts')" update=":filters :groups_menu_bar" name="loadFilterCounts"
-                             oncomplete="updateCarousel();setContentPadding();" async="false" process="@this" partialSubmit="true"/>
+                             async="false" process="@this" partialSubmit="true"/>
         </h:form>
 
         <h:panelGroup id="nothing"></h:panelGroup>

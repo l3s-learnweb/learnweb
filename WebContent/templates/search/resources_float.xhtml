@@ -6,40 +6,22 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <div class="container">
-    <div id="image-container" class="row text-center text-lg-left">
+    <h:outputStylesheet library="justifiedGallery" name="justifiedGallery.min.css"/>
+    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="justifiedGallery" name="jquery.justifiedGallery.min.js" target="head"/>
+    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+    <div id="gallery" >
         <p:repeat var="res" value="#{resources}">
-            <div id="resource_${res.tempId}" class="col-lg-3 col-md-4 col-sm-6 col-xs-12 resource">
-                <div class="d-block mb-4 h-100 img-container">
-                    <div class="content">
-                            <div class="content-overlay"></div>
-                            <img class="content-image" src="${res.thumbnail2b.url}"/>
-                            <div class="content-details fadeIn-bottom">
-                                <h3 class="content-title text-truncate overflow-hidden">${res.title}</h3>
-                                <p class="content-text text-truncate overflow-hidden">${res.description}</p>
-                            </div>
-                    </div>
-                </div>
-            </div>
-           <!-- <div  id="resource_${res.tempId}" class="resource px-1">
-                <div class="img-container">
-                    <div>
-                        <img src="${res.thumbnail2b.url}" alt="Responsive image" class="m-0 py-1 img-responsive" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}"/>
-                    </div>
-                    <div class="overlay">
-                        <div class="overlay-content pl-1">
-                            <p  class="text-truncate overflow-hidden font-weight-bold">${res.title}</p>
-                                <h:outputLink value="${res.urlProxied}">
-                                    <img src="#{request.contextPath}#{res.serviceIcon}" alt="${res.location}" style="height: 0.8rem; width: 0.8rem;"/>
-                                </h:outputLink>
+            <div id="resource_${res.tempId}"  class="resource content" data-src="${res.resource.maxImageUrl}"   data-fancybox="gallery">
+                        <div class="content-overlay"></div>
+                        <img style="z-index: -1;" id="${res.tempId}" src="${res.thumbnail2b.url}"/>
+                        <div class="content-details fadeIn-bottom">
+                            <i class="fa fa-search-plus fa-3x text-white"></i>
                         </div>
-                    </div>
-                </div>
                 <ui:decorate template="/templates/search/resource_metadata.xhtml">
                     <ui:param name="res" value="#{res}"/>
                 </ui:decorate>
-            </div>-->
+            </div>
         </p:repeat>
-    </div>
     </div>
 </ui:composition>
