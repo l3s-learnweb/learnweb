@@ -5,6 +5,7 @@
     xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
+    <!--@elvariable id="view" type="java.lang.String"-->
 
     <div class="metadata">
         <!--<div class="embedded">&lt;!&ndash;${res.embedded}&ndash;&gt;</div>-->
@@ -12,7 +13,7 @@
             <p:outputLabel for="@next" value="#{msg.title}:" styleClass="font-weight-bold" escape="false"/>
             <h:outputText value="${res.title}" escape="false"/>
             <br/>
-            <ui:fragment rendered="#{not empty res.description}">
+            <ui:fragment rendered="#{not empty res.description and view ne 'grid'}">
                 <p:outputLabel for="@next" value="#{msg.description}:" styleClass="font-weight-bold" escape="false"/>
                 <h:outputText value="${res.descriptionHTML}" escape="false"/>
                 <br/>

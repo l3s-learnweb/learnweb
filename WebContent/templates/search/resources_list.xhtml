@@ -10,7 +10,14 @@
 <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 <div class="d-flex flex-column bg-white">
     <p:repeat value="#{resources}" var="res">
-    <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_${res.tempId}">
+        <h:panelGroup layout="block" styleClass="m-2 pl-3 font-weight-bold border-bottom" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+            <h:outputText value="#{msg.page} "/>
+            <h:outputText value="#{(res.tempId+9) / 10}">
+                <f:convertNumber maxFractionDigits="0"/>
+            </h:outputText>
+        </h:panelGroup>
+
+        <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_${res.tempId}">
         <div>
             <div>
                 <h:outputLink styleClass="resourceWebLink" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">

@@ -1,5 +1,4 @@
 var no_more_results = false;
-var gridItemWidth = 190;
 var step = 200;
 var scrolling = false;
 
@@ -35,12 +34,6 @@ function prepareResources() {
     }
 }
 
-function resizeGridResources() {
-    var results = $('#results');
-    var innerWidth = results.width() - 21;
-    gridItemWidth = 100 / Math.floor(results.innerWidth() / 220) + '%';
-    $('.resource', results).width(gridItemWidth);
-}
 
 var loading = false;
 
@@ -97,8 +90,6 @@ function createGroupTooltips() {
 $(document).ready(function () {
     $("#gallery").justifiedGallery();
     prepareResources();
-    if (view === 'grid')
-        resizeGridResources();
     <!-- TODO: this function doesn't exist, do we need this in future? -->
     /*else if(view === 'list')
     {

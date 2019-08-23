@@ -5,36 +5,22 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
-
-	<p:repeat var="res" value="#{resources}" >
-		<div class="resource" id="resource_${res.tempId}">
-			<h:panelGroup styleClass="#{res.newResource ? 'grid_newResource' : 'oldResource'}">
-				<div class="border">
-					<div class="stretchy-wrapper">
-						<div class="smallImage" style="background-image:url(${res.thumbnail2.url});">
-							<h:outputText value="#{res.durationInMinutes}" styleClass="duration" rendered="#{res.resource.duration > 0}" />
-						</div>
-					</div>
-					<div class="title"><h:outputText value="${res.title}" escape="false" /></div>
+	<h:outputStylesheet library="justifiedGallery" name="justifiedGallery.min.css"/>
+	<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+	<h:outputScript library="justifiedGallery" name="jquery.justifiedGallery.min.js" target="head"/>
+	<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+	<div id="gallery" >
+		<p:repeat var="res" value="#{resources}">
+			<div id="resource_${res.tempId}"  class="resource content" data-src="${res.urlProxied}"   data-fancybox="gallery">
+				<div class="content-overlay"></div>
+				<img style="z-index: -1;" id="${res.tempId}" src="${res.thumbnail2b.url}"/>
+				<div class="content-details fadeIn-bottom">
+					<i class="fa fa-search-plus fa-3x text-white"></i>
 				</div>
-			</h:panelGroup>
-
-			<div id="resource_${res.tempId}_preview" class="preview" style="max-width:${res.thumbnail2.width > 160 ? res.thumbnail2.width : 180}px;">
-				<img src="${res.thumbnail2.url}" height="${res.thumbnail2.height}" width="${res.thumbnail2.width}" class="mediumImage" />
-				<div class="title"><h:outputText value="${res.title}" escape="false" /></div>
-				<div class="description">
-					<h:outputText value="${res.shortSnippet}" escape="false" />
-				</div>
-				<div class="location">
-					<h:outputLink value="${res.urlProxied}">
-						<img src="#{request.contextPath}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/> <h:outputText value="${res.location}" />
-					</h:outputLink>
-				</div>
+				<ui:decorate template="/templates/search/resource_metadata.xhtml">
+					<ui:param name="res" value="#{res}"/>
+				</ui:decorate>
 			</div>
-
-			<ui:decorate template="/templates/search/resource_metadata.xhtml">
-				<ui:param name="res" value="#{res}" />
-			</ui:decorate>
-		</div>
-	</p:repeat>
+		</p:repeat>
+	</div>
 </ui:composition>
