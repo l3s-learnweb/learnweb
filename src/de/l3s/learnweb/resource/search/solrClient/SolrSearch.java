@@ -228,7 +228,7 @@ public class SolrSearch implements Serializable
                 else
                 {
                     // Where field not exists or equal to "/"
-                    this.filterPath = "(*:* NOT path:*) || path: \"/\"";
+                    this.filterPath = "(*:* NOT path:[* TO *]) OR path: \"/\"";
                 }
             }
             else
@@ -399,6 +399,8 @@ public class SolrSearch implements Serializable
                     filterGroupStr += " OR groupId : " + groupId.toString();
             }
             solrQuery.addFilterQuery(filterGroupStr);
+        } else {
+            solrQuery.addFilterQuery("groupId:[* TO *] OR ownerUserId:" + userId + ""); // hide private resources
         }
 
         if(0 != groupField.length())
@@ -413,8 +415,6 @@ public class SolrSearch implements Serializable
         {
             solrQuery.addSort("timestamp", ORDER.desc);
         }
-        solrQuery.addFilterQuery("-(id:r_* AND -(groupId:* OR ownerUserId:" + userId + "))"); // hide private resources
-        // better use?  solrQuery.addFilterQuery("groupId:* OR ownerUserId:" + userId + ""); // hide private resources
 
         solrQuery.setStart((page - 1) * resultsPerPage);
         solrQuery.setRows(resultsPerPage);

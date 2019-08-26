@@ -138,7 +138,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         if(!user.isEmailConfirmed())
         {
             user.sendEmailConfirmation();
-
             confirmRequiredBean.setLoggedInUser(user);
 
             return "/lw/user/confirm_required.xhtml?faces-redirect=true";
