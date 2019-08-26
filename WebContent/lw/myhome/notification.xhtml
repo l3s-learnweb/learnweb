@@ -5,91 +5,47 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 	
-		<ui:param name="loginRequired" value="true" />
-		<ui:param name="pageTitle" value="#{msg.notification}" />
-		<ui:define name="sub_breadcrumb">
-			<p:menuitem value="#{msg.notification}" url="myhome/notification.jsf#"/>
-		</ui:define>
-<!--		<ui:define name="right_layout">
-			<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"
-				id="right_pane" rendered="#{userBean.loggedIn}">
-				<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;"></div>
-			</p:layoutUnit>
-		</ui:define>-->
-	
-		<ui:define name="center_layout" >
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.notification}" />
 
-			<p:panel>
-				<h:panelGroup layout="block" styleClass="w-100 mb-1" rendered="#{userBean.moderator}">
-					<h:outputText value="#{msg.moderator}: "/>
-					<a href="#{request.contextPath}/lw/admin/notification.jsf">
-						<h:outputText value="#{msg.send_notification}"/>
-					</a>
-				</h:panelGroup>
+	<ui:define name="sub_breadcrumb">
+		<p:menuitem value="#{msg.notification}" url="myhome/notification.jsf#"/>
+	</ui:define>
 
-				<h:outputText value="#{msg.no_notifications}" rendered="#{empty messageBean.receivedMessages}"/>
-			</p:panel>
+	<ui:define name="center_layout" >
+		<p:panel header="#{msg.notification}">
+			<h:panelGroup layout="block" styleClass="w-100 mb-1" rendered="#{userBean.moderator}">
+				<h:outputText value="#{msg.moderator}: "/>
+				<a href="#{request.contextPath}/lw/admin/notification.jsf">
+					<h:outputText value="#{msg.send_notification}"/>
+				</a>
+			</h:panelGroup>
 
+			<h:outputText value="#{msg.no_notifications}" rendered="#{empty messageBean.receivedMessages}"/>
 
-			<p:panel styleClass="unread rounded mt-1 text-break p-2">
-				<div class="d-flex">
-					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
-					<div class="d-flex flex-column">
-						<div>
-							<h:outputText value="Title " escape="false"  />
-							<h:outputText value="(#{msg.new_word})" escape="false"  />
-						</div>
+			<ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
+				<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+					<img class="profile-picture mr-3" src="#{message.fromUser.image}" alt="Profile picture"/>
 
-						<small>
+					<div class="log-details">
+						<p class="mb-0">
+							<h:outputText value="#{message.title}" escape="false"  />
+							<h:outputText rendered="#{message.read}" value="(#{msg.new_word})" escape="false"  />
+						</p>
+						<p class="mb-0 log-description">
+							<h:outputText value="#{message.text}" escape="false"  />
+						</p>
+						<p class="small font-weight-light mb-0 log-date">
 							<h:outputText value="#{msg.from_user} " escape="false"  />
-							<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
-							<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
-						</small>
-						<h:outputText escape="false" value="ACDC"/>
+							<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"  />
+							<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
+							<h:outputText value="#{message.time}">
+								<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+							</h:outputText>
+						</p>
 					</div>
 				</div>
-			</p:panel>
-
-			<p:panel styleClass="rounded mt-1 text-break  p-2">
-				<div class="d-flex">
-					<img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}" alt="Profile picture"/>
-					<div class="d-flex flex-column">
-						<div>
-							<h:outputText value="Title" escape="false"  />
-						</div>
-
-						<small>
-							<h:outputText value="#{msg.from_user} " escape="false"  />
-							<h:outputText value="User " styleClass="font-weight-bold" escape="false"  />
-							<h:outputText value="#{msg.on_date} 21.11.1996" escape="false" styleClass="font-weight-light"/>
-						</small>
-						<h:outputText escape="false" value="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."/>
-					</div>
-				</div>
-			</p:panel>
-
-			<ui:repeat var="message" value="#{messageBean.receivedMessages}">
-				<p:panel styleClass="#{message.read ? 'read' : 'unread'} rounded mt-1 text-break  p-2">
-					<div class="d-flex">
-						<img class="profile-picture mr-4 mr-md-2" src="#{message.fromUser.image}" alt="Profile picture"/>
-						<div class="d-flex flex-column">
-							<div>
-								<h:outputText value="#{message.title}" escape="false"  />
-								<h:outputText rendered="#{message.read}" value="(#{msg.new_word})" escape="false"  />
-							</div>
-
-							<small>
-								<h:outputText value="#{msg.from_user} " escape="false"  />
-								<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"  />
-								<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
-								<h:outputText value="#{message.time}">
-									<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-								</h:outputText>
-							</small>
-							<h:outputText escape="false" value="#{message.text}"/>
-						</div>
-					</div>
-				</p:panel>
 			</ui:repeat>
-		</ui:define>
+		</p:panel>
+	</ui:define>
 </ui:composition>
