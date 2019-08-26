@@ -10,9 +10,9 @@
 		<div class="#{status.last ? '' : 'mb-4' }">
 			<div class="d-flex align-items-center justify-content-between p-2 bg-light">
 				<div class="d-flex align-items-center">
-					<h3 class="mb-0 mr-1">
-						<b>#{submission.title}</b>
-					</h3>
+					<h4 class="mb-0 mr-1">
+						#{submission.title}
+					</h4>
 
 					<h:form styleClass="d-inline-block">
 						<p:commandLink title="#{msg.edit}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"

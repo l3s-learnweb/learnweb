@@ -61,7 +61,7 @@
                             <div class="d-flex align-items-center p-2 bg-light">
                                 <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center">
-                                    <h3 class="mr-1 mb-0">#{userSubmission.user.username}</h3>
+                                    <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
                                     <h:form prependId="false">
                                         <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
