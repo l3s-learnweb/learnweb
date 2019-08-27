@@ -2,9 +2,6 @@ package de.l3s.learnweb;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 
 public class Announcement implements Serializable
 {
@@ -32,7 +29,7 @@ public class Announcement implements Serializable
         this.date = date;
     }
 
-    public Date getDate() throws ParseException //LocalDate
+    public Date getDate()
     {
         return date;
     }

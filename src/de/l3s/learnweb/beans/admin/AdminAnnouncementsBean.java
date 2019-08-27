@@ -13,9 +13,8 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.Announcement;
-
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @RequestScoped
@@ -25,7 +24,6 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
     private List<Announcement> announcements;
-    private Announcement announcement;
     @NotEmpty
     private String text;
     @NotEmpty
@@ -42,7 +40,6 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
 
     public void onLoad() throws SQLException
     {
-
         try
         {
             announcements = new ArrayList<>(getLearnweb().getAnnouncementsManager().getAnnouncementsAll());
@@ -51,17 +48,17 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         {
             log.error(e);
         }
-
     }
 
-    public void onCreateNews() throws SQLException
+    public void onCreateNews()
     {
         try
         {
             Announcement announcement = new Announcement();
             announcement.setTitle(title);
             announcement.setText(text);
-            if(date != null){
+            if(date != null)
+            {
                 announcement.setDate(date);
             }
             announcement.setHidden(hidden);
@@ -77,7 +74,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         }
     }
 
-    public void onDeleteNews(Announcement announcement) throws SQLException
+    public void onDeleteNews(Announcement announcement)
     {
         try
         {
@@ -91,21 +88,25 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         }
     }
 
-
-    public void onHidden(int announcementId) throws SQLException
+    public void onHidden(int announcementId) // TODO rename to onToggleVisibility
     {
         try
         {
+            // TODO this looks to complex. Why to you have to create a new Announcement instance. This will cause problems to the cache
+
             Announcement announcement = new Announcement();
             boolean hidden = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId).isHidden();
             announcement.setHidden(hidden);
             announcement.setId(announcementId);
             log.debug(announcement.toString());
             getLearnweb().getAnnouncementsManager().hide(announcement);
-            if(hidden){
-                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was hided !");
-            }else{
-                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement is showed!");
+            if(hidden)
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement is hidden.");
+            }
+            else
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement is shown.");
             }
         }
         catch(Exception e)
@@ -154,19 +155,28 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         this.hidden = hidden;
     }
 
-
     public List<Announcement> getAnnouncements()
     {
         return announcements;
     }
 
+    // TODO this method is used by the frontpage. This should be moved to a separate FrontPageBean
+    /*
+     * I've already created the bean in de.l3s.learnweb.beans;
+     *
+     * The used loop isn't very nice. Use a sql query to get the desired entries.
+     */
     public List<Announcement> getAvailableAnnouncements()
     {
 
-        for(int i = 0; i < announcements.size();){
-            if(announcements.get(i).isHidden()){
+        for(int i = 0; i < announcements.size();)
+        {
+            if(announcements.get(i).isHidden())
+            {
                 announcements.remove(i);
-            }else{
+            }
+            else
+            {
                 i++;
             }
         }
