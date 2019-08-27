@@ -535,7 +535,7 @@ public class UserBean implements Serializable
                 ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), null, su + "/lw/group/overview.jsf?group_id=" + group.getId());
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
+                // theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
                 if(!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
                 {
                     theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("links"), "fa fa-fw fa-link", su + "/lw/group/links.jsf?group_id=" + group.getId()));

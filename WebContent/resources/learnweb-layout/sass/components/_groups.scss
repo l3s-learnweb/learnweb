@@ -1,0 +1,35 @@
+.member-block {
+  display: block;
+  position: relative;
+  color: $body-color;
+  background: $gray-200;
+  box-shadow: $box-shadow-sm;
+
+  .member-picture {
+    padding-top: 100%;
+    position: relative;
+
+    img {
+      background-color: $white;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  .member-star {
+    @include icon-override('\f091'); // \f091, \f005
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    font-size: 1rem;
+    color: $orange;
+  }
+
+  &:hover {
+    color: $themeElementTextColor;
+    background: $themePrimaryColor;
+  }
+}

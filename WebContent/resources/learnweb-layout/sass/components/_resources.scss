@@ -273,36 +273,36 @@ ul.res-filters {
     padding: 0.5rem;
     width: 50%;
 
-    @include media-breakpoint-up(lg) {
-      width: 25%;
-    }
-
     @include media-breakpoint-up(md) {
       width: 33.333%;
     }
 
+    @include media-breakpoint-up(lg) {
+      width: 25%;
+    }
+
     &[data-cq~="min-width:0px"] {
-      width: 100%; // 3 columns
+      width: 100%; // 1 column
     }
 
-    &[data-cq~="min-width:200px"] {
-      width: 50%; // 3 columns
+    &[data-cq~="min-width:300px"] {
+      width: 50%; // 3 columns, 150min, 249max
     }
 
-    &[data-cq~="min-width:450px"] {
-      width: 33.333%; // 3 columns
+    &[data-cq~="min-width:500px"] {
+      width: 33.333%; // 3 columns, 166min, 249max
     }
 
-    &[data-cq~="min-width:600px"] {
-      width: 25%; // 4 columns
-    }
-
-    &[data-cq~="min-width:800px"] {
-      width: 20%; // 5 columns
+    &[data-cq~="min-width:750px"] {
+      width: 25%; // 4 columns, 187min, 249max
     }
 
     &[data-cq~="min-width:1000px"] {
-      width: 16.666%; // 6 columns
+      width: 20%; // 5 columns, 200min, 249max
+    }
+
+    &[data-cq~="min-width:1250px"] {
+      width: 16.666%; // 6 columns, 208min, 249max
     }
   }
 }

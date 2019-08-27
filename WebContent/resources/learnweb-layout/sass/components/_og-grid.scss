@@ -1,0 +1,38 @@
+.gridder {
+  padding: 0;
+  list-style: none;
+  margin: -0.25rem;
+
+  .gridder-list {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0.25rem;
+    width: 100px;
+
+    &.selectedItem a::after {
+      content: ' ';
+      position: absolute;
+      top: auto;
+      left: 50%;
+      height: 0;
+      width: 0;
+      border: 1rem solid transparent;
+      border-bottom-color: $gray-200;
+      margin: -0.7rem 0 0 -1rem;
+    }
+  }
+
+  .gridder-show {
+    display: block;
+    float: left;
+    width: 100%;
+    position: relative;
+    background: $gray-200;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}
+
+.gridder-content {
+  display: none;
+}

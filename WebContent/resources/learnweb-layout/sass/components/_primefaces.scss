@@ -3,6 +3,11 @@ body {
     padding: 0;
   }
 
+  .ui-widget.ui-widget-content-invisible > .ui-widget-content {
+    background: initial;
+    border: initial;
+  }
+
   .ui-widget.ui-widget-content-pt-0 > .ui-widget-content {
     padding-top: 0;
   }

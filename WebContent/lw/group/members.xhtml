@@ -23,26 +23,119 @@
 </ui:define>
 
 <ui:define name="group_layout">
-    <p:panel header="#{msg.members}" styleClass="bg-white section-group-members mb-3">
+    <h:outputScript library="learnweb-layout" name="js/og-grid.js"/>
+
+    <p:panel header="#{msg.members}" styleClass="mb-3">
         <h:form>
-            <h:panelGrid id="resource_disp" styleClass="mt-2">
+            <ul class="gridder clearfix">
                 <p:repeat id="datagrid" var="user" value="#{groupMembersBean.members}">
-                    <p:commandLink styleClass="resource_command_link" update=":right_form" onclick="PF('learnweb').showRightPane();">
-                        <f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
-                        <div class="members-panelgrid">
-                            <img src="#{user.image}" alt="#{user.fullName}"/>
+                    <li class="gridder-list" data-griddercontent="#user${user.id}">
+                        <p:commandLink onclick="return false;" styleClass="member-block">
+                            <f:setPropertyActionListener target="#{groupMembersBean.clickedUser}" value="#{user}"/>
+
+                            <div class="member-picture">
+                                <img src="#{user.image}" alt="#{user.fullName}"/>
+                            </div>
+
                             <ui:fragment rendered="#{not empty user.credits}">
                                 <div class="member-star"></div>
                             </ui:fragment>
-                            <div class="member-username-small">
-                                #{user.username}
+
+                            <div class="member-username text-center py-1">#{user.username}</div>
+                        </p:commandLink>
+                    </li>
+
+                    <div id="user${user.id}" class="gridder-content">
+                        <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{groupMembersBean.userDetailsHidden}">
+                            <div class="col">
+                                <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
                             </div>
-                        </div>
-                    </p:commandLink>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{not groupMembersBean.userDetailsHidden}">
+                            <div class="col-md-4">
+                                <p:panel header="#{msg.profile} #{msg.of} #{user.username}">
+                                    <p:panelGrid columns="2" styleClass="ui-widget-content-invisible" layout="grid">
+                                        <h:outputText value="#{msg.username}:" />
+                                        <h:outputText id="username" value="#{user.username}" />
+
+                                        <h:outputText value="#{msg.email_address}:" rendered="#{not empty user.email}"/>
+                                        <h:outputText value="#{user.email}" rendered="#{not empty user.email}"/>
+
+                                        <h:outputText value="#{msg.gender}:" />
+                                        <h:outputText value="-" rendered="#{user.gender == 0}" />
+                                        <h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}" />
+                                        <h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}" />
+
+                                        <h:outputText value="#{msg.address}:" rendered="#{not empty user.address}"/>
+                                        <h:outputText value="#{user.address}" rendered="#{not empty user.address}"/>
+
+                                        <h:outputText value="#{msg.profession}:" rendered="#{not empty user.profession}"/>
+                                        <h:outputText value="#{user.profession}" rendered="#{not empty user.profession}"/>
+
+                                        <h:outputText value="#{msg.interest}:" rendered="#{not empty user.interest}" />
+                                        <h:outputText value="#{user.interest}" rendered="#{not empty user.interest}" />
+
+                                        <h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty user.additionalInformation}" />
+                                        <h:outputText value="#{user.additionalInformation}" rendered="#{not empty user.additionalInformation}" />
+
+                                        <h:outputText value="#{msg.registered_since}:" />
+                                        <h:outputText value="#{user.registrationDate}">
+                                            <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+                                        </h:outputText>
+                                    </p:panelGrid>
+                                </p:panel>
+
+                                <p:panel header="#{msg.awards}" rendered="#{not empty user.credits}">
+                                    <h:outputText value="#{user.credits}" escape="false"/>
+                                </p:panel>
+                            </div>
+
+                            <h:panelGroup styleClass="col-md-4" layout="block" rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+                                <p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}" styleClass="mb-3">
+                                    <ul>
+                                        <p:repeat var="g" value="#{user.groups}">
+                                            <li>
+                                                <h:outputLink value="group/overview.jsf">
+                                                    <f:param name="group_id" value="#{g.id}" />
+                                                    <h:outputText value="#{g.title}" />
+                                                </h:outputLink>
+                                            </li>
+                                        </p:repeat>
+                                    </ul>
+                                </p:panel>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="col-md-4" layout="block" rendered="#{userBean.canModerateCourses(user.courses)}">
+                                <p:panel header="#{msg.moderator_options}" styleClass="mb-3">
+                                    <h:outputLink value="myhome/profile.jsf">
+                                        <f:param name="user_id" value="#{user.id}" />
+                                        <h:outputText value="#{msg.edit_profile}" escape="false"/>
+                                    </h:outputLink>
+                                    <br/>
+                                    <h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+                                        <f:param name="user_id" value="#{user.id}" />
+                                        <h:outputText value="#{msg.search_history}" escape="false"/>
+                                    </h:outputLink>
+                                </p:panel>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
                 </p:repeat>
-            </h:panelGrid>
+            </ul>
         </h:form>
     </p:panel>
+
+    <script>
+        $(function() {
+            $('.gridder').gridderExpander({
+                scroll: false,
+                showNav: false,
+                animationSpeed: 400,
+                animationEasing: "easeInOutExpo"
+            });
+        });
+    </script>
 </ui:define>
 
 <ui:define name="right_layout">
