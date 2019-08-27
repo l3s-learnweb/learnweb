@@ -22,6 +22,7 @@ public class ActivityDashboardChartsFactory
     {
         LineChartModel model = new LineChartModel();
         ChartData chartData = new ChartData();
+        List<String> colors = ChartJsUtils.getColorList(data.size());
 
         for(ActivityGraphData activityData : data)
         {
@@ -32,7 +33,8 @@ public class ActivityDashboardChartsFactory
 
             dataSet.setData(values);
             dataSet.setFill(false);
-            dataSet.setBorderColor(ChartJsUtils.getRandColor());
+            dataSet.setBorderColor(colors.get(0));
+            colors.remove(0);
             dataSet.setLabel(activityData.getName());
             dataSet.setLineTension(0.1);
 

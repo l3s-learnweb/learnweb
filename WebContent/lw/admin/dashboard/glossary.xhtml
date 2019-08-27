@@ -12,7 +12,7 @@
 </ui:define>
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.dashboard}"/>
+<ui:param name="pageTitle" value="#{msg.glossary_dashboard}"/>
 <ui:define name="sub_breadcrumb">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
     <p:menuitem value="#{msg.glossary_dashboard}" url=""/>
@@ -21,7 +21,7 @@
 <ui:define name="center_layout" >
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
-    <p:panel header="#{msg.users_activities}" styleClass="mb-3">
+    <p:panel header="#{msg.choose_options}" styleClass="mb-3">
         <ui:decorate template="templates/setSelectedUsers.xhtml">
             <ui:param name="cbean" value="#{glossaryDashboardBean}"/>
         </ui:decorate>
@@ -31,37 +31,37 @@
         <ui:fragment rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
             <div class="row">
                 <div class="col-6 col-md-3 pr-2 mb-3">
-                    <p:panel header="#{msg.total_concept}">
+                    <p:panel header="#{msg['Glossary.total_concepts']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="Concept - a general notion"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.concepts_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 pl-2 px-md-2 mb-3">
-                    <p:panel header="#{msg.total_terms}">
+                    <p:panel header="#{msg['Glossary.total_terms']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="Term - a word/phrase, that is used to describe a concept"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.terms_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 pr-2 px-md-2 mb-3">
-                    <p:panel header="#{msg.total_sources}">
+                    <p:panel header="#{msg['Glossary.total_sources']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="Number of visited pages (grouped by categories) by the users"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.sources_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.totalSources}"/>
                     </p:panel>
                 </div>
                 <div class="col-6 col-md-3 pl-2 mb-3">
-                    <p:panel header="#{msg.ratio}">
+                    <p:panel header="#{msg['Glossary.ratio']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="A ratio of terms to concepts"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.ratio_description']}"/>
                         </f:facet>
                         <h:outputText value="#{glossaryDashboardBean.termsToConcepts}"/>
                     </p:panel>
@@ -72,42 +72,25 @@
                 <div class="col-md-6 pr-2">
                     <p:outputPanel id="activityTypesPanel"
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
-                        <p:panel id="chart_barModel" header="#{msg.users_activity_types}">
+                        <p:panel id="chart_barModel" header="#{msg.activities}">
                             <f:facet name="actions">
                                 <p:button icon="ui-icon-help" onclick="return false;"/>
-                                <p:tooltip for="@previous">
-                                    <h:outputText value="Total number of interactions grouped by categories:" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="Glossary - actions in the glossary (create, add, delete, edit)"
-                                                  escape="false"/>
-                                    <br/>
-                                    <h:outputText value="Search - searching in a group resources or categories"
-                                                  escape="false"/>
-                                    <br/>
-                                    <h:outputText value="System - log in and log out" escape="false"/>
-                                    <br/>
-                                    <h:outputText
-                                            value="Resource - interactions with resources (download, delete, add, tagging, rating, commenting)"
-                                            escape="false"/>
-                                    <br/>
-                                </p:tooltip>
+                                <p:tooltip for="@previous" value="#{msg['Glossary.activity_type_description']}" escape="false"/>
                             </f:facet>
-                            <p:barChart model="#{glossaryDashboardBean.usersActivityTypesChart}"
-                                        xaxisAngle="60" style="height:350px" responsive="true"/>
+                            <p:barChart model="#{glossaryDashboardBean.usersActivityTypesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
                 <div class="col-md-6 pl-2">
                     <p:outputPanel id="sourcePanel"
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
-                        <p:panel id="chart_barModel_stSources" header="#{msg.users_sources}">
+                        <p:panel id="chart_barModel_stSources" header="#{msg['Glossary.sources']}">
                             <f:facet name="actions">
                                 <p:button icon="ui-icon-help" onclick="return false;"/>
                                 <p:tooltip for="@previous"
-                                           value="Percentage ratio of visited pages (grouped by categories) by users"/>
+                                           value="#{msg['Glossary.sources_panel_description']}"/>
                             </f:facet>
-                            <p:pieChart model="#{glossaryDashboardBean.usersSourcesChart}" style="height:400px"
-                                        responsive="true"/>
+                            <p:pieChart model="#{glossaryDashboardBean.usersSourcesChart}"/>
                         </p:panel>
                     </p:outputPanel>
                 </div>
@@ -115,52 +98,50 @@
 
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <p:panel id="glossary" header="#{msg.users_glossary}">
+                    <p:panel id="glossary" header="#{msg['Glossary.glossary']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="Number of concepts and terms by a user"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.glossary_description']}"/>
                         </f:facet>
-                        <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"
-                                    style="height:400px" responsive="true"/>
+                        <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"/>
                     </p:panel>
                 </div>
                 <div class="col-md-8">
-                    <p:panel header="Users' Glossary Location">
-                        <f:facet name="Glossaries">
-                            <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="All glossary resources that this user has created"/>
+                    <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
+                        <f:facet name="header">
+                            #{msg['Glossary.location']}
+                            <p:button icon="ui-icon-help" onclick="return false;" styleClass="float-right"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
                         </f:facet>
-                        <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
-                            <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}">
-                                <h:outputLink value="#{glossary.url}">
-                                    <h:outputText value="#{glossary.title}"/>
-                                </h:outputLink>
-                            </p:column>
 
-                            <p:column styleClass="ui-column-title" headerText="#{msg.location}">
-                                <h:outputText value="#{msg.myPrivateResources}" rendered="#{glossary.group eq null}"/>
+                        <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}">
+                            <h:outputLink value="#{glossary.url}">
+                                <h:outputText value="#{glossary.title}"/>
+                            </h:outputLink>
+                        </p:column>
 
-                                <h:outputLink value="group/resources.jsf" rendered="#{glossary.group ne null}">
-                                    <f:param name="group_id" value="#{glossary.group.id}"/>
-                                    <f:param name="folder_id" value="#{glossary.folder.id}"/>
-                                    <f:param name="resource_id" value="#{glossary.id}"/>
-                                    <h:outputText value="#{glossary.group.title}"/>
-                                </h:outputLink>
-                            </p:column>
-                        </p:dataTable>
-                    </p:panel>
+                        <p:column styleClass="ui-column-title" headerText="#{msg.location}">
+                            <h:outputText value="#{msg.myPrivateResources}" rendered="#{glossary.group eq null}"/>
+
+                            <h:outputLink value="group/resources.jsf" rendered="#{glossary.group ne null}">
+                                <f:param name="group_id" value="#{glossary.group.id}"/>
+                                <f:param name="folder_id" value="#{glossary.folder.id}"/>
+                                <f:param name="resource_id" value="#{glossary.id}"/>
+                                <h:outputText value="#{glossary.group.title}"/>
+                            </h:outputLink>
+                        </p:column>
+                    </p:dataTable>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <p:panel id="chart_plot_01" header="Interactions">
+                    <p:panel id="chart_plot_01" header="#{msg.interactions}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="@previous" value="Total number of interactions (of all selected users) per day"/>
+                            <p:tooltip for="@previous" value="#{msg['Glossary.interactions_description']}"/>
                         </f:facet>
-                        <p:lineChart model="#{glossaryDashboardBean.interactionsChart}"
-                                     style="height:300px;" responsive="true"/>
+                        <p:lineChart model="#{glossaryDashboardBean.interactionsChart}"/>
                     </p:panel>
                 </div>
             </div>
@@ -169,14 +150,14 @@
                 <div class="col-md-12">
                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
                                  var="gfs" styleClass="table-responsive my-2"
-                                 emptyMessage="Nothing was found for the users in the date range that you selected.">
+                                 emptyMessage="#{msg.no_data}">
 
                         <f:facet name="header">
                             <div class="ui-helper-clearfix">
-                                Fields
+                                #{msg['Glossary.fields']}
                                 <div class="float-right">
                                     <p:button icon="ui-icon-help" onclick="return false;"/>
-                                    <p:tooltip for="@previous" value="The number of fields that were filled in by users. We started to record the 'was pasted' flag on 5.11.2018."/>
+                                    <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
                                 </div>
                             </div>
                         </f:facet>
@@ -192,39 +173,39 @@
                             #{gfs.terms}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                            <f:facet name="header">Pasted Terms</f:facet>
+                            <f:facet name="header">#{msg['Glossary.pasted_terms']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
-                            <f:facet name="header">Pronunciation</f:facet>
+                            <f:facet name="header">#{msg['Glossary.pronounciation']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                            <f:facet name="header">Pasted Pronunciation</f:facet>
+                            <f:facet name="header">#{msg['Glossary.pasted_pronounciations']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
-                            <f:facet name="header">Acronym</f:facet>
+                            <f:facet name="header">#{msg['Glossary.acronym']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                            <f:facet name="header">Pasted Acronym</f:facet>
+                            <f:facet name="header">#{msg['Glossary.pasted_acronyms']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
-                            <f:facet name="header">Phraseology</f:facet>
+                            <f:facet name="header">#{msg['Glossary.phraseology']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                            <f:facet name="header">Pasted Phraseology</f:facet>
+                            <f:facet name="header">#{msg['Glossary.pasted_phraseologies']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
-                            <f:facet name="header">Uses</f:facet>
+                            <f:facet name="header">#{msg['Glossary.use']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
-                            <f:facet name="header">Source</f:facet>
+                            <f:facet name="header">#{msg['Glossary.sources']}</f:facet>
                             #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
@@ -234,7 +215,7 @@
                             </h:outputText>%
                         </p:column>
                         <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
-                            <f:facet name="header">Total pasted %</f:facet>
+                            <f:facet name="header">#{msg['Glossary.total_pasted']}</f:facet>
                             <h:outputText value="#{gfs.totalPastedPct*100}">
                                 <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
                             </h:outputText>%
@@ -247,15 +228,19 @@
                 <div class="col-md-12">
                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.descFieldsStatistic}"
                                  var="gds"
-                                 emptyMessage="Nothing was found for the users in the date range that you selected."
+                                 emptyMessage="#{msg.no_data}"
                                  paginator="true" rows="25"
                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  rowsPerPageTemplate="25,50,100">
+
                         <f:facet name="header">
-                            #{msg['Glossary.Definitions']}
-                            <p:button id="descriptionsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                      icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="descriptionsTable" value="All descriptions that were filled in by users"/>
+                            <div class="ui-helper-clearfix">
+                                #{msg['Glossary.Definitions']}
+                                <div class="float-right">
+                                    <p:button icon="ui-icon-help" onclick="return false;"/>
+                                    <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>
+                                </div>
+                            </div>
                         </f:facet>
 
                         <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"

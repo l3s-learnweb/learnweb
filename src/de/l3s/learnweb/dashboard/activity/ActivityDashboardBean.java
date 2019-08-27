@@ -86,6 +86,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         try
         {
             dashboardManager = new ActivityDashboardManager();
+            selectedActionItems = new ArrayList<>(actions.keySet());
+
             cleanAndUpdateStoredData();
         }
         catch(SQLException e)
