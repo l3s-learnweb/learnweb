@@ -172,7 +172,7 @@ class GlossaryDashboardChartsFactory
             }
         }
         concepts.setData(conceptsData);
-        concepts.setBackgroundColor(ChartJsUtils.getColorList(4));
+        concepts.setBackgroundColor(ChartJsUtils.getColorList(10));
 
         BarChartDataSet terms = new BarChartDataSet();
         terms.setLabel("Terms");
@@ -190,7 +190,7 @@ class GlossaryDashboardChartsFactory
             }
         }
         terms.setData(termsData);
-        terms.setBackgroundColor(ChartJsUtils.getColorList(4));
+        terms.setBackgroundColor(ChartJsUtils.getColorList(10));
 
         data.setLabels(labels);
         data.addChartDataSet(terms);

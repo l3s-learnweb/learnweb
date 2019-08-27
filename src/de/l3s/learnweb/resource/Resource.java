@@ -1227,7 +1227,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 else if(getSource().equals(SERVICE.youtube))
                     embeddedCode = "<iframe src=\"https://www.youtube-nocookie.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
                 else if(getSource().equals(SERVICE.vimeo))
-                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
                 if(isProcessing())
                 {

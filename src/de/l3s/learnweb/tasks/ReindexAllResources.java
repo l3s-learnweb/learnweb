@@ -25,5 +25,6 @@ public class ReindexAllResources
         learnweb.onDestroy();
 
         log.debug("All tasks completed.");
+        System.exit(0);
     }
 }
