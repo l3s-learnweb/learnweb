@@ -9882,6 +9882,15 @@ body .moderator-btn {
   border: 1px solid #1D4350;
   color: #fff;
 }
+body .moderator-btn .ui-button-text {
+  position: relative;
+}
+body .moderator-btn .ui-button-text:before {
+  content: "";
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  padding-right: 0.5rem;
+}
 body .moderator-btn.ui-state-hover, body .moderator-btn.ui-state-active, body .moderator-btn.ui-state-focus {
   background-position: right center;
 }

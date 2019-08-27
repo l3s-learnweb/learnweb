@@ -71,7 +71,7 @@
                 </p:commandButton>
 
                 <ui:fragment rendered="#{true or learnwebBean.learnweb.service == 'AMA'}">
-                    <p:commandButton value="#{msg.download_group_resources}" onclick="PF('dlg1').show();" type="button" styleClass="moderator-btn" icon="fa fa-fw fa-low-vision"/>
+                    <p:commandButton value="#{msg.download_group_resources}" onclick="PF('dlg1').show();" type="button" styleClass="moderator-btn"/>
 
                     <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" width="50%">
                         <h:outputFormat value="#{msg.export_resources_warning}">

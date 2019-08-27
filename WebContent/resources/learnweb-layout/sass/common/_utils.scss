@@ -148,6 +148,17 @@ body {
     border: 1px solid #1D4350;
     color: $cyanButtonTextColor;
 
+    .ui-button-text {
+      position: relative;
+
+      &:before {
+        content: '\f2a8';
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        padding-right: 0.5rem;
+      }
+    }
+
     &.ui-state-hover,
     &.ui-state-active,
     &.ui-state-focus {
