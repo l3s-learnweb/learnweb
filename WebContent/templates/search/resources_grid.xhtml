@@ -9,13 +9,17 @@
 	<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
 	<h:outputScript library="justifiedGallery" name="jquery.justifiedGallery.min.js" target="head"/>
 	<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-	<div id="gallery" >
+	<div id="gallery" class="border-0">
 		<p:repeat var="res" value="#{resources}">
 			<div id="resource_${res.tempId}"  class="resource content" data-src="${res.urlProxied}"   data-fancybox="gallery">
 				<div class="content-overlay"></div>
-				<img style="z-index: -1;" id="${res.tempId}" src="${res.thumbnail2b.url}"/>
-				<div class="content-details fadeIn-bottom">
-					<i class="fa fa-search-plus fa-3x text-white"></i>
+				<img id="${res.tempId}" style="z-index: -1;" src="${res.thumbnail2b.url}"/>
+					<div class="content-details fadeIn-bottom">
+						<i class="fa fa-play-circle-o fa-3x text-white"></i>
+					</div>
+				<div class="caption d-flex justify-content-between align-items-center">
+					<span>#{res.title}</span>
+					<span class="mr-2">#{res.durationInMinutes}</span>
 				</div>
 				<ui:decorate template="/templates/search/resource_metadata.xhtml">
 					<ui:param name="res" value="#{res}"/>

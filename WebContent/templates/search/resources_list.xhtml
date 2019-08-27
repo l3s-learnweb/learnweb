@@ -25,9 +25,19 @@
                 </h:outputLink>
             </div>
             <div>
-                <div class="text-truncate overflow-hidden" style="color: #006621;">
-                <h:outputText rendered="#{res.id != -1}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputText>
-                <h:outputText rendered="#{res.id == -1}" escape="true" target="_blank">#{res.url}</h:outputText>
+                <div class="d-flex">
+                    <div class="text-truncate overflow-hidden" style="color: #006621;">
+                    <h:outputText rendered="#{res.id != -1}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputText>
+                    <h:outputText rendered="#{res.id == -1}" escape="true" target="_blank">#{res.url}</h:outputText>
+                    </div>
+                    <div class="iconscontainer">
+                        <div class="icon mt-1">
+                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-plus-circle fa-fw text-decoration-none"
+                                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
+                            </h:outputLink>
+                            <span>#{msg.addToMyResources}</span>
+                        </div>
+                    </div>
                 </div>
                 <ui:fragment rendered="${res.archived}">
                     <div>#{msg['Archive.captured_between']}
@@ -42,26 +52,24 @@
                     </div>
                 </ui:fragment>
             </div>
-            <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
+            <span class="text-truncate d-block">
+                 <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
+            </span>
         </div>
         <div>
-            <p:outputLabel for="@next" value="#{msg.options}: " styleClass="font-weight-bold"/>
-            <h:outputLink value="#" rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}" styleClass="fa fa-plus-circle mr-2 fa-fw text-decoration-none"
-                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
-            </h:outputLink>
             <h:panelGroup rendered="#{not empty res.group}" styleClass="mr-2">
-                <p:outputLabel for="@next" value="#{msg.group}: " styleClass="font-weight-bold"/>
+                <p:outputLabel for="@next" value="#{msg.group}:" styleClass="font-weight-bold mr-1"/>
                 <h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
                     <f:param name="group_id" value="#{res.group.id}"/>
                     <h:outputText value="#{res.group.title}"/>
                 </h:outputLink>
             </h:panelGroup>
-            <h:panelGroup styleClass="metadata-field" rendered="#{not empty res.getMetadataValue('collector')}">
+            <h:panelGroup rendered="#{not empty res.getMetadataValue('collector')}">
                 <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="font-weight-bold"/>
                 <h:outputText value="#{res.getMetadataValue('collector')}"/>
             </h:panelGroup>
             <h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
-                <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="font-weight-bold"/>
+                <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="font-weight-bold"/>
                 <h:outputText value="#{res.resource.ownerUser.fullName}"/>
             </h:panelGroup>
         </div>

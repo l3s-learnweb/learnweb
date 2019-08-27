@@ -88,7 +88,12 @@ function createGroupTooltips() {
 }
 
 $(document).ready(function () {
-    $("#gallery").justifiedGallery();
+    $("#gallery").justifiedGallery({
+        rowHeight: "200",
+        margins: 20,
+        captionsShowAlways : true,
+        captionsAnimation : true,
+    });
     prepareResources();
     <!-- TODO: this function doesn't exist, do we need this in future? -->
     /*else if(view === 'list')

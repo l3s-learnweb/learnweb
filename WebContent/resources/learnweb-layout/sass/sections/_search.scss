@@ -280,51 +280,91 @@
 
   .content {
     overflow: hidden;
+
+    .content-overlay {
+      background: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      opacity: 0;
+      -webkit-transition: all 0.4s ease-in-out 0s;
+      -moz-transition: all 0.4s ease-in-out 0s;
+      transition: all 0.4s ease-in-out 0s;
+    }
+
+    .content-details {
+      position: absolute;
+      text-align: center;
+      padding-left: 1em;
+      padding-right: 1em;
+      top: 50%;
+      left: 50%;
+      opacity: 0;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      -webkit-transition: all 0.3s ease-in-out 0s;
+      -moz-transition: all 0.3s ease-in-out 0s;
+      transition: all 0.3s ease-in-out 0s;
+    }
+
+    &:hover {
+      .content-overlay {
+        opacity: 1;
+      }
+
+      .content-details {
+        top: 50%;
+        left: 50%;
+        opacity: 1;
+      }
+
+      .caption {
+        transform: translateY(100%);
+      }
+    }
   }
 
-  .content .content-overlay {
-    background: rgba(0,0,0,0.7);
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    opacity: 0;
-    -webkit-transition: all 0.4s ease-in-out 0s;
-    -moz-transition: all 0.4s ease-in-out 0s;
-    transition: all 0.4s ease-in-out 0s;
-  }
+  .iconscontainer {
 
-  .content:hover .content-overlay{
-    opacity: 1;
-  }
+    .icon {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
 
-  .content-image{
-    width: 100%;
-  }
+      span {
+        position: absolute;
+        top: 60%;
+        margin-top: 0.5rem;
+        padding: .55rem 1rem;
+        background-color: white;
+        font-weight: 500;
+        white-space: nowrap;
+        border-radius: 50px;
+        box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.07);
 
-  .content-details {
-    position: absolute;
-    text-align: center;
-    padding-left: 1em;
-    padding-right: 1em;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    -webkit-transition: all 0.3s ease-in-out 0s;
-    -moz-transition: all 0.3s ease-in-out 0s;
-    transition: all 0.3s ease-in-out 0s;
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+      }
+      &:hover {
+        span {
+          top: 100%;
+          opacity: 1;
+        }
+      }
+    }
   }
-
-  .content:hover .content-details{
-    top: 50%;
-    left: 50%;
-    opacity: 1;
-  }
-
 }
 
 
