@@ -308,11 +308,11 @@ ul.res-filters {
 }
 
 .res-block {
+  display: block;
   position: relative;
   color: $body-color;
   background: $gray-200;
-  box-shadow: 0 1px 1px 0 $themeSidebarDividerColor;
-  cursor: pointer;
+  box-shadow: $box-shadow-sm;
 
   .res-bl-preview {
     padding-top: 75%; // 4:3 Aspect Ratio
@@ -321,10 +321,10 @@ ul.res-filters {
     .res-bl-preview-wrap {
       transition: opacity $transition-duration ease-in-out;
       background-color: $white;
-      height: 100%;
       overflow: hidden;
       position: absolute;
       text-align: center;
+      height: 100%;
       width: 100%;
       left: 0;
       top: 0;
@@ -401,7 +401,7 @@ ul.res-filters {
   .ui-selecting & {
     color: $themeElementTextColor;
     background: $themePrimaryDarkerAlt;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: $box-shadow;
 
     .res-bl-icon {
       color: $themePrimaryDarkerAlt;
@@ -431,7 +431,7 @@ ul.res-filters {
   .ui-draggable-helper & { // TODO: investigate
     background-color: $themePrimaryColor;
     color: $white;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: $box-shadow;
     opacity: 1;
 
     .res-bl-preview {

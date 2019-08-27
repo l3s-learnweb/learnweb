@@ -86,17 +86,6 @@
   background: rgba($dark, 0.9);
 }
 
-.s-gutters {
-  margin-right: -$grid-gutter-width / 4;
-  margin-left: -$grid-gutter-width / 4;
-
-  > .col,
-  > [class*="col-"] {
-    padding-right: $grid-gutter-width / 4;
-    padding-left: $grid-gutter-width / 4;
-  }
-}
-
 td.td-text-right {
   @extend .text-right;
 }
