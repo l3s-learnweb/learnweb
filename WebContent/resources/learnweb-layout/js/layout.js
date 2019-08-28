@@ -160,8 +160,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             return currentPath.indexOf(this.href) === 0;
         }).each(function () {
             var $activeMenuLink = $(this);
+            var $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
+
             $activeMenuLink.addClass('ui-state-active');
-            $this.expandMenuItemThree($activeMenuLink.closest('.ui-menuitem'));
+            $activeMenuItem[0].scrollIntoView();
+
+            $this.expandMenuItemThree($activeMenuItem);
         });
     },
 
