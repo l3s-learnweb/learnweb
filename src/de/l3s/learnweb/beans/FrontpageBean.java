@@ -1,13 +1,12 @@
 package de.l3s.learnweb.beans;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.List;
+import de.l3s.learnweb.Announcement;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-
-import de.l3s.learnweb.Announcement;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.List;
 
 @Named
 @RequestScoped
@@ -21,7 +20,7 @@ public class FrontpageBean extends ApplicationBean implements Serializable
     {
         try
         {
-            announcements = getLearnweb().getAnnouncementsManager().getTopAnnouncements(MAX_ANNOUNCEMENTS);
+            announcements =  getLearnweb().getAnnouncementsManager().getTopAnnouncements(MAX_ANNOUNCEMENTS);
         }
         catch(SQLException e)
         {

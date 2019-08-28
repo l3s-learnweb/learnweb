@@ -18,9 +18,9 @@
     <div class="section-landing">
         <div id="header" class="header" style="background-image:url(#{resource['frontpage:luh.jpg']});">
             <div class="container">
-                <div class="row row-eq-height">
+                <div class="row align-items-center">
                     <div class="col-md-6 col-lg-4 mb-4 mb-md-0">
-                        <div class="bg-white-90 p-3 pb-4 h-100">
+                        <div class="bg-white-90 p-3 pb-4">
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </div>
                     </div>
@@ -28,11 +28,11 @@
                         <div class="header-news-list bg-dark-90 text-white">
                             <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
-                            <p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="unordered">
+                            <p:dataList rows="3" value="#{frontpageBean.announcements}" var="news" type="unordered">
                                 <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
                                 <h:outputText value="#{news.date}" styleClass="news-date mb-1">
-                                    <f:convertDateTime type="date" timeZone="#{userBean.timeZone}"/>
+                                    <f:convertDateTime type="both" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
 
                                 <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>

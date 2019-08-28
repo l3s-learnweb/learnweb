@@ -1,15 +1,11 @@
 package de.l3s.learnweb;
 
+import org.apache.log4j.Logger;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
+import java.util.*;
 
 public class AnnouncementsManager
 {
@@ -18,31 +14,27 @@ public class AnnouncementsManager
     private Learnweb learnweb;
     private Map<Integer, Announcement> cache;
 
-    public AnnouncementsManager(Learnweb learnweb) throws SQLException
+    public AnnouncementsManager(Learnweb learnweb)
     {
         super();
         this.learnweb = learnweb;
-        this.cache = Collections.synchronizedMap(new LinkedHashMap<>(80)); // TODO it is not necessary
-        // all announcements will be requested only by very few users on the admin page. But the top announcements will be requested by many users on the frontpage
-        // thus you have to cache only the top entries see getTopAnnouncements()
-        this.resetCache();
+        this.cache = new LinkedHashMap<>();
     }
 
-    public synchronized void resetCache() throws SQLException
+    public void resetCache(int limit) throws SQLException
     {
-        cache.clear();
-
-        try(ResultSet rs = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC "))
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE hidden = ? ORDER BY created_at DESC limit ?"))
         {
-            while(rs.next())
+            preparedStatement.setBoolean(1, false);
+            preparedStatement.setInt(2, limit);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            cache.clear();
+            while(resultSet.next())
             {
-                Announcement announcement = createAnnouncement(rs);
+                Announcement announcement = createAnnouncement(resultSet);
                 cache.put(announcement.getId(), announcement);
+
             }
-        }
-        catch(Exception e)
-        {
-            log.error(e);
         }
     }
 
@@ -70,7 +62,6 @@ public class AnnouncementsManager
             log.debug(stmt.toString());
             stmt.executeUpdate();
         }
-
         return announcement;
     }
 
@@ -104,8 +95,8 @@ public class AnnouncementsManager
         {
             stmt.setBoolean(1, announcement.isHidden());
             stmt.setInt(2, announcement.getId());
-            log.debug(stmt.toString());
             stmt.executeUpdate();
+            log.debug(stmt.toString());
         }
     }
 
@@ -114,14 +105,33 @@ public class AnnouncementsManager
         return new java.sql.Date(calendarDate.getTime());
     }
 
-    public Collection<Announcement> getAnnouncementsAll()
+    public List<Announcement> getAnnouncementsAll()
     {
-        return Collections.unmodifiableCollection(cache.values());
+        List<Announcement> newList = new ArrayList<Announcement>();
+        try(ResultSet resultSet = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC"))
+        {
+            while(resultSet.next())
+            {
+                Announcement announcement = createAnnouncement(resultSet);
+                newList.add(announcement);
+            }
+        }
+        catch(Exception e)
+        {
+            log.error(e);
+        }
+        return newList;
     }
 
-    public Announcement getAnnouncementById(int newsId)
+    public Announcement getAnnouncementById(int newsId) throws SQLException
     {
-        return cache.get(newsId);
+        PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE news_id = ?");
+        stmt.setInt(1, newsId);
+        try(ResultSet resultSet = stmt.executeQuery())
+        {
+            resultSet.next();
+            return createAnnouncement(resultSet);
+        }
     }
 
     /**
@@ -131,8 +141,8 @@ public class AnnouncementsManager
      */
     public List<Announcement> getTopAnnouncements(int maxAnnouncements) throws SQLException
     {
-        // TODO use cache
-        return null;
+        resetCache(maxAnnouncements);
+        return new ArrayList<Announcement>(cache.values());
     }
 
 }

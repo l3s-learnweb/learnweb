@@ -33,7 +33,7 @@
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" timeZone="#{userBean.timeZone}" />
+					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" showTime="true" type="both" timeZone="#{userBean.timeZone}" />
 					<p:message for="@previous"/>
 				</div>
 

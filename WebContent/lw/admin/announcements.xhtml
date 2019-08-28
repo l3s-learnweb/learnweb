@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.date}:"/>
-                    <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" timeZone="#{userBean.timeZone}" />
+                    <p:datePicker id="datepick" value="#{adminAnnouncementsBean.date}" showTime="true" timeZone="#{userBean.timeZone}" />
                     <p:message for="@previous"/>
                 </div>
 
@@ -80,7 +80,7 @@
 
                 <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
                     <p:selectBooleanCheckbox value="#{news.hidden}">
-                        <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onHidden(news.id)}" />
+                        <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onToggleVisibility(news.id)}" />
                     </p:selectBooleanCheckbox>
                 </p:column>
 
