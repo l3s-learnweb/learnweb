@@ -10848,7 +10848,7 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
 
 .ui-lwmenu {
   padding: 0;
-  list-style-type: none;
+  list-style: none;
 }
 .ui-lwmenu a {
   text-decoration: none;
@@ -10856,9 +10856,13 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
 .ui-lwmenu .ui-menuitem {
   margin: 1px 0;
 }
-.ui-lwmenu .ui-lwmenu-icon,
 .ui-lwmenu .ui-menuitem-icon {
+  line-height: 1.3;
   min-width: 1.28571429em;
+}
+.ui-lwmenu .ui-menuitem-icon:not(.ui-menuitem-icon-expand) {
+  margin-left: 0.125rem;
+  margin-right: 0.375rem;
 }
 .ui-lwmenu .ui-menuitem-link {
   display: flex;
@@ -10866,10 +10870,6 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
   color: #212529;
   border-left: 0.25rem solid transparent;
   padding: 0.375rem 0.4rem 0.375rem 0.125rem;
-}
-.ui-lwmenu .ui-menuitem-link .ui-menuitem-icon {
-  margin-left: 0.125rem;
-  margin-right: 0.375rem;
 }
 .ui-lwmenu .ui-menuitem-link .ui-menuitem-text {
   overflow: hidden;
@@ -10881,23 +10881,17 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
   background-color: #2C447B !important;
   border-left-color: #4b6cb7;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header {
+.ui-lwmenu .ui-menuitem-panel > .ui-menuitem-link {
   margin-top: 2px;
   font-weight: 700;
   padding: 0.5em 0.375rem 0.5em 0.125rem;
   color: #fff;
   background-color: #4b6cb7;
 }
-.ui-lwmenu .ui-lwmenu-panel .ui-lwmenu-panel-header.ui-state-disabled {
+.ui-lwmenu .ui-menuitem-panel > .ui-menuitem-link.ui-state-disabled {
   cursor: default;
 }
-.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-header > .ui-menuitem-icon:before {
-  content: "";
-}
-.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-content {
-  display: block;
-}
-.ui-lwmenu .ui-lwmenu-panel.ui-state-expand .ui-lwmenu-panel-content .ui-menu-list {
+.ui-lwmenu .ui-menuitem-panel.ui-state-expand > .ui-menu-list {
   margin-left: 0;
 }
 .ui-lwmenu > .ui-menu-parent > .ui-menu-list > .ui-menu-parent.ui-state-expand {
@@ -10919,14 +10913,11 @@ body .ui-breadcrumb ul li .ui-menuitem-link {
 .ui-lwmenu .ui-menu-parent .ui-menu-list .ui-menu-parent .ui-menu-list {
   margin-left: 0;
 }
-.ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menuitem-link > .ui-lwmenu-icon:before {
+.ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menuitem-link > .ui-menuitem-icon-expand:before {
   content: "";
 }
 .ui-lwmenu .ui-menu-parent.ui-state-expand > .ui-menu-list {
   display: block;
-}
-.ui-lwmenu .ui-menu-parent.ui-state-empty > .ui-menuitem-link > .ui-lwmenu-icon {
-  visibility: hidden;
 }
 
 .ui-menu.ui-menu-navbar-submenu {

@@ -15,20 +15,15 @@ public class LearnwebMenu extends AbstractMenu implements Widget
 
     public static final String CONTAINER_CLASS = "ui-lwmenu ui-widget";
 
-    public static final String PANEL_CLASS = "ui-lwmenu-panel ui-menu-parent";
-    public static final String PANEL_HEADER_CLASS = "ui-menuitem-link ui-lwmenu-panel-header";
-    public static final String PANEL_HEADER_ICON_CLASS = "ui-menuitem-icon fa fa-fw fa-angle-right";
-    public static final String PANEL_HEADER_TEXT_CLASS = "ui-menuitem-text";
-    public static final String PANEL_CONTENT_CLASS = "ui-lwmenu-panel-content ui-helper-hidden";
-
-    public static final String DESCENDANT_SUBMENU_CLASS = "ui-menuitem ui-menu-parent";
-    public static final String DESCENDANT_SUBMENU_ICON_CLASS = "ui-lwmenu-icon fa fa-fw fa-angle-right";
-    public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
-
     public static final String MENUITEM_CLASS = "ui-menuitem";
+    public static final String MENUITEM_LINK_CLASS = "ui-menuitem-link";
     public static final String MENUITEM_TEXT_CLASS = "ui-menuitem-text";
     public static final String MENUITEM_ICON_CLASS = "ui-menuitem-icon";
-    public static final String MENUITEM_LINK_WITH_ICON_CLASS = "ui-menuitem-link ui-menuitem-link-hasicon";
+    public static final String MENUITEM_LINK_WITH_ICON_CLASS = MENUITEM_LINK_CLASS + " ui-menuitem-link-hasicon";
+
+    public static final String DESCENDANT_SUBMENU_CLASS = MENUITEM_CLASS + " ui-menu-parent";
+    public static final String DESCENDANT_SUBMENU_ICON_CLASS = MENUITEM_ICON_CLASS + " ui-menuitem-icon-expand fa fa-fw fa-angle-right";
+    public static final String DESCENDANT_SUBMENU_LIST_CLASS = "ui-menu-list ui-helper-reset ui-helper-hidden";
 
     public LearnwebMenu()
     {
@@ -37,13 +32,10 @@ public class LearnwebMenu extends AbstractMenu implements Widget
 
     public enum PropertyKeys
     {
-
         widgetVar,
         model,
         style,
-        styleClass,
-        multiple,
-        stateful
+        styleClass
     }
 
     @Override
@@ -91,26 +83,6 @@ public class LearnwebMenu extends AbstractMenu implements Widget
     public void setStyleClass(String styleClass)
     {
         getStateHelper().put(LearnwebMenu.PropertyKeys.styleClass, styleClass);
-    }
-
-    public boolean isMultiple()
-    {
-        return (Boolean) getStateHelper().eval(LearnwebMenu.PropertyKeys.multiple, true);
-    }
-
-    public void setMultiple(boolean multiple)
-    {
-        getStateHelper().put(LearnwebMenu.PropertyKeys.multiple, multiple);
-    }
-
-    public boolean isStateful()
-    {
-        return (Boolean) getStateHelper().eval(LearnwebMenu.PropertyKeys.stateful, true);
-    }
-
-    public void setStateful(boolean stateful)
-    {
-        getStateHelper().put(LearnwebMenu.PropertyKeys.stateful, stateful);
     }
 
     @Override
