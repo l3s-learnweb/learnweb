@@ -10,6 +10,7 @@
     <!--@elvariable id="helpText" type="java.lang.String"-->
     <!--@elvariable id="helpTextStyle" type="java.lang.String"-->
     <!--@elvariable id="smallPage" type="java.lang.Boolean"-->
+    <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
     <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
     <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
     <!--@elvariable id="rightPane" type="java.lang.Boolean"-->
@@ -50,7 +51,7 @@
         </h:head>
 
         <h:body styleClass="layout-body">
-            <div class="layout-overlay"></div>
+            <div class="layout-overlay ui-widget-overlay"></div>
 
             <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
                 <ui:include src="parts/header.xhtml"/>
@@ -75,12 +76,18 @@
                             </ui:fragment>
 
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
-                                <ui:insert name="breadcrumb_bar">
-                                    <p:breadCrumb styleClass="mb-3">
-                                        <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
-                                        <ui:insert name="sub_breadcrumb"/>
-                                    </p:breadCrumb>
-                                </ui:insert>
+                                <ui:fragment rendered="#{not hideBreadcrumbs}">
+                                    <div class="layout-breadcrumb mb-3">
+                                        <p:breadCrumb>
+                                            <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
+                                            <ui:insert name="sub_breadcrumb"/>
+                                        </p:breadCrumb>
+
+                                        <div class="breadcrumb-right">
+                                            <ui:insert name="breadcrumb_right"/>
+                                        </div>
+                                    </div>
+                                </ui:fragment>
 
                                 <div class="row no-gutters">
                                     <div class="col layout-main-pane">
@@ -106,7 +113,7 @@
 
             <p:ajaxStatus styleClass="ajax-status-screen" onstart="$('.layout-overlay').addClass('show');" onsuccess="$('.layout-overlay').removeClass('show');">
                 <f:facet name="start">
-                    <div class="layout-overlay show">
+                    <div class="layout-overlay ui-widget-overlay">
                         <div class="la-pacman fa-5x text-secondary">
                             <div></div>
                             <div></div>

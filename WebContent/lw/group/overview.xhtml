@@ -32,7 +32,7 @@
         <div class="col-md-6">
             <p:panel header="Group details">
                 <h5>#{groupOverviewBean.group.title}</h5>
-                <p>#{groupOverviewBean.group.description}</p>
+                <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
                 <p class="mb-1">
                     <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
                     <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>

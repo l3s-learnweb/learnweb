@@ -21,116 +21,94 @@
 	<p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumTopicsBean.group.id}"/>
 </ui:define>
 
+<ui:define name="breadcrumb_right">
+    <h:form>
+        <p:commandButton rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                       update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+        </p:commandButton>
+
+        <p:commandButton value="#{msg['ForumIndex.new_topic']}" onclick="PF('newTopicDialog').show();" global="false"
+						 rendered="${forumTopicsBean.group.isMember(userBean.user)}"/>
+    </h:form>
+</ui:define>
+
 <ui:define name="group_layout">
-	<p:panel header="#{msg.forum}">
-		<f:facet name="actions">
-			<h:form id="center_header_form" styleClass="col mb-2 mx-1 py-1">
-				<p:commandButton value="#{msg['ForumIndex.new_topic']}" rendered="${forumTopicsBean.group.isMember(userBean.user)}" styleClass="secondary-btn"/>
+    <p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table" tableStyleClass="table-responsive"
+                 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
+        <f:facet name="header">#{msg.forum}</f:facet>
 
-				<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-							   update=":growl @form" partialSubmit="true" styleClass="secondary-btn" process="@this" value="#{msg.join_group}">
-					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-				</p:commandLink>
-			</h:form>
-		</f:facet>
+        <p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
+            <h:link outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}">
+                <ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate}">
+                    <i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
+                </ui:fragment>
+                <h:outputText value="#{topic.title}"/>
+            </h:link>
+        </p:column>
 
-		<h:form prependId="false" rendered="#{not facesContext.validationFailed}" id="form_list_topics">
-			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
-						 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-						 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
+        <p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}" style="max-width:1.5rem;">
+            <h:outputText value="#{topic.replies}"/>
+        </p:column>
 
-				<p:column headerText="#{msg['ForumIndex.topic']}" styleClass="text-center" sortBy="#{topic.title}">
-					<h:link outcome="/lw/group/forum_post.jsf?topic_id=#{topic.id}">
-						<ui:fragment rendered="#{userBean.user.lastLoginDate lt topic.lastPostDate}">
-							<i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
-						</ui:fragment>
-						<h:outputText value="#{topic.title}"/>
-					</h:link>
-				</p:column>
-				<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}">
-					<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-				</p:column>
-				<p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}">
-					<h:outputText value="#{topic.replies}"/>
-				</p:column>
-				<p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}">
-					<h:outputText value="#{topic.views}"/>
-				</p:column>
-				<p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}">
-					<h:outputText value="#{topic.lastPostDate}"
-								  styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'font-weight-bold':''}">
-						<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
-					</h:outputText>
-					<br/>
-					<h:outputText value="#{msg.by} "/>
-					<h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
-				</p:column>
-			</p:dataTable>
+        <p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}" style="max-width:1.5rem;">
+            <h:outputText value="#{topic.views}"/>
+        </p:column>
+
+		<p:column headerText="#{msg['ForumIndex.author']}" styleClass="text-center" sortBy="#{topic.user.username}" style="max-width:3rem;">
+			<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
+		</p:column>
+
+        <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}" style="max-width:3rem;">
+            <h:outputText value="#{topic.lastPostDate}" styleClass="d-block">
+                <f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
+            </h:outputText>
+			<div>#{msg.by} <h:link value="#{topic.lastPostUser.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/></div>
+        </p:column>
+    </p:dataTable>
+
+	<p:dialog header="#{msg['ForumIndex.new_topic']}" widgetVar="newTopicDialog" modal="true" resizable="false" responsive="true" closeOnEscape="true"
+			  rendered="${forumTopicsBean.group.isMember(userBean.user)}">
+		<h:form id="new_topic_form">
+			<div class="form-group">
+				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
+				<h:inputText id="post_topic" value="#{forumTopicsBean.newTopicTitle}" required="true">
+					<f:validateLength maximum="100"/>
+				</h:inputText>
+				<p:message for="@previous"/>
+			</div>
+
+			<div class="form-group">
+				<p:outputLabel for="@next" value="#{msg.category}:"/>
+				<p:selectOneMenu id="post_category" value="#{forumTopicsBean.newPost.category}" editable="true"
+								 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
+					<f:selectItems value="#{forumTopicsBean.categories}"/>
+				</p:selectOneMenu>
+				<p:message for="@previous"/>
+			</div>
+
+			<div class="form-group">
+				<p:outputLabel for="@next" value="#{msg['PostShow.postContent']}:"/>
+				<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" height="200">
+					<f:facet name="toolbar">
+						<span class="ql-formats">
+							<button class="ql-bold"></button>
+							<button class="ql-italic"></button>
+							<button class="ql-underline"></button>
+							<button class="ql-strike"></button>
+						</span>
+						<span class="ql-formats">
+							<select class="ql-font"></select>
+							<select class="ql-size"></select>
+						</span>
+					</f:facet>
+				</p:textEditor>
+				<p:message for="@previous"/>
+			</div>
+
+			<p:commandButton ajax="true" value="#{msg.save}" action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :forum_table"/>
 		</h:form>
-	</p:panel>
-
-	<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
-		<p:panel styleClass="mt-3" header="#{msg['ForumIndex.new_topic']}">
-				<h:form prependId="false">
-					<table id="new_topic_table">
-						<tr>
-							<td >
-								<h:outputText styleClass="w-100 mb-2" value="#{msg['ForumIndex.topic']}: "/>
-							</td>
-							<td>
-								<h:inputText value="#{forumTopicsBean.newTopicTitle}" styleClass="w-100 mb-2" id="post_topic" label="#{msg['ForumIndex.topic']}">
-									<f:validateLength minimum="0" maximum="100"/>
-								</h:inputText>
-							</td>
-							<td>
-								<p:message for="post_topic"/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<h:outputText value="#{msg.category}: "/>
-							</td>
-							<td>
-								<p:selectOneMenu id="post_category" styleClass="w-100 mb-2" value="#{forumTopicsBean.newPost.category}"
-												 editable="true" label="#{msg.category}"
-												 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
-									<f:selectItems value="#{forumTopicsBean.categories}"/>
-								</p:selectOneMenu>
-							</td>
-							<td >
-								<p:message for="post_category"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" label="#{msg['PostShow.postContent']}" >
-									<f:facet name="toolbar">
-						             <span class="ql-formats">
-						                <button class="ql-bold"></button>
-						                <button class="ql-italic"></button>
-						                <button class="ql-underline"></button>
-						                <button class="ql-strike"></button>
-						            </span>
-										<span class="ql-formats">
-						                <select class="ql-font"></select>
-						                <select class="ql-size"></select>
-						            </span>
-									</f:facet>
-								</p:textEditor>
-							</td>
-							<td >
-								<p:message for="post_message"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="3">
-								<p:commandButton ajax="true" value="#{msg.save}"
-												 action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :form_list_topics"/>
-							</td>
-						</tr>
-					</table>
-				</h:form>
-		</p:panel>
-	</ui:fragment>
+	</p:dialog>
 </ui:define>
 </ui:composition>
