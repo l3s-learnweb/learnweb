@@ -28,6 +28,13 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
             }
         });
 
+        /**
+         * Listener to trigger modal close, when clicked on dialog overlay.
+         */
+        $(document).on('click', '.ui-dialog-mask', function () {
+            $this.getWidgetVarById(this.id.replace('_modal', '')).hide();
+        });
+
         $this.overlay.on('mouseup', function(e) {
             if ($this.isRightPaneOpen) {
                 $this.hideRightPane();
@@ -81,6 +88,20 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
                 window.cqApi.reevaluate(false);
             }, 200);
         }
+    },
+
+    /**
+     * Returns the PrimefacesWidget from element ID
+     * @param elementId
+     * @returns {*}
+     */
+    getWidgetVarById: function (elementId) {
+        for (var propertyName in PrimeFaces.widgets) {
+            var widget = PrimeFaces.widgets[propertyName];
+            if (widget && widget.elementId === elementId) {
+                return widget;
+            }
+        }
     }
 });
 
@@ -115,7 +136,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
             }
 
             var submenu = currentLink.parent();
-            if (submenu.hasClass("ui-menu-parent")) {
+            if (submenu.hasClass('ui-menu-parent')) {
                 if ($this.isExpanded(submenu)) {
                     $this.collapseTreeItem(submenu);
                 } else {
@@ -187,7 +208,17 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 $(function () {
     // We created a PrimeFaces widget without an active element, so we need manually tell PrimeFaces to run it
     // After that, we can access any method of it by using `PF('learnweb')`, like `PF('learnweb').showRightPane();`
-    PrimeFaces.cw("LearnwebTheme", "learnweb", {id: "learnweb"});
+    PrimeFaces.cw('LearnwebTheme', 'learnweb', {id: 'learnweb'});
+});
+
+/**
+ * Reset center position of Dialog after content is loaded.
+ */
+PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
+    show: function() {
+        this._super();
+        this.resetPosition();
+    }
 });
 
 /**
@@ -197,7 +228,7 @@ $(function () {
  */
 PrimeFaces.widget.Menu.prototype.show = function() {
     this.align();
-    this.jq.css({"z-index": ++PrimeFaces.zindex}).show();
+    this.jq.css({'z-index': ++PrimeFaces.zindex}).show();
 };
 
 /**
@@ -250,12 +281,12 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
 //     }
 //
 //     if (event === 'start') {
-//         $("body").css("cursor", "progress");
+//         $('body').css('cursor', 'progress');
 //         ajaxInProgress = setTimeout(function () {
 //             this.jq.children().hide().filter(this.toFacetId(event)).show();
 //         }.bind(this), 200);
 //     } else {
-//         $("body").css("cursor", "default");
+//         $('body').css('cursor', 'default');
 //         clearTimeout(ajaxInProgress);
 //         ajaxInProgress = null;
 //         this.jq.children().hide().filter(this.toFacetId(event)).show();
@@ -264,7 +295,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
 
 /**
  * This is a new implementation of old script which changes size of filters list.
- * If list contains more than N items, then all after N will be hidden and "Show more" will be displayed instead.
+ * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
  */
 PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     init: function (cfg) {
