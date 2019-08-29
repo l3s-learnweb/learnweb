@@ -124,7 +124,16 @@
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.awards}:"/>
-                                <p:editor id="usercredits" value="#{profileBean.credits}" height="80" controls="bold italic underline undo redo"/>
+                                <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.credits}" height="80">
+                                    <f:facet name="toolbar">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                    </f:facet>
+                                </p:textEditor>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 

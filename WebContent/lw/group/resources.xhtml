@@ -27,8 +27,17 @@
     <p:menuitem value="#{msg.resources}" url=""/>
 </ui:define>
 
+<ui:define name="breadcrumb_right">
+    <h:form>
+        <p:commandButton rendered="${not groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+        </p:commandButton>
+    </h:form>
+</ui:define>
+
 <ui:define name="left_column">
-    <p:panel header="Folders" styleClass="mb-3">
+    <p:panel header="Folders">
         <h:form id="group_folders_tree_form">
             <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
                     datakey="#{node.folderId}" animate="true" selectionMode="single" styleClass="ui-tree-responsive">

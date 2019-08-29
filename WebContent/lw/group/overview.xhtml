@@ -20,6 +20,15 @@
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/overview.jsf?group_id=#{groupOverviewBean.group.id}"/>
 </ui:define>
 
+<ui:define name="breadcrumb_right">
+    <h:form>
+        <p:commandButton rendered="${not groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+        </p:commandButton>
+    </h:form>
+</ui:define>
+
 <ui:define name="group_layout">
     <h:outputScript library="learnweb-layout" name="js/og-grid.js"/>
 

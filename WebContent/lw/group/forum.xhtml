@@ -107,7 +107,9 @@
 				<p:message for="@previous"/>
 			</div>
 
-			<p:commandButton ajax="true" value="#{msg.save}" action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form :forum_table"/>
+			<p:commandButton ajax="true" value="#{msg.save}" action="#{forumTopicsBean.onSavePost}"
+							 oncomplete="if (!args.validationFailed) PF('newTopicDialog').hide();"
+							 process="@form" update=":forum_table @form"/>
 		</h:form>
 	</p:dialog>
 </ui:define>
