@@ -25,12 +25,32 @@ var scrolling = false;
 
 function prepareResources() {
     if (view != 'list') {
-        $('[data-fancybox="gallery"]').fancybox({
-            caption: function (instance, item) {
-                return $(this).find('.metadata').html();
+        $("#gallery").justifiedGallery({
+            rowHeight: "200",
+            margins: 20,
+            captionsShowAlways : true,
+            captionsAnimation : true
+        });
+        $('[data-fancybox="search-gallery"]').fancybox({
+            baseClass: "fancybox-search-layout",
+            infobar: false,
+            touch: {
+                vertical: false
+            },
+            buttons: ["close", "share"],
+            animationEffect: "fade",
+            transitionEffect: "fade",
+            preventCaptionOverlap: false,
+            idleTime: false,
+            gutter: 0,
+            caption: function(instance, current) {
+                var $caption = $(current.opts.captionid);
+                return $caption.html();
+            },
+            onInit : function(instance) {
+                instance.$refs.inner.wrap('<div class="fancybox-outer"></div>');
             }
         });
-        $("#gallery").justifiedGallery('norewind');
     }
 }
 
@@ -88,12 +108,6 @@ function createGroupTooltips() {
 }
 
 $(document).ready(function () {
-    $("#gallery").justifiedGallery({
-        rowHeight: "200",
-        margins: 20,
-        captionsShowAlways : true,
-        captionsAnimation : true,
-    });
     prepareResources();
     <!-- TODO: this function doesn't exist, do we need this in future? -->
     /*else if(view === 'list')

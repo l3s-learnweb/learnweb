@@ -1,27 +1,24 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <h:outputStylesheet library="justifiedGallery" name="justifiedGallery.min.css"/>
-    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-    <h:outputScript library="justifiedGallery" name="jquery.justifiedGallery.min.js" target="head"/>
-    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-    <div id="gallery" >
+    <div id="gallery">
         <p:repeat var="res" value="#{resources}">
-            <div id="resource_${res.tempId}"  class="resource content" data-src="${res.resource.maxImageUrl}"   data-fancybox="gallery">
-                        <div class="content-overlay"></div>
-                        <img style="z-index: -1;" id="${res.tempId}" src="${res.thumbnail2b.url}"/>
-                        <div class="content-details fadeIn-bottom">
-                            <i class="fa fa-search-plus fa-3x text-white"></i>
-                        </div>
-                <ui:decorate template="/templates/search/resource_metadata.xhtml">
-                    <ui:param name="res" value="#{res}"/>
-                </ui:decorate>
+            <div class="product">
+                <a href="${res.resource.maxImageUrl}" data-fancybox="search-gallery" data-type="image" data-captionId="#product${res.tempId}">
+                    <img src="${res.thumbnail2b.url}" alt="${res.title}"/>
+                </a>
+                <div class="product-form" id="product${res.tempId}">
+                    <ui:decorate template="/templates/search/resource_metadata.xhtml">
+                        <ui:param name="res" value="#{res}"/>
+                    </ui:decorate>
+                </div>
             </div>
         </p:repeat>
     </div>
+
 </ui:composition>

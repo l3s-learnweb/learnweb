@@ -368,3 +368,89 @@
 }
 
 
+.fancybox-search-layout {
+  @include media-breakpoint-up(md) {
+    /* Give space around main area */
+    .fancybox-outer {
+      top: 50px;
+      left: 50px;
+      bottom: 50px;
+      right: 50px;
+      margin: auto;
+      max-width: 1180px;
+      max-height: 495px;
+      overflow: visible;
+      background: #fff;
+      box-shadow: 10px 10px 15px rgba(0,0,0,0.3);
+      transition: opacity .3s;
+    }
+
+    /* Make it to fade-out while closing */
+    &.fancybox-is-closing .fancybox-outer {
+      opacity: 0;
+    }
+
+    /* Set color for background element */
+    .fancybox-bg {
+      background-color: $gray-700;
+    }
+
+    &.fancybox-is-open .fancybox-bg {
+      opacity: 0.7;
+    }
+
+    /* Adjust content area position */
+    .fancybox-stage {
+      right: 300px;
+    }
+
+    /* Move caption area to the right side */
+    .fancybox-caption {
+      top: 0;
+      right: 44px;
+      bottom: 0;
+      left: auto;
+      width: 256px;
+      padding: 30px 20px;
+      background: #333;
+      pointer-events: all; /* Make text selectable */
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    /* Align buttons at the right side  */
+    .fancybox-toolbar {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: auto;
+      width: 44px;
+      background: #333;
+      border-left: 1px solid #222;
+    }
+
+    /* Remove background from all buttons */
+    .fancybox-button,
+    .fancybox-navigation button:before {
+      background: transparent;
+    }
+
+    /* Change arrow color */
+    .fancybox-navigation button {
+      color: $themeElementTextColor !important;
+      padding: 10px;
+    }
+
+    /* Reposition arrows */
+    .fancybox-button--arrow_left {
+      left: -60px !important;
+    }
+
+    .fancybox-button--arrow_right {
+      right: -60px !important;
+    }
+
+    &.fancybox-show-thumbs .fancybox-button--arrow_right {
+      right: -272px !important;
+    }
+  }
+}
