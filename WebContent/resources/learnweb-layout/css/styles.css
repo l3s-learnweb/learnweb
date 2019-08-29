@@ -9867,24 +9867,18 @@ body .ui-log .ui-log-content {
 }
 
 body .moderator-btn {
-  background-color: #1D4350;
-  background-image: linear-gradient(to right, #1D4350 0%, #A43931 51%, #1D4350 100%);
-  background-size: 200% auto;
-  transition: 0.5s;
-  border: 1px solid #1D4350;
   color: #fff;
+  border: 1px solid #38569C !important;
 }
 body .moderator-btn .ui-button-text {
   position: relative;
 }
 body .moderator-btn .ui-button-text:before {
-  content: "";
+  content: "";
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   padding-right: 0.5rem;
-}
-body .moderator-btn.ui-state-hover, body .moderator-btn.ui-state-active, body .moderator-btn.ui-state-focus {
-  background-position: right center;
+  color: #F9C642;
 }
 
 .layout-wrapper .layout-header {
@@ -10171,29 +10165,6 @@ body,
 }
 .fileupload-minimal .ui-fileupload-content {
   display: none;
-}
-
-.moderator2-btn {
-  color: #fff;
-  border: 1px solid #38569C !important;
-}
-.moderator2-btn .ui-icon {
-  color: #F9C642;
-}
-
-.moderator3-btn {
-  background-color: #4b6cb7;
-  background-image: linear-gradient(to right, #38569C, #4b6cb7, #38569C, #38569C);
-  background-size: 300% 100%;
-  border: 1px solid #38569C;
-  color: #fff;
-  moz-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
-  transition: all 0.4s ease-in-out;
-}
-.moderator3-btn.ui-state-hover, .moderator3-btn.ui-state-active, .moderator3-btn.ui-state-focus {
-  background-position: 100% 0;
 }
 
 /*Overview*/

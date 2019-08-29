@@ -7,30 +7,3 @@
     display: none;
   }
 }
-
-.moderator2-btn {
-  color: $themeElementTextColor;
-  border: 1px solid $themePrimaryColorDarker!important;
-  .ui-icon {
-    color: $themePrimaryAltColor;
-  }
-}
-
-.moderator3-btn {
-  background-color: $themePrimaryColor;
-  background-image: linear-gradient(to right, $themePrimaryColorDarker, $themePrimaryColor, $themePrimaryColorDarker, $themePrimaryColorDarker);
-  background-size: 300% 100%;
-  border: 1px solid $themePrimaryColorDarker;
-  color: $themeElementTextColor;
-
-  moz-transition: all .4s ease-in-out;
-  -o-transition: all .4s ease-in-out;
-  -webkit-transition: all .4s ease-in-out;
-  transition: all .4s ease-in-out;
-
-  &.ui-state-hover,
-  &.ui-state-active,
-  &.ui-state-focus {
-    background-position: 100% 0;
-  }
-}

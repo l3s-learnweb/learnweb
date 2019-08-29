@@ -22,6 +22,13 @@
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
 
+	<ui:define name="breadcrumb_right">
+		<h:form prependId="false">
+			<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+							 process="@this" oncomplete="PF('create_submission_dialog').show();"/>
+		</h:form>
+	</ui:define>
+
 	<ui:define name="center_layout">
 
 		<h:form>
@@ -190,15 +197,6 @@
 			</p:dialog>
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
-
-			<p:panel header="Submissions" styleClass="d-none">
-				<h:form prependId="false" styleClass="mb-3" >
-					<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator2-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-				</h:form>
-			</p:panel>
 
 			<p:tabView id="submissions" styleClass="ui-tabs-transparent">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">

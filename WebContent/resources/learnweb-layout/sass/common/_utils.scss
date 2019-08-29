@@ -141,28 +141,20 @@ td.td-text-right {
 
 body {
   .moderator-btn {
-    background-color: #1D4350;
-    background-image: linear-gradient(to right, #1D4350 0%, #A43931 51%, #1D4350 100%);
-    background-size: 200% auto;
-    transition: 0.5s;
-    border: 1px solid #1D4350;
-    color: $cyanButtonTextColor;
+    color: $themeElementTextColor;
+    border: 1px solid $themePrimaryColorDarker!important;
 
     .ui-button-text {
       position: relative;
 
       &:before {
-        content: '\f2a8';
+        content: '\f013';
         display: inline-block;
         font: normal normal normal 14px/1 FontAwesome;
         padding-right: 0.5rem;
+        color: $themePrimaryAltColor;
       }
     }
 
-    &.ui-state-hover,
-    &.ui-state-active,
-    &.ui-state-focus {
-      background-position: right center;
-    }
   }
 }

@@ -60,9 +60,9 @@
                         <div class="#{status.last ? '' : 'mb-4' } border-bottom">
                             <div class="d-flex align-items-center p-2 bg-light">
                                 <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center justify-content-between w-100">
                                     <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
-                                    <h:form prependId="false">
+                                    <h:form prependId="false" styleClass="d-none">
                                         <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
                                             <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
@@ -75,6 +75,7 @@
                                             <i class="fa fa-fw fa-unlock text-dark" aria-hidden="true"></i>
                                         </p:commandLink>
                                     </h:form>
+                                    <p:selectBooleanButton id="value1" value="" styleClass="moderator-btn" onLabel="locked" offLabel="unlocked"  />
                                 </div>
                             </div>
 

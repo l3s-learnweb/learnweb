@@ -28,7 +28,7 @@
         <p:remoteCommand name="resourceUpdatedHook" update=":summary_overview_form :group_activity"/>
     </h:form>
 
-    <div class="row s-gutters">
+    <div class="row">
         <div class="col-md-6">
             <p:panel header="Group details">
                 <h5>#{groupOverviewBean.group.title}</h5>
@@ -75,13 +75,13 @@
                             </li>
 
                             <div id="user${user.id}" class="gridder-content">
-                                <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{groupOverviewBean.userDetailsHidden}">
+                                <h:panelGroup styleClass="row" layout="block" rendered="#{groupOverviewBean.userDetailsHidden}">
                                     <div class="col">
                                         <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
                                     </div>
                                 </h:panelGroup>
 
-                                <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{not groupOverviewBean.userDetailsHidden}">
+                                <h:panelGroup styleClass="row" layout="block" rendered="#{not groupOverviewBean.userDetailsHidden}">
                                     <div class="col-lg-4">
                                         <p:panel header="#{msg.profile} #{msg.of} #{user.username}">
                                             <p:panelGrid columns="2" styleClass="ui-widget-content-invisible" layout="grid">

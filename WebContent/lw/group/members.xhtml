@@ -46,13 +46,13 @@
                     </li>
 
                     <div id="user${user.id}" class="gridder-content">
-                        <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{groupMembersBean.userDetailsHidden}">
+                        <h:panelGroup styleClass="row" layout="block" rendered="#{groupMembersBean.userDetailsHidden}">
                             <div class="col">
                                 <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
                             </div>
                         </h:panelGroup>
 
-                        <h:panelGroup styleClass="row s-gutters" layout="block" rendered="#{not groupMembersBean.userDetailsHidden}">
+                        <h:panelGroup styleClass="row" layout="block" rendered="#{not groupMembersBean.userDetailsHidden}">
                             <div class="col-md-4">
                                 <p:panel header="#{msg.profile} #{msg.of} #{user.username}">
                                     <p:panelGrid columns="2" styleClass="ui-widget-content-invisible" layout="grid">
