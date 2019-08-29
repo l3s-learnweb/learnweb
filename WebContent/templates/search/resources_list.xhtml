@@ -20,8 +20,10 @@
         <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_${res.tempId}">
         <div>
             <div>
-                <h:outputLink styleClass="resourceWebLink" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                    <span class="block-with-text d-block w-100">
                     <h:outputText value="#{res.title}" escape="false"/>
+                    </span>
                 </h:outputLink>
             </div>
             <div>
@@ -30,29 +32,35 @@
                     <h:outputText rendered="#{res.id != -1}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputText>
                     <h:outputText rendered="#{res.id == -1}" escape="true" target="_blank">#{res.url}</h:outputText>
                     </div>
-                    <div class="iconscontainer">
+                    <div class="iconscontainer d-flex">
                         <div class="icon mt-1">
                             <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-plus-circle fa-fw text-decoration-none"
                                           onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
                             </h:outputLink>
                             <span>#{msg.addToMyResources}</span>
                         </div>
+                        <ui:fragment rendered="${res.archived}">
+                            <div class="icon mt-1">
+                                <i class="fa fa-archive fa-fw text-decoration-none" aria-hidden="true"></i>
+                                <span>
+                                    #{msg['Archive.captured_between']}
+                                    <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">\
+                                        <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                                    </a> #{msg['Archive.captured_between_and']}
+                                                <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                        <h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
+                                                                                                                     dateStyle="short"/></h:outputText>
+                                    </a>
+
+                                </span>
+                            </div>
+                        </ui:fragment>
                     </div>
                 </div>
                 <ui:fragment rendered="${res.archived}">
-                    <div>#{msg['Archive.captured_between']}
-                        <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                            <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date"
-                                                                                                          dateStyle="short"/></h:outputText>
-                        </a> #{msg['Archive.captured_between_and']}
-                        <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                            <h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
-                                                                                                         dateStyle="short"/></h:outputText>
-                        </a>
-                    </div>
                 </ui:fragment>
             </div>
-            <span class="text-truncate d-block">
+            <span class="block-with-text d-block w-100">
                  <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
             </span>
         </div>

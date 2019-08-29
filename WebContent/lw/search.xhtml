@@ -31,7 +31,7 @@
     <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
 
     <div class="container-fluid section-search">
-        <h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
+        <h:panelGroup id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
             <p:outputPanel styleClass="group-menu-header text-center" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
@@ -39,35 +39,27 @@
                     <f:param value="#{searchBean.searchService}"/>
                 </h:outputFormat>
             </p:outputPanel>
-
             <h:form>
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" numVisible="2"
-                            circular="true" styleClass="ui-carousel-light">
-                    <h:link outcome="search" styleClass="source_#{gr.groupAlias}">
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" styleClass="ui-carousel-light bg-transparent">
+                    <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
                         <f:param name="service" value="#{gr.groupAlias}"/>
                         <f:param name="action" value="#{searchBean.searchMode}"/>
                         <f:param name="query" value="#{searchBean.query}"/>
-                        <div class="group-menu-title font-weight-bold">
-                            <h:outputFormat value="#{msg.search_groups_title}" escape="false">
+                        <div class="group-menu-title font-weight-bold border-bottom">
+                            <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
                                 <f:param value="#{gr.groupName}"/>
                                 <f:param value="#{gr.totalResources}"/>
                             </h:outputFormat>
                         </div>
-                    </h:link>
-                    <div>
-                        <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start" rendered="#{searchBean.searchMode == 'text'}">
+
+                        <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" rendered="#{searchBean.searchMode == 'text'}">
                             <p:repeat value="#{gr.resources}" var="res">
-                                <div>
-                                    <div>
-                                        <h:outputLink class="resourceWebLink" target="_blank" value="#{res.id != -1 ? res.learnwebUrl : res.url}">
-                                            <h:outputText value="#{res.title}" escape="false"/>
-                                        </h:outputLink>
-                                    </div>
-                                    <div>
-                                        <h:outputText value="#{res.url}" style="font-size: 0.8rem;" escape="false"/>
-                                    </div>
-                                    <h:outputText value="#{res.snippet}" style="font-size: 0.8rem;" escape="false"></h:outputText>
-                                </div>
+                                <span class="text-truncate d-block w-100 p-1">
+                                <h:outputText value="#{res.title}" style="font-size: 0.8rem; color: #4b6cb7;" styleClass="mr-1 w-50" escape="false"/>
+                                <h:outputText value="#{res.url}" style="font-size: 0.7rem; color: #006621;" styleClass="text-truncate overflow-hidden w-50" escape="false"/>
+                                <br/>
+                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-inline-block text-dark" style="font-size: 0.7rem;" escape="false"/>
+                                </span>
                             </p:repeat>
                         </h:panelGroup>
                         <h:panelGroup styleClass="d-flex flex-row justify-content-around" layout="block"
@@ -76,8 +68,7 @@
                                 <img src="${res.thumbnail2.url}" class="img-responsive p-1"/>
                             </p:repeat>
                         </h:panelGroup>
-                    </div>
-
+                    </h:link>
                 </p:carousel>
             </h:form>
 
@@ -86,35 +77,23 @@
             <h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
                 <ul>
                     <li class="filter">
-                        <h:outputLink value="group/overview.jsf" id="backtogroup" styleClass="d-inline-block p-2 text-body custom-underline fa fa-angle-left"
-                                      rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-                            #{msg.back_to}
-                            <i>#{userBean.user.activeGroup.title}</i>
-                            <f:param name="group_id" value="#{userBean.user.activeGroup.id}"/>
-                        </h:outputLink>
+                        <h:link value="Web" outcome="search" styleClass="text-dark box border-right px-sm-1 text-decoration-none еуч">
+                            <f:param name="action" value="text"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
+                        </h:link>
                     </li>
                     <li class="filter">
-                        <span class="p-2 d-inline-block fa fa-angle-down">
-                            #{msg.Search_type}
-                        </span>
-                        <h:panelGroup styleClass="filter-sub-bar" layout="block">
-                            <h:form styleClass="text-center">
-                                <h:link value="Web" outcome="search" styleClass="fa fa-globe border-right px-sm-1 text-decoration-none">
-                                    <f:param name="action" value="text"/>
-                                    <f:param name="query" value="#{searchBean.query}"/>
-                                </h:link>
-                                <h:link value="#{msg.Images}" outcome="search"
-                                        styleClass="fa fa-picture-o border-right px-sm-1  text-decoration-none">
-                                    <f:param name="action" value="image"/>
-                                    <f:param name="query" value="#{searchBean.query}"/>
-                                </h:link>
-
-                                <h:link value="#{msg.Videos}" outcome="search" styleClass="fa fa-picture-o border-right px-sm-1 text-decoration-none">
-                                    <f:param name="action" value="video"/>
-                                    <f:param name="query" value="#{searchBean.query}"/>
-                                </h:link>
-                            </h:form>
-                        </h:panelGroup>
+                        <h:link value="#{msg.Images}" outcome="search"
+                                styleClass="text-dark border-right px-sm-1  text-decoration-none">
+                            <f:param name="action" value="image"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
+                        </h:link>
+                    </li>
+                    <li class="filter">
+                        <h:link value="#{msg.Videos}" outcome="search" styleClass="text-dark border-right px-sm-1 text-decoration-none">
+                            <f:param name="action" value="video"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
+                        </h:link>
                     </li>
                     <li class="filter sources" id="source_filter">
                         <span class="p-2 d-inline-block fa fa-angle-down">
