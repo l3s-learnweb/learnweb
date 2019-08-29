@@ -4,7 +4,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-
 <ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 <ui:param name="helpText" value="#{msg.searchHelp}"/>
 <ui:param name="loginRequired" value="true"/>
@@ -20,7 +19,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.searchTitle}" url="search.jsf"/>
 </ui:define>
 

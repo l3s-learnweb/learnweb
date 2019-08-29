@@ -4,6 +4,10 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg['Tracker.dashboard']}"/>
+<ui:param name="center_pane_styles" value="border: none;background-color: transparent;"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="userId" value="#{trackerDashboardBean.paramUserId}"/>
@@ -11,15 +15,12 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg['Tracker.dashboard']}"/>
-<ui:param name="center_pane_styles" value="border: none;background-color: transparent;"/>
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
     <p:menuitem value="#{msg['Tracker.dashboard']}" url=""/>
 </ui:define>
 
-<ui:define name="center_layout" >
+<ui:define name="center_layout">
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
     <p:panel header="#{msg.choose_options}" styleClass="mb-3">

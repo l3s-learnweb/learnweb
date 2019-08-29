@@ -6,6 +6,12 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="false"/>
+<ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
+<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
+<ui:param name="group" value="#{groupResourcesBean.group}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}"/>
@@ -16,13 +22,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="disableGrowl" value="false"/>
-<ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
-<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
-<ui:param name="group" value="#{groupResourcesBean.group}"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{groupResourcesBean.group.title}" url="group/overview.jsf?group_id=#{groupResourcesBean.groupId}"/>
     <p:menuitem value="#{msg.resources}" url=""/>
 </ui:define>

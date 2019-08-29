@@ -1,28 +1,27 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+
+    <ui:param name="pageTitle" value="Survey"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="disableGrowl" value="true"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
-			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}" />
-			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}" />
-			<f:viewAction action="#{surveyBean.onLoad}" />
-			<f:viewAction action="#{surveyBean.onLoadEdit}" />
+			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
+			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
+			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}"/>
+			<f:viewAction action="#{surveyBean.onLoad}"/>
+			<f:viewAction action="#{surveyBean.onLoadEdit}"/>
 		</f:metadata>
 	</ui:define>
-	
-	<ui:param name="pageTitle" value="Survey" />
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
 
-
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
@@ -32,7 +31,7 @@
 		<h:form id="form" rendered="#{surveyBean.resource != null}">
 
 			<p:panel>
-				<h:panelGroup rendered="#{surveyBean.formEnabled}" >
+				<h:panelGroup rendered="#{surveyBean.formEnabled}">
 					<h:panelGroup id="questions" styleClass="survey">
 						<h2 class="d-none d-print-block">#{surveyBean.resource.title}</h2>
 
@@ -41,11 +40,11 @@
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
                                     <h3>
-                                        <h:outputText value="${question.label}" />
+                                        <h:outputText value="${question.label}"/>
                                     </h3>
 								</c:if>
 								<c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
-									<h:outputText value="${question.label}" />
+									<h:outputText value="${question.label}"/>
 								</c:if>
 							</c:if>
 
@@ -54,19 +53,19 @@
                                     <c:if test="#{question.type eq 'INPUT_TEXT'}">
                                         <p:outputLabel for="input_#{question.id}" value="#{question.label}"></p:outputLabel>
                                         <p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-                                                     title="#{question.info}" >
+                                                     title="#{question.info}">
 
-                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
+                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
                                         </p:inputText>
                                         <p:tooltip for="input_#{question.id}" showEvent="focus"
                                                    hideEvent="blur" position="left"
-                                                   rendered="#{not empty question.info}" />
+                                                   rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
                                         <p:outputLabel for="input_area_#{question.id}" value="#{question.label}"></p:outputLabel>
                                         <p:inputTextarea id="input_area_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-                                                         title="#{question.info}" rows="4" >
+                                                         title="#{question.info}" rows="4">
 
                                             <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
                                         </p:inputTextarea>

@@ -6,19 +6,19 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
+			<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true"/>
 			<f:viewAction action="#{resourceBean.loadResource}"/>
 		</f:metadata>
 	</ui:define>
 
 	<h:head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>Video</title>
 
-		<h:outputStylesheet name="vendor/video-js-v7.6.1/video-js.min.css" />
-		<h:outputScript name="vendor/video-js-v7.6.1/video.min.js" target="head" />
+		<h:outputStylesheet name="vendor/video-js-v7.6.1/video-js.min.css"/>
+		<h:outputScript name="vendor/video-js-v7.6.1/video.min.js" target="head"/>
 
-		<base href="#{request.contextPath}/lw/" />
+		<base href="#{request.contextPath}/lw/"/>
 
 		<style type="text/css">
 		html, body { height:100%; margin:0; padding:0; }
@@ -28,7 +28,7 @@
 	<h:body>
 		<audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}' height="100%" width="100%"
 			   poster="#{resourceBean.resource.thumbnail2.url}">
-			<source src="#{resourceBean.resource.fileUrl}" type="#{resourceBean.resource.format}" />
+			<source src="#{resourceBean.resource.fileUrl}" type="#{resourceBean.resource.format}"/>
 			<p class="vjs-no-js">
 				To listen this audio please enable JavaScript, and consider upgrading to a web browser that
 				<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 audio</a>

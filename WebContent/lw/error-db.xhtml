@@ -4,16 +4,16 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">>
 
-	<ui:param name="pageTitle" value="#{msg.error}" />
-	<ui:param name="smallPage" value="true" />
-	<ui:param name="disableGrowl" value="true" />
+	<ui:param name="pageTitle" value="#{msg.error}"/>
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="disableGrowl" value="true"/>
 
 	<ui:define name="container_layout">
 		<p:panel header="Database connection error" styleClass="ui-widget-danger">
 			<h5 class="text-danger" onclick="$('.collapse').fadeIn();">Learnweb is currently not able to connect to its database. Please check again in a few minutes.</h5>
 
 			<pre class="pre-scrollable collapse">
-				<h:outputText value="Message:#{pfExceptionHandler.message}" />
+				<h:outputText value="Message:#{pfExceptionHandler.message}"/>
 			</pre>
 		</p:panel>
 	</ui:define>

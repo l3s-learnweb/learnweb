@@ -17,17 +17,17 @@
 					<h:form styleClass="d-none">
 						<p:commandLink title="#{msg.edit}" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 									   process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
-							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
+							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 							<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
 						</p:commandLink>
 						<p:commandLink title="unlock submission" rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and submission.submitted}"
 									   process="@this" update=":current_submissions" action="#{submissionBean.unlockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();setScrollPos();" onstart="saveScrollPos(event);">
-							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
+							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 							<i class="fa fa-fw fa-lock text-dark" aria-hidden="true"></i>
 						</p:commandLink>
 						<p:commandLink title="lock submission" rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"
 									   process="@this" update=":current_submissions" action="#{submissionBean.lockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();">
-							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
+							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 							<i class="fa fa-fw fa-unlock text-dark" aria-hidden="true"></i>
 						</p:commandLink>
 					</h:form>
@@ -37,11 +37,11 @@
 					<h:form>
 						<p:selectBooleanButton id="value1" value=""  styleClass="moderator-btn" onLabel="locked" offLabel="unlocked"
 											   process="@this" update=":current_submissions"
-											   rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}" />
+											   rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"/>
 
 						<p:commandButton value="#{msg.edit}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 								  process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
-							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}" />
+							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 						</p:commandButton>
 
 						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn"
@@ -99,7 +99,7 @@
 				<h:panelGroup layout="block" styleClass="mt-5" rendered="#{not empty submission.submittedResources}">
 					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
 						<h:panelGroup styleClass="res-grid" layout="block">
-							<ui:repeat var="res" value="#{submission.submittedResources}" >
+							<ui:repeat var="res" value="#{submission.submittedResources}">
 								<h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
 										<ui:param name="res" value="#{res}" />

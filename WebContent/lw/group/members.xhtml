@@ -4,6 +4,12 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.groupMember}"/>
+<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
+<ui:param name="rightPane" value="true"/>
+<ui:param name="group" value="#{groupMembersBean.group}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupMembersBean.groupId}"/>
@@ -11,13 +17,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.groupMember}"/>
-<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
-<ui:param name="rightPane" value="true"/>
-<ui:param name="group" value="#{groupMembersBean.group}"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{groupMembersBean.group.title}" url="group/overview.jsf?group_id=#{groupMembersBean.groupId}"/>
     <p:menuitem value="#{msg.members}" url=""/>
 </ui:define>

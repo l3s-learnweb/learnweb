@@ -7,12 +7,12 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.send_notification}" url="admin/notification.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.moderator}" >
+		<p:panel rendered="#{not userBean.moderator}">
 			<h:outputText value="#{msg.missing_authentication}"/>
 		</p:panel>
 

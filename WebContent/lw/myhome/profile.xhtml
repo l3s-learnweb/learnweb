@@ -10,7 +10,7 @@
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
 </ui:define>
 
@@ -64,7 +64,7 @@
                         <div>
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.gender}:"/>
-                                <p:selectOneMenu id="usergender" value="#{profileBean.gender}" >
+                                <p:selectOneMenu id="usergender" value="#{profileBean.gender}">
                                     <f:selectItem id="g0" itemLabel="--" itemValue="0"/>
                                     <f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1"/>
                                     <f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2"/>

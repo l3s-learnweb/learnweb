@@ -7,20 +7,20 @@
 				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 				xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
+    <ui:param name="pageTitle" value="Survey Result"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="disableGrowl" value="true"/>
+
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyResultBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
-			<f:viewAction action="#{surveyResultBean.onLoad}" />
+			<f:viewParam name="resource_id" value="#{surveyResultBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
+			<f:viewAction action="#{surveyResultBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.survey_results}" url="result.jsf?resource_id=#{surveyResultBean.surveyResourceId}"/>
 	</ui:define>
-
-	<ui:param name="pageTitle" value="Survey Result" />
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
 		<h:form rendered="#{surveyResultBean.questionColumns ne null}" styleClass="section-survey">
@@ -29,29 +29,29 @@
 				<f:facet name="{Exporters}">
 					<h:commandLink>
 						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
-						<p:dataExporter type="xls" target="survey_result" fileName="survey" />
+						<p:dataExporter type="xls" target="survey_result" fileName="survey"/>
 					</h:commandLink>
 				</f:facet>
 				<f:facet name="header">#{surveyResultBean.resource.title}</f:facet>
 				<p:column headerText="#{msg.username}">
 					<h:outputLink id="print_user" value="survey/answer.jsf">
-						<h:outputText value="#{result.user.username} " />
-						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}" />
-						<f:param name="user_id" value="#{result.userId}" />
+						<h:outputText value="#{result.user.username} "/>
+						<f:param name="resource_id" value="#{surveyResultBean.surveyResourceId}"/>
+						<f:param name="user_id" value="#{result.userId}"/>
 					</h:outputLink>
 				</p:column>
 
 				<p:column headerText="Student id">
-					<h:outputText value="#{result.user.studentId}" />
+					<h:outputText value="#{result.user.studentId}"/>
 				</p:column>
-				<p:column headerText="#{msg.courses}" >
-					<h:outputText value="#{result.user.courses}" />
+				<p:column headerText="#{msg.courses}">
+					<h:outputText value="#{result.user.courses}"/>
 				</p:column>
 				<p:column headerText="#{msg.submit}?">
-					<h:outputText value="#{result.submitted}" />
+					<h:outputText value="#{result.submitted}"/>
 				</p:column>
 				<p:columns var="column" value="#{surveyResultBean.questionColumns}" headerText="#{column.label}">
-					<h:outputText value="#{result.getAnswer(column.id)}" />
+					<h:outputText value="#{result.getAnswer(column.id)}"/>
 				</p:columns>
 			</p:dataTable>
 		</h:form>

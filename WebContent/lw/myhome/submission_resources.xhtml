@@ -5,6 +5,10 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
+    <ui:param name="rightPane" value="true"/>
+    <ui:param name="pageTitle" value="#{msg['Submission.title']}" />
+    <ui:param name="loginRequired" value="true" />
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
@@ -15,14 +19,10 @@
 		</f:metadata>
 	</ui:define>
 
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
         <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
-
-	<ui:param name="rightPane" value="true"/>
-	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
-	<ui:param name="loginRequired" value="true" />
 
 	<ui:define name="center_layout">
 
@@ -60,7 +60,7 @@
 
             <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
                 <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid border-top">
-                    <p:repeat var="res" value="#{submissionBean.selectedResources}" >
+                    <p:repeat var="res" value="#{submissionBean.selectedResources}">
                         <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                             <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
                                 <ui:fragment>

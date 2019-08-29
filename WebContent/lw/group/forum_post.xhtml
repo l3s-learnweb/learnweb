@@ -4,6 +4,11 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{forumPostBean.topic.title}"/>
+<ui:param name="group" value="#{forumPostBean.group}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="topic_id" value="#{forumPostBean.topicId}"/>
@@ -11,12 +16,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="disableGrowl" value="true"/>
-<ui:param name="pageTitle" value="#{forumPostBean.topic.title}"/>
-<ui:param name="group" value="#{forumPostBean.group}"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{forumPostBean.group.title}" url="group/overview.jsf?group_id=#{forumPostBean.group.id}"/>
     <p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumPostBean.group.id}"/>
     <p:menuitem value="#{forumPostBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumPostBean.topicId}"/>
@@ -127,7 +127,7 @@
                     </ui:fragment>
                     <tr>
                         <td colspan="2">
-                            <p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" >
+                            <p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}">
                                 <f:facet name="toolbar">
                                  <span class="ql-formats">
                                     <button class="ql-bold"></button>

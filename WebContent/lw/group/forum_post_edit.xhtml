@@ -4,6 +4,11 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="true"/>
+<ui:param name="pageTitle" value="#{msg.forum} - #{msg.edit}"/>
+<ui:param name="group" value="#{forumEditBean.group}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="post_id" value="#{forumEditBean.postId}"/>
@@ -11,12 +16,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="disableGrowl" value="true"/>
-<ui:param name="pageTitle" value="#{msg.forum} - #{msg.edit}"/>
-<ui:param name="group" value="#{forumEditBean.group}"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.edit}" url="myhome/activity.jsf#"/>
 </ui:define>
 

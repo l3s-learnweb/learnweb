@@ -4,6 +4,9 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.glossary_dashboard}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="userId" value="#{glossaryDashboardBean.paramUserId}"/>
@@ -11,14 +14,12 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="#{msg.glossary_dashboard}"/>
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
     <p:menuitem value="#{msg.glossary_dashboard}" url=""/>
 </ui:define>
 
-<ui:define name="center_layout" >
+<ui:define name="center_layout">
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
     <p:panel header="#{msg.choose_options}" styleClass="mb-3">
@@ -254,7 +255,7 @@
                         <p:column headerText="Word count" sortBy="#{gds.length}" sortable="true">
                             #{gds.length}
                         </p:column>
-                        <p:column headerText="Pasted" sortBy="#{gds.descriptionPasted}" sortable="true" >
+                        <p:column headerText="Pasted" sortBy="#{gds.descriptionPasted}" sortable="true">
                             #{gds.descriptionPasted}
                         </p:column>
 

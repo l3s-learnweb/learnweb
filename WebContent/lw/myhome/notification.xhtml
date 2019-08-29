@@ -8,11 +8,11 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.notification}" url="myhome/notification.jsf#"/>
 	</ui:define>
 
-	<ui:define name="center_layout" >
+	<ui:define name="center_layout">
 		<p:panel header="#{msg.notification}">
 			<h:panelGroup layout="block" styleClass="w-100 mb-1" rendered="#{userBean.moderator}">
 				<h:outputText value="#{msg.moderator}: "/>

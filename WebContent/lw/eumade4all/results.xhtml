@@ -4,6 +4,10 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:p="http://primefaces.org/ui">
 
+    <ui:param name="pageTitle" value="Survey Result" />
+    <ui:param name="loginRequired" value="true" />
+    <ui:param name="disableGrowl" value="true" />
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="resource_id" value="#{surveyResultBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
@@ -11,11 +15,7 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:param name="pageTitle" value="Survey Result" />
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
-
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{surveyResultBean.resource.title}" url="eumade4all/results.jsf?resource_id=#{surveyResultBean.surveyResourceId}"/>
 	</ui:define>
 
@@ -40,7 +40,7 @@
 				<p:column headerText="Student id">
 					<h:outputText value="#{result.user.studentId}" />
 				</p:column>
-				<p:column headerText="#{msg.courses}" >					
+				<p:column headerText="#{msg.courses}">
 					<h:outputText value="#{result.user.courses}" />
 				</p:column>
 				<p:column headerText="#{msg.submit}?">

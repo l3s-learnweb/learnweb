@@ -4,6 +4,11 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
+    <ui:param name="loginRequired" value="true" />
+    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
+    <ui:param name="helpText" value=""/>
+    <ui:param name="rightPane" value="true"/>
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
@@ -13,12 +18,7 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
-	<ui:param name="helpText" value=""/>
-	<ui:param name="rightPane" value="true"/>
-
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
 

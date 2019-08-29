@@ -10,7 +10,7 @@
     <ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
     <ui:param name="rightPane" value="true"/>
 
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
     </ui:define>
 
@@ -96,7 +96,7 @@
             });
         </script>
 
-        <h:form id="my_groups" >
+        <h:form id="my_groups">
             <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
                     #{msg.myGroups}

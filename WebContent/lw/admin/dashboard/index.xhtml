@@ -4,18 +4,19 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="List of all dashboards"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="course_id" value="#{adminCourseBean.courseId}" />
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="List of all dashboards"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/user.jsf#"/>
 </ui:define>
+
 <ui:define name="center_layout">
     <p:panel header="List of all dashboards">
         <div class="row">

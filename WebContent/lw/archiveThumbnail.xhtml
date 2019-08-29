@@ -6,17 +6,17 @@ xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value ="#{archiveThumbnailBean.resourceId}" />
+			<f:viewParam name="resource_id" value ="#{archiveThumbnailBean.resourceId}"/>
 			<f:viewAction action="#{archiveThumbnailBean.init}"/>
 		</f:metadata>
 	</ui:define>
 
-	<ui:param name="pageTitle" value="#{msg['Archive.thumbnail_visualization']}" />
+	<ui:param name="pageTitle" value="#{msg['Archive.thumbnail_visualization']}"/>
 
 	<ui:define name="center_layout">
 
-		<h:outputScript name="archive-thumbnail/contentflow.js" target="head" />
-		<h:outputScript name="archive-thumbnail/archive_thumbnail.js" target="head" />
+		<h:outputScript name="archive-thumbnail/contentflow.js" target="head"/>
+		<h:outputScript name="archive-thumbnail/archive_thumbnail.js" target="head"/>
 
     	<div class="section-archive-thumbnail">
     	<h:panelGroup id="maincontent"  layout="block">

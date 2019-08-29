@@ -1,21 +1,22 @@
-<ui:composition
-        template="/WEB-INF/templates/layout/template.xhtml"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-        xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.courses}"/>
-<ui:define name="sub_breadcrumb">
+
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.courses}" url="admin/courses.jsf#"/>
 </ui:define>
+
 <ui:define name="center_layout">
     <div class="row">
         <div class="col-12 col-sm-6">
-            <p:panel header="#{msg.add_new_course}" >
+            <p:panel header="#{msg.add_new_course}">
                 <h:form id="addcourse">
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.course_title}:"/>
@@ -30,7 +31,7 @@
 
         <div class="col-12 col-sm-6">
             <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
-                <h:form id="addorganisation" >
+                <h:form id="addorganisation">
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.organization_title}:"/>
                         <h:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>

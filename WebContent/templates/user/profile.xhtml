@@ -1,19 +1,19 @@
-<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html"
-	  xmlns:f="http://xmlns.jcp.org/jsf/core"
-	  xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-<!--@elvariable id="user" type="de.l3s.learnweb.User"-->
-<!--@elvariable id="userDetailsHidden" type="java.lang.Boolean"-->
+	<!--@elvariable id="user" type="de.l3s.learnweb.User"-->
+	<!--@elvariable id="userDetailsHidden" type="java.lang.Boolean"-->
 
-<ui:composition>
 	<p:panel header="#{groupMembersBean.clickedUser eq null ? msg.user_details : groupMembersBean.clickedUser.username}" id="right_pane">
 
 		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
 
 		<p:panelGrid columns="2" styleClass="d-flex" rendered="#{not userDetailsHidden}">
-			<f:facet name="header" >
-				<img   src="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image" />
+			<f:facet name="header">
+				<img src="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image" />
 			</f:facet>
 			<h:outputText value="#{msg.username}:" />
 			<h:outputText id="username" value="#{user.username}" />
@@ -82,4 +82,3 @@
 	</ui:fragment>
 	
 </ui:composition>
-</html>

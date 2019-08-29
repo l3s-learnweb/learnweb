@@ -22,12 +22,12 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.myResourcesTitle}" url="myhome/resources.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:outputPanel styleClass="m-0 panel-content bg-white section-resources" >
+    <p:outputPanel styleClass="m-0 panel-content bg-white section-resources">
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>

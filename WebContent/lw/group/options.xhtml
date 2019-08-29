@@ -5,6 +5,12 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="disableGrowl" value="false"/>
+<ui:param name="pageTitle" value="#{groupOptionsBean.group.title}"/>
+<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
+<ui:param name="group" value="#{groupOptionsBean.group}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupOptionsBean.groupId}"/>
@@ -12,13 +18,7 @@
     </f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true"/>
-<ui:param name="disableGrowl" value="false"/>
-<ui:param name="pageTitle" value="#{groupOptionsBean.group.title}"/>
-<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
-<ui:param name="group" value="#{groupOptionsBean.group}"/>
-
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{groupOptionsBean.group.title}" url="group/overview.jsf?group_id=#{groupOptionsBean.group.id}"/>
     <p:menuitem value="Options" url="group/options.jsf?group_id=#{groupOptionsBean.group.id}"/>
 </ui:define>

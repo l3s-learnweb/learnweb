@@ -1,15 +1,14 @@
-<ui:composition 
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Group Log Analysis"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="Group Log Analysis" url="admin/user_assessment.jsf"/>
 	</ui:define>
 
@@ -21,7 +20,7 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.FormativeAssessment_selectClass1}"/>
-						<p:selectOneMenu id="selectCourse20" value="#{userAssessmentBean.selectCourse20}" >
+						<p:selectOneMenu id="selectCourse20" value="#{userAssessmentBean.selectCourse20}">
 							<f:selectItem itemLabel="-" itemValue=""/>
 							<f:selectItems value="#{userAssessmentBean.courses}" var="c20" itemLabel="#{c20.title}" itemValue="#{c20.id}"/>
 						</p:selectOneMenu>
@@ -279,7 +278,7 @@
 							<p:message for="@previous"/>
 						</div>
 
-						<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedbackUser}" >
+						<p:commandButton value="#{msg.FormativeAssessment_feedback}" actionListener="#{userAssessmentBean.sendFeedbackUser}">
 							<f:param name="selected_users" value="#{userAssessmentBean.selectedUser}"/>
 						</p:commandButton>
 					</p:dialog>

@@ -5,7 +5,11 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui">
 
+    <ui:param name="loginRequired" value="true" />
+    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
+    <ui:param name="helpText" value="" />
     <ui:param name="rightPane" value="true"/>
+
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}" />
@@ -14,10 +18,7 @@
         </f:metadata>
     </ui:define>
 
-    <ui:param name="loginRequired" value="true" />
-    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
-    <ui:param name="helpText" value="" />
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
         <p:menuitem value="#{submissionModeratorBean.submission.title}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
@@ -107,7 +108,7 @@
                             <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                                 <h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
                                     <h:panelGroup styleClass="res-grid" layout="block">
-                                        <ui:repeat var="res" value="#{userSubmission.resources}" >
+                                        <ui:repeat var="res" value="#{userSubmission.resources}">
                                             <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                                                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
                                                     <ui:param name="res" value="#{res}" />

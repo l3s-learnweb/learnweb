@@ -7,9 +7,9 @@
         xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Personal Information" />
+<ui:param name="pageTitle" value="Your Personal Information"/>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
     <p:menuitem value="#{msg.personal_info}" url="your_information/your_personal_info.jsf#"/>
 </ui:define>
@@ -19,10 +19,10 @@
         <div class="dashboard flex-center">
             <div class="ui-panel ui-widget ui-widget-content ui-corner-all profile-details">
                 <div class="ui-panel-content ui-widget-content">
-                    <h:graphicImage library="images" name="universitaet_panorama.jpg" alt="profile background picture" ></h:graphicImage>
+                    <h:graphicImage library="images" name="universitaet_panorama.jpg" alt="profile background picture"></h:graphicImage>
                     <img src="#{yourPersonalInfoBean.userImage}" alt="profile photo" class="profile-avatar"></img>
-                    <span class="profile-name"><h:outputText value="#{yourPersonalInfoBean.fullName}" /></span>
-                    <span class="profile-role"><h:outputText value="#{yourGeneralInfoBean.username}" /></span>
+                    <span class="profile-name"><h:outputText value="#{yourPersonalInfoBean.fullName}"/></span>
+                    <span class="profile-role"><h:outputText value="#{yourGeneralInfoBean.username}"/></span>
                     <a href="#{request.contextPath}/lw/myhome/profile.jsf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" type="button"
                             aria-disabled="false"><span class="ui-button-text ui-c"><h:outputText value="#{msg.go_to_profile}"/></span></a>
 
@@ -35,19 +35,19 @@
                                     <div class="stats-numbers"><h:outputText value="#{msg.dateofbirth}"/></div>
                                     <div class="stats-title">
                                         <h:outputText value="#{yourPersonalInfoBean.dateOfBirth}">
-                                            <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                                            <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                                         </h:outputText>
                                     </div>
                                 </div>
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.address}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.address}" /></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.address}"/></div>
                                 </div>
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.profession}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.userProfession}" /></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.userProfession}"/></div>
                                 </div>
                             </div>
                             <div class="profile-statistics-panel col-4">
@@ -55,7 +55,7 @@
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.email_address}"/></div>
-                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.email}" /></div>
+                                    <div class="stats-title"><h:outputText value="#{yourPersonalInfoBean.email}"/></div>
                                 </div>
                             </div>
                             <div class="profile-statistics-panel col-4">

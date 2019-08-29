@@ -1,20 +1,19 @@
-<ui:composition
-		template="/WEB-INF/templates/layout/template.xhtml"
-		xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-		xmlns:h="http://xmlns.jcp.org/jsf/html"
-		xmlns:f="http://xmlns.jcp.org/jsf/core"
-		xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
  
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.statistics_group}" url="admin/statistics.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:form id="anlyse_form" >
+		<h:form id="anlyse_form">
 			<p:panel header="#{msg.select_groups}" styleClass="mb-3">
 				<ui:include src="/templates/user/user_select_form.xhtml" />
 				<div class="form-group">
@@ -32,44 +31,44 @@
 					<h:outputText value="#{entry.title}" />
 				</p:column>
 
-				<p:column headerText="#{msg.resources}" >
+				<p:column headerText="#{msg.resources}">
 					<h:outputText value="#{entry.resources}" />
 				</p:column>
 
-				<p:column headerText="#{msg.thumb_ratings}" >
+				<p:column headerText="#{msg.thumb_ratings}">
 					<h:outputText value="#{entry.thumb_ratings}" />
 				</p:column>
 
-				<p:column headerText="#{msg.star_ratings}" >
+				<p:column headerText="#{msg.star_ratings}">
 					<h:outputText value="#{entry.star_ratings}" />
 				</p:column>
 
-				<p:column headerText="#{msg.comments}" >
+				<p:column headerText="#{msg.comments}">
 					<h:outputText value="#{entry.comments}" />
 				</p:column>
 
-				<p:column headerText="#{msg.tags}" >
+				<p:column headerText="#{msg.tags}">
 					<h:outputText value="#{entry.tags}" />
 				</p:column>
 
-				<p:column headerText="#{msg.no_of_archived_versions}" >
+				<p:column headerText="#{msg.no_of_archived_versions}">
 					<h:outputText value="#{entry.no_of_archived_versions}" />
 				</p:column>
 
-				<p:column headerText="#{msg.no_of_archived_resources}" >
+				<p:column headerText="#{msg.no_of_archived_resources}">
 					<h:outputText value="#{entry.no_of_archived_resources}" />
 				</p:column>
 
-				<p:column headerText="#{msg.forum_topics}" >
+				<p:column headerText="#{msg.forum_topics}">
 					<h:outputText value="#{entry.forum_topics}" />
 				</p:column>
 
-				<p:column headerText="#{msg.forum_posts}" >
+				<p:column headerText="#{msg.forum_posts}">
 					<h:outputText value="#{entry.forum_posts}" />
 				</p:column>
 			</p:dataTable>
 
-			<ui:fragment rendered="#{adminStatisticsBean.showDetails}" >
+			<ui:fragment rendered="#{adminStatisticsBean.showDetails}">
 				<p:panel styleClass="mt-3" header="#{msg.statistics_detailed}">
 					<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
 										   onchange="$('.description').toggle();" value="off" />

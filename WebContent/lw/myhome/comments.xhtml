@@ -9,7 +9,7 @@
 	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}"/>
 	<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.myCommentsTitle}" url="myhome/comments.jsf#"/>
 	</ui:define>
 
@@ -30,7 +30,7 @@
 			</p:column>
 
 			<p:column headerText="#{msg.date}">
-				<h:outputText value="#{comment.date}" >
+				<h:outputText value="#{comment.date}">
 					<f:convertDateTime dateStyle="default" type="both"/>
 				</h:outputText>
 			</p:column>

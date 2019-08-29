@@ -7,13 +7,14 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg['Activity.dashboard']}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewAction action="#{activityDashboardBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
     <p:menuitem value="#{msg['Activity.dashboard']}" url=""/>
 </ui:define>

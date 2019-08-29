@@ -1,17 +1,17 @@
-<ui:composition
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
 	<ui:param name="pageTitle" value="Advanced Search" />
-	<ui:define name="sub_breadcrumb">
+
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.advancedSearch}" url="advanced_search.jsf"/>
 	</ui:define>
+
 	<ui:define name="center_layout">
-		
-		
 		<p:panel>
 		
 			<h:form id="advacedSearchForm" onsubmit="this.action='#{request.contextPath}/advancedSearch/search_result.jsf';">

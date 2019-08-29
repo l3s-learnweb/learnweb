@@ -1,22 +1,21 @@
-<ui:composition
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.banlist_header}"/>
 	
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.banlist_header}" url="admin/banlist.jsf#"/>
 	</ui:define>
 	
 	<ui:define name="center_layout">
         <ui:fragment>
-            <div class="row" >
+            <div class="row">
                 <div class="col-12 col-md-10 col-lg-8 col-xl-6">
 					<p:panel header="#{msg.manual_ban}">
 						<h:form id="banformreg">
@@ -50,7 +49,7 @@
                 </div>
             </div>
 
-            <h:form styleClass="mt-3" id="banlistform" >
+            <h:form styleClass="mt-3" id="banlistform">
                 <p:dataTable var="accessData" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
@@ -119,10 +118,10 @@
 				</h:form>
 			</p:dialog>
 
-			<h:form id="suspiciouslistform" >
+			<h:form id="suspiciouslistform">
                 <p:dataTable  paginatorPosition="bottom" var="aggrReqData" value="#{adminBanlistBean.suspiciousActivityList}" tableStyleClass="table-responsive" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-                    <p:column headerText="IP" sortBy="#{aggrReqData.IP}" >
+                    <p:column headerText="IP" sortBy="#{aggrReqData.IP}">
                         <h:outputText value="#{aggrReqData.IP}" />
                     </p:column>
 
