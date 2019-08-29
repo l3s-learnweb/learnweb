@@ -13235,6 +13235,73 @@ ul.res-filters .clear-filters:hover a {
   }
 }
 
+@media (min-width: 768px) {
+  .fancybox-search-layout-alt {
+    /* Change color for backdrop */
+    /* Move caption area to the right side */
+    /* Remove gradient from caption*/
+    /* Adjust content area position */
+    /* Align buttons at the right side  */
+    /* Remove background from all buttons */
+    /* Navigation arrows */
+    /* Reposition right arrow */
+  }
+  .fancybox-search-layout-alt .fancybox-bg {
+    background-color: #495057;
+  }
+  .fancybox-search-layout-alt.fancybox-is-open .fancybox-bg {
+    opacity: 0.7;
+  }
+  .fancybox-search-layout-alt .fancybox-caption {
+    background: #f1ecec;
+    bottom: 0;
+    color: #6c6f73;
+    left: auto;
+    padding: 30px 20px;
+    right: 44px;
+    top: 0;
+    width: 256px;
+  }
+  .fancybox-search-layout-alt .fancybox-caption h3 {
+    color: #444;
+    font-size: 21px;
+    line-height: 1.3;
+    margin-bottom: 24px;
+  }
+  .fancybox-search-layout-alt .fancybox-caption a {
+    color: #444;
+  }
+  .fancybox-search-layout-alt .fancybox-caption::before {
+    display: none;
+  }
+  .fancybox-search-layout-alt .fancybox-stage {
+    right: 300px;
+  }
+  .fancybox-search-layout-alt .fancybox-toolbar {
+    background: #3b3b45;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    top: 0;
+    width: 44px;
+  }
+  .fancybox-search-layout-alt .fancybox-button {
+    background: transparent;
+  }
+  .fancybox-search-layout-alt .fancybox-navigation .fancybox-button div {
+    padding: 2px;
+  }
+  .fancybox-search-layout-alt .fancybox-navigation .fancybox-button[disabled] {
+    color: #6c757d;
+  }
+  .fancybox-search-layout-alt .fancybox-navigation .fancybox-button:not([disabled]) {
+    color: #fff;
+  }
+  .fancybox-search-layout-alt .fancybox-button--arrow_right {
+    right: 308px !important;
+  }
+}
+
 .section-survey {
   /* copied from glossary: should be removed */
 }
