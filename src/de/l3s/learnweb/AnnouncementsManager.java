@@ -45,12 +45,13 @@ public class AnnouncementsManager
         announcement.setTitle(rs.getString("title"));
         announcement.setText(rs.getString("message"));
         announcement.setUserId(rs.getInt("user_id"));
-        announcement.setDate(rs.getDate("created_at")); // TODO be careful with SQL getDate. It will really only return the date but not the time.
+        announcement.setDate(rs.getTimestamp("created_at")); // TODO be careful with SQL getDate. It will really only return the date but not the time.
+        log.debug(rs.getTimestamp("created_at"));
         announcement.setHidden(rs.getBoolean("hidden"));
         return announcement;
     }
 
-    public Announcement save(Announcement announcement) throws SQLException
+    public void save(Announcement announcement) throws SQLException
     {
         try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id, created_at, hidden) VALUES (?, ?, ?, ?, ?)"))
         {
@@ -62,7 +63,7 @@ public class AnnouncementsManager
             log.debug(stmt.toString());
             stmt.executeUpdate();
         }
-        return announcement;
+        //return announcement;
     }
 
     public void delete(Announcement announcement) throws SQLException
@@ -93,7 +94,7 @@ public class AnnouncementsManager
     {
         try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("UPDATE lw_news SET hidden = ?  WHERE news_id = ?"))
         {
-            stmt.setBoolean(1, announcement.isHidden());
+            stmt.setBoolean(1, !announcement.isHidden());
             stmt.setInt(2, announcement.getId());
             stmt.executeUpdate();
             log.debug(stmt.toString());
@@ -102,7 +103,10 @@ public class AnnouncementsManager
 
     private static java.sql.Date sqlDate(java.util.Date calendarDate)
     {
-        return new java.sql.Date(calendarDate.getTime());
+        if(calendarDate != null)
+            return new java.sql.Date(calendarDate.getTime());
+        else
+            return null;
     }
 
     public List<Announcement> getAnnouncementsAll()

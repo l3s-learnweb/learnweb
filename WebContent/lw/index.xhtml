@@ -28,7 +28,7 @@
                         <div class="header-news-list bg-dark-90 text-white">
                             <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
-                            <p:dataList rows="3" value="#{frontpageBean.announcements}" var="news" type="unordered">
+                            <p:dataList value="#{frontpageBean.announcements}" var="news" type="unordered">
                                 <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
                                 <h:outputText value="#{news.date}" styleClass="news-date mb-1">

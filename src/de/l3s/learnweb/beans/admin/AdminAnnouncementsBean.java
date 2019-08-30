@@ -5,17 +5,16 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class AdminAnnouncementsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5638619427036990427L;
@@ -31,12 +30,12 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
 
     private boolean hidden;
 
-    public AdminAnnouncementsBean() throws SQLException
+    public AdminAnnouncementsBean()
     {
         onLoad();
     }
 
-    public void onLoad() throws SQLException
+    public void onLoad()
     {
         try
         {

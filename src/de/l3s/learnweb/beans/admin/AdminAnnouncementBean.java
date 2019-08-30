@@ -1,20 +1,16 @@
 package de.l3s.learnweb.beans.admin;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
-
+import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.beans.ApplicationBean;
+import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
-import com.google.api.client.util.DateTime;
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.Announcement;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Date;
 
 
 @Named
@@ -61,7 +57,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
 
     }
 
-    public void onUpdateNews(int announcementId) throws SQLException
+    public void onUpdateNews(int announcementId)
     {
         try
         {
