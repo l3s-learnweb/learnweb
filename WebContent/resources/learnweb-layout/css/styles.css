@@ -11160,7 +11160,8 @@ ul.res-filters > li {
 ul.res-filters > li .filter-title {
   cursor: pointer;
   display: inline-block;
-  padding: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  line-height: 2;
 }
 ul.res-filters > li:first-child .filter-title {
   padding-left: 1rem;
@@ -11537,7 +11538,7 @@ ul.res-filters .clear-filters:hover a {
 }
 .resources-panel .ui-toolbar {
   border: 0;
-  padding: 3px 1rem;
+  padding: 0.1875rem 1rem;
   background: #4b6cb7;
   color: #fff;
 }
@@ -12337,16 +12338,16 @@ ul.res-filters .clear-filters:hover a {
   content: "";
 }
 .section-entity-relationship .box .info .source_bing {
-  background-image: url("#{resource['icon:services/bing.gif']}");
+  background-image: url("#{resource['images:services/bing.gif']}");
 }
 .section-entity-relationship .box .info .source_learnweb {
-  background-image: url("#{resource['icon:services/learnweb.gif']}");
+  background-image: url("#{resource['images:services/learnweb.gif']}");
 }
 .section-entity-relationship .box .info .source_archiveit {
-  background-image: url("#{resource['icon:services/archiveit.gif']}");
+  background-image: url("#{resource['images:services/archiveit.gif']}");
 }
 .section-entity-relationship .box .info .source_loro {
-  background-image: url("#{resource['icon:services/loro.gif']}");
+  background-image: url("#{resource['images:services/loro.gif']}");
 }
 .section-entity-relationship .box .time span {
   position: absolute;
@@ -13075,40 +13076,40 @@ ul.res-filters .clear-filters:hover a {
   padding-left: 1rem;
 }
 .section-search .group-menu-header .source_bing, .section-search .source_bing .group-menu-title {
-  background-image: url("#{resource['icon:services/bing.gif']}");
+  background-image: url("#{resource['images:services/bing.gif']}");
 }
 .section-search .group-menu-header .source_flickr, .section-search .source_flickr .group-menu-title {
-  background-image: url("#{resource['icon:services/flickr.png']}");
+  background-image: url("#{resource['images:services/flickr.png']}");
 }
 .section-search .group-menu-header .source_youtube, .section-search .source_youtube .group-menu-title {
-  background-image: url("#{resource['icon:services/youtube.png']}");
+  background-image: url("#{resource['images:services/youtube.png']}");
 }
 .section-search .group-menu-header .source_vimeo, .section-search .source_vimeo .group-menu-title {
-  background-image: url("#{resource['icon:services/vimeo.gif']}");
+  background-image: url("#{resource['images:services/vimeo.gif']}");
 }
 .section-search .group-menu-header .source_ipernity, .section-search .source_ipernity .group-menu-title {
-  background-image: url("#{resource['icon:services/ipernity.gif']}");
+  background-image: url("#{resource['images:services/ipernity.gif']}");
 }
 .section-search .group-menu-header .source_ted, .section-search .source_ted .group-menu-title {
-  background-image: url("#{resource['icon:services/ted.gif']}");
+  background-image: url("#{resource['images:services/ted.gif']}");
 }
 .section-search .group-menu-header .source_tedx, .section-search .source_tedx .group-menu-title, .section-search .group-menu-header .source_teded, .section-search .group-menu-block.source_teded .group-menu-title {
-  background-image: url("#{resource['icon:services/tedx.gif']}");
+  background-image: url("#{resource['images:services/tedx.gif']}");
 }
 .section-search .group-menu-header .source_loro, .section-search .source_loro .group-menu-title {
-  background-image: url("#{resource['icon:services/loro.gif']}");
+  background-image: url("#{resource['images:services/loro.gif']}");
 }
 .section-search .group-menu-header .source_yovisto, .section-search .source_yovisto .group-menu-title {
-  background-image: url("#{resource['icon:services/yovisto.gif']}");
+  background-image: url("#{resource['images:services/yovisto.gif']}");
 }
 .section-search .group-menu-header .source_learnweb, .section-search .source_learnweb .group-menu-title {
-  background-image: url("#{resource['icon:services/learnweb.gif']}");
+  background-image: url("#{resource['images:services/learnweb.gif']}");
 }
 .section-search .group-menu-header .source_archiveit, .section-search .source_archiveit .group-menu-title {
-  background-image: url("#{resource['icon:services/archiveit.gif']}");
+  background-image: url("#{resource['images:services/archiveit.gif']}");
 }
 .section-search .group-menu-header .source_factcheck, .section-search .source_factcheck .group-menu-title {
-  background-image: url("#{resource['icon:services/learnweb.gif']}");
+  background-image: url("#{resource['images:services/learnweb.gif']}");
 }
 .section-search .custom-underline {
   display: inline-block;

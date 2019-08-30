@@ -852,13 +852,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public String getServiceIcon()
     {
         if(getId() != -1) // is stored at fedora
-            return "/resources/icon/services/learnweb.gif";
+            return "/resources/images/services/learnweb.gif";
 
         String format = ".gif";
         if(getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity"))
             format = ".png";
 
-        return "/resources/icon/services/" + getLocation().toLowerCase() + format;
+        return "/resources/images/services/" + getLocation().toLowerCase() + format;
     }
 
     public static Comparator<Resource> createIdComparator()

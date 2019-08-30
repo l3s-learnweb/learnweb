@@ -7,18 +7,26 @@
     <h:outputScript library="learnweb-layout" target="head" name="js/selectionTree.js"/>
 
    	<style type="text/css">
-   	.klapper_zu {
-		float:left;
-		width:1rem;
-        height: 1rem;
-		background:url("#{resource['icon/icon-minus.gif']}") bottom no-repeat;
-		margin-right:3px;
-		cursor:pointer;
-	}
-	.klapper_auf { background-image:url("#{resource['icon/icon-plus.gif']}"); }
+        .klapper_zu {
+            float:left;
+            width:1rem;
+            height: 1rem;
+            position: relative;
+            margin-right:3px;
+            cursor:pointer;
+        }
+        .klapper_zu::after {
+            font-family: FontAwesome;
+            position: absolute;
+            content: "\f147";
+            top: -1px;
+        }
+        .klapper_auf::after {
+            content: "\f196";
+        }
    	</style>
-    <div id="userselect">
 
+    <div id="userselect">
         <div class="klapper_zu">&#160;</div>
         <input type="checkbox" name="ignore" value="1" class="checker"/>
         <h:outputText value=" #{msg.courses}:" style="font-weight:bold;"/>
