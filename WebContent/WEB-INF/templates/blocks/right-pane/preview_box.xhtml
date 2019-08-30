@@ -6,32 +6,150 @@
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-    <h:panelGroup layout="block" styleClass="preview_box p-1 border" id="preview_box">
-        <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
-            <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
-                <h:outputText value='#{res.embedded}' escape="false"/>
+    <div class="align-center" style="margin-top: 5px;">
+        <div class="lightbox section-resources" id="lightbox">
+            <div id="lightbox_background" onclick="lightbox_close();"></div>
+
+            <div id="lightbox_container">
+                <div id="lightbox_title">
+                    <h:outputText value="#{res.title}" escape="false"/>
+                    <a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
+                </div>
+                <div id="lightbox_content">
+                    <ui:fragment rendered="#{res.isOfficeResource()}">
+                        <div id="lightbox_editor"></div>
+                        <script type="text/javascript"> load_editor();</script>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type eq 'pdf'}">
+                        <iframe src="#{res.url}" style="width:100%; height:100%;"></iframe>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.type eq 'image' or res.type eq 'survey'}">
+                        <img src="#{res.thumbnail4.url}" height="#{res.thumbnail4.height}" width="#{res.thumbnail4.width}"
+                             style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%); -o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{res.storageType == 2 and (res.type eq 'text' or res.type eq 'website')}">
+                        <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+                            <img src="#{res.thumbnail4.url}" height="#{res.thumbnail4.height}" width="#{res.thumbnail4.width}"/>
+                        </div>
+                    </ui:fragment>
+
+                    <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty res.archiveUrls and res.canEditResource(userBean.user)}">
+                        <div id="archive_list">
+                            <ui:fragment rendered="${res.archiveUrls.size() le 100}">
+                                <ul>
+                                    <ui:repeat var="entry" value="#{res.archiveUrls}">
+                                        <li>
+                                            <a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
+                                                <h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+                                            </a>
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </ui:fragment>
+                            <ui:fragment rendered="${res.archiveUrls.size() gt 100}">
+                                <script type="text/javascript">archiveListInitialize();</script>
+                                <ul>
+                                    <ui:repeat var="entry" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+                                        <!--@elvariable id="entry" type="java.util.Map.Entry<java.lang.String, java.util.List<de.l3s.learnweb.ArchiveUrl>>"-->
+                                        <li class="years">
+                                            <span>#{entry.key}</span>
+                                            <ul class="archive-versions">
+                                                <ui:repeat var="version" value="#{entry.value}">
+                                                    <li>
+                                                        <a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
+                                                            <h:outputText value="${userBean.formatDate(version.timestamp)}"/>
+                                                        </a>
+                                                    </li>
+                                                </ui:repeat>
+                                            </ul>
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </ui:fragment>
+                        </div>
+                        <div id="archive_iframe_div">
+                            <i class="fa fa-cog fa-spin fa-4x fa-fw" aria-hidden="true"></i>
+                            <iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}"></iframe>
+                        </div>
+                        <div id="archive_timestamp_overlay">
+                                <span class="archive_timestamp_overlay_text">
+                                    #{msg["Archive.show_version"]}:
+                                    <h:outputText id="archive_timestamp" value="${userBean.formatDate(res.lastArchivedObject.timestamp)}"/>
+                                </span>
+                            <button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
+                        </div>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="${not empty res.thumbnailUpdateInfo}">
+                        <div id="lightbox_footer">
+                                <span class="archive_timestamp_overlay_text">
+                                    #{msg["Archive.thumbnail_update_info"]}:
+                                    <h:outputText value="${userBean.formatDate(res.thumbnailUpdateInfo.date)}"/>
+                                    (#{msg.by} ${res.thumbnailUpdateInfo.username})
+                                </span>
+                        </div>
+                    </h:panelGroup>
+                </div>
             </div>
+        </div>
+
+        <h:panelGroup layout="block" styleClass="preview_box p-1 border" id="preview_box">
+            <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
+                <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
+                    <h:outputText value='#{res.embedded}' escape="false"/>
+                </div>
+            </ui:fragment>
+            <ui:fragment rendered="#{res.type eq 'website' and not empty res.thumbnail3}">
+                <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+            </ui:fragment>
+            <ui:fragment rendered="#{res.isOfficeResource() and not (res.isOffline())}">
+                <div class="preview_box_wrapper editor_preview">
+                    <form id="editor_user_info">
+                        <input type="hidden" id="ed_user_id" value="#{userBean.user.id}"/>
+                        <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
+                        <input type="hidden" id="ed_can_be_edited" value="#{res.canEditResource(userBean.user)}"/>
+                    </form>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/openoffice-editor.xhtml"/>
+                    <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
+                </div>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty res.thumbnail3 and res.type ne 'video' and res.type ne 'website' and not res.isOfficeResource()}">
+                <a data-fancybox="lightbox" href="#lightbox_container">
+                    <div class="preview_box_wrapper">
+                        <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" width="#{res.thumbnail3.width}"
+                             style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+                    </div>
+                </a>
+            </ui:fragment>
+        </h:panelGroup>
+    </div>
+
+    <div class="text-center pt-2">
+        <a class="hyperlink" href="#{rightPaneBean.clickedResource.urlProxied}" target="_blank">
+            <h:outputText styleClass="hyperlink"
+                          rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf'}"
+                          value="#{rightPaneBean.clickedResource.url}"/>
+        </a>
+        <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.archiveUrls}">
+            <a class="hyperlink float-right" onclick="lightbox_open(); change_lightbox_content(true);" title="#{msg['Archive.change_thumbnail']}?" aria-label="#{msg['Archive.change_thumbnail']}?">
+                <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+            </a>
         </ui:fragment>
-        <ui:fragment rendered="#{res.type eq 'website' and not empty res.thumbnail3}">
-            <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
-        </ui:fragment>
-        <ui:fragment rendered="#{res.isOfficeResource() and not (res.isOffline())}">
-            <div class="preview_box_wrapper editor_preview">
-                <form id="editor_user_info">
-                    <input type="hidden" id="ed_user_id" value="#{userBean.user.id}"/>
-                    <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
-                    <input type="hidden" id="ed_can_be_edited" value="#{res.canEditResource(userBean.user)}"/>
-                </form>
-                <ui:decorate template="/WEB-INF/templates/blocks/resources/openoffice-editor.xhtml"/>
-                <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
-            </div>
-        </ui:fragment>
-        <ui:fragment rendered="#{not empty res.thumbnail3 and res.type ne 'video' and res.type ne 'website' and not res.isOfficeResource()}">
-            <div class="preview_box_wrapper">
-                <img src="#{res.thumbnail3.url}" onmouseup="lightbox_open();"
-                     height="#{res.thumbnail3.height}" width="#{res.thumbnail3.width}"
-                     style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
-            </div>
-        </ui:fragment>
-    </h:panelGroup>
+        <h:outputLink value="glossary/glossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                      rendered="#{rightPaneBean.clickedResource.type eq 'glossary2'}">
+            <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+            #{msg["Glossary.open"]}
+        </h:outputLink>
+        <h:outputLink value="../lw/survey/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                      rendered="#{rightPaneBean.clickedResource.type eq 'survey'}">
+            <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+            Open survey
+        </h:outputLink>
+
+        <h:outputLink id="survey_esult" value="../lw/survey/results.jsf" style="margin-left:5px"
+                      styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                      rendered="#{rightPaneBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }">
+            <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+            Results
+        </h:outputLink>
+    </div>
 </ui:composition>
