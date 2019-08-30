@@ -1,3 +1,8 @@
+/****************************************************************
+ This file will be loaded on every page.
+ Include only methods which are required on every page.
+ ****************************************************************/
+
 /**
  * PrimeFaces LearnwebTheme Layout
  */
@@ -17,12 +22,46 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         this.isRightPaneOpen = false;
 
         this._bindEvents();
+
+        var myMarket = PrimeFaces.settings.locale;
+        this.header.find('#searchfield').autoComplete({
+            source: function (term, response) {
+                try {
+                    xhr.abort();
+                } catch (e) {
+                }
+                $.ajax({
+                    url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
+                    data: {
+                        'query': term,
+                        'market': myMarket
+                    },
+                    dataType: 'jsonp',
+                    success: function (data) {
+                        var suggestions = [];
+                        $.each(data[1], function (i, val) {
+                            suggestions.push(val);
+                        });
+                        response(suggestions);
+
+                        var logQuerySuggestionAsync = function () {
+                            logQuerySuggestion([
+                                {name: 'query', value: term},
+                                {name: 'market', value: myMarket},
+                                {name: 'suggestions', value: suggestions}
+                            ]);
+                        };
+                        setTimeout(logQuerySuggestionAsync, 0);
+                    }
+                });
+            }
+        }).addClass('searchfield_autocomplete');
     },
 
     _bindEvents: function () {
         var $this = this;
 
-        $(window).on('beforeunload', function() {
+        $(window).on('beforeunload', function () {
             if (typeof onUnloadCommand === 'function') {
                 onUnloadCommand();
             }
@@ -35,7 +74,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
             $this.getWidgetVarById(this.id.replace('_modal', '')).hide();
         });
 
-        $this.overlay.on('mouseup', function(e) {
+        $this.overlay.on('mouseup', function (e) {
             if ($this.isRightPaneOpen) {
                 $this.hideRightPane();
             }
@@ -177,7 +216,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         var $this = this;
 
         var currentPath = window.location.href;
-        this.menuitemLinks.filter(function() {
+        this.menuitemLinks.filter(function () {
             return currentPath.indexOf(this.href) === 0;
         }).each(function () {
             var $activeMenuLink = $(this);
@@ -203,6 +242,31 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 });
 
 /**
+ * Method required for the search field
+ * TODO: why do we need it?
+ */
+function removeViewstate(searchForm) {
+    $(searchForm).find("[name='javax.faces.ViewState']").remove();
+}
+
+/**
+ * TODO: Find better way to call it
+ */
+function updateCarousel2() {
+    PrimeFaces.cw('LimitedList', 'me', {id: 'learnweb'});
+}
+
+/*
+ * Store preferences in user account settings
+ */
+function setPreference(prefKey, prefValue) {
+    setPreferenceRemote([
+        {name: 'key', value: prefKey},
+        {name: 'value', value: prefValue}
+    ]);
+}
+
+/**
  * On document ready events
  */
 $(function () {
@@ -215,7 +279,7 @@ $(function () {
  * Reset center position of Dialog after content is loaded.
  */
 PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
-    show: function() {
+    show: function () {
         this._super();
         this.resetPosition();
     }
@@ -226,7 +290,7 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
  * https://github.com/primefaces/primefaces/issues/5035 (the issue was resolved and should be released in PF 7.1)
  * Fix for PrimeFaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
  */
-PrimeFaces.widget.Menu.prototype.show = function() {
+PrimeFaces.widget.Menu.prototype.show = function () {
     this.align();
     this.jq.css({'z-index': ++PrimeFaces.zindex}).show();
 };
@@ -237,8 +301,8 @@ PrimeFaces.widget.Menu.prototype.show = function() {
  * But this script allows to set dynamic number of column based on the size of first element.
  * To use it, set `breakpoint` property of `p:carousel` to `-1`.
  */
-PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
-    if(this.cfg.breakpoint === -1) {
+PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
+    if (this.cfg.breakpoint === -1) {
         var firstItem = this.items.eq(0);
         firstItem.css('width', 'auto');
         var firstItemWidth = firstItem.length ? firstItem.width() : 150; // firstItem.outerWidth(true), firstItem.width()
@@ -250,7 +314,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
         this.pageLinks.show();
     } else {
         var win = $(window);
-        if(win.width() <= this.cfg.breakpoint) {
+        if (win.width() <= this.cfg.breakpoint) {
             this.columns = 1;
             this.calculateItemWidths(this.columns);
             this.totalPages = this.itemsCount;
@@ -301,13 +365,14 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     init: function (cfg) {
         this._super(cfg);
 
+        this.defaultVisibleItems = 5;
         this.targetLists = $('.js-limited-list');
         this.targetLists.each(this._init);
     },
 
     _init: function () {
         var $list = $(this);
-        var visibleItems = $list.data('visible-items');
+        var visibleItems = $list.data('visible-items') || this.defaultVisibleItems;
         var $items = $list.find('li:not(.expand-list)');
         var $expandBtn = $list.find('li.expand-list');
 
