@@ -103,7 +103,7 @@
     </div>
 
     <p:dialog header="#{msg.addLink}" widgetVar="addLinkDialog" rendered="${groupLinksBean.group.isMember(userBean.user)}"
-              modal="true" resizable="false" responsive="true" closeOnEscape="true" draggable="false">
+              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
         <h:form id="add_link_form">
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.type}:"/>
@@ -139,7 +139,7 @@
     </p:dialog>
 
     <p:dialog header="#{msg.edit} (#{groupLinksBean.selectedLink.title})" widgetVar="editLinkDialog" id="edit_link_dialog"
-              modal="true" resizable="false" responsive="true" closeOnEscape="true" draggable="false">
+              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
         <h:form rendered="#{groupLinksBean.selectedLink != null}" id="edit_link_form">
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>

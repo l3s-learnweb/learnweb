@@ -30,8 +30,7 @@
             <h:outputStylesheet name="learnweb-layout/css/styles.css"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
-            <h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js"/>
+            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.js"/>
             <h:outputScript name="vendor/cq-prolyfill-v0.4.0/cq-prolyfill.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="learnweb-layout" name="js/default2.js"/>
@@ -131,21 +130,18 @@
                 <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();"/>
                 <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
 
-                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog" resizable="true">
-                    <p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
-
-                    <div id="stacktrace" class="d-none">
+                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog"
+                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+                    <p class="error h4 mb-3" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
+                    <div id="stacktrace" class="collapse">
                         <h:outputText value="Message:#{pfExceptionHandler.message}"/>
                         <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/>
                     </div>
                 </p:dialog>
 
-                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog" modal="true">
-                    <div class="error" style="font-size:1.4rem">
-                        #{msg.reload_page}
-                    </div>
-                    <br/>
-                    <br/>
+                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog"
+                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+                    <p class="error h4 mb-3">#{msg.reload_page}</p>
                     <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}"/>
                 </p:dialog>
             </h:form>

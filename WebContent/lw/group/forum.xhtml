@@ -69,7 +69,7 @@
     </p:dataTable>
 
 	<p:dialog header="#{msg['ForumIndex.new_topic']}" widgetVar="newTopicDialog" rendered="${forumTopicsBean.group.isMember(userBean.user)}"
-			  modal="true" resizable="false" responsive="true" closeOnEscape="true" draggable="false">
+			  modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
 		<h:form id="new_topic_form">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
