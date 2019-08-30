@@ -57,13 +57,13 @@
                          update=":right_pane :resourcesView :growl" oncomplete="resourceDND();PF('learnweb').showRightPane();"/>
     </h:form>
 
-    <div class="resources-panel section-resources">
-        <div class="col-folders ui-panel ui-widget border-right mb-0">
+    <div class="row no-gutters resources-panel section-resources">
+        <div class="col-12 col-folders ui-panel ui-widget d-flex flex-column">
             <div class="ui-panel-titlebar ui-widget-header">
                 <span class="ui-panel-title">Folders</span>
             </div>
 
-            <div class="ui-panel-content ui-widget-content">
+            <div class="ui-panel-content ui-widget-content flex-grow-1">
                 <h:form id="group_folders_tree_form">
                     <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
                             datakey="#{node.folderId}" animate="true" selectionMode="single" styleClass="ui-tree-responsive" onNodeClick="openFolder(#{node.id});">
@@ -75,7 +75,7 @@
                 </h:form>
             </div>
         </div>
-        <div class="col-resources">
+        <div class="col-12 col-resources ui-panel ui-widget">
             <h:form>
                 <p:toolbar>
                     <f:facet name="left">
@@ -121,7 +121,7 @@
                 </p:toolbar>
             </h:form>
 
-            <h:panelGroup id="resourcesWrapper" layout="block">
+            <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content">
                 <c:if test="${userBean.user.organisation.id ne 480}">
                     <!--suppress XmlDuplicatedId -->
                     <h:form id="resourcesFilters" styleClass="bg-gray200">

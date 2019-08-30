@@ -531,42 +531,52 @@ ul.res-filters {
 }
 
 .resources-panel {
-  display: flex;
-  background-color: $contentBgColor;
-  border: 1px solid $contentBorderColor;
+  > div {
+    background-color: $contentBgColor;
+  }
 
-  .col-folders {
-    flex: 0 0 auto;
-    width: 15rem;
+  @include media-breakpoint-up(md) {
+    .col-folders {
+      flex: 0 0 auto;
+      width: 15rem;
 
-    .ui-panel-content {
-      border: 0;
+      .ui-panel-content {
+        border-right: 0;
+      }
+    }
+
+    .col-resources {
+      flex: 1 0 auto;
+      width: 0; // magic
     }
   }
 
-  .col-resources {
-    flex: 1 0 auto;
-    width: 0; // magic
+  .ui-panel .ui-panel-content {
+    border-top: 0;
+  }
 
-    .ui-toolbar {
-      border: 0;
-      padding: 3px 1rem;
-      background: $themePrimaryColor;
-      color: $themeElementTextColor;
+  .ui-toolbar {
+    border: 0;
+    padding: 3px 1rem;
+    background: $themePrimaryColor;
+    color: $themeElementTextColor;
 
-      .ui-separator {
-        pointer-events: none;
-      }
+    .ui-separator {
+      pointer-events: none;
+    }
 
-      .ui-toolbar-group-right {
-        .ui-button {
-          background-color: $themePrimaryColorDarker;
-          border: 1px solid $themePrimaryColorDarker;
+    .ui-toolbar-group-right {
+      .ui-button {
+        background-color: $themePrimaryColorDarker;
+        border: 1px solid $themePrimaryColorDarker;
 
-          &.ui-state-hover, &.ui-state-focus {
-            background-color: $themePrimaryDarkerAlt;
-            border-color: $themePrimaryDarkerAlt;
-          }
+        &.ui-state-hover, &.ui-state-focus {
+          background-color: $themePrimaryDarkerAlt;
+          border-color: $themePrimaryDarkerAlt;
+        }
+
+        &:last-child {
+          margin-right: 0;
         }
       }
     }

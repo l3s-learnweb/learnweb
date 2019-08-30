@@ -10017,7 +10017,7 @@ body .moderator-btn .ui-button-text:before {
     overflow-y: auto;
     height: 100%;
     width: 80%;
-    z-index: 1001;
+    z-index: 10001;
     padding: 0;
     background: #f2f5fa;
   }
@@ -10050,7 +10050,6 @@ body .moderator-btn .ui-button-text:before {
   }
   body.right-pane-open .layout-overlay {
     display: block;
-    opacity: 1;
   }
   body.right-pane-open .layout-right-pane {
     right: 0;
@@ -10119,7 +10118,6 @@ body,
 }
 .layout-overlay:not(.show) {
   display: none;
-  opacity: 0;
 }
 
 .layout-wrapper .layout-breadcrumb {
@@ -11518,38 +11516,44 @@ ul.res-filters .clear-filters:hover a {
   display: none;
 }
 
-.resources-panel {
-  display: flex;
+.resources-panel > div {
   background-color: #fff;
-  border: 1px solid #ced4da;
 }
-.resources-panel .col-folders {
-  flex: 0 0 auto;
-  width: 15rem;
+@media (min-width: 768px) {
+  .resources-panel .col-folders {
+    flex: 0 0 auto;
+    width: 15rem;
+  }
+  .resources-panel .col-folders .ui-panel-content {
+    border-right: 0;
+  }
+  .resources-panel .col-resources {
+    flex: 1 0 auto;
+    width: 0;
+  }
 }
-.resources-panel .col-folders .ui-panel-content {
-  border: 0;
+.resources-panel .ui-panel .ui-panel-content {
+  border-top: 0;
 }
-.resources-panel .col-resources {
-  flex: 1 0 auto;
-  width: 0;
-}
-.resources-panel .col-resources .ui-toolbar {
+.resources-panel .ui-toolbar {
   border: 0;
   padding: 3px 1rem;
   background: #4b6cb7;
   color: #fff;
 }
-.resources-panel .col-resources .ui-toolbar .ui-separator {
+.resources-panel .ui-toolbar .ui-separator {
   pointer-events: none;
 }
-.resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button {
+.resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button {
   background-color: #38569C;
   border: 1px solid #38569C;
 }
-.resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-hover, .resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-focus {
+.resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-hover, .resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-focus {
   background-color: #415688;
   border-color: #415688;
+}
+.resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button:last-child {
+  margin-right: 0;
 }
 
 /*!
