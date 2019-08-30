@@ -36,6 +36,7 @@
 @import "layouts/_template_page";
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
+@import "components/_autocomplete";
 @import "components/_buttons";
 @import "components/_dashboard";
 @import "components/_fancybox";

@@ -7376,7 +7376,7 @@ body .ui-panel .ui-panel-titlebar + .ui-panel-content {
 body .ui-panel .ui-panel-content {
   /* height: 100%; causes problems on the dashboard. let's see if it is needed anywhere*/
   box-sizing: border-box;
-  padding: 0.875rem;
+  padding: 1rem;
   border: 1px solid #ced4da;
 }
 body .ui-panel .ui-panel-footer {
@@ -7414,7 +7414,7 @@ body .ui-fieldset .ui-fieldset-legend.ui-state-hover {
   background-color: #ced4da;
 }
 body .ui-fieldset .ui-fieldset-content {
-  padding: 0.875rem;
+  padding: 1rem;
 }
 body .ui-notificationbar {
   background-color: #4b6cb7;
@@ -7482,7 +7482,7 @@ body .ui-accordion .ui-accordion-header .ui-icon.ui-icon-triangle-1-s:before {
   content: "";
 }
 body .ui-accordion .ui-accordion-content {
-  padding: 0.875rem;
+  padding: 1rem;
   border: 0 none;
 }
 body .ui-tabs {
@@ -7567,7 +7567,7 @@ body .ui-tabs.ui-tabs-left .ui-tabs-nav li, body .ui-tabs.ui-tabs-right .ui-tabs
   background-color: #fff;
 }
 body .ui-tabs .ui-tabs-panel {
-  padding: 0.875rem;
+  padding: 1rem;
   border: 1px solid #ced4da;
 }
 body .ui-panelgrid .ui-panelgrid-header .ui-panelgrid-cell,
@@ -7928,7 +7928,7 @@ body .ui-datagrid .ui-paginator.ui-paginator-bottom .ui-paginator-pages {
   padding: 4px 0 0 0;
 }
 body .ui-datagrid .ui-datagrid-content {
-  padding: 0.875rem;
+  padding: 1rem;
 }
 body .ui-datagrid .ui-panel {
   margin-right: 5px;
@@ -9074,10 +9074,11 @@ body .ui-dialog .ui-dialog-titlebar .ui-dialog-title {
   font-weight: 700;
 }
 body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon {
+  text-decoration: none;
   color: #fff;
   border: 0 none;
   transition: color 0.3s;
-  padding: 0;
+  padding: 3px 0;
   margin-left: 4px;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -9094,7 +9095,7 @@ body .ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-icon.ui-dialog-titlebar-
   left: 1px;
 }
 body .ui-dialog .ui-dialog-content {
-  padding: 0.875rem;
+  padding: 1rem;
 }
 body .ui-dialog .ui-dialog-footer {
   border: 0;
@@ -9741,7 +9742,7 @@ body .ui-log .ui-log-header .ui-log-button.ui-log-clear, body .ui-log .ui-log-he
   left: auto;
 }
 body .ui-log .ui-log-content {
-  padding: 0.875rem;
+  padding: 1rem;
   max-height: 250px;
 }
 
@@ -10126,13 +10127,15 @@ body,
 
 .layout-wrapper .layout-breadcrumb {
   background-color: #fff;
-  padding: 0.5rem 1rem;
   border: 1px solid #4b6cb7;
   border-left: 0;
   border-right: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.layout-wrapper .layout-breadcrumb > * {
+  margin: 0.5rem 1rem;
 }
 .layout-wrapper .layout-main {
   position: relative;
@@ -10169,6 +10172,43 @@ body,
 
 .template-page .layout-wrapper .layout-main .layout-main-content {
   padding: 0;
+}
+
+.autocomplete-suggestions {
+  text-align: left;
+  cursor: default;
+  border: 1px solid #ccc;
+  border-top: 0;
+  background: #fff;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.1);
+  /* core styles should not be changed */
+  position: absolute;
+  display: none;
+  z-index: 9999;
+  max-height: 254px;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.autocomplete-suggestion {
+  position: relative;
+  padding: 0 0.6em;
+  line-height: 23px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1.02em;
+  color: #333;
+}
+
+.autocomplete-suggestion b {
+  font-weight: normal;
+  color: #1f8dd6;
+}
+
+.autocomplete-suggestion.selected {
+  background: #f0f0f0;
 }
 
 .fileupload-minimal .ui-fileupload-buttonbar {
