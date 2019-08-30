@@ -158,3 +158,11 @@ body {
 
   }
 }
+
+.col-xs-auto {
+  @include media-breakpoint-down(xs) {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+}

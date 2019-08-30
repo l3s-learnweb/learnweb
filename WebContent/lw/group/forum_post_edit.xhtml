@@ -17,14 +17,17 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.edit}" url="myhome/activity.jsf#"/>
+    <p:menuitem value="#{forumEditBean.group.title}" url="group/overview.jsf?group_id=#{forumEditBean.group.id}"/>
+    <p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumEditBean.group.id}"/>
+    <p:menuitem value="#{forumEditBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumEditBean.topic.id}"/>
+    <p:menuitem value="#{msg.edit}" url="#"/>
 </ui:define>
 
 <ui:define name="group_layout">
     <p:panel rendered="#{forumEditBean.canEditPost()}">
         <h:form>
             <table id="answer_table">
-                <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
+                <ui:fragment rendered="#{forumEditBean.group.restrictionForumCategoryEnabled}">
                     <div class="mb-3">
                         <h:panelGroup>
                             <p class="mb-0"><h:outputText styleClass="font-weight-bold" value="#{msg.category}: "/></p>

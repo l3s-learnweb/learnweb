@@ -9884,6 +9884,14 @@ body .moderator-btn .ui-button-text:before {
   color: #F9C642;
 }
 
+@media (max-width: 575.98px) {
+  .col-xs-auto {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
 .layout-wrapper .layout-header {
   position: fixed;
   top: 0;
@@ -12987,8 +12995,6 @@ ul.res-filters .clear-filters:hover a {
   padding-left: 1rem;
 }
 .section-search .group-menu-title {
-  border-bottom: 2px solid #6c757d;
-  background-size: 1rem 1rem;
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 1rem;
@@ -13130,6 +13136,42 @@ ul.res-filters .clear-filters:hover a {
 .section-search .iconscontainer .icon:hover span {
   top: 100%;
   opacity: 1;
+}
+
+.ui-carousel-item {
+  border-radius: 0.1rem;
+  padding: 0 !important;
+  margin: 0.1rem 0.5rem !important;
+}
+.ui-carousel-item:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+
+.block-with-text {
+  overflow: hidden;
+  position: relative;
+  line-height: 1.2em;
+  max-height: 2.4em;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+}
+
+.block-with-text:before {
+  content: "...";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.block-with-text:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.2em;
+  background: white;
 }
 
 @media (min-width: 768px) {
