@@ -2,7 +2,6 @@ contextMenu-v2.7.0 (https://github.com/swisnl/jQuery-contextMenu) NEW VERSION AV
 cq-prolyfill-v0.4.0 (https://github.com/ausi/cq-prolyfill) Allows to use media queries which depends of container width
 d3js-v3.5.17 (https://github.com/d3/d3) NEW VERSION AVAILABLE - used to create charts
 highcharts-v4.2.1 (https://github.com/highcharts/highcharts) NEW VERSION AVAILABLE - also for charts // TODO should be replaced to PrimeFaces ChartJS
-jquery-ui-v1.12.1 (https://github.com/jquery/jquery-ui) - Used for drag&drop and context menu
 jsnetworkx-v0.3.4 (https://github.com/fkling/JSNetworkX) - used on searchHistory pages to create a graph // TODO probably can be replaced by d3js
 jspos (lexer, lexicon, POSTagger) - used on admin/wanderer.jsf page
 montage-v1.0.0 - used to create feed on fact_sheet_* pages
