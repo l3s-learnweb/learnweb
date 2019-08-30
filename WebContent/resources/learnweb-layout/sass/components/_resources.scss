@@ -99,7 +99,8 @@ ul.res-filters {
     .filter-title {
       cursor: pointer;
       display: inline-block;
-      padding: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      line-height: 2;
     }
 
     &:first-child .filter-title {
@@ -557,7 +558,7 @@ ul.res-filters {
 
   .ui-toolbar {
     border: 0;
-    padding: 3px 1rem;
+    padding: 0.1875rem 1rem;
     background: $themePrimaryColor;
     color: $themeElementTextColor;
 
