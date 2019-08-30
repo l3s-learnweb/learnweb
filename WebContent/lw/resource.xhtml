@@ -20,7 +20,7 @@
 
 	<ui:define name="center_layout">
 
-		<h1><a href="#{resourceBean.resource.learnwebUrl}"><h:outputText value="#{resourceBean.resource.title}" escape="false" /></a></h1>
+		<h1><a href="#{resourceBean.resource.learnwebUrl}"><h:outputText value="#{resourceBean.resource.title}" escape="false"/></a></h1>
 	
 		<ui:fragment rendered="#{not userBean.loggedIn}">
 		<p>You need to login to access this resource.</p>

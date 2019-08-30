@@ -7,15 +7,15 @@
 	xmlns:p="http://primefaces.org/ui">	
 
 <h:head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<meta charset="utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta charset="utf-8"/>
 	<title>WordWanderer – take your text for a walk</title>
 
-	<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
-	<h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
-	<h:outputScript target="head" name="vendor/jspos-v1.0.0/lexer.js" />
-	<h:outputScript target="head" name="vendor/jspos-v1.0.0/lexicon.js" />
-	<h:outputScript target="head" name="vendor/jspos-v1.0.0/POSTagger.js" />
+	<h:outputScript library="primefaces" target="head" name="jquery/jquery.js"/>
+	<h:outputScript target="head" name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js"/>
+	<h:outputScript target="head" name="vendor/jspos-v1.0.0/lexer.js"/>
+	<h:outputScript target="head" name="vendor/jspos-v1.0.0/lexicon.js"/>
+	<h:outputScript target="head" name="vendor/jspos-v1.0.0/POSTagger.js"/>
 
 <style type="text/css" media="screen">
 
@@ -659,8 +659,8 @@ input[type="checkbox"], input[type="submit"] {
 		
 		
 	<p id="wanderp">
-		<input checked="checked" id="lowercase" type="checkbox" /> <label for="lowercase">turn text to lower case</label><br/>
-		<input class="" name="wander" value="wander" id="wander" type="submit" />	
+		<input checked="checked" id="lowercase" type="checkbox"/> <label for="lowercase">turn text to lower case</label><br/>
+		<input class="" name="wander" value="wander" id="wander" type="submit"/>
 	<span class="" id="loading">&#xA0;</span></p>
 
 <!--[if lte IE 9]>
@@ -686,7 +686,7 @@ $("#wanderp").html("WordWanderer supports only Internet Explorer 10 and newer.<b
 		<span id="options_button">Options</span> &#xA0; 
 		<span id="help_button">About</span> &#xA0; 
 	</h2>
-	<input id="search" name="search" placeholder="search for words" type="text" />
+	<input id="search" name="search" placeholder="search for words" type="text"/>
 	
 	<div style="opacity: 0; height: 0px;" id="suggestions"></div>
 	
@@ -739,34 +739,34 @@ below the visualization.</p>
 	<p class="types"><strong>Show</strong> (<span id="selectall">select all</span>)</p>
 	
 	<ul>
-		<li> <input checked="checked" id="type_JJ" type="checkbox" /><label for="type_JJ">Adjectives</label></li>
-		<li> <input checked="checked" id="type_RR" type="checkbox" /><label for="type_RR">Adverbs</label></li>
-		<li> <input checked="checked" id="type_NN" type="checkbox" /><label for="type_NN">Nouns</label></li>
-		<li> <input checked="checked" id="type_VV" type="checkbox" /><label for="type_VV">Verbs</label></li>		
+		<li> <input checked="checked" id="type_JJ" type="checkbox"/><label for="type_JJ">Adjectives</label></li>
+		<li> <input checked="checked" id="type_RR" type="checkbox"/><label for="type_RR">Adverbs</label></li>
+		<li> <input checked="checked" id="type_NN" type="checkbox"/><label for="type_NN">Nouns</label></li>
+		<li> <input checked="checked" id="type_VV" type="checkbox"/><label for="type_VV">Verbs</label></li>
 	</ul>
 	<ul>
-		<li> <input checked="checked" id="type_CC" type="checkbox" /><label for="type_CC">Conjunctions</label></li>
-		<li> <input checked="checked" id="type_DD" type="checkbox" /><label for="type_DD">Determiners</label></li>
-		<li> <input checked="checked" id="type_II" type="checkbox" /><label for="type_II">Prepositions</label></li>
-		<li> <input checked="checked" id="type_PP" type="checkbox" /><label for="type_PP">Pronouns</label></li>
+		<li> <input checked="checked" id="type_CC" type="checkbox"/><label for="type_CC">Conjunctions</label></li>
+		<li> <input checked="checked" id="type_DD" type="checkbox"/><label for="type_DD">Determiners</label></li>
+		<li> <input checked="checked" id="type_II" type="checkbox"/><label for="type_II">Prepositions</label></li>
+		<li> <input checked="checked" id="type_PP" type="checkbox"/><label for="type_PP">Pronouns</label></li>
 	</ul>
 	<ul>
-		<li> <input id="type_PU" type="checkbox" /><label for="type_PU">Punctuation</label></li>
-		<li> <input id="type_MC" type="checkbox" /><label for="type_MC">Numbers</label></li>
-		<li> <input id="type_SY" type="checkbox" /><label for="type_SY">Symbols</label></li>		
-		<li> <input id="type_FU" type="checkbox" /><label for="type_FU">Other</label></li>		
+		<li> <input id="type_PU" type="checkbox"/><label for="type_PU">Punctuation</label></li>
+		<li> <input id="type_MC" type="checkbox"/><label for="type_MC">Numbers</label></li>
+		<li> <input id="type_SY" type="checkbox"/><label for="type_SY">Symbols</label></li>
+		<li> <input id="type_FU" type="checkbox"/><label for="type_FU">Other</label></li>
 	</ul>	
 	
 	
 	<p class="exclude"><strong>Hide</strong> </p>
 
 	<ul>
-		<li> <input checked="checked" id="stopwords" type="checkbox" /><label for="stopwords">Common words such as: the, is, at, in, and of</label> </li>
-		<li> <input id="excludeopt" type="checkbox" /> <input id="exclude" placeholder="enter words separated by space" name="exclude" />
+		<li> <input checked="checked" id="stopwords" type="checkbox"/><label for="stopwords">Common words such as: the, is, at, in, and of</label> </li>
+		<li> <input id="excludeopt" type="checkbox"/> <input id="exclude" placeholder="enter words separated by space" name="exclude"/>
 	</li></ul>	
 
 	<p class="buttons">
-		<input name="apply" value="Apply" id="apply" type="submit" />
+		<input name="apply" value="Apply" id="apply" type="submit"/>
 	</p>
 </div>
 

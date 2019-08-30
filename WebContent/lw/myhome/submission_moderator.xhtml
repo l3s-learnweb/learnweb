@@ -5,16 +5,16 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="loginRequired" value="true" />
-    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
     <ui:param name="helpText" value="" />
     <ui:param name="rightPane" value="true"/>
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}" />
+            <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
             <f:viewAction action="#{rightPaneBean.onLoad}"/>
-            <f:viewAction action="#{submissionModeratorBean.onLoad}" />
+            <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
         </f:metadata>
     </ui:define>
 
@@ -25,8 +25,8 @@
 
     <ui:define name="center_layout">
         <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
 
@@ -50,7 +50,7 @@
                     </span>
 
                     <span class="font-weight-lighter">#{msg.course}:
-                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}" />
+                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}"/>
                     </span>
                 </div>
 
@@ -66,13 +66,13 @@
                                     <h:form prependId="false" styleClass="d-none">
                                         <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                             <i class="fa fa-fw fa-lock text-dark" aria-hidden="true"></i>
                                         </p:commandLink>
 
                                         <p:commandLink  title="lock submission" rendered="#{not userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                             <i class="fa fa-fw fa-unlock text-dark" aria-hidden="true"></i>
                                         </p:commandLink>
                                     </h:form>
@@ -95,10 +95,10 @@
 
                                     <div class="col-auto d-flex flex-column mt-2">
                                         <span>
-                                            <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" />
+                                            <h:outputText value="#{logEntry.resource.shortDescription}" escape="false"/>
                                         </span>
 
-                                        <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false" />
+                                        <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false"/>
                                     </div>
                                 </div>
                             </h:panelGroup>
@@ -111,7 +111,7 @@
                                         <ui:repeat var="res" value="#{userSubmission.resources}">
                                             <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                                                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                                    <ui:param name="res" value="#{res}" />
+                                                    <ui:param name="res" value="#{res}"/>
                                                 </ui:decorate>
                                             </h:panelGroup>
                                         </ui:repeat>
@@ -129,7 +129,7 @@
 
     <ui:define name="right_layout">
         <ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-            <ui:param name="bean" value="#{submissionBean}" />
+            <ui:param name="bean" value="#{submissionBean}"/>
         </ui:decorate>
     </ui:define>
 </ui:composition>

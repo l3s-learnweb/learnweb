@@ -10,8 +10,8 @@
 		<span class="fact_sheet_field">#{fact.label}:</span>
 		<span class="fact_sheet_value">
 			<p:repeat var="entry" value="#{fact.data}" varStatus="status">
-				<h:outputText value=", " rendered="#{not status.first}" />
-				<h:outputText value="#{entry}" />
+				<h:outputText value=", " rendered="#{not status.first}"/>
+				<h:outputText value="#{entry}"/>
 			</p:repeat>
 		</span>
 	</div>

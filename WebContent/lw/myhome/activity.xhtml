@@ -17,8 +17,8 @@
 
     <ui:define name="center_layout">
         <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
             <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
 
@@ -59,7 +59,7 @@
                                 <ui:repeat var="res" value="#{logEntry.resource}">
                                     <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                                         <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                            <ui:param name="res" value="#{res}" />
+                                            <ui:param name="res" value="#{res}"/>
                                         </ui:decorate>
                                     </h:panelGroup>
                                 </ui:repeat>
@@ -69,7 +69,7 @@
 
                     <h:panelGroup styleClass="mt-3" rendered="#{logEntry.resource!=null}">
                         <h:outputText value="#{msg.tags}: " escape="false" rendered="#{not empty logEntry.resource.tagsAsString}"/>
-                        <h:outputText value=" #{logEntry.resource.tagsAsString} " rendered="#{not empty logEntry.resource.tagsAsString}" escape="false" />
+                        <h:outputText value=" #{logEntry.resource.tagsAsString} " rendered="#{not empty logEntry.resource.tagsAsString}" escape="false"/>
                     </h:panelGroup>
                 </div>
             </p:repeat>

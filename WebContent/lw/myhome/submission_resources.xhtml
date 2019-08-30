@@ -6,14 +6,14 @@
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <ui:param name="rightPane" value="true"/>
-    <ui:param name="pageTitle" value="#{msg['Submission.title']}" />
-    <ui:param name="loginRequired" value="true" />
+    <ui:param name="pageTitle" value="#{msg['Submission.title']}"/>
+    <ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
-			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
-			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
+			<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
+			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
@@ -27,8 +27,8 @@
 	<ui:define name="center_layout">
 
 		<h:form styleClass="d-none">
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="selectResourceDND(); load_editor(); "/>
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=" :resourceGrid2" oncomplete="selectResourceDND(); updateMaxResources();"/>
 		</h:form>
@@ -36,8 +36,8 @@
 		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
 		<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
 
-		<h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
-		<h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
+		<h:outputScript library="learnweb-layout" name="js/resource-pane.js"/>
+		<h:outputScript library="learnweb-layout" name="js/submission-resources.js"/>
 
 		<script>
 			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
@@ -66,7 +66,7 @@
                                 <ui:fragment>
                                     <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
                                         <div class="context-menu-item-wrapper">
-                                            <span class="context-menu-item-icon" />
+                                            <span class="context-menu-item-icon"/>
                                             <!--						<span class="context-menu-item-content">Remove</span>-->
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                             </h:panelGroup>
 
 							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-								<ui:param name="res" value="#{res}" />
+								<ui:param name="res" value="#{res}"/>
 							</ui:decorate>
                         </h:panelGroup>
                     </p:repeat>
@@ -137,7 +137,7 @@
 
 	<ui:define name="right_layout">
 		<ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-			<ui:param name="bean" value="#{submissionBean}" />
+			<ui:param name="bean" value="#{submissionBean}"/>
 		</ui:decorate>
 	</ui:define>
 </ui:composition>

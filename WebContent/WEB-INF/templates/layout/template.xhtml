@@ -31,7 +31,7 @@
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
             <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
-            <h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
+            <h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js"/>
             <h:outputScript name="vendor/cq-prolyfill-v0.4.0/cq-prolyfill.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
             <h:outputScript library="learnweb-layout" name="js/default2.js"/>
@@ -128,15 +128,15 @@
 
             <h:form>
                 <!-- TODO: check if we need it -->
-                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();" />
-                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();"/>
+                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
 
                 <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog" resizable="true">
                     <p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
 
                     <div id="stacktrace" class="d-none">
-                        <h:outputText value="Message:#{pfExceptionHandler.message}" />
-                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+                        <h:outputText value="Message:#{pfExceptionHandler.message}"/>
+                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/>
                     </div>
                 </p:dialog>
 
@@ -146,7 +146,7 @@
                     </div>
                     <br/>
                     <br/>
-                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}" />
+                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}"/>
                 </p:dialog>
             </h:form>
 

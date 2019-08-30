@@ -5,8 +5,8 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 	
-		<ui:param name="loginRequired" value="true" />
-		<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}" />
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}"/>
 
 		<ui:define name="breadcrumb_ext">
 			<p:menuitem value="#{msg.myRatedResourcesTitle}" url="myhome/rated_resources.jsf#"/>
@@ -21,13 +21,13 @@
 					
 					<p:column headerText="#{msg.title}">
 						<h:outputLink value="resource.jsf">
-							<f:param name="resource_id" value="#{res.id}" />
+							<f:param name="resource_id" value="#{res.id}"/>
 							#{res.title}
 						</h:outputLink>
 					</p:column>
 					
 					<p:column headerText="#{msg.description}">
-						<h:outputText value="#{res.descriptionHTML}" escape="false" />
+						<h:outputText value="#{res.descriptionHTML}" escape="false"/>
 					</p:column>
 					
 					<p:column headerText="#{msg.type}">

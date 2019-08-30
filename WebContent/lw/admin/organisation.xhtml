@@ -6,20 +6,20 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="loginRequired" value="true" />
-    <ui:param name="pageTitle" value="#{adminOrganisationBean.selectedOrganisation.title} - #{msg.organization}" />
-    <ui:param name="disableGrowl" value="true" />
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{adminOrganisationBean.selectedOrganisation.title} - #{msg.organization}"/>
+    <ui:param name="disableGrowl" value="true"/>
 
 	<ui:define name="metadata">
 	    <f:metadata>
-	        <f:viewParam name="organisation_id" value="#{adminOrganisationBean.organisationId}" required="false" requiredMessage="#{msg.missing_parameter}" />
-	        <f:viewAction action="#{adminOrganisationBean.onLoad}" />
+	        <f:viewParam name="organisation_id" value="#{adminOrganisationBean.organisationId}" required="false" requiredMessage="#{msg.missing_parameter}"/>
+	        <f:viewAction action="#{adminOrganisationBean.onLoad}"/>
 	    </f:metadata>
 	</ui:define>
 
 	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.organization}" url="admin/organisations.jsf" />
-		<p:menuitem value="#{adminOrganisationBean.selectedOrganisation.title}" url="#" />
+		<p:menuitem value="#{msg.organization}" url="admin/organisations.jsf"/>
+		<p:menuitem value="#{adminOrganisationBean.selectedOrganisation.title}" url="#"/>
 	</ui:define>
 
     <ui:define name="center_layout">
@@ -60,8 +60,8 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.welcome_page}:"/>
                                 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.selectedOrganisation.welcomePage}" editable="true">
-                                    <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf" />
-                                    <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf" />
+                                    <f:selectItem itemValue="/lw/myhome/activity.jsf" itemLabel="/lw/myhome/activity.jsf"/>
+                                    <f:selectItem itemValue="/lw/myhome/welcome.jsf" itemLabel="/lw/myhome/welcome.jsf"/>
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
                             </div>
@@ -69,9 +69,9 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.logout_page}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.logoutPage}" editable="true">
-                                    <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page" />
-                                    <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page" />
-                                    <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page" />
+                                    <f:selectItem itemValue="/lw/index.jsf" itemLabel="Learnweb index page"/>
+                                    <f:selectItem itemValue="/ama/index.jsf" itemLabel="AMA index page"/>
+                                    <f:selectItem itemValue="/aw/index.jsf" itemLabel="Archive index page"/>
                                 </p:selectOneMenu>
                                 <p:message for="@previous"/>
                             </div>
@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.default_lang}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.defaultLanguage}">
-                                    <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}" />
+                                    <f:selectItem itemLabel="#{msg.no_default_lang}" itemValue="#{null}"/>
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguages}" var="lang"
                                                    itemLabel="${msg['language_' += lang]}" itemValue="#{lang}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.lang_variant}:"/>
                                 <p:selectOneMenu value="#{adminOrganisationBean.selectedOrganisation.languageVariant}">
-                                    <f:selectItem itemValue="" itemLabel="#{msg.no_lang_variant}" />
+                                    <f:selectItem itemValue="" itemLabel="#{msg.no_lang_variant}"/>
                                     <f:selectItems value="#{adminOrganisationBean.supportedLanguageVariants}" var="variant"
                                                    itemLabel="#{variant}" itemValue="#{variant}"></f:selectItems>
                                 </p:selectOneMenu>
@@ -105,7 +105,7 @@
                                 <p:message for="@previous"/>
                             </div>
 
-                            <p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false" />
+                            <p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/>
                         </p:panel>
                     </div>
 

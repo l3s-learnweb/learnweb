@@ -5,8 +5,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="false" />
-	<ui:param name="pageTitle" value="Factsheet" />
+	<ui:param name="loginRequired" value="false"/>
+	<ui:param name="pageTitle" value="Factsheet"/>
 
 	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="Factsheet" url="factsheettest.jsf"/>
@@ -20,46 +20,46 @@
 
                     <p:selectOneMenu id="Search" editable="false" value="#{factSheetBean.search}">
                         <f:selectItem itemLabel="Select One" itemValue="" />
-                        <f:selectItem itemLabel="Random" itemValue="#{factSheetBean.random}" />
-                        <f:selectItem itemLabel="Barack Obama" itemValue="Q76" />
-                        <f:selectItem itemLabel="Donald Trump" itemValue="Q22686" />
+                        <f:selectItem itemLabel="Random" itemValue="#{factSheetBean.random}"/>
+                        <f:selectItem itemLabel="Barack Obama" itemValue="Q76"/>
+                        <f:selectItem itemLabel="Donald Trump" itemValue="Q22686"/>
                         <f:selectItem itemLabel="Lion"  itemValue="Q140"/>
                         <f:selectItem itemLabel="Henry the Lion"  itemValue="Q105378"/>
-                        <f:selectItem itemLabel="Cloud Strife"  itemValue="Q1798592" />
-                        <f:selectItem itemLabel="Paris"  itemValue="Q90" />
+                        <f:selectItem itemLabel="Cloud Strife"  itemValue="Q1798592"/>
+                        <f:selectItem itemLabel="Paris"  itemValue="Q90"/>
                         <f:selectItem itemLabel="Pokémon"  itemValue="Q864"/>
                         <f:selectItem itemLabel="Nil"  itemValue="Q3392"/>
-                        <f:selectItem itemLabel="Mars"  itemValue="Q111" />
+                        <f:selectItem itemLabel="Mars"  itemValue="Q111"/>
                         <f:selectItem itemLabel="Red Bull"  itemValue="Red Bull"/>
                         <f:selectItem itemLabel="BMW"  itemValue="Q26678"/>
-                        <f:selectItem itemLabel="Cucumber" itemValue="Cucumber" />
+                        <f:selectItem itemLabel="Cucumber" itemValue="Cucumber"/>
                         <!-- /https://docs.google.com/spreadsheets/d/11UIURYRCUet1jGH_DbQUmzx4utKHIfCICssKZxgtVog/edit#gid=0 -->
                     </p:selectOneMenu>
 
-                    <p:commandButton value="Submit" update="facts" action="#{factSheetBean.onClick}" />
+                    <p:commandButton value="Submit" update="facts" action="#{factSheetBean.onClick}"/>
                 </h:panelGrid>
             </h:form>
         </p:panel>
 
 		<h:panelGroup id="facts">
 			<h:panelGrid columns="2">
-				<h:outputText value="query" />
-				<h:outputText value="#{factSheetBean.search}" />
+				<h:outputText value="query"/>
+				<h:outputText value="#{factSheetBean.search}"/>
 			
-				<h:outputText value="label" />
-				<h:outputText value="#{factSheetBean.entity.label}" />
+				<h:outputText value="label"/>
+				<h:outputText value="#{factSheetBean.entity.label}"/>
 				
-				<h:outputText value="title" />
-				<h:outputText value="#{factSheetBean.entity.title}" />
+				<h:outputText value="title"/>
+				<h:outputText value="#{factSheetBean.entity.title}"/>
 				
-				<h:outputText value="description" />
-				<h:outputText value="#{factSheetBean.entity.description}" />
+				<h:outputText value="description"/>
+				<h:outputText value="#{factSheetBean.entity.description}"/>
 				
-				<h:outputText value="wikiId" />
-				<h:outputText value="#{factSheetBean.entity.wikiId}" />
+				<h:outputText value="wikiId"/>
+				<h:outputText value="#{factSheetBean.entity.wikiId}"/>
 				
-				<h:outputText value="image" />
-				<h:outputText value="#{factSheetBean.entity.imageUrl}" />
+				<h:outputText value="image"/>
+				<h:outputText value="#{factSheetBean.entity.imageUrl}"/>
 				
 			
 			</h:panelGrid>
@@ -67,7 +67,7 @@
 			<p:repeat var="fact" value="#{factSheetBean.entity.facts}">
 				
 				<ui:decorate template="/templates/factsheet/fact.xhtml">
-					<ui:param name="fact" value="#{fact}" />
+					<ui:param name="fact" value="#{fact}"/>
 				</ui:decorate>
 			</p:repeat>
 		</h:panelGroup>

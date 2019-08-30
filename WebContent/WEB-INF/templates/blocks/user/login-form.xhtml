@@ -4,7 +4,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<h:form styleClass="login-form" prependId="false">
+<h:form styleClass="login-form">
     <div class="form-group">
         <p:outputLabel for="@next" value="#{msg.username}:"/>
         <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" required="true"/>

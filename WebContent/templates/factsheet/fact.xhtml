@@ -6,13 +6,13 @@
 
 	<ui:fragment rendered="#{fact.template eq 'list'}">
 		<ui:decorate template="/templates/factsheet/fact_list.xhtml">
-			<ui:param name="fact" value="#{fact}" />
+			<ui:param name="fact" value="#{fact}"/>
 		</ui:decorate>
 	</ui:fragment>
 	
 	<ui:fragment rendered="#{true}">
 		<ui:decorate template="/templates/factsheet/fact_date_place.xhtml">
-			<ui:param name="fact" value="#{fact}" />
+			<ui:param name="fact" value="#{fact}"/>
 		</ui:decorate>
 	</ui:fragment>
 	

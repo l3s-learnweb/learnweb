@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="#{msg.detailed_transcript_log}" />
+	<ui:param name="pageTitle" value="#{msg.detailed_transcript_log}"/>
 	<ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="breadcrumb_ext">
@@ -14,7 +14,7 @@
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false">
 			<p:panel header="#{msg.select_users}">
-				<ui:include src="/templates/user/user_select_form.xhtml" />
+				<ui:include src="/templates/user/user_select_form.xhtml"/>
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
 								 process="@form" update=":transcript_table"/>
 			</p:panel>
@@ -34,43 +34,43 @@
 				<f:facet name="header">#{msg.transcript_logs}</f:facet>
 
 				<p:column headerText="#{msg.student}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-					<h:outputText value="#{log.user.username}" />
+					<h:outputText value="#{log.user.username}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
-					<h:outputText value="#{log.resource.title}" />
+					<h:outputText value="#{log.resource.title}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.ownerUser.username}" sortBy="#{log.resource.ownerUser.username}">
-					<h:outputText value="#{log.resource.ownerUser.username}" />
+					<h:outputText value="#{log.resource.ownerUser.username}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.word}">
-					<h:outputText value="#{log.wordsSelected}" />
+					<h:outputText value="#{log.wordsSelected}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
-					<h:outputText value="#{log.userAnnotation}" />
+					<h:outputText value="#{log.userAnnotation}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
 					<f:facet name="filter">
 						<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
-							<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
-							<f:selectItem itemLabel="Selection" itemValue="selection" />
-							<f:selectItem itemLabel="Deselection" itemValue="deselection" />
-							<f:selectItem itemLabel="Add Annotation" itemValue="add annotation" />
-							<f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation" />
-							<f:selectItem itemLabel="Display Definition" itemValue="display definition" />
-							<f:selectItem itemLabel="Save Transcript" itemValue="save transcript" />
-							<f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript" />
+							<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+							<f:selectItem itemLabel="Selection" itemValue="selection"/>
+							<f:selectItem itemLabel="Deselection" itemValue="deselection"/>
+							<f:selectItem itemLabel="Add Annotation" itemValue="add annotation"/>
+							<f:selectItem itemLabel="Edit Annotation" itemValue="edit annotation"/>
+							<f:selectItem itemLabel="Display Definition" itemValue="display definition"/>
+							<f:selectItem itemLabel="Save Transcript" itemValue="save transcript"/>
+							<f:selectItem itemLabel="Submit Transcript" itemValue="submit transcript"/>
 						</p:selectOneMenu>
 					</f:facet>
-					<h:outputText value="#{log.action}" />
+					<h:outputText value="#{log.action}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
-					<h:outputText value="#{log.timestamp}" />
+					<h:outputText value="#{log.timestamp}"/>
 				</p:column>
 			</p:dataTable>
 		</h:form>

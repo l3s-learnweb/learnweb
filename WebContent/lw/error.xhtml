@@ -4,17 +4,17 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">>
 
-	<ui:param name="pageTitle" value="#{msg.error}" />
-	<ui:param name="smallPage" value="true" />
-	<ui:param name="disableGrowl" value="true" />
+	<ui:param name="pageTitle" value="#{msg.error}"/>
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="disableGrowl" value="true"/>
 
 	<ui:define name="container_layout">
 		<p:panel header="#{msg.error}" styleClass="ui-widget-danger">
 			<h5 class="text-danger" onclick="$('.collapse').fadeIn();">#{msg.fatal_error}</h5>
 
 			<pre class="pre-scrollable collapse">
-				<h:outputText value="Message: #{pfExceptionHandler.message}" /><br/>
-				<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+				<h:outputText value="Message: #{pfExceptionHandler.message}"/><br/>
+				<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/>
 			</pre>
 		</p:panel>
 	</ui:define>

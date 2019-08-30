@@ -40,9 +40,9 @@
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
                              update=":breadcrumbs :resourcesView :right_pane :growl " oncomplete="resourceDND();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}"
-                             update=":right_pane :growl" />
+                             update=":right_pane :growl"/>
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}"
-                             update=":right_pane :growl" />
+                             update=":right_pane :growl"/>
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
                              update=":right_pane :resourcesView :growl" oncomplete="resourceDND();"/>
         </h:form>
@@ -209,7 +209,7 @@
                                               pt:data-canDeleteResource="true">
 
                                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                        <ui:param name="folder" value="#{folder}" />
+                                        <ui:param name="folder" value="#{folder}"/>
                                     </ui:decorate>
 
                                 </h:panelGroup>
@@ -225,7 +225,7 @@
                                               pt:data-canDeleteResource="true">
 
                                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                        <ui:param name="folder" value="#{folder}" />
+                                        <ui:param name="folder" value="#{folder}"/>
                                     </ui:decorate>
 
                                 </h:panelGroup>
@@ -257,7 +257,7 @@
                                                   pt:data-canAnnotateResource="true">
 
                                         <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                            <ui:param name="res" value="#{res}" />
+                                            <ui:param name="res" value="#{res}"/>
                                         </ui:decorate>
 
                                     </h:panelGroup>
@@ -287,7 +287,7 @@
                                       pt:data-canAnnotateResource="true">
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                <ui:param name="res" value="#{res}" />
+                                <ui:param name="res" value="#{res}"/>
                             </ui:decorate>
                         </h:panelGroup>
                     </ui:repeat>

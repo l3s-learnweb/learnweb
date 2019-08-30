@@ -15,11 +15,11 @@
 	<ui:define name="center_layout">
 		<h:form id="anlyse_form">
 			<p:panel header="#{msg.select_groups}" styleClass="mb-3">
-				<ui:include src="/templates/user/user_select_form.xhtml" />
+				<ui:include src="/templates/user/user_select_form.xhtml"/>
 				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}" />
+					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
 				</div>
-				<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form" />
+				<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
 			</p:panel>
 
 			<p:dataTable id="output" var="entry" tableStyleClass="table-responsive" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
@@ -28,54 +28,54 @@
 				</f:facet>
 
 				<p:column headerText="#{msg.group}" sortBy="#{entry.title}">
-					<h:outputText value="#{entry.title}" />
+					<h:outputText value="#{entry.title}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.resources}">
-					<h:outputText value="#{entry.resources}" />
+					<h:outputText value="#{entry.resources}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.thumb_ratings}">
-					<h:outputText value="#{entry.thumb_ratings}" />
+					<h:outputText value="#{entry.thumb_ratings}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.star_ratings}">
-					<h:outputText value="#{entry.star_ratings}" />
+					<h:outputText value="#{entry.star_ratings}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.comments}">
-					<h:outputText value="#{entry.comments}" />
+					<h:outputText value="#{entry.comments}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.tags}">
-					<h:outputText value="#{entry.tags}" />
+					<h:outputText value="#{entry.tags}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.no_of_archived_versions}">
-					<h:outputText value="#{entry.no_of_archived_versions}" />
+					<h:outputText value="#{entry.no_of_archived_versions}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.no_of_archived_resources}">
-					<h:outputText value="#{entry.no_of_archived_resources}" />
+					<h:outputText value="#{entry.no_of_archived_resources}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.forum_topics}">
-					<h:outputText value="#{entry.forum_topics}" />
+					<h:outputText value="#{entry.forum_topics}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.forum_posts}">
-					<h:outputText value="#{entry.forum_posts}" />
+					<h:outputText value="#{entry.forum_posts}"/>
 				</p:column>
 			</p:dataTable>
 
 			<ui:fragment rendered="#{adminStatisticsBean.showDetails}">
 				<p:panel styleClass="mt-3" header="#{msg.statistics_detailed}">
 					<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}"
-										   onchange="$('.description').toggle();" value="off" />
+										   onchange="$('.description').toggle();" value="off"/>
 					<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
-										   onchange="$('.admin_comments').toggle();" value="on" />
+										   onchange="$('.admin_comments').toggle();" value="on"/>
 					<hr />
-					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />
+					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false"/>
 				</p:panel>
 			</ui:fragment>
 		</h:form>

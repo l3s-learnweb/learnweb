@@ -194,11 +194,11 @@
 						<h:outputText value="#{stat.pair.assessedUser.courses[0].title}"/>
 					</p:column>
 					<p:column>
-						<h:outputText value="#{stat.pair.assessedUser.studentId}" />
+						<h:outputText value="#{stat.pair.assessedUser.studentId}"/>
 					</p:column>
 					<p:column rendered="#{showEmail}">
-						<h:outputText value="#{stat.pair.assessedUser.email}" />
-						<h:outputText value="#{stat.pair.assessedUser.id}" />
+						<h:outputText value="#{stat.pair.assessedUser.email}"/>
+						<h:outputText value="#{stat.pair.assessedUser.id}"/>
 					</p:column>
 
 					<p:column>
@@ -210,39 +210,39 @@
 					</p:column>
 					
 					<p:column>
-						<h:outputText value="Not submitted" rendered="#{not stat.pair.peerAssessmentUserAnswers.submitted}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{not stat.pair.peerAssessmentUserAnswers.submitted}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.pair.peerAssessmentUserAnswers.submitted}">
-							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.pair.assessorUserId}" />
-							<h:outputText value="#{stat.pair.peerAssessment.title}" />
+							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.pair.assessorUserId}"/>
+							<h:outputText value="#{stat.pair.peerAssessment.title}"/>
 						</h:outputLink>
 					</p:column>
 					
 					<p:column>	
 						<p:repeat var="user" value="#{stat.pair.assessment.usersWhoSubmitted}">	
 							<h:outputLink value="survey/answer.jsf">
-								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}" />							
-								<f:param name="user_id" value="#{user.id}" />							
-								<h:outputText value="#{user.realUsername}" />	 
+								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}"/>
+								<f:param name="user_id" value="#{user.id}"/>
+								<h:outputText value="#{user.realUsername}"/>
 							</h:outputLink>
 						</p:repeat>						
 					</p:column>
 					
 					<p:column>
-						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.baselineSurveyResourceId gt 0}">
-							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.userId}" />
-							<h:outputText value="Baseline" />
+							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.userId}"/>
+							<h:outputText value="Baseline"/>
 						</h:outputLink>
 					</p:column>
 					
 						<p:column>
-						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.evaluationSurveyResourceId gt 0}">
-							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.userId}" />
-							<h:outputText value="Evaluation" />
+							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.userId}"/>
+							<h:outputText value="Evaluation"/>
 						</h:outputLink>
 					</p:column>
 					

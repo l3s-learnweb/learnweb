@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Activity" />
+<ui:param name="pageTitle" value="Your Activity"/>
 
 <ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
@@ -54,7 +54,7 @@
 
             <p:column headerText="#{msg.action_date}">
                 <h:outputText value="#{action.date}">
-                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

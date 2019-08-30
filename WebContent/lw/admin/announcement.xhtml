@@ -11,8 +11,8 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}" />
-			<f:viewAction action="#{adminAnnouncementBean.onLoad}" />
+			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}"/>
+			<f:viewAction action="#{adminAnnouncementBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
@@ -32,7 +32,7 @@
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" showTime="true" type="both" timeZone="#{userBean.timeZone}" />
+					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" showTime="true" type="both" timeZone="#{userBean.timeZone}"/>
 					<p:message for="@previous"/>
 				</div>
 
@@ -56,11 +56,11 @@
 				</div>
 
 				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}" />
+					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}"/>
 				</div>
 
 				<p:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" value="#{msg.update}" update="@form :growl">
-					<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}" />
+					<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}"/>
 				</p:commandButton>
 			</p:panel>
 		</h:form>

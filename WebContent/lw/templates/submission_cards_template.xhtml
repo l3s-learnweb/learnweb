@@ -46,30 +46,30 @@
 
 						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn"
 								  rendered="#{submission.pastSubmission and (not userBean.moderator || submissionBean.submissionOverviewReadOnly)}">
-							<f:param name="submission_id" value="#{submission.id}" />
-							<f:param name="user_id" value="#{submissionBean.userId}" />
+							<f:param name="submission_id" value="#{submission.id}"/>
+							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
 						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn"
 								  rendered="#{submission.currentSubmission and userBean.moderator and submissionBean.submissionOverviewReadOnly}">
-							<f:param name="submission_id" value="#{submission.id}" />
-							<f:param name="user_id" value="#{submissionBean.userId}" />
+							<f:param name="submission_id" value="#{submission.id}"/>
+							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
 						<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="moderator-btn"
 								  rendered="#{userBean.moderator}">
-							<f:param name="submission_id" value="#{submission.id}" />
+							<f:param name="submission_id" value="#{submission.id}"/>
 						</p:button>
 
 						<p:button outcome="submission_resources" value="#{msg['Submission.submit_resources']}"
 								  rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
-							<f:param name="submission_id" value="#{submission.id}" />
-							<f:param name="user_id" value="#{submissionBean.userId}" />
+							<f:param name="submission_id" value="#{submission.id}"/>
+							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
 						<p:button outcome="../survey/survey" value="Please submit the survey first"
 								  rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
-							<f:param name="resource_id" value="#{submission.surveyResourceId}" />
+							<f:param name="resource_id" value="#{submission.surveyResourceId}"/>
 						</p:button>
 					</h:form>
 				</div>
@@ -90,7 +90,7 @@
 					</span>
 
 					<span class="font-weight-lighter">#{msg.course}:
-						<h:outputText styleClass="font-weight-light" value="#{submission.course.title}" />
+						<h:outputText styleClass="font-weight-light" value="#{submission.course.title}"/>
 					</span>
 				</div>
 
@@ -102,7 +102,7 @@
 							<ui:repeat var="res" value="#{submission.submittedResources}">
 								<h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{res}" />
+										<ui:param name="res" value="#{res}"/>
 									</ui:decorate>
 								</h:panelGroup>
 							</ui:repeat>

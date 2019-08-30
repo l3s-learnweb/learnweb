@@ -196,9 +196,9 @@
                     </h:panelGrid>
 
                     <h:panelGrid columns="2" cellpadding="10" id="purposes">
-                        <p:outputLabel for="aclist" value="Purpose of Use:" />
+                        <p:outputLabel for="aclist" value="Purpose of Use:"/>
                         <p:autoComplete id="aclist" dropdown="true" multiple="true" value="#{resourceDetailBean.selectedPurposes}" completeMethod="#{searchFilterBean.completePurpose}"
-                                        label="Purposes of Use" />
+                                        label="Purposes of Use"/>
                     </h:panelGrid>
 
                     <br/>
@@ -211,10 +211,10 @@
         </c:if>
         <c:choose>
             <c:when test="#{rightPaneBean.paneAction =='viewUpdatedResource'}">
-                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/summary_right_pane.xhtml" />
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/summary_right_pane.xhtml"/>
             </c:when>
             <c:otherwise>
-                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml" />
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml"/>
             </c:otherwise>
         </c:choose>
     </ui:fragment>

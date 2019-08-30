@@ -9,8 +9,8 @@
 	<div id="fact_sheet_wrapper">
 		<div id="fact_sheet_image_wrapper" style="height: 184px">
 			<h:outputLink value="search.jsf">
-				<f:param name="action" value="image" />
-				<f:param name="query" value="#{searchBean.query}" />
+				<f:param name="action" value="image"/>
+				<f:param name="query" value="#{searchBean.query}"/>
 
 				<div id="more_images_box">
 					More Images
@@ -41,32 +41,32 @@
 			<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].birthDate  and not empty searchBean.graph.entities[0].birthPlace }">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Born}: " styleClass="fact_sheet_field" />
+					<h:outputText value="#{msg.Born}: " styleClass="fact_sheet_field"/>
 					<h:outputText value="#{searchBean.graph.entities[0].birthDate}" styleClass="fact_sheet_value">
-							<f:convertDateTime  dateStyle="long" />
+							<f:convertDateTime  dateStyle="long"/>
 						</h:outputText>
 						#{msg.in_location} #{searchBean.graph.entities[0].birthPlace}
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{empty searchBean.graph.entities[0].birthDate and not empty searchBean.graph.entities[0].birthPlace }">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Place_of_birth}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthPlace}</span>
+					<h:outputText value="#{msg.Place_of_birth}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthPlace}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{empty searchBean.graph.entities[0].birthPlace and not empty searchBean.graph.entities[0].birthDate}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Date_of_birth}: " styleClass="fact_sheet_field" />
+					<h:outputText value="#{msg.Date_of_birth}: " styleClass="fact_sheet_field"/>
 					<h:outputText value="#{searchBean.graph.entities[0].birthDate}" styleClass="fact_sheet_value">
-							<f:convertDateTime  dateStyle="long" />
+							<f:convertDateTime  dateStyle="long"/>
 						</h:outputText>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].deathDate and not empty searchBean.graph.entities[0].deathPlace }">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Died}: " styleClass="fact_sheet_field" />
+					<h:outputText value="#{msg.Died}: " styleClass="fact_sheet_field"/>
 					<span class="fact_sheet_value">
 						<h:outputText value="#{searchBean.graph.entities[0].deathDate}" styleClass="fact_sheet_value">
-							<f:convertDateTime  dateStyle="long" />
+							<f:convertDateTime  dateStyle="long"/>
 						</h:outputText>
 						#{msg.in_location} #{searchBean.graph.entities[0].deathPlace}
 					</span>
@@ -74,41 +74,41 @@
 			</ui:fragment>
 			<ui:fragment rendered="#{empty searchBean.graph.entities[0].deathDate and not empty searchBean.graph.entities[0].deathPlace}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Place_of_death}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathPlace}</span>
+					<h:outputText value="#{msg.Place_of_death}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathPlace}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{empty searchBean.graph.entities[0].deathPlace and not empty searchBean.graph.entities[0].deathDate}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.Date_of_death}: " styleClass="fact_sheet_field" />
+					<h:outputText value="#{msg.Date_of_death}: " styleClass="fact_sheet_field"/>
 
 					<h:outputText value="#{searchBean.graph.entities[0].deathDate}" styleClass="fact_sheet_value">
-							<f:convertDateTime  dateStyle="long" />
+							<f:convertDateTime  dateStyle="long"/>
 						</h:outputText>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].fullName }">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.full_name}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].fullName}</span>
+					<h:outputText value="#{msg.full_name}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].fullName}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].birthName}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.birth_name}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthName}</span>
+					<h:outputText value="#{msg.birth_name}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthName}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].alternativeNames}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.alternative_names}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].alternativeNames}</span>
+					<h:outputText value="#{msg.alternative_names}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].alternativeNames}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].children}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.children}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].children}</span>
+					<h:outputText value="#{msg.children}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].children}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{not empty searchBean.graph.entities[0].spouse}">
 				<div class="fact_sheet_detail">
-					<h:outputText value="#{msg.spouse}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].spouse}</span>
+					<h:outputText value="#{msg.spouse}: " styleClass="fact_sheet_field"/><span class="fact_sheet_value">#{searchBean.graph.entities[0].spouse}</span>
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="#{searchBean.graph.entities.size() gt 1}">

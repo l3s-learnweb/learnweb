@@ -13,11 +13,11 @@
 
     <p:panel header="#{msg['privacy_statement']}">
         <ui:fragment rendered="#{userBean.localeCode eq 'de'}">
-            <ui:include src="privacy_statement_de.xhtml" />
+            <ui:include src="privacy_statement_de.xhtml"/>
         </ui:fragment>
 
         <ui:fragment rendered="#{userBean.localeCode ne 'de'}">
-            <ui:include src="privacy_statement_en.xhtml" />
+            <ui:include src="privacy_statement_en.xhtml"/>
         </ui:fragment>
 
         <script>

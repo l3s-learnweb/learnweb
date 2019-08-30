@@ -7,7 +7,7 @@
 <!-- Edit resource block -->
 <h:form id="edit_form">
 
-    <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+    <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}"/>
 
     <ui:fragment
             rendered="#{rightPaneBean.clickedResource.type eq 'text' or rightPaneBean.clickedResource.type eq 'website' or rightPaneBean.clickedResource.type eq 'pdf' or rightPaneBean.clickedResource.type eq 'video' or rightPaneBean.clickedResource.type eq 'image' or rightPaneBean.clickedResource.type eq 'audio'}">
@@ -47,14 +47,14 @@
 
         <tr>
             <td colspan="2">
-                <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+                <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
 
                 <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
                                  actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane"
-                                 oncomplete="resourceUpdatedHook();" style="margin-right:0;" />
+                                 oncomplete="resourceUpdatedHook();" style="margin-right:0;"/>
                 <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
                                  actionListener="#{rightPaneBean.cancelEditClickedResource}" update=":right_pane"
-                                 style="margin-right:0.5em" immediate="true" />
+                                 style="margin-right:0.5em" immediate="true"/>
             </td>
         </tr>
     </table>

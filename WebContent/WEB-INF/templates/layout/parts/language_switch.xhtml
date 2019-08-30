@@ -6,7 +6,7 @@
 
 	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
 		<h:outputLink id="languageSwitchButton" styleClass="header-element lang-button" onclick="return false;">
-			<img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch" />
+			<img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
 		</h:outputLink>
 
 		<p:menu overlay="true" trigger="languageSwitchButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">

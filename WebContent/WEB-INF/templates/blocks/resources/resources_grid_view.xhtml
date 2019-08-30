@@ -20,7 +20,7 @@
                               pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
 
                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                        <ui:param name="folder" value="#{folder}" />
+                        <ui:param name="folder" value="#{folder}"/>
                     </ui:decorate>
 
                 </h:panelGroup>
@@ -39,7 +39,7 @@
                               pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
 
                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                        <ui:param name="res" value="#{res.resource}" />
+                        <ui:param name="res" value="#{res.resource}"/>
                     </ui:decorate>
 
                 </h:panelGroup>

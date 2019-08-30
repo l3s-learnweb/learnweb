@@ -14,7 +14,7 @@
 
             <f:facet name="{Exporters}">
                 <h:panelGroup>
-                    <h:commandButton rendered="#{exportable}" value="Request All Data" action="#{dataExporterBean.requestUserResources()}" style="float:right;" />
+                    <h:commandButton rendered="#{exportable}" value="Request All Data" action="#{dataExporterBean.requestUserResources()}" style="float:right;"/>
 
                     <h:commandLink styleClass="text-danger float-right p-1">
                         <i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
 
             <p:column headerText="#{msg.creation_date}">
                 <h:outputText value="#{item.creationDate}">
-                	<f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                	<f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 

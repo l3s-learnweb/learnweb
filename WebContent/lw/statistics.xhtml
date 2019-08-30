@@ -82,17 +82,17 @@
 
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">#{msg.average_number_of_tags_per_tagged_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
                         </tr>
 
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">#{msg.average_number_of_comments_per_commented_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
                         </tr>
                         <!--
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">average session length</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText> minutes</div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText> minutes</div></td>
                         </tr>
                          -->
                     </tbody>
@@ -104,11 +104,11 @@
             <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
             <p:column headerText="#{msg.month}">
-                <h:outputText value="#{month.key}" />
+                <h:outputText value="#{month.key}"/>
             </p:column>
 
             <p:column headerText="#{msg.active_users}">
-                <h:outputText value="#{month.value}" />
+                <h:outputText value="#{month.value}"/>
             </p:column>
         </p:dataTable>
 

@@ -13,7 +13,7 @@
 				<p:tab rendered="#{not empty summary.addedResources}">
 					<f:facet name="title">
 						<i class="fa fa-fw fa-plus text-success pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['added_resources']}"><f:param value="#{summary.addedResources.size()}" /></h:outputFormat>
+						<h:outputFormat value="#{msg['added_resources']}"><f:param value="#{summary.addedResources.size()}"/></h:outputFormat>
 					</f:facet>
 
 					<div class="activity-feed-slider activity-feed-added-resources">
@@ -23,7 +23,7 @@
 
 								<div class="mx-auto" style="min-width:10rem;">
 									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{item.resource}" />
+										<ui:param name="res" value="#{item.resource}"/>
 									</ui:decorate>
 								</div>
 							</p:commandLink>
@@ -34,13 +34,13 @@
 				<p:tab rendered="#{not empty summary.deletedResources}">
 					<f:facet name="title">
 						<i class="fa fa-fw fa-times text-danger pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['deleted_resources']}"><f:param value="#{summary.deletedResources.size()}" /></h:outputFormat>
+						<h:outputFormat value="#{msg['deleted_resources']}"><f:param value="#{summary.deletedResources.size()}"/></h:outputFormat>
 					</f:facet>
 
 					<div class="activity-feed">
 						<p:repeat value="#{summary.deletedResources}" var="item">
 							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false" />
+								<h:outputText value="#{item.description}" escape="false"/>
 							</div>
 						</p:repeat>
 					</div>
@@ -49,7 +49,7 @@
 				<p:tab rendered="#{not empty summary.updatedResources}">
 					<f:facet name="title">
 						<i class="fa fa-fw fa-pencil text-warning pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['updated_resources']}"><f:param value="#{summary.updatedResources.size()}" /></h:outputFormat>
+						<h:outputFormat value="#{msg['updated_resources']}"><f:param value="#{summary.updatedResources.size()}"/></h:outputFormat>
 					</f:facet>
 
 					<div class="activity-feed-slider activity-feed-updated-resources">
@@ -59,7 +59,7 @@
 
 								<div class="mx-auto" style="min-width:10rem;">
 									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{item.resource}" />
+										<ui:param name="res" value="#{item.resource}"/>
 									</ui:decorate>
 								</div>
 							</p:commandLink>
@@ -70,13 +70,13 @@
 				<p:tab rendered="#{not empty summary.forumsInfo}">
 					<f:facet name="title">
 						<i class="fa fa-fw fa-commenting-o text-info pr-1" aria-hidden="true"></i>
-						<h:outputText value="#{msg.forum}" />
+						<h:outputText value="#{msg.forum}"/>
 					</f:facet>
 
 					<div class="activity-feed activity-feed-forum">
 						<p:repeat value="#{summary.forumsInfo}" var="item">
 							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false" />
+								<h:outputText value="#{item.description}" escape="false"/>
 							</div>
 						</p:repeat>
 					</div>
@@ -85,13 +85,13 @@
 				<p:tab rendered="#{not empty summary.membersInfo}">
 					<f:facet name="title">
 						<i class="fa fa-fw fa-users text-info pr-1" aria-hidden="true"></i>
-						<h:outputText value="#{msg.members}" />
+						<h:outputText value="#{msg.members}"/>
 					</f:facet>
 
 					<div class="activity-feed activity-feed-members">
 						<p:repeat value="#{summary.membersInfo}" var="item">
 							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false" />
+								<h:outputText value="#{item.description}" escape="false"/>
 							</div>
 						</p:repeat>
 					</div>

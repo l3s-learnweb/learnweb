@@ -5,8 +5,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.system_tools}" />
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.system_tools}"/>
 
 	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.system_tools}" url="admin/systemtools.jsf"/>
@@ -23,39 +23,39 @@
 					<f:facet name="header">#{msg.database_connections}</f:facet>
 
 					<p:column headerText="#{msg.id}" sortBy="#{process.id}">
-						<h:outputText value="#{process.id}" />
+						<h:outputText value="#{process.id}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.username}" sortBy="#{process.user}">
-						<h:outputText value="#{process.user}" />
+						<h:outputText value="#{process.user}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.host}" sortBy="#{process.host}">
-						<h:outputText value="#{process.host}" />
+						<h:outputText value="#{process.host}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.db}" sortBy="#{process.db}">
-						<h:outputText value="#{process.db}" />
+						<h:outputText value="#{process.db}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.command}" sortBy="#{process.command}">
-						<h:outputText value="#{process.command}" />
+						<h:outputText value="#{process.command}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.time}" sortBy="#{process.time}">
-						<h:outputText value="#{process.time}" />
+						<h:outputText value="#{process.time}"/>
 					</p:column>
 
 					<p:column headerText="${msg.state}" sortBy="#{process.state}">
-						<h:outputText value="#{process.state}" />
+						<h:outputText value="#{process.state}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.info}" sortBy="#{process.info}">
-						<h:outputText value="#{process.info}" />
+						<h:outputText value="#{process.info}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.progress}" sortBy="#{process.progress}">
-						<h:outputText value="#{process.progress}" />
+						<h:outputText value="#{process.progress}"/>
 					</p:column>
 
 					<p:column headerText="#{msg.terminate}">
@@ -65,7 +65,7 @@
 					</p:column>
 				</p:dataTable>
 
-				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="mt-3" value="#{msg.clear_caches}" />
+				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="mt-3" value="#{msg.clear_caches}"/>
 			</h:form>
 		</ui:fragment>
 	</ui:define>

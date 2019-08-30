@@ -7,17 +7,17 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{adminCourseBean.course.title}" />
+    <ui:param name="pageTitle" value="#{adminCourseBean.course.title}"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="course_id" value="#{adminCourseBean.courseId}" />
+			<f:viewParam name="course_id" value="#{adminCourseBean.courseId}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.courses}" url="admin/courses.jsf" />
-		<p:menuitem value="#{adminCourseBean.course.title}" url="admin/course.jsf?course_id=#{adminCourseBean.course.id}" />
+		<p:menuitem value="#{msg.courses}" url="admin/courses.jsf"/>
+		<p:menuitem value="#{adminCourseBean.course.title}" url="admin/course.jsf?course_id=#{adminCourseBean.course.id}"/>
 	</ui:define>
 		
 	<ui:define name="center_layout">
@@ -67,8 +67,8 @@
 								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
 									<p:outputLabel for="@next" value="#{msg.organization}:"/>
 									<p:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}">
-										<f:selectItem itemLabel="#{msg.no_organization}" itemValue="0" />
-										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+										<f:selectItem itemLabel="#{msg.no_organization}" itemValue="0"/>
+										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
 										<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
 									</p:selectOneMenu>
 									<p:message for="@previous"/>
@@ -77,15 +77,15 @@
 								<h:panelGroup layout="block" styleClass="form-group" rendered="#{userBean.admin}">
 									<p:outputLabel for="@next" value="#{msg.default_group}:"/>
 									<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
-										<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0" />
-										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+										<f:selectItem itemLabel="#{msg.no_default_group}" itemValue="0"/>
+										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true"/>
 										<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 									</p:selectOneMenu>
 									<p:message for="@previous"/>
 								</h:panelGroup>
 
 								<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl :courseoptions">
-									<f:param name="course_id" value="#{adminCourseBean.courseId}" />
+									<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
 								</p:commandButton>
 							</p:panel>
 						</div>

@@ -25,7 +25,7 @@
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.date}:"/>
                 <p:calendar id="datetime" value="#{adminAnnouncementsBean.date}" showButtonPanel="true"
-                            timeOnly="true" timeZone="#{userBean.timeZone}" />
+                            timeOnly="true" timeZone="#{userBean.timeZone}"/>
                 <p:message for="@previous"/>
             </div>
 
@@ -49,7 +49,7 @@
             </div>
 
             <div class="form-group">
-                <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}" itemLabel="#{msg.hide}" />
+                <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}" itemLabel="#{msg.hide}"/>
             </div>
 
             <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@form" update=":growl" rendered="#{userBean.admin}" value="#{msg.add}"/>
@@ -81,7 +81,7 @@
 
             <p:column headerText="#{msg.hide}" sortBy="#{news.hidden}">
                 <p:selectBooleanCheckbox value="#{news.hidden}">
-                    <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onToggleVisibility(news.id)}" />
+                    <p:ajax update=":growl" listener="#{adminAnnouncementsBean.onToggleVisibility(news.id)}"/>
                 </p:selectBooleanCheckbox>
             </p:column>
 
@@ -89,7 +89,7 @@
                 <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
-                    <f:param name="announcement_id" value="#{news.id}" />
+                    <f:param name="announcement_id" value="#{news.id}"/>
                 </h:outputLink>
 
                 <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this"
