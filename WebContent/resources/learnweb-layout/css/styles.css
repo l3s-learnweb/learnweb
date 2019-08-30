@@ -6081,7 +6081,8 @@ body .ui-button.ui-button-icon-only .ui-button-text {
   padding: 0.25rem;
 }
 body .ui-button.ui-button-icon-only .ui-icon {
-  margin-top: -0.375rem;
+  margin-top: -0.4rem;
+  margin-left: -7px;
 }
 body .ui-button .ui-icon {
   font-size: 0.875rem;
@@ -7603,12 +7604,8 @@ body .ui-toolbar .ui-button {
   margin-right: 8px;
 }
 body .ui-toolbar .ui-button-text-icon-left .ui-icon {
-  margin-left: 10px;
-  margin-top: -10px;
-}
-body .ui-toolbar .ui-button-text {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 0;
+  margin-top: -7px;
 }
 body .ui-toolbar .ui-button-icon-only {
   border-radius: 50%;
@@ -11519,6 +11516,40 @@ ul.res-filters .clear-filters:hover a {
   margin-top: 2px;
   opacity: 0.5;
   display: none;
+}
+
+.resources-panel {
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+}
+.resources-panel .col-folders {
+  flex: 0 0 auto;
+  width: 15rem;
+}
+.resources-panel .col-folders .ui-panel-content {
+  border: 0;
+}
+.resources-panel .col-resources {
+  flex: 1 0 auto;
+  width: 0;
+}
+.resources-panel .col-resources .ui-toolbar {
+  border: 0;
+  padding: 3px 1rem;
+  background: #4b6cb7;
+  color: #fff;
+}
+.resources-panel .col-resources .ui-toolbar .ui-separator {
+  pointer-events: none;
+}
+.resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button {
+  background-color: #38569C;
+  border: 1px solid #38569C;
+}
+.resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-hover, .resources-panel .col-resources .ui-toolbar .ui-toolbar-group-right .ui-button.ui-state-focus {
+  background-color: #415688;
+  border-color: #415688;
 }
 
 /*!

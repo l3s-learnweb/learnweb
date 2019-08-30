@@ -529,3 +529,46 @@ ul.res-filters {
     }
   }
 }
+
+.resources-panel {
+  display: flex;
+  background-color: $contentBgColor;
+  border: 1px solid $contentBorderColor;
+
+  .col-folders {
+    flex: 0 0 auto;
+    width: 15rem;
+
+    .ui-panel-content {
+      border: 0;
+    }
+  }
+
+  .col-resources {
+    flex: 1 0 auto;
+    width: 0; // magic
+
+    .ui-toolbar {
+      border: 0;
+      padding: 3px 1rem;
+      background: $themePrimaryColor;
+      color: $themeElementTextColor;
+
+      .ui-separator {
+        pointer-events: none;
+      }
+
+      .ui-toolbar-group-right {
+        .ui-button {
+          background-color: $themePrimaryColorDarker;
+          border: 1px solid $themePrimaryColorDarker;
+
+          &.ui-state-hover, &.ui-state-focus {
+            background-color: $themePrimaryDarkerAlt;
+            border-color: $themePrimaryDarkerAlt;
+          }
+        }
+      }
+    }
+  }
+}

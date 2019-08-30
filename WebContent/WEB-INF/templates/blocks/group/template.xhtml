@@ -1,34 +1,23 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="group" type="de.l3s.learnweb.group.Group"-->
 
     <ui:define name="center_layout">
         <ui:fragment rendered="#{group ne null}">
             <ui:fragment rendered="${not group.canViewResources(userBean.user)}">
-                <!-- TODO: Instead of showing empty page if group not exists we need to redirect to 404, if access restricted, redirect to 403 -->
                 <h3 class="error">
-                    #{msg.group_resources_access_denied}
-                    <h:outputText rendered="${group.policyView != 'GROUP_LEADER' and group.canJoinGroup(userBean.user)}"
-                                  value="#{msg.group_resources_access_denied_join_first}"/>
+                    <h:outputText value="#{msg.group_resources_access_denied}"/>
+                    <h:outputText value="#{msg.group_resources_access_denied_join_first}"
+                                  rendered="${group.policyView != 'GROUP_LEADER' and group.canJoinGroup(userBean.user)}"/>
                 </h3>
             </ui:fragment>
 
             <ui:fragment rendered="#{group.canViewResources(userBean.user)}">
-                <ui:insert name="group_layout">
-                    <div class="row s-gutters">
-                        <h:panelGroup layout="block" styleClass="col-md col-md-fixed">
-                            <ui:insert name="left_column"/>
-                        </h:panelGroup>
-
-                        <h:panelGroup layout="block" styleClass="col-md mw-0">
-                            <ui:insert name="middle_column"/>
-                        </h:panelGroup>
-                    </div>
-                </ui:insert>
+                <ui:insert name="group_layout"/>
             </ui:fragment>
         </ui:fragment>
     </ui:define>
