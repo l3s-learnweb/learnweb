@@ -1,6 +1,6 @@
 function open_timeline(){
-	$('#calendar').hide("slide", { direction: "right" }, 1000);
-	$('#container').show("slide", { direction: "left" }, 1000);
+	$('#archive_timeline_calendar').hide("slide", { direction: "right" }, 1000);
+	$('#archive_timeline_container').show("slide", { direction: "left" }, 1000);
 	return false;
 }
 function archiveVersionsList(thisDayEvent){
@@ -73,8 +73,8 @@ function json(data_var){
 							var date = new Date(this.x);
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
-							$('#calendar').show("slide", { direction: "right" }, 1000);
-							$('#container').hide("slide", { direction: "left" }, 1000);
+							$('#archive_timeline_calendar').show("slide", { direction: "right" }, 1000);
+							$('#archive_timeline_container').hide("slide", { direction: "left" }, 1000);
 							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 							
 						}
@@ -90,7 +90,7 @@ function json(data_var){
 		}]
 	};
 	
-	$('#container').highcharts(options);
+	$('#archive_timeline_container').highcharts(options);
 	openasd();
 	//chart = Highcharts.Chart(options,function(chart){chart.render();});
 }

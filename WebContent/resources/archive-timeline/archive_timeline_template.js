@@ -3,10 +3,10 @@ var chart; //handle to access the HighCharts methods
 //Slide transitions between calendar and timeline view
 function returnToTimeline(){
 	resizeChart();
-	//$('#calendar').hide("slide", { direction: "right" }, 1000);
-	//$('#container').show("slide", { direction: "left" }, 1000);
-	$('#container').fadeTo(1000, 1.0);
-	$('#calendar').fadeTo(1000,0.0).hide();
+	//$('#archive_timeline_calendar').hide("slide", { direction: "right" }, 1000);
+	//$('#archive_timeline_container').show("slide", { direction: "left" }, 1000);
+	$('#archive_timeline_container').fadeTo(1000, 1.0);
+	$('#archive_timeline_calendar').fadeTo(1000,0.0).hide();
 
 	return false;
 }
@@ -36,7 +36,7 @@ var id;
 $(window).resize(function() {
 	clearTimeout(id);
     id = setTimeout(function(){
-    	if($('#container').is(':visible')){
+    	if($('#archive_timeline_container').is(':visible')){
     		resizeChart();
     	}
     }, 500);
@@ -44,8 +44,8 @@ $(window).resize(function() {
 
 //To resize the highchart to fit the container width on window resize
 function resizeChart(){
-	$('#container').width($('#timeline_view').width());
-	chart.setSize($('#timeline_view').width(), $('#container').height());
+	$('#archive_timeline_container').width($('#archive_timeline_view').width());
+	chart.setSize($('#archive_timeline_view').width(), $('#archive_timeline_container').height());
 	chart.reflow();
 }
 
@@ -55,7 +55,7 @@ function loadTimeline(data_var){
 	
 	chart = new Highcharts.Chart({
 		chart: {
-			renderTo: 'container',
+			renderTo: 'archive_timeline_container',
 			zoomType: 'x'
 		},
         credits: {
@@ -97,10 +97,10 @@ function loadTimeline(data_var){
 							var date = new Date(this.x);
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
-							//$('#calendar').show("slide", { direction: "right" }, 1000);
-							$('#calendar').show().fadeTo(1000,1.0);
-							$('#container').fadeTo( 1000, 0.0 );
-							//$('#container').hide("slide", { direction: "left" }, 1000);
+							//$('#archive_timeline_calendar').show("slide", { direction: "right" }, 1000);
+							$('#archive_timeline_calendar').show().fadeTo(1000,1.0);
+							$('#archive_timeline_container').fadeTo( 1000, 0.0 );
+							//$('#archive_timeline_container').hide("slide", { direction: "left" }, 1000);
 							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 						}
 					}
@@ -115,5 +115,5 @@ function loadTimeline(data_var){
 		}]
 	});
 	$('.highcharts-container').css('overflow','');
-	$('#timeline_view').hide();
+	$('#archive_timeline_view').hide();
 }

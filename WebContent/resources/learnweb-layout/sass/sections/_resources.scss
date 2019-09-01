@@ -15,27 +15,6 @@
 
   /** styles for archive visualizations in the lightbox and right pane*/
 
-  #archive_list_view {
-    padding-top: 10px;
-    position: relative;
-    max-height: 350px;
-    width: 100%;
-    float: left;
-    overflow: auto;
-    display: none;
-  }
-
-  #archive_list {
-    padding-top: 10px;
-    padding-left: 15px;
-    position: relative;
-    height: 100%;
-    width: 15%;
-    float: left;
-    overflow: auto;
-    background-color: $white;
-  }
-
   #archive_iframe_div {
     float: right;
     width: 83%;
@@ -84,6 +63,15 @@
   }
 
   #archive_list {
+    padding-top: 10px;
+    padding-left: 15px;
+    position: relative;
+    height: 100%;
+    width: 15%;
+    float: left;
+    overflow: auto;
+    background-color: $white;
+
     a {
       &:link, &:visited {
         color: $black !important;
@@ -96,25 +84,8 @@
       list-style-type: none;
       padding: 0;
     }
-  }
 
-  #archive_list_view ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  #archive_list ul > li {
-    float: left;
-    width: 149px;
-    text-align: center;
-    padding: 10px 0px 10px 0px;
-    border-radius: 4px;
-    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.3);
-    color: black !important;
-  }
-
-  #archive_list_view ul {
-    > li {
+    ul > li {
       float: left;
       width: 149px;
       text-align: center;
@@ -124,12 +95,6 @@
       color: black !important;
     }
 
-    &:hover {
-      background-color: $lightGreen;
-    }
-  }
-
-  #archive_list {
     li {
       ul li:hover {
         background-color: $lightGreen;
@@ -145,31 +110,8 @@
     }
   }
 
-  #list_button {
-    margin-right: 0rem !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-  }
-
-  #timeline_button {
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-  }
-
   #right_pane .button-active {
     background-color: $themePrimaryColorDarker !important;
-  }
-
-  #resources_informations_table {
-    border-collapse: collapse;
-
-    .resource_field {
-      padding-right: 5px;
-    }
-
-    td {
-      padding: 5px 0 0 0;
-    }
   }
 
   .userpic {

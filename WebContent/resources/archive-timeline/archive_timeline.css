@@ -6,13 +6,13 @@
     overflow: hidden;
 }
 
-#container {
+#archive_timeline_container {
     height: 100%;
     width: 100%;
     position: absolute;
 }
 
-#calendar {
+#archive_timeline_calendar {
     position: absolute;
     height : 100%;
     width : 100%;
@@ -28,7 +28,7 @@
   	color: inherit;
 }
 
-#calendar hr {
+#archive_timeline_calendar hr {
   margin-top: 20px;
   margin-bottom: 20px;
   border: 0;

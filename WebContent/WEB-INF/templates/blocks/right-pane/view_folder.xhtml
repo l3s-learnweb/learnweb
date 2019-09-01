@@ -4,56 +4,27 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<!-- View folder block -->
-<h:panelGroup rendered="#{rightPaneBean.paneAction == 'viewFolder' and rightPaneBean.clickedFolder != null}" layout="block">
-    <table id="view_folder_table" class="full-width">
-        <tr>
-            <td>
-                #{msg.group}:
-            </td>
-            <td>
-                <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.group.title}"/>
-            </td>
-        </tr>
-        <ui:fragment rendered="#{rightPaneBean.clickedFolder.parentFolder != null}">
-            <tr>
-                <td>
-                    #{msg.path}:
-                </td>
-                <td>
-                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.parentFolder.prettyPath}"/>
-                </td>
-            </tr>
-        </ui:fragment>
-        <tr>
-            <td>
-                #{msg.title}:
-            </td>
-            <td>
-                <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.name}"/>
-            </td>
-        </tr>
-        <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.description}">
-            <tr>
-                <td>
-                    #{msg.description}:
-                </td>
-                <td>
-                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.description}" escape="false"/>
-                </td>
-            </tr>
-        </ui:fragment>
-        <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.user}">
-            <tr>
-                <td>
-                    #{msg.created_by}:
-                </td>
-                <td>
-                    <h:outputText style="width: 96%" value="#{rightPaneBean.clickedFolder.user.username}" escape="false"/>
-                </td>
-            </tr>
-        </ui:fragment>
-    </table>
-</h:panelGroup>
+<dl class="row">
+    <dt class="col-sm-3">#{msg.group}:</dt>
+    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.group.title}"/></dd>
+
+    <ui:fragment rendered="#{rightPaneBean.clickedFolder.parentFolder != null}">
+        <dt class="col-sm-3">#{msg.path}:</dt>
+        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.parentFolder.prettyPath}"/></dd>
+    </ui:fragment>
+
+    <dt class="col-sm-3">#{msg.title}:</dt>
+    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.name}"/></dd>
+
+    <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.description}">
+        <dt class="col-sm-3">#{msg.description}:</dt>
+        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.description}" escape="false"/></dd>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.user}">
+        <dt class="col-sm-3">#{msg.created_by}:</dt>
+        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.user.username}"/></dd>
+    </ui:fragment>
+</dl>
 
 </ui:composition>

@@ -60,6 +60,7 @@
       <disabledExtension id="junit" />
       <disabledExtension id="moduleInfo" />
     </inspection_tool>
+    <inspection_tool class="XmlDefaultAttributeValue" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="XmlUnusedNamespaceDeclaration" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
   </profile>
 </component>

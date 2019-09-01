@@ -6,50 +6,42 @@
 /** @external updateAddResourcePaneCommand */
 /** @external updateThumbnailCommand */
 
+function archive_open_timeline() {
+    var $archiveListBtn = $('#archive_list_btn');
+    var $archiveTimelineBtn = $('#archive_timeline_btn');
+    var $archiveListView = $('#archive_list_view');
+    var $archiveTimelineView = $('#archive_timeline_view');
 
-function scrollToElement(element) {
-    // TODO: remove the method
-}
-
-function open_timeline_view() {
-    var $archive_list_view = $('#archive_list_view');
-    if ($archive_list_view.is(':visible')) {
-        $archive_list_view.slideToggle("slow");
-        $('#list_button').toggleClass('button-active');
+    if ($archiveListView.is(':visible')) {
+        $archiveListView.slideToggle("slow");
+        $archiveListBtn.toggleClass('ui-state-active');
     }
 
-    var $timeline_view = $('#timeline_view');
-    $timeline_view.slideToggle("slow", function () {
-        scroller();
-        $('#timeline_button').toggleClass("button-active");
-        if ($timeline_view.is(':visible')) {
-            var $container = $('#container');
-            $container.width($timeline_view.width());
-            chart.setSize($timeline_view.width(), $container.height());
+    $archiveTimelineView.slideToggle("slow", function () {
+        $archiveTimelineBtn.toggleClass("ui-state-active");
+        if ($archiveTimelineView.is(':visible')) {
+            var $container = $('#archive_timeline_container');
+            $container.width($archiveTimelineView.width());
+            chart.setSize($archiveTimelineView.width(), $container.height());
             chart.reflow();
-            scrollToElement($timeline_view);
         }
     });
-    return false;
 }
 
-function open_list_view() {
-    var $timeline_view = $('#timeline_view');
-    if ($timeline_view.is(':visible')) {
-        $timeline_view.slideToggle("slow");
-        $('#timeline_button').toggleClass('button-active');
+function archive_open_list() {
+    var $archiveListBtn = $('#archive_list_btn');
+    var $archiveTimelineBtn = $('#archive_timeline_btn');
+    var $archiveListView = $('#archive_list_view');
+    var $archiveTimelineView = $('#archive_timeline_view');
+
+    if ($archiveTimelineView.is(':visible')) {
+        $archiveTimelineView.slideToggle("slow");
+        $archiveTimelineBtn.toggleClass('ui-state-active');
     }
 
-    var $archive_list_view = $('#archive_list_view');
-    $archive_list_view.slideToggle("slow", function () {
-        scroller();
-        $('#list_button').toggleClass("button-active");
-
-        if ($archive_list_view.is(':visible')) {
-            scrollToElement($archive_list_view);
-        }
+    $archiveListView.slideToggle("slow", function () {
+        $archiveListBtn.toggleClass("ui-state-active");
     });
-    return false;
 }
 
 var box;
@@ -122,17 +114,6 @@ function archiveListInitialize(){
     $('.years').on('click', function() {
     	$(this).find('span').toggleClass("bold");
         $(this).find('ul').slideToggle();
-    });
-}
-
-function prepareCommentButton() {
-    var button = $('#comment_button');
-    button.hide();
-    $('#commentfield').on('focus', function () {
-        button.slideDown();
-    });
-    $('#comment_form').on('blur', function () {
-        $('#comment_button').slideUp(1000);
     });
 }
 

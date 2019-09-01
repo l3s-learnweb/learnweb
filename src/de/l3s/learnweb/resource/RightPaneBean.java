@@ -399,6 +399,13 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         return monthNames.toJSONString();
     }
 
+    public void onOpenExtendedMetadataDialog()
+    {
+        //log.debug("onOpenExtendedMetadataDialog");
+        int groupId = getClickedResource() == null ? 0 : getClickedResource().getGroupId();
+        log(Action.extended_metadata_open_dialog, groupId, getClickedResource().getId());
+    }
+
     /* Load beans  */
 
     public FileEditorBean getFileEditorBean()
