@@ -10006,6 +10006,10 @@ dd {
 .layout-right-pane {
   transition: all 0.2s ease-in-out;
 }
+.layout-right-pane .ui-widget-content {
+  top: 66px;
+  position: sticky;
+}
 @media (prefers-reduced-motion: reduce) {
   .layout-right-pane {
     transition: none;
