@@ -33,7 +33,6 @@ public class AnnouncementsManager
             {
                 Announcement announcement = createAnnouncement(resultSet);
                 cache.put(announcement.getId(), announcement);
-
             }
         }
     }
@@ -45,8 +44,7 @@ public class AnnouncementsManager
         announcement.setTitle(rs.getString("title"));
         announcement.setText(rs.getString("message"));
         announcement.setUserId(rs.getInt("user_id"));
-        announcement.setDate(rs.getTimestamp("created_at")); // TODO be careful with SQL getDate. It will really only return the date but not the time.
-        log.debug(rs.getTimestamp("created_at"));
+        announcement.setDate(rs.getTimestamp("created_at"));
         announcement.setHidden(rs.getBoolean("hidden"));
         return announcement;
     }
@@ -58,9 +56,8 @@ public class AnnouncementsManager
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
             stmt.setInt(3, announcement.getUserId());
-            stmt.setDate(4, sqlDate(announcement.getDate()));
+            stmt.setTimestamp(4, sqlDate(announcement.getDate()));
             stmt.setBoolean(5, announcement.isHidden());
-            log.debug(stmt.toString());
             stmt.executeUpdate();
         }
         //return announcement;
@@ -71,7 +68,6 @@ public class AnnouncementsManager
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_news` WHERE news_id = ?"))
         {
             delete.setInt(1, announcement.getId());
-            log.debug(delete.toString());
             delete.executeUpdate();
         }
         cache.remove(announcement.getId());
@@ -83,7 +79,7 @@ public class AnnouncementsManager
         {
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
-            stmt.setDate(3, sqlDate(announcement.getDate()));
+            stmt.setTimestamp(3, sqlDate(announcement.getDate()));
             stmt.setBoolean(4, announcement.isHidden());
             stmt.setInt(5, announcement.getId());
             stmt.executeUpdate();
@@ -97,14 +93,13 @@ public class AnnouncementsManager
             stmt.setBoolean(1, !announcement.isHidden());
             stmt.setInt(2, announcement.getId());
             stmt.executeUpdate();
-            log.debug(stmt.toString());
         }
     }
 
-    private static java.sql.Date sqlDate(java.util.Date calendarDate)
+    private static java.sql.Timestamp sqlDate(java.util.Date calendarDate)
     {
         if(calendarDate != null)
-            return new java.sql.Date(calendarDate.getTime());
+            return new java.sql.Timestamp(calendarDate.getTime());
         else
             return null;
     }

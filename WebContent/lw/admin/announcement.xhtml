@@ -26,18 +26,18 @@
 			<p:panel>
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
-					<p:inputText id="news_title" value="#{adminAnnouncementBean.announcement.title}"/>
+					<p:inputText id="news_title" value="#{adminAnnouncementBean.title}"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" showTime="true" type="both" timeZone="#{userBean.timeZone}"/>
+					<p:calendar id="datetime" value="#{adminAnnouncementBean.date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="#{userBean.timeZone}" timeInput="true"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
-					<p:textEditor height="200" value="#{adminAnnouncementBean.announcement.text}">
+					<p:textEditor height="200" value="#{adminAnnouncementBean.text}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>
@@ -56,7 +56,7 @@
 				</div>
 
 				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}"/>
+					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.hidden}" itemLabel="#{msg.hide}"/>
 				</div>
 
 				<p:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" value="#{msg.update}" update="@form :growl">

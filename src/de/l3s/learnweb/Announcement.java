@@ -24,15 +24,9 @@ public class Announcement implements Serializable
         this.userId = userId;
     }
 
-    public void setDate(final Date date)
-    {
-        this.date = date;
-    }
+    public void setDate(final Date date) { this.date = date; }
 
-    public Date getDate()
-    {
-        return date;
-    }
+    public Date getDate() { return date; }
 
     public int getId()
     {
@@ -44,10 +38,7 @@ public class Announcement implements Serializable
         this.id = id;
     }
 
-    public String getTitle()
-    {
-        return title;
-    }
+    public String getTitle() { return title; }
 
     public void setTitle(final String title)
     {
@@ -59,10 +50,7 @@ public class Announcement implements Serializable
         return text;
     }
 
-    public boolean isHidden()
-    {
-        return hidden;
-    }
+    public boolean isHidden() { return hidden; }
 
     public void setHidden(final boolean hidden)
     {
