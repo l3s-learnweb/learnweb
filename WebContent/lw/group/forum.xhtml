@@ -48,11 +48,11 @@
             </h:link>
         </p:column>
 
-        <p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}" style="max-width:1.5rem;">
+        <p:column headerText="#{msg['ForumIndex.replies']}" styleClass="text-center" sortBy="#{topic.replies}" style="max-width:2rem;">
             <h:outputText value="#{topic.replies}"/>
         </p:column>
 
-        <p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}" style="max-width:1.5rem;">
+        <p:column headerText="#{msg['ForumIndex.views']}" styleClass="text-center" sortBy="#{topic.views}" style="max-width:2rem;">
             <h:outputText value="#{topic.views}"/>
         </p:column>
 
@@ -60,7 +60,7 @@
 			<h:link value="#{topic.user.username}" outcome="/lw/user/detail.jsf?user_id=#{topic.userId}"/>
 		</p:column>
 
-        <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}" style="max-width:3rem;">
+        <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="text-center" sortBy="#{topic.lastPostDate}" style="max-width:5rem;">
             <h:outputText value="#{topic.lastPostDate}" styleClass="d-block">
                 <f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
             </h:outputText>

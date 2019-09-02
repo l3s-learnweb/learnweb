@@ -134,22 +134,22 @@
                 <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
             </a>
         </ui:fragment>
-        <h:outputLink value="glossary/glossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+        <h:outputLink value="glossary/glossary.jsf" styleClass="ui-button ui-button-text-only clearfix"
                       rendered="#{rightPaneBean.clickedResource.type eq 'glossary2'}">
             <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-            #{msg["Glossary.open"]}
+            <h:outputText value="#{msg['Glossary.open']}" styleClass="ui-button-text"/>            
         </h:outputLink>
-        <h:outputLink value="../lw/survey/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+        <h:outputLink value="../lw/survey/survey.jsf" styleClass="ui-button ui-button-text-only clearfix"
                       rendered="#{rightPaneBean.clickedResource.type eq 'survey'}">
             <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-            Open survey
+            <h:outputText value="Open survey" styleClass="ui-button-text"/>            
         </h:outputLink>
 
         <h:outputLink id="survey_esult" value="../lw/survey/results.jsf" style="margin-left:5px"
-                      styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                      styleClass="ui-button ui-button-text-only clearfix"
                       rendered="#{rightPaneBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }">
             <f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-            Results
+            <h:outputText value="Results" styleClass="ui-button-text"/>            
         </h:outputLink>
     </div>
 </ui:composition>
