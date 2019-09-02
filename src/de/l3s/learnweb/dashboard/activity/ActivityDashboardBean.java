@@ -11,9 +11,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.util.Misc;
@@ -25,7 +25,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 3326736281893564706L;

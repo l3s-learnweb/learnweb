@@ -17,13 +17,14 @@
 
 <ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['Tracker.dashboard']}" url=""/>
+    <p:menuitem value="#{msg['Tracker.dashboard']}" url="admin/dashboard/tracker.jsf"/>
+    <p:menuitem value="#{trackerDashboardBean.firstSelectedUser.username}" url="#" rendered="#{trackerDashboardBean.singleUser}"/>
 </ui:define>
 
 <ui:define name="center_layout">
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
-    <p:panel header="#{msg.choose_options}" styleClass="mb-3">
+    <p:panel header="#{msg.choose_options}" styleClass="mb-2">
         <ui:decorate template="templates/setSelectedUsers.xhtml">
             <ui:param name="cbean" value="#{trackerDashboardBean}"/>
         </ui:decorate>

@@ -16,7 +16,8 @@
 
 <ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg.glossary_dashboard}" url=""/>
+    <p:menuitem value="#{msg['glossary_dashboard']}" url="admin/dashboard/glossary.jsf"/>
+    <p:menuitem value="#{glossaryDashboardBean.firstSelectedUser.username}" url="#" rendered="#{glossaryDashboardBean.singleUser}"/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -31,7 +32,7 @@
     <h:panelGroup id="content" layout="block">
         <ui:fragment rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
             <div class="row">
-                <div class="col-6 col-md-3 pr-2 mb-3">
+                <div class="col-6 col-md-3 pr-2">
                     <p:panel header="#{msg['Glossary.total_concepts']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -40,7 +41,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalConcepts}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pl-2 px-md-2 mb-3">
+                <div class="col-6 col-md-3 pl-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_terms']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -49,7 +50,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalTerms}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pr-2 px-md-2 mb-3">
+                <div class="col-6 col-md-3 pr-2 px-md-2">
                     <p:panel header="#{msg['Glossary.total_sources']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -58,7 +59,7 @@
                         <h:outputText value="#{glossaryDashboardBean.totalSources}"/>
                     </p:panel>
                 </div>
-                <div class="col-6 col-md-3 pl-2 mb-3">
+                <div class="col-6 col-md-3 pl-2">
                     <p:panel header="#{msg['Glossary.ratio']}">
                         <f:facet name="actions">
                             <p:button icon="ui-icon-help" onclick="return false;"/>
@@ -69,7 +70,7 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-6 pr-2">
                     <p:outputPanel id="activityTypesPanel"
                                    rendered="#{not empty glossaryDashboardBean.selectedUsersIds}">
@@ -97,7 +98,7 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-4">
                     <p:panel id="glossary" header="#{msg['Glossary.glossary']}">
                         <f:facet name="actions">
@@ -107,7 +108,7 @@
                         <p:barChart model="#{glossaryDashboardBean.usersGlossaryChart}"/>
                     </p:panel>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-8 mb-3">
                     <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
                         <f:facet name="header">
                             #{msg['Glossary.location']}
@@ -135,7 +136,7 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-12">
                     <p:panel id="chart_plot_01" header="#{msg.interactions}">
                         <f:facet name="actions">
@@ -147,10 +148,10 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-12">
                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
-                                 var="gfs" styleClass="table-responsive my-2"
+                                 var="gfs" styleClass="table-responsive mb-3"
                                  emptyMessage="#{msg.no_data}">
 
                         <f:facet name="header">
@@ -225,7 +226,7 @@
                 </div>
             </div>
 
-            <div class="row mb-3">
+            <div class="row">
                 <div class="col-md-12">
                     <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.descFieldsStatistic}"
                                  var="gds"

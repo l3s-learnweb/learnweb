@@ -7,7 +7,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
-import scala.util.control.Exception;
+import de.l3s.util.Misc;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean
 {
@@ -68,7 +68,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
 
     /**
      * @return all groups the current user can moderate
-     * @throws SQLException
      */
     public List<Group> getAllGroups() throws SQLException
     {
@@ -79,7 +78,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
 
     /**
      * @return all users the current user can moderate
-     * @throws SQLException
      */
     public List<User> getAllUsers() throws SQLException
     {
@@ -121,6 +119,15 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     public List<Integer> getSelectedUsersIds()
     {
         return selectedUsersIds;
+    }
+
+    public User getFirstSelectedUser() throws SQLException
+    {
+        if (Misc.nullOrEmpty(selectedUsersIds)) {
+            return null;
+        }
+
+        return Learnweb.getInstance().getUserManager().getUser(selectedUsersIds.get(0));
     }
 
     public List<Integer> getSelectedGroupsIds()

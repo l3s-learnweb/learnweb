@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
@@ -17,7 +17,7 @@ import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class GlossaryDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;

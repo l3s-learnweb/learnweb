@@ -564,7 +564,8 @@ public class UserBean implements Serializable
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("simple_transcript_log"), "fa fa-fw fa-language", su + "/lw/admin/simple_transcript_log.jsf"));
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("transcript_summaries"), "fa fa-fw fa-language", su + "/lw/admin/transcript_summary.jsf"));
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("glossary_dashboard"), "fa fa-fw fa-bar-chart", su + "/lw/admin/dashboard/glossary.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("activity_dashboard"), "fa fa-fw fa-line-chart", su + "/lw/admin/dashboard/activity.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Activity.dashboard"), "fa fa-fw fa-line-chart", su + "/lw/admin/dashboard/activity.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Tracker.dashboard"), "fa fa-fw fa-database", su + "/lw/admin/dashboard/tracker.jsf"));
                 model.addElement(moderatorSubmenu);
             }
 
