@@ -184,7 +184,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         SimpleEntry<String, Resource> clickedResourceFromSlider = getChosenResourceFromSlider();
         if(clickedResourceFromSlider != null)
         {
-            rightPaneBean.setPaneAction("updated".equals(clickedResourceFromSlider.getKey()) ? RightPaneAction.viewUpdatedResource : RightPaneAction.viewResource);
+            rightPaneBean.setPaneAction(RightPaneAction.viewResource);
             rightPaneBean.setClickedAbstractResource(clickedResourceFromSlider.getValue());
         }
     }

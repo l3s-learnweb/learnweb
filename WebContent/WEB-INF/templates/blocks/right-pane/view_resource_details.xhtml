@@ -37,10 +37,10 @@
 	<ui:fragment rendered="#{userBean.starRatingEnabled}">
 		<dt class="col-sm-3">#{msg.relevance}:</dt>
 		<dd class="col-sm-9">
-			<h:form id="rate_form">
+			<h:form>
 				<p:rating value="#{resourceDetailBean.clickedResource.starRatingRounded}" cancel="false"
 						disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
-					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl"/>
+					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="@form :growl"/>
 				</p:rating>
 
 				<h:outputText value="#{rightPaneBean.clickedResource.starRating}">
@@ -66,15 +66,15 @@
 	<ui:fragment rendered="#{userBean.thumbRatingEnabled}">
 		<dt class="col-sm-3">#{msg.reliability}:</dt>
 		<dd class="col-sm-9">
-			<h:form id="thumbrating">
+			<h:form>
 				<h:panelGrid columns="4">
 					<h:outputText value="+#{rightPaneBean.clickedResource.thumbUp}"/>
-					<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl" ariaLabel="Rate thump up">
+					<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="@form :growl" ariaLabel="Rate thump up">
 						<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
 						<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 					</p:commandLink>
 
-					<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl" ariaLabel="Rate thump down">
+					<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="@form :growl" ariaLabel="Rate thump down">
 						<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
 						<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 					</p:commandLink>
@@ -184,8 +184,8 @@
 	<ui:fragment rendered="${rightPaneBean.clickedResource.storageType == 2 and rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.current_version}:</dt>
 		<dd class="col-sm-9">
-			<p:commandButton form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
-							 value="#{msg['Archive.now']}" update=":growl :archive_view_options"/>
+			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
+							 value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
 		</dd>
 	</ui:fragment>
 
@@ -231,7 +231,7 @@
 								<f:param name="query" value="#{tag.name}"/>
 								<span class="ui-button-text">#{tag.name}</span>
 							</h:outputLink>
-							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" update=":right_pane :growl" process="@form" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" update=":right_pane :growl" process="@this" icon="fa fa-times" styleClass="secondary-btn rounded-0"
 											 rendered="#{rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 							</p:commandButton>
@@ -244,7 +244,7 @@
 				<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
 				<p:message for="@previous"/>
 				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}" styleClass="rounded-0"
-								 update=":tag_form :growl :tag_input_form:tag_name" partialSubmit="true" process="@form">
+								 update="@parent:@parent:tag_form :growl tag_name" partialSubmit="true" process="@form">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
 			</h:form>
@@ -254,45 +254,43 @@
 	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.comments or rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.comments}:</dt>
 		<dd class="col-sm-9">
-			<h:form styleClass="mb-2">
+			<h:form styleClass="mb-2" id="new_comment_form">
 				<ui:fragment rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 					<div class="form-group mb-0">
 						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
 						<p:message for="@previous"/>
 					</div>
 
-					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":comments_list_form @form :growl">
+					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update="@parent:@parent:@parent:comments_list_form @form :growl">
 						<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 					</p:commandButton>
 				</ui:fragment>
 			</h:form>
 			<h:form id="comments_list_form">
-				<h:panelGroup layout="block" rendered="#{not empty rightPaneBean.clickedResource.comments}">
-					<ui:repeat var="comment" value="#{rightPaneBean.clickedResource.comments}">
-						<div class="d-flex comment-entry bg-light mb-2 p-2">
-							<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
+				<ui:repeat var="comment" value="#{rightPaneBean.clickedResource.comments}" rendered="#{not empty rightPaneBean.clickedResource.comments}">
+					<div class="d-flex comment-entry bg-light mb-2 p-2">
+						<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
 
-							<div class="comment-details">
-								<p class="mb-0">
-									<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
-									<h:outputText value="${userBean.getPrettyDate(comment.date)}" escape="false" styleClass="small font-weight-light mb-0 comment-date"/>
-								</p>
-								<div class="mb-1">#{comment.text}</div>
-								<div class="small">
-									<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" rendered="#{resourceDetailBean.canEditComment(comment)}"
-												   onsuccess="PF('commentEditDialog').show();" ajax="true" update=":comment_edit_form">
-										<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-									</p:commandLink>
-									<p:commandLink value="#{msg.delete}" styleClass="text-danger" rendered="#{resourceDetailBean.canEditComment(comment)}"
-												   action="#{resourceDetailBean.onDeleteComment}" onstart="return confirm('#{msg.delete_message_comments}');"
-												   ajax="true" update=":right_pane :growl">
-										<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-									</p:commandLink>
-								</div>
+						<div class="comment-details">
+							<p class="mb-0">
+								<h:link value="#{comment.user.username}" outcome="/lw/user/detail.jsf?user_id=#{comment.user.id}" styleClass="font-weight-bold comment-author mr-3"/>
+								<h:outputText value="${userBean.getPrettyDate(comment.date)}" escape="false" styleClass="small font-weight-light mb-0 comment-date"/>
+							</p>
+							<div class="mb-1">#{comment.text}</div>
+							<div class="small">
+								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" rendered="#{resourceDetailBean.canEditComment(comment)}"
+											   onsuccess="PF('commentEditDialog').show();" ajax="true" update="@parent:@parent:@parent:comment_edit_form">
+									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+								</p:commandLink>
+								<p:commandLink value="#{msg.delete}" styleClass="text-danger" rendered="#{resourceDetailBean.canEditComment(comment)}"
+											   action="#{resourceDetailBean.onDeleteComment}" onstart="return confirm('#{msg.delete_message_comments}');"
+											   ajax="true" update=":right_pane :growl">
+									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+								</p:commandLink>
 							</div>
 						</div>
-					</ui:repeat>
-				</h:panelGroup>
+					</div>
+				</ui:repeat>
 			</h:form>
 		</dd>
 	</ui:fragment>
@@ -305,7 +303,7 @@
 			<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"/>
 		</div>
 
-		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list_form :growl" title="#{msg.save}"
+		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update="@parent:@parent:comments_list_form :growl" title="#{msg.save}"
 			value="#{msg.save}" onsuccess="PF('commentEditDialog').hide();"/>
 	</h:form>
 </p:dialog>

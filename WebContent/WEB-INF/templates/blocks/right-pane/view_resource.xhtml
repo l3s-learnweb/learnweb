@@ -26,46 +26,26 @@
         </ui:decorate>
     </ui:fragment>
 
-    <c:if test="${userBean.user.organisation.id eq 480}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/yell_ext_metadetails.xhtml"/>
-    </c:if>
+    <h:form prependId="false">
+        <p:tabView dynamic="true" cache="true">
+            <p:tab title="#{msg.details_right_pane}">
+                <c:if test="${userBean.user.organisation.id eq 480}">
+                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_meta.xhtml"/>
+                </c:if>
 
-    <c:choose>
-        <c:when test="#{rightPaneBean.paneAction =='viewUpdatedResource'}">
-            <input class="updated_resource_tabs" id="details_tab" type="radio" name="tabs" checked="checked"/>
-            <label class="tab_label" for="details_tab">#{msg.details_right_pane}</label>
-            <input class="updated_resource_tabs" id="activity_tab" type="radio" name="tabs"/>
-            <label class="tab_label" for="activity_tab">#{msg.activity_right_pane}</label>
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_details.xhtml"/>
+            </p:tab>
 
-            <div id="details_content" class="tabs_right_pane">
-                <ui:fragment>
-                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml"/>
-                </ui:fragment>
-            </div>
-
-            <div id="activity_content" class="tabs_right_pane">
-                <h:dataTable var="datagrid" value="#{groupOverviewBean.updatedResourceActivities}" styleClass="not-selectable">
-                    <h:column>
-                        <div class="float-left">
-                            <img id="userpic" src="#{datagrid.userImage}" alt="profile image" width="30" height="30" class="newsfeed_user_image"/>
-                        </div>
-                        <div class="newsfeed_text">
-                            <h:outputText value="#{datagrid.description}" escape="false"/>
-                        </div>
-
-                        <h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>
-                        <br></br>
-                        <br></br>
-                        <hr width="485px" class="newsfeed_separator"></hr>
-                        <br></br>
-                    </h:column>
-                </h:dataTable>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane_under_previewbox_content.xhtml"/>
-        </c:otherwise>
-    </c:choose>
+            <p:tab title="#{msg.activity_right_pane}">
+                <p:repeat value="#{rightPaneBean.clickedResource.logs}" var="logEntry" varStatus="status">
+                    <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+                        <ui:param name="status" value="#{status}"/>
+                        <ui:param name="logEntry" value="#{logEntry}"/>
+                    </ui:decorate>
+                </p:repeat>
+            </p:tab>
+        </p:tabView>
+    </h:form>
 </ui:fragment>
 
 </ui:composition>

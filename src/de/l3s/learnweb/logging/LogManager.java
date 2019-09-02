@@ -5,10 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -131,6 +128,37 @@ public class LogManager
         }
         PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
         select.setInt(1, userId);
+
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            log.add(new LogEntry(rs));
+        }
+        select.close();
+
+        return log;
+    }
+
+    /**
+     *
+     * @param limit if limit is -1 all log entries are returned
+     */
+    public List<LogEntry> getLogsByResource(int resourceId, int limit) throws SQLException
+    {
+        LinkedList<LogEntry> log = new LinkedList<>();
+
+        Set<Action> actions = new HashSet<>(Action.getActionsByCategory(ActionCategory.RESOURCE));
+        actions.remove(Action.opening_resource);
+        StringBuilder sb = new StringBuilder();
+        for(Action action : actions)
+        {
+            sb.append(",");
+            sb.append(action.ordinal());
+        }
+
+        String limitStr = limit > 0 ? "LIMIT " + limit : "";
+        PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE target_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        select.setInt(1, resourceId);
 
         ResultSet rs = select.executeQuery();
         while(rs.next())

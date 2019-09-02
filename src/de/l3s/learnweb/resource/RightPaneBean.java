@@ -44,8 +44,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         newFolder,
         editFolder,
         viewFolder,
-        newFile,
-        viewUpdatedResource // TODO Oleh: why do we need it? I think it can be replaced to some flag in Resource
+        newFile
     }
 
     private int resourceId = 0; // url param, force resource view
@@ -141,7 +140,6 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         case newResource:
             return UtilBean.getLocaleMessage("upload_resource");
         case viewResource:
-        case viewUpdatedResource:
             return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
         case editResource:
             return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();

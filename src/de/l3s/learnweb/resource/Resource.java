@@ -1932,6 +1932,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             addTag(tag.getName(), tags.getElementOwner(tag));
     }
 
+    public List<LogEntry> getLogs() throws SQLException
+    {
+        return Learnweb.getInstance().getLogManager().getLogsByResource(getId(), -1);
+    }
+
     @Deprecated
     public String getLanguageOne()
     {

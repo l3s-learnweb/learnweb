@@ -4,7 +4,10 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="section-resources">
+<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="section-resources mb-0">
+    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+
     <h:outputStylesheet library="lightbox" name="lightbox.css"/>
     <h:outputScript library="learnweb-layout" name="js/resource-pane.js" target="head"/>
 
@@ -26,7 +29,7 @@
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_resource.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewResource' or rightPaneBean.paneAction =='viewUpdatedResource'}">
+    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewResource'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource.xhtml"/>
     </ui:fragment>
 
