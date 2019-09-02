@@ -75,8 +75,11 @@
                                 </div>
                             </div>
                             <div class="course-footer mt-3">
-                                <p:commandButton type="button" value="Join"/>
-                            </div>
+								<h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+									<h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+									<f:param name="wizard" value="default" />
+								</h:outputLink>
+							</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -88,10 +91,14 @@
                                     <h:graphicImage library="frontpage" name="interactive_puzzle.png" alt="YELL Logo"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-left">
-                                    ​<h:outputText value="#{msg.yell_description}"/>
+                                	​<h:outputText value="#{msg.yell_description}"/>
                                 </div>
                             </div>
                             <div class="course-footer mt-3">
+								<h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+									<h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+									<f:param name="wizard" value="yell" />
+								</h:outputLink>
                                 <p:commandButton type="button" value="Join"/>
                             </div>
                         </div>

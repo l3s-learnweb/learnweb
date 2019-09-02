@@ -51,13 +51,7 @@
 
 					<div class="d-flex flex-column w-25">
 						<h:outputText for="university" styleClass="font-weight-bold" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputText>
-						<p:selectOneMenu id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" style="width:125px">
-							<f:selectItem itemLabel="Univ. of Messina" itemValue="Univ. of Messina"/>
-							<f:selectItem itemLabel="Univ. Tor Vergata" itemValue="Univ. Tor Vergata"/>
-							<f:selectItem itemLabel="Univ. of Florence" itemValue="Univ. of Florence"/>
-							<f:selectItem itemLabel="Univ. of Leeds" itemValue="Univ. of Leeds"/>
-							<f:selectItem itemLabel="Univ. of Aarhus" itemValue="Univ. of Aarhus"/>
-						</p:selectOneMenu>
+						<p:inputText id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" />
 						<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}"/>
 					</div>
 
