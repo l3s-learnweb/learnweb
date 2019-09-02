@@ -19,6 +19,7 @@
             <supported-locale>it</supported-locale>
             <supported-locale>pt</supported-locale>
             <supported-locale>es</supported-locale>
+            <supported-locale>uk</supported-locale>
         </locale-config>
 
         <resource-bundle>
