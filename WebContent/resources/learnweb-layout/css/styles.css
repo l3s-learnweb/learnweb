@@ -11055,6 +11055,12 @@ body .ui-tabs.ui-tabs-transparent .ui-tabs-nav li,
 body .ui-tabs.ui-tabs-transparent .ui-tabs-panels {
   background: #fff;
 }
+@media (max-width: 767.98px) {
+  body .ui-tabs.ui-tabs-transparent .ui-tabs-header {
+    width: 100%;
+    border-right: 1px solid #ced4da !important;
+  }
+}
 
 .resource-log-snippet {
   display: flex;

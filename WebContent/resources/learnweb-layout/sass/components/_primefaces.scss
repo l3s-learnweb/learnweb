@@ -91,5 +91,13 @@ body {
     .ui-tabs-panels {
       background: $contentBgColor;
     }
+
+
+    @include media-breakpoint-down(sm) {
+      .ui-tabs-header {
+        width: 100%;
+        border-right: 1px solid $headerLightBorderColor!important;
+      }
+    }
   }
 }

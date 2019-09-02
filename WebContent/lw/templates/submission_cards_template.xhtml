@@ -8,7 +8,7 @@
 
 	<ui:repeat var="submission" varStatus="status" value="#{submissions}">
 		<div class="#{status.last ? '' : 'mb-4' }">
-			<div class="d-flex align-items-center justify-content-between p-2 bg-light">
+			<div class="d-flex align-items-center justify-content-between p-2 bg-light flex-md-row flex-column">
 				<div class="d-flex align-items-center">
 					<h4 class="mb-0 mr-1">
 						#{submission.title}
@@ -33,41 +33,41 @@
 					</h:form>
 				</div>
 
-				<div class="d-flex text-right flex-sm-row flex-column">
+				<div class="d-flex text-md-right flex-md-row flex-column">
 					<h:form>
-						<p:selectBooleanButton id="value1" value=""  styleClass="moderator-btn" onLabel="locked" offLabel="unlocked"
+						<p:selectBooleanButton id="value1" value=""  styleClass="moderator-btn my-1 my-md-0" onLabel="locked" offLabel="unlocked"
 											   process="@this" update=":current_submissions"
 											   rendered="#{(userBean.moderator) and submissionBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"/>
 
-						<p:commandButton value="#{msg.edit}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+						<p:commandButton value="#{msg.edit}" styleClass="moderator-btn my-1 my-md-0" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
 								  process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 						</p:commandButton>
 
-						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn"
+						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn my-1 my-md-0"
 								  rendered="#{submission.pastSubmission and (not userBean.moderator || submissionBean.submissionOverviewReadOnly)}">
 							<f:param name="submission_id" value="#{submission.id}"/>
 							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
-						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn"
+						<p:button outcome="submission_resources" value="#{msg['Submission.view_submission']}" styleClass="moderator-btn my-1 my-md-0"
 								  rendered="#{submission.currentSubmission and userBean.moderator and submissionBean.submissionOverviewReadOnly}">
 							<f:param name="submission_id" value="#{submission.id}"/>
 							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
-						<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="moderator-btn"
+						<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="moderator-btn my-1 my-md-0"
 								  rendered="#{userBean.moderator}">
 							<f:param name="submission_id" value="#{submission.id}"/>
 						</p:button>
 
-						<p:button outcome="submission_resources" value="#{msg['Submission.submit_resources']}"
+						<p:button outcome="submission_resources" value="#{msg['Submission.submit_resources']}" styleClass="my-1 my-md-0"
 								  rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 							<f:param name="submission_id" value="#{submission.id}"/>
 							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
-						<p:button outcome="../survey/survey" value="Please submit the survey first"
+						<p:button outcome="../survey/survey" value="Please submit the survey first" styleClass="my-1 my-md-0"
 								  rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 							<f:param name="resource_id" value="#{submission.surveyResourceId}"/>
 						</p:button>
