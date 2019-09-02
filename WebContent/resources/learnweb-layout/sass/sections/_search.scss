@@ -189,7 +189,7 @@
   .group-menu-title {
     background-position: left center;
     background-repeat: no-repeat;
-    padding-left: 1rem;
+    padding-left: 2rem;
   }
   .group-menu-header .source_bing, .source_bing .group-menu-title {
     background-image: url("\#{resource['images:services/bing.gif']}");
@@ -373,6 +373,25 @@
      }
 }
 
+.zoom {
+  transition: transform .2s;
+  margin: 0 auto;
+  &:hover {
+    transform: scale(1.25);
+    z-index: 3;
+  }
+}
+.video-duration{
+  opacity: 0.75;
+  position: absolute;
+  right:2%;
+  bottom: 3%;
+  background-color: $dark;
+  color:white;
+  border-radius: 0.1rem;
+  font-size: 0.8rem;
+  line-height: 0.9rem;
+}
 .block-with-text {
   overflow: hidden;
   position: relative;

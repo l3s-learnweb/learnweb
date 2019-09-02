@@ -5,21 +5,16 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
-	<h:outputStylesheet library="justifiedGallery" name="justifiedGallery.min.css"/>
-	<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-	<h:outputScript library="justifiedGallery" name="jquery.justifiedGallery.min.js" target="head"/>
-	<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-	<div id="gallery" class="border-0">
+
+	<div class="border-0 row  justify-content-center">
 		<p:repeat var="res" value="#{resources}">
-			<div id="resource_${res.tempId}"  class="resource content" data-src="${res.urlProxied}"   data-fancybox="gallery">
-				<div class="content-overlay"></div>
-				<img id="${res.tempId}" style="z-index: -1;" src="${res.thumbnail2b.url}"/>
-					<div class="content-details fadeIn-bottom">
-						<i class="fa fa-play-circle-o fa-3x text-white"></i>
-					</div>
-				<div class="caption d-flex justify-content-between align-items-center">
-					<span>#{res.title}</span>
-					<span class="mr-2">#{res.durationInMinutes}</span>
+			<div id="resource_${res.tempId}"  class="resource card col-3 px-0 zoom" data-src="${res.urlProxied}"   data-fancybox="gallery">
+				<div class="position-relative">
+				<img id="${res.tempId}"  class="card-img-top border-bottom" src="${res.thumbnail2b.url}"/>
+				<div class="video-duration">#{res.durationInMinutes}</div>
+				</div>
+				<div class="card-body p-0">
+						<span class="font-weight-bold">#{res.title}</span>
 				</div>
 				<ui:decorate template="/templates/search/resource_metadata.xhtml">
 					<ui:param name="res" value="#{res}"/>

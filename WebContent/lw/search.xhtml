@@ -62,10 +62,10 @@
                                 </span>
                             </p:repeat>
                         </h:panelGroup>
-                        <h:panelGroup styleClass="d-flex flex-row justify-content-around" layout="block"
+                        <h:panelGroup styleClass="row" style="max-height: 140px;" layout="block"
                                       rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
                             <p:repeat value="#{gr.resources}" var="res">
-                                <img src="${res.thumbnail2.url}" class="img-responsive p-1"/>
+                                <img src="${res.thumbnail2.url}" class="col-6"/>
                             </p:repeat>
                         </h:panelGroup>
                     </h:link>
