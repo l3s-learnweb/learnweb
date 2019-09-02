@@ -14,11 +14,11 @@ function archive_open_timeline() {
 
     if ($archiveListView.is(':visible')) {
         $archiveListView.slideToggle("slow");
-        $archiveListBtn.toggleClass('ui-state-active');
+        $archiveListBtn.removeClass('ui-state-active');
     }
 
     $archiveTimelineView.slideToggle("slow", function () {
-        $archiveTimelineBtn.toggleClass("ui-state-active");
+        $archiveTimelineBtn.addClass("ui-state-active");
         if ($archiveTimelineView.is(':visible')) {
             var $container = $('#archive_timeline_container');
             $container.width($archiveTimelineView.width());
@@ -36,11 +36,11 @@ function archive_open_list() {
 
     if ($archiveTimelineView.is(':visible')) {
         $archiveTimelineView.slideToggle("slow");
-        $archiveTimelineBtn.toggleClass('ui-state-active');
+        $archiveTimelineBtn.removeClass('ui-state-active');
     }
 
     $archiveListView.slideToggle("slow", function () {
-        $archiveListBtn.toggleClass("ui-state-active");
+        $archiveListBtn.addClass("ui-state-active");
     });
 }
 
@@ -283,16 +283,10 @@ function resourceDND() {
     });
 }
 
-function check_tag(tagName){
-	
-	
-}
-
 function load_editor() {
-	if ($("#right_pane .editor_preview").length) {
+	if ($("#right_pane .editor-preview-wrapper").length) {
         connectEditor("iframeEditor", "embedded");
 	}
-
 }
 
 function load_lightbox_editor() {

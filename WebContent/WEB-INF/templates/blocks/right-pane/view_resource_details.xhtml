@@ -4,7 +4,7 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<dl class="row mb-0">
+<dl class="row mb-n2">
 	<ui:fragment rendered="${not empty rightPaneBean.clickedResource.fileName and rightPaneBean.clickedResource.source ne 'loro'}">
 		<dt class="col-sm-3">#{msg.file}:</dt>
 		<dd class="col-sm-9">
@@ -195,17 +195,16 @@
 				<dt class="col-sm-3">#{msg['Archive.versions']} (<span class="text-danger">#{rightPaneBean.clickedResource.archiveUrls.size()}</span>):</dt>
 				<dd class="col-sm-9">
 					<h:panelGroup layout="block">
-						<p:commandButton id="archive_list_btn" styleClass="rounded-right mr-0" value="#{msg.list_view}" onclick="archive_open_list();return false;"/>
-						<p:commandButton id="archive_timeline_btn" styleClass="rounded-left" value="#{msg.timeline_view}" onclick="archive_open_timeline();return false;"/>
+						<p:button id="archive_list_btn" styleClass="rounded-right mr-0" value="#{msg.list_view}" onclick="archive_open_list();return false;"/>
+						<p:button id="archive_timeline_btn" styleClass="rounded-left" value="#{msg.timeline_view}" onclick="archive_open_timeline();return false;"/>
 					</h:panelGroup>
 
 					<h:panelGroup id="archive_list_view" layout="block" styleClass="my-2 collapse" style="max-height:20rem;overflow:auto;">
 						<ul class="list-inline list-unstyled mb-0">
 							<p:repeat var="archiveUrl" value="#{rightPaneBean.clickedResource.archiveUrls}">
 								<li class="list-inline-item mr-0 mb-1" style="width:10rem;">
-									<a href="#{archiveUrl.archiveUrl}" target="_blank" class="ui-button ui-state-default ui-button-text-only outline-btn w-100">
-										<h:outputText value="${userBean.formatDate(archiveUrl.timestamp)}"/>
-									</a>
+									<p:linkButton href="#{archiveUrl.archiveUrl}" value="#{userBean.formatDate(archiveUrl.timestamp)}"
+												  target="_blank" styleClass="outline-btn w-100"/>
 								</li>
 							</p:repeat>
 						</ul>
@@ -226,11 +225,10 @@
 				<ul class="list-inline list-unstyled mb-1">
 					<ui:repeat var="tag" value="#{rightPaneBean.clickedResource.tags}">
 						<li class="list-inline-item mr-0 mb-1">
-							<h:outputLink styleClass="ui-button ui-state-default ui-button-text-only secondary-btn mr-0 rounded-0" value="search.jsf">
+							<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn mr-0 rounded-0">
 								<f:param name="action" value="image"/>
 								<f:param name="query" value="#{tag.name}"/>
-								<span class="ui-button-text">#{tag.name}</span>
-							</h:outputLink>
+							</p:linkButton>
 							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" update=":right_pane :growl" process="@this" icon="fa fa-times" styleClass="secondary-btn rounded-0"
 											 rendered="#{rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
@@ -244,7 +242,7 @@
 				<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
 				<p:message for="@previous"/>
 				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}" styleClass="rounded-0"
-								 update="@parent:@parent:tag_form :growl tag_name" partialSubmit="true" process="@form">
+								 update=":tag_form :growl tag_name" partialSubmit="true" process="@form">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
 			</h:form>
@@ -261,14 +259,14 @@
 						<p:message for="@previous"/>
 					</div>
 
-					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update="@parent:@parent:@parent:comments_list_form @form :growl">
+					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":comments_list_form @form :growl">
 						<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 					</p:commandButton>
 				</ui:fragment>
 			</h:form>
 			<h:form id="comments_list_form">
-				<ui:repeat var="comment" value="#{rightPaneBean.clickedResource.comments}" rendered="#{not empty rightPaneBean.clickedResource.comments}">
-					<div class="d-flex comment-entry bg-light mb-2 p-2">
+				<ui:repeat var="comment" varStatus="status" value="#{rightPaneBean.clickedResource.comments}" rendered="#{not empty rightPaneBean.clickedResource.comments}">
+					<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
 						<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
 
 						<div class="comment-details">
@@ -279,7 +277,7 @@
 							<div class="mb-1">#{comment.text}</div>
 							<div class="small">
 								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" rendered="#{resourceDetailBean.canEditComment(comment)}"
-											   onsuccess="PF('commentEditDialog').show();" ajax="true" update="@parent:@parent:@parent:comment_edit_form">
+											   onsuccess="PF('commentEditDialog').show();" ajax="true" update=":comment_edit_form">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
 								<p:commandLink value="#{msg.delete}" styleClass="text-danger" rendered="#{resourceDetailBean.canEditComment(comment)}"
@@ -303,7 +301,7 @@
 			<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"/>
 		</div>
 
-		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update="@parent:@parent:comments_list_form :growl" title="#{msg.save}"
+		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list_form :growl" title="#{msg.save}"
 			value="#{msg.save}" onsuccess="PF('commentEditDialog').hide();"/>
 	</h:form>
 </p:dialog>

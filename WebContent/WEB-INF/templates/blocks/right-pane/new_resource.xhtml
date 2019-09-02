@@ -16,9 +16,8 @@
         <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
             <h:outputText value="#{addResourceBean.currentPath}" rendered="#{addResourceBean.formStep != 1}"/>
-            <p:commandLink onstart="selectNewResourceLocation();" rendered="#{addResourceBean.formStep == 1}">
-                <h:outputText value="#{addResourceBean.currentPath}"/>
-            </p:commandLink>
+            <p:button onclick="selectNewResourceLocation();return false;" value="#{addResourceBean.currentPath}"
+                      rendered="#{addResourceBean.formStep == 1}"/>
         </div>
     </div>
 

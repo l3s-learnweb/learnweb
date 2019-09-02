@@ -3,11 +3,6 @@
 }
 
 .layout-right-pane {
-
-  .ui-widget-content {
-    top: 66px;
-    position: sticky;
-  }
   @include transition();
 
   @include media-breakpoint-down(md) {

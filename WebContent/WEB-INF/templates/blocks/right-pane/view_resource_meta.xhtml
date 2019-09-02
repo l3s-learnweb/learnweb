@@ -84,13 +84,11 @@
         </dd>
     </dl>
 
-    <div class="text-center">
-        <h:form>
-            <p:commandButton id="detailAdd_button" value="Add your own" update=":add_metadata_form" styleClass="alt-btn"
-                             onsuccess="PF('metaDetailDialog').show();" ajax="true" process="@form" partialSubmit="true"
-                             actionListener="#{rightPaneBean.onOpenExtendedMetadataDialog}"/>
-        </h:form>
-    </div>
+    <h:form styleClass="text-center">
+        <p:commandButton id="detailAdd_button" value="Add your own" update=":add_metadata_form" styleClass="alt-btn"
+                         onsuccess="PF('metaDetailDialog').show();" ajax="true" process="@this" partialSubmit="true"
+                         actionListener="#{rightPaneBean.onOpenExtendedMetadataDialog}"/>
+    </h:form>
 </div>
 
 <p:dialog widgetVar="metaDetailDialog" header="Add Your Own Categorization" appendTo="@(body)"

@@ -583,3 +583,10 @@ ul.res-filters {
     }
   }
 }
+
+.resource-preview {
+  iframe {
+    width: 100%;
+    min-height: 25rem;
+  }
+}

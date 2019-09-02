@@ -10006,10 +10006,6 @@ dd {
 .layout-right-pane {
   transition: all 0.2s ease-in-out;
 }
-.layout-right-pane .ui-widget-content {
-  top: 66px;
-  position: sticky;
-}
 @media (prefers-reduced-motion: reduce) {
   .layout-right-pane {
     transition: none;
@@ -10983,6 +10979,9 @@ body,
   display: none;
 }
 
+body .ui-linkbutton a {
+  text-decoration: none;
+}
 body .ui-widget.ui-widget-content-p-0 > .ui-widget-content {
   padding: 0;
 }
@@ -11569,6 +11568,11 @@ ul.res-filters .clear-filters:hover a {
 }
 .resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button:last-child {
   margin-right: 0;
+}
+
+.resource-preview iframe {
+  width: 100%;
+  min-height: 25rem;
 }
 
 /*!
@@ -12675,16 +12679,6 @@ ul.res-filters .clear-filters:hover a {
   /** styles for archive visualizations in the lightbox and right pane*/
   /* Selector styles */
   /* Drag & Drop styles */
-  /* My resources page */
-}
-.section-resources #add_resource_upload_form .ui-fileupload-files tr td:first-child, .section-resources #add_resource_upload_form .ui-fileupload-files tr td:last-child {
-  display: none;
-}
-.section-resources .preview_box {
-  box-shadow: 1px 1px 3px 3px #dee2e6;
-}
-.section-resources .preview_box iframe {
-  min-height: 400px;
 }
 .section-resources #archive_iframe_div {
   float: right;
@@ -12766,18 +12760,8 @@ ul.res-filters .clear-filters:hover a {
 .section-resources #archive_list .bold {
   font-weight: bold;
 }
-.section-resources #right_pane .button-active {
-  background-color: #38569C !important;
-}
-.section-resources .userpic {
-  height: 2.5rem;
-  width: 2.5rem;
-  position: absolute;
-  left: 0;
-}
 .section-resources .ui-selectable-helper {
   position: absolute;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   background-color: rgba(0, 0, 0, 0.1);
   border: 1px dotted #000;
@@ -12785,18 +12769,12 @@ ul.res-filters .clear-filters:hover a {
   z-index: 500;
 }
 .section-resources .selected-icon {
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  -webkit-transform: translateZ(1px);
   transform: translateZ(1px);
-  -webkit-transition-duration: 0.2s, 0.1s, 0.1s;
   transition-duration: 0.2s, 0.1s, 0.1s;
-  -webkit-transition-property: opacity, color, background-color;
   transition-property: opacity, color, background-color;
-  -webkit-transition-timing-function: ease-in;
   transition-timing-function: ease-in;
   background-color: #cd2026;
-  -webkit-border-radius: 40px;
   border-radius: 40px;
   color: #fff;
   font-size: 0.875rem;
@@ -12820,31 +12798,6 @@ ul.res-filters .clear-filters:hover a {
 }
 .section-resources #deleteConfirmDialog.plural .ui-dialog-content p > span.plural {
   display: block;
-}
-.section-resources .center-header > h2 {
-  margin-right: 1rem;
-}
-.section-resources a.more_resources_link {
-  float: right;
-  margin-right: 1rem;
-  clear: both;
-  text-decoration: underline;
-}
-.section-resources a.more_resources_link:hover {
-  text-decoration: none;
-}
-.section-resources .layout_button {
-  display: inline-block;
-  top: -2px;
-  position: relative;
-}
-.section-resources .layout_button > button {
-  background-color: #f8f9fa !important;
-  border: none;
-  border-radius: 2px;
-}
-.section-resources .layout_button:hover {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 .section-resources .myresource-listview {
   padding-right: 7px;
@@ -12872,28 +12825,6 @@ ul.res-filters .clear-filters:hover a {
   .section-resources .myresource-listview .res-list-item:nth-child(1), .section-resources .myresource-listview .res-list-item:nth-child(2), .section-resources .myresource-listview .res-list-item:nth-child(3), .section-resources .myresource-listview .res-list-item:nth-child(4), .section-resources .myresource-listview .res-list-item:nth-child(5) {
     display: inline-block;
   }
-}
-.section-resources .ui-rating {
-  opacity: 1 !important;
-  filter: Alpha(Opacity=100) !important;
-}
-.section-resources .username {
-  font-weight: bold;
-  color: #343a40;
-  vertical-align: top;
-}
-.section-resources .username_div {
-  padding-left: 40px;
-  margin-bottom: 5px;
-}
-.section-resources .username_link {
-  text-decoration: none;
-  vertical-align: top;
-}
-.section-resources .hyperlink {
-  color: #0071bc;
-  display: flex;
-  justify-content: center;
 }
 
 .section-search {

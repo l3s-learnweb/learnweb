@@ -1,27 +1,30 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-    <ui:fragment>
-        <form id="editor_values">
-            <input type="hidden" id="ed_file_name" value="#{fileEditorBean.resource.fileName}"/>
-            <input type="hidden" id="ed_file_ext" value="#{fileEditorBean.filesExtension}"/>
-            <input type="hidden" id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}"/>
-            <input type="hidden" id="ed_callback_url" value="#{fileEditorBean.callbackUrl}"/>
-            <input type="hidden" id="ed_file_key" value="#{fileEditorBean.key}"/>
-            <input type="hidden" id="ed_file_type" value="#{fileEditorBean.fileType}"/>
-            <input type="hidden" id="ed_resource_id" value="#{fileEditorBean.resource.id}"/>
-        </form>
+<h:outputScript library="learnweb-layout" name="js/openoffice-api.original.js" target="head"/>
+<h:outputScript library="learnweb-layout" name="js/openoffice-editor2.js" target="head"/>
 
-        <h:outputScript target="head">
-            var extensionParams = { url: '#{fileEditorBean.onlyOfficeClientUrl}' };
-        </h:outputScript>
+<form id="editor_values" class="d-none">
+    <input type="hidden" id="ed_user_id" value="#{userBean.user.id}"/>
+    <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
+    <input type="hidden" id="ed_can_be_edited" value="#{fileEditorBean.resource.canEditResource(userBean.user)}"/>
 
-        <h:outputScript library="learnweb-layout" name="js/openoffice-api.original.js" target="head"/>
-        <h:outputScript library="learnweb-layout" name="js/openoffice-editor2.js" target="head"/>
+    <input type="hidden" id="ed_file_name" value="#{fileEditorBean.resource.fileName}"/>
+    <input type="hidden" id="ed_file_ext" value="#{fileEditorBean.filesExtension}"/>
+    <input type="hidden" id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}"/>
+    <input type="hidden" id="ed_callback_url" value="#{fileEditorBean.callbackUrl}"/>
+    <input type="hidden" id="ed_file_key" value="#{fileEditorBean.key}"/>
+    <input type="hidden" id="ed_file_type" value="#{fileEditorBean.fileType}"/>
+    <input type="hidden" id="ed_resource_id" value="#{fileEditorBean.resource.id}"/>
+</form>
 
-        <div id="iframeEditor"></div>
-    </ui:fragment>
+<h:outputScript target="head">
+    var extensionParams = { url: '#{fileEditorBean.onlyOfficeClientUrl}' };
+</h:outputScript>
+
+<div id="iframeEditor"></div>
+
 </ui:composition>

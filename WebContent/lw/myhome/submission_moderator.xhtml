@@ -60,7 +60,7 @@
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
                         <div class="#{status.last ? '' : 'mb-4' } border-bottom">
                             <div class="d-flex align-items-center p-2 bg-light">
-                                <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
+                                <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center justify-content-between w-100">
                                     <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
                                     <h:form prependId="false" styleClass="d-none">
