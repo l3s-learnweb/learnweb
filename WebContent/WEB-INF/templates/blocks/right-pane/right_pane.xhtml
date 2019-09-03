@@ -4,13 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="section-resources mb-0">
-    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-
-    <h:outputStylesheet library="lightbox" name="lightbox.css"/>
-    <h:outputScript library="learnweb-layout" name="js/resource-pane.js" target="head"/>
-
+<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="mb-0">
     <f:facet name="actions">
         <a href="#" class="layout-right-pane-close" aria-label="#{msg.close}">
             <i class="fa fa-times fa-inverse" aria-hidden="true"></i>

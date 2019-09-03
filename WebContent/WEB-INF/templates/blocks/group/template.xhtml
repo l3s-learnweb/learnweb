@@ -6,6 +6,14 @@
 
     <!--@elvariable id="group" type="de.l3s.learnweb.group.Group"-->
 
+    <ui:define name="head">
+        <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+        <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+
+        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
+        <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
+    </ui:define>
+
     <ui:define name="center_layout">
         <ui:fragment rendered="#{group ne null}">
             <ui:fragment rendered="${not group.canViewResources(userBean.user)}">

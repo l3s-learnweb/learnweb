@@ -4,118 +4,6 @@
 /** @external createGroupItemCommand */
 /** @external updateGroupItemsCommand */
 /** @external updateAddResourcePaneCommand */
-/** @external updateThumbnailCommand */
-
-function archive_open_timeline() {
-    var $archiveListBtn = $('#archive_list_btn');
-    var $archiveTimelineBtn = $('#archive_timeline_btn');
-    var $archiveListView = $('#archive_list_view');
-    var $archiveTimelineView = $('#archive_timeline_view');
-
-    if ($archiveListView.is(':visible')) {
-        $archiveListView.slideToggle("slow");
-        $archiveListBtn.removeClass('ui-state-active');
-    }
-
-    $archiveTimelineView.slideToggle("slow", function () {
-        $archiveTimelineBtn.addClass("ui-state-active");
-        if ($archiveTimelineView.is(':visible')) {
-            var $container = $('#archive_timeline_container');
-            $container.width($archiveTimelineView.width());
-            chart.setSize($archiveTimelineView.width(), $container.height());
-            chart.reflow();
-        }
-    });
-}
-
-function archive_open_list() {
-    var $archiveListBtn = $('#archive_list_btn');
-    var $archiveTimelineBtn = $('#archive_timeline_btn');
-    var $archiveListView = $('#archive_list_view');
-    var $archiveTimelineView = $('#archive_timeline_view');
-
-    if ($archiveTimelineView.is(':visible')) {
-        $archiveTimelineView.slideToggle("slow");
-        $archiveTimelineBtn.removeClass('ui-state-active');
-    }
-
-    $archiveListView.slideToggle("slow", function () {
-        $archiveListBtn.addClass("ui-state-active");
-    });
-}
-
-var box;
-function lightbox_load() {
-    box = $('#lightbox');
-}
-function lightbox_close() {
-	change_lightbox_content(false);
-    box.hide();
-    box.detach();
-}
-
-function lightbox_resize_container() {
-    var height = $(window).height() - 167;
-    $('#lightbox_container').height(height < 200 ? 200 : height);
-}
-function lightbox_open() {
-    box.appendTo(document.body);
-    lightbox_resize_container();
-    box.show();
-}
-
-function change_lightbox_content(showArchiveUrls){
-	if(showArchiveUrls)
-	{
-		$('#lightbox_content').children().first().hide();
-		$('#lightbox_footer').hide();
-		
-		$('#archive_lightbox_content').show(function(){
-			$(this).find("iframe").prop("src", function(){
-				return $(this).data("src");
-			});
-		});
-	}
-	else
-	{
-		$('#lightbox_content').children().first().show();
-		$('#lightbox_footer').show(); //displays last updated info on viewing thumbnail
-		$('#archive_lightbox_content').hide(function(){
-			$(this).find("iframe").prop("src","");
-		});
-	}
-}
-
-var prevClickedElement;
-function onclick_archive_url(e){
-        e.preventDefault();e.stopPropagation();
-        
-        //reset the background of previously selected archived version
-        $(prevClickedElement).parent().css('background-color','#ffffff');
-        var clickedElement = e.target || e.srcElement;
-        var target_src = $(clickedElement).attr('href');
-        
-        //setting the timestamp text to selected version
-        $('#archive_timestamp').text($(clickedElement).text()); 
-        $(clickedElement).parent().css('background-color','#b5ebdc');
-        document.getElementById('archive_iframe').src = target_src;
-        $('#archive_iframe').data('src', target_src);
-        prevClickedElement = clickedElement;
-}
-
-function updateThumbnail(){
-	var archive_url = $('#archive_iframe').data('src');
-	lightbox_close();
-	updateThumbnailCommand([{name: 'archive_url', value: archive_url}]);
-}
-
-function archiveListInitialize(){
-	$('.years ul').hide();
-    $('.years').on('click', function() {
-    	$(this).find('span').toggleClass("bold");
-        $(this).find('ul').slideToggle();
-    });
-}
 
 function selectNewResourceLocation() {
     dialog.confirm('selectDestination', function () {
@@ -168,14 +56,14 @@ function resourceDND() {
     var $dataGrid = $('#datagrid');
 
     // disable drag and drop for the activity log
-    if($dataGrid.hasClass("not-selectable"))
-    	return;
+    if ($dataGrid.hasClass("not-selectable"))
+        return;
 
     $dataGrid.selectable({
         filter: 'div.group-resources-item',
         cancel: 'div.group-resources-item',
         start: function (e) {
-            if (!(e.ctrlKey||e.metaKey)) {
+            if (!(e.ctrlKey || e.metaKey)) {
                 selected.clear();
             }
         },
@@ -283,23 +171,6 @@ function resourceDND() {
     });
 }
 
-function load_editor() {
-	if ($("#right_pane .editor-preview-wrapper").length) {
-        connectEditor("iframeEditor", "embedded");
-	}
-}
-
-function load_lightbox_editor() {
-	lightbox_open();
-	var canBeEdited = ($('#ed_can_be_edited').val() == 'true');
-
-	$('#lightbox_background').on('click', lightbox_close_for_editor);
-	$('#lightbox_close').on('click', lightbox_close_for_editor);
-
-	var mode = canBeEdited ? "edit" : "view";
-    connectEditor("lightbox_editor", mode);
- }
-
 /* Context menu */
 /**
  * @param {{canAddResources?: boolean,
@@ -343,17 +214,17 @@ function openFolder(folderId) {
 }
 
 function openGroup(folderId) {
-	update_url(0, 0, folderId);
-	openFolderCommand([
-	    {name: 'itemId', value: folderId}
-	]);
+    update_url(0, 0, folderId);
+    openFolderCommand([
+        {name: 'itemId', value: folderId}
+    ]);
 }
 
 function doAction(action, extraAttr1, extraAttr2) {
     switch (action) {
-    	case 'new-file':
-    		createGroupItemCommand([{name: 'type', value: 'newFile'},{name: 'docType', value: extraAttr1 } ]);
-    		break;
+        case 'new-file':
+            createGroupItemCommand([{name: 'type', value: 'newFile'}, {name: 'docType', value: extraAttr1}]);
+            break;
         case 'create-folder':
             createGroupItemCommand([{name: 'type', value: 'folder'}]);
             break;
@@ -373,11 +244,9 @@ function doAction(action, extraAttr1, extraAttr2) {
             var last = selected.getItem(selected.getSize() - 1);
             if (selected.getSize() > 0 && last.type === "folder") {
                 openFolder(last.id);
-            }
-            else if(selected.getSize() > 0 && last.type === "group") {
-            	openGroup(last.id);
-            }
-            else {
+            } else if (selected.getSize() > 0 && last.type === "group") {
+                openGroup(last.id);
+            } else {
                 console.error("No folder selected.");
             }
             break;
@@ -452,13 +321,13 @@ function doAction(action, extraAttr1, extraAttr2) {
                 console.error("No resources selected.");
             }
             break;
-        case 'remove': 
-        	updateSelectedItemsCommand([
-        	    {name: 'action', value: 'remove'},
-        	    {name: 'items', value: selected.getItemsAsJson()}
-        	]);
-        	update_url(0);
-        	break;
+        case 'remove':
+            updateSelectedItemsCommand([
+                {name: 'action', value: 'remove'},
+                {name: 'items', value: selected.getItemsAsJson()}
+            ]);
+            update_url(0);
+            break;
         default:
             console.log("Unimplemented or unsupported action: ", action);
     }
@@ -466,16 +335,6 @@ function doAction(action, extraAttr1, extraAttr2) {
 
 $(document).ready(function () {
     resourceDND();
-
-    lightbox_load();
-    load_editor();
-    $(window).resize(lightbox_resize_container);
-
-    // register esc key
-    $(document).keydown(function (e) {
-        if (e.which === 27)
-            lightbox_close();
-    });
 
     $(document).on('click', '.group-resources-item', function (e) {
         if (e.shiftKey && selected.getSize() > 0) {
@@ -502,9 +361,8 @@ $(document).ready(function () {
         }
 
         selected.selectLastItem();
-        load_editor();
     });
-    
+
     //for resource_yell.html
     $(document).on('click', '.group-resources2-item', function (e) {
         if (e.shiftKey && selected.getSize() > 0) {
@@ -531,7 +389,6 @@ $(document).ready(function () {
         }
 
         selected.selectLastItem();
-        load_editor();
     });
 
     $(document).on('click', '.resource-controls a', function (e) {
@@ -543,7 +400,7 @@ $(document).ready(function () {
         selected.clearAndAdd(element);
         doAction(action);
     });
-    
+
     //for resources_list_view.xhtml only
     $(document).on('click', '.resource-controls2 a', function (e) {
         var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
@@ -558,11 +415,10 @@ $(document).ready(function () {
     $(document).on('dblclick', '.group-resources-item[data-itemtype="folder"]', function () {
         var folderId = $(this).attr("data-itemId");
         var folderType = $(this).attr("data-itemType");
-        if(folderId && folderType === "folder") {
+        if (folderId && folderType === "folder") {
             openFolder(folderId);
-        }
-        else if(folderId && folderType === "group") {
-        	openGroup(folderId);
+        } else if (folderId && folderType === "group") {
+            openGroup(folderId);
         }
     });
 
@@ -630,7 +486,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on("update", ".nano", function(){
+    $(document).on("update", ".nano", function () {
         hideContextMenu();
     });
 
@@ -639,8 +495,6 @@ $(document).ready(function () {
         doAction(action);
         hideContextMenu();
     });
-    
-    archiveListInitialize();
 });
 
 function ConfirmDialog() {
@@ -660,6 +514,7 @@ function ConfirmDialog() {
         });
     };
 }
+
 var dialog = new ConfirmDialog();
 
 function SelectedItems() {
@@ -711,10 +566,10 @@ function SelectedItems() {
 
     this.clear = function () {
         $(".group-resources-item.ui-selected").removeClass("ui-selected");
-        
+
         //for resources_yell only
         $(".group-resources2-item.ui-selected").removeClass("ui-selected");
-        
+
         this.items = [];
     };
 
@@ -764,7 +619,7 @@ function SelectedItems() {
 
         if (type === "folder") {
             //update_url(0, id);
-        } else if(type === "resource"){
+        } else if (type === "resource") {
             update_url(id);
         }
     };
@@ -828,6 +683,7 @@ function SelectedItems() {
 
     return this;
 }
+
 var selected = new SelectedItems();
 
 (function ($) {
