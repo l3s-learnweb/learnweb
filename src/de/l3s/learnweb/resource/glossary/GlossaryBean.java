@@ -107,11 +107,49 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             availableTopicOne.add(new SelectItem("Ecology"));
 
             // Add pronounciation voices
-            pronounciationVoices.put(Locale.ENGLISH, "UK English Male");
-            pronounciationVoices.put(Locale.ITALIAN, "Italian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("sq").build(), "Albanian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("ar").build(), "Arabic Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("ca").build(), "Catalan Male");
+            pronounciationVoices.put(Locale.CHINESE, "Chinese Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("ch").setRegion("HK").build(), "Chinese (Hong Kong) Female");
+            pronounciationVoices.put(Locale.TAIWAN, "Chinese Taiwan Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("hr").build(), "Croatian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("cs").build(), "Czech Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("da").build(), "Danish Male");
             pronounciationVoices.put(Locale.GERMAN, "Deutsch Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("nl").build(), "Dutch Male");
+            pronounciationVoices.put(Locale.ENGLISH, "UK English Male");
+            pronounciationVoices.put(Locale.US, "US English Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("et").build(), "Estonian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("fi").build(), "Finnish Female");
             pronounciationVoices.put(Locale.FRENCH, "French Female");
-            // TODO: add nl, pt, es, ru (they are used in lw_glossary_term table)
+            pronounciationVoices.put(Locale.CANADA_FRENCH, "French Canadian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("el").build(), "Greek Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("hu").build(), "Hungarian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("is").build(), "Icelandic Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("in").build(), "Indonesian Male");
+            pronounciationVoices.put(Locale.ITALIAN, "Italian Female");
+            pronounciationVoices.put(Locale.JAPAN, "Japanese Male");
+            pronounciationVoices.put(Locale.KOREA, "Korean Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("lv").build(), "Latvian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("no").build(), "Norwegian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("pl").build(), "Polish Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("ro").build(), "Romanian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("ru").build(), "Russian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("sr").build(), "Serbian Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("sk").build(), "Slovak Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("es").build(), "Spanish Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("sv").build(), "Swedish Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("th").build(), "Thai Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("tr").build(), "Turkish Male");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
 
             // convert tree like glossary structure to flat table
             repaintTable();
