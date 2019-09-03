@@ -32,8 +32,8 @@ import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf

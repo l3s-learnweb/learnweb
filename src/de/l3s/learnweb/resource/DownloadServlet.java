@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * Servlet Class

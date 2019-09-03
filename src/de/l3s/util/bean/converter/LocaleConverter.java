@@ -1,4 +1,4 @@
-package de.l3s.learnweb.beans.converter;
+package de.l3s.util.bean.converter;
 
 import java.util.Locale;
 
@@ -10,7 +10,7 @@ import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 public class LocaleConverter implements Converter<Locale>
@@ -39,5 +39,4 @@ public class LocaleConverter implements Converter<Locale>
 
         return value.toLanguageTag();
     }
-
 }

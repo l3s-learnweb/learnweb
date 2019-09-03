@@ -20,8 +20,8 @@ import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.Sql;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * @author Philipp

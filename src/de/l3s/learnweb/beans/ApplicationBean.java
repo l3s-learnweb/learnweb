@@ -17,8 +17,8 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserBean;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.Misc;
+import de.l3s.util.bean.BeanHelper;
 
 public class ApplicationBean
 {

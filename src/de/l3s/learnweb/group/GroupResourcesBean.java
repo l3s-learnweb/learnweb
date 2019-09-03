@@ -49,8 +49,8 @@ import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped

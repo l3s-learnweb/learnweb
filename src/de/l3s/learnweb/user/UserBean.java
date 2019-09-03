@@ -38,8 +38,8 @@ import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @SessionScoped

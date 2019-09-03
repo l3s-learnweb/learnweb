@@ -1,4 +1,4 @@
-package de.l3s.util;
+package de.l3s.util.bean;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.util.StringHelper;
 
 public class BeanHelper
 {

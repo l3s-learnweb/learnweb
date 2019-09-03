@@ -48,8 +48,8 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.bean.BeanHelper;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
 
 @Named
 @ViewScoped
