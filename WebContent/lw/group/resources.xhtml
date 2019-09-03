@@ -183,81 +183,76 @@
                     <!--suppress XmlDuplicatedId -->
                     <h:panelGroup id="resourcesFilters" layout="block">
                         <!-- from here begins the new metadata visualization -->
-                        <h:form id="yell-filters-tabs">
-                            <h:form id="header_query_form" prependId="false">
-                                <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}" id="input_query_form"
-                                             onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
+                        <h:form id="header_query_form" prependId="false">
+                            <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}" id="input_query_form"
+                                         onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
-                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="false" process="@form"
+                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
                                                  oncomplete="resourceDND();" update=":resourcesWrapper"
-                                                 value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
-                            </h:form>
-                            <br/>
-
-                            <h:form id="accordion_form" style="width:530px;">
-                                <p:accordionPanel activeIndex="-2">
-                                    <p:tab title="Filters - refine your search or narrow down your search results!">
-                                        <h:form id="metadata_filter_form">
-                                            <p:panelGrid columns="3" cellpadding="20" layout="grid">
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="alist" value="Author:  "/>
-                                                    <p:selectCheckboxMenu id="alist" value="#{groupResourcesBean.selectedAuthors}"
-                                                                          label="Authors" multiple="true" filter="true" filterMatchMode="startsWith">
-                                                        <f:selectItems value="#{groupResourcesBean.authors}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="llist" value="Language:"/>
-                                                    <p:selectCheckboxMenu id="llist" value="#{groupResourcesBean.selectedLanguages}"
-                                                                          label="Languages" multiple="true" filter="true" filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{searchFilterBean.langs}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="levlist" value="Language Level:"/>
-                                                    <p:selectCheckboxMenu id="levlist" value="#{groupResourcesBean.selectedLevels}"
-                                                                          label="Levels" multiple="true" filter="true" filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{searchFilterBean.levels}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="aglist" value="Target Learner:"/>
-                                                    <p:selectCheckboxMenu id="aglist" value="#{groupResourcesBean.selectedTargets}" multiple="true"
-                                                                          label="Target Learners" filter="true" filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{searchFilterBean.targets}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-                                                <h:panelGroup>
-                                                    <h:outputLabel for="aclist" value="Purpose of Use:"/>
-                                                    <p:selectCheckboxMenu id="aclist" value="#{groupResourcesBean.selectedPurposes}" multiple="true"
-                                                                          label="Purposes of Use" filter="true" filterMatchMode="startsWith"
-                                                                          panelStyle="width:250px">
-                                                        <f:selectItems value="#{searchFilterBean.purposes}"/>
-                                                    </p:selectCheckboxMenu>
-                                                </h:panelGroup>
-
-
-                                                <p:commandButton styleClass="greenbutton" value="Filter"
-                                                                 actionListener="#{groupResourcesBean.onMetadataFilterClick}" update=":resourcesWrapper"
-                                                                 oncomplete="resourceDND();" process="@form"/>
-                                            </p:panelGrid>
-                                        </h:form>
-                                    </p:tab>
-                                </p:accordionPanel>
-                            </h:form>
-                            <hr/>
-
-                            <b><h:outputText
-                                    value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
+                                             value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
                         </h:form>
+                        <br/>
+
+                        <h:form id="accordion_form" style="width:530px;">
+                            <p:accordionPanel activeIndex="-2">
+                                <p:tab title="Filters - refine your search or narrow down your search results!">
+                                    <p:panelGrid columns="3" cellpadding="20" layout="grid">
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="alist" value="Author:  "/>
+                                            <p:selectCheckboxMenu id="alist" value="#{groupResourcesBean.selectedAuthors}"
+                                                                  label="Authors" multiple="true" filter="true" filterMatchMode="startsWith">
+                                                <f:selectItems value="#{groupResourcesBean.authors}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="llist" value="Language:"/>
+                                            <p:selectCheckboxMenu id="llist" value="#{groupResourcesBean.selectedLanguages}"
+                                                                  label="Languages" multiple="true" filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.langs}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="levlist" value="Language Level:"/>
+                                            <p:selectCheckboxMenu id="levlist" value="#{groupResourcesBean.selectedLevels}"
+                                                                  label="Levels" multiple="true" filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.levels}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="aglist" value="Target Learner:"/>
+                                            <p:selectCheckboxMenu id="aglist" value="#{groupResourcesBean.selectedTargets}" multiple="true"
+                                                                  label="Target Learners" filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.targets}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup>
+                                            <h:outputLabel for="aclist" value="Purpose of Use:"/>
+                                            <p:selectCheckboxMenu id="aclist" value="#{groupResourcesBean.selectedPurposes}" multiple="true"
+                                                                  label="Purposes of Use" filter="true" filterMatchMode="startsWith"
+                                                                  panelStyle="width:250px">
+                                                <f:selectItems value="#{searchFilterBean.purposes}"/>
+                                            </p:selectCheckboxMenu>
+                                        </h:panelGroup>
+
+
+                                        <p:commandButton styleClass="greenbutton" value="Filter"
+                                                         actionListener="#{groupResourcesBean.onMetadataFilterClick}" update=":resourcesWrapper"
+                                                         oncomplete="resourceDND();" process="@form"/>
+                                    </p:panelGrid>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </h:form>
+                        <hr/>
+
+                        <b><h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
                     </h:panelGroup>
                 </c:if>
 
