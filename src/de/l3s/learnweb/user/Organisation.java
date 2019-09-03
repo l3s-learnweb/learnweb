@@ -431,11 +431,12 @@ public class Organisation implements Serializable, Comparable<Organisation>
             if(bannerImageFileId < 1)
                 return null;
 
+            // TODO temporal mapper for new layout to new image ids
+
             File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
 
             if(file != null)
-                // bannerImage = "background-image: url(" + file.getUrl() + ");";
-                bannerImage = "background-image: url(" + file.getUrl() + ");";
+                bannerImage = file.getUrl();
             else
                 bannerImage = "";
         }

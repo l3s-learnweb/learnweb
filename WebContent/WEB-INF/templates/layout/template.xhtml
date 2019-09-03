@@ -59,17 +59,15 @@
                 </ui:fragment>
 
                 <div class="layout-main d-flex flex-column">
-                    <main class="layout-main-content">
+                    <main class="layout-main-content #{smallPage or loginRequired and !userBean.loggedIn? 'container':''}">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
                             <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
                                 <p:panel header="#{msg.loginTitle}">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
-                                        </div>
-                                    </div>
+                                	<div class="mw-md">
+                                		<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>    
+                                	</div>                                   
                                 </p:panel>
                             </ui:fragment>
 

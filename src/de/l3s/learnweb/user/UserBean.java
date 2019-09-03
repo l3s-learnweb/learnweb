@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
@@ -394,11 +395,21 @@ public class UserBean implements Serializable
      */
     public String getBannerImage() throws SQLException
     {
-        return getActiveOrganisation().getBannerImage();
+        String bannerImage = null;
+
+        if(isLoggedIn())
+            bannerImage = getActiveOrganisation().getBannerImage();
+
+        if(StringUtils.isNotEmpty(bannerImage))
+            return bannerImage;
+
+        return "logos/logo_learnweb.png";
     }
 
     public String getBannerLink() throws SQLException
     {
+        if(!isLoggedIn())
+            return Learnweb.getInstance().getSecureServerUrl();
 
         return Learnweb.getInstance().getSecureServerUrl() + getActiveOrganisation().getWelcomePage();
     }
@@ -657,7 +668,6 @@ public class UserBean implements Serializable
 
     public String getPrettyDate(Date date)
     {
-        //return StringHelper.getPrettyDate(date, locale);
         if(localePrettyTime == null)
             localePrettyTime = new PrettyTime(locale);
 
@@ -694,7 +704,7 @@ public class UserBean implements Serializable
         {
             if(url.startsWith("https://waps.io") || url.startsWith("http://waps.io"))
                 return url;
-            return "http://waps.io/open?c=2" +
+            return "https://waps.io/open?c=2" +
                     "&u=" + StringHelper.urlEncode(url) +
                     "&i=" + user.getId() +
                     "&t=" + Learnweb.getInstance().getProperties().getProperty("tracker.key");

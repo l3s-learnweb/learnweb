@@ -4,15 +4,15 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<h:form styleClass="login-form">
+<h:form>
     <div class="form-group">
-        <p:outputLabel for="@next" value="#{msg.username}:"/>
+        <p:outputLabel for="@next" value="#{msg.username}:" indicateRequired="false" />
         <p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" required="true"/>
 		<p:message for="@previous"/>
     </div>
 
     <div class="form-group">
-        <p:outputLabel for="@next" value="#{msg.password}:"/>
+        <p:outputLabel for="@next" value="#{msg.password}:" indicateRequired="false" />
         <p:password id="password" value="#{loginBean.password}" label="#{msg.password}" required="true"/>
 		<p:message for="@previous"/>
     </div>
@@ -23,8 +23,9 @@
         <p:message for="@previous"/>
     </h:panelGroup>
 
-    <p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
-
+	<div class="form-group">
+	    <p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
+	</div>
     <h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block">#{msg.forgotten_password}</h:outputLink>
 </h:form>
 

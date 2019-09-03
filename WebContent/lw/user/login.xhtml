@@ -8,20 +8,18 @@
 	<ui:param name="pageTitle" value="#{msg.loginTitle}"/>
 	<ui:param name="smallPage" value="true"/> 
 	<ui:param name="disableGrowl" value="true"/>
+    <ui:param name="hideBreadcrumbs" value="true"/>
 
 	<ui:define name="center_layout">
 		<p:panel header="#{msg.loginTitle}">
-			<div class="row">
-				<div class="col-md-4">
-					<ui:fragment rendered="#{!userBean.loggedIn}" styleClass="pb-4">
-						<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
-
-						<h:outputLink value="#{request.contextPath}/lw/user/register.jsf" styleClass="d-block">#{msg.registerLabel}</h:outputLink>
-					</ui:fragment>
-
-					<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold"/>
+			<ui:fragment rendered="#{!userBean.loggedIn}">
+				<div class="mw-md">
+					<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml" />
 				</div>
-			</div>
+				<h:outputLink value="#{request.contextPath}/lw/user/register.jsf" styleClass="d-block">#{msg.registerLabel}</h:outputLink>
+			</ui:fragment>
+
+			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" styleClass="font-weight-bold" />
 		</p:panel>
 	</ui:define>
 </ui:composition>
