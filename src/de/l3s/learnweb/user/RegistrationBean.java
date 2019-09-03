@@ -42,6 +42,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     @Email
     private String email;
 
+    private boolean acceptPrivacyPolicy = false;
+    private boolean acceptTracking = false;
+
     private String wizardTitle;
     private boolean wizardParamInvalid = false; // true if an invalid wizard parameter was given; no parameter is ok for the public course
 
@@ -53,6 +56,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
+
+    private Course course;
 
     public String getUsername()
     {
@@ -175,7 +180,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
         if(null != wizardTitle && wizardTitle.length() != 0)
         {
-            Course course = getLearnweb().getCourseManager().getCourseByWizard(wizardTitle);
+            course = getLearnweb().getCourseManager().getCourseByWizard(wizardTitle);
             if(null == course)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
@@ -251,4 +256,30 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     {
         this.confirmRequiredBean = confirmRequiredBean;
     }
+
+    public boolean isAcceptPrivacyPolicy()
+    {
+        return acceptPrivacyPolicy;
+    }
+
+    public void setAcceptPrivacyPolicy(boolean acceptPrivacyPolicy)
+    {
+        this.acceptPrivacyPolicy = acceptPrivacyPolicy;
+    }
+
+    public boolean isAcceptTracking()
+    {
+        return acceptTracking;
+    }
+
+    public void setAcceptTracking(boolean acceptTracking)
+    {
+        this.acceptTracking = acceptTracking;
+    }
+
+    public Course getCourse()
+    {
+        return course;
+    }
+
 }

@@ -10,7 +10,7 @@
     <ul class="header-menu row justify-content-end">
         <li><a href="#"><span>#{msg.loginLabel}</span></a></li>
         <li><a href="#about"><span>About us</span></a></li>
-        <li><a href="#courses"><span>Subscribe</span></a></li>
+        <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
     </ul>
 </ui:define>
 
@@ -60,7 +60,7 @@
 
         <div id="courses" class="courses px-4 py-5 border-top-0">
             <div class="container">
-                <h2 class="text-white text-center mb-3">Subscribe</h2>
+                <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
                 <div class="row align-items-start text-center">
                     <div class="col-md-6">
                         <div class="course-single bg-white h-100 mb-5 pb-4">
@@ -77,7 +77,6 @@
                             <div class="course-footer mt-3">
 								<h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
 									<h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
-									<f:param name="wizard" value="default" />
 								</h:outputLink>
 							</div>
                         </div>
@@ -99,7 +98,6 @@
 									<h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
 									<f:param name="wizard" value="yell" />
 								</h:outputLink>
-                                <p:commandButton type="button" value="Join"/>
                             </div>
                         </div>
                     </div>
