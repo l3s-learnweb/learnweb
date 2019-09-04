@@ -6,12 +6,10 @@
     margin-bottom: 0.5rem;
   }
 
-  > div,
-  > span,
   input,
   textarea,
-  select {
-    display: block;
+  select,
+  > .ui-widget {
     width: 100%;
   }
 }

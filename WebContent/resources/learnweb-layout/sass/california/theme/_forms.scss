@@ -306,13 +306,11 @@ body {
     }
 
     .ui-chkbox {
-        display: inline-block;
-        vertical-align: middle;
+        display: flex;
         margin: 0;
-        width: 20px;
-        height: 20px;
 
         .ui-chkbox-box {
+            flex-shrink: 0;
             border: 1px solid $inputBorderColor;
             background-color: $inputBgColor;
             width: 20px;
