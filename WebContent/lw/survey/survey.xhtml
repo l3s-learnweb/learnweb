@@ -39,7 +39,7 @@
 
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
-                                    <h3>
+                                    <h3 class="my-4">
                                         <h:outputText value="${question.label}"/>
                                     </h3>
 								</c:if>
@@ -49,7 +49,7 @@
 							</c:if>
 
                             <c:if test="#{!fn:startsWith(question.type,'FULLWIDTH_')}">
-                                <div class="question">
+                                <div class="form-group">
                                     <c:if test="#{question.type eq 'INPUT_TEXT'}">
                                         <p:outputLabel for="input_#{question.id}" value="#{question.label}"></p:outputLabel>
                                         <p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"

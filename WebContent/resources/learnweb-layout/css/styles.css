@@ -10540,6 +10540,9 @@ body .ui-tabs.ui-tabs-transparent .ui-tabs-panels {
     border-right: 1px solid #ced4da !important;
   }
 }
+body .ui-chkbox {
+  display: inline-flex;
+}
 
 .table-responsive {
   table-layout: auto !important;

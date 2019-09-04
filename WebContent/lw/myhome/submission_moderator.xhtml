@@ -63,20 +63,17 @@
                                 <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center justify-content-between w-100">
                                     <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
-                                    <h:form prependId="false" styleClass="d-none">
-                                        <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
+                                    <h:form prependId="false">
+                                        <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
                                             <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
-                                            <i class="fa fa-fw fa-lock text-dark" aria-hidden="true"></i>
-                                        </p:commandLink>
+                                        </p:commandButton>
 
-                                        <p:commandLink  title="lock submission" rendered="#{not userSubmission.submitStatus}"
+                                        <p:commandButton  value="unlocked"  styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
                                             <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
-                                            <i class="fa fa-fw fa-unlock text-dark" aria-hidden="true"></i>
-                                        </p:commandLink>
+                                        </p:commandButton>
                                     </h:form>
-                                    <p:selectBooleanButton id="value1" value="" styleClass="moderator-btn" onLabel="locked" offLabel="unlocked"  />
                                 </div>
                             </div>
 
