@@ -1,10 +1,9 @@
-var cf;
 var timeMaps = {};
 var maxItemHeight = 325;
 
 function loadTimeMaps()
 {
-	timeMaps = {}
+	timeMaps = {};
 	var j = 0;
 	$('.timeline-event-box').each(function(i, obj) {
 		if($(obj).hasClass("selected"))
@@ -15,13 +14,21 @@ function loadTimeMaps()
 function timelineEventSelect()
 {
 	if(Object.keys(timeMaps).length === 0)
-    	cf.moveTo(PF('tmlnbar').getSelectedIndex());
+    	PF('contentFlow').cf.moveTo(PF('tmlnbar').getSelectedIndex());
 	else if(Object.keys(timeMaps).length > 0)
-		cf.moveTo(timeMaps[PF('tmlnbar').getSelectedIndex()]);
+		PF('contentFlow').cf.moveTo(timeMaps[PF('tmlnbar').getSelectedIndex()]);
 }
 
 function loadCF(){
-	cf = new ContentFlow('contentFlow', {reflectionColor: "#000000", circularFlow: false, startItem: 'visible', reflectionHeight: 0.3, maxItemHeight:maxItemHeight});
+	var cf = new ContentFlow('contentFlow', {
+		reflectionColor: "#000000",
+		circularFlow: false,
+		visibleItems: 3,
+		scrollWheelSpeed: 1.5,
+		startItem: 'visible',
+		reflectionHeight: 0.3,
+		maxItemHeight: maxItemHeight
+	});
 	cf._init();
 }
 
@@ -35,11 +42,10 @@ function loadMaxItemSize(){
 		maxItemHeight = 600;
 	else if(screen.width >=2100)
 		maxItemHeight = 700;
-
 }
 
 $(document).ready(function(){
 	loadMaxItemSize();
-	loadCF();
+	// loadCF();
 	loadTimeMaps();
 });

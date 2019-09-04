@@ -1,1 +1,0 @@
-Is contentflow used without modifications? If yes, it should be moved to /vendor
