@@ -18,7 +18,7 @@ function archive_open_timeline() {
         $archiveTimelineBtn.addClass('ui-state-active');
         if ($archiveTimelineView.is(':visible')) {
             var $container = $('#archive_timeline_container');
-            $container.width($archiveTimelineView.width());
+            $container.show().width($archiveTimelineView.width());
             chart.setSize($archiveTimelineView.width(), $container.height());
             chart.reflow();
         }

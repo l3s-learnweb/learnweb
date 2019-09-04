@@ -8,11 +8,10 @@
     <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
     <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 
-    <h:outputScript name="vendor/responsive-calendar-v1.0.0/responsive-calendar.js" target="head"/>
-    <h:outputStylesheet name="vendor/responsive-calendar-v1.0.0/responsive-calendar.css"/>
+    <h:outputScript name="vendor/responsive-calendar-v0.9.0/responsive-calendar.min.js" target="head"/>
+    <h:outputStylesheet name="vendor/responsive-calendar-v0.9.0/responsive-calendar.css"/>
 
-    <h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
-    <h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
+    <h:outputScript library="learnweb-layout" name="js/archive-timeline.js" target="head"/>
 
     <script>
         Highcharts.setOptions({
@@ -71,29 +70,28 @@
         });
     </script>
 
-    <br/>
-    <div class='box'>
-        <div id="archive_timeline_container"></div>
-        <div id="archive_timeline_calendar">
+    <div class="box">
+        <div id="archive_timeline_container" class="collapse"></div>
+        <div id="archive_timeline_calendar" class="collapse">
             <!-- Responsive calendar - START -->
             <div class="responsive-calendar">
                 <div class="controls">
-                    <a class="pull-left" data-go="prev">
+                    <a class="float-left" data-go="prev">
                         <h:panelGroup layout="block"  style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
                             #{msg.previous}
                         </h:panelGroup>
                     </a>
-                    <h4 id="head-year-month">
+                    <h5 class="mb-0">
                         <span id="year" data-head-year="data-head-year"></span>
                         <span id="month" data-head-month="data-head-month"></span>
-                    </h4>
-                    <a class="pull-right" data-go="next">
+                    </h5>
+                    <a class="float-right" data-go="next">
                         <h:panelGroup layout="block"  style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
                             #{msg.next}
                         </h:panelGroup>
                     </a>
                 </div>
-                <hr/>
+                <hr class="border-bottom"/>
                 <h:panelGroup layout="block" class="day-headers">
                     <p:repeat var="day" value="${rightPaneBean.shortWeekDays}">
                         <h:panelGroup layout="block" class="day header">
@@ -106,9 +104,9 @@
                 </div>
             </div>
             <!-- Responsive calendar - END -->
-            <h:outputLink style="float:right;color:#489a83" onclick="return returnToTimeline();">
-                #{msg.back_to_timeline_view}
-            </h:outputLink>
+            <div class="text-right">
+                <h:outputLink onclick="return returnToTimeline();">#{msg.back_to_timeline_view}</h:outputLink>
+            </div>
         </div>
     </div>
 

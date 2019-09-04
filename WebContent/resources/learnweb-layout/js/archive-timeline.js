@@ -5,7 +5,7 @@ function returnToTimeline(){
 	resizeChart();
 	//$('#archive_timeline_calendar').hide("slide", { direction: "right" }, 1000);
 	//$('#archive_timeline_container').show("slide", { direction: "left" }, 1000);
-	$('#archive_timeline_container').fadeTo(1000, 1.0);
+	$('#archive_timeline_container').show().fadeTo(1000, 1.0);
 	$('#archive_timeline_calendar').fadeTo(1000,0.0).hide();
 
 	return false;
@@ -99,7 +99,7 @@ function loadTimeline(data_var){
 							var month = date.getMonth() + 1;
 							//$('#archive_timeline_calendar').show("slide", { direction: "right" }, 1000);
 							$('#archive_timeline_calendar').show().fadeTo(1000,1.0);
-							$('#archive_timeline_container').fadeTo( 1000, 0.0 );
+							$('#archive_timeline_container').fadeTo( 1000, 0.0 ).hide();
 							//$('#archive_timeline_container').hide("slide", { direction: "left" }, 1000);
 							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 						}
