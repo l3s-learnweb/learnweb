@@ -1179,8 +1179,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             if(null == this.group)
             {
-                log.fatal("group must not be null; " + BeanHelper.getRequestSummary());
-                return null;
+                onLoad();
+
+                if(null == this.group)
+                {
+                    log.fatal("group must not be null; " + BeanHelper.getRequestSummary());
+                    return null;
+                }
             }
 
             authors = new ArrayList<>();

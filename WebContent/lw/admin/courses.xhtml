@@ -34,7 +34,7 @@
                     </p:column>
 
                     <p:column style="width:10%" headerText="#{msg.members}" sortBy="#{course.memberCount}">
-                        <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
+                        <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
                     </p:column>
 
                     <p:column style="width:38%" headerText="#{msg.options}" styleClass="options_column column-button">

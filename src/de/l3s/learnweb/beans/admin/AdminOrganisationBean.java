@@ -191,6 +191,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
             glossaryLanguages.add(new Locale("el"));
             glossaryLanguages.add(new Locale("en"));
             glossaryLanguages.add(new Locale("es"));
+            glossaryLanguages.add(new Locale("lv"));
             glossaryLanguages.add(new Locale("fr"));
             glossaryLanguages.add(new Locale("it"));
             glossaryLanguages.add(new Locale("nl"));

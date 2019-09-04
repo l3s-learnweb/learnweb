@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.primefaces.model.chart.BarChartModel;
@@ -24,7 +24,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.util.MapHelper;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
 {
     private static final long serialVersionUID = -8766501339911729826L;
@@ -83,6 +83,8 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
         String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
         startDate = new Date(Long.parseLong(savedStartDate));
         endDate = new Date(Long.parseLong(savedEndDate));
+        this.endDate.setHours(23); // to make sure to include all actions from the last day
+        this.endDate.setMinutes(59);
 
         selectedUser = paramUserId == null ? user : getLearnweb().getUserManager().getUser(paramUserId);
         selectedUsersIds = Collections.singletonList(selectedUser.getId());
@@ -150,6 +152,9 @@ public class GlossaryDashboardUsersBean extends CommonDashboardUserBean
     public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
+
+        this.endDate.setHours(23); // to make sure to include all actions from the last day
+        this.endDate.setMinutes(59);
 
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }

@@ -94,8 +94,8 @@
 							<h:outputText value="#{item.uses}" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.pronounciation']}">
-                            <p:commandLink type="button" rendered="#{userBean.moderator and !empty item.term and !empty glossaryBean.getPronounciationVoice(item.language)}"
-                                           onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
+                            <p:commandLink type="button" rendered="#{!empty item.term and !empty glossaryBean.getPronounciationVoice(item.language)}"
+                                           onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}'); return false;">
 								<i class="fa fa-fw fa-volume-up"></i>
                             </p:commandLink>
 
