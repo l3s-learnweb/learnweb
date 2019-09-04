@@ -19,90 +19,22 @@
     }
   }
 
-  /*To indicate if the resource is an old resource*/
-
-  .oldResource {
-  }
-
-  /* Search filters bar */
-
-  .filters_menu_bar {
-    ul {
-      list-style: none outside none;
-      margin: 0;
-      padding: 0;
-      display: inline-block;
-
-      li {
-        display: inline-block;
-        position: relative;
-        white-space: nowrap;
-        margin-right: -0.1rem;
-      }
-    }
-
-    .search-filters li:hover .filter-sub-bar {
-      visibility: visible;
-    }
-
-    ul li.disabled {
-      opacity: 0.4;
-      .filter-name {
-        cursor: default;
-      }
-    }
-
-    .search-filters.no-source .filter.sources .arrow, ul li.disabled .filter-name .arrow {
-      opacity: 0;
-    }
-
-    .filter-sub-bar {
-      visibility: hidden;
-      position: absolute;
-      left: 0;
-      width: auto;
-      z-index: 10;
-      border: solid 1px $gray-400;
-      background: $white;
-
-      &.hidden {
-        display: none;
-      }
-
-      a {
-        display: block;
-        white-space: nowrap;
-        text-decoration: none;
-        padding: 0 15px 0 10px;
-        line-height: 3.2rem;
-        color: $black;
-        max-width: 60rem;
-        text-overflow: ellipsis;
-        overflow: hidden;
-
-        &.active, &:hover {
-          background: $gray-100;
-        }
-      }
-    }
-
-    a.clear-filter {
-      color: $black;
-      display: inline-block;
-      padding: 0.4rem 1.4rem 0.3rem;
-    }
-  }
-
   .resourceWebLink {
     &:visited {
       color: $blueDarkest;
     }
   }
 
-  /* ---------------------- Preview ------------------------*/
-
   .metadata {
     display: none;
+  }
+
+  .resource {
+    &:hover {
+      .iconscontainer {
+        opacity: 1;
+      }
+    }
   }
 
 
@@ -276,7 +208,7 @@
     }
   }
 
-  .content {
+/*  .content {
     overflow: hidden;
 
     .content-overlay {
@@ -323,10 +255,11 @@
         transform: translateY(100%);
       }
     }
-  }
+  }*/
 
   .iconscontainer {
-
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
     .icon {
       position: relative;
       display: flex;
@@ -359,25 +292,36 @@
         span {
           top: 100%;
           opacity: 1;
+          z-index: 2;
         }
       }
     }
   }
 }
- .ui-carousel-item {
-  border-radius: 0.1rem;
-  padding: 0 !important;
-  margin: 0.1rem 0.5rem !important;
-     &:hover{
-        box-shadow: 0 0 11px rgba(33,33,33,.2);
-     }
+.ui-carousel-light {
+  .ui-carousel-header {
+    background: $gray-200 !important;
+  }
+  .ui-carousel-viewport {
+    .ui-carousel-items {
+      .ui-carousel-item {
+        border-radius: 0.1rem;
+        padding: 0 !important;
+        margin: 0.1rem 0.5rem !important;
+
+        &:hover {
+          box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+        }
+      }
+    }
+  }
 }
 
 .zoom {
   transition: transform .2s;
   margin: 0 auto;
   &:hover {
-    transform: scale(1.25);
+    transform: scale(1.1);
     z-index: 3;
   }
 }

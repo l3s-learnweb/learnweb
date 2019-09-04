@@ -17,7 +17,7 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_${res.tempId}">
+        <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_#{res.tempId}">
         <div>
             <div>
                 <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
@@ -44,11 +44,11 @@
                                 <i class="fa fa-archive fa-fw text-decoration-none" aria-hidden="true"></i>
                                 <span>
                                     #{msg['Archive.captured_between']}
-                                    <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">\
+                                    <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
                                         <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
                                     </a> #{msg['Archive.captured_between_and']}
-                                                <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
+                                                <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                        <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
                                                                                                                      dateStyle="short"/></h:outputText>
                                     </a>
 
@@ -57,8 +57,6 @@
                         </ui:fragment>
                     </div>
                 </div>
-                <ui:fragment rendered="${res.archived}">
-                </ui:fragment>
             </div>
             <span class="block-with-text d-block w-100">
                  <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
