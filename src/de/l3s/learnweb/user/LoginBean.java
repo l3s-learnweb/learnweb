@@ -27,6 +27,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 {
     // private static final Logger log = Logger.getLogger(LoginBean.class);
     private static final long serialVersionUID = 7980062591522267111L;
+    private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
 
     @NotEmpty
     private String username;
@@ -80,7 +81,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         if(!InetAddresses.isInetAddress(ip))
         {
-            return null;
+            return LOGIN_PAGE;
         }
 
         //Gets the ip and username info from protection manager
@@ -93,13 +94,13 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(ipBan != null && ipBan.after(now))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipBan.toString());
-            return null;
+            return LOGIN_PAGE;
         }
 
         if(userBan != null && userBan.after(now))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userBan.toString());
-            return null;
+            return LOGIN_PAGE;
         }
 
         //USER AUTHORIZATION HAPPENS HERE
@@ -109,7 +110,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
             pm.updateFailedAttempts(ip, username);
-            return null;
+            return LOGIN_PAGE;
         }
 
         pm.updateSuccessfulAttempts(ip, username);
@@ -184,16 +185,6 @@ public class LoginBean extends ApplicationBean implements Serializable
         }
 
         return logoutPage + "?faces-redirect=true";
-
-        /*
-        int organisationId = user.getOrganisationId();
-        if(getLearnweb().getService() == SERVICE.AMA)
-            return "/ama/index.xhtml?faces-redirect=true";
-        if(organisationId == 848) // is archive web course
-            return "/aw/index.xhtml?faces-redirect=true";
-        else
-            return "/lw/index.xhtml?faces-redirect=true";
-            */
     }
 
     public ConfirmRequiredBean getConfirmRequiredBean()
