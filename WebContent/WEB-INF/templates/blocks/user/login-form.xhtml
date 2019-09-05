@@ -22,11 +22,10 @@
         <p:captcha id="captcha" label="#{msg.captcha}" language="#{userBean.locale}" required="true"/>
         <p:message for="@previous"/>
     </h:panelGroup>
+    
+	<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
 
-	<div class="form-group">
-	    <p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
-	</div>
-    <h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block">#{msg.forgotten_password}</h:outputLink>
+	<h:outputLink value="#{request.contextPath}/lw/user/password.jsf" styleClass="d-block mt-2">#{msg.forgotten_password}</h:outputLink>    
 </h:form>
 
 </ui:composition>
