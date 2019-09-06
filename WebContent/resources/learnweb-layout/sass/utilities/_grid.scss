@@ -1,7 +1,7 @@
 .sticky-column {
   position: sticky;
-  top: 1rem;
-  height: calc(100vh - 2rem);
+  top: $topbar-height;
+  height: calc(100vh - #{$topbar-height});
   overflow-y: auto;
 }
 .col-xs-auto {

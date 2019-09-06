@@ -7,13 +7,13 @@
   - Install scss using npm `npm i -g sass` (https://sass-lang.com/install)
 
  Now you can build all scss files to css files
-  - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
+  - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
 
  Or you can setup to watch for changes in your files and build automatically (during active development phase)
-  - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
+  - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
 
  Good to know:
-  - Files starts with underscore (_) means they should not be compiled, they intend to be imported by other files
+  - File names starting with underscore (_) mean that they should not be compiled, they are intended to be imported by other files
   - All other files will be compiled from scss to css
 
  Good to read:
@@ -10342,6 +10342,21 @@ body,
   margin-left: 0;
 }
 
+:target::before {
+  content: "";
+  display: block;
+  height: 6.25rem;
+  margin: -6.25rem 0 0;
+}
+
+@media (min-width: 768px) {
+  :target::before {
+    content: "";
+    display: block;
+    height: 3.125rem;
+    margin: -3.125rem 0 0;
+  }
+}
 .template-page .layout-wrapper .layout-main .layout-main-content {
   padding: 0;
 }
@@ -10425,8 +10440,8 @@ body .fileupload-minimal .ui-fileupload-content {
 
 .sticky-column {
   position: sticky;
-  top: 1rem;
-  height: calc(100vh - 2rem);
+  top: 3.125rem;
+  height: calc(100vh - 3.125rem);
   overflow-y: auto;
 }
 
@@ -12584,21 +12599,34 @@ ul.res-filters .clear-filters:hover a {
 .section-landing .header .header-news-list .ui-datalist-content .news-content {
   font-weight: normal;
 }
-.section-landing .courses {
+.section-landing #courses {
   background-color: #38569C;
+  border-top: 1px solid #38569C;
 }
-.section-landing .courses .course-single .course-header {
+.section-landing #courses .course-single .course-header {
   background-color: #2C447B;
   color: #fff;
   letter-spacing: 0.1rem;
 }
-.section-landing .courses .course-single .course-subheader {
+.section-landing #courses .course-single .course-subheader {
   background-color: #e9ecef;
   color: #2C447B;
 }
-.section-landing .courses .course-single .course-content img {
+.section-landing #courses .course-single .course-content img {
   width: 100%;
   max-width: 7rem;
+}
+@media (min-width: 768px) {
+  @keyframes highlight {
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  .section-landing #login:target #loginbox,
+.section-landing #about:target > div,
+.section-landing #courses:target > div {
+    animation: highlight 1s ease;
+  }
 }
 
 .unread {

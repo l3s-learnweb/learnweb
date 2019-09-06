@@ -35,8 +35,9 @@
     }
   }
 
-  .courses {
+  #courses {
     background-color: $themePrimaryColorDarker;
+    border-top:1px solid $themePrimaryColorDarker; // to avoid padding collapse
 
     .course-single {
       .course-header {
@@ -56,6 +57,19 @@
           max-width: 7rem;
         }
       }
+    }
+  }  
+ 
+
+  @include media-breakpoint-up(md) {  
+    @keyframes highlight {
+      50% { transform: scale(1.05); }
+    }
+  
+    #login:target #loginbox,
+    #about:target > div,
+    #courses:target > div {  
+      animation: highlight 1s ease;   
     }
   }
 }

@@ -8,7 +8,7 @@
 
 <ui:define name="header_right">
     <ul class="header-menu row justify-content-end">
-        <li><a href="#"><span>#{msg.loginLabel}</span></a></li>
+        <li><a href="#login"><span>#{msg.loginLabel}</span></a></li>
         <li><a href="#about"><span>About us</span></a></li>
         <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
     </ul>
@@ -17,9 +17,9 @@
 <ui:define name="center_layout">
     <div class="section-landing">
         <div id="header" class="header" style="background-image:url(#{resource['frontpage:luh.jpg']});">
-            <div class="container">
+            <div class="container" id="login">
                 <div class="row align-items-center">
-                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0">
+                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0" id="loginbox">
                         <div class="bg-white-90 p-3 pb-4">
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </div>
@@ -43,8 +43,8 @@
             </div>
         </div>
 
-        <div id="about" class="about py-5">
-            <div class="container">
+        <div id="about">
+            <div class="container py-5">
                 <div class="row">
                     <div class="col-lg-6">
                         <h2 class="text-center text-primary">About us</h2>
@@ -58,8 +58,8 @@
             </div>
         </div>
 
-        <div id="courses" class="courses px-4 py-5 border-top-0">
-            <div class="container">
+        <div id="courses">
+            <div class="container py-5">
                 <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
                 <div class="row align-items-start text-center">
                     <div class="col-md-6">

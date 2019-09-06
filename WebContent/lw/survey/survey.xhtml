@@ -120,7 +120,7 @@
                                                           value="#{surveyBean.userAnswers.answers[question.id]}"
                                                           label="" multiple="true" title="#{question.info}"
                                                           required="#{question.required and empty param[save.clientId]}"
-                                                          filter="#{question.answers.size() gt 8}"
+                                                          filter="#{question.answers.size() gt 8}" layout="responsive" columns="10"
                                                           filterMatchMode="startsWith" panelStyle="">
                                             <f:selectItems value="#{question.answers}" var="option"
                                                            itemLabel="#{option}" itemValue="#{option}"/>

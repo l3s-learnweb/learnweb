@@ -66,3 +66,20 @@ body,
     }
   }
 }
+
+// adds before element so that the target of anchor links isn't hidden by the menu. Important for example for the privacy statement
+:target::before {
+  content: "";
+  display: block;
+  height: #{2*$topbar-height}; 
+  margin: -#{2*$topbar-height} 0 0; 
+}
+
+@include media-breakpoint-up(md) {    
+:target::before {
+  content: "";
+  display: block;
+  height: $topbar-height; 
+  margin: -$topbar-height 0 0; 
+}
+}
