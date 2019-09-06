@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <h:form styleClass="mt-3" id="banlistform">
+            <h:form id="banlistform">
                 <p:dataTable var="accessData" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">

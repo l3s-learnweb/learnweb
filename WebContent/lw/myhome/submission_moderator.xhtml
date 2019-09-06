@@ -36,7 +36,7 @@
 
         <h:panelGroup layout="block">
             <p:panel header="#{submissionModeratorBean.submission.title}">
-                <div class="form-group">
+                <div class="form-group d-flex flex-column">
                     <span class="font-weight-lighter">#{msg['Submission.open_date']}:
                         <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.openDatetime}">
                             <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
@@ -58,7 +58,7 @@
 
                 <h:panelGroup layout="block" id="user_submissions">
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-                        <div class="#{status.last ? '' : 'mb-4' } border-bottom">
+                        <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
                             <div class="d-flex align-items-center p-2 bg-light">
                                 <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
                                 <div class="d-flex align-items-center justify-content-between w-100">

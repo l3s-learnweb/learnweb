@@ -73,7 +73,7 @@
 			</ui:fragment>
 
 
-			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -183,7 +183,7 @@
 						</p:selectBooleanCheckbox>
 					</div>
 
-					<div class="form-group" id="create_dialog_survey_text" style="display:none;">
+					<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
 						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:"/>
 						<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
 							<f:selectItem itemLabel="Select Survey Resource"/>

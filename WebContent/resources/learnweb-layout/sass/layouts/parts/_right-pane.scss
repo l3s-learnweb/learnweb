@@ -3,6 +3,15 @@
 }
 
 .layout-right-pane {
+  word-break: break-word;
+
+  .ui-panel-titlebar {
+    display: flex;
+    span {
+      width: 100%;
+    }
+  }
+
   @include transition();
 
   @include media-breakpoint-down(md) {

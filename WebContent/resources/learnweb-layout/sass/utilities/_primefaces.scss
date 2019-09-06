@@ -110,4 +110,8 @@ body {
   .ui-chkbox {
     display: inline-flex;
   }
+
+  .ui-selectonemenu-items {
+    max-width: 100vw;
+  }
 }
