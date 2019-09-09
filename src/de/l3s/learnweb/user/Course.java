@@ -25,7 +25,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
     public enum Option implements Comparable<Option>
     {
         Unused_1,
-        Unused_2,
+        Groups_Hypothesis_enabled,
         Groups_Forum_categories_enabled,
         Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,

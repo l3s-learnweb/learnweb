@@ -33,11 +33,11 @@
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                                 <div class="mb-3">
-                                    <h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                                    <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
                                     <p:message for="@previous"/>
-                                    <h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                                    <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
                                     <p:message for="@previous"/>
-                                    <h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                                    <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
                                     <p:message for="@previous"/>
                                 </div>
                                 <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>
@@ -104,11 +104,11 @@
                     <div class="form-group">
                         <p:outputLabel for="@next" value="#{msg.ban_for}:"/>
                         <div class="mb-3">
-                            <h:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banDays}" required="false" pt:placeholder="Days" class="mr-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
-                            <h:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
+                            <p:inputText value="#{adminBanlistBean.banHours}" required="false" pt:placeholder="Hours" class="mr-3 mb-3 mb-sm-0"/>
                             <p:message for="@previous"/>
-                            <h:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
+                            <p:inputText value="#{adminBanlistBean.banMinutes}" required="false" pt:placeholder="Mins"/>
                             <p:message for="@previous"/>
                         </div>
                         <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>

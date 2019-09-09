@@ -73,20 +73,20 @@
 		<h:form id="new_topic_form">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
-				<h:inputText id="post_topic" value="#{forumTopicsBean.newTopicTitle}" required="true">
-					<f:validateLength maximum="100"/>
-				</h:inputText>
+				<p:inputText id="post_topic" value="#{forumTopicsBean.newTopicTitle}" />
 				<p:message for="@previous"/>
 			</div>
 
-			<div class="form-group">
-				<p:outputLabel for="@next" value="#{msg.category}:"/>
-				<p:selectOneMenu id="post_category" value="#{forumTopicsBean.newPost.category}" editable="true"
-								 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
-					<f:selectItems value="#{forumTopicsBean.categories}"/>
-				</p:selectOneMenu>
-				<p:message for="@previous"/>
-			</div>
+			<ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">						
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.category}:"/>
+					<p:selectOneMenu id="post_category" value="#{forumTopicsBean.newPost.category}" editable="true"
+									 required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
+						<f:selectItems value="#{forumTopicsBean.categories}"/>
+					</p:selectOneMenu>
+					<p:message for="@previous"/>
+				</div>
+			</ui:fragment>
 
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg['PostShow.postContent']}:"/>

@@ -59,19 +59,19 @@
                     <h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.description}" sortBy="#{group.description}">
+                <p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="d-none d-sm-table-cell">
                     <h:outputText value="#{group.description}" escape="false"/>
                 </p:column>
 
-                <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}">
+                <p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" styleClass="d-none d-md-table-cell">
                     <h:outputText value="#{group.leader.username}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.course}" sortBy="#{group.course.title}">
+                <p:column headerText="#{msg.course}" sortBy="#{group.course.title}" styleClass="d-none d-sm-table-cell">
                     <h:outputText value="#{group.course.title}"/>
                 </p:column>
 
-                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}">
+                <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
                     <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
                     <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                 </p:column>
@@ -113,7 +113,7 @@
                         <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
                     </p:column>
 
-                    <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains">
+                    <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
                         <h:outputText value="#{group.description}" escape="false"/>
                     </p:column>
 
@@ -121,11 +121,11 @@
                         <h:outputText value="#{group.language}"/>
                     </p:column>
 
-                    <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains">
+                    <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
                         <h:outputText value="#{group.course.title}"/>
                     </p:column>
 
-                    <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}">
+                    <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
                         <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
                         <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
                     </p:column>
@@ -151,17 +151,19 @@
             <h:form id="create_group_form">
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.title}:"/>
-                    <h:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" required="true"/>
+                    <p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" required="true"/>
                     <p:message for="@previous"/>
                 </div>
 
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.course}:"/>
-                    <p:selectOneMenu id="course_id" value="#{groupsBean.newGroup.courseId}" required="true">
-                        <f:selectItems var="c" value="#{userBean.user.courses}" itemLabel="#{c.title}" itemValue="#{c.id}"/>
-                    </p:selectOneMenu>
-                    <p:message for="@previous"/>
-                </div>
+				<ui:fragment rendered="#{userBean.user.courses.size() gt 1}">
+	                <div class="form-group">
+	                    <p:outputLabel for="@next" value="#{msg.course}:"/>
+	                    <p:selectOneMenu id="course_id" value="#{groupsBean.newGroup.courseId}" required="true">
+	                        <f:selectItems var="c" value="#{userBean.user.courses}" itemLabel="#{c.title}" itemValue="#{c.id}"/>
+	                    </p:selectOneMenu>
+	                    <p:message for="@previous"/>
+	                </div>
+                </ui:fragment>
 
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.description}:"/>
@@ -178,11 +180,13 @@
                     <p:message for="@previous"/>
                 </div>
 
-                <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.language}:"/>
-                    <p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
-                    <p:message for="@previous"/>
-                </div>
+				<ui:fragment rendered="false">
+	                <div class="form-group">
+	                    <p:outputLabel for="@next" value="#{msg.language}:"/>
+	                    <p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
+	                    <p:message for="@previous"/>
+	                </div>
+                </ui:fragment>
 
                 <div class="row">
                     <div class="col">

@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.user.User;
 import eu.bitwalker.useragentutils.UserAgent;
-import javafx.util.Pair;
 
 public class ExportManager
 {
@@ -201,7 +201,7 @@ public class ExportManager
             }
             else if(lwResource.getStorageType() == Resource.WEB_RESOURCE)
             {
-                Pair<String, InputStream> file = createUrlFile(lwResource.getUrl(), platform, lwResource.getTitle());
+                SimpleEntry<String, InputStream> file = createUrlFile(lwResource.getUrl(), platform, lwResource.getTitle());
                 files.put(createFileName(folderName, file.getKey()), file.getValue());
             }
         }
@@ -302,7 +302,7 @@ public class ExportManager
         resourcesTable.appendChild(row);
     }
 
-    private Pair<String, InputStream> createUrlFile(String url, String platform, String title) throws IOException
+    private SimpleEntry<String, InputStream> createUrlFile(String url, String platform, String title) throws IOException
     {
         switch(platform)
         {
@@ -313,11 +313,11 @@ public class ExportManager
                     "Type=Link\n" +
                     "URL=" + url;
 
-            return new Pair<String, InputStream>(title + ".desktop", new ByteArrayInputStream(desktopFile.getBytes()));
+            return new SimpleEntry<String, InputStream>(title + ".desktop", new ByteArrayInputStream(desktopFile.getBytes()));
         case "Windows":
             String urlFile = "[InternetShortcut]\n" +
                     "URL=" + url;
-            return new Pair<String, InputStream>(title + ".url", new ByteArrayInputStream(urlFile.getBytes()));
+            return new SimpleEntry<String, InputStream>(title + ".url", new ByteArrayInputStream(urlFile.getBytes()));
         case "macOS":
         case "Mac OS X":
             NSDictionary root = new NSDictionary();
@@ -326,9 +326,9 @@ public class ExportManager
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             PropertyListParser.saveAsXML(root, byteArrayOutputStream);
 
-            return new Pair<String, InputStream>(title + ".weblock", new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+            return new SimpleEntry<String, InputStream>(title + ".weblock", new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
         default:
-            return new Pair<String, InputStream>(title + ".txt", new ByteArrayInputStream(url.getBytes(StandardCharsets.UTF_8)));
+            return new SimpleEntry<String, InputStream>(title + ".txt", new ByteArrayInputStream(url.getBytes(StandardCharsets.UTF_8)));
         }
     }
 

@@ -160,7 +160,7 @@
                                 </p:commandLink>
 
                                 <div id="search_filter_form" class="res-search-form">
-                                    <h:inputText value="#{groupResourcesBean.query}"/>
+                                    <p:inputText value="#{groupResourcesBean.query}"/>
 
                                     <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
                                                      styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"

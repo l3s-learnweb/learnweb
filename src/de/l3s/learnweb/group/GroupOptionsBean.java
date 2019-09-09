@@ -17,6 +17,7 @@ import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -201,6 +202,11 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
 
         return yourList;
+    }
+
+    public boolean isHypothesisEnabled() throws SQLException
+    {
+        return getGroup().getCourse().getOption(Option.Groups_Hypothesis_enabled);
     }
 
     public String getNewHypothesisLink()
