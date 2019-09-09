@@ -16,7 +16,7 @@ import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import de.l3s.util.Misc;
+import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
@@ -79,6 +79,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 .collect(Collectors.joining(","));
     }
 
+    @Override
     public void onLoad()
     {
         super.onLoad();
@@ -96,6 +97,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
+    @Override
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
@@ -106,7 +108,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     private void fetchDataFromManager() throws SQLException
     {
-        if(!Misc.nullOrEmpty(getSelectedUsersIds())) {
+        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
+        {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             if(selectedActionItems != null)
             {

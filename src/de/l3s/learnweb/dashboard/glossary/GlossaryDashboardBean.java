@@ -9,12 +9,13 @@ import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.util.Misc;
+import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.charts.bar.BarChartModel;
 import org.primefaces.model.charts.line.LineChartModel;
 import org.primefaces.model.charts.pie.PieChartModel;
+
+import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
+import de.l3s.learnweb.resource.Resource;
 
 @Named
 @ViewScoped
@@ -44,6 +45,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     private List<Resource> glossaryResources;
 
+    @Override
     public void onLoad()
     {
         super.onLoad();
@@ -59,6 +61,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
+    @Override
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
@@ -83,7 +86,8 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     private void fetchDataFromManager() throws SQLException
     {
-        if (!Misc.nullOrEmpty(getSelectedUsersIds())) {
+        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
+        {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
             totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
@@ -180,7 +184,7 @@ public class GlossaryDashboardBean extends CommonDashboardUserBean implements Se
 
     public float getTermsToConcepts()
     {
-        return ((float)totalConcepts / totalTerms);
+        return ((float) totalConcepts / totalTerms);
     }
 
     public Integer getTotalSources()

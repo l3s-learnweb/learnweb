@@ -10,9 +10,10 @@ import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
 import de.l3s.util.MapHelper;
-import de.l3s.util.Misc;
 
 @Named
 @ViewScoped
@@ -28,6 +29,7 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
     private Map<String, Integer> proxySourcesWithCounters;
     private LinkedList<TrackerUserActivity> trackerStatistics;
 
+    @Override
     public void onLoad()
     {
         super.onLoad();
@@ -43,6 +45,7 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
         }
     }
 
+    @Override
     public void cleanAndUpdateStoredData() throws SQLException
     {
         trackerStatistics = null;
@@ -53,7 +56,8 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
     private void fetchDataFromManager() throws SQLException
     {
-        if(!Misc.nullOrEmpty(getSelectedUsersIds())) {
+        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
+        {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
             proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
@@ -62,7 +66,8 @@ public class TrackerDashboardBean extends CommonDashboardUserBean implements Ser
 
     public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList()
     {
-        if (proxySourcesWithCounters == null) {
+        if(proxySourcesWithCounters == null)
+        {
             return null;
         }
 
