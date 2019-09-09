@@ -5,8 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -207,11 +211,14 @@ public class LogManager
         return log;
     }
 
-    public SummaryOverview getLogsByGroup(int groupId, List<Action> actions, LocalDateTime from, LocalDateTime to) throws SQLException
+    public SummaryOverview getLogsByGroup(int groupId, Action[] actions, LocalDateTime from, LocalDateTime to) throws SQLException
     {
-        String actionsString = actions.stream()
-                .map(a -> String.valueOf(a.ordinal()))
-                .collect(Collectors.joining(","));
+        StringBuilder actionsString = new StringBuilder();
+        for(Action action : actions)
+        {
+            actionsString.append(",");
+            actionsString.append(action.ordinal());
+        }
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))

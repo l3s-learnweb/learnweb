@@ -161,12 +161,6 @@
             </ui:decorate>
         </div>
 
-        <h:panelGroup id="factsheet">
-            <ui:fragment rendered="${searchBean.graphLoaded}">
-                <ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>
-            </ui:fragment>
-        </h:panelGroup>
-
         <div id="search_loading_more_results" class="text-center font-weight-bold m-2">
             #{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i>
         </div>

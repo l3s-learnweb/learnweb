@@ -21,7 +21,6 @@ import java.util.zip.ZipOutputStream;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jena.atlas.lib.Pair;
 import org.apache.log4j.Logger;
 
 import com.dd.plist.NSDictionary;
@@ -44,6 +43,7 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.user.User;
 import eu.bitwalker.useragentutils.UserAgent;
+import javafx.util.Pair;
 
 public class ExportManager
 {
@@ -202,7 +202,7 @@ public class ExportManager
             else if(lwResource.getStorageType() == Resource.WEB_RESOURCE)
             {
                 Pair<String, InputStream> file = createUrlFile(lwResource.getUrl(), platform, lwResource.getTitle());
-                files.put(createFileName(folderName, file.getLeft()), file.getRight());
+                files.put(createFileName(folderName, file.getKey()), file.getValue());
             }
         }
 

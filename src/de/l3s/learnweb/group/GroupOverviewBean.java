@@ -14,9 +14,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.user.Organisation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.ext.com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
@@ -25,8 +24,8 @@ import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
+import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
 
 @Named
 @ViewScoped
@@ -104,25 +103,26 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         return showAllLogs;
     }
 
+    private final static Action[] OVERVIEW_ACTIONS = { Action.forum_topic_added, Action.deleting_resource,
+            Action.adding_resource, Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource };
+
     public SummaryOverview getSummaryOverview()
     {
         try
         {
-            final List<Action> actions = Lists.newArrayList(Action.forum_topic_added, Action.deleting_resource,
-                    Action.adding_resource, Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource);
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusWeeks(1), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_week_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(1), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_month_overview_changes");
             }
             if(groupSummary == null || groupSummary.isEmpty())
             {
-                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, actions, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
+                groupSummary = getLearnweb().getLogManager().getLogsByGroup(groupId, OVERVIEW_ACTIONS, LocalDateTime.now().minusMonths(6), LocalDateTime.now());
                 summaryTitle = UtilBean.getLocaleMessage("last_six_month_changes");
             }
             return groupSummary;
@@ -142,7 +142,8 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 
         if(groupSummary != null && index != null && type != null)
         {
-            if (StringUtils.isEmpty(index)) { // TODO: remove later, added to investigate issue
+            if(StringUtils.isEmpty(index))
+            { // TODO: remove later, added to investigate issue
                 log.error("getChosenResourceFromSlider: index is empty for type `" + type + "`.");
             }
 
