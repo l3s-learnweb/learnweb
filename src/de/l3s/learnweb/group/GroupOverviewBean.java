@@ -129,7 +129,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            addErrorMessage(e);
+            log.error("Can't create group summery", e);
             return null;
         }
     }

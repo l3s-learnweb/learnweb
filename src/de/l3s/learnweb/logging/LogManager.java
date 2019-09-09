@@ -221,7 +221,7 @@ public class LogManager
         }
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
+                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString.toString().substring(1) + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
         {
             select.setInt(1, groupId);
             select.setTimestamp(2, Timestamp.valueOf(from));
