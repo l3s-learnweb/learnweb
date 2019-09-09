@@ -19,8 +19,8 @@ import com.google.common.cache.CacheBuilder;
 public class Cache<E extends HasId> implements ICache<E>
 {
     private int capacity;
-    private com.google.common.cache.Cache<Integer, E> weakValues; // cached values which are remove when they are not referenced else where
-    private Map<Integer, E> values; // makes sure to keep a reference to the X most used values, as defined by capacity
+    private com.google.common.cache.Cache<Integer, E> weakValues; // cached values which are removed when they are not referenced else where
+    private Map<Integer, E> values; // makes sure to keep a reference to the X most recently added values, as defined by capacity
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
@@ -50,16 +50,12 @@ public class Cache<E extends HasId> implements ICache<E>
                 .build();
     }
 
-    /* (non-Javadoc)
-     * @see de.l3s.util.ICache#get(int)
-     */
     @Override
     public E get(int id)
     {
         readLock.lock();
         try
         {
-            //return values.get(id);
             return weakValues.getIfPresent(id);
         }
         finally
@@ -73,13 +69,6 @@ public class Cache<E extends HasId> implements ICache<E>
         writeLock.lock();
         try
         {
-            /*
-            E old = values.get(id);
-            if(null != old)
-                return old;
-            
-            values.put(id, resource);
-            */
             E old = weakValues.getIfPresent(id);
             if(null != old)
                 return old;
@@ -95,9 +84,6 @@ public class Cache<E extends HasId> implements ICache<E>
         }
     }
 
-    /* (non-Javadoc)
-     * @see de.l3s.util.ICache#put(E)
-     */
     @Override
     public E put(E resource)
     {
@@ -105,9 +91,6 @@ public class Cache<E extends HasId> implements ICache<E>
         return put(id, resource);
     }
 
-    /* (non-Javadoc)
-     * @see de.l3s.util.ICache#remove(int)
-     */
     @Override
     public void remove(int resourceId)
     {
@@ -123,9 +106,6 @@ public class Cache<E extends HasId> implements ICache<E>
         }
     }
 
-    /* (non-Javadoc)
-     * @see de.l3s.util.ICache#clear()
-     */
     @Override
     public void clear()
     {
@@ -133,6 +113,7 @@ public class Cache<E extends HasId> implements ICache<E>
         try
         {
             values.clear();
+            weakValues.invalidateAll();
         }
         finally
         {
