@@ -10,18 +10,63 @@
 <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 <div class="d-flex flex-column bg-white">
     <p:repeat value="#{resources}" var="res">
-        <h:panelGroup layout="block" styleClass="m-2 pl-3 font-weight-bold border-bottom" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+        <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
             <h:outputText value="#{msg.page} "/>
             <h:outputText value="#{(res.tempId+9) / 10}">
                 <f:convertNumber maxFractionDigits="0"/>
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource m-2 col-sm-12 col-md-12 col-lg-5" id="resource_#{res.tempId}">
+        <div class="resource m-2" style="max-width: 48em;" id="resource_#{res.tempId}">
+            <div class="tooltip-container">
+                <div class="tooltip-data shadow">
+                    <div class="tooltip-item">
+                        <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;">
+                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="text-decoration-none"/>
+                            <span>#{msg.addToMyResources}</span>
+                        </span>
+                    </div>
+                    <div class="tooltip-item">
+                        <ui:fragment rendered="${res.archived}">
+                            <span>
+                                #{msg['Archive.captured_between']}
+                                <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                    <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                                </a> #{msg['Archive.captured_between_and']}
+                                <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                    <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
+                                                                                                                 dateStyle="short"/></h:outputText>
+                                </a>
+                            </span>
+                        </ui:fragment>
+                    </div>
+                    <div class="tooltip-item">
+                        <ui:fragment  rendered="#{not empty res.group}">
+                            <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
+                            <h:outputLink value="group/resources.jsf" title="#{res.group.description}">
+                                <f:param name="group_id" value="#{res.group.id}"/>
+                                <h:outputText value="#{res.group.title}"/>
+                            </h:outputLink>
+                        </ui:fragment>
+                    </div>
+                    <div class="tooltip-item">
+                        <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
+                            <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="mr-1 font-weight-bold my-0"/>
+                            <h:outputText value="#{res.getMetadataValue('collector')}"/>
+                        </ui:fragment>
+                    </div>
+                    <div class="tooltip-item">
+                        <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
+                            <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
+                            <h:outputText value="#{res.resource.ownerUser.fullName}"/>
+                        </ui:fragment>
+                    </div>
+                </div>
+            </div>
         <div>
             <div>
                 <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
-                    <span class="block-with-text d-block w-100">
+                    <span class="d-block text-truncate">
                     <h:outputText value="#{res.title}" escape="false"/>
                     </span>
                 </h:outputLink>
@@ -32,55 +77,13 @@
                     <h:outputText rendered="#{res.id != -1}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputText>
                     <h:outputText rendered="#{res.id == -1}" escape="true" target="_blank">#{res.url}</h:outputText>
                     </div>
-                    <div class="iconscontainer d-flex">
-                        <div class="icon mt-1">
-                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-plus-circle fa-fw text-decoration-none"
-                                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;">
-                            </h:outputLink>
-                            <span>#{msg.addToMyResources}</span>
-                        </div>
-                        <ui:fragment rendered="${res.archived}">
-                            <div class="icon mt-1">
-                                <i class="fa fa-archive fa-fw text-decoration-none" aria-hidden="true"></i>
-                                <span>
-                                    #{msg['Archive.captured_between']}
-                                    <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                                    </a> #{msg['Archive.captured_between_and']}
-                                                <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
-                                                                                                                     dateStyle="short"/></h:outputText>
-                                    </a>
-
-                                </span>
-                            </div>
-                        </ui:fragment>
-                    </div>
                 </div>
             </div>
             <span class="block-with-text d-block w-100">
                  <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
             </span>
         </div>
-        <div>
-            <h:panelGroup rendered="#{not empty res.group}" styleClass="mr-2">
-                <p:outputLabel for="@next" value="#{msg.group}:" styleClass="font-weight-bold mr-1"/>
-                <h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
-                    <f:param name="group_id" value="#{res.group.id}"/>
-                    <h:outputText value="#{res.group.title}"/>
-                </h:outputLink>
-            </h:panelGroup>
-            <h:panelGroup rendered="#{not empty res.getMetadataValue('collector')}">
-                <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="font-weight-bold"/>
-                <h:outputText value="#{res.getMetadataValue('collector')}"/>
-            </h:panelGroup>
-            <h:panelGroup styleClass="metadata-field" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
-                <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="font-weight-bold"/>
-                <h:outputText value="#{res.resource.ownerUser.fullName}"/>
-            </h:panelGroup>
         </div>
-
-    </div>
     </p:repeat>
 </div>
 </ui:composition>

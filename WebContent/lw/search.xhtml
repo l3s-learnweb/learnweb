@@ -32,57 +32,7 @@
 
     <div class="container-fluid section-search">
         <h:panelGroup id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
-            <p:outputPanel styleClass="group-menu-header text-center bg-gray200" layout="block" rendered="#{searchBean.searchService != null}">
-                <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
-                    <f:param value="#{searchBean.totalFromCurrentService}"/>
-                    <f:param value="#{searchBean.searchService.name()}"/>
-                    <f:param value="#{searchBean.searchService}"/>
-                </h:outputFormat>
-            </p:outputPanel>
-            <h:form>
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" styleClass="ui-carousel-light bg-transparent">
-                    <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
-                        <f:param name="service" value="#{gr.groupAlias}"/>
-                        <f:param name="action" value="#{searchBean.searchMode}"/>
-                        <f:param name="query" value="#{searchBean.query}"/>
-                        <div class="group-menu-title font-weight-bold border-bottom">
-                            <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
-                                <f:param value="#{gr.groupName}"/>
-                                <f:param value="#{gr.totalResources}"/>
-                            </h:outputFormat>
-                        </div>
-
-                        <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" rendered="#{searchBean.searchMode == 'text'}">
-                            <p:repeat value="#{gr.resources}" var="res">
-                                <span class="text-truncate d-block w-100 p-1">
-                                <h:outputText value="#{res.title}" style="font-size: 0.8rem; color: #4b6cb7;" styleClass="mr-1 w-50" escape="false"/>
-                                <h:outputText value="#{res.url}" style="font-size: 0.7rem; color: #006621;" styleClass="text-truncate overflow-hidden w-50" escape="false"/>
-                                <br/>
-                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-inline-block text-dark" style="font-size: 0.7rem;" escape="false"/>
-                                </span>
-                            </p:repeat>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="row" style="max-height: 140px;" layout="block"
-                                      rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                            <p:repeat value="#{gr.resources}" var="res">
-                                <img src="${res.thumbnail2.url}" class="col-6"/>
-                            </p:repeat>
-                        </h:panelGroup>
-<!--                        <h:panelGroup  style="max-height: 140px; display: grid; justify-content: stretch;   grid-template-columns: 20% 20% 20% 20% 20%;" layout="block"
-                                       rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                            <p:repeat value="#{gr.resources}" var="res">
-                                <div  style="">
-                                    <img src="#{res.thumbnail4.url}" style="object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%;"/>
-                                </div>
-                            </p:repeat>
-                        </h:panelGroup>-->
-                    </h:link>
-                </p:carousel>
-            </h:form>
-
-        </h:panelGroup>
-        <h:form id="resourcesFilters" styleClass="bg-gray200">
-        <ul class="res-filters">
+            <ul class="res-filters bg-gray200">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
@@ -110,6 +60,59 @@
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>
             </li>
+            </ul>
+            <p:outputPanel styleClass="group-menu-header text-center bg-gray200" layout="block" rendered="#{searchBean.searchService != null}">
+                <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
+                    <f:param value="#{searchBean.totalFromCurrentService}"/>
+                    <f:param value="#{searchBean.searchService.name()}"/>
+                    <f:param value="#{searchBean.searchService}"/>
+                </h:outputFormat>
+            </p:outputPanel>
+            <h:form>
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" breakpoint="-1" styleClass="ui-carousel-light bg-transparent">
+                    <div class="mx-auto" style="max-width:25em;">
+                        <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
+                            <f:param name="service" value="#{gr.groupAlias}"/>
+                            <f:param name="action" value="#{searchBean.searchMode}"/>
+                            <f:param name="query" value="#{searchBean.query}"/>
+                            <div class="group-menu-title font-weight-bold border-bottom">
+                                <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
+                                    <f:param value="#{gr.groupName}"/>
+                                    <f:param value="#{gr.totalResources}"/>
+                                </h:outputFormat>
+                            </div>
+
+                            <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" rendered="#{searchBean.searchMode == 'text'}">
+                                <p:repeat value="#{gr.resources}" var="res">
+                                <span class="text-truncate d-block w-100 p-1">
+                                <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
+                                <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
+                                <br/>
+                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
+                                </span>
+                                </p:repeat>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="row" style="max-height: 140px;" layout="block"
+                                          rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
+                                <p:repeat value="#{gr.resources}" var="res">
+                                    <img src="${res.thumbnail2.url}" class="col-6"/>
+                                </p:repeat>
+                            </h:panelGroup>
+                            <!--                        <h:panelGroup  style="max-height: 140px; display: grid; justify-content: stretch;   grid-template-columns: 20% 20% 20% 20% 20%;" layout="block"
+                                                                   rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
+                                                        <p:repeat value="#{gr.resources}" var="res">
+                                                            <div  style="">
+                                                                <img src="#{res.thumbnail4.url}" style="object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%;"/>
+                                                            </div>
+                                                        </p:repeat>
+                                                    </h:panelGroup>-->
+                        </h:link>
+                    </div>
+                </p:carousel>
+            </h:form>
+        </h:panelGroup>
+        <h:form id="resourcesFilters" styleClass="bg-gray200">
+        <ul class="res-filters">
             <p:repeat value="#{searchBean.availableFilters}" var="filter">
                 <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
                                     <span class="filter-title">
@@ -203,7 +206,7 @@
 
         <h:panelGroup id="nothing"></h:panelGroup>
 
-        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="true" style="z-index:1500;">
+        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" id="resource_dialog" modal="false" minWidth="600" resizable="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
                 <ui:fragment rendered="#{not empty searchBean.selectedResource}">
                     <table id="add_attributes_table" class="full-width">
@@ -275,7 +278,7 @@
                             <td></td>
                             <td>
                                 <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form"
-                                                 update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true"
+                                                 update=":growl" oncomplete="PF('resource_dialog').hide()" async="true"
                                                  onclick="PF('add_button').disable()" widgetVar="add_button"/>
                                 <p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" style="margin-left:0.5rem;"/>
                             </td>

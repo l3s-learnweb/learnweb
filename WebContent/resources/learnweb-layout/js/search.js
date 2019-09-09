@@ -26,8 +26,8 @@ var scrolling = false;
 function prepareResources() {
     if (view != 'list') {
         $("#gallery").justifiedGallery({
-            rowHeight: "200",
-            margins: 20,
+            rowHeight: "160",
+            margins: 10,
             captionsShowAlways : true,
             captionsAnimation : true
         });

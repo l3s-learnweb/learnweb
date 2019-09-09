@@ -310,6 +310,10 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
         this.columns = Math.floor(viewportInnerWidth / firstItemWidth);
         this.calculateItemWidths();
         this.totalPages = Math.ceil(this.itemsCount / this.columns);
+        if (this.totalPages == 1) {
+            this.nextNav.hide();
+            this.prevNav.hide();
+        }
         this.responsiveDropdown.hide();
         this.pageLinks.show();
     } else {

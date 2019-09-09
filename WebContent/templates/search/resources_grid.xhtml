@@ -6,15 +6,15 @@
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-	<div class="border-0 row  justify-content-center">
+	<div class="border-0 row justify-content-between px-0 mx-0">
 		<p:repeat var="res" value="#{resources}">
-			<div id="resource_#{res.tempId}"  class="resource card col-3 px-0 zoom"  data-src="#{res.urlProxied}" data-captionId="#product#{res.tempId}"  data-fancybox="search-gallery">
+			<div id="resource_#{res.tempId}"  class="resource card px-0 zoom m-2 shadow col-lg-2"  data-src="#{res.urlProxied}" data-captionId="#product#{res.tempId}"  data-fancybox="search-gallery">
 				<div class="position-relative">
 					<img id="#{res.tempId}"  class="card-img-top border-bottom" src="#{res.thumbnail2b.url}"/>
 					<div class="video-duration">#{res.durationInMinutes}</div>
 				</div>
-				<div class="card-body p-0 d-block text-truncate font-weight-bold">
-						<span>#{res.title}</span>
+				<div class="card-body font-weight-bold p-1">
+					<h:outputText value="#{res.title}" escape="false"></h:outputText>
 				</div>
 				<div class="product-form" id="product#{res.tempId}">
 					<ui:decorate template="/templates/search/resource_metadata.xhtml">
