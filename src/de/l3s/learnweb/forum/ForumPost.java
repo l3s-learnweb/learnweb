@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
@@ -16,7 +16,7 @@ public class ForumPost implements Serializable
     private int id = -1;
     private int userId;
     private int topicId;
-    @NotEmpty
+    @NotBlank
     private String text;
     private Date date;
     private int editCount;

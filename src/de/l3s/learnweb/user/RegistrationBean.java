@@ -11,10 +11,10 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -27,16 +27,17 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4567220515408089722L;
 
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String username;
 
-    @NotEmpty
+    @NotBlank
     private String password;
 
-    @NotEmpty
+    @NotBlank
     private String confirmPassword;
 
-    @NotEmpty
+    @NotBlank
     private String studentId;
 
     @Email

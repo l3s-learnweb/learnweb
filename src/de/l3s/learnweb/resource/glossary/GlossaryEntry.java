@@ -5,9 +5,8 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.constraints.Size;
-
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 import org.jsoup.helper.Validate;
 
 import scala.collection.mutable.StringBuilder;
@@ -23,14 +22,14 @@ public class GlossaryEntry implements Serializable
     private int userId; // the user who created this entry
     private int lastChangedByUserId;
     private Timestamp timestamp;
-    @Size(max = 900)
+    @Length(max = 900)
     private String description;
     private boolean descriptionPasted = false;
-    @Size(max = 90)
+    @Length(max = 90)
     private String topicOne;
-    @Size(max = 90)
+    @Length(max = 90)
     private String topicTwo;
-    @Size(max = 90)
+    @Length(max = 90)
     private String topicThree;
     private List<GlossaryTerm> terms = new LinkedList<>();
     private String fulltext; //fulltext search in glossary

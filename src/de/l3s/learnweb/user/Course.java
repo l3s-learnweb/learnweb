@@ -5,9 +5,10 @@ import java.sql.SQLException;
 import java.util.BitSet;
 import java.util.List;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -35,14 +36,16 @@ public class Course implements Serializable, Comparable<Course>, HasId
     }
 
     private int id = -1;
-    @Size(min = 1, max = 40)
+    @NotBlank
+    @Length(min = 2, max = 40)
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
-    @Size(min = 1, max = 90)
+    @NotBlank
+    @Length(min = 2, max = 90)
     private String wizardParam;
     private int nextXUsersBecomeModerator;
-    @Size(min = 0, max = 65000)
+    @Length(max = 65000)
     private String welcomeMessage;
 
     private BitSet options = new BitSet(Option.values().length);

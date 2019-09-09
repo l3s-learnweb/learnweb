@@ -3,7 +3,7 @@ package de.l3s.learnweb.beans.admin;
 import de.l3s.learnweb.Announcement;
 import de.l3s.learnweb.beans.ApplicationBean;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
@@ -20,11 +20,11 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private static final long serialVersionUID = -5638619327036890427L;
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
-    @NotEmpty
+    @NotBlank
     private String text;
-    @NotEmpty
+    @NotBlank
     private String title;
-    @NotEmpty
+    @NotBlank
     private Date date;
     private boolean hidden;
 

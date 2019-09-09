@@ -14,11 +14,11 @@ import java.util.TimeZone;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -75,7 +75,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private String interest;
     private String studentId;
     private Date registrationDate;
-    @Size(max = 255)
+    @Length(max = 255)
     private String credits;
     private boolean acceptTermsAndConditions = false;
 
@@ -290,6 +290,7 @@ public class User implements Comparable<User>, Serializable, HasId
         }
 
         this.email = StringUtils.defaultString(email); // make sure it's not null
+        this.email = this.email.trim();
     }
 
     public void setEmailConfirmationToken(String emailConfirmationToken)
@@ -324,7 +325,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setUsername(String username)
     {
-        this.username = username;
+        this.username = StringUtils.trim(username);
     }
 
     public void setOrganisationId(int organisationId)

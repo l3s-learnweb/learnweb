@@ -1,17 +1,19 @@
 package de.l3s.learnweb.beans.admin;
 
-import de.l3s.learnweb.Announcement;
-import de.l3s.learnweb.beans.ApplicationBean;
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
+
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
@@ -21,9 +23,9 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
     private List<Announcement> announcements;
-    @NotEmpty
+    @NotBlank
     private String text;
-    @NotEmpty
+    @NotBlank
     private String title;
 
     private Date date;
@@ -140,5 +142,4 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
     {
         return announcements;
     }
-
 }

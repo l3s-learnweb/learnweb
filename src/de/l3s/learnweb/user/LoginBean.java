@@ -10,8 +10,9 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.net.InetAddresses;
 
@@ -29,9 +30,9 @@ public class LoginBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 7980062591522267111L;
     private static final String LOGIN_PAGE = "/lw/user/login.xhtml";
 
-    @NotEmpty
+    @NotBlank
     private String username;
-    @NotEmpty
+    @NotBlank
     private String password;
     private boolean captchaRequired;
 
@@ -53,9 +54,9 @@ public class LoginBean extends ApplicationBean implements Serializable
         return username;
     }
 
-    public void setUsername(String name)
+    public void setUsername(String username)
     {
-        this.username = name;
+        this.username = StringUtils.trim(username);
     }
 
     public String getPassword()

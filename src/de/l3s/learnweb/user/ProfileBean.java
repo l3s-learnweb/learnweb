@@ -12,14 +12,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 import org.primefaces.event.FileUploadEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -34,7 +34,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(ProfileBean.class);
     private static final long serialVersionUID = -2460055719611784132L;
 
-    @Size(min = 0, max = 250)
+    @Length(max = 250)
     private String address;
 
     private Date dateOfBirth;
@@ -46,37 +46,38 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @Max(value = 2)
     private int gender;
 
-    @Size(min = 0, max = 50)
+    @Length(max = 50)
     private String interest;
 
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String username;
 
-    @Size(min = 0, max = 50)
+    @Length(max = 50)
     private String studentId;
 
-    @Size(min = 0, max = 80)
+    @Length(max = 80)
     private String profession;
 
-    @Size(min = 0, max = 250)
+    @Length(max = 250)
     private String additionalInformation;
 
-    @NotEmpty
+    @NotBlank
     private String password;
 
-    @NotEmpty
+    @NotBlank
     private String confirmPassword;
 
-    @NotEmpty
+    @NotBlank
     private String currentPassword;
 
-    @Size(min = 0, max = 250)
+    @Length(max = 250)
     private String fullName;
 
-    @Size(min = 0, max = 250)
+    @Length(max = 250)
     private String affiliation;
 
-    @Size(min = 0, max = 250)
+    @Length(max = 250)
     private String credits;
     private boolean acceptTermsAndConditions;
 
