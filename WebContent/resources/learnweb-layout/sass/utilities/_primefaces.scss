@@ -114,4 +114,10 @@ body {
   .ui-selectonemenu-items {
     max-width: 100vw;
   }
+
+  .ui-commandlink {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

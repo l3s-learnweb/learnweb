@@ -10575,6 +10575,9 @@ body .ui-chkbox {
 body .ui-selectonemenu-items {
   max-width: 100vw;
 }
+body .ui-commandlink:hover {
+  text-decoration: underline;
+}
 
 .table-responsive {
   table-layout: auto !important;
@@ -12905,8 +12908,9 @@ ul.res-filters .clear-filters:hover a {
 .section-search .metadata {
   display: none;
 }
-.section-search .resource:hover .iconscontainer {
+.section-search .resource:hover .tooltip-container {
   opacity: 1;
+  z-index: 2;
 }
 .section-search .fact_sheet_value a {
   color: #5893ec;
@@ -13041,44 +13045,43 @@ ul.res-filters .clear-filters:hover a {
 .section-search .ui-paginator-bottom .ui-paginator-pages .ui-state-active {
   background-color: transparent !important;
 }
-.section-search .iconscontainer {
-  opacity: 0;
-  transition: all 0.2s ease-in-out;
+.section-search #resource_dialog {
+  top: 10em !important;
+  left: 10em !important;
 }
-.section-search .iconscontainer .icon {
+.section-search .tooltip-container {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  opacity: 0;
 }
-.section-search .iconscontainer .icon span {
+.section-search .tooltip-container .tooltip-data {
   position: absolute;
-  top: 60%;
-  margin-top: 0.5rem;
+  left: 100%;
+  line-height: 1.2rem;
   padding: 0.55rem 1rem;
   background-color: white;
   font-weight: 500;
   white-space: nowrap;
-  border-radius: 50px;
-  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  opacity: 0;
+  border-radius: 0.2rem;
   transition: all 0.2s ease-in-out;
 }
-.section-search .iconscontainer .icon:hover span {
-  top: 100%;
-  opacity: 1;
-  z-index: 2;
+.section-search .tooltip-container .tooltip-data .tooltip-item {
+  margin-left: 0.1rem;
+}
+.section-search .tooltip-container .tooltip-data .tooltip-item:hover {
+  margin-left: 0;
+  border-left: 0.1rem solid #6c757d;
 }
 
 .ui-carousel-light .ui-carousel-header {
   background: #e9ecef !important;
+}
+.ui-carousel-light .ui-carousel-viewport {
+  max-height: 8em;
 }
 .ui-carousel-light .ui-carousel-viewport .ui-carousel-items .ui-carousel-item {
   border-radius: 0.1rem;

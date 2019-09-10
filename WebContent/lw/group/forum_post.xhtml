@@ -29,8 +29,8 @@
             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
         </p:commandButton>
 
-        <p:commandButton value="#{msg['ForumIndex.post_reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" global="false"
-                         styleClass="alt-btn" onclick="$('html, body').animate({scrollTop:$(document).height()});">
+        <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" oncomplete="PF('reply_post_dialog').show();" update=":reply_post_dialog" rendered="#{forumPostBean.group.isMember(userBean.user)}" global="false"
+                         styleClass="alt-btn">
         </p:commandButton>
     </h:form>
 </ui:define>
@@ -44,26 +44,26 @@
                          tableStyleClass="table-responsive h-100"
                          paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-                <p:column headerText="#{msg.author}" styleClass="col-xs-auto col-sm-3 col-md-2 col-xl-1 text-center">
+                <p:column headerText="#{msg.author}" styleClass="py-2 text-center">
                     <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
                     <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
                         <img class="img-fluid mx-auto" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
                     </h:link>
 
                     <div class="text-muted small">
-                        <p class="mb-0 registered-since">
+                        <p class="mb-0">
                             <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
                             <h:outputText value="#{post.user.registrationDate}">
                                 <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
                             </h:outputText>
                         </p>
-                        <p class="mb-0 total-messages">
+                        <p class="mb-0">
                             <h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}"/>
                         </p>
                     </div>
                 </p:column>
 
-                <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="col h-100">
+                <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="h-100">
                     <div class="d-flex flex-column h-100">
                         <div class="row border-bottom p-1">
                             <ui:fragment rendered="#{not empty post.category}">
@@ -98,14 +98,16 @@
 
                             <div class="col text-right">
                                 <p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" update=":forum_post_table"
-                                               ajax="true" actionListener="#{forumPostBean.deletePost(post)}" styleClass="mx-2"/>
+                                               ajax="true" actionListener="#{forumPostBean.deletePost(post)}" styleClass="mx-2">
+                                    <p:confirm message="Are you sure that you want to delete the post?" />
+                                </p:commandLink>
 
                                 <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2" rendered="#{forumPostBean.canEditPost(post)}">
                                     <f:param name="post_id" value="#{post.id}"/>
                                     <h:outputText value="#{msg.edit}"/>
                                 </h:outputLink>
 
-                                <p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
+                                <p:commandLink value="#{msg['ForumIndex.quote']}" oncomplete="PF('reply_post_dialog').show();" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
                                                update=":post_form:post_message" ajax="true"/>
                             </div>
                         </div>
@@ -115,76 +117,74 @@
         </h:form>
     </p:panel>
 
-    <ui:fragment rendered="#{forumPostBean.group.isMember(userBean.user)}">
-        <p:panel header="#{msg['ForumIndex.reply']}" styleClass="offset-lg-2 offset-xl-1">
-            <h:form id="post_form">
-                <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
-                    <div class="form-group">
-                        <p:outputLabel for="@next" value="#{msg.category}:"/>
-                        <p:selectOneMenu id="post_category" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
-                                         value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
-                            <f:selectItems value="#{forumPostBean.categories}"/>
-                        </p:selectOneMenu>
-                        <p:message for="@previous"/>
-                    </div>
-                </ui:fragment>
-
+    <p:dialog header="#{msg['ForumIndex.reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" id="reply_post_dialog" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="reply_post_dialog">
+        <h:form id="post_form">
+            <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
                 <div class="form-group">
-                    <p:outputLabel for="@next" value="#{msg.text}:" styleClass="d-none"/>
-                    <p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" height="150">
-                        <f:facet name="toolbar">
+                    <p:outputLabel for="@next" value="#{msg.category}:"/>
+                    <p:selectOneMenu id="post_category" required="#{forumPostBean.group.restrictionForumCategoryRequired}"
+                                     value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
+                        <f:selectItems value="#{forumPostBean.categories}"/>
+                    </p:selectOneMenu>
+                    <p:message for="@previous"/>
+                </div>
+            </ui:fragment>
+
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.text}:" styleClass="d-none"/>
+                <p:textEditor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" height="150">
+                    <f:facet name="toolbar">
                             <span class="ql-formats">
                                 <select class="ql-font"/>
                                 <select class="ql-size"/>
                             </span>
-                            <span class="ql-formats">
+                        <span class="ql-formats">
                                 <button class="ql-bold"/>
                                 <button class="ql-italic"/>
                                 <button class="ql-underline"/>
                                 <button class="ql-strike"/>
                             </span>
-                            <span class="ql-formats">
+                        <span class="ql-formats">
                                 <select class="ql-color"/>
                                 <select class="ql-background"/>
                             </span>
-                            <span class="ql-formats">
+                        <span class="ql-formats">
                                 <button class="ql-script" value="sub"/>
                                 <button class="ql-script" value="super"/>
                             </span>
-                            <span class="ql-formats">
+                        <span class="ql-formats">
                                 <!--<button class="ql-header" value="1"/>
                                 <button class="ql-header" value="2"/>-->
-                                <button class="ql-blockquote"/>
+                            <button class="ql-blockquote"/>
                                 <button class="ql-code-block"/>
                             </span>
-                            <span class="ql-formats">
+                        <span class="ql-formats">
                                 <button class="ql-list" value="ordered"/>
                                 <button class="ql-list" value="bullet"/>
                                 <button class="ql-indent" value="-1"/>
                                 <button class="ql-indent" value="+1"/>
                             </span>
-                            <!--<span class="ql-formats">
-                                <button class="ql-direction" value="rtl"/>
-                                <select class="ql-align"/>
-                            </span>-->
-                            <!--<span class="ql-formats">
-                                <button class="ql-link"/>
-                                <button class="ql-image"/>
-                                <button class="ql-video"/>
-                                <button class="ql-formula"/>
-                            </span>-->
-                            <span class="ql-formats">
+                        <!--<span class="ql-formats">
+                            <button class="ql-direction" value="rtl"/>
+                            <select class="ql-align"/>
+                        </span>-->
+                        <!--<span class="ql-formats">
+                            <button class="ql-link"/>
+                            <button class="ql-image"/>
+                            <button class="ql-video"/>
+                            <button class="ql-formula"/>
+                        </span>-->
+                        <span class="ql-formats">
                                 <button class="ql-clean"/>
                             </span>
-                        </f:facet>
-                    </p:textEditor>
-                    <p:message for="@previous"/>
-                </div>
+                    </f:facet>
+                </p:textEditor>
+                <p:message for="@previous"/>
+            </div>
 
-                <p:commandButton value="#{msg.send}" action="#{forumPostBean.onSavePost}" validateClient="true"
-                                 ajax="true" update="@form :forum_post_table"/>
-            </h:form>
-        </p:panel>
-    </ui:fragment>
+            <p:commandButton value="#{msg.send}" action="#{forumPostBean.onSavePost}" validateClient="true"
+                             ajax="true" oncomplete="PF('reply_post_dialog').hide();" update="@form :forum_post_table"/>
+        </h:form>
+    </p:dialog>
 </ui:define>
 </ui:composition>
