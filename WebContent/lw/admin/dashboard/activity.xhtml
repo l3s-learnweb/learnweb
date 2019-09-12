@@ -22,7 +22,7 @@
 <ui:define name="center_layout">
     <p:panel header="#{msg.choose_options}">
         <p:outputPanel styleClass="my-3">
-            <ui:decorate template="templates/setSelectedUsers.xhtml">
+            <ui:decorate template="/WEB-INF/templates/blocks/setSelectedUsers.xhtml">
                 <ui:param name="cbean" value="#{activityDashboardBean}"/>
             </ui:decorate>
         </p:outputPanel>

@@ -25,7 +25,7 @@
     <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
 
     <p:panel header="#{msg.choose_options}" styleClass="mb-2">
-        <ui:decorate template="templates/setSelectedUsers.xhtml">
+        <ui:decorate template="/WEB-INF/templates/blocks/setSelectedUsers.xhtml">
             <ui:param name="cbean" value="#{trackerDashboardBean}"/>
         </ui:decorate>
     </p:panel>

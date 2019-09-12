@@ -13,12 +13,13 @@
 
     <p:panel header="#{msg['privacy_statement']}">
     	<h1 style="color:red; text-align:center; font-size:5rem;">Placeholder. Don't read</h1>
+
         <ui:fragment rendered="#{userBean.localeCode eq 'de'}">
-            <ui:include src="privacy_statement_de.xhtml"/>
+            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_de.xhtml"/>
         </ui:fragment>
 
         <ui:fragment rendered="#{userBean.localeCode ne 'de'}">
-            <ui:include src="privacy_statement_en.xhtml"/>
+            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_en.xhtml"/>
         </ui:fragment>
 
         <script>
