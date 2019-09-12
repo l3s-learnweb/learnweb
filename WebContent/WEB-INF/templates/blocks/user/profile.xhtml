@@ -45,9 +45,7 @@
 		</p:panelGrid>
 	</p:panel>
 
-	<ui:fragment rendered="#{learnwebBean.learnweb.service != 'AMA'}">
-
-	<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{user.username}">
+	<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{user.username}" rendered="#{learnwebBean.learnweb.service != 'AMA'}">
 		<p:repeat var="g" value="#{user.groups}">
 			<h:panelGrid>
 			<div class="float-left" style="float:left;">
@@ -59,26 +57,21 @@
 			</h:panelGrid>
 		</p:repeat>
 	</p:panel>
-	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty user.credits}">
-		<p:panel header="#{msg.awards}">
-			<h:outputText value="#{user.credits}" escape="false"/>
-		</p:panel>
-	</ui:fragment>
+	<p:panel header="#{msg.awards}" rendered="#{not empty user.credits}">
+		<h:outputText value="#{user.credits}" escape="false"/>
+	</p:panel>
 
-	<ui:fragment rendered="${userBean.canModerateCourses(user.courses)}">
-		<p:panel header="#{msg.moderator_options}">
-			<h:outputLink value="myhome/profile.jsf">
-				<f:param name="user_id" value="#{user.id}"/>
-				<h:outputText value="#{msg.edit_profile}" escape="false"/>
-			</h:outputLink>
-			<br/>
-			<h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
-				<f:param name="user_id" value="#{user.id}"/>
-				<h:outputText value="#{msg.search_history}" escape="false"/>
-			</h:outputLink>
-		</p:panel>
-	</ui:fragment>
-	
+	<p:panel header="#{msg.moderator_options}" rendered="${userBean.canModerateCourses(user.courses)}">
+		<h:outputLink value="myhome/profile.jsf">
+			<f:param name="user_id" value="#{user.id}"/>
+			<h:outputText value="#{msg.edit_profile}" escape="false"/>
+		</h:outputLink>
+		<br/>
+		<h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+			<f:param name="user_id" value="#{user.id}"/>
+			<h:outputText value="#{msg.search_history}" escape="false"/>
+		</h:outputLink>
+	</p:panel>
+
 </ui:composition>

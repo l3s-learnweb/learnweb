@@ -106,7 +106,7 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{addResourceBean.formStep != 1}">
-        <ui:decorate template="/templates/resources/edit.xhtml">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
             <ui:param name="res" value="#{addResourceBean.resource}"/>
         </ui:decorate>
     </ui:fragment>

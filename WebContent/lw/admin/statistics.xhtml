@@ -15,7 +15,7 @@
 	<ui:define name="center_layout">
 		<h:form id="anlyse_form">
 			<p:panel header="#{msg.select_groups}" styleClass="mb-3">
-				<ui:include src="/templates/user/user_select_form.xhtml"/>
+				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 				<div class="form-group">
 					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
 				</div>

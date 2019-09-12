@@ -158,7 +158,7 @@
 
 
         <div id="results" class="#{searchBean.view}_view mt-3">
-            <ui:decorate template="/templates/search/resources.xhtml">
+            <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
             </ui:decorate>
@@ -176,7 +176,7 @@
 
         <div id="new_results" style="display:none;">
             <h:panelGroup id="nextPage" layout="block">
-                <ui:decorate template="/templates/search/resources.xhtml">
+                <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                     <ui:param name="view" value="#{searchBean.view}"/>
                     <ui:param name="resources" value="#{searchBean.nextPage}"/>
                 </ui:decorate>
@@ -234,7 +234,7 @@
                             </td>
                         </tr>
 
-                        <ui:decorate template="/templates/resources/edit.xhtml">
+                        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
                             <ui:param name="res" value="#{searchBean.selectedResource}"/>
                         </ui:decorate>
 

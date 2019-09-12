@@ -200,19 +200,19 @@
 
 			<p:tabView id="submissions" styleClass="ui-tabs-transparent">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}"/>
 					</ui:decorate>
 				</p:tab>
 
 				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}"/>
 					</ui:decorate>
 				</p:tab>
 
 				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}"/>
 					</ui:decorate>
 				</p:tab>

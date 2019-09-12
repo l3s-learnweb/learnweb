@@ -14,7 +14,7 @@
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
 			<p:panel header="#{msg.select_users}">
-				<ui:include src="/templates/user/user_select_form.xhtml"/>
+				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
 								 process="@form" update=":transcript_table"/>
 			</p:panel>

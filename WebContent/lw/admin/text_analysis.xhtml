@@ -14,7 +14,7 @@
     <ui:define name="center_layout">
         <p:panel header="#{msg.select_users}">
             <h:form id="anlyse_form">
-                <ui:include src="/templates/user/user_select_form.xhtml"/>
+                <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
                 <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                                  update=":growl anlyse_form"/>

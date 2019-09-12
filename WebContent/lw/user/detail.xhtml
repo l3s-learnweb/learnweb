@@ -39,11 +39,10 @@
 	<ui:define name="right_layout">
 		<p:panel rendered="#{userBean.loggedIn}" styleClass="m-0 px-0 bg-transparent no-border">
 
-			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
-
-				<ui:decorate template="/templates/user/profile.xhtml">
-					<ui:param name="user" value="#{userDetailBean.user}"/>
-				</ui:decorate>
+			<ui:decorate template="/WEB-INF/templates/blocks/user/profile.xhtml">
+				<ui:param name="user" value="#{userDetailBean.user}"/>
+				<ui:param name="userDetailsHidden" value="#{userDetailBean.pageHidden}"/>
+			</ui:decorate>
 
 		</p:panel>
 	</ui:define>
