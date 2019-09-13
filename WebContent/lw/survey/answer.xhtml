@@ -18,131 +18,129 @@
 	<ui:param name="pageTitle" value="Survey"/>
 	<ui:param name="loginRequired" value="true"/>
 
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
+		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
+	</ui:define>
+
 	<ui:define name="center_layout">
 		<h:form id="form" prependId="false" styleClass="section-survey">
 			<ui:fragment rendered="#{surveyBean.resource != null}">
-				<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
-
-					<h:panelGrid columns="1" cellpadding="5" id="survey">
-
-						<h:outputText value="Student ID: #{surveyBean.userAnswers.user.studentId}" styleClass="font-weight-bold" rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
+				<p:panel>
+					<h:panelGroup id="survey" styleClass="survey">
+						<p:outputLabel value="Student ID: #{surveyBean.userAnswers.user.studentId}" styleClass="font-weight-bold" rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
 
 						<c:forEach var="field" items="#{surveyBean.resource.questions}">
-
 							<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
-
 								<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
 									<h:panelGroup>
-										<h3>
-											<h:outputText value="${field.label}"
-												style="font-style: italic; font-weight: bold;"/>
+										<h3 class="my-4">
+											<h:outputText value="${field.label}"/>
 										</h3>
 									</h:panelGroup>
 								</c:if>
+
 								<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-									<h:outputText value="${field.label}"/>
+									<p:outputLabel value="${field.label}"/>
+								</c:if>
+							</c:if>
+
+							<div class="form-group">
+								<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
+							<!-- eumade4all special rule remove later   field.label.startsWith('QUALITATIVE FEEDBACK ON ') and  -->
+								<c:if test="#{not (field.label.startsWith('QUALITATIVE FEEDBACK ON ') and empty surveyBean.userAnswers.answers[field.id].trim())}">
+									<p:outputLabel value="#{field.label}"/>
+
+									<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
+								</c:if>
+							</c:if>
+
+								<c:if
+									test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+									<p:outputLabel value="#{field.label}"/>
+									<p:selectOneMenu id="input_selectone_#{field.id}"
+										value="#{surveyBean.userAnswers.answers[field.id]}"
+										editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
+										required="#{field.required}" class="border-box-100"
+										title="#{field.info}">
+										<f:selectItems value="#{field.answers}" var="option"
+											itemLabel="#{option}" itemValue="#{option}"/>
+									</p:selectOneMenu>
 								</c:if>
 
-							</c:if>
-							<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
-							<!-- eumade4all special rule remove later   field.label.startsWith('QUALITATIVE FEEDBACK ON ') and  -->
-							<c:if test="#{not (field.label.startsWith('QUALITATIVE FEEDBACK ON ') and empty surveyBean.userAnswers.answers[field.id].trim())}">
-							
-								<h:outputText value="#{field.label}"/>
-								<h:outputText
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									style="font-style:italic;"/></c:if>
-							</c:if>
+								<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
+									<p:outputLabel value="#{field.label}"/>
+									<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
+										value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
+										label="" multiple="true" title="#{field.info}"
+										required="#{field.required}"
+										filter="#{field.optionsList.size() gt 8}"
+										filterMatchMode="startsWith" >
+										<f:selectItems value="#{field.optionsList}" var="selectItemOption"
+											itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}"/>
+									</p:selectCheckboxMenu>
+								</c:if>
 
-							<c:if
-								test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-								<h:outputText value="#{field.label}"/>
-								<p:selectOneMenu id="input_selectone_#{field.id}"
-									value="#{surveyBean.userAnswers.answers[field.id]}"
-									editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
-									required="#{field.required}" class="border-box-100"
-									title="#{field.info}">
-									<f:selectItems value="#{field.answers}" var="option"
-										itemLabel="#{option}" itemValue="#{option}"/>
-								</p:selectOneMenu>
-							</c:if>
+								<c:if test="#{field.type eq 'ONE_RADIO'}">
+									<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
+										<!-- eumade4all special rule remove later  -->
+										<p:outputLabel value="#{field.label}"/>
+										<p:selectOneRadio id="input_oneradio_#{field.id}"
+											value="#{surveyBean.userAnswers.answers[field.id]}" label=""
+											multiple="true" title="#{field.info}"
+											required="#{field.required}"
+											filter="#{field.optionsList.size() gt 8}" layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">
+											<!--
 
-							<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-								<h:outputText value="#{field.label}"/>
-								<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
-									value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-									label="" multiple="true" title="#{field.info}"
-									required="#{field.required}"
-									filter="#{field.optionsList.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px">
-									<f:selectItems value="#{field.optionsList}" var="selectItemOption"
-										itemLabel="#{selectItemOption.label}" itemValue="#{selectItemOption.value}"/>
-								</p:selectCheckboxMenu>
-							</c:if>
-							<c:if test="#{field.type eq 'ONE_RADIO'}">
-							<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
-							<!-- eumade4all special rule remove later  -->
-							
-								<h:outputText value="#{field.label}"/>
-								<h:selectOneRadio id="input_oneradio_#{field.id}"
-									value="#{surveyBean.userAnswers.answers[field.id]}" label=""
-									multiple="true" title="#{field.info}"
-									required="#{field.required}" 
-									filter="#{field.optionsList.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px"
-									styleClass="radio-buttons">
-									<!--  
-									
-									<f:selectItems value="#{field.answers}" var="option" 
-										itemLabel="#{option}" itemValue="#{option}"  />
-										
-										special rule for eumade4all remove after the project:
-										-->
-									<f:selectItems value="#{field.getEUMadeAnswersWithout()}" var="option"
-												   itemLabel="#{option}" itemValue="#{option}"  />
-								
-								</h:selectOneRadio>
-							</c:if>
-							</c:if>
-							<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
-								<h:outputText value="#{field.label}"/>
-								<h:selectManyCheckbox id="input_manycheckbox_#{field.id}"
-									value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
-									label="" multiple="true" title="#{field.info}"
-									required="#{field.required}"
-									filter="#{field.optionsList.size() gt 8}"
-									filterMatchMode="startsWith" panelStyle="width:250px"
-									layout="pageDirection" columns="1">
-									<f:selectItems value="#{field.answers}" var="option"
-										itemLabel="#{option}" itemValue="#{option}"/>
-								</h:selectManyCheckbox>
-							</c:if>
+											<f:selectItems value="#{field.answers}" var="option"
+												itemLabel="#{option}" itemValue="#{option}"  />
 
+												special rule for eumade4all remove after the project:
+												-->
+											<f:selectItems value="#{field.getEUMadeAnswersWithout()}" var="option"
+														   itemLabel="#{option}" itemValue="#{option}"  />
+
+										</p:selectOneRadio>
+									</c:if>
+								</c:if>
+
+								<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
+									<p:outputLabel value="#{field.label}"/>
+									<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
+										value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
+										label="" multiple="true" title="#{field.info}"
+										required="#{field.required}"
+										filter="#{field.optionsList.size() gt 8}"
+										filterMatchMode="startsWith" panelStyle="width:250px"
+										layout="pageDirection" columns="1">
+										<f:selectItems value="#{field.answers}" var="option"
+											itemLabel="#{option}" itemValue="#{option}"/>
+									</p:selectManyCheckbox>
+								</c:if>
+							</div>
 						</c:forEach>
-					</h:panelGrid>
 
-					<br />
-					
-					<p:commandButton value="#{msg.Print}" type="button"  styleClass="greenbutton resource_button float-left">
-						<p:printer target="survey"/>
-					</p:commandButton>
-					
-					<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}" style="float:left; margin-left:20px;"  styleClass="greenbutton resource_button float-left ">
-						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
-						<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
-						<h:outputText value="#{msg.edit}"/>
-					</h:outputLink>	
+						<div class="mt-3">
+							<p:commandButton value="#{msg.Print}" type="button">
+								<p:printer target="survey"/>
+							</p:commandButton>
 
-								
+							<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}"  styleClass="float-right ">
+								<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
+								<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
+								<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+								<h:outputText value="#{msg.edit}"/>
+							</h:outputLink>
+						</div>
+					</h:panelGroup>
+					
+
 				</p:panel>
-
 			</ui:fragment>
 
 			<ui:fragment rendered="#{surveyBean.resource == null}">
 				<div class="noresource">
-					<br /> <br />
-					<h:outputText value="Please select valid survey resource."
-						style="text-align:center; font-weight:bold"></h:outputText>
+					<h:outputText value="Please select valid survey resource."></h:outputText>
 				</div>
 			</ui:fragment>			
 		</h:form>

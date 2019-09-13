@@ -36,7 +36,6 @@
 						<h2 class="d-none d-print-block">#{surveyBean.resource.title}</h2>
 
                         <c:forEach var="question" items="#{surveyBean.resource.questions}">
-
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
                                     <h3 class="my-4">
@@ -149,7 +148,7 @@
 					
 					<div class="mt-3">
                         <div class="float-right">
-                            <p:commandButton value="#{msg.Print}" type="button" style="float:left;" styleClass="greenbutton resource_button">
+                            <p:commandButton value="#{msg.Print}" type="button">
                                 <p:printer target="questions"/>
                             </p:commandButton>
                         </div>
@@ -168,7 +167,6 @@
 	                     	process="@form" 
 	                     	update="@form :message">
 						</p:commandButton>
-						<br class="clear"/>
 					</div>
 				</h:panelGroup>	
 

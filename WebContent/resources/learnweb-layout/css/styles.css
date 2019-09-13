@@ -10588,6 +10588,9 @@ body .ui-selectonemenu-items {
 body .ui-commandlink:hover {
   text-decoration: underline;
 }
+body .ui-selectoneradio label {
+  margin: 8px 1rem 8px 8px !important;
+}
 
 .table-responsive {
   table-layout: auto !important;
