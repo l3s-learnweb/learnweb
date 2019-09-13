@@ -70,12 +70,14 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
-                        <f:facet name="header">#{msg['Activity.table']}</f:facet>
-                        <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                            <h:outputText value="#{row[key]}"/>
-                        </p:columns>
-                    </p:dataTable>
+                    <h:form>
+                        <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
+                            <f:facet name="header">#{msg['Activity.table']}</f:facet>
+                            <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
+                                <h:outputText value="#{row[key]}"/>
+                            </p:columns>
+                        </p:dataTable>
+                    </h:form>
                 </div>
             </div>
         </p:outputPanel>
