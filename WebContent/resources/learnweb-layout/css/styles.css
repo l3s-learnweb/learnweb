@@ -9991,7 +9991,7 @@ body .ui-log .ui-log-content {
 }
 .layout-wrapper .layout-header .header-logo {
   padding: 0 0.5rem;
-  width: 11.125rem;
+  width: 12.125rem;
 }
 .layout-wrapper .layout-header .lang-button img {
   height: 1.875rem;
@@ -10041,7 +10041,7 @@ body .ui-log .ui-log-content {
 }
 @media (max-width: 767.98px) {
   .layout-wrapper .layout-header {
-    height: 6.25rem;
+    height: auto;
   }
   .layout-wrapper .layout-header .layout-container {
     flex-wrap: wrap;
@@ -10054,6 +10054,12 @@ body .ui-log .ui-log-content {
   }
   .layout-wrapper .layout-header .search-form {
     max-width: 100%;
+  }
+  .layout-wrapper .layout-header .header-menu a {
+    padding: 0.7rem 0.6rem;
+  }
+  .layout-wrapper .layout-header .header-element {
+    padding: 0 0.4rem;
   }
 }
 
@@ -10309,6 +10315,11 @@ body,
 .layout-wrapper .layout-breadcrumb > * {
   margin: 0.5rem 1rem;
 }
+@media (max-width: 767.98px) {
+  .layout-wrapper .layout-breadcrumb {
+    margin-top: 3.125rem;
+  }
+}
 .layout-wrapper .layout-main {
   position: relative;
   padding-top: 3.125rem;
@@ -10319,11 +10330,6 @@ body,
 @media (prefers-reduced-motion: reduce) {
   .layout-wrapper .layout-main {
     transition: none;
-  }
-}
-@media (max-width: 767.98px) {
-  .layout-wrapper .layout-main {
-    padding-top: 6.25rem;
   }
 }
 @media (max-width: 1199.98px) {
@@ -10455,6 +10461,10 @@ body .fileupload-minimal .ui-fileupload-content {
 
 .mw-md {
   max-width: 25rem;
+}
+
+.w-inherit {
+  width: inherit !important;
 }
 
 .profile-picture {
@@ -13140,80 +13150,104 @@ ul.res-filters .clear-filters:hover a {
   background: white;
 }
 
-@media (min-width: 768px) {
-  .fancybox-search-layout {
-    /* Give space around main area */
-    /* Make it to fade-out while closing */
-    /* Set color for background element */
-    /* Adjust content area position */
-    /* Move caption area to the right side */
-    /* Align buttons at the right side  */
-    /* Remove background from all buttons */
-    /* Change arrow color */
-    /* Reposition arrows */
-  }
-  .fancybox-search-layout .fancybox-outer {
-    top: 50px;
-    left: 50px;
-    bottom: 50px;
-    right: 50px;
-    margin: auto;
-    max-width: 1180px;
-    max-height: 495px;
-    overflow: visible;
-    background: #fff;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
-    transition: opacity 0.3s;
-  }
-  .fancybox-search-layout.fancybox-is-closing .fancybox-outer {
-    opacity: 0;
-  }
-  .fancybox-search-layout .fancybox-bg {
-    background-color: #495057;
-  }
-  .fancybox-search-layout.fancybox-is-open .fancybox-bg {
-    opacity: 0.7;
+.fancybox-search-layout {
+  /* Give space around main area */
+  /* Make it to fade-out while closing */
+  /* Set color for background element */
+  /* Adjust content area position */
+  /* Move caption area to the right side */
+  /* Align buttons at the right side  */
+  /* Remove background from all buttons */
+  /* Change arrow color */
+  /* Reposition arrows */
+}
+.fancybox-search-layout .fancybox-outer {
+  top: 2rem;
+  bottom: 2rem;
+  right: 2rem;
+  left: 2rem;
+  margin: auto;
+  overflow: visible;
+  background: #fff;
+  box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s;
+}
+.fancybox-search-layout.fancybox-is-closing .fancybox-outer {
+  opacity: 0;
+}
+.fancybox-search-layout .fancybox-bg {
+  background-color: #495057;
+}
+.fancybox-search-layout.fancybox-is-open .fancybox-bg {
+  opacity: 0.7;
+}
+.fancybox-search-layout .fancybox-stage {
+  right: 256px;
+}
+.fancybox-search-layout .fancybox-stage .fancybox-slide {
+  padding: 2rem 1rem;
+}
+.fancybox-search-layout .fancybox-caption {
+  top: 2rem;
+  bottom: 0;
+  left: auto;
+  width: 256px;
+  padding: 1rem;
+  background: #333;
+  pointer-events: all;
+  /* Make text selectable */
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fancybox-search-layout .fancybox-toolbar {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  background: #333;
+  max-height: 2rem;
+  width: 256px;
+  border-bottom: 1px solid #222;
+  display: flex;
+  flex-direction: row-reverse;
+}
+.fancybox-search-layout .fancybox-button {
+  max-height: 2rem;
+  max-width: 2rem;
+  padding: 0.2rem;
+}
+.fancybox-search-layout .fancybox-button,
+.fancybox-search-layout .fancybox-navigation button:before {
+  background: transparent;
+}
+.fancybox-search-layout .fancybox-navigation button {
+  color: #fff !important;
+  padding: 10px;
+}
+.fancybox-search-layout .fancybox-button--arrow_left {
+  left: -60px !important;
+}
+.fancybox-search-layout .fancybox-button--arrow_right {
+  right: -60px !important;
+}
+.fancybox-search-layout.fancybox-show-thumbs .fancybox-button--arrow_right {
+  right: -272px !important;
+}
+@media (max-width: 767.98px) {
+  .fancybox-search-layout .fancybox-caption {
+    position: relative;
+    top: 70%;
+    width: 100%;
+    height: 30%;
+    overflow: overlay;
   }
   .fancybox-search-layout .fancybox-stage {
-    right: 300px;
-  }
-  .fancybox-search-layout .fancybox-caption {
-    top: 0;
-    right: 44px;
-    bottom: 0;
-    left: auto;
-    width: 256px;
-    padding: 30px 20px;
-    background: #333;
-    pointer-events: all;
-    /* Make text selectable */
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    bottom: 30%;
+    right: 0;
+    top: 2rem;
+    width: 100%;
   }
   .fancybox-search-layout .fancybox-toolbar {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    width: 44px;
-    background: #333;
-    border-left: 1px solid #222;
-  }
-  .fancybox-search-layout .fancybox-button,
-.fancybox-search-layout .fancybox-navigation button:before {
-    background: transparent;
-  }
-  .fancybox-search-layout .fancybox-navigation button {
-    color: #fff !important;
-    padding: 10px;
-  }
-  .fancybox-search-layout .fancybox-button--arrow_left {
-    left: -60px !important;
-  }
-  .fancybox-search-layout .fancybox-button--arrow_right {
-    right: -60px !important;
-  }
-  .fancybox-search-layout.fancybox-show-thumbs .fancybox-button--arrow_right {
-    right: -272px !important;
+    width: 100%;
   }
 }
 
@@ -13265,7 +13299,6 @@ ul.res-filters .clear-filters:hover a {
     left: auto;
     right: 0;
     top: 0;
-    width: 44px;
   }
   .fancybox-search-layout-alt .fancybox-button {
     background: transparent;

@@ -33,6 +33,9 @@ body,
     > * {
       margin: $grid-gutter-width/2 $grid-gutter-width;
     }
+    @include media-breakpoint-down($topbar-two-row-display) {
+      margin-top: $topbar-height;
+    }
   }
 
   .layout-main {
@@ -41,10 +44,6 @@ body,
     margin-left: $sidebar-width;
     min-height: 100vh;
     @include transition(margin-left $transition-duration);
-
-    @include media-breakpoint-down($topbar-two-row-display) {
-      padding-top: 2 * $topbar-height;
-    }
 
     @include media-breakpoint-down($sidebar-hide-display) {
       margin-left: 0;

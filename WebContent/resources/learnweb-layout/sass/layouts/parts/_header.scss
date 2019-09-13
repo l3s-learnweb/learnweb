@@ -35,7 +35,7 @@ $topbar-button-padding: 1rem;
 
     .header-logo {
       padding: 0 $topbar-button-padding / 2;
-      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding * 2);
+      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding);
     }
 
     .lang-button {
@@ -96,7 +96,7 @@ $topbar-button-padding: 1rem;
     }
 
     @include media-breakpoint-down($topbar-two-row-display) {
-      height: 2 * $topbar-height;
+      height: auto;
 
       .layout-container {
         flex-wrap: wrap;
@@ -112,6 +112,16 @@ $topbar-button-padding: 1rem;
 
       .search-form {
         max-width: 100%;
+      }
+
+      .header-menu {
+        a {
+          padding: 0.7rem 0.6rem;
+        }
+      }
+
+      .header-element {
+        padding: 0 $topbar-button-padding - 0.6;
       }
     }
   }
