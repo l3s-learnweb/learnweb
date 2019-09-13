@@ -1,35 +1,5 @@
 package de.l3s.learnweb.user;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.ocpsoft.prettytime.PrettyTime;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-import org.primefaces.model.menu.DefaultMenuItem;
-import org.primefaces.model.menu.DefaultSubMenu;
-import org.primefaces.model.menu.DynamicMenuModel;
-import org.primefaces.model.menu.MenuModel;
-
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.FrontpageServlet;
@@ -40,6 +10,28 @@ import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.ocpsoft.prettytime.PrettyTime;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultSubMenu;
+import org.primefaces.model.menu.DynamicMenuModel;
+import org.primefaces.model.menu.MenuModel;
+
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.*;
 
 @Named
 @SessionScoped
@@ -589,7 +581,7 @@ public class UserBean implements Serializable
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("ip_requests"), "fa fa-fw fa-line-chart", su + "/lw/admin/requests.jsf"));
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("system_tools"), "fa fa-fw fa-language", su + "/lw/admin/systemtools.jsf"));
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("admin_messages_Title"), "fa fa-fw fa-language", su + "/lw/admin/adminmsg.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("news"), "fa fa-fw fa-language", su + "/lw/admin/adminnews.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("news"), "fa fa-fw fa-language", su + "/lw/admin/announcements.jsf"));
                 model.addElement(adminSubmenu);
             }
 

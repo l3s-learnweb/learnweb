@@ -82,10 +82,6 @@
 									</p:selectOneMenu>
 									<p:message for="@previous"/>
 								</h:panelGroup>
-
-								<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl :courseoptions">
-									<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
-								</p:commandButton>
 							</p:panel>
 						</div>
 
@@ -107,6 +103,12 @@
                             </p:panel>
 						</div>
 					</div>
+				</div>
+
+				<div class="d-flex justify-content-center w-100">
+					<p:commandButton actionListener="#{adminCourseBean.save}" styleClass="p-1" value="#{msg.save}" update=":growl :courseoptions">
+						<f:param name="course_id" value="#{adminCourseBean.courseId}"/>
+					</p:commandButton>
 				</div>
 			</div>
 		</h:form>
