@@ -44,7 +44,7 @@
                          tableStyleClass="table-responsive h-100"
                          paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-                <p:column headerText="#{msg.author}" styleClass="py-2 text-center">
+                <p:column headerText="#{msg.author}" styleClass="py-2 text-center w-15">
                     <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
                     <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
                         <img class="img-fluid mx-auto" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
@@ -65,7 +65,7 @@
 
                 <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="h-100">
                     <div class="d-flex flex-column h-100">
-                        <div class="row border-bottom p-1">
+                        <div class="row border-bottom pb-1">
                             <ui:fragment rendered="#{not empty post.category}">
                                 <div class="col font-italic">
                                     #{msg.category}: #{post.category}
@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        <div class="row border-top p-1 mt-auto">
+                        <div class="row border-top pt-1 mt-auto">
                             <ui:fragment rendered="#{post.editCount gt 0}">
                                 <div class="col">
                                     <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
@@ -117,7 +117,7 @@
         </h:form>
     </p:panel>
 
-    <p:dialog header="#{msg['ForumIndex.reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" id="reply_post_dialog" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="reply_post_dialog">
+    <p:dialog header="#{msg['ForumIndex.reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" id="reply_post_dialog" styleClass="modal-dialog-select mw-md" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="reply_post_dialog">
         <h:form id="post_form">
             <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
                 <div class="form-group">

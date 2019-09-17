@@ -1,22 +1,21 @@
 package de.l3s.learnweb.forum;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.User;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Named
 @ViewScoped
@@ -157,6 +156,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         newPost.setText(
                 "<div class='post_quote' style='margin: 0.6rem 2rem; border-left: 2px solid rgb(168, 168, 168); border-right: 2px solid rgb(168, 168, 168); background-color: rgb(207, 207, 207);'><div class='post_quote_name' style='font-weight: bold; padding: 0.2rem 0.5rem;background-color: rgb(168, 168, 168);'>"
                         + username + "</div><div class='post_quote_text' style='padding: 0.2rem 0.5rem;'> " + post.getText() + "</div></div><br/>");
+
+        newPost.setText("<blockquote>" + "<strong>" + username + "</strong><br>"  + post.getText() + "</blockquote><br>");
     }
 
     public int getTopicId()
