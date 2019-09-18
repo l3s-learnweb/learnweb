@@ -27,7 +27,7 @@
 		<h:form id="form" prependId="false" styleClass="section-survey">
 			<ui:fragment rendered="#{surveyBean.resource != null}">
 				<p:panel>
-					<h:panelGroup id="survey" styleClass="survey">
+					<h:panelGroup id="survey">
 						<p:outputLabel value="Student ID: #{surveyBean.userAnswers.user.studentId}" styleClass="font-weight-bold" rendered="#{userBean.moderator or userBean.user.id eq surveyBean.surveyUserId}"/>
 
 						<c:forEach var="field" items="#{surveyBean.resource.questions}">
@@ -119,22 +119,20 @@
 								</c:if>
 							</div>
 						</c:forEach>
-
-						<div class="mt-3">
-							<p:commandButton value="#{msg.Print}" type="button">
-								<p:printer target="survey"/>
-							</p:commandButton>
-
-							<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}"  styleClass="float-right ">
-								<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
-								<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
-								<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-								<h:outputText value="#{msg.edit}"/>
-							</h:outputLink>
-						</div>
 					</h:panelGroup>
-					
 
+					<div class="mt-3">
+						<p:commandButton value="#{msg.Print}" type="button">
+							<p:printer target="survey"/>
+						</p:commandButton>
+
+						<h:outputLink value="survey/survey.jsf" rendered="#{not surveyBean.submitted}"  styleClass="float-right ">
+							<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
+							<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
+							<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+							<h:outputText value="#{msg.edit}"/>
+						</h:outputLink>
+					</div>
 				</p:panel>
 			</ui:fragment>
 

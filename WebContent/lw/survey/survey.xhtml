@@ -32,7 +32,7 @@
 
 			<p:panel>
 				<h:panelGroup rendered="#{surveyBean.formEnabled}">
-					<h:panelGroup id="questions" styleClass="survey">
+					<h:panelGroup id="questions">
 						<h2 class="d-none d-print-block">#{surveyBean.resource.title}</h2>
 
                         <c:forEach var="question" items="#{surveyBean.resource.questions}">
