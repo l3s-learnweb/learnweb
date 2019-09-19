@@ -1,15 +1,13 @@
-<ui:composition
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.discussion_activity}" url="admin/group_discussion_activity.jsf"/>
 	</ui:define>
 
@@ -18,19 +16,19 @@
 					 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			<f:facet name="header">#{msg.discussion_activity}</f:facet>
 			<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
-				<h:outputText value="#{entry.name}" />
+				<h:outputText value="#{entry.name}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
-				<h:outputText value="#{entry.annotation}" />
+				<h:outputText value="#{entry.annotation}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
-				<h:outputText value="#{entry.snippet}" />
+				<h:outputText value="#{entry.snippet}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
-				<h:outputText value="#{entry.url}" />
+				<h:outputText value="#{entry.url}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.time}" sortBy="#{entry.time}">

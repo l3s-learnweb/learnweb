@@ -1,14 +1,13 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 	
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="Your information" />
+	<ui:param name="pageTitle" value="Your information"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="Your Information" url="your_information/index.jsf#"/>
 	</ui:define>
 
@@ -22,7 +21,7 @@
 	                    </span>
 	                </div>
 	                <div class="ui-panel-content ui-widget-content">
-                        <h:outputFormat value="#{msg['your_info.intro_msg']}" />
+                        <h:outputFormat value="#{msg['your_info.intro_msg']}"/>
 	                </div>
 	                <div class="ui-fluid">
 	                    <div class="card">
@@ -32,7 +31,7 @@
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_personal_info.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-android"></span>
 	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.your_personal_info']}" />
+                                                <h:outputFormat value="#{msg['your_info.your_personal_info']}"/>
                                             </span>
 	                                    </a>
 	                                </li>
@@ -110,7 +109,7 @@
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_search_history.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-history"></span>
 	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.history_msg']}" />
+                                                <h:outputFormat value="#{msg['your_info.history_msg']}"/>
                                             </span>
 	                                    </a>
 	                                </li>
@@ -118,7 +117,7 @@
 	                                    <a class="ui-menuitem-link ui-corner-all" href="your_information/your_activity.jsf">
 	                                        <span class="ui-menuitem-icon fa fa-print"></span>
 	                                        <span class="ui-menuitem-text">
-                                                <h:outputFormat value="#{msg['your_info.activity_msg']}" />
+                                                <h:outputFormat value="#{msg['your_info.activity_msg']}"/>
                                             </span>
 	                                    </a>
 	                                </li>

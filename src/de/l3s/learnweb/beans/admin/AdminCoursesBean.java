@@ -9,10 +9,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -29,12 +29,12 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(AdminCoursesBean.class);
 
     private List<Course> courses;
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String newCourseTitle;
 
-    @NotNull
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String newOrganisationTitle;
 
     public AdminCoursesBean() throws SQLException

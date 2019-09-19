@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class GlossaryTableView implements Serializable
 {
     private static final long serialVersionUID = -757320545292668593L;
@@ -64,7 +66,7 @@ public class GlossaryTableView implements Serializable
 
     public String getUses()
     {
-        return String.join(", ", term.getUses());
+        return StringUtils.join(term.getUses(), ", ");
     }
 
     public String getPronounciation()

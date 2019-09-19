@@ -8,12 +8,12 @@
         <div class="layout-container d-flex">
             <div class="d-flex">
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <a href="#" id="menu-button" class="header-element menu-button">
+                    <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
                         <i class="fa fa-bars mx-auto"></i>
                     </a>
                 </ui:fragment>
-                <a href="#{request.contextPath}/lw/myhome/welcome.jsf" class="header-element header-logo no-hover-bg">
-                    <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo" styleClass="w-100"/>
+                <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
+                    <h:graphicImage library="images" name="#{userBean.bannerImage}" alt="#{msg['application.name']} logo" styleClass="w-100"/>
                 </a>
             </div>
 
@@ -21,7 +21,7 @@
                 <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
                     <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100" onsubmit="removeViewstate(this);">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
-                        <input type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
+                        <input id="searchfield" type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
 
                         <button id="searchbutton" title="#{msg.searchLabel}">
                             <i class="fa fa-search" aria-hidden="true"></i>
@@ -38,15 +38,15 @@
 				<ui:include src="language_switch.xhtml"/>
  
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <h:outputLink id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
+                    <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
                         <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
                     </h:outputLink>
 
                     <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
-                        <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}" />
-                        <p:menuitem url="#{request.contextPath}/lw/admin/dashboard/user.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}" />
-                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}" />
-                        <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}" />
+                        <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}"/>
+                        <p:menuitem url="#{request.contextPath}/lw/admin/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
+                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}"/>
+                        <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
                     </p:menu>
                 </ui:fragment>
             </h:form>

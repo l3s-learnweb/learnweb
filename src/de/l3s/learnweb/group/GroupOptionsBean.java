@@ -9,14 +9,15 @@ import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -32,8 +33,8 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
     private int editedGroupLeaderId;
     private int selectedResourceTargetGroupId;
 
-    @NotEmpty
-    @Size(min = 3, max = 60)
+    @NotBlank
+    @Length(min = 3, max = 60)
     private String editedGroupTitle;
     private String editedGroupDescription; // Group edit fields (Required for editing group)
     private String editedHypothesisLink;
@@ -201,6 +202,11 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
 
         return yourList;
+    }
+
+    public boolean isHypothesisEnabled() throws SQLException
+    {
+        return getGroup().getCourse().getOption(Option.Groups_Hypothesis_enabled);
     }
 
     public String getNewHypothesisLink()

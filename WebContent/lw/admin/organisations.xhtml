@@ -1,16 +1,14 @@
-<ui:composition 
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.organizations}"/>
 
-	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf" />
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg.organizations}" url="admin/organisations.jsf"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
@@ -19,17 +17,17 @@
 				<f:facet name="header">#{msg.organizations_all}</f:facet>
 
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
-					<h:outputText value="#{organisation.title}" />
+					<h:outputText value="#{organisation.title}"/>
 				</p:column>
 
-				<p:column headerText="#{msg.welcome_page}" >
-					<h:outputText value="#{organisation.welcomePage}" />
+				<p:column headerText="#{msg.welcome_page}">
+					<h:outputText value="#{organisation.welcomePage}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.options}" styleClass="td-text-right">
 					<h:link title="#{msg.edit}" outcome="/lw/admin/organisation">
 						<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-						<f:param name="organisation_id" value="#{organisation.id}" />
+						<f:param name="organisation_id" value="#{organisation.id}"/>
 						<h:outputText value="#{msg.edit}"/>
 					</h:link>
 				</p:column>

@@ -8,7 +8,7 @@
 <h:panelGroup layout="block">
     <h:form id="edit_folder_form">
 
-        <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}" />
+        <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}"/>
 
         <table id="edit_folder_table" class="full-width">
             <tr>
@@ -47,14 +47,14 @@
             </tr>
             <tr>
                 <td colspan="2" class="align-right">
-                    <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
+                    <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
 
                     <p:commandButton styleClass="mr-2"
                                      actionListener="#{rightPaneBean.cancelEditClickedResource}"
-                                     value="#{msg.cancel}" update=":right_pane" immediate="true" />
+                                     value="#{msg.cancel}" update=":right_pane" immediate="true"/>
                     <p:commandButton styleClass="mr-2"  oncomplete="resourceDND();"
                                      value="#{msg.save}" update=":folderGrid :right_pane :growl"
-                                     actionListener="#{rightPaneBean.editClickedResource}" />
+                                     actionListener="#{rightPaneBean.editClickedResource}"/>
                 </td>
             </tr>
         </table>

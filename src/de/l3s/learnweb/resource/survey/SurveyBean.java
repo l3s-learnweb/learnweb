@@ -14,7 +14,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped

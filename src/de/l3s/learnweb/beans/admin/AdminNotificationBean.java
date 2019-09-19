@@ -5,23 +5,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.StringHelper;
+import de.l3s.util.email.EmailValidator;
 import de.l3s.util.email.Mail;
 
 @Named
@@ -29,11 +29,11 @@ import de.l3s.util.email.Mail;
 public class AdminNotificationBean extends ApplicationBean
 {
     private static final Logger log = Logger.getLogger(AdminNotificationBean.class);
-    @NotEmpty
+    @NotBlank
     private String text;
-    @NotEmpty
+    @NotBlank
     private String title;
-    private boolean sendEmail = false; // send the message also per mail    
+    private boolean sendEmail = false; // send the message also per mail
     private boolean moderatorCanSendMail = false;
     //Alana
     private String[] listStudents;
@@ -47,7 +47,7 @@ public class AdminNotificationBean extends ApplicationBean
             return;
 
         if(StringUtils.isNotBlank(user.getEmail()))
-            moderatorCanSendMail = validator.isValid(user.getEmail(), null);
+            moderatorCanSendMail = validator.isValid(user.getEmail());
     }
 
     public void send() throws SQLException
@@ -91,7 +91,7 @@ public class AdminNotificationBean extends ApplicationBean
             {
                 log.debug("try send mail to: " + user.getEmail());
 
-                if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail(), null))
+                if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail()))
                     usersWithoutMail.add(user.getUsername());
                 else
                     recipients.add(user.getEmail());
@@ -144,44 +144,6 @@ public class AdminNotificationBean extends ApplicationBean
         return moderatorCanSendMail;
     }
 
-    //Alana
-    public void send2() throws SQLException
-    {
-        log.debug("Send2");
-        if(null == this.listStudents || this.listStudents.length == 0)
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
-            return;
-        }
-
-        TreeSet<Integer> selectedUsers = new TreeSet<>();
-        for(String userId : this.listStudents)
-        {
-            selectedUsers.add(Integer.parseInt(userId));
-        }
-
-        User fromUser = getUser();
-
-        Message message = new Message();
-        message.setFromUser(fromUser);
-        message.setTitle(this.title);
-        message.setText(this.text);
-        message.setTime(new Date());
-
-        UserManager um = getLearnweb().getUserManager();
-        int counter = 0;
-
-        for(int userId : selectedUsers)
-        {
-            User user = um.getUser(userId);
-            message.setToUser(user);
-            message.save();
-
-            counter++;
-        }
-        addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
-    }
-
     public String getText()
     {
         return text;
@@ -210,12 +172,6 @@ public class AdminNotificationBean extends ApplicationBean
     public void setSendEmail(boolean sendEmail)
     {
         this.sendEmail = sendEmail;
-    }
-
-    //Alana
-    public String[] getListStudents()
-    {
-        return listStudents;
     }
 
     public void setListStudents(String[] listStudents)

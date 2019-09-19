@@ -7,20 +7,20 @@
 <ui:param name="pageTitle" value="#{msg['application.name']}"/>
 
 <ui:define name="header_right">
-    <ul class="header-menu row justify-content-end">
-        <li><a href="#"><span>#{msg.loginLabel}</span></a></li>
+    <ul class="header-menu row justify-content-end px-0">
+        <li><a href="#login"><span>#{msg.loginLabel}</span></a></li>
         <li><a href="#about"><span>About us</span></a></li>
-        <li><a href="#courses"><span>Subscribe</span></a></li>
+        <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
     </ul>
 </ui:define>
 
 <ui:define name="center_layout">
     <div class="section-landing">
         <div id="header" class="header" style="background-image:url(#{resource['frontpage:luh.jpg']});">
-            <div class="container">
-                <div class="row row-eq-height">
-                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0">
-                        <div class="bg-white-90 p-3 pb-4 h-100">
+            <div class="container" id="login">
+                <div class="row align-items-center">
+                    <div class="col-md-6 col-lg-4 mb-4 mb-md-0" id="loginbox">
+                        <div class="bg-white-90 p-3 pb-4">
                             <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
                         </div>
                     </div>
@@ -28,11 +28,11 @@
                         <div class="header-news-list bg-dark-90 text-white">
                             <h2 class="m-0 bg-dark">#{msg.announcements}</h2>
 
-                            <p:dataList rows="3" value="#{adminAnnouncementsBean.availableAnnouncements}" var="news" type="unordered">
+                            <p:dataList value="#{frontpageBean.announcements}" var="news" type="unordered">
                                 <h4 class="news-title"><h:outputText value="#{news.title}"/></h4>
 
                                 <h:outputText value="#{news.date}" styleClass="news-date mb-1">
-                                    <f:convertDateTime type="date" timeZone="#{userBean.timeZone}"/>
+                                    <f:convertDateTime type="both" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
 
                                 <h:outputText escape="false" value="#{news.text}" styleClass="news-content"/>
@@ -43,24 +43,24 @@
             </div>
         </div>
 
-        <div id="about" class="about py-5">
-            <div class="container">
+        <div id="about">
+            <div class="container py-5">
                 <div class="row">
                     <div class="col-lg-6">
                         <h2 class="text-center text-primary">About us</h2>
                         <p><h:outputText value="#{msg.homepage}"/></p>
                     </div>
                     <div class="col-lg-6">
-                        <!--<ui:include src="/templates/user/guide.xhtml"/>-->
+                        <!--<ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>-->
                         <!--<iframe width="560" height="315" src="resources/templates/user/guide.xhtml" frameborder="0"></iframe>-->
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="courses" class="courses px-4 py-5 border-top-0">
-            <div class="container">
-                <h2 class="text-white text-center mb-3">Subscribe</h2>
+        <div id="courses">
+            <div class="container py-5">
+                <h2 class="text-white text-center mb-3">#{msg.registerLabel}</h2>
                 <div class="row align-items-start text-center">
                     <div class="col-md-6">
                         <div class="course-single bg-white h-100 mb-5 pb-4">
@@ -71,12 +71,31 @@
                                     <h:graphicImage library="frontpage" name="icons8-playground-96.png" alt="Playground Logo"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-left">
-                                    ​<h:outputText value="#{msg.standard_version_description}"/>
+                                    ​<h:outputText value="Use our playground to take a quick look at the features Learnweb offers. You don't need to register and can directly explore all functionalities"/>
                                 </div>
                             </div>
-                            <div class="course-footer mt-3">
-                                <p:commandButton type="button" value="Join"/>
+                            <div class="course-footer my-3">
+								<h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+									<h:outputText value="Explore Learnweb (without registration)" styleClass="ui-button-text"/>
+								</h:outputLink>
+							</div>
+                            <div>
+                                <h5 class="course-subheader py-1 m-0">Public course</h5>
+                                <div class="course-content row mx-auto my-3">
+                                    <div class="col-4 col-lg-3">
+                                        <h:graphicImage library="frontpage" name="public_course_icon.png" alt="Playground Logo"/>
+                                    </div>
+                                    <div class="col-8 col-lg-9 text-left">
+                                        ​<h:outputText value="#{msg.standard_version_description}"/>
+                                    </div>
+                                </div>
+                                <div class="course-footer mt-3">
+                                    <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+                                        <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+                                    </h:outputLink>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -88,11 +107,14 @@
                                     <h:graphicImage library="frontpage" name="interactive_puzzle.png" alt="YELL Logo"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-left">
-                                    ​<h:outputText value="#{msg.yell_description}"/>
+                                	​<h:outputText value="#{msg.yell_description}"/>
                                 </div>
                             </div>
                             <div class="course-footer mt-3">
-                                <p:commandButton type="button" value="Join"/>
+								<h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+									<h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+									<f:param name="wizard" value="yell" />
+								</h:outputLink>
                             </div>
                         </div>
                     </div>

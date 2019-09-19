@@ -7,9 +7,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -144,6 +145,37 @@ public class LogManager
 
     /**
      *
+     * @param limit if limit is -1 all log entries are returned
+     */
+    public List<LogEntry> getLogsByResource(int resourceId, int limit) throws SQLException
+    {
+        LinkedList<LogEntry> log = new LinkedList<>();
+
+        Set<Action> actions = new HashSet<>(Action.getActionsByCategory(ActionCategory.RESOURCE));
+        actions.remove(Action.opening_resource);
+        StringBuilder sb = new StringBuilder();
+        for(Action action : actions)
+        {
+            sb.append(",");
+            sb.append(action.ordinal());
+        }
+
+        String limitStr = limit > 0 ? "LIMIT " + limit : "";
+        PreparedStatement select = learnweb.getConnection().prepareStatement(LOG_SELECT + " WHERE target_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        select.setInt(1, resourceId);
+
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            log.add(new LogEntry(rs));
+        }
+        select.close();
+
+        return log;
+    }
+
+    /**
+     *
      * @param groupId
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entries are returned
@@ -179,14 +211,17 @@ public class LogManager
         return log;
     }
 
-    public SummaryOverview getLogsByGroup(int groupId, List<Action> actions, LocalDateTime from, LocalDateTime to) throws SQLException
+    public SummaryOverview getLogsByGroup(int groupId, Action[] actions, LocalDateTime from, LocalDateTime to) throws SQLException
     {
-        String actionsString = actions.stream()
-                .map(a -> String.valueOf(a.ordinal()))
-                .collect(Collectors.joining(","));
+        StringBuilder actionsString = new StringBuilder();
+        for(Action action : actions)
+        {
+            actionsString.append(",");
+            actionsString.append(action.ordinal());
+        }
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
+                LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + actionsString.toString().substring(1) + ") and timestamp between ? AND ? ORDER BY timestamp DESC "))
         {
             select.setInt(1, groupId);
             select.setTimestamp(2, Timestamp.valueOf(from));

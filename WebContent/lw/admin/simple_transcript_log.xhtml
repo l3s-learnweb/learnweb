@@ -7,14 +7,14 @@
     <ui:param name="pageTitle" value="#{msg.simple_transcript_log}"/>
     <ui:param name="loginRequired" value="true"/>
 
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg.simple_transcript_log}" url="admin/simple_transcript_log.jsf#"/>
     </ui:define>
 
     <ui:define name="center_layout">
         <h:form id="us_form" prependId="false">
             <p:panel header="#{msg.select_users}">
-                <ui:include src="/templates/user/user_select_form.xhtml"/>
+                <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
                 <p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
                                  process="@form" update=":transcript_table"/>
             </p:panel>

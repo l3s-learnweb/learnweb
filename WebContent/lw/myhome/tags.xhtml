@@ -1,15 +1,14 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.myTagsTitle}" />
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.myTagsTitle}"/>
 	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.myTagsTitle}" url="myhome/tags.jsf#"/>
 	</ui:define>
 
@@ -18,15 +17,15 @@
 			<f:facet name="header">#{msg.myTags}</f:facet>
 
 			<p:column headerText="#{msg.tags}">
-				<h:outputText value="#{tag.name}" />
+				<h:outputText value="#{tag.name}"/>
 			</p:column>
 
 			<p:column headerText="#{msg.resource}">
 				<p:repeat var="res" value="#{tag.resources}">
 					<h:outputLink value="myhome/resources.jsf" styleClass="mr-1">
-						<f:param name="resource_id" value="#{res.id}" />
-						<f:param name="group_id" value="#{res.groupId}" />
-						<h:outputText value="#{res.title}" escape="false" />
+						<f:param name="resource_id" value="#{res.id}"/>
+						<f:param name="group_id" value="#{res.groupId}"/>
+						<h:outputText value="#{res.title}" escape="false"/>
 					</h:outputLink>
 				</p:repeat>
 			</p:column>

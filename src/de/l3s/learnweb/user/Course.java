@@ -5,9 +5,10 @@ import java.sql.SQLException;
 import java.util.BitSet;
 import java.util.List;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
@@ -24,7 +25,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
     public enum Option implements Comparable<Option>
     {
         Unused_1,
-        Unused_2,
+        Groups_Hypothesis_enabled,
         Groups_Forum_categories_enabled,
         Groups_Only_moderators_can_create_groups,
         Users_Require_mail_address,
@@ -35,14 +36,16 @@ public class Course implements Serializable, Comparable<Course>, HasId
     }
 
     private int id = -1;
-    @Size(min = 1, max = 40)
+    @NotBlank
+    @Length(min = 2, max = 40)
     private String title;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
-    @Size(min = 1, max = 90)
+    @NotBlank
+    @Length(min = 2, max = 90)
     private String wizardParam;
     private int nextXUsersBecomeModerator;
-    @Size(min = 0, max = 65000)
+    @Length(max = 65000)
     private String welcomeMessage;
 
     private BitSet options = new BitSet(Option.values().length);
@@ -256,27 +259,6 @@ public class Course implements Serializable, Comparable<Course>, HasId
     public int compareTo(Course o)
     {
         return getTitle().compareTo(o.getTitle());
-
-        /*
-         old version tried to sort primarily by organisationTitle, secondarily by course title
-         but I'm not sure why
-
-        if(o.getOrganisationId() == getOrganisationId())
-            return getTitle().compareTo(o.getTitle());
-        
-        try
-        {
-            String title1 = (getOrganisationId() < 1) ? "" : getOrganisation().getTitle();
-            String title2 = (o.getOrganisationId() < 1) ? "" : o.getOrganisation().getTitle();
-            return title1.compareTo(title2);
-        }
-        catch(SQLException e)
-        {
-            log.error("unhandled error", e);
-        
-            return 0;
-        }
-        */
     }
 
     @Override

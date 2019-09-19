@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
@@ -24,9 +24,9 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;
-    @NotEmpty
+    @NotBlank
     private String password;
-    @NotEmpty
+    @NotBlank
     private String confirmPassword;
     private User user = null;
 

@@ -1,14 +1,13 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="pageTitle" value="#{msg.email_validation}"/>
-    <ui:param name="loginRequired" value="false"/>
     <ui:param name="smallPage" value="true"/>
     <ui:param name="disableGrowl" value="true"/>
+    <ui:param name="hideBreadcrumbs" value="true"/>
 
     <ui:define name="center_layout">
         <h:panelGroup id="confirmRequiredContent" layout="block">
@@ -29,8 +28,8 @@
 				</script> 
 				
 				<h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
-					<f:param value="#{confirmRequiredBean.user.realUsername}" />
-					<f:param value="#{confirmRequiredBean.user.email}" />
+					<f:param value="#{confirmRequiredBean.user.realUsername}"/>
+					<f:param value="#{confirmRequiredBean.user.email}"/>
 				</h:outputFormat>
             </p:panel>
 
@@ -38,7 +37,7 @@
                 <h:form id="emailform">
                     <h:panelGrid columns="3">
                         <h:outputLabel for="email">#{msg.email_address}: *</h:outputLabel>
-                        <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem" />
+                        <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem"/>
                         <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
 
                         <h:outputText value="" />

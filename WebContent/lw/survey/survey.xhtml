@@ -1,28 +1,27 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+
+    <ui:param name="pageTitle" value="Survey"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="disableGrowl" value="true"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
-			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}" />
-			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}" />
-			<f:viewAction action="#{surveyBean.onLoad}" />
-			<f:viewAction action="#{surveyBean.onLoadEdit}" />
+			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter"/>
+			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}"/>
+			<f:viewParam name="go_back" value="#{surveyBean.goBackPage}"/>
+			<f:viewAction action="#{surveyBean.onLoad}"/>
+			<f:viewAction action="#{surveyBean.onLoadEdit}"/>
 		</f:metadata>
 	</ui:define>
-	
-	<ui:param name="pageTitle" value="Survey" />
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="disableGrowl" value="true" />
 
-
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
@@ -32,47 +31,46 @@
 		<h:form id="form" rendered="#{surveyBean.resource != null}">
 
 			<p:panel>
-				<h:panelGroup rendered="#{surveyBean.formEnabled}" >
-					<h:panelGroup id="questions" styleClass="survey">
+				<h:panelGroup rendered="#{surveyBean.formEnabled}">
+					<h:panelGroup id="questions">
 						<h2 class="d-none d-print-block">#{surveyBean.resource.title}</h2>
 
                         <c:forEach var="question" items="#{surveyBean.resource.questions}">
-
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
-                                    <h3 class="h3">
-                                        <h:outputText value="${question.label}" />
+                                    <h3 class="my-4">
+                                        <h:outputText value="${question.label}"/>
                                     </h3>
 								</c:if>
 								<c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
-									<h:outputText value="${question.label}" />
+									<h:outputText value="${question.label}"/>
 								</c:if>
 							</c:if>
 
                             <c:if test="#{!fn:startsWith(question.type,'FULLWIDTH_')}">
-                                <div class="question">
+                                <div class="form-group">
                                     <c:if test="#{question.type eq 'INPUT_TEXT'}">
                                         <p:outputLabel for="input_#{question.id}" value="#{question.label}"></p:outputLabel>
                                         <p:inputText id="input_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-                                                     title="#{question.info}" >
+                                                     title="#{question.info}">
 
-                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
+                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
                                         </p:inputText>
                                         <p:tooltip for="input_#{question.id}" showEvent="focus"
                                                    hideEvent="blur" position="left"
-                                                   rendered="#{not empty question.info}" />
+                                                   rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
                                         <p:outputLabel for="input_area_#{question.id}" value="#{question.label}"></p:outputLabel>
                                         <p:inputTextarea id="input_area_#{question.id}" required="#{question.required and empty param[save.clientId]}" value="#{surveyBean.userAnswers.answers[question.id]}"
-                                                         title="#{question.info}" rows="4" >
+                                                         title="#{question.info}" rows="4">
 
-                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}" />
+                                            <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
                                         </p:inputTextarea>
                                         <p:tooltip for="input_area_#{question.id}" showEvent="focus"
                                                    hideEvent="blur" position="left"
-                                                   rendered="#{not empty question.info}" />
+                                                   rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'AUTOCOMPLETE'}">
@@ -81,10 +79,10 @@
                                         <p:autoComplete id="input_complete_#{question.id}"
                                                         required="#{question.required and empty param[save.clientId]}"
                                                         value="#{surveyBean.userAnswers.answers[question.id]}"
-                                                        completeMethod="#{question.completeText}" />
+                                                        completeMethod="#{question.completeText}"/>
                                         <p:tooltip for="input_complete_#{question.id}" showEvent="hover"
                                                    position="left" rendered="#{true}"
-                                                   value="#{question.info}" />
+                                                   value="#{question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}">
@@ -95,9 +93,9 @@
                                                          required="#{question.required and empty param[save.clientId]}"
                                                          title="#{question.info}">
                                             <f:selectItems value="#{question.answers}" var="option"
-                                                           itemLabel="#{option}" itemValue="#{option}" />
+                                                           itemLabel="#{option}" itemValue="#{option}"/>
                                         </p:selectOneMenu>
-                                        <p:tooltip for="input_selectone_#{question.id}" position="left" rendered="#{not empty question.info}" />
+                                        <p:tooltip for="input_selectone_#{question.id}" position="left" rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'MULTIPLE_MENU'}">
@@ -109,9 +107,9 @@
                                                               filter="#{question.answers.size() gt 8}"
                                                               filterMatchMode="startsWith" panelStyle="">
                                             <f:selectItems value="#{question.answers}" var="option"
-                                                           itemLabel="#{option.label}" itemValue="#{option.value}" />
+                                                           itemLabel="#{option.label}" itemValue="#{option.value}"/>
                                         </p:selectCheckboxMenu>
-                                        <p:tooltip for="input_selectmultiple_#{question.id}" position="left" rendered="#{not empty question.info}" />
+                                        <p:tooltip for="input_selectmultiple_#{question.id}" position="left" rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'ONE_RADIO'}">
@@ -121,12 +119,12 @@
                                                           value="#{surveyBean.userAnswers.answers[question.id]}"
                                                           label="" multiple="true" title="#{question.info}"
                                                           required="#{question.required and empty param[save.clientId]}"
-                                                          filter="#{question.answers.size() gt 8}"
+                                                          filter="#{question.answers.size() gt 8}" layout="responsive" columns="10"
                                                           filterMatchMode="startsWith" panelStyle="">
                                             <f:selectItems value="#{question.answers}" var="option"
-                                                           itemLabel="#{option}" itemValue="#{option}" />
+                                                           itemLabel="#{option}" itemValue="#{option}"/>
                                         </p:selectOneRadio>
-                                        <p:tooltip for="input_oneradio_#{question.id}" position="left" rendered="#{not empty question.info}" />
+                                        <p:tooltip for="input_oneradio_#{question.id}" position="left" rendered="#{not empty question.info}"/>
                                     </c:if>
 
                                     <c:if test="#{question.type eq 'MANY_CHECKBOX'}">
@@ -139,9 +137,9 @@
                                                               filterMatchMode="startsWith" panelStyle=""
                                                               layout="grid" columns="1">
                                             <f:selectItems value="#{question.answers}" var="option"
-                                                           itemLabel="#{option}" itemValue="#{option}" />
+                                                           itemLabel="#{option}" itemValue="#{option}"/>
                                         </p:selectManyCheckbox>
-                                        <p:tooltip for="input_manycheckbox_#{question.id}" position="left" rendered="#{not empty question.info}" />
+                                        <p:tooltip for="input_manycheckbox_#{question.id}" position="left" rendered="#{not empty question.info}"/>
                                     </c:if>
                                 </div>
                             </c:if>
@@ -150,8 +148,8 @@
 					
 					<div class="mt-3">
                         <div class="float-right">
-                            <p:commandButton value="#{msg.Print}" type="button" style="float:left;" styleClass="greenbutton resource_button">
-                                <p:printer target="questions" />
+                            <p:commandButton value="#{msg.Print}" type="button">
+                                <p:printer target="questions"/>
                             </p:commandButton>
                         </div>
 
@@ -159,7 +157,7 @@
 							action="#{surveyBean.onSubmit()}" update=":message @form"
 							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
 							ajax="true">
-							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}" />
+							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
 						</p:commandButton>
 	
 						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
@@ -169,21 +167,20 @@
 	                     	process="@form" 
 	                     	update="@form :message">
 						</p:commandButton>
-						<br class="clear" />
 					</div>
 				</h:panelGroup>	
 
 				<ui:fragment rendered="#{not surveyBean.formEnabled}">
-					<h:outputText value="#{msg['survey.cant_edit']}" />
+					<h:outputText value="#{msg['survey.cant_edit']}"/>
 
 					<h:outputLink value="survey/answer.jsf" rendered="#{surveyBean.userAnswers.saved}">
-						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}" />
-						<f:param name="user_id" value="#{surveyBean.surveyUserId}" />		
-						<h:outputText value="#{msg['survey.View_answers']}" />
+						<f:param name="resource_id" value="#{surveyBean.surveyResourceId}"/>
+						<f:param name="user_id" value="#{surveyBean.surveyUserId}"/>
+						<h:outputText value="#{msg['survey.View_answers']}"/>
 					</h:outputLink>
 
 					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}">
-						<h:outputText value="#{surveyBean.goBackPageTitle}" />
+						<h:outputText value="#{surveyBean.goBackPageTitle}"/>
 					</h:outputLink>
 				</ui:fragment>	
 					

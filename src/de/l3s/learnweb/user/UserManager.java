@@ -217,7 +217,7 @@ public class UserManager
 
             if(!rs.next())
             {
-                log.error("invalid user id was requested: " + userId, new IllegalArgumentException());
+                log.warn("invalid user id was requested: " + userId, new IllegalArgumentException());
                 return null;
             }
             user = createUser(rs);

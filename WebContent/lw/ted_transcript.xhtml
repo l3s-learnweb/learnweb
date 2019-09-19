@@ -4,37 +4,37 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}"/>
+<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
+<ui:param name="helpTextStyle" value="tedtranscript_help"/>
+
 <ui:define name="metadata">
 	<f:metadata>
-		<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}" />
+		<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}"/>
 		<f:viewAction action="#{tedTranscriptBean.preRenderView}"/>
 	</f:metadata>
 </ui:define>
 
-<ui:param name="loginRequired" value="true" />
-<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}" />
-<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
-<ui:param name="helpTextStyle" value="tedtranscript_help" />
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
 	<p:menuitem value="#{msg.tedTranscriptTitle}" url=""/>
 </ui:define>
+
 <ui:define name="center_layout">
 	<div class="mt-3 row section-ted-transcript">
 			<h:form class="d-none" id="command_form">
 				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSetSynonyms()}" name="setSynonymsForWord" process="@this" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
-				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
-				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options" />
-				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
+				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl"/>
+				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options"/>
+				<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none"/>
 			</h:form>
 
-			<h:outputStylesheet name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js" />
-			<h:outputStylesheet name="vendor/contextMenu-v2.7.0/jquery.contextMenu.min.css" />
-			<h:outputScript name="vendor/contextMenu-v2.7.0/jquery.contextMenu.min.js" />
+			<h:outputScript name="vendor/contextMenu-v2.8.0/jquery.contextMenu.min.js"/>
 
-			<h:outputStylesheet name="vendor/spectrum-v1.8.0/spectrum.css" />
-			<h:outputScript name="vendor/spectrum-v1.8.0/spectrum.js" />
+			<h:outputStylesheet name="vendor/spectrum-v1.8.0/spectrum.css"/>
+			<h:outputScript name="vendor/spectrum-v1.8.0/spectrum.js"/>
 
-			<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="head" />
+			<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="head"/>
 
 			<script type="text/javascript">
 				var noteId = #{tedTranscriptBean.noteId};
@@ -42,7 +42,7 @@
 			</script>
 			<div class="col-md px-0 d-flex">
 			<div id="ted_content" class="col position-sticky">
-				<div class="embed-responsive embed-responsive-1by1 sticky-top" style="top: 5rem;"    id="ted_embedded" >
+				<div class="embed-responsive embed-responsive-1by1 sticky-top" style="top: 5rem;"    id="ted_embedded">
 					<!-- ${tedTranscriptBean.tedResource.embedded} -->
 				</div>
 			</div>
@@ -50,10 +50,10 @@
 			<div class="col-md" style="">
 				<h:panelGroup layout="block" id="transcript_column"  class="right_bar">
 					<p:outputPanel id="transcript_options">
-						<div class="center-header">
+						<div class="p-2 bg-gray200">
 							<h:form>
-								<p:outputLabel for="@next" styleClass="mr-2" value="#{msg.select_transcript_lang}:" />
-								<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}" >
+								<p:outputLabel for="@next" styleClass="mr-2" value="#{msg.select_transcript_lang}:"/>
+								<p:selectOneMenu id="select_lang" styleClass="mr-2" value="#{tedTranscriptBean.transcriptLanguage}">
 									<f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 									<p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 								</p:selectOneMenu>
@@ -102,7 +102,7 @@
 							<p:tab title="#{msg.summary}">
 								<h:form prependId="false" styleClass="mb-2">
 									<p:outputLabel for="@next" value="#{msg.brief_summary}"/>
-									<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false"  value="#{tedTranscriptBean.summaryTextS}" /><br/>
+									<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false"  value="#{tedTranscriptBean.summaryTextS}"/><br/>
 									<h:outputText id="char_s"/><br/>
 									<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitShortSummary()}"/>
 								</h:form>

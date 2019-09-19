@@ -5,28 +5,29 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui">
 
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
+    <ui:param name="helpText" value="" />
     <ui:param name="rightPane" value="true"/>
+
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}" />
+            <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
             <f:viewAction action="#{rightPaneBean.onLoad}"/>
-            <f:viewAction action="#{submissionModeratorBean.onLoad}" />
+            <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
         </f:metadata>
     </ui:define>
 
-    <ui:param name="loginRequired" value="true" />
-    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
-    <ui:param name="helpText" value="" />
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
         <p:menuitem value="#{submissionModeratorBean.submission.title}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
 
     <ui:define name="center_layout">
         <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
-            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="load_editor(); " />
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
 
         <h:panelGroup id="resourcesView" layout="block">
@@ -35,7 +36,7 @@
 
         <h:panelGroup layout="block">
             <p:panel header="#{submissionModeratorBean.submission.title}">
-                <div class="form-group">
+                <div class="form-group d-flex flex-column">
                     <span class="font-weight-lighter">#{msg['Submission.open_date']}:
                         <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.openDatetime}">
                             <f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
@@ -49,7 +50,7 @@
                     </span>
 
                     <span class="font-weight-lighter">#{msg.course}:
-                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}" />
+                        <h:outputText styleClass="font-weight-light" value="#{submissionModeratorBean.submission.course.title}"/>
                     </span>
                 </div>
 
@@ -57,23 +58,21 @@
 
                 <h:panelGroup layout="block" id="user_submissions">
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
-                        <div class="#{status.first ? (status.last ? '' : 'mb-5') : status.last ? 'mt-5' : 'my-5' } ">
+                        <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
                             <div class="d-flex align-items-center p-2 bg-light">
-                                <img id="userpic" class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
-                                <div class="d-flex align-items-center">
-                                    <h3 class="h3 mr-1 mb-0">#{userSubmission.user.username}</h3>
+                                <img class="profile-picture mr-4 mr-md-2" src="${learnwebBean.getProfileImage(userSubmission.getUser())}" alt="Profile picture"/>
+                                <div class="d-flex align-items-center justify-content-between w-100">
+                                    <h4 class="mr-1 mb-0">#{userSubmission.user.username}</h4>
                                     <h:form prependId="false">
-                                        <p:commandLink  title="unlock submission" rendered="#{userSubmission.submitStatus}"
+                                        <p:commandButton  value="locked" styleClass="moderator-btn" rendered="#{userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-                                            <i class="fa fa-fw fa-lock text-dark" aria-hidden="true"></i>
-                                        </p:commandLink>
+                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
+                                        </p:commandButton>
 
-                                        <p:commandLink  title="lock submission" rendered="#{not userSubmission.submitStatus}"
+                                        <p:commandButton  value="unlocked"  styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
-                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
-                                            <i class="fa fa-fw fa-unlock text-dark" aria-hidden="true"></i>
-                                        </p:commandLink>
+                                            <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
+                                        </p:commandButton>
                                     </h:form>
                                 </div>
                             </div>
@@ -93,30 +92,29 @@
 
                                     <div class="col-auto d-flex flex-column mt-2">
                                         <span>
-                                            <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" />
+                                            <h:outputText value="#{logEntry.resource.shortDescription}" escape="false"/>
                                         </span>
 
-                                        <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false" />
+                                        <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false"/>
                                     </div>
                                 </div>
                             </h:panelGroup>
 
                             <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
 
-                            <h:panelGroup styleClass="py-3" layout="block" rendered="#{not empty userSubmission.resources}">
+                            <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                                 <h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
                                     <h:panelGroup styleClass="res-grid" layout="block">
-                                        <ui:repeat var="res" value="#{userSubmission.resources}" >
+                                        <ui:repeat var="res" value="#{userSubmission.resources}">
                                             <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                                                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                                    <ui:param name="res" value="#{res}" />
+                                                    <ui:param name="res" value="#{res}"/>
                                                 </ui:decorate>
                                             </h:panelGroup>
                                         </ui:repeat>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </h:panelGroup>
-                            <hr/>
                         </div>
                     </p:repeat>
                 </h:panelGroup>
@@ -128,7 +126,7 @@
 
     <ui:define name="right_layout">
         <ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-            <ui:param name="bean" value="#{submissionBean}" />
+            <ui:param name="bean" value="#{submissionBean}"/>
         </ui:decorate>
     </ui:define>
 </ui:composition>

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+    <!--@elvariable id="view" type="java.lang.String"-->
+    <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
+
+    <ui:fragment rendered="#{view eq 'list'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/search/resources_list.xhtml">
+            <ui:param name="resources" value="#{resources}"/>
+        </ui:decorate>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{view eq 'float'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/search/resources_float.xhtml">
+            <ui:param name="resources" value="#{resources}"/>
+        </ui:decorate>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{view eq 'grid'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/search/resources_grid.xhtml">
+            <ui:param name="resources" value="#{resources}"/>
+        </ui:decorate>
+    </ui:fragment>
+</ui:composition>

@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
@@ -19,9 +19,9 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.IResourceContainer;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.IResourceContainer;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
@@ -37,14 +37,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
     private User leader;
     private int courseId;
 
-    @NotEmpty
-    @Size(min = 3, max = 60)
+    @NotBlank
+    @Length(min = 3, max = 60)
     private String title;
     private String description;
     private String metadata1;
     private String hypothesisLink;
     private String hypothesisToken;
-    @Size(max = 50)
+    @Length(max = 50)
     private String language;
     private int categoryId;
 
@@ -243,6 +243,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
      * @return
      * @throws SQLException
      */
+    @Override
     public List<Folder> getSubFolders() throws SQLException
     {
         if(folders == null)

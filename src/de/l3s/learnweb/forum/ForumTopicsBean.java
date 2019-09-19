@@ -6,12 +6,13 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -29,7 +30,8 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     private Group group;
     private List<ForumTopic> topics;
 
-    @NotEmpty
+    @NotBlank
+    @Length(max = 100)
     private String newTopicTitle;
     private ForumPost newPost;
 
@@ -128,5 +130,4 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     {
         this.newTopicTitle = newTopicTitle;
     }
-
 }

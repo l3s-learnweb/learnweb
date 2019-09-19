@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.validation.constraints.Size;
-
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.util.StringHelper;
 
@@ -22,15 +21,15 @@ public class GlossaryTerm implements Serializable
     private int entryId;
     private int userId; // the user who created this term
     private int lastChangedByUserId;
-    @Size(max = 100)
+    @Length(max = 100)
     private String term;
     private List<String> uses;
-    @Size(max = 200)
+    @Length(max = 200)
     private String pronounciation;
-    @Size(max = 100)
+    @Length(max = 100)
     private String acronym;
     private String source;
-    @Size(max = 1500)
+    @Length(max = 1500)
     private String phraseology;
     private Locale language; //TODO:: change to locale when PF bug resolved
     private Timestamp timestamp;

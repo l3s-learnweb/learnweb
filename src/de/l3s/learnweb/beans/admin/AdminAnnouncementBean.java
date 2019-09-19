@@ -1,20 +1,16 @@
 package de.l3s.learnweb.beans.admin;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
-
+import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.beans.ApplicationBean;
+import org.apache.log4j.Logger;
+import javax.validation.constraints.NotBlank;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-
-import com.google.api.client.util.DateTime;
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.Announcement;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Date;
 
 
 @Named
@@ -24,21 +20,19 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     private static final long serialVersionUID = -5638619327036890427L;
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
-    @NotEmpty
+    @NotBlank
     private String text;
-    @NotEmpty
+    @NotBlank
     private String title;
-    private int announcementId;
-    private Announcement announcement;
-    @NotEmpty
+    @NotBlank
     private Date date;
     private boolean hidden;
 
+    private int announcementId;
+    private Announcement announcement;
+
     public void onLoad() throws SQLException
     {
-        // announcement = getLearnweb().getAnnouncementsManager().getNewsById(getParameterInt("announcement_id"));
-        log.debug("init AdminOrganisationBean");
-
         if(getUser() == null)
             return;
 
@@ -47,31 +41,29 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             addAccessDeniedMessage();
             return;
         }
-        if(announcementId > 0){
-            announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
-            if(announcement == null)
-            {
-                addGrowl(FacesMessage.SEVERITY_FATAL, "invalid announcement_id parameter");
-            }else{
-                log.debug(announcement.toString());
-            }
-        }else{
-            log.debug("announcementId is " + announcementId);
-        }
 
+        announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
+        if(announcement == null)
+        {
+            addGrowl(FacesMessage.SEVERITY_FATAL, "invalid announcement_id parameter");
+        }else{
+            setDate(announcement.getDate());
+            setText(announcement.getText());
+            setTitle(announcement.getTitle());
+            setHidden(announcement.isHidden());
+        }
     }
 
-    public void onUpdateNews(int announcementId) throws SQLException
+    public void onUpdateNews(int announcementId)
     {
         try
         {
             Announcement announcement = new Announcement();
-            announcement.setTitle(this.announcement.getTitle());
-            announcement.setText(this.announcement.getText());
-            announcement.setDate(this.announcement.getDate());
-            announcement.setId(announcementId);
-            announcement.setHidden(this.announcement.isHidden());
-            log.debug(announcement.toString());
+            announcement.setTitle(this.getTitle());
+            announcement.setText(this.getText());
+            announcement.setDate(this.getDate());
+            announcement.setId(this.getAnnouncementId());
+            announcement.setHidden(this.isHidden());
             getLearnweb().getAnnouncementsManager().update(announcement);
             addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was updated !");
         }
@@ -79,9 +71,7 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         {
             addErrorMessage(e);
         }
-
     }
-
 
     public String getText()
     {
@@ -103,7 +93,6 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         this.title = title;
     }
 
-
     public Announcement getAnnouncement()
     {
         return announcement;
@@ -118,4 +107,12 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
     {
         this.announcementId = announcementId;
     }
+
+    public Date getDate() { return date; }
+
+    public void setDate(final Date date) { this.date = date; }
+
+    public boolean isHidden() { return hidden; }
+
+    public void setHidden(final boolean hidden) { this.hidden = hidden; }
 }

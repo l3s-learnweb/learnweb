@@ -1,7 +1,7 @@
 body {
     .ui-panel {
     	border:0;
-    	
+        margin-bottom: 1rem;
         padding: 0;
         .ui-panel-titlebar {
             border: 0 none;
@@ -240,13 +240,13 @@ body {
         }
         .ui-button-text-icon-left {
             .ui-icon {
-                margin-left: 10px;
-                margin-top: -10px;
+                margin-left: 0;
+                margin-top: -7px;
             }
         }
         .ui-button-text {
-            margin-left: 20px;
-            margin-right: 20px;
+            //margin-left: 20px;
+            //margin-right: 20px;
         }
         .ui-button-icon-only {
             border-radius: 50%;

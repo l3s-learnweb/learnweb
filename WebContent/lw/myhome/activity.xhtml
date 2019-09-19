@@ -1,86 +1,79 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.activity_stream}"/>
     <ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
     <ui:param name="rightPane" value="true"/>
-    <ui:define name="sub_breadcrumb">
+
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg.activity_stream}" url="myhome/activity.jsf#"/>
     </ui:define>
+
     <ui:define name="center_layout">
-		
         <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":datagrid" />
-            <p:remoteCommand name="resourceUpdatedHook" update=":datagrid" />
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
+
+        <h:panelGroup id="resourcesView" layout="block">
+            <!-- dummy for right pane -->
+        </h:panelGroup>
 
         <p:panel header="#{msg.activity_stream}">
             #{msg.activity_message}
-        </p:panel>
 
-        <p:repeat value="#{activityResourceBean.newsList}" id="datagrid" var="logEntry">
-            <p:panel styleClass="rounded mt-1 text-break">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex align-items-center">
-                            <img id="userpic" class="profile-picture mr-4 mr-md-2" src="#{logEntry.userImage}" alt="Profile picture"/>
-                            <div class="d-flex flex-column">
-                                <div>
-                                    <h:outputText value="#{logEntry.description}" escape="false"  />
-                                    <h:panelGroup rendered="#{logEntry.queryNeeded}">
-                                        <h:outputText value=" #{msg.with_query}" escape="false"  />
-                                        <h:outputLink value="search.jsf">
-                                            <h:outputText value=" #{logEntry.resource.query}"/>
-                                            <f:param name="query" value="#{logEntry.resource.query}"/>
-                                            <f:param name="action" value="web"/>
-                                        </h:outputLink>
-                                        <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
-                                    </h:panelGroup>
-                                </div>
+            <p:repeat value="#{activityResourceBean.newsList}" id="datagrid" var="logEntry" varStatus="status">
+                <div class="#{status.last ? 'pt-3' : 'py-3 border-bottom'}">
+                    <div class="d-flex align-items-center log-entry">
+                        <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
-                                <small><h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false" styleClass="font-weight-light"/></small>
-                            </div>
+                        <div class="log-details">
+                            <p class="mb-0 log-description">
+                                <h:outputText value="#{logEntry.description}" escape="false"  />
+                                <h:panelGroup rendered="#{logEntry.queryNeeded}">
+                                    <h:outputText value=" #{msg.with_query}" escape="false"  />
+                                    <h:outputLink styleClass="log-query" value="search.jsf">
+                                        <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
+                                        <f:param name="query" value="#{logEntry.resource.query}"/>
+                                        <f:param name="action" value="web"/>
+                                    </h:outputLink>
+                                    <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+                                </h:panelGroup>
+                            </p>
+                            <p class="small font-weight-light mb-0 log-date">
+                                <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
+                            </p>
                         </div>
-
                     </div>
 
-                    <h:panelGroup styleClass="col-12" rendered="#{logEntry.resource!=null}">
-                        <hr/>
-                        <div class="row">
-                            <ui:fragment rendered="#{not empty logEntry.resource.thumbnail3}">
-                                <div class="col-5 col-md-3">
-                                    <h:form>
-                                        <p:commandLink update=":right_pane">
-                                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
-                                            <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
-                                        </p:commandLink>
-                                    </h:form>
-                                </div>
-                            </ui:fragment>
-                                <div class="col-auto d-flex flex-column mt-2">
-                                <span>
-                                    <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" />
-                                </span>
-                                    <h:outputText value="#{msg.author}: #{logEntry.resource.author}" rendered="#{not empty logEntry.resource.author}" escape="false" />
-                                </div>
-                        </div>
-
+                    <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty logEntry.resource}">
+                        <h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+                            <h:panelGroup styleClass="res-grid" layout="block">
+                                <ui:repeat var="res" value="#{logEntry.resource}">
+                                    <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                                            <ui:param name="res" value="#{res}"/>
+                                        </ui:decorate>
+                                    </h:panelGroup>
+                                </ui:repeat>
+                            </h:panelGroup>
+                        </h:panelGroup>
                     </h:panelGroup>
-                    <h:panelGroup styleClass="col-12" rendered="#{logEntry.resource!=null}">
+
+                    <h:panelGroup styleClass="mt-3" rendered="#{logEntry.resource!=null}">
                         <h:outputText value="#{msg.tags}: " escape="false" rendered="#{not empty logEntry.resource.tagsAsString}"/>
-                        <h:outputText value=" #{logEntry.resource.tagsAsString} " rendered="#{not empty logEntry.resource.tagsAsString}" escape="false" />
+                        <h:outputText value=" #{logEntry.resource.tagsAsString} " rendered="#{not empty logEntry.resource.tagsAsString}" escape="false"/>
                     </h:panelGroup>
                 </div>
-            </p:panel>
-        </p:repeat>
+            </p:repeat>
+        </p:panel>
 
-        <h:panelGroup id="resourcesView"><!-- dummy element --></h:panelGroup>
-        
     </ui:define>
 
     <ui:define name="right_layout">

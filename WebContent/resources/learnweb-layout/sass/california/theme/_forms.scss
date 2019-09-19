@@ -39,7 +39,7 @@ body {
             outline: 0 none;
         }
 
-        &.ui-state-hover, &.ui-state-focus {
+        &:hover, &.ui-state-hover, &.ui-state-focus {
             background-color: $primaryButtonHoverBgColor;
             border-color: $primaryButtonHoverBgColor;
         }
@@ -83,7 +83,8 @@ body {
             }
 
             .ui-icon {
-                margin-top: -1*($input-btn-padding-y*1.5);
+                margin-top: -1.6*$input-btn-padding-y;
+                margin-left: -7px;
             }
         }
 
@@ -99,7 +100,7 @@ body {
             background-color: $primaryAltButtonBgColor;
             border: 1px solid $primaryAltButtonBgColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $primaryAltButtonHoverBgColor;
                 border-color: $primaryAltButtonHoverBgColor;
             }
@@ -114,7 +115,7 @@ body {
             background-color: $secondaryButtonBgColor;
             border: 1px solid $secondaryButtonBgColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $secondaryButtonHoverBgColor;
                 border-color: $secondaryButtonHoverBgColor;
             }
@@ -130,7 +131,7 @@ body {
             border: 1px solid $outlineButtonBorderColor;
             color: $outlineButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $outlineButtonHoverBgColor;
                 border-color: $outlineButtonHoverBorderColor;
                 color: $outlineButtonHoverTextColor;
@@ -148,7 +149,7 @@ body {
             border: 1px solid $blueButtonBgColor;
             color: $blueButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $blueButtonHoverBgColor;
                 border-color: $blueButtonHoverBgColor;
             }
@@ -164,7 +165,7 @@ body {
             border: 1px solid $cyanButtonBgColor;
             color: $cyanButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $cyanButtonHoverBgColor;
                 border-color: $cyanButtonHoverBgColor;
             }
@@ -180,7 +181,7 @@ body {
             border: 1px solid $greenButtonBgColor;
             color: $greenButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $greenButtonHoverBgColor;
                 border-color: $greenButtonHoverBgColor;
             }
@@ -196,7 +197,7 @@ body {
           border: 1px solid $yellowButtonBgColor;
           color: $yellowButtonTextColor;
 
-          &.ui-state-hover, &.ui-state-focus {
+          &:hover, &.ui-state-hover, &.ui-state-focus {
               background-color: $yellowButtonHoverBgColor;
               border-color: $yellowButtonHoverBgColor;
           }
@@ -212,7 +213,7 @@ body {
             border: 1px solid $purpleButtonBgColor;
             color: $purpleButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $purpleButtonHoverBgColor;
                 border-color: $purpleButtonHoverBgColor;
             }
@@ -228,7 +229,7 @@ body {
             border: 1px solid $pinkButtonBgColor;
             color: $pinkButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $pinkButtonHoverBgColor;
                 border-color: $pinkButtonHoverBgColor;
             }
@@ -244,7 +245,7 @@ body {
             border: 1px solid $bluegreyButtonBgColor;
             color: $bluegreyButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $bluegreyButtonHoverBgColor;
                 border-color: $bluegreyButtonHoverBgColor;
             }
@@ -260,7 +261,7 @@ body {
             border: 1px solid $tealButtonBgColor;
             color: $tealButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $tealButtonHoverBgColor;
                 border-color: $tealButtonHoverBgColor;
             }
@@ -276,7 +277,7 @@ body {
             border: 1px solid $orangeButtonBgColor;
             color: $orangeButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $orangeButtonHoverBgColor;
                 border-color: $orangeButtonHoverBgColor;
             }
@@ -292,7 +293,7 @@ body {
             border: 1px solid $greyButtonBgColor;
             color: $greyButtonTextColor;
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $greyButtonHoverBgColor;
                 border-color: $greyButtonHoverBgColor;
             }
@@ -305,13 +306,11 @@ body {
     }
 
     .ui-chkbox {
-        display: inline-block;
-        vertical-align: middle;
+        display: flex;
         margin: 0;
-        width: 20px;
-        height: 20px;
 
         .ui-chkbox-box {
+            flex-shrink: 0;
             border: 1px solid $inputBorderColor;
             background-color: $inputBgColor;
             width: 20px;
@@ -1041,7 +1040,7 @@ body {
             border: 1px solid $primaryButtonBgColor;
             @include border-radius(0px);
 
-            &.ui-state-hover, &.ui-state-focus {
+            &:hover, &.ui-state-hover, &.ui-state-focus {
                 background-color: $primaryButtonHoverBgColor;
                 border-color: $primaryButtonHoverBgColor;
             }

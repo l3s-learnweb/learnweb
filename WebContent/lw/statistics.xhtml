@@ -1,14 +1,14 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="pageTitle" value="#{msg.statistics}"/>
 	<ui:param name="smallPage" value="true"/>
 
-	<ui:define name="sub_breadcrumb">
-		<p:menuitem value="#{msg.statistics}" url="statistics.jsf" />
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg.statistics}" url="statistics.jsf"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
@@ -77,22 +77,22 @@
 
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">#{msg.average_number_of_rates_per_rated_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
                         </tr>
 
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">#{msg.average_number_of_tags_per_tagged_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
                         </tr>
 
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">#{msg.average_number_of_comments_per_commented_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
                         </tr>
                         <!--
                         <tr class="ui-widget-content ui-datatable-even">
                             <td><div class="ui-dt-c">average session length</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText> minutes</div></td>
+                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText> minutes</div></td>
                         </tr>
                          -->
                     </tbody>
@@ -100,15 +100,15 @@
             </div>
         </p:panel>
 
-        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}" >
+        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
             <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
             <p:column headerText="#{msg.month}">
-                <h:outputText value="#{month.key}" />
+                <h:outputText value="#{month.key}"/>
             </p:column>
 
             <p:column headerText="#{msg.active_users}">
-                <h:outputText value="#{month.value}" />
+                <h:outputText value="#{month.value}"/>
             </p:column>
         </p:dataTable>
 

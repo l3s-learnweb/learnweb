@@ -49,8 +49,8 @@ import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -94,7 +94,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private List<String> authors;
 
     //Grid or List view of group resources
-    private boolean gridView = false;
+    private boolean gridView = true;
 
     //for extended Metadata filter search
     private ExtendedMetadataSearch extendedMetadataSearch;
@@ -127,6 +127,10 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(null == user) // not logged in
             return;
+
+        if (user.getOrganisation().getId() == 480) {
+            gridView = false;
+        }
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
 

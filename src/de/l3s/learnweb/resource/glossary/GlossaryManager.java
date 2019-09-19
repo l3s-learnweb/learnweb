@@ -19,8 +19,8 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
-import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
 
 public class GlossaryManager
 {

@@ -1,25 +1,16 @@
 package de.l3s.learnweb.user;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.FrontpageServlet;
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.component.ActiveSubMenu;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.user.Organisation.Option;
+import de.l3s.util.StringHelper;
+import de.l3s.util.bean.BeanHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
@@ -29,16 +20,18 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.DynamicMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.FrontpageServlet;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.component.ActiveSubMenu;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupManager;
-import de.l3s.learnweb.user.Organisation.Option;
-import de.l3s.util.BeanHelper;
-import de.l3s.util.StringHelper;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.*;
 
 @Named
 @SessionScoped
@@ -397,11 +390,21 @@ public class UserBean implements Serializable
      */
     public String getBannerImage() throws SQLException
     {
-        return getActiveOrganisation().getBannerImage();
+        String bannerImage = null;
+
+        if(isLoggedIn())
+            bannerImage = getActiveOrganisation().getBannerImage();
+
+        if(StringUtils.isNotEmpty(bannerImage))
+            return bannerImage;
+
+        return "logos/logo_learnweb.png";
     }
 
     public String getBannerLink() throws SQLException
     {
+        if(!isLoggedIn())
+            return Learnweb.getInstance().getSecureServerUrl();
 
         return Learnweb.getInstance().getSecureServerUrl() + getActiveOrganisation().getWelcomePage();
     }
@@ -538,7 +541,7 @@ public class UserBean implements Serializable
                 ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), null, su + "/lw/group/overview.jsf?group_id=" + group.getId());
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
                 theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
-                theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
+                // theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
                 if(!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
                 {
                     theGroup.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("links"), "fa fa-fw fa-link", su + "/lw/group/links.jsf?group_id=" + group.getId()));
@@ -567,7 +570,8 @@ public class UserBean implements Serializable
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("simple_transcript_log"), "fa fa-fw fa-language", su + "/lw/admin/simple_transcript_log.jsf"));
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("transcript_summaries"), "fa fa-fw fa-language", su + "/lw/admin/transcript_summary.jsf"));
                 moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("glossary_dashboard"), "fa fa-fw fa-bar-chart", su + "/lw/admin/dashboard/glossary.jsf"));
-                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("activity_dashboard"), "fa fa-fw fa-line-chart", su + "/lw/admin/dashboard/activity.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Activity.dashboard"), "fa fa-fw fa-line-chart", su + "/lw/admin/dashboard/activity.jsf"));
+                moderatorSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("Tracker.dashboard"), "fa fa-fw fa-database", su + "/lw/admin/dashboard/tracker.jsf"));
                 model.addElement(moderatorSubmenu);
             }
 
@@ -580,7 +584,7 @@ public class UserBean implements Serializable
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("ip_requests"), "fa fa-fw fa-line-chart", su + "/lw/admin/requests.jsf"));
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("system_tools"), "fa fa-fw fa-language", su + "/lw/admin/systemtools.jsf"));
                 adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("admin_messages_Title"), "fa fa-fw fa-language", su + "/lw/admin/adminmsg.jsf"));
-                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("news"), "fa fa-fw fa-language", su + "/lw/admin/adminnews.jsf"));
+                adminSubmenu.addElement(new DefaultMenuItem(UtilBean.getLocaleMessage("news"), "fa fa-fw fa-language", su + "/lw/admin/announcements.jsf"));
                 model.addElement(adminSubmenu);
             }
 
@@ -659,7 +663,6 @@ public class UserBean implements Serializable
 
     public String getPrettyDate(Date date)
     {
-        //return StringHelper.getPrettyDate(date, locale);
         if(localePrettyTime == null)
             localePrettyTime = new PrettyTime(locale);
 
@@ -696,7 +699,7 @@ public class UserBean implements Serializable
         {
             if(url.startsWith("https://waps.io") || url.startsWith("http://waps.io"))
                 return url;
-            return "http://waps.io/open?c=2" +
+            return "https://waps.io/open?c=2" +
                     "&u=" + StringHelper.urlEncode(url) +
                     "&i=" + user.getId() +
                     "&t=" + Learnweb.getInstance().getProperties().getProperty("tracker.key");

@@ -1,0 +1,25 @@
+.sticky-column {
+  position: sticky;
+  top: $topbar-height;
+  height: calc(100vh - #{$topbar-height});
+  overflow-y: auto;
+}
+.col-xs-auto {
+  @include media-breakpoint-down(xs) {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.mw-md {
+  max-width: 25rem;
+}
+
+.w-inherit {
+  width: inherit!important;
+}
+
+.w-15 {
+  width: 15%;
+}

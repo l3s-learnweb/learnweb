@@ -74,7 +74,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private SERVICE searchService;
     private String view = "float"; // float, grid or list
 
-    private boolean graphLoaded = false;
     private int counter = 0;
 
     private final static int minResourcesPerGroup = 2;
@@ -180,7 +179,6 @@ public class SearchBean extends ApplicationBean implements Serializable
             resourcesGroupedBySource = null;
             availableSources = null;
             queryFilters = null;
-            graphLoaded = false;
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -534,11 +532,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     public void setView(String view)
     {
         this.view = view;
-    }
-
-    public boolean isGraphLoaded()
-    {
-        return graphLoaded;
     }
 
     public Search getImages()

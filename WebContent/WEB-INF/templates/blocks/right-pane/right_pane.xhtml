@@ -4,41 +4,39 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="section-resources">
+<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="mb-0">
     <f:facet name="actions">
         <a href="#" class="layout-right-pane-close" aria-label="#{msg.close}">
             <i class="fa fa-times fa-inverse" aria-hidden="true"></i>
         </a>
     </f:facet>
 
-    <h:outputScript library="learnweb-layout" name="js/resource-pane.js" target="head"/>
-
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFile'}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_file.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_file.xhtml"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFolder'}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_folder.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_folder.xhtml"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'newResource'}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_resource.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_resource.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewResource' or rightPaneBean.paneAction =='viewUpdatedResource'}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource.xhtml" />
+    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewResource'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource.xhtml"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewFolder' and rightPaneBean.clickedFolder != null}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_folder.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_folder.xhtml"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'editResource' and rightPaneBean.clickedResource.id != -1}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_resource.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_resource.xhtml"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'editFolder' and rightPaneBean.clickedFolder != null}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_folder.xhtml" />
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_folder.xhtml"/>
     </ui:fragment>
 </p:panel>
 </ui:composition>

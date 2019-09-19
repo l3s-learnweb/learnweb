@@ -1,37 +1,154 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-    <h:panelGroup layout="block" styleClass="preview_box p-1 border" id="preview_box">
+    <div class="resource-preview">
+        <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
+            <div class="preview-wrapper">
+                <div id="iframe_editor"></div>
+
+                <h:outputScript>
+                    var editorConfigValues = {
+                        documentType: '#{fileEditorBean.fileType}',
+                        user: {
+                            id: '#{userBean.user.id}',
+                            name: '#{userBean.user.username}'
+                        },
+                        document: {
+                            title: '#{fileEditorBean.resource.fileName}',
+                            url: '#{fileEditorBean.fullFilesUrl}',
+                            fileType: '#{fileEditorBean.filesExtension}',
+                            key: '#{fileEditorBean.key}',
+                            resourceId: '#{fileEditorBean.resource.id}',
+                            canBeEdited: '#{res.canEditResource(userBean.user)}'
+                        },
+                        historyUrl: '#{fileEditorBean.historyUrl}',
+                        callbackUrl: '#{fileEditorBean.callbackUrl}',
+                        clientUrl: '#{fileEditorBean.onlyOfficeClientUrl}'
+                    };
+                    loadPreviewEditor();
+                </h:outputScript>
+            </div>
+        </ui:fragment>
+
         <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
-            <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
+            <div class="preview-wrapper">
                 <h:outputText value='#{res.embedded}' escape="false"/>
             </div>
         </ui:fragment>
-        <ui:fragment rendered="#{res.type eq 'website' and not empty res.thumbnail3}">
-            <img src="#{res.thumbnail3.url}" height="#{res.thumbnail3.height}" onmouseup="lightbox_open();" width="#{res.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+
+        <ui:fragment rendered="#{res.type eq 'pdf'}">
+            <a data-fancybox="" data-type="iframe" data-src="#{res.url}" href="javascript:" class="preview-wrapper">
+                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto" style="cursor:zoom-in;"/>
+            </a>
         </ui:fragment>
-        <ui:fragment rendered="#{res.isOfficeResource() and not (res.isOffline())}">
-            <div class="preview_box_wrapper editor_preview">
-                <form id="editor_user_info">
-                    <input type="hidden" id="ed_user_id" value="#{userBean.user.id}"/>
-                    <input type="hidden" id="ed_user_name" value="#{userBean.user.username}"/>
-                    <input type="hidden" id="ed_can_be_edited" value="#{res.canEditResource(userBean.user)}"/>
-                </form>
-                <ui:decorate template="/WEB-INF/templates/blocks/resources/openoffice-editor.xhtml"/>
-                <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
+
+        <ui:fragment rendered="#{not empty res.thumbnail4 and not empty res.thumbnail3 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+            <a data-fancybox="" data-caption="#{res.title}" href="#{res.thumbnail4.url}" class="preview-wrapper">
+                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto" style="cursor:zoom-in;"/>
+            </a>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail3 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+            <div class="preview-wrapper">
+                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto"/>
             </div>
         </ui:fragment>
-        <ui:fragment rendered="#{not empty res.thumbnail3 and res.type ne 'video' and res.type ne 'website' and not res.isOfficeResource()}">
-            <div class="preview_box_wrapper">
-                <img src="#{res.thumbnail3.url}" onmouseup="lightbox_open();"
-                     height="#{res.thumbnail3.height}" width="#{res.thumbnail3.width}"
-                     style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom-in;"/>
+    </div>
+
+    <div class="mb-3 text-center resource-links">
+        <p:link href="#{res.urlProxied}" target="_blank" value="#{res.url}"
+                rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
+
+        <ui:fragment rendered="#{not empty res.archiveUrls and res.canEditResource(userBean.user)}">
+            <p:button onclick="loadArchiveUrlsModal();return false;" title="#{msg['Archive.change_thumbnail']}?" icon="fa fa-pencil"
+                      aria-label="#{msg['Archive.change_thumbnail']}?" styleClass="secondary-btn mx-2">
+            </p:button>
+
+            <div id="modal_archive_urls" class="content-root collapse">
+                <div class="content-header text-center mb-3">
+                    <h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
+                </div>
+                <div class="d-flex h-100">
+                    <div class="mr-3 archive-snapshots-wrapper content-scroll">
+                        <ui:fragment rendered="${res.archiveUrls.size() le 100}">
+                            <ul class="archive-snapshot-list list-unstyled mb-0">
+                                <ui:repeat var="au" value="#{rightPaneBean.clickedResource.archiveUrls}">
+                                    <li style="width:12rem;">
+                                        <p:linkButton href="#{au.archiveUrl}" value="#{userBean.formatDate(au.timestamp)}"
+                                                      styleClass="outline-btn w-100 m-0 mb-1"/>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                        <ui:fragment rendered="${res.archiveUrls.size() gt 100}">
+                            <ul class="archive-snapshot-list list-unstyled mb-0">
+                                <ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+                                    <li>
+                                        <p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
+                                        <ul class="list-unstyled pl-3 collapse">
+                                            <ui:repeat var="au2" value="#{ay.value}">
+                                                <li style="width:12rem;">
+                                                    <p:linkButton href="#{au2.archiveUrl}" value="#{userBean.formatDate(au2.timestamp)}"
+                                                                  styleClass="outline-btn w-100 m-0 mb-1"/>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="archive-frame-wrapper border shadow content-scroll">
+                            <iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}"></iframe>
+                        </div>
+                        <div class="row align-items-center mt-2">
+                            <h:panelGroup rendered="${not empty res.thumbnailUpdateInfo}">
+                                <div class="col-md">
+                                    <span class="text-muted">
+                                        <h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
+                                        <h:outputText value="#{userBean.formatDate(res.thumbnailUpdateInfo.date)}"/>
+                                        <h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
+                                    </span>
+                                </div>
+                            </h:panelGroup>
+                            <div class="col-md text-right">
+                                <span>
+                                    <h:outputText value="#{msg['Archive.show_version']}: "/>
+                                    <h:outputText id="archive_timestamp" value="${userBean.formatDate(res.lastArchivedObject.timestamp)}"/>
+                                    <p:button value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn" onclick="updateThumbnail();return false;"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </ui:fragment>
-    </h:panelGroup>
+
+        <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
+            <p:button onclick="loadModalEditor();return false;" value="Open editor" icon="fa fa-arrows-alt"/>
+
+            <div class="collapse" id="modal_editor_wrapper">
+                <div id="modal_editor"></div>
+            </div>
+        </ui:fragment>
+
+        <p:linkButton outcome="/lw/glossary/glossary" value="#{msg['Glossary.open']}" rendered="#{res.type eq 'glossary2'}">
+            <f:param name="resource_id" value="#{res.id}"/>
+        </p:linkButton>
+
+        <p:linkButton outcome="/lw/survey/survey" value="#{msg['survey.open']}" rendered="#{res.type eq 'survey'}">
+            <f:param name="resource_id" value="#{res.id}"/>
+        </p:linkButton>
+
+        <p:linkButton outcome="/lw/survey/results" value="Results" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
+            <f:param name="resource_id" value="#{res.id}"/>
+        </p:linkButton>
+    </div>
 </ui:composition>

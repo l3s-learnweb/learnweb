@@ -4,15 +4,15 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.notification}" />
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.notification}"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.send_notification}" url="admin/notification.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel rendered="#{not userBean.moderator}" >
+		<p:panel rendered="#{not userBean.moderator}">
 			<h:outputText value="#{msg.missing_authentication}"/>
 		</p:panel>
 
@@ -45,7 +45,7 @@
 					<p:message for="@previous"/>
 				</div>
 
-				<ui:include src="/templates/user/user_select_form.xhtml" />
+				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
 				<div class="form-group">
 					<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" itemLabel="#{msg.send_notification_also_per_mail}"
@@ -57,7 +57,7 @@
 				</div>
 
 				<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
-				<p:commandButton value="#{msg.clear}" styleClass="secondary-btn" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
+				<p:commandButton value="#{msg.clear}" styleClass="secondary-btn" onclick="editor.clear()" icon="ui-icon ui-icon-close"/>
 			</p:panel>
 		</h:form>
 	</ui:define>

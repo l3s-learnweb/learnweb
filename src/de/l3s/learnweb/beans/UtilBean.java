@@ -19,8 +19,6 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LanguageBundle;
-import de.l3s.learnweb.group.GroupResourcesBean;
-import de.l3s.learnweb.resource.MyResourcesBean;
 import de.l3s.learnweb.user.UserBean;
 
 @Named
@@ -48,18 +46,6 @@ public class UtilBean implements Serializable
     public static UserBean getUserBean()
     {
         return (UserBean) getManagedBean("userBean");
-    }
-
-    @Deprecated
-    public static GroupResourcesBean getGroupResourcesBean()
-    {
-        return (GroupResourcesBean) getManagedBean("groupResourcesBean");
-    }
-
-    @Deprecated
-    public static MyResourcesBean getMyResourcesBean()
-    {
-        return (MyResourcesBean) getManagedBean("myResourcesBean");
     }
 
     public static void redirect(String redirectPath)

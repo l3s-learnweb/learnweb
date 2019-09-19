@@ -1,13 +1,18 @@
 package de.l3s.learnweb.dashboard;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
-import scala.util.control.Exception;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean
 {
@@ -45,10 +50,13 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         if(user == null) // not logged in or no privileges
             return;
 
-        if(!user.isModerator()) { // can see only their own statistic
+        if(!user.isModerator())
+        { // can see only their own statistic
             singleUser = true;
             selectedUsersIds = Collections.singletonList(user.getId());
-        } else if (paramUserId != null) { // statistic for one user from parameter
+        }
+        else if(paramUserId != null)
+        { // statistic for one user from parameter
             try
             {
                 singleUser = true;
@@ -59,7 +67,9 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
             {
                 throw new RuntimeException("User not found.");
             }
-        } else {
+        }
+        else
+        {
             singleUser = false;
         }
     }
@@ -68,7 +78,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
 
     /**
      * @return all groups the current user can moderate
-     * @throws SQLException
      */
     public List<Group> getAllGroups() throws SQLException
     {
@@ -79,7 +88,6 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
 
     /**
      * @return all users the current user can moderate
-     * @throws SQLException
      */
     public List<User> getAllUsers() throws SQLException
     {
@@ -121,6 +129,16 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
     public List<Integer> getSelectedUsersIds()
     {
         return selectedUsersIds;
+    }
+
+    public User getFirstSelectedUser() throws SQLException
+    {
+        if(CollectionUtils.isEmpty(selectedUsersIds))
+        {
+            return null;
+        }
+
+        return Learnweb.getInstance().getUserManager().getUser(selectedUsersIds.get(0));
     }
 
     public List<Integer> getSelectedGroupsIds()

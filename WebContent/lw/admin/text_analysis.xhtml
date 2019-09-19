@@ -7,14 +7,14 @@
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg.text_analysis}" url="admin/text_analysis.jsf#"/>
     </ui:define>
 
     <ui:define name="center_layout">
         <p:panel header="#{msg.select_users}">
             <h:form id="anlyse_form">
-                <ui:include src="/templates/user/user_select_form.xhtml"/>
+                <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
                 <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                                  update=":growl anlyse_form"/>
@@ -22,8 +22,8 @@
 
                 <p class="my-3">
                     <h:outputFormat value="#{msg.text_analysis_comments_count}">
-                        <f:param value="#{adminTextAnalysisBean.commentCount}" />
-                        <f:param value="#{adminTextAnalysisBean.selectedUsers.size()}" />
+                        <f:param value="#{adminTextAnalysisBean.commentCount}"/>
+                        <f:param value="#{adminTextAnalysisBean.selectedUsers.size()}"/>
                     </h:outputFormat>
                 </p>
 

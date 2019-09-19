@@ -852,13 +852,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public String getServiceIcon()
     {
         if(getId() != -1) // is stored at fedora
-            return "/resources/icon/services/learnweb.gif";
+            return "/resources/images/services/learnweb.gif";
 
         String format = ".gif";
         if(getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity"))
             format = ".png";
 
-        return "/resources/icon/services/" + getLocation().toLowerCase() + format;
+        return "/resources/images/services/" + getLocation().toLowerCase() + format;
     }
 
     public static Comparator<Resource> createIdComparator()
@@ -1227,7 +1227,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                 else if(getSource().equals(SERVICE.youtube))
                     embeddedCode = "<iframe src=\"https://www.youtube-nocookie.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
                 else if(getSource().equals(SERVICE.vimeo))
-                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
                 if(isProcessing())
                 {
@@ -1930,6 +1930,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         for(Tag tag : tags)
             addTag(tag.getName(), tags.getElementOwner(tag));
+    }
+
+    public List<LogEntry> getLogs() throws SQLException
+    {
+        return Learnweb.getInstance().getLogManager().getLogsByResource(getId(), -1);
     }
 
     @Deprecated

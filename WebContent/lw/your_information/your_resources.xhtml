@@ -4,18 +4,18 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg['your_information.resources.title']}" />
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg['your_information.resources.title']}"/>
 
-    <ui:define name="sub_breadcrumb">
-        <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
-        <p:menuitem value="#{msg.resources}" url="your_information/your_resources.jsf#" />
-    </ui:define>
+<ui:define name="breadcrumb_ext">
+    <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
+    <p:menuitem value="#{msg.resources}" url="your_information/your_resources.jsf#"/>
+</ui:define>
 
 <ui:define name="center_layout">
-    <ui:decorate template="templates/resources_table_skeletton.xhtml">
+    <ui:decorate template="/WEB-INF/templates/blocks/your-information/resources_table_skeletton.xhtml">
         <ui:param name="resources" value="#{yourResourcesBean.userResources}"/>
-        <ui:param name="exportable" value="true" />
+        <ui:param name="exportable" value="true"/>
     </ui:decorate>
 </ui:define>
 

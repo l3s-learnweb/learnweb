@@ -11,12 +11,12 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import de.l3s.util.Misc;
+import org.apache.commons.collections4.CollectionUtils;
 import org.primefaces.model.charts.line.LineChartModel;
 
 import de.l3s.learnweb.dashboard.CommonDashboardUserBean;
@@ -25,7 +25,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class ActivityDashboardBean extends CommonDashboardUserBean implements Serializable
 {
     private static final long serialVersionUID = 3326736281893564706L;
@@ -79,6 +79,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
                 .collect(Collectors.joining(","));
     }
 
+    @Override
     public void onLoad()
     {
         super.onLoad();
@@ -86,6 +87,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         try
         {
             dashboardManager = new ActivityDashboardManager();
+            selectedActionItems = new ArrayList<>(actions.keySet());
+
             cleanAndUpdateStoredData();
         }
         catch(SQLException e)
@@ -94,6 +97,7 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
         }
     }
 
+    @Override
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
@@ -104,7 +108,8 @@ public class ActivityDashboardBean extends CommonDashboardUserBean implements Se
 
     private void fetchDataFromManager() throws SQLException
     {
-        if(!Misc.nullOrEmpty(getSelectedUsersIds())) {
+        if(!CollectionUtils.isEmpty(getSelectedUsersIds()))
+        {
             List<Integer> selectedUsersIds = getSelectedUsersIds();
             if(selectedActionItems != null)
             {

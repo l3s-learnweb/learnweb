@@ -5,30 +5,30 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
+    <ui:param name="rightPane" value="true"/>
+    <ui:param name="pageTitle" value="#{msg['Submission.title']}"/>
+    <ui:param name="loginRequired" value="true"/>
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
-			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
-			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}" />
+			<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
+			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
-    <ui:define name="sub_breadcrumb">
+    <ui:define name="breadcrumb_ext">
         <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
         <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
 
-	<ui:param name="rightPane" value="true"/>
-	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
-	<ui:param name="loginRequired" value="true" />
-
 	<ui:define name="center_layout">
 
 		<h:form styleClass="d-none">
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="selectResourceDND(); load_editor(); "/>
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=" :resourceGrid2" oncomplete="selectResourceDND(); updateMaxResources();"/>
 		</h:form>
@@ -36,8 +36,9 @@
 		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
 		<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
 
-		<h:outputScript library="learnweb-layout" name="js/resource-pane.js" />
-		<h:outputScript library="learnweb-layout" name="js/submission-resources.js" />
+		<h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
+		<h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
+		<h:outputScript library="learnweb-layout" name="js/submission-resources.js"/>
 
 		<script>
 			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
@@ -59,15 +60,14 @@
             </ui:fragment>
 
             <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
-                <hr/>
-                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid">
-                    <p:repeat var="res" value="#{submissionBean.selectedResources}" >
+                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid border-top">
+                    <p:repeat var="res" value="#{submissionBean.selectedResources}">
                         <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                             <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
                                 <ui:fragment>
                                     <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
                                         <div class="context-menu-item-wrapper">
-                                            <span class="context-menu-item-icon" />
+                                            <span class="context-menu-item-icon"/>
                                             <!--						<span class="context-menu-item-content">Remove</span>-->
                                         </div>
                                     </div>
@@ -75,7 +75,7 @@
                             </h:panelGroup>
 
 							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-								<ui:param name="res" value="#{res}" />
+								<ui:param name="res" value="#{res}"/>
 							</ui:decorate>
                         </h:panelGroup>
                     </p:repeat>
@@ -138,7 +138,7 @@
 
 	<ui:define name="right_layout">
 		<ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-			<ui:param name="bean" value="#{submissionBean}" />
+			<ui:param name="bean" value="#{submissionBean}"/>
 		</ui:decorate>
 	</ui:define>
 </ui:composition>

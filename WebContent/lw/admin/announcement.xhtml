@@ -1,23 +1,20 @@
-<ui:composition
-		template="/WEB-INF/templates/layout/template.xhtml"
-		xmlns="http://www.w3.org/1999/xhtml"
-		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-		xmlns:h="http://xmlns.jcp.org/jsf/html"
-		xmlns:f="http://xmlns.jcp.org/jsf/core"
-		xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-		xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.announcements}"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}" />
-			<f:viewAction action="#{adminAnnouncementBean.onLoad}" />
+			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}"/>
+			<f:viewAction action="#{adminAnnouncementBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
 		<p:menuitem value="#{adminAnnouncementBean.announcement.title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
 	</ui:define>
@@ -27,18 +24,18 @@
 			<p:panel>
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
-					<p:inputText id="news_title" value="#{adminAnnouncementBean.announcement.title}"/>
+					<p:inputText id="news_title" value="#{adminAnnouncementBean.title}"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:datePicker id="datepick" value="#{adminAnnouncementBean.announcement.date}" timeZone="#{userBean.timeZone}" />
+					<p:calendar id="datetime" value="#{adminAnnouncementBean.date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="#{userBean.timeZone}" timeInput="true"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
-					<p:textEditor height="200" value="#{adminAnnouncementBean.announcement.text}">
+					<p:textEditor height="200" value="#{adminAnnouncementBean.text}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>
@@ -57,11 +54,11 @@
 				</div>
 
 				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}" />
+					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.hidden}" itemLabel="#{msg.hide}"/>
 				</div>
 
 				<p:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" value="#{msg.update}" update="@form :growl">
-					<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}" />
+					<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}"/>
 				</p:commandButton>
 			</p:panel>
 		</h:form>

@@ -5,9 +5,9 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Posts" />
+<ui:param name="pageTitle" value="Your Posts"/>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
     <p:menuitem value="#{msg.posts}" url="your_information/your_posts.jsf#"/>
 </ui:define>
@@ -58,13 +58,13 @@
 
             <p:column headerText="#{msg.posted_on}">
                 <h:outputText value="#{post.date}">
-                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
             <p:column headerText="#{msg.last_edited}">
                 <h:outputText value="#{post.lastEditDate}">
-                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+                    <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
         </p:dataTable>

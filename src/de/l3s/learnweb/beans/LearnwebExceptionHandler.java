@@ -11,7 +11,7 @@ import javax.faces.event.ExceptionQueuedEvent;
 import org.apache.log4j.Logger;
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandler;
 
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * Used to log errors which are redirect to /lw/error.jsf

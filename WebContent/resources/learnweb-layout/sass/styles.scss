@@ -6,13 +6,13 @@
   - Install scss using npm `npm i -g sass` (https://sass-lang.com/install)
 
  Now you can build all scss files to css files
-  - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
+  - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
 
  Or you can setup to watch for changes in your files and build automatically (during active development phase)
-  - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css`
+  - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
 
  Good to know:
-  - Files starts with underscore (_) means they should not be compiled, they intend to be imported by other files
+  - File names starting with underscore (_) mean that they should not be compiled, they are intended to be imported by other files
   - All other files will be compiled from scss to css
 
  Good to read:
@@ -27,34 +27,36 @@
 @import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
 @import 'california/theme/_theme'; // California theme for PrimeFaces components
 
-// Load common utils and helpers
-@import 'common/_utils';
-@import 'common/_global';
-
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import "layouts/_template";
 @import "layouts/_template_page";
 
+// Load utilities and helpers
+@import "utilities/_background";
+@import "utilities/_buttons";
+@import "utilities/_fancybox";
+@import "utilities/_forms";
+@import "utilities/_grid";
+@import "utilities/_others";
+@import "utilities/_primefaces";
+@import "utilities/_tables";
+
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
-@import "components/_buttons";
+@import "components/_autocomplete";
+@import "components/_contextmenu";
 @import "components/_dashboard";
-@import "components/_fancybox";
-@import "components/_forms";
-@import "components/_menu";
-@import "components/_primefaces";
+@import "components/_groups";
+@import "components/_og-grid";
 @import "components/_resources";
 @import "components/_spinner";
-@import "components/_tables";
 
-// The styles used only for specific page (or group of pages) should be extracted into section
+// The old styles used on specific pages, should be refactored and moved into components later
 @import "sections/_archive-thumbnail";
 @import "sections/_entity-relationship";
 @import "sections/_glossary";
-@import "sections/_group-members";
 @import "sections/_landing";
 @import "sections/_notification";
 @import "sections/_resource-transcript";
-@import "sections/_resources";
 @import "sections/_search";
 @import "sections/_survey";
 @import "sections/_ted-transcript";

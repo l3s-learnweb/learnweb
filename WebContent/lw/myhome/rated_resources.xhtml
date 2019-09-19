@@ -1,14 +1,13 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-				xmlns="http://www.w3.org/1999/xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 	
-		<ui:param name="loginRequired" value="true" />
-		<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}" />
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}"/>
 
-		<ui:define name="sub_breadcrumb">
+		<ui:define name="breadcrumb_ext">
 			<p:menuitem value="#{msg.myRatedResourcesTitle}" url="myhome/rated_resources.jsf#"/>
 		</ui:define>
 
@@ -21,13 +20,13 @@
 					
 					<p:column headerText="#{msg.title}">
 						<h:outputLink value="resource.jsf">
-							<f:param name="resource_id" value="#{res.id}" />
+							<f:param name="resource_id" value="#{res.id}"/>
 							#{res.title}
 						</h:outputLink>
 					</p:column>
 					
 					<p:column headerText="#{msg.description}">
-						<h:outputText value="#{res.descriptionHTML}" escape="false" />
+						<h:outputText value="#{res.descriptionHTML}" escape="false"/>
 					</p:column>
 					
 					<p:column headerText="#{msg.type}">

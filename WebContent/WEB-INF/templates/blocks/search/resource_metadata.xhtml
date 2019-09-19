@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
+    <!--@elvariable id="view" type="java.lang.String"-->
+
+    <div class="metadata">
+        <!--<div class="embedded">&lt;!&ndash;${res.embedded}&ndash;&gt;</div>-->
+        <div>
+            <p:outputLabel for="@next" value="#{msg.title}:" styleClass="font-weight-bold mr-1" escape="false"/>
+            <h:outputText value="${res.title}" escape="false"/>
+            <br/>
+            <ui:fragment rendered="#{not empty res.description and view ne 'grid'}">
+                <p:outputLabel for="@next" value="#{msg.description}:" styleClass="font-weight-bold mr-1" escape="false"/>
+                <h:outputText value="${res.descriptionHTML}" escape="false"/>
+                <br/>
+            </ui:fragment>
+
+            <p:outputLabel for="@next" value="#{msg.location}:" styleClass="font-weight-bold mr-1" escape="false"/>
+            <h:outputLink value="${res.urlProxied}">
+                <h:outputText value="${res.location}" escape="false"/>
+            </h:outputLink>
+            <br/>
+
+            <p:outputLabel for="@next" value="#{msg.resource_found_at}:" styleClass="font-weight-bold mr-1" escape="false"/>
+            <h:outputText value="#{res.source.label}" escape="false"/>
+            <br/>
+
+            <ui:fragment rendered="#{not empty res.description and not empty res.resource.author}">
+                <p:outputLabel for="@next" value="#{msg.author}: " styleClass="font-weight-bold mr-1" escape="false"/>
+                <h:outputText value="#{res.resource.author}"/>
+                <br/>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not empty res.group}">
+                <p:outputLabel for="@next" value="#{msg.group}: " styleClass="font-weight-bold mr-1" escape="false"/>
+                <h:outputLink value="group/resources.jsf">
+                    <f:param name="group_id" value="#{res.group.id}"/>
+                    <f:param name="resource_id" value="#{res.id}"/>
+                    <h:outputText value="#{res.group.title}"/>
+                </h:outputLink>
+                <br/>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not empty res.resource.tags}">
+                <p:outputLabel for="@next" value="#{msg.tags}:" styleClass="font-weight-bold mr-1" escape="false"/>
+                <p:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
+                    <h:outputText value="#{tag.name}"/><h:outputText value=", " rendered="#{!status.last}" escape="false"/>
+                </p:repeat>
+                <br/>
+            </ui:fragment>
+            <ui:fragment rendered="#{(not empty res.snippet) and false}">
+                <p:outputLabel for="@next" value="#{msg.snippet}:" styleClass="font-weight-bold mr-1" escape="false"/><br/>
+                <h:outputText value="${res.snippet}" escape="false"/>
+                <br/>
+            </ui:fragment>
+            <p:outputLabel for="@next" value="#{msg.options}:" styleClass="font-weight-bold mr-1" escape="false"/><br/>
+            <h:outputLink value="#{request.contextPath}/lw/user/login.jsf" rendered="#{!userBean.loggedIn}">
+                <h:outputText value="#{msg.loginLabel}"/>
+            </h:outputLink>
+
+            <h:outputLink value="#" title="#{msg.addToMyResources}" rendered="#{userBean.loggedIn}"
+                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); $.fancybox.close(); return false;">
+                <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
+            </h:outputLink>
+        </div>
+    </div>
+</ui:composition>

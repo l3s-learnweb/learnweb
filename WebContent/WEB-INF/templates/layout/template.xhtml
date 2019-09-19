@@ -10,6 +10,7 @@
     <!--@elvariable id="helpText" type="java.lang.String"-->
     <!--@elvariable id="helpTextStyle" type="java.lang.String"-->
     <!--@elvariable id="smallPage" type="java.lang.Boolean"-->
+    <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
     <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
     <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
     <!--@elvariable id="rightPane" type="java.lang.Boolean"-->
@@ -29,11 +30,9 @@
             <h:outputStylesheet name="learnweb-layout/css/styles.css"/>
 
             <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-            <h:outputScript name="vendor/jquery-ui-v1.12.1/jquery-ui.min.js"/>
-            <h:outputScript name="vendor/jquery-migrate-v3.0.1/jquery-migrate-3.0.1.js" />
+            <h:outputScript name="vendor/jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js"/>
             <h:outputScript name="vendor/cq-prolyfill-v0.4.0/cq-prolyfill.min.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
-            <h:outputScript library="learnweb-layout" name="js/default2.js"/>
 
             <ui:insert name="head"/>
 
@@ -50,7 +49,7 @@
         </h:head>
 
         <h:body styleClass="layout-body">
-            <div class="layout-overlay"></div>
+            <div class="layout-overlay ui-widget-overlay"></div>
 
             <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
                 <ui:include src="parts/header.xhtml"/>
@@ -60,27 +59,31 @@
                 </ui:fragment>
 
                 <div class="layout-main d-flex flex-column">
-                    <main class="layout-main-content">
+                    <main class="layout-main-content #{smallPage or loginRequired and !userBean.loggedIn? 'container':''}">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
 
                             <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
                                 <p:panel header="#{msg.loginTitle}">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
-                                        </div>
-                                    </div>
+                                	<div class="mw-md">
+                                		<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>    
+                                	</div>                                   
                                 </p:panel>
                             </ui:fragment>
 
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
-                                <ui:insert name="breadcrumb_bar">
-                                    <p:breadCrumb styleClass="mb-3">
-                                        <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
-                                        <ui:insert name="sub_breadcrumb"/>
-                                    </p:breadCrumb>
-                                </ui:insert>
+                                <ui:fragment rendered="#{not hideBreadcrumbs}">
+                                    <div class="layout-breadcrumb mb-3">
+                                        <p:breadCrumb>
+                                            <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
+                                            <ui:insert name="breadcrumb_ext"/>
+                                        </p:breadCrumb>
+
+                                        <div class="ml-auto">
+                                            <ui:insert name="breadcrumb_right"/>
+                                        </div>
+                                    </div>
+                                </ui:fragment>
 
                                 <div class="row no-gutters">
                                     <div class="col layout-main-pane">
@@ -106,7 +109,7 @@
 
             <p:ajaxStatus styleClass="ajax-status-screen" onstart="$('.layout-overlay').addClass('show');" onsuccess="$('.layout-overlay').removeClass('show');">
                 <f:facet name="start">
-                    <div class="layout-overlay show">
+                    <div class="layout-overlay ui-widget-overlay">
                         <div class="la-pacman fa-5x text-secondary">
                             <div></div>
                             <div></div>
@@ -121,25 +124,22 @@
 
             <h:form>
                 <!-- TODO: check if we need it -->
-                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();" />
-                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();"/>
+                <p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();"/>
 
-                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog" resizable="true">
-                    <p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
-
-                    <div id="stacktrace" class="d-none">
-                        <h:outputText value="Message:#{pfExceptionHandler.message}" />
-                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+                <p:dialog id="exceptionDialog" header="#{msg.error}" widgetVar="exceptionDialog"
+                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+                    <p class="error h4 mb-3" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
+                    <div id="stacktrace" class="collapse">
+                        <h:outputText value="Message:#{pfExceptionHandler.message}"/>
+                        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/>
                     </div>
                 </p:dialog>
 
-                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog" modal="true">
-                    <div class="error" style="font-size:1.4rem">
-                        #{msg.reload_page}
-                    </div>
-                    <br/>
-                    <br/>
-                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}" />
+                <p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog"
+                          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+                    <p class="error h4 mb-3">#{msg.reload_page}</p>
+                    <p:button onclick="document.location.reload(); return false;" value="#{msg.reload}"/>
                 </p:dialog>
             </h:form>
 

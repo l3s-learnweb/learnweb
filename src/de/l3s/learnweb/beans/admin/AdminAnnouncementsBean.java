@@ -1,48 +1,44 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.Announcement;
-
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
-@RequestScoped
+@ViewScoped
 public class AdminAnnouncementsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5638619427036990427L;
     private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
     private List<Announcement> announcements;
-    private Announcement announcement;
-    @NotEmpty
+    @NotBlank
     private String text;
-    @NotEmpty
+    @NotBlank
     private String title;
 
     private Date date;
 
     private boolean hidden;
 
-    public AdminAnnouncementsBean() throws SQLException
+    public AdminAnnouncementsBean()
     {
         onLoad();
     }
 
-    public void onLoad() throws SQLException
+    public void onLoad()
     {
-
         try
         {
             announcements = new ArrayList<>(getLearnweb().getAnnouncementsManager().getAnnouncementsAll());
@@ -51,22 +47,21 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         {
             log.error(e);
         }
-
     }
 
-    public void onCreateNews() throws SQLException
+    public void onCreateNews()
     {
         try
         {
             Announcement announcement = new Announcement();
             announcement.setTitle(title);
             announcement.setText(text);
-            if(date != null){
+            if(date != null)
+            {
                 announcement.setDate(date);
             }
             announcement.setHidden(hidden);
             announcement.setUserId(getUser().getId());
-            log.debug(announcement.toString());
             getLearnweb().getAnnouncementsManager().save(announcement);
             addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was added !");
             onLoad();
@@ -77,7 +72,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         }
     }
 
-    public void onDeleteNews(Announcement announcement) throws SQLException
+    public void onDeleteNews(Announcement announcement)
     {
         try
         {
@@ -91,22 +86,11 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         }
     }
 
-
-    public void onHidden(int announcementId) throws SQLException
+    public void onToggleVisibility(int announcementId)
     {
         try
         {
-            Announcement announcement = new Announcement();
-            boolean hidden = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId).isHidden();
-            announcement.setHidden(hidden);
-            announcement.setId(announcementId);
-            log.debug(announcement.toString());
-            getLearnweb().getAnnouncementsManager().hide(announcement);
-            if(hidden){
-                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was hided !");
-            }else{
-                addGrowl(FacesMessage.SEVERITY_INFO, "Announcement is showed!");
-            }
+            getLearnweb().getAnnouncementsManager().hide(getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId));
         }
         catch(Exception e)
         {
@@ -154,23 +138,8 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         this.hidden = hidden;
     }
 
-
     public List<Announcement> getAnnouncements()
     {
         return announcements;
     }
-
-    public List<Announcement> getAvailableAnnouncements()
-    {
-
-        for(int i = 0; i < announcements.size();){
-            if(announcements.get(i).isHidden()){
-                announcements.remove(i);
-            }else{
-                i++;
-            }
-        }
-        return announcements;
-    }
-
 }

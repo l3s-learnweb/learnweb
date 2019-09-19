@@ -18,10 +18,10 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class ForumEditBean extends ApplicationBean implements Serializable
 {
-    //private static final Logger log = Logger.getLogger(ForumEditBean.class);
     private static final long serialVersionUID = 6561750124856501158L;
+    //private static final Logger log = Logger.getLogger(ForumEditBean.class);
+
     int postId;
-    int topicId;
     private ForumPost post;
     private ForumTopic topic;
     private Group group;
@@ -70,12 +70,6 @@ public class ForumEditBean extends ApplicationBean implements Serializable
     public ForumTopic getTopic()
     {
         return topic;
-    }
-
-    public int getTopicId()
-    {
-
-        return topicId;
     }
 
     public List<SelectItem> getCategories()

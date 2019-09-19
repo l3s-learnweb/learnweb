@@ -1,24 +1,27 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <div class="row s-gutters flex-column-reverse flex-lg-row">
+    <div class="row flex-column-reverse flex-lg-row">
         <div class="col-12 col-lg-6">
             <p:panel header="#{msg.last_activities}" id="profile_news">
-                <ui:decorate template="/WEB-INF/templates/blocks/user/activity-logs.xhtml"/>
+                <p:repeat value="#{newsFeedBean.newsList}" var="logEntry" varStatus="status">
+                    <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+                        <ui:param name="status" value="#{status}"/>
+                        <ui:param name="logEntry" value="#{logEntry}"/>
+                    </ui:decorate>
+                </p:repeat>
             </p:panel>
         </div>
         <div class="col-12 col-lg-6">
@@ -64,7 +67,7 @@
                         <div>
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.gender}:"/>
-                                <p:selectOneMenu id="usergender" value="#{profileBean.gender}" >
+                                <p:selectOneMenu id="usergender" value="#{profileBean.gender}">
                                     <f:selectItem id="g0" itemLabel="--" itemValue="0"/>
                                     <f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1"/>
                                     <f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2"/>
@@ -124,7 +127,16 @@
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="#{profileBean.moderatorAccess}">
                                 <p:outputLabel for="@next" value="#{msg.awards}:"/>
-                                <p:editor id="usercredits" value="#{profileBean.credits}" height="80" controls="bold italic underline undo redo"/>
+                                <p:textEditor id="usercredits" widgetVar="editorWidget" value="#{profileBean.credits}" height="80">
+                                    <f:facet name="toolbar">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                    </f:facet>
+                                </p:textEditor>
                                 <p:message for="@previous"/>
                             </h:panelGroup>
 

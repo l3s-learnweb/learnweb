@@ -1,20 +1,20 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
-	
-	<ui:param name="pageTitle" value="#{msg.transcript_summaries}" />
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg.transcript_summaries}"/>
 	<ui:param name="loginRequired" value="true"/>
 
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.transcript_summaries}" url="admin/transcript_summary.jsf#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
 			<p:panel header="#{msg.select_users}">
-				<ui:include src="/templates/user/user_select_form.xhtml" />
+				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
 								 process="@form" update=":transcript_table"/>
 			</p:panel>
@@ -34,19 +34,19 @@
 				<f:facet name="header">#{msg.transcript_logs}</f:facet>
 
 				<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-					<h:outputText value="#{log.user.username}" />
+					<h:outputText value="#{log.user.username}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
-					<h:outputText value="#{log.resource.title}" />
+					<h:outputText value="#{log.resource.title}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.summary_type}" filterBy="#{log.summaryType}">
-					<h:outputText value="#{log.summaryType}" />
+					<h:outputText value="#{log.summaryType}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.summary}">
-					<h:outputText value="#{log.summaryText}" />
+					<h:outputText value="#{log.summaryText}"/>
 				</p:column>
 
 			</p:dataTable>

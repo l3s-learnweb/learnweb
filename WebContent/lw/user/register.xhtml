@@ -1,109 +1,115 @@
-<ui:composition
-	template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:param name="pageTitle" value="#{msg.registerLabel}"/>
+    <ui:param name="smallPage" value="true"/>
+    <ui:param name="disableGrowl" value="true"/>
+    <ui:param name="hideBreadcrumbs" value="true"/>    
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="wizard" value="#{registrationBean.wizard}" />
+			<f:viewParam name="wizard" value="#{registrationBean.wizard}"/>
 			<f:viewAction action="#{registrationBean.preRenderView}"/>
 		</f:metadata>
 	</ui:define>
 
-
-	<ui:param name="pageTitle" value="#{msg.registerLabel}" />
-	<ui:param name="smallPage" value="true" />
-	<ui:param name="disableGrowl" value="true" />
-
 	<ui:define name="center_layout">
+
 
 		<ui:fragment rendered="#{not registrationBean.wizardParamInvalid}">
 
-			<p:panel header="#{msg.registerLabel}" >
-				<h:form id="registerform">
-
-					<div class="d-flex flex-column w-25 mb-3">
-						<h:outputText styleClass="font-weight-bold" for="username" value="#{msg.username}: *" />
-						<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}"
-									 label="#{msg.username}" />
-						<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />
-					</div>
-
-					<div class="d-flex flex-column w-25 mb-3">
-						<h:outputText styleClass="font-weight-bold" for="password" value="#{msg.password}: *" />
-						<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}"
-									promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-									goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
-						</p:password>
-						<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
-					</div>
-
-					<div class="d-flex flex-column w-25 mb-3">
-						<h:outputText styleClass="font-weight-bold" for="confirm_password" value="#{msg.confirm_password}: *" />
-						<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}"
-									validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}"
-									weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}"
-									strongLabel="#{msg.passwordStrength_strong}">
-						</p:password>
-						<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
-					</div>
-
-					<div class="d-flex flex-column w-25">
-						<h:outputText for="university" styleClass="font-weight-bold" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputText>
-						<p:selectOneMenu id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" style="width:125px">
-							<f:selectItem itemLabel="Univ. of Messina" itemValue="Univ. of Messina" />
-							<f:selectItem itemLabel="Univ. Tor Vergata" itemValue="Univ. Tor Vergata" />
-							<f:selectItem itemLabel="Univ. of Florence" itemValue="Univ. of Florence" />
-							<f:selectItem itemLabel="Univ. of Leeds" itemValue="Univ. of Leeds" />
-							<f:selectItem itemLabel="Univ. of Aarhus" itemValue="Univ. of Aarhus" />
-						</p:selectOneMenu>
-						<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}" />
-					</div>
-
-					<div class="d-flex flex-column w-25 mb-3">
-						<h:outputText styleClass="font-weight-bold" for="email" value="#{msg.email_address}:"><h:outputText styleClass="font-weight-bold" value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputText>
-						<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
-						<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
-					</div>
-
-					<div class="d-flex flex-column w-25">
-						<h:outputText for="studentId" styleClass="font-weight-bold" rendered="#{registrationBean.studentIdRequired}">#{msg.student_id} *:</h:outputText>
-						<p:inputText id="studentId" value="#{registrationBean.studentId}" label="#{msg.student_id}:" rendered="#{registrationBean.studentIdRequired}" />
-						<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" rendered="#{registrationBean.studentIdRequired}" />
-					</div>
-
-					<div class="d-flex flex-column w-25 mb-3">
-						<h:panelGroup layout="block"></h:panelGroup>
-						<p:captcha label="Captcha" id="captcha" language="#{userBean.locale}"/>
-						<p:message showSummary="true" showDetail="false" styleClass="error" for="captcha" />
-					</div>
-
-					<h:outputText value="" />
-					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
-					<h:outputText value="" />
-
-
-					<p class="mt-2">
-						<h:outputText value="* #{msg.mandatory_field}" />
-					</p>
-					<br/>
-					<br/><br/>
-					<h:panelGroup layout="block" rendered="#{not empty registrationBean.wizard}">
-						<h:outputText value="#{msg.instructions}" style="font-weight:bold; text-decoration:underline;"/>
-						<style type="text/css">
-							.registration-instructions a {font-weight:bold;text-decoration:underline;}
-							.registration-instructions a:hover {text-decoration:none;}
-						</style>
-						<ul style="padding:15px;" class="registration-instructions">
-							<li>#{msg.register_first_time_access}</li>
-							<li><h:outputFormat value="#{msg.register_account_already_wizard}" escape="false"><f:param value="user/login.jsf" /></h:outputFormat></li>
-							<li><h:outputFormat value="#{msg.register_lw_account_wizard}" escape="false"><f:param value="#{registrationBean.wizard}" /></h:outputFormat></li>
-						</ul>
-					</h:panelGroup>
+			<p:panel header="#{msg.registerLabel}">		
+				<h:form id="errorform" rendered="#{userBean.loggedIn}">
+					<p>You are already logged in.</p>
+					<p>You have to <h:commandLink action="#{loginBean.logout}">logout</h:commandLink> before you can create a new account.</p>
 				</h:form>
+					
+				<h:form id="registerform" rendered="#{not userBean.loggedIn}">			
+					<div class="form-group mw-md">
+						<p:outputLabel for="@next" value="#{msg.username}:" />
+						<p:inputText value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}" label="#{msg.username}" />
+						<p:message for="@previous" />
+					</div>
+
+					<div class="form-group mw-md">
+						<p:outputLabel for="@next" value="#{msg.password}:" />
+						<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" promptLabel="#{msg.passwordStrength_prompt}"
+							weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}" />
+						<p:message for="@previous" />
+					</div>
+
+					<div class="form-group mw-md">
+						<p:outputLabel for="@next" value="#{msg.confirm_password}:" />
+						<p:password value="#{registrationBean.confirmPassword}" autocomplete="false" label="#{msg.confirm_password}" validator="#{registrationBean.validatePassword}"
+							promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" 
+							strongLabel="#{msg.passwordStrength_strong}" />
+						<p:message for="@previous" />
+					</div>
+
+					<h:panelGroup class="form-group mw-md" rendered="#{registrationBean.affiliationRequired}">
+						<p:outputLabel for="@next" value="#{msg.university}" />
+						<p:inputText value="#{registrationBean.affiliation}" label="#{msg.university}" required="true" />
+						<p:message for="@previous" />
+					</h:panelGroup>
+
+					<div class="form-group mw-md">
+						<p:outputLabel for="@next" value="#{msg.email_address}:" />
+						<p:inputText value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
+						<p:message for="@previous" />
+					</div>
+
+					<h:panelGroup class="form-group mw-md" rendered="#{registrationBean.studentIdRequired}">
+						<p:outputLabel for="@next" value="#{msg.student_id}" />
+						<p:inputText value="#{registrationBean.studentId}" label="#{msg.student_id}:" />
+						<p:message for="@previous" />
+					</h:panelGroup>
+
+					<div class="form-group mw-md" style="min-height:78px;">
+						<p:captcha label="Captcha" language="#{userBean.locale}" />
+						<p:message for="@previous" />
+					</div>
+
+					<div class="form-check">
+						<div class="d-flex">
+							<p:selectBooleanCheckbox id="accept_privacy_policy" value="#{registrationBean.acceptPrivacyPolicy}" required="true" styleClass="form-check-input"
+								label="#{msg.privacy_statement}:" validator="requiredCheckboxValidator" />
+							<p:outputLabel for="@previous" styleClass="form-check-label pl-1">
+								<h:outputFormat value="#{msg['registration.accept_privacy_policy']}" escape="false">
+									<f:param value="privacy_statement.jsf" />
+								</h:outputFormat>
+							</p:outputLabel>
+						</div>
+						<p:message for="accept_privacy_policy" />
+					</div>
+					
+					<div class="form-group small">
+						<h:outputText value="* #{msg.mandatory_field}" />
+					</div>
+					
+					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false" />
+
+				</h:form>
+				
+				<h:panelGroup rendered="#{not empty registrationBean.wizard}">
+					<hr/>
+					<h5>
+						<h:outputText value="#{msg.instructions}" />
+					</h5>
+					<ul class="pl-3">
+						<li>#{msg.register_first_time_access}</li>
+						<li><h:outputFormat value="#{msg.register_account_already_wizard}" escape="false">
+								<f:param value="user/login.jsf" />
+							</h:outputFormat>
+						</li>
+						<li><h:outputFormat value="#{msg.register_lw_account_wizard}" escape="false">
+								<f:param value="#{registrationBean.course.title}" />
+							</h:outputFormat>
+						</li>
+					</ul>
+				</h:panelGroup>
 			</p:panel>
 		</ui:fragment>
 	</ui:define>

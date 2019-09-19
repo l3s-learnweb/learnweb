@@ -1,5 +1,4 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -22,12 +21,12 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.myResourcesTitle}" url="myhome/resources.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:outputPanel styleClass="m-0 panel-content bg-white section-resources" >
+    <p:outputPanel styleClass="m-0 panel-content bg-white">
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
@@ -40,14 +39,14 @@
             <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
                              update=":breadcrumbs :resourcesView :right_pane :growl " oncomplete="resourceDND();"/>
             <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}"
-                             update=":right_pane :growl" />
+                             update=":right_pane :growl"/>
             <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}"
-                             update=":right_pane :growl" />
+                             update=":right_pane :growl"/>
             <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
                              update=":right_pane :resourcesView :growl" oncomplete="resourceDND();"/>
         </h:form>
 
-        <div class="center-header" id="group_header">
+        <div class="p-2 bg-gray200" id="group_header">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <h5 class="text-primary mr-2 mb-0">My Resources</h5>
@@ -209,7 +208,7 @@
                                               pt:data-canDeleteResource="true">
 
                                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                        <ui:param name="folder" value="#{folder}" />
+                                        <ui:param name="folder" value="#{folder}"/>
                                     </ui:decorate>
 
                                 </h:panelGroup>
@@ -225,7 +224,7 @@
                                               pt:data-canDeleteResource="true">
 
                                     <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                        <ui:param name="folder" value="#{folder}" />
+                                        <ui:param name="folder" value="#{folder}"/>
                                     </ui:decorate>
 
                                 </h:panelGroup>
@@ -257,7 +256,7 @@
                                                   pt:data-canAnnotateResource="true">
 
                                         <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                            <ui:param name="res" value="#{res}" />
+                                            <ui:param name="res" value="#{res}"/>
                                         </ui:decorate>
 
                                     </h:panelGroup>
@@ -287,7 +286,7 @@
                                       pt:data-canAnnotateResource="true">
 
                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                <ui:param name="res" value="#{res}" />
+                                <ui:param name="res" value="#{res}"/>
                             </ui:decorate>
                         </h:panelGroup>
                     </ui:repeat>

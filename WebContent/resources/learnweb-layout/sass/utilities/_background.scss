@@ -1,0 +1,19 @@
+.bg-gray200 {
+  background: $gray-200;
+}
+
+.bg-white-90 {
+  background: rgba($white, 0.9);
+}
+
+.bg-dark-90 {
+  background: rgba($dark, 0.9);
+}
+
+.bg-highlight {
+  color: $white;
+  background-color: $gray-600;
+  border: 1px solid $gray-600;
+  border-radius: $btn-border-radius;
+  padding: 0 $btn-border-radius;
+}

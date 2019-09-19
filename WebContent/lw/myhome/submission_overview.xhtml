@@ -4,30 +4,42 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
+    <ui:param name="helpText" value=""/>
+    <ui:param name="rightPane" value="true"/>
+
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="user_id" value="#{submissionBean.userId}" />
+			<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
 			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
 			<f:viewAction action="#{rightPaneBean.onLoad}"/>
 			<f:viewAction action="#{submissionBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
-	<ui:param name="helpText" value=""/>
-	<ui:param name="rightPane" value="true"/>
-
-	<ui:define name="sub_breadcrumb">
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
+	</ui:define>
+
+	<ui:define name="breadcrumb_right">
+		<h:form prependId="false">
+			<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
+							 process="@this" oncomplete="PF('create_submission_dialog').show();"/>
+		</h:form>
 	</ui:define>
 
 	<ui:define name="center_layout">
 
-		<!--<h:form>
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesView" />
-			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" />
-		</h:form>-->
+		<h:form>
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
+			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
+		</h:form>
+
+		<h:panelGroup id="resourcesView" layout="block">
+			<!-- dummy for right pane -->
+		</h:panelGroup>
 
 		<h:panelGroup layout="block">
 			<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
@@ -52,8 +64,8 @@
 									#{learnwebBean.learnweb.secureServerUrl}/lw/survey/answer.jsf?resource_id=#{pair.peerAssessment.id}&amp;user_id=#{submissionBean.userId}
 								</a>
 
-								<h:outputText value=" Not submitted yet" rendered="#{not pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="red bold" />
-								<h:outputText value=" Submitted successfully" rendered="#{pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="green bold" />
+								<h:outputText value=" Not submitted yet" rendered="#{not pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="red bold"/>
+								<h:outputText value=" Submitted successfully" rendered="#{pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="green bold"/>
 							</li>
 						</ui:repeat>
 					</ul>
@@ -61,7 +73,7 @@
 			</ui:fragment>
 
 
-			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -86,13 +98,13 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-						<p:calendar value="#{submissionBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button" />
+						<p:calendar value="#{submissionBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-						<p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button" />
+						<p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous"/>
 					</div>
 
@@ -134,7 +146,7 @@
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.course}:"/>
 						<p:selectOneMenu value="#{submissionBean.newSubmission.courseId}">
-							<f:selectItem itemLabel="Select Course" />
+							<f:selectItem itemLabel="Select Course"/>
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 							<f:ajax listener="#{submissionBean.onCreateSurveyChangeCourse}" render="create_dialog_survey_menu" onevent="courseChange"/>
 						</p:selectOneMenu>
@@ -150,19 +162,19 @@
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
 						<p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-						<p:message for="@previous" display="icon" />
+						<p:message for="@previous" display="icon"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
 						<p:calendar id="close_date" value="#{submissionBean.newSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-						<p:message for="@previous" display="icon" />
+						<p:message for="@previous" display="icon"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
 						<p:inputText id="max_resources" value="#{submissionBean.newSubmission.noOfResources}"/>
-						<p:message for="@previous" display="icon" />
+						<p:message for="@previous" display="icon"/>
 					</div>
 
 					<div class="form-group">
@@ -171,13 +183,13 @@
 						</p:selectBooleanCheckbox>
 					</div>
 
-					<div class="form-group" id="create_dialog_survey_text" style="display:none;">
-						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:" />
+					<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
+						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:"/>
 						<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
-							<f:selectItem itemLabel="Select Survey Resource" />
+							<f:selectItem itemLabel="Select Survey Resource"/>
 							<f:selectItems value="#{submissionBean.surveyResourcesList}"/>
 						</p:selectOneMenu>
-						<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon" />
+						<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
 					</div>
 
 					<p:commandButton value="#{msg.save}" styleClass="float-right" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
@@ -186,35 +198,25 @@
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:panel header="Submissions" styleClass="d-none">
-				<h:form prependId="false" styleClass="mb-3" >
-					<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-									 process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-                    <p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-button" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-                                     process="@this" oncomplete="PF('create_submission_dialog').show();" icon="fa fa fa-cog"/>
-				</h:form>
-			</p:panel>
-
 			<p:tabView id="submissions" styleClass="ui-tabs-transparent">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}" />
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}"/>
 					</ui:decorate>
 				</p:tab>
 
 				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}" />
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}"/>
 					</ui:decorate>
 				</p:tab>
 
 				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-					<ui:decorate  template="/lw/templates/submission_cards_template.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}" />
+					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}"/>
 					</ui:decorate>
 				</p:tab>
 			</p:tabView>
-
 
 			<h:panelGroup id="datagrid" class="not-selectable d-none"></h:panelGroup>
 		</h:panelGroup>
@@ -297,7 +299,7 @@
 
 	<ui:define name="right_layout">
 		<ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-			<ui:param name="bean" value="#{submissionBean}" />
+			<ui:param name="bean" value="#{submissionBean}"/>
 		</ui:decorate>
 	</ui:define>
 </ui:composition>

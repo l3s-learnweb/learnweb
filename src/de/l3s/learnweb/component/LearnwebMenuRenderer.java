@@ -22,9 +22,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
         String clientId = menu.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
-        wb.init("LearnwebMenu", menu.resolveWidgetVar(), clientId)
-                .attr("stateful", menu.isStateful())
-                .attr("multiple", menu.isMultiple());
+        wb.init("LearnwebMenu", menu.resolveWidgetVar(), clientId);
         wb.finish();
     }
 
@@ -80,7 +78,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         ResponseWriter writer = context.getResponseWriter();
         String style = submenu.getStyle();
         String styleClass = submenu.getStyleClass();
-        styleClass = styleClass == null ? LearnwebMenu.PANEL_CLASS : LearnwebMenu.PANEL_CLASS + " " + styleClass;
+        styleClass = LearnwebMenu.DESCENDANT_SUBMENU_CLASS + " ui-menuitem-panel " + styleClass;
         styleClass = submenu.isExpanded() ? styleClass + " ui-state-expand" : styleClass;
 
         //wrapper
@@ -93,7 +91,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         //header
         writer.startElement("a", null);
-        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_CLASS, null);
+        writer.writeAttribute("class", LearnwebMenu.MENUITEM_LINK_CLASS, null);
         writer.writeAttribute("role", "tab", null);
         writer.writeAttribute("tabindex", "0", null);
         if(!(submenu instanceof ActiveSubMenu) || submenu.isDisabled())
@@ -108,32 +106,24 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
 
         //icon
         writer.startElement("span", null);
-        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_ICON_CLASS, null);
+        writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_ICON_CLASS, null);
         writer.endElement("span");
 
         //icon
         writer.startElement("span", null);
-        writer.writeAttribute("class", LearnwebMenu.PANEL_HEADER_TEXT_CLASS, null);
+        writer.writeAttribute("class", LearnwebMenu.MENUITEM_TEXT_CLASS, null);
         writer.writeText(submenu.getLabel(), null);
         writer.endElement("span");
         writer.endElement("a");
 
         //content
-        writer.startElement("div", null);
-        writer.writeAttribute("class", LearnwebMenu.PANEL_CONTENT_CLASS, null);
-        writer.writeAttribute("role", "tabpanel", null);
-        writer.writeAttribute("id", menu.getClientId(context) + "_" + submenu.getId(), null);
-        writer.writeAttribute("tabindex", "0", null);
-
         if(submenu.getElementsCount() > 0)
         {
             writer.startElement("ul", null);
-            writer.writeAttribute("class", LearnwebMenu.LIST_CLASS, null);
+            writer.writeAttribute("class", LearnwebMenu.DESCENDANT_SUBMENU_LIST_CLASS, null);
             encodeMenuElements(context, menu, submenu.getElements());
             writer.endElement("ul");
         }
-
-        writer.endElement("div");   //content
 
         writer.endElement("li");   //wrapper
     }

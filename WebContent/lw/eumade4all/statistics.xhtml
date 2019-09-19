@@ -1,8 +1,8 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="pageTitle" value="#{msg.statistics}"/>
 	<ui:param name="smallPage" value="true"/>
@@ -11,15 +11,17 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="type" value="#{eUMade4AllStatisticsBean.assessmentType}"  />
-			<f:viewAction action="#{eUMade4AllStatisticsBean.onLoad}" />
+			<f:viewAction action="#{eUMade4AllStatisticsBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
-	<ui:define name="sub_breadcrumb">
+
+	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.statistics}" url="eumade4all/statistics.jsf"/>
 	</ui:define>
+
 	<ui:define name="center_layout">				
 	
-		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
+		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}"/>
 		
 		<ui:fragment rendered="#{userBean.moderator}">	
 		<!--	<style type="text/css">
@@ -31,7 +33,7 @@
 
 			
 			<p:panel header="#{msg.statistics}" styleClass="mb-5">
-				<table role="grid" id="statistics_table" >
+				<table role="grid" id="statistics_table">
 					<thead>
 						<tr role="row">
 							<th class="ui-state-default" role="columnheader" style="width:20%">
@@ -116,7 +118,7 @@
 					<h:commandLink rendered="#{eUMade4AllStatisticsBean.assessmentType gt 1}">
 						Download data
 						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
-						<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
+						<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}"/>
 					</h:commandLink>
 				</p:panel>
             </h:form> 
@@ -129,18 +131,18 @@
 						<h:commandLink>
 							Download data
 							<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
-							<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}" />
+							<p:dataExporter type="xls" target="survey_result" fileName="#{eUMade4AllStatisticsBean.assessmentTypeName}"/>
 						</h:commandLink>
 					</f:facet>
 	
 					<p:column headerText="Student id">
-						<h:outputText value="#{result.user.studentId}" />
+						<h:outputText value="#{result.user.studentId}"/>
 					</p:column>
-					<p:column headerText="#{msg.courses}" >					
-						<h:outputText value="#{result.user.courses}" />
+					<p:column headerText="#{msg.courses}">
+						<h:outputText value="#{result.user.courses}"/>
 					</p:column>
 					<p:columns var="column" value="#{eUMade4AllStatisticsBean.questionColumns}" headerText="#{column.label}">
-						<h:outputText value="#{result.getAnswer(column.id)}" />
+						<h:outputText value="#{result.getAnswer(column.id)}"/>
 					</p:columns>
 				</p:dataTable>
 			
@@ -189,14 +191,14 @@
 					</p:columnGroup>
 					
 					<p:column>
-						<h:outputText value="#{stat.pair.assessedUser.courses[0].title}" />
+						<h:outputText value="#{stat.pair.assessedUser.courses[0].title}"/>
 					</p:column>
 					<p:column>
-						<h:outputText value="#{stat.pair.assessedUser.studentId}" />
+						<h:outputText value="#{stat.pair.assessedUser.studentId}"/>
 					</p:column>
 					<p:column rendered="#{showEmail}">
-						<h:outputText value="#{stat.pair.assessedUser.email}" />
-						<h:outputText value="#{stat.pair.assessedUser.id}" />
+						<h:outputText value="#{stat.pair.assessedUser.email}"/>
+						<h:outputText value="#{stat.pair.assessedUser.id}"/>
 					</p:column>
 
 					<p:column>
@@ -208,39 +210,39 @@
 					</p:column>
 					
 					<p:column>
-						<h:outputText value="Not submitted" rendered="#{not stat.pair.peerAssessmentUserAnswers.submitted}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{not stat.pair.peerAssessmentUserAnswers.submitted}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.pair.peerAssessmentUserAnswers.submitted}">
-							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.pair.assessorUserId}" />
-							<h:outputText value="#{stat.pair.peerAssessment.title}" />
+							<f:param name="resource_id" value="#{stat.pair.peerAssessmentSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.pair.assessorUserId}"/>
+							<h:outputText value="#{stat.pair.peerAssessment.title}"/>
 						</h:outputLink>
 					</p:column>
 					
 					<p:column>	
 						<p:repeat var="user" value="#{stat.pair.assessment.usersWhoSubmitted}">	
 							<h:outputLink value="survey/answer.jsf">
-								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}" />							
-								<f:param name="user_id" value="#{user.id}" />							
-								<h:outputText value="#{user.realUsername}" />	 
+								<f:param name="resource_id" value="#{stat.pair.assessmentSurveyResourceId}"/>
+								<f:param name="user_id" value="#{user.id}"/>
+								<h:outputText value="#{user.realUsername}"/>
 							</h:outputLink>
 						</p:repeat>						
 					</p:column>
 					
 					<p:column>
-						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{stat.baselineSurveyResourceId lt 0}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.baselineSurveyResourceId gt 0}">
-							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.userId}" />
-							<h:outputText value="Baseline" />
+							<f:param name="resource_id" value="#{stat.baselineSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.userId}"/>
+							<h:outputText value="Baseline"/>
 						</h:outputLink>
 					</p:column>
 					
 						<p:column>
-						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red" />
+						<h:outputText value="Not submitted" rendered="#{stat.evaluationSurveyResourceId lt 0}" styleClass="red"/>
 						<h:outputLink value="survey/answer.jsf" rendered="#{stat.evaluationSurveyResourceId gt 0}">
-							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}" />							
-							<f:param name="user_id" value="#{stat.userId}" />
-							<h:outputText value="Evaluation" />
+							<f:param name="resource_id" value="#{stat.evaluationSurveyResourceId}"/>
+							<f:param name="user_id" value="#{stat.userId}"/>
+							<h:outputText value="Evaluation"/>
 						</h:outputLink>
 					</p:column>
 					

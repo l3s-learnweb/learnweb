@@ -10,7 +10,6 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jena.shared.ConfigException;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
@@ -254,7 +253,7 @@ public class Learnweb
             String propertiesFileName = getPropertiesFileName();
 
             if(propertiesFileName.equals("lw_local_other"))
-                throw new ConfigException("Create a configuration file for your environment: " + Misc.getSystemDescription());
+                throw new RuntimeException("Create a configuration file for your environment: " + Misc.getSystemDescription());
 
             log.debug("Load config file: " + propertiesFileName);
 

@@ -10,7 +10,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -25,9 +25,9 @@ public class GroupLinksBean extends ApplicationBean implements Serializable
 
     private int groupId;
     // New link form
-    @NotEmpty
+    @NotBlank
     private String newLinkUrl;
-    @NotEmpty
+    @NotBlank
     private String newLinkTitle;
     private String newLinkType;
 

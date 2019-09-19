@@ -1,43 +1,39 @@
 body {
     .ui-breadcrumb {
-        background-color: $breadcrumbBgColor;
-        color: $breadcrumbTextColor;
-        padding: $headerPadding;
-        border: 1px solid $breadcrumbBorderColor;
-        border-radius: 3px;
+        padding: 0;
+        background-color: initial;
         ul {
+            display: flex;
             li {
-                float: none;
+                font-weight: bold;
+                font-size: $font-size-lg;
                 display: inline-block;
-                vertical-align: middle;
+                float: none;
                 .ui-menuitem-link {
-                    color: $primaryColor;
-                    margin: 0;
-                    position: relative;
-                    top: -2px;
+                    margin: 0 !important;
                 }
                 &.ui-breadcrumb-chevron {
-                    @include icon_override("\f105");
-                    font-size: 1.25em;
-                    margin: 0 0.2rem;
-                    //vertical-align: middle;
+                    margin: 0 0.5rem;
+                    @include icon_simple("\f105");
                 }
-                &:first-child {
-                    font-size: $font-size-lg;
-                    a.ui-icon-home {
-                        margin: 0;
-                    }
+                &:first-child span {
+                    display: none;
                 }
                 &:last-child {
+                    pointer-events: none;
                     .ui-menuitem-link {
                         color: $breadcrumbTextColor;
-                        font-weight: 600;
                     }
                 }
-                .ui-icon-home {
-                    color: $breadcrumbTextColor;
-                }
             }
+        }
+        .ui-icon {
+            color: $breadcrumbTextColor;
+            text-decoration: none;
+            font-weight: normal;
+            text-align: center;
+            line-height: 1.5;
+            height: auto;
         }
     }
     .ui-steps {

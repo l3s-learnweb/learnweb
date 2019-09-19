@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<div class="eMetaDetail my-3 py-3 border-top border-bottom">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Level (stats):</dt>
+        <dd class="col-sm-9">
+            <h:outputText value="(Not available. Click the button below to add)"
+                          rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.lCount}"/>
+            <h:outputText value="#{rightPaneBean.clickedResource.extendedMetadata.lCount}"
+                          rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.lCount}"/>
+        </dd>
+
+        <dt class="col-sm-3">Target Learner (stats):</dt>
+        <dd class="col-sm-9">
+            <h:outputText value="(Not available. Click the button below to add)"
+                          rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.targetCount}"/>
+            <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.targetCount}">
+                <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                    <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
+                        <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+                        <h:outputText value="Pre-school"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
+                        <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+                        <h:outputText value="Young learners"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'teenage learners'}">
+                        <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+                        <h:outputText value="Teens"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'teachers'}">
+                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                        <h:outputText value="Teachers"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'adult learners'}">
+                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                        <h:outputText value="Adult learners"/>
+                    </ui:fragment>
+
+                    <h:outputText value="[#{t.value}] "/>
+                </p:repeat>
+            </ui:fragment>
+        </dd>
+
+        <dt class="col-sm-3">Purpose of use (stats):</dt>
+        <dd class="col-sm-9">
+            <h:outputText value="(Not available. Click the button below to add)"
+                          rendered="#{empty rightPaneBean.clickedResource.extendedMetadata.targetCount}"/>
+            <ui:fragment rendered="#{not empty rightPaneBean.clickedResource.extendedMetadata.purposeCount}">
+                <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                    <span class="text-nowrap d-inline-block">
+                        <span class="bg-highlight">
+                            <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+                                 <h:outputText value="Speaking [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
+                                 <h:outputText value="Listening [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
+                                 <h:outputText value="Writing [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
+                                <i class="fa fa-fw fa-book" aria-hidden="true"></i>
+                                 <h:outputText value="Reading [#{p.value}]"/>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
+                                                     not 'listening skills'.equalsIgnoreCase(p.key) and
+                                                     not 'writing skills'.equalsIgnoreCase(p.key) and
+                                                     not 'reading skills'.equalsIgnoreCase(p.key)}">
+                                #{p.key}
+                            </ui:fragment>
+                        </span>
+                    </span>
+                </p:repeat>
+            </ui:fragment>
+        </dd>
+    </dl>
+
+    <h:form styleClass="text-center">
+        <p:commandButton id="detailAdd_button" value="Add your own" update=":add_metadata_form" styleClass="alt-btn"
+                         onsuccess="PF('metaDetailDialog').show();" ajax="true" process="@this" partialSubmit="true"
+                         actionListener="#{rightPaneBean.onOpenExtendedMetadataDialog}"/>
+    </h:form>
+</div>
+
+<p:dialog widgetVar="metaDetailDialog" header="Add Your Own Categorization" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+    <p class="mb-0">Please, add your own categorization: this will help you and other users find resources easily and efficiently.</p>
+    <p>Select the most appropriate tags or type them; then, click on the &quot;SAVE&quot; button.</p>
+    <p>Resource title: <b>#{rightPaneBean.clickedResource.title}</b></p>
+
+    <h:form id="add_metadata_form">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="Language Level: "/>
+                    <p:selectCheckboxMenu id="levlist" value="#{resourceDetailBean.selectedLevels}" label="Levels"
+                                          multiple="true" filter="false" filterMatchMode="startsWith">
+                        <f:selectItems value="#{searchFilterBean.levels}"/>
+                    </p:selectCheckboxMenu>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="Target Learner:"/>
+                    <p:selectCheckboxMenu id="aglist" value="#{resourceDetailBean.selectedTargets}" label="Target Learners"
+                                          multiple="true" filter="false" filterMatchMode="startsWith">
+                        <f:selectItems value="#{searchFilterBean.targets}"/>
+                    </p:selectCheckboxMenu>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="Purpose of Use:" styleClass="d-block"/>
+                    <p:autoComplete id="aclist" dropdown="true" multiple="true" value="#{resourceDetailBean.selectedPurposes}"
+                                    completeMethod="#{searchFilterBean.completePurpose}" label="Purposes of Use" styleClass="d-inline-block w-auto"/>
+                </div>
+            </div>
+        </div>
+
+        <p:commandButton value="Save" actionListener="#{resourceDetailBean.addNewMetadata}" update=":right_pane :growl"
+                         onsuccess="PF('metaDetailDialog').hide();resourceUpdatedHook();"/>
+        <p:commandButton value="Cancel" onclick="PF('metaDetailDialog').hide();return false;" styleClass="secondary-btn"/>
+    </h:form>
+</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,33 @@
+.profile-picture {
+  width: 2.8125rem;
+  height: 2.8125rem;
+  border-radius: 50%;
+  background: $themeElementTextColor;
+  border: 1px solid $themePrimaryColor;
+}
+
+.has-badge {
+  position: relative;
+
+  &:after{
+    position: absolute;
+    right: 0;
+    top: 0;
+    content: attr(data-count);
+    font-size: 0.7rem;
+    padding: 0.5em;
+    border-radius: 50%;
+    line-height: 0.75em;
+    color: $themeElementTextColor;
+    background: rgba($red, 0.85);
+    text-align: center;
+    min-width: 1.75em;
+    font-weight: bold;
+  }
+}
+
+.modal-dialog-select {
+  .ui-selectonemenu-label {
+    max-width: 254px;
+  }
+}

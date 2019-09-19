@@ -1,0 +1,180 @@
+.context-menu-icon {
+  &.context-menu-icon--fa {
+    display: list-item;
+    font-family: inherit;
+    line-height: inherit;
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 2em;
+      font-family: 'FontAwesome';
+      font-size: 1em;
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      color: #2980b9;
+      text-align: center;
+      //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+      transform: translateY(-50%);
+    }
+  }
+
+  &.context-menu-disabled::before {
+    color: #bbb;
+  }
+
+  &.context-menu-hover:before {
+    color: #fff;
+  }
+
+  &.context-menu-icon-loading:before {
+    animation: fa-spin 2s infinite;
+  }
+}
+
+.context-menu-list {
+  position: absolute;
+  display: inline-block;
+  min-width: 13em;
+  max-width: 26em;
+  padding: .25em 0;
+  margin: .3em;
+  font-family: inherit;
+  font-size: inherit;
+  list-style-type: none;
+  background: #fff;
+  border: 1px solid #bebebe;
+  //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+  border-radius: .2em;
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+}
+
+.context-menu-item {
+  position: relative;
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: content-box;
+  padding: .2em 2em;
+  color: #2f2f2f;
+  //Instead of the line below you could use @include user-select($select)
+  user-select: none;
+  background-color: #fff;
+
+  > label {
+    > input {
+      //Instead of the line below you could use @include user-select($select)
+      user-select: text;
+    }
+
+    > textarea {
+      //Instead of the line below you could use @include user-select($select)
+      user-select: text;
+    }
+  }
+
+  &.context-menu-hover {
+    color: #fff;
+    cursor: pointer;
+    background-color: #2980b9;
+  }
+
+  &.context-menu-disabled {
+    color: #bbb;
+    cursor: default;
+    background-color: #fff;
+  }
+
+  &.context-menu-input {
+    padding: .3em .6em;
+  }
+
+  > .context-menu-list {
+    top: .3em;
+    right: -.3em;
+    display: none;
+  }
+
+  &.context-menu-visible > .context-menu-list {
+    display: block;
+  }
+}
+
+.context-menu-separator {
+  padding: 0;
+  margin: .35em 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.context-menu-input {
+  &.context-menu-hover {
+    color: #2f2f2f;
+    cursor: default;
+  }
+
+  > label {
+    margin: 0;
+    display: block;
+    width: 100%;
+    //Instead of the line below you could use @include box-sizing($bs)
+    box-sizing: border-box;
+
+    > * {
+      vertical-align: top;
+    }
+
+    > input[type="checkbox"] {
+      position: relative;
+      top: .12em;
+      margin-right: .4em;
+    }
+
+    > input[type="radio"] {
+      position: relative;
+      top: .12em;
+      margin-right: .4em;
+    }
+
+    > input[type="text"] {
+      display: block;
+      width: 100%;
+      //Instead of the line below you could use @include box-sizing($bs)
+      box-sizing: border-box;
+    }
+
+    > textarea {
+      display: block;
+      width: 100%;
+      //Instead of the line below you could use @include box-sizing($bs)
+      box-sizing: border-box;
+      height: 7em;
+    }
+
+    > select {
+      display: block;
+      width: 100%;
+      //Instead of the line below you could use @include box-sizing($bs)
+      box-sizing: border-box;
+    }
+  }
+}
+
+.context-menu-accesskey {
+  text-decoration: underline;
+}
+
+.context-menu-submenu:after {
+  position: absolute;
+  top: 50%;
+  right: .5em;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  content: '';
+  border-color: transparent transparent transparent #2f2f2f;
+  border-style: solid;
+  border-width: .25em 0 .25em .25em;
+  //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
+  transform: translateY(-50%);
+}

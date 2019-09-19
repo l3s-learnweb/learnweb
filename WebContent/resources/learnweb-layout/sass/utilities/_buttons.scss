@@ -1,0 +1,28 @@
+body {
+  .moderator-btn {
+    color: $themeElementTextColor;
+    border: 1px solid $themePrimaryColorDarker!important;
+
+    .ui-button-text {
+      position: relative;
+
+      &:before {
+        content: '\f013';
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        padding-right: 0.5rem;
+        color: $themePrimaryAltColor;
+      }
+    }
+  }
+
+  .fileupload-minimal {
+    .ui-fileupload-buttonbar {
+      background: inherit;
+    }
+
+    .ui-fileupload-content {
+      display: none;
+    }
+  }
+}

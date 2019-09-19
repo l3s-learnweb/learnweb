@@ -6,22 +6,23 @@
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Activity Dashboard"/>
+<ui:param name="pageTitle" value="#{msg['Activity.dashboard']}"/>
+
 <ui:define name="metadata">
     <f:metadata>
         <f:viewAction action="#{activityDashboardBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 
-<ui:define name="sub_breadcrumb">
+<ui:define name="breadcrumb_ext">
     <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg.activity_dashboard}" url=""/>
+    <p:menuitem value="#{msg['Activity.dashboard']}" url=""/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <p:panel header="Users' Activities (All user interactions)">
+    <p:panel header="#{msg.choose_options}">
         <p:outputPanel styleClass="my-3">
-            <ui:decorate template="templates/setSelectedUsers.xhtml">
+            <ui:decorate template="/WEB-INF/templates/blocks/setSelectedUsers.xhtml">
                 <ui:param name="cbean" value="#{activityDashboardBean}"/>
             </ui:decorate>
         </p:outputPanel>
@@ -36,7 +37,7 @@
             </div>
 
             <div id="advanced_options" class="py-1">
-                <a href="#"><h:outputText value="Advanced options"/> <i class="fa fa-fw fa-angle-double-up"/></a>
+                <a href="#"><h:outputText value="#{msg['Activity.advanced_options']}"/> <i class="fa fa-fw fa-angle-double-up"/></a>
             </div>
 
             <div id="all_activities" class="collapse">
@@ -51,29 +52,32 @@
 
     <h:panelGroup id="content">
         <p:outputPanel id="activityPanel" styleClass="dashboard">
-            <div class="row my-3">
+            <div class="row">
                 <div class="col">
-                    <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="Activities">
+                    <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="#{msg.activities}">
                         <f:facet name="actions">
-                            <p:button id="interactions"
-                                      styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon"
-                                      icon="ui-icon-help" onclick="return false;"/>
-                            <p:tooltip for="interactions"
-                                       value="Number of selected activities (of all selected users) per day"/>
+                            <div class="ui-helper-clearfix">
+                                <div class="float-right">
+                                    <p:button icon="ui-icon-help" onclick="return false;"/>
+                                    <p:tooltip for="@previous" value="#{msg['Activity.actions_list']}"/>
+                                </div>
+                            </div>
                         </f:facet>
-                        <p:lineChart model="#{activityDashboardBean.interactionsChart}"
-                                 style="height:300px;" responsive="true"/>
+
+                        <p:lineChart model="#{activityDashboardBean.interactionsChart}"/>
                     </p:panel>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
-                        <f:facet name="header">Activities Table</f:facet>
-                        <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
-                            <h:outputText value="#{row[key]}"/>
-                        </p:columns>
-                    </p:dataTable>
+                    <h:form>
+                        <p:dataTable var="row" rendered="#{!empty activityDashboardBean.interactionsTable}" value="#{activityDashboardBean.interactionsTable}">
+                            <f:facet name="header">#{msg['Activity.table']}</f:facet>
+                            <p:columns var="key" value="#{activityDashboardBean.interactionsTableColumnNames}" headerText="#{key}">
+                                <h:outputText value="#{row[key]}"/>
+                            </p:columns>
+                        </p:dataTable>
+                    </h:form>
                 </div>
             </div>
         </p:outputPanel>

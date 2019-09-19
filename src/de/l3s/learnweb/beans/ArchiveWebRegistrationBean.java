@@ -12,13 +12,13 @@ import javax.inject.Named;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.resource.SERVICE;
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.email.Mail;
 
 @Named
@@ -27,17 +27,18 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 {
     private static final long serialVersionUID = 1506604946829332647L;
 
-    @Size(min = 2, max = 50)
+    @NotBlank
+    @Length(min = 2, max = 50)
     private String username;
 
-    @NotEmpty
+    @NotBlank
     private String password;
 
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
 
-    @NotEmpty
+    @NotBlank
     private String affiliation;
 
     private String description;

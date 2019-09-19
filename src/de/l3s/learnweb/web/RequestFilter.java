@@ -17,7 +17,7 @@ import com.google.common.net.InetAddresses;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
-import de.l3s.util.BeanHelper;
+import de.l3s.util.bean.BeanHelper;
 
 /**
  * Logs incoming requests by IPs. Records IP, time and URL, then at the end of the day stores it into a log file.
