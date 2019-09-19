@@ -8,7 +8,7 @@
         <div class="layout-container d-flex">
             <div class="d-flex">
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <a href="#" id="menu-button" class="header-element menu-button">
+                    <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
                         <i class="fa fa-bars mx-auto"></i>
                     </a>
                 </ui:fragment>
@@ -38,7 +38,7 @@
 				<ui:include src="language_switch.xhtml"/>
  
                 <ui:fragment rendered="#{userBean.loggedIn}">
-                    <h:outputLink id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
+                    <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
                         <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
                     </h:outputLink>
 

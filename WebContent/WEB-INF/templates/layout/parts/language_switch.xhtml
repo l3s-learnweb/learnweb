@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
 	<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
-		<h:outputLink id="languageSwitchButton" styleClass="header-element lang-button" onclick="return false;">
+		<h:outputLink id="languageSwitchButton" value="#{userBean.bannerLink}" styleClass="header-element lang-button" onclick="return false;">
 			<img src="#{request.contextPath}/resources/images/flags/flag_#{userBean.localeCode}.png" alt="Language switch"/>
 		</h:outputLink>
 
