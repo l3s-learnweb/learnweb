@@ -66,7 +66,7 @@
             <p:panel header="#{msg.members}">
                 <h:form>
                     <ul class="gridder clearfix">
-                        <p:repeat id="datagrid" var="user" value="#{groupOverviewBean.members}">
+                        <p:repeat var="user" value="#{groupOverviewBean.members}">
                             <li class="gridder-list" data-griddercontent="#user${user.id}">
                                 <p:commandLink onclick="return false;" styleClass="member-block">
                                     <f:setPropertyActionListener target="#{groupOverviewBean.clickedUser}" value="#{user}"/>

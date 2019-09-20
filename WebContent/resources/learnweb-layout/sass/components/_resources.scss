@@ -33,35 +33,47 @@ img.res-image-simple {
   max-width: 100%;
   border-radius: $btn-border-radius;
   animation: fadein $transition-duration;
-  border: 1px solid $themeSidebarDividerColor;
+  border: $border-width solid $themeSidebarDividerColor;
   transition: max-height $transition-duration ease, max-width $transition-duration ease;
   transform-origin: center;
 }
 
 ul.res-breadcrumbs {
-  padding-left: 0;
+  padding: 0 1rem;
+  margin-bottom: 0;
   list-style: none;
+  background: $gray-100;
+  border: $border-width solid $gray-200;
+  border-left: 0;
+  border-radius: 0;
 
   li {
     display: inline-block;
     position: relative;
+    border: $border-width solid transparent;
+
+    &.ui-droppable-active {
+      background: lighten($themePrimaryAltColor, 30%);
+      border-color: $themePrimaryAltColor;
+      border-style: dashed;
+    }
+
+    &.ui-droppable-hover {
+      border-color: $themePrimaryAltColorDarker;
+      background: $themePrimaryAltColorDarker;
+    }
 
     a {
       display: block;
       text-decoration: none;
-      padding: 0.5rem;
+      padding: 0.2rem 0.5rem;
 
       &:hover {
         background-color: $gray-300 !important;
       }
     }
 
-    &:first-child a {
-      padding-left: 1rem;
-    }
-
     &:last-child a {
-      padding-right: 1rem;
       cursor: default;
       pointer-events: none;
 
@@ -78,16 +90,16 @@ ul.res-breadcrumbs {
         position: absolute;
         display: inline-block;
         font-family: FontAwesome;
-        font-size: 2em;
+        font-size: 1.5em;
         top: -0.1em;
-        right: -0.5em;
+        right: -0.75em;
       }
     }
   }
 }
 
 ul.res-filters {
-  padding-left: 0;
+  padding: 0 1rem;
   margin-bottom: 0;
   list-style: none;
 
@@ -101,14 +113,6 @@ ul.res-filters {
       display: inline-block;
       padding: 0.25rem 0.5rem;
       line-height: 2;
-    }
-
-    &:first-child .filter-title {
-      padding-left: 1rem;
-    }
-
-    &:last-child .filter-title {
-      padding-right: 1rem;
     }
 
     &.active,
@@ -136,7 +140,7 @@ ul.res-filters {
     padding-left: 0;
     left: 0;
     z-index: 10;
-    border: solid 1px $gray-400;
+    border: $border-width solid $gray-400;
 
     li {
       background: $gray-200;
@@ -172,12 +176,12 @@ ul.res-filters {
     display: none;
 
     input {
-      border: 1px solid $dark;
+      border: $border-width solid $dark;
       border-right: 0;
     }
 
     button {
-      border: 1px solid $dark;
+      border: $border-width solid $dark;
       border-left: 0;
       background: none;
       border-radius: 0;
@@ -216,14 +220,10 @@ ul.res-filters {
   flex-wrap: nowrap;
   justify-content: flex-start;
   padding: 1rem 0.5rem;
-  border-bottom: 1px solid $themeSidebarDividerColor;
+  border-bottom: $border-width solid $themeSidebarDividerColor;
 
   &:hover {
     background: $gray-200;
-
-    .res-col-controls {
-      visibility: visible;
-    }
   }
 
   .res-col {
@@ -248,21 +248,11 @@ ul.res-filters {
     flex: 1 1 auto;
     //align-self: start;
   }
+}
 
-  .res-col-controls {
-    flex: 0 0 auto;
-    visibility: hidden;
-    display: flex;
-    flex-direction: column;
-
-    a {
-      text-decoration: none;
-
-      &:hover {
-        opacity: 0.6;
-      }
-    }
-  }
+.res-empty-text {
+  display: flex;
+  padding: 1rem;
 }
 
 .res-grid {
@@ -270,8 +260,12 @@ ul.res-filters {
   display: flex;
   flex-wrap: wrap;
 
-  .res-grid-item {
-    padding: 0.5rem;
+  &:empty {
+    display: none;
+  }
+
+  .res-item {
+    margin: 0.5rem;
     width: 50%;
 
     @include media-breakpoint-up(md) {
@@ -283,27 +277,27 @@ ul.res-filters {
     }
 
     &[data-cq~="min-width:0px"] {
-      width: 100%; // 1 column
+      width: calc(100% - 1rem); // 1 column
     }
 
     &[data-cq~="min-width:300px"] {
-      width: 50%; // 3 columns, 150min, 249max
+      width: calc(50% - 1rem); // 3 columns, 150min, 249max
     }
 
     &[data-cq~="min-width:500px"] {
-      width: 33.333%; // 3 columns, 166min, 249max
+      width: calc(33.333% - 1rem); // 3 columns, 166min, 249max
     }
 
     &[data-cq~="min-width:750px"] {
-      width: 25%; // 4 columns, 187min, 249max
+      width: calc(25% - 1rem); // 4 columns, 187min, 249max
     }
 
     &[data-cq~="min-width:1000px"] {
-      width: 20%; // 5 columns, 200min, 249max
+      width: calc(20% - 1rem); // 5 columns, 200min, 249max
     }
 
     &[data-cq~="min-width:1250px"] {
-      width: 16.666%; // 6 columns, 208min, 249max
+      width: calc(16.666% - 1rem); // 6 columns, 208min, 249max
     }
   }
 }
@@ -314,10 +308,12 @@ ul.res-filters {
   color: $body-color;
   background: $gray-200;
   box-shadow: $box-shadow-sm;
+  border: $border-width solid $gray-200;
 
   .res-bl-preview {
     padding-top: 75%; // 4:3 Aspect Ratio
     position: relative;
+    border-bottom: $border-width solid $gray-200;
 
     .res-bl-preview-wrap {
       transition: opacity $transition-duration ease-in-out;
@@ -336,6 +332,8 @@ ul.res-filters {
         width: 100%;
         vertical-align: middle;
         object-fit: cover;
+        pointer-events: none;
+        user-select: none;
       }
     }
   }
@@ -382,6 +380,11 @@ ul.res-filters {
   &:hover {
     color: $themeElementTextColor;
     background: $themePrimaryColor;
+    border-color: $themePrimaryColor;
+
+    .res-bl-preview {
+      border-color: $themePrimaryColor;
+    }
 
     .res-bl-icon {
       color: $themePrimaryColor;
@@ -390,19 +393,17 @@ ul.res-filters {
     .res-bl-author {
       color: $themeElementTextColor !important;
     }
-
-    .resource-controls {
-      visibility: visible;
-      opacity: 1;
-    }
   }
 
-  .selected &, // TODO: should be removed, always use .ui-selected
-  .ui-selected &,
-  .ui-selecting & {
+  .ui-selecting &, // when the lasso includes this element
+  .ui-selected & { // after a successful selection
     color: $themeElementTextColor;
     background: $themePrimaryDarkerAlt;
-    box-shadow: $box-shadow;
+    border-color: $themePrimaryDarkerAlt;
+
+    .res-bl-preview {
+      border-color: $themePrimaryDarkerAlt;
+    }
 
     .res-bl-icon {
       color: $themePrimaryDarkerAlt;
@@ -413,23 +414,41 @@ ul.res-filters {
     }
   }
 
-  .ui-draggable-greyscale & { // TODO: investigate
+  .ui-draggable-dragging & { // While dragging the element
+    opacity: 0.5;
     transition: opacity .15s cubic-bezier(0.4, 0, 1, 1);
     pointer-events: none;
   }
 
-  .ui-state-active & { // TODO: investigate
-    border: 0;
-    font-weight: normal;
-    text-shadow: none;
-    box-shadow: none;
+  .ui-droppable-active & { // When a draggable that can be dropped on this dropppable is activated
+    border-color: $themePrimaryAltColor;
+    border-style: dashed;
+
+    .res-bl-icon {
+      background: lighten($themePrimaryAltColor, 30%);
+    }
   }
 
-  .ui-state-highlight & { // TODO: investigate
-    outline: 2px solid $themePrimaryColor;
+  .ui-droppable-hover & { // When dragging a draggable over this droppable
+    color: $themeElementTextColor;
+    background: $themePrimaryAltColorDarker;
+    border-color: $themePrimaryAltColorDarker;
+
+    .res-bl-preview {
+      border-color: $themePrimaryAltColorDarker;
+    }
+
+    .res-bl-icon {
+      color: $themeElementTextColor;
+      background: $themePrimaryAltColorDarker;
+    }
+
+    .res-bl-author {
+      color: $themeElementTextColor !important;
+    }
   }
 
-  .ui-draggable-helper & { // TODO: investigate
+  .ui-draggable-helper & {
     background-color: $themePrimaryColor;
     color: $white;
     box-shadow: $box-shadow;
@@ -437,96 +456,6 @@ ul.res-filters {
 
     .res-bl-preview {
       display: none;
-    }
-  }
-}
-
-.resource-controls {
-  visibility: hidden;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  background: rgba($gray-300, 0.75);
-  transition: opacity $transition-duration ease-in-out;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.25;
-
-  &.edit-locked {
-    background: rgba($red, 0.75);
-  }
-}
-
-.context-menu {
-  border-radius: 0;
-  transition: opacity $transition-duration;
-  background: $white;
-  cursor: default;
-  font-size: $font-size-base;
-  margin: 0;
-  outline: none;
-  position: fixed;
-  height: auto !important;
-  overflow-y: auto;
-  padding: 8px 0;
-  border: 1px solid transparent;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
-  z-index: 2300;
-  max-height: 411px;
-  display: none;
-
-  .context-menu-item {
-    &:not([style*="display: none"]):first-child {
-      padding-top: 6px;
-    }
-
-    &.divider {
-      border-top: 1px solid $gray-200;
-    }
-
-    &:hover {
-      border-left: 4px solid $gray-600;
-      margin-left: 0;
-      background-color: $gray-100;
-    }
-
-    position: relative;
-    color: $gray-800;
-    cursor: pointer;
-    list-style: none;
-    /*padding: 6px 8em 6px 30px;*/
-    white-space: nowrap;
-    min-width: 160px;
-    border: none;
-    height: 24px;
-    margin: 0 0 0 4px;
-    padding: 6px 24px 6px 0;
-    display: none;
-
-    .context-menu-item-wrapper {
-      margin-left: 4px;
-      padding-left: 16px;
-
-      .context-menu-item-icon {
-        background-repeat: no-repeat;
-        height: 21px;
-        left: 3px;
-        position: absolute;
-        right: auto;
-        top: 3px;
-        vertical-align: middle;
-        width: 21px;
-        background-origin: border-box;
-        margin-left: 12px;
-        margin-top: 2px;
-        opacity: .5;
-        display: none;
-      }
     }
   }
 }
@@ -569,7 +498,7 @@ ul.res-filters {
     .ui-toolbar-group-right {
       .ui-button {
         background-color: $themePrimaryColorDarker;
-        border: 1px solid $themePrimaryColorDarker;
+        border: $border-width solid $themePrimaryColorDarker;
 
         &.ui-state-hover, &.ui-state-focus {
           background-color: $themePrimaryDarkerAlt;
@@ -582,6 +511,15 @@ ul.res-filters {
       }
     }
   }
+}
+
+.ui-selectable-helper { // The "lasso" element used to visualize the ongoing selection.
+  position: absolute;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+  border: $border-width dotted $black;
+  pointer-events: none;
+  z-index: 99999 !important;
 }
 
 .resource-preview {
@@ -598,124 +536,11 @@ ul.res-filters {
   }
 }
 
-.fancybox-html-archive-urls {
-  .fancybox-slide {
-    padding: 44px !important;
-  }
-
-  .fancybox-content {
-    padding: 1rem;
-    height: 100%;
-    width: 100%;
-    overflow: visible;
-
-    .content-scroll {
-      max-height: calc(100vh - 12rem);
-      overflow: auto;
-    }
-
-    .archive-frame-wrapper {
-      position: relative;
-      overflow: hidden;
-      height: 100%;
-
-      iframe {
-        background: $themeSidebarDividerColor url("\#{resource['images:three-dots-spinner.svg']}") center center no-repeat;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-        border: 0;
-      }
-    }
-  }
-}
-
-.fancybox-iframe-inline {
-  .fancybox-slide {
-    padding: 44px !important;
-  }
-
-  .fancybox-content {
-    height: 100%;
-    overflow: visible;
-    padding: 0;
-    width: 100%;
-    background: #fff;
-
-    iframe {
-      background: transparent;
-      border: 0;
-      display: block;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      padding: 0;
-      width: 100%;
-
-      /* Fix iOS */
-      left: 0;
-      position: absolute;
-      top: 0;
-    }
-  }
-}
-
-/* Selector styles */
-.ui-selectable-helper { // TODO: check or remove
-  position: absolute;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  background-color: rgba(0, 0, 0, 0.1);
-  border: 1px dotted $black;
-  pointer-events: none;
-  z-index: 500;
-}
-
-/* Drag & Drop styles */
-.selected-icon { // TODO: check or remove
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transform: translateZ(1px);
-  transition-duration: .2s, .1s, .1s;
-  transition-property: opacity, color, background-color;
-  transition-timing-function: ease-in;
-  background-color: $red;
-  border-radius: 40px;
-  color: $white;
-  font-size: $font-size-base;
-  height: 24px;
-  line-height: 24px;
-  margin-top: -12px;
-  min-width: 22px;
-  padding-left: 1px;
-  padding-right: 1px;
-  position: absolute;
-  right: -12px;
-  top: 0;
-  text-align: center;
-  z-index: 3;
-}
-
-#deleteConfirmDialog { // TODO: check or remove
-  .ui-dialog-content p > span {
-    display: none;
-  }
-
-  &.single {
-    &.folders .ui-dialog-content p > span.single-folder,
-    &.resources .ui-dialog-content p > span.single-resource {
-      display: block;
-    }
-  }
-
-  &.plural .ui-dialog-content p > span.plural {
-    display: block;
-  }
-}
-
 .myresource-listview { // TODO: check or remove
   padding-right: 7px;
   display: block;
 
-  .res-list-item {
+  .res-item {
     display: none;
 
     @media screen and (max-width: 1050px) {

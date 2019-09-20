@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<div class="res-row">
+    <div class="res-col res-col-type">
+        <i class="fa res-t-icon t-#{res.type}" aria-hidden="true"></i>
+    </div>
+
+    <div class="res-col res-col-preview">
+        <img class="res-image-simple" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"/>
+    </div>
+
+    <div class="metadata-block res-col res-col-description">
+        <h6>#{res.title}</h6>
+
+        <ui:fragment rendered="#{not empty res.language}">
+            <p class="text-muted small mb-0"><b>Language:</b> #{res.language}</p>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
+            <p class="text-muted small mb-0"><b>Level (stats):</b> #{res.extendedMetadata.lCount}</p>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
+            <p class="text-muted small mb-0">
+                <b>Target learner (stats):</b>
+                <ui:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
+                    <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
+                        <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+                        <h:outputText value="Pre-school"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
+                        <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+                        <h:outputText value="Young learners"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'teenage learners'}">
+                        <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+                        <h:outputText value="Teens"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'teachers'}">
+                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                        <h:outputText value="Teachers"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{t.key == 'adult learners'}">
+                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                        <h:outputText value="Adult learners"/>
+                    </ui:fragment>
+
+                    <h:outputText value="[#{t.value}] "/>
+                </ui:repeat>
+            </p>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
+            <p class="text-muted small mb-0">
+                <b>Purpose of use (stats):</b>
+                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                    <span class="text-nowrap d-inline-block">
+                        <span class="bg-highlight">
+                            <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
+                                 <h:outputText value="Speaking [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
+                                 <h:outputText value="Listening [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
+                                 <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
+                                 <h:outputText value="Writing [#{p.value}]"/>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
+                                <i class="fa fa-fw fa-book" aria-hidden="true"></i>
+                                 <h:outputText value="Reading [#{p.value}]"/>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
+                                                     not 'listening skills'.equalsIgnoreCase(p.key) and
+                                                     not 'writing skills'.equalsIgnoreCase(p.key) and
+                                                     not 'reading skills'.equalsIgnoreCase(p.key)}">
+                                #{p.key}
+                            </ui:fragment>
+                        </span>
+                    </span>
+                </ui:repeat>
+            </p>
+        </ui:fragment>
+    </div>
+</div>
+
+</ui:composition>

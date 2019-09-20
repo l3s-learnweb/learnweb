@@ -16,7 +16,7 @@
         <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
             <h:outputText value="#{addResourceBean.currentPath}" rendered="#{addResourceBean.formStep != 1}"/>
-            <p:button onclick="selectNewResourceLocation();return false;" value="#{addResourceBean.currentPath}"
+            <p:button onclick="createConfirmDialog('selectDestination', updateAddResourcePaneCommand);return false;" value="#{addResourceBean.currentPath}"
                       rendered="#{addResourceBean.formStep == 1}"/>
         </div>
     </div>

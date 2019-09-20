@@ -29,21 +29,16 @@
 		<h:form styleClass="d-none">
 			<p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
 			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="selectResourceDND(); load_editor(); "/>
-			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=" :resourceGrid2" oncomplete="selectResourceDND(); updateMaxResources();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":growl" oncomplete="load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}" update=":submittedResourcesGrid" oncomplete="updateMaxResources();"/>
 		</h:form>
 
 		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
 		<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+		<h:outputScript name="vendor/contextMenu-v2.8.0/jquery.contextMenu.min.js"/>
 
 		<h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
 		<h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
-		<h:outputScript library="learnweb-layout" name="js/submission-resources.js"/>
-
-		<script>
-			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
-			var resources_to_select = max_resources;
-		</script>
 
 		<!-- only for eumade4all -->
 		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
@@ -59,10 +54,11 @@
                 <h3>The submitted resources</h3>
             </ui:fragment>
 
-            <h:panelGroup layout="block" id="datagrid" styleClass="mt-3" pt:data-isEnabledMoving="false">
-                <h:panelGroup id="resourceGrid2" layout="block" styleClass="res-grid border-top">
+            <h:panelGroup layout="block" styleClass="res-container mt-3"
+						  pt:data-canSelectResources="true">
+                <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top">
                     <p:repeat var="res" value="#{submissionBean.selectedResources}">
-                        <h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+                        <h:panelGroup styleClass="res-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
                             <h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
                                 <ui:fragment>
                                     <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
@@ -80,7 +76,7 @@
                         </h:panelGroup>
                     </p:repeat>
 
-                    <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="nothing_found"/>
+                    <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="res-empty-text"/>
 
                     <h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
                         <a href="#" class="cancel" onclick="return false;">
@@ -93,7 +89,7 @@
 				</h:panelGroup>
 
                 <h:form id="submit_resources_form" prependId="false">
-                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=" :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
                 </h:form>
             </h:panelGroup>
         </p:panel>
@@ -113,17 +109,18 @@
 					<a href="#" data-fancybox-close="true" class="text-white"><i class="fa fa-fw fa-times" aria-hidden="true"></i></a>
 				</f:facet>
 				<f:facet name="footer">
-					<p:commandButton value="#{msg.add}" onclick="selectResources();"/>
+					<p:commandButton value="#{msg.add}" onclick="confirmResourcesSelect();"/>
 				</f:facet>
 
 				<h:panelGroup layout="block" rendered="#{empty submissionBean.resources}">
-					<h:outputText value="#{msg.no_resources_found}" class="nothing_found"/>
+					<h:outputText value="#{msg.no_resources_found}" class="res-empty-text"/>
 					First, add resources to <h:outputLink value="myhome/resources.jsf">#{msg.myResourcesTitle}.</h:outputLink>
 				</h:panelGroup>
 
-				<h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block" rendered="#{!empty submissionBean.resources}">
+				<h:panelGroup id="submitResourcesGrid" styleClass="res-container res-grid" layout="block" rendered="#{!empty submissionBean.resources}"
+							  pt:data-canSelectResources="true">
 					<p:repeat var="res" value="#{submissionBean.resources}">
-						<h:panelGroup styleClass="res-grid-item resource-item2 group-resources-item2"
+						<h:panelGroup styleClass="res-item"
 									  pt:data-itemType="resource"
 									  pt:data-itemId="#{res.id}" layout="block">
 							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -134,6 +131,56 @@
 				</h:panelGroup>
 			</p:panel>
 		</h:panelGroup>
+
+		<script type="application/javascript">
+			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
+			var resources_to_select = max_resources;
+
+			/* global updateSelectedItemsCommand */
+
+			function confirmSubmitMessage() {
+				var confirmMessage = "Are you sure you want to submit? You will no longer be able to submit any more resources.";
+				//var no_selected_resources = $('.res-item').length;
+				if (resources_to_select > 0)
+					confirmMessage = "You should select " + resources_to_select + " more resource" + (resources_to_select > 1 ? "s" : "") + " for your submission. " + confirmMessage;
+				return confirm(confirmMessage);
+			}
+
+			function confirmResourcesSelect() {
+				updateSelectedItemsCommand([
+					{name: 'action', value: 'add'},
+					{name: 'items', value: JSON.stringify(selected)}
+				]);
+				selected.unselectAll();
+				$.fancybox.close();
+			}
+
+			function updateMaxResources() {
+				var num_selected_resources = $('.res-item.ui-selected').length;
+				resources_to_select = max_resources - num_selected_resources;
+				if (resources_to_select === 0)
+					$('#add_resource_sign').hide();
+				if (num_selected_resources > 0)
+					$('#submit_resources_button').show();
+			}
+
+            $(function () {
+                $(document).on('click', '#add_resource_sign', function () {
+                    $.fancybox.open({
+                        src: '#select_resources_modal',
+                        type: 'inline'
+                    }, {
+                        // modal: true,
+                        touch: false,
+                        smallBtn: false,
+                        buttons: false
+                    });
+                });
+
+                updateMaxResources();
+                createSelectable('submitResourcesGrid');
+            });
+		</script>
 	</ui:define>
 
 	<ui:define name="right_layout">

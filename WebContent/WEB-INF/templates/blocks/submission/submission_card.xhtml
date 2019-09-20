@@ -85,10 +85,10 @@
 				<p class="font-weight-lighter mb-3">#{submission.description}</p>
 
 				<h:panelGroup layout="block" styleClass="mt-5" rendered="#{not empty submission.submittedResources}">
-					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+					<h:panelGroup layout="block" styleClass="res-container">
 						<h:panelGroup styleClass="res-grid" layout="block">
 							<ui:repeat var="res" value="#{submission.submittedResources}">
-								<h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+								<h:panelGroup styleClass="res-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
 										<ui:param name="res" value="#{res}"/>
 									</ui:decorate>

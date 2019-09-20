@@ -8,7 +8,7 @@
     <div class="form-group row">
         <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
-            <p:button onclick="selectNewResourceLocation();return false;" value="#{addResourceBean.currentPath}"/>
+            <p:button onclick="createConfirmDialog('selectDestination', updateAddResourcePaneCommand);return false;" value="#{addResourceBean.currentPath}"/>
         </div>
     </div>
 

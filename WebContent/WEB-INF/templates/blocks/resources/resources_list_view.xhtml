@@ -2,12 +2,11 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <h:panelGroup styleClass="res-container-list" layout="block">
-    <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-        <h:panelGroup styleClass="group-resources2-item res-list-item" layout="block"
+    <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
+        <h:panelGroup styleClass="res-item" layout="block"
                       pt:data-itemType="resource"
                       pt:data-itemId="#{res.resource.id}"
                       pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
@@ -15,116 +14,11 @@
                       pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
                       pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
 
-            <div class="res-row">
-                <div class="res-col res-col-type">
-                    <i class="fa res-t-icon t-#{res.type}" aria-hidden="true"></i>
-                </div>
-
-                <div class="res-col res-col-preview">
-                    <img class="res-image-simple" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"/>
-                </div>
-
-                <div class="metadata-block res-col res-col-description">
-                    <h6>#{res.title}</h6>
-                    <ui:fragment rendered="#{not empty res.language}">
-                        <p class="text-muted small mb-0"><b>Language:</b> #{res.language}</p>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
-                        <p class="text-muted small mb-0"><b>Level (stats):</b> #{res.extendedMetadata.lCount}</p>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
-                        <p class="text-muted small mb-0">
-                            <b>Target learner (stats):</b>
-                            <p:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
-                                <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
-                                    <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
-                                    <h:outputText value="Pre-school"/>
-                                </ui:fragment>
-                                <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
-                                    <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
-                                    <h:outputText value="Young learners"/>
-                                </ui:fragment>
-                                <ui:fragment rendered="#{t.key == 'teenage learners'}">
-                                    <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
-                                    <h:outputText value="Teens"/>
-                                </ui:fragment>
-                                <ui:fragment rendered="#{t.key == 'teachers'}">
-                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                                    <h:outputText value="Teachers"/>
-                                </ui:fragment>
-                                <ui:fragment rendered="#{t.key == 'adult learners'}">
-                                    <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                                    <h:outputText value="Adult learners"/>
-                                </ui:fragment>
-
-                                <h:outputText value="[#{t.value}] "/>
-                            </p:repeat>
-                        </p>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
-                        <p class="text-muted small mb-0">
-                            <b>Purpose of use (stats):</b>
-                            <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
-                                <span class="text-nowrap d-inline-block">
-                                    <span class="bg-highlight">
-                                        <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
-                                             <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
-                                             <h:outputText value="Speaking [#{p.value}]"/>
-                                        </ui:fragment>
-                                        <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
-                                             <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
-                                             <h:outputText value="Listening [#{p.value}]"/>
-                                        </ui:fragment>
-                                        <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
-                                             <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-                                             <h:outputText value="Writing [#{p.value}]"/>
-                                        </ui:fragment>
-                                        <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
-                                            <i class="fa fa-fw fa-book" aria-hidden="true"></i>
-                                             <h:outputText value="Reading [#{p.value}]"/>
-                                        </ui:fragment>
-
-                                        <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
-                                                                 not 'listening skills'.equalsIgnoreCase(p.key) and
-                                                                 not 'writing skills'.equalsIgnoreCase(p.key) and
-                                                                 not 'reading skills'.equalsIgnoreCase(p.key)}">
-                                            #{p.key}
-                                        </ui:fragment>
-                                    </span>
-                                </span>
-                            </p:repeat>
-                        </p>
-                    </ui:fragment>
-                </div>
-
-                <h:panelGroup class="res-col res-col-controls" layout="block">
-                    <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-                        <i class="fa text-success fa-plus" aria-hidden="true"></i>
-                    </h:outputLink>
-
-                    <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
-                        <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
-                            <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
-                        </h:outputLink>
-                    </ui:fragment>
-
-                    <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
-                        <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-                            <i class="fa text-danger fa-times" aria-hidden="true"></i>
-                        </h:outputLink>
-                    </ui:fragment>
-                </h:panelGroup>
-            </div>
+            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_row.xhtml">
+                <ui:param name="res" value="#{res.resource}"/>
+            </ui:decorate>
         </h:panelGroup>
-    </p:repeat>
-
-    <h:outputText value="${msg.no_resources_found}" class="nothing_found"
-                  rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
-
-    <h:outputText value="#{msg.no_results_found}" class="nothing_found"
-                  rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'FilterPaginator'}"/>
-
-    <!--<h:outputText value="#{msg.no_results_found}" class="nothing_found"
-        rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/> -->
+    </ui:repeat>
 </h:panelGroup>
+
 </ui:composition>

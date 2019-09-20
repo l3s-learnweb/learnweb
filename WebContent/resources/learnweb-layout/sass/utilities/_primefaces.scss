@@ -85,6 +85,18 @@ body {
     .ui-tree-container {
       padding: 0;
     }
+
+    .ui-treenode {
+      &.ui-droppable-active {
+        background: lighten($themePrimaryAltColor, 30%);
+        border: 1px dashed $themePrimaryAltColor;
+      }
+
+      &.ui-droppable-hover {
+        background: $themePrimaryAltColorDarker;
+        border: 1px solid $themePrimaryAltColorDarker;
+      }
+    }
   }
 
   .ui-tabs.ui-tabs-transparent {

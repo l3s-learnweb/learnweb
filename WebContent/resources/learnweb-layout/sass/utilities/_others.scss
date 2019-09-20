@@ -24,6 +24,13 @@
     min-width: 1.75em;
     font-weight: bold;
   }
+
+  &.ui-draggable-helper::after {
+    background: $red;
+    right: -0.5rem;
+    top: -0.5rem;
+    font-size: 0.875rem;
+  }
 }
 
 .modal-dialog-select {

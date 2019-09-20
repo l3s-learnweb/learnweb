@@ -48,7 +48,7 @@
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
             <p:commandButton value="#{msg.create_folder}" update=":folderGrid :growl :right_pane"
-                             action="#{addFolderBean.addFolder}" ajax="true" oncomplete="resourceDND();">
+                             action="#{addFolderBean.addFolder}" ajax="true" oncomplete="onResourcesUpdated();">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
         </div>

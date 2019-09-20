@@ -11,3 +11,66 @@
     }
   }
 }
+
+.fancybox-iframe-inline {
+  .fancybox-slide {
+    padding: 44px !important;
+  }
+
+  .fancybox-content {
+    height: 100%;
+    overflow: visible;
+    padding: 0;
+    width: 100%;
+    background: #fff;
+
+    iframe {
+      background: transparent;
+      border: 0;
+      display: block;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      padding: 0;
+      width: 100%;
+
+      /* Fix iOS */
+      left: 0;
+      position: absolute;
+      top: 0;
+    }
+  }
+}
+
+
+.fancybox-html-archive-urls {
+  .fancybox-slide {
+    padding: 44px !important;
+  }
+
+  .fancybox-content {
+    padding: 1rem;
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+
+    .content-scroll {
+      max-height: calc(100vh - 12rem);
+      overflow: auto;
+    }
+
+    .archive-frame-wrapper {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+
+      iframe {
+        background: $themeSidebarDividerColor url("\#{resource['images:three-dots-spinner.svg']}") center center no-repeat;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        border: 0;
+      }
+    }
+  }
+}

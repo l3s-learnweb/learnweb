@@ -4,27 +4,12 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
-<!--@elvariable id="showControls" type="java.lang.Boolean"-->
 
 <div class="res-block">
     <div class="res-bl-preview">
         <div class="res-bl-preview-wrap">
             <img class="res-bl-preview-image" src="#{res.smallThumbnail.url}" alt="#{res.title}" title="#{res.title}"/>
         </div>
-
-        <h:panelGroup class="resource-controls #{res.editLocked ? 'edit-locked' : ''}" layout="block" rendered="#{showControls}">
-            <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-                <i class="fa text-success fa-plus" aria-hidden="true"></i>
-            </h:outputLink>
-
-            <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" rendered="${res.canEditResource(userBean.user)}">
-                <i class="fa text-warning fa-pencil" aria-hidden="true"></i>
-            </h:outputLink>
-
-            <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete" rendered="${res.canDeleteResource(userBean.user)}">
-                <i class="fa text-danger fa-times" aria-hidden="true"></i>
-            </h:outputLink>
-        </h:panelGroup>
     </div>
 
     <div class="res-bl-details">

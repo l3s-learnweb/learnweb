@@ -94,6 +94,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
         $this.rightPane.on('click', '.layout-right-pane-close', function (e) {
             $this.hideRightPane();
+            $this.updateSearchParams({resource_id: null});
 
             e.preventDefault();
         });
@@ -101,6 +102,23 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         if ($this.rightPane.find('#right_pane_content div').length) {
             $this.showRightPane();
         }
+    },
+
+    updateSearchParams: function (searchParams, cleanExisting) {
+        var sp = new URLSearchParams(cleanExisting ? undefined : window.location.search);
+
+        Object.keys(searchParams).forEach(function (key) {
+            var value = searchParams[key];
+
+            if (value === null) {
+                sp.delete(key);
+            } else {
+                sp.set(key, value);
+            }
+        });
+
+        var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + sp.toString();
+        window.history.pushState({url: newUrl}, '', newUrl);
     },
 
     showRightPane: function () {

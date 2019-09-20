@@ -1,55 +1,40 @@
-<ui:composition
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-    <h:panelGroup id="datagrid" styleClass="datagrid res-container-grid" layout="block">
-        <h:panelGroup styleClass="mx-3" layout="block" rendered="#{groupResourcesBean.query != null}">
-            <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>
-        </h:panelGroup>
+    <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
+        <ui:repeat value="#{groupResourcesBean.subFolders}" var="folder">
+            <h:panelGroup styleClass="res-item" layout="block"
+                          pt:data-itemType="folder"
+                          pt:data-itemId="#{folder.folderId}"
+                          pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
+                          pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
+                          pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
 
-        <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
-            <p:repeat value="#{groupResourcesBean.subFolders}" var="folder">
-                <h:panelGroup styleClass="group-resources-item res-grid-item" layout="block"
-                              pt:data-itemType="folder"
-                              pt:data-itemId="#{folder.folderId}"
-                              pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
-                              pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
-                              pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
-
-                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                        <ui:param name="folder" value="#{folder}"/>
-                    </ui:decorate>
-
-                </h:panelGroup>
-            </p:repeat>
-        </h:panelGroup>
-
-        <h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block">
-            <p:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-                <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
-                <h:panelGroup styleClass="group-resources-item res-grid-item" layout="block"
-                              pt:data-itemType="resource"
-                              pt:data-itemId="#{res.resource.id}"
-                              pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
-                              pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
-                              pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
-                              pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
-
-                    <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                        <ui:param name="res" value="#{res.resource}"/>
-                    </ui:decorate>
-
-                </h:panelGroup>
-            </p:repeat>
-        </h:panelGroup>
-
-        <h:outputText value="${msg.no_resources_found}" class="nothing_found"
-                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
-
-        <h:outputText value="#{msg.no_results_found}" class="nothing_found"
-                      rendered="#{groupResourcesBean.paginator.isEmpty() and groupResourcesBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
+                <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
+                    <ui:param name="folder" value="#{folder}"/>
+                </ui:decorate>
+            </h:panelGroup>
+        </ui:repeat>
     </h:panelGroup>
+
+    <h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block">
+        <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
+            <h:panelGroup styleClass="res-item" layout="block"
+                          pt:data-itemType="resource"
+                          pt:data-itemId="#{res.resource.id}"
+                          pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
+                          pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
+                          pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
+                          pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
+
+                <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                    <ui:param name="res" value="#{res.resource}"/>
+                </ui:decorate>
+            </h:panelGroup>
+        </ui:repeat>
+    </h:panelGroup>
+
 </ui:composition>
