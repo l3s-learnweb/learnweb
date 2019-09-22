@@ -28,8 +28,8 @@
             <div>
                 <div class="d-flex">
                     <div class="text-truncate overflow-hidden" style="color: #006621;">
-                    <h:outputText rendered="#{res.id != -1}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputText>
-                    <h:outputText rendered="#{res.id == -1}" escape="true" target="_blank">#{res.url}</h:outputText>
+                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
+                    <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
                     </div>
                     <div class="d-flex">
                        <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;" class="tooltip-second text-center mx-1">

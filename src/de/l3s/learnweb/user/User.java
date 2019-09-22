@@ -1,8 +1,8 @@
 package de.l3s.learnweb.user;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Date;
@@ -10,11 +10,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +37,8 @@ import de.l3s.util.MD5;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
+
+import static org.apache.http.HttpHeaders.USER_AGENT;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
@@ -610,8 +610,28 @@ public class User implements Comparable<User>, Serializable, HasId
 
         if(fileId > 0)
             return learnweb.getFileManager().createUrl(fileId, "user_icon.png");
-
         return learnweb.getSecureServerUrl() + "/resources/images/no-profile-picture.jpg";
+    }
+
+    /**
+     * get default avatar for  user
+     */
+    public InputStream getDefaultAvatar() throws IOException
+    {
+        URL obj = new URL("https://ui-avatars.com/api/?name=" + username + "&size=100");
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK)
+        {
+            return con.getInputStream();
+        }
+        else
+        {
+            return  null;
+        }
+
     }
 
     public void setId(int id)

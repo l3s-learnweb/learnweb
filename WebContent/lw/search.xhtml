@@ -210,17 +210,11 @@
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
                 <ui:fragment rendered="#{not empty searchBean.selectedResource}">
                     <table id="add_attributes_table" class="full-width">
-                        <colgroup>
-                            <col span="1" style="width: 10%; min-width: 10rem;"/>
-                            <col span="1"/>
-                        </colgroup>
-
                         <tr>
                             <td><h:outputText value="#{msg.add_to}:" escape="false"/></td>
                             <td>
-                                <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
-                                        selectionMode="single" selection="#{searchBean.selectedNode}"
-                                        style="max-height:28rem; width:100%; min-width:60rem; overflow:auto; box-sizing: border-box;">
+                                <p:tree  id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
+                                        selectionMode="single" selection="#{searchBean.selectedNode}">
                                     <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 
                                     <p:treeNode type="group">
@@ -233,6 +227,7 @@
                                 </p:tree>
                             </td>
                         </tr>
+
 
                         <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
                             <ui:param name="res" value="#{searchBean.selectedResource}"/>
@@ -254,8 +249,8 @@
                             <tr>
                                 <td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
                                 <td>
-                                    <h:panelGroup class="wayback_span">
-                                        <h:panelGroup class="wayback_span"
+                                    <h:panelGroup>
+                                        <h:panelGroup
                                                       rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
                                             <a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank">
                                                 <h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}">
