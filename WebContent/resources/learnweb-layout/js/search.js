@@ -27,6 +27,7 @@ function prepareResources() {
     if (view != 'list') {
         $("#gallery").justifiedGallery({
             rowHeight: "160",
+            maxRowHeight: "180",
             margins: 10,
             captionsShowAlways : true,
             captionsAnimation : true

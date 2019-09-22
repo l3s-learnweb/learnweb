@@ -61,7 +61,7 @@
                 </h:link>
             </li>
             </ul>
-            <p:outputPanel styleClass="group-menu-header text-center bg-gray200" layout="block" rendered="#{searchBean.searchService != null}">
+            <p:outputPanel styleClass="group-menu-header text-center bg-gray400" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
                     <f:param value="#{searchBean.searchService.name()}"/>
@@ -69,8 +69,8 @@
                 </h:outputFormat>
             </p:outputPanel>
             <h:form>
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" breakpoint="-1" styleClass="ui-carousel-light bg-transparent">
-                    <div class="mx-auto" style="max-width:25em;">
+                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" breakpoint="-1" styleClass="ui-carousel-light">
+                    <div class="mx-auto py-1" style="max-width:15em;">
                         <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
                             <f:param name="service" value="#{gr.groupAlias}"/>
                             <f:param name="action" value="#{searchBean.searchMode}"/>
@@ -206,7 +206,7 @@
 
         <h:panelGroup id="nothing"></h:panelGroup>
 
-        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" id="resource_dialog" modal="false" minWidth="600" resizable="true">
+        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" id="resource_dialog" modal="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
                 <ui:fragment rendered="#{not empty searchBean.selectedResource}">
                     <table id="add_attributes_table" class="full-width">
