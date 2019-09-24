@@ -90,73 +90,86 @@
                                     </div>
                                 </h:panelGroup>
 
-                                <h:panelGroup styleClass="row" layout="block" rendered="#{not groupOverviewBean.userDetailsHidden}">
-                                    <div class="col-lg-4">
-                                        <p:panel header="#{msg.profile} #{msg.of} #{user.username}">
-                                            <p:panelGrid columns="2" styleClass="ui-widget-content-invisible" layout="grid">
-                                                <h:outputText value="#{msg.username}:"/>
-                                                <h:outputText value="#{user.username}"/>
-
-                                                <h:outputText value="#{msg.email_address}:" rendered="#{not empty user.email}"/>
-                                                <h:outputText value="#{user.email}" rendered="#{not empty user.email}"/>
-
-                                                <h:outputText value="#{msg.gender}:"/>
-                                                <h:outputText value="-" rendered="#{user.gender == 0}"/>
-                                                <h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}"/>
-                                                <h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}"/>
-
-                                                <h:outputText value="#{msg.address}:" rendered="#{not empty user.address}"/>
-                                                <h:outputText value="#{user.address}" rendered="#{not empty user.address}"/>
-
-                                                <h:outputText value="#{msg.profession}:" rendered="#{not empty user.profession}"/>
-                                                <h:outputText value="#{user.profession}" rendered="#{not empty user.profession}"/>
-
-                                                <h:outputText value="#{msg.interest}:" rendered="#{not empty user.interest}"/>
-                                                <h:outputText value="#{user.interest}" rendered="#{not empty user.interest}"/>
-
-                                                <h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty user.additionalInformation}"/>
-                                                <h:outputText value="#{user.additionalInformation}" rendered="#{not empty user.additionalInformation}"/>
-
-                                                <h:outputText value="#{msg.registered_since}:"/>
-                                                <h:outputText value="#{user.registrationDate}">
-                                                    <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
-                                                </h:outputText>
-                                            </p:panelGrid>
-                                        </p:panel>
+                                <h:panelGroup styleClass="d-flex" layout="block" rendered="#{not groupOverviewBean.userDetailsHidden}">
+                                    <div class="pt-1">
+                                        <img class="profile-picture w-auto h-auto" src="#{user.image}" alt="#{user.fullName}"/>
                                     </div>
 
-                                    <h:panelGroup styleClass="col-lg-4" layout="block" rendered="#{learnwebBean.learnweb.service != 'AMA'}">
-                                        <p:panel header="#{msg.groupsTitle} #{msg.of} #{user.username}">
-                                            <ul>
-                                                <p:repeat var="g" value="#{user.groups}">
-                                                    <li>
+                                    <div class="pl-3 flex-grow-1 overflow-auto">
+                                        <div class="d-flex">
+                                            <div class="flex-fill">
+                                                <h5>#{user.username}</h5>
+                                            </div>
+                                            <h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.canModerateCourses(user.courses)}">
+                                                <h:outputLink value="myhome/profile.jsf" styleClass="pr-1">
+                                                    <f:param name="user_id" value="#{user.id}"/>
+                                                    <h:outputText value="#{msg.edit_profile}"/>
+                                                </h:outputLink>
+                                                <h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+                                                    <f:param name="user_id" value="#{user.id}"/>
+                                                    <h:outputText value="#{msg.search_history}"/>
+                                                </h:outputLink>
+                                            </h:panelGroup>
+                                        </div>
+
+                                        <ui:fragment rendered="#{not empty user.credits}">
+                                            <div class="text-primary mb-1 border border-primary p-1">
+                                                <i class="fa fa-trophy text-warning pr-1" aria-hidden="true"></i>
+                                                <h:outputText value="#{user.credits}" escape="false"/>
+                                            </div>
+                                        </ui:fragment>
+
+                                        <ui:fragment rendered="#{not empty user.email}">
+                                            <p class="text-muted small mb-0 text-truncate">
+                                                <b>#{msg.email_address}:</b>
+                                                <a href="mailto:#{user.email}">#{user.email}</a>
+                                            </p>
+                                        </ui:fragment>
+
+                                        <p class="text-muted small mb-0">
+                                            <b>#{msg.gender}: </b>
+                                            <h:outputText value="-" rendered="#{user.gender == 0}"/>
+                                            <h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}"/>
+                                            <h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}"/>
+                                        </p>
+
+                                        <ui:fragment rendered="#{not empty user.address}">
+                                            <p class="text-muted small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
+                                        </ui:fragment>
+
+                                        <ui:fragment rendered="#{not empty user.profession}">
+                                            <p class="text-muted small mb-0"><b>#{msg.profession}:</b> #{user.profession}</p>
+                                        </ui:fragment>
+
+                                        <ui:fragment rendered="#{not empty user.interest}">
+                                            <p class="text-muted small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
+                                        </ui:fragment>
+
+                                        <ui:fragment rendered="#{not empty user.additionalInformation}">
+                                            <p class="text-muted small mb-0"><b>#{msg.additionalinformation}:</b> #{user.additionalInformation}</p>
+                                        </ui:fragment>
+
+                                        <p class="text-muted small mb-0">
+                                            <b>#{msg.registered_since}: </b>
+                                            <h:outputText value="#{user.registrationDate}">
+                                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
+                                            </h:outputText>
+                                        </p>
+
+                                        <ui:fragment rendered="#{not empty user.groups}">
+                                            <p class="text-muted small mb-0">
+                                                <b>#{msg.groupsTitle}: </b>
+                                                <ui:repeat var="g" value="#{user.groups}">
+                                                    <span class="text-nowrap d-inline-block">
                                                         <h:outputLink value="group/overview.jsf">
                                                             <f:param name="group_id" value="#{g.id}"/>
                                                             <h:outputText value="#{g.title}"/>
                                                         </h:outputLink>
-                                                    </li>
-                                                </p:repeat>
-                                            </ul>
-                                        </p:panel>
-                                    </h:panelGroup>
-
-                                    <h:panelGroup styleClass="col-lg-4" layout="block">
-                                        <p:panel header="#{msg.awards}" rendered="#{not empty user.credits}">
-                                            <h:outputText value="#{user.credits}" escape="false"/>
-                                        </p:panel>
-
-                                        <p:panel header="#{msg.moderator_options}" rendered="#{userBean.canModerateCourses(user.courses)}">
-                                            <h:outputLink value="myhome/profile.jsf">
-                                                <f:param name="user_id" value="#{user.id}"/>
-                                                <h:outputText value="#{msg.edit_profile}" escape="false"/>
-                                            </h:outputLink>
-                                            <br/>
-                                            <h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
-                                                <f:param name="user_id" value="#{user.id}"/>
-                                                <h:outputText value="#{msg.search_history}" escape="false"/>
-                                            </h:outputLink>
-                                        </p:panel>
-                                    </h:panelGroup>
+                                                    </span>
+                                                </ui:repeat>
+                                            </p>
+                                        </ui:fragment>
+                                    </div>
                                 </h:panelGroup>
                             </div>
                         </p:repeat>

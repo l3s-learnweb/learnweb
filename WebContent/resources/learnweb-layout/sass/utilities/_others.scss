@@ -1,6 +1,8 @@
 .profile-picture {
   width: 2.8125rem;
   height: 2.8125rem;
+  max-width: 6.25rem;
+  max-height: 6.25rem;
   border-radius: 50%;
   background: $themeElementTextColor;
   border: 1px solid $themePrimaryColor;
@@ -31,6 +33,10 @@
     top: -0.5rem;
     font-size: 0.875rem;
   }
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .modal-dialog-select {
