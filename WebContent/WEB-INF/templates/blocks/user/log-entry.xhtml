@@ -4,11 +4,12 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:p="http://primefaces.org/ui">
 
+<!--@elvariable id="showPreview" type="java.lang.Boolean"-->
 <!--@elvariable id="status" type="javax.servlet.jsp.jstl.core.LoopTagStatus"-->
 <!--@elvariable id="logEntry" type="de.l3s.learnweb.logging.LogEntry"-->
 
 <div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-	<img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
+	<img class="profile-picture align-self-start mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
 
 	<div class="log-details">
 		<p class="mb-0 log-description">
@@ -26,6 +27,31 @@
 		<p class="small font-weight-light mb-0 log-date">
 			<h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
 		</p>
+
+		<ui:fragment rendered="#{showPreview}">
+			<h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
+				<h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
+					<p:commandLink update=":right_pane" onclick="PF('learnweb').showRightPane();">
+						<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
+						<img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
+					</p:commandLink>
+				</h:panelGroup>
+
+				<div class="resource-details pl-3">
+					<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
+
+					<h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
+						<h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+						<h:outputText value="#{logEntry.resource.author}"/>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
+						<h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+						<h:outputText value="#{logEntry.resource.tagsAsString}"/>
+					</h:panelGroup>
+				</div>
+			</h:panelGroup>
+		</ui:fragment>
 	</div>
 </div>
 

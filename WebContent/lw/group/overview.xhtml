@@ -56,8 +56,8 @@
                 </p>
 
                 <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
-                    <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form" partialSubmit="true"
-                                     process="@this" styleClass="alt-btn">
+                    <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form"
+                                     partialSubmit="true" process="@this" styleClass="alt-btn">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
                     </p:commandButton>
                 </h:form>
@@ -66,7 +66,7 @@
             <p:panel header="#{msg.members}">
                 <h:form>
                     <ul class="gridder clearfix">
-                        <p:repeat var="user" value="#{groupOverviewBean.members}">
+                        <ui:repeat var="user" value="#{groupOverviewBean.members}">
                             <li class="gridder-list" data-griddercontent="#user${user.id}">
                                 <p:commandLink onclick="return false;" styleClass="member-block">
                                     <div class="member-picture">
@@ -82,95 +82,17 @@
                             </li>
 
                             <div id="user${user.id}" class="gridder-content">
-                                <h:panelGroup styleClass="row" layout="block" rendered="#{groupOverviewBean.userDetailsHidden}">
-                                    <div class="col">
-                                        <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
-                                    </div>
-                                </h:panelGroup>
+                                <ui:fragment rendered="#{groupOverviewBean.userDetailsHidden}">
+                                    <h:outputText value="This information is hidden due to the privacy settings of your organization." styleClass="m-2 d-block"/>
+                                </ui:fragment>
 
-                                <h:panelGroup styleClass="d-flex" layout="block" rendered="#{not groupOverviewBean.userDetailsHidden}">
-                                    <div class="pt-1">
-                                        <img class="profile-picture w-auto h-auto" src="#{user.image}" alt="#{user.fullName}"/>
-                                    </div>
-
-                                    <div class="pl-3 flex-grow-1 overflow-auto">
-                                        <div class="d-flex">
-                                            <div class="flex-fill">
-                                                <h5>#{user.username}</h5>
-                                            </div>
-                                            <h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.canModerateCourses(user.courses)}">
-                                                <h:outputLink value="myhome/profile.jsf" styleClass="pr-1">
-                                                    <f:param name="user_id" value="#{user.id}"/>
-                                                    <h:outputText value="#{msg.edit_profile}"/>
-                                                </h:outputLink>
-                                                <h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
-                                                    <f:param name="user_id" value="#{user.id}"/>
-                                                    <h:outputText value="#{msg.search_history}"/>
-                                                </h:outputLink>
-                                            </h:panelGroup>
-                                        </div>
-
-                                        <ui:fragment rendered="#{not empty user.credits}">
-                                            <div class="text-primary mb-1 border border-primary p-1">
-                                                <i class="fa fa-trophy text-warning pr-1" aria-hidden="true"></i>
-                                                <h:outputText value="#{user.credits}" escape="false"/>
-                                            </div>
-                                        </ui:fragment>
-
-                                        <ui:fragment rendered="#{not empty user.email}">
-                                            <p class="text-muted small mb-0 text-truncate">
-                                                <b>#{msg.email_address}:</b>
-                                                <a href="mailto:#{user.email}">#{user.email}</a>
-                                            </p>
-                                        </ui:fragment>
-
-                                        <p class="text-muted small mb-0">
-                                            <b>#{msg.gender}: </b>
-                                            <h:outputText value="-" rendered="#{user.gender == 0}"/>
-                                            <h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}"/>
-                                            <h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}"/>
-                                        </p>
-
-                                        <ui:fragment rendered="#{not empty user.address}">
-                                            <p class="text-muted small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
-                                        </ui:fragment>
-
-                                        <ui:fragment rendered="#{not empty user.profession}">
-                                            <p class="text-muted small mb-0"><b>#{msg.profession}:</b> #{user.profession}</p>
-                                        </ui:fragment>
-
-                                        <ui:fragment rendered="#{not empty user.interest}">
-                                            <p class="text-muted small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
-                                        </ui:fragment>
-
-                                        <ui:fragment rendered="#{not empty user.additionalInformation}">
-                                            <p class="text-muted small mb-0"><b>#{msg.additionalinformation}:</b> #{user.additionalInformation}</p>
-                                        </ui:fragment>
-
-                                        <p class="text-muted small mb-0">
-                                            <b>#{msg.registered_since}: </b>
-                                            <h:outputText value="#{user.registrationDate}">
-                                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
-                                            </h:outputText>
-                                        </p>
-
-                                        <ui:fragment rendered="#{not empty user.groups}">
-                                            <p class="text-muted small mb-0">
-                                                <b>#{msg.groupsTitle}: </b>
-                                                <ui:repeat var="g" value="#{user.groups}">
-                                                    <span class="text-nowrap d-inline-block">
-                                                        <h:outputLink value="group/overview.jsf">
-                                                            <f:param name="group_id" value="#{g.id}"/>
-                                                            <h:outputText value="#{g.title}"/>
-                                                        </h:outputLink>
-                                                    </span>
-                                                </ui:repeat>
-                                            </p>
-                                        </ui:fragment>
-                                    </div>
-                                </h:panelGroup>
+                                <ui:fragment rendered="#{not groupOverviewBean.userDetailsHidden}">
+                                    <ui:decorate template="/WEB-INF/templates/blocks/user/member-details.xhtml">
+                                        <ui:param name="user" value="#{user}"/>
+                                    </ui:decorate>
+                                </ui:fragment>
                             </div>
-                        </p:repeat>
+                        </ui:repeat>
                     </ul>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
@@ -189,55 +111,13 @@
 
             <p:panel header="All activities" id="resourcesView">
                 <h:form id="group_activity">
-                    <!-- TODO: this section can be reused from user's activity log. The difference only is that here we show a resource and by click we update right panel.-->
-                    <p:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
-                        <div class="d-flex align-items-start #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
-                            <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
-
-                            <div class="log-details">
-                                <p class="mb-0 log-description">
-                                    <h:outputText value="#{logEntry.description}" escape="false"/>
-                                    <h:panelGroup rendered="#{logEntry.queryNeeded}">
-                                        <h:outputText value=" #{msg.with_query}" escape="false"/>
-                                        <h:outputLink styleClass="log-query" value="search.jsf">
-                                            <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
-                                            <f:param name="query" value="#{logEntry.resource.query}"/>
-                                            <f:param name="action" value="web"/>
-                                        </h:outputLink>
-                                        <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"/>
-                                    </h:panelGroup>
-                                </p>
-
-                                <p class="small font-weight-light mb-0 log-date">
-                                    <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}"
-                                                  escape="false"/>
-                                </p>
-
-                                <h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
-                                    <h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
-                                        <p:commandLink update=":right_pane" onclick="PF('learnweb').showRightPane();">
-                                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
-                                            <img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
-                                        </p:commandLink>
-                                    </h:panelGroup>
-
-                                    <div class="resource-details pl-3">
-                                        <h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>
-
-                                        <h:panelGroup rendered="#{not empty logEntry.resource.author}" layout="block" styleClass="mb-1">
-                                            <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
-                                            <h:outputText value="#{logEntry.resource.author}"/>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup rendered="#{not empty logEntry.resource.tagsAsString}" layout="block" styleClass="mb-1">
-                                            <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
-                                            <h:outputText value="#{logEntry.resource.tagsAsString}"/>
-                                        </h:panelGroup>
-                                    </div>
-                                </h:panelGroup>
-                            </div>
-                        </div>
-                    </p:repeat>
+                    <ui:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
+                        <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+                            <ui:param name="showPreview" value="true"/>
+                            <ui:param name="status" value="#{status}"/>
+                            <ui:param name="logEntry" value="#{logEntry}"/>
+                        </ui:decorate>
+                    </ui:repeat>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllLogs}" layout="block">
                         <p:commandButton value="#{msg.full_history}" styleClass="secondary-btn"
