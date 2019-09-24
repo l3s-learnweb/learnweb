@@ -46,7 +46,7 @@ body {
     }
     .ui-blockui {
         background-color: rgba(73,80,87,.75);
-        background-image: url("\#{resource['images:loader.svg']}");
+        background-image: url("\#{resource['images:blockui-spinner.svg']}");
         background-size: 3rem;
         background-repeat: no-repeat;
         background-position: center 4rem;

@@ -6,34 +6,37 @@
 
     <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
         <ui:repeat value="#{groupResourcesBean.subFolders}" var="folder">
-            <h:panelGroup styleClass="res-item" layout="block"
+            <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf"
                           pt:data-itemType="folder"
                           pt:data-itemId="#{folder.folderId}"
                           pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
                           pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
                           pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
+                <f:param name="group_id" value="#{groupResourcesBean.group.id}"/>
+                <f:param name="folder_id" value="#{folder.folderId}"/>
 
                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
                     <ui:param name="folder" value="#{folder}"/>
                 </ui:decorate>
-            </h:panelGroup>
+            </h:outputLink>
         </ui:repeat>
     </h:panelGroup>
 
     <h:panelGroup id="resourceGrid" styleClass="res-grid" layout="block">
         <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-            <h:panelGroup styleClass="res-item" layout="block"
+            <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                           pt:data-itemType="resource"
                           pt:data-itemId="#{res.resource.id}"
                           pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
                           pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
                           pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
                           pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
+                <f:param name="resource_id" value="#{res.resource.id}"/>
 
                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
                     <ui:param name="res" value="#{res.resource}"/>
                 </ui:decorate>
-            </h:panelGroup>
+            </h:outputLink>
         </ui:repeat>
     </h:panelGroup>
 

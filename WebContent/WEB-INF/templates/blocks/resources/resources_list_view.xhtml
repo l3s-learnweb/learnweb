@@ -6,18 +6,19 @@
 
 <h:panelGroup styleClass="res-container-list" layout="block">
     <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
-        <h:panelGroup styleClass="res-item" layout="block"
+        <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                       pt:data-itemType="resource"
                       pt:data-itemId="#{res.resource.id}"
                       pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
                       pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
                       pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
                       pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
+            <f:param name="resource_id" value="#{res.resource.id}"/>
 
             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_row.xhtml">
                 <ui:param name="res" value="#{res.resource}"/>
             </ui:decorate>
-        </h:panelGroup>
+        </h:outputLink>
     </ui:repeat>
 </h:panelGroup>
 

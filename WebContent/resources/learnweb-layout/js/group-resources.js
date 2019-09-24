@@ -184,6 +184,8 @@ function createSelectable(resContainerId) {
         return;
 
     $resContainer.on('click', '.res-item', function (e) { // select using keyboard hot keys
+        e.preventDefault();
+
         if (e.shiftKey && selected.size() > 0) { // select all between
             var prevSelected = selected.getItem(selected.size() - 1);
             selected.select(this);
@@ -216,8 +218,8 @@ function createSelectable(resContainerId) {
     });
 
     $resContainer.selectable({
-        filter: 'div.res-item',
-        cancel: 'div.res-item',
+        filter: '.res-item',
+        cancel: '.res-item',
         start: function (e) {
             // noinspection JSUnresolvedVariable
             if (!(e.ctrlKey || e.metaKey)) {
