@@ -9,7 +9,7 @@
 <ui:param name="disableGrowl" value="true"/>
 
 <ui:define name="container_layout">
-    <h:outputScript library="learnweb-layout" name="js/bootstrap.min.js"/>
+    <h:outputScript name="vendor/scrollspy-v1.0.0/scrollspy.min.js"/>
 
     <p:panel header="#{msg['privacy_statement']}">
     	<h1 style="color:red; text-align:center; font-size:5rem;">Placeholder. Don't read</h1>
@@ -23,7 +23,8 @@
         </ui:fragment>
 
         <script>
-            $('body').scrollspy({ target: '#content-list', offset: 25 })
+            var headerHeight = $('.layout-header').height();
+            $('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
         </script>
     </p:panel>
 </ui:define>

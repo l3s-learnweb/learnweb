@@ -17,8 +17,7 @@
 	<ui:param name="helpTextStyle" value="tedtranscript_help"/>
 
 	<ui:define name="center_layout">
-
-		<h:form class="d-none" id="command_form">
+		<h:form styleClass="d-none">
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this"  update=":growl"/>
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options"/>
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none"/>
@@ -36,10 +35,10 @@
   			var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
   		</script>
 
-		<div id="ted_content" class="section-resource-transcript">
+		<div id="ted_content" class="section-ted-transcript section-resource-transcript">
 			<div id="preview"></div>
 
-			<h:panelGroup layout="block" id="transcript_column" class="right_bar">
+			<h:panelGroup layout="block" id="transcript_column" styleClass="right_bar">
 				<p:outputPanel id="transcript_options">
 					<div class="text-right noselect">
 						<h:form>
@@ -51,7 +50,7 @@
 							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 						</h:form>
 					</div>
-					<div class="transcript_note noselect">
+					<div class="my-3 p-3 border border-dark noselect">
 						<b>Owner of transcript: </b>
 						<h:outputText value="#{tedTranscriptBean.tedResource.ownerUser.username}"/>
 						<br /> <b>#{msg.note}:</b>
@@ -62,11 +61,11 @@
 					</div>
 				</p:outputPanel>
 				<h:panelGroup layout="block" id="transcript">
-					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript"
+					<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" styleClass="my-3 p-3 border border-dark transcript-container"
 						rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>
-					<h:panelGroup layout="block" class="tedTranscript"
+					<h:panelGroup layout="block" styleClass="my-3 p-3 border border-dark transcript-container"
 						rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 					</h:panelGroup>

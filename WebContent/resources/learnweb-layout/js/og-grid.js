@@ -15,17 +15,17 @@
 
     /* KEYPRESS LEFT & RIGHT ARROW */
     /* This will work only if a current gridder is opened. */
-    $(document).keydown(function(e) {
-        var keycode = e.keyCode;
+    $(document).on('keydown', function(e) {
+        var keyCode = e.keyCode;
         var $current_gridder = $(".currentGridder");
         var $current_target = $current_gridder.find(".gridder-show");
         if($current_gridder.length){
-            if ( keycode === 37 ) {
+            if ( keyCode === 37 ) {
                 //console.log("Pressed Left Arrow");
                 $current_target.prev().prev().trigger("click");
                 e.preventDefault();
             }
-            if ( keycode === 39 ) {
+            if ( keyCode === 39 ) {
                 //console.log("Pressed Right Arrow");
                 $current_target.next().trigger("click");
                 e.preventDefault();
@@ -42,7 +42,7 @@
 
         return this.each(function() {
 
-            var mybloc;
+            var myBloc;
             var _this = $(this);
             var visible = false;
 
@@ -106,55 +106,56 @@
                 }
 
                 /* ADD LOADING BLOC */
-                var $htmlcontent = $("<div class=\"gridder-show loading\"></div>");
-                mybloc = $htmlcontent.insertAfter(myself);
+                var $htmlContent = $("<div class=\"gridder-show loading\"></div>");
+                myBloc = $htmlContent.insertAfter(myself);
 
                 /* GET CONTENT VIA AJAX OR #ID*/
-                var griddercontent = myself.data("griddercontent");
-                var thecontent = $(griddercontent).html();
-                processContent(myself, thecontent);
+                var gridderContent = myself.data("griddercontent");
+                var theContent = $(gridderContent).html();
+                processContent(myself, theContent);
             }
 
             // PROCESS CONTENT
-            function processContent(myself, thecontent){
+            function processContent(myself, theContent){
 
                 /* FORMAT OUTPUT */
-                var htmlcontent = "<div class=\"gridder-padding\">";
+                var htmlContent = "<div class=\"gridder-padding\">";
 
                 if(settings.showNav){
 
                     /* CHECK IF PREV AND NEXT BUTTON HAVE ITEMS */
-                    var prevItem = ($(".selectedItem").prev());
-                    var nextItem = ($(".selectedItem").next().next());
+                    var selectedItem = $(".selectedItem");
+                    var prevItem = (selectedItem.prev());
+                    var nextItem = (selectedItem.next().next());
 
-                    htmlcontent += "<div class=\"gridder-navigation\">";
-                    htmlcontent += "<a href=\"#\" class=\"gridder-close\">"+settings.closeText+"</a>";
-                    htmlcontent += "<a href=\"#\" class=\"gridder-nav prev "+(!prevItem.length?"disabled":"")+"\">"+settings.prevText+"</a>";
-                    htmlcontent += "<a href=\"#\" class=\"gridder-nav next "+(!nextItem.length?"disabled":"")+"\">"+settings.nextText+"</a>";
-                    htmlcontent += "</div>";
+                    htmlContent += "<div class=\"gridder-navigation\">";
+                    htmlContent += "<a href=\"#\" class=\"gridder-close\">"+settings.closeText+"</a>";
+                    htmlContent += "<a href=\"#\" class=\"gridder-nav prev "+(!prevItem.length?"disabled":"")+"\">"+settings.prevText+"</a>";
+                    htmlContent += "<a href=\"#\" class=\"gridder-nav next "+(!nextItem.length?"disabled":"")+"\">"+settings.nextText+"</a>";
+                    htmlContent += "</div>";
                 }
 
-                htmlcontent += "<div class=\"gridder-expanded-content\">";
-                htmlcontent += thecontent;
-                htmlcontent += "</div>";
-                htmlcontent += "</div>";
+                htmlContent += "<div class=\"gridder-expanded-content\">";
+                htmlContent += theContent;
+                htmlContent += "</div>";
+                htmlContent += "</div>";
 
                 // IF EXPANDER IS ALREADY EXPANDED
                 if (!visible) {
-                    mybloc.hide().append(htmlcontent).slideDown(settings.animationSpeed, settings.animationEasing, function () {
+                    myBloc.hide().append(htmlContent).slideDown(settings.animationSpeed, settings.animationEasing, function () {
                         visible = true;
                         /* AFTER EXPAND CALLBACK */
-                        if ($.isFunction(settings.onContent)) {
-                            settings.onContent(mybloc);
+                        if (typeof settings.onContent === "function") {
+                            settings.onContent(myBloc);
                         }
                     });
                 } else {
-                    mybloc.html(htmlcontent);
-                    mybloc.find(".gridder-padding").fadeIn(settings.animationSpeed, settings.animationEasing, function () {
+                    myBloc.html(htmlContent);
+                    myBloc.find(".gridder-padding").fadeIn(settings.animationSpeed, settings.animationEasing, function () {
                         visible = true;
                         /* CHANGED CALLBACK */
-                        if ($.isFunction(settings.onContent)) {
-                            settings.onContent(mybloc);
+                        if (typeof settings.onContent === "function") {
+                            settings.onContent(myBloc);
                         }
                     });
                 }
@@ -171,7 +172,7 @@
                 }
 
                 /* REMOVE LOADING CLASS */
-                mybloc.removeClass("loading");
+                myBloc.removeClass("loading");
             }
 
             /* CLICK EVENT */

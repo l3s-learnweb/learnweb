@@ -38,3 +38,15 @@
     max-width: 254px;
   }
 }
+
+@keyframes highlight {
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+section:target .highlight {
+  @include media-breakpoint-up(md) {
+    animation: highlight 1s ease;
+  }
+}

@@ -42,7 +42,6 @@ function archive_open_list() {
 }
 
 
-
 /* Modal to see archive versions */
 
 function loadArchiveUrlsModal() {
@@ -52,7 +51,7 @@ function loadArchiveUrlsModal() {
     }, {
         baseClass: 'fancybox-html-archive-urls',
         closeExisting: true,
-        smallBtn : false
+        smallBtn: false
     });
 
     $('#archive_iframe').attr('src', function () {
@@ -65,7 +64,7 @@ function updateThumbnail() {
     updateThumbnailCommand([{name: 'archive_url', value: archive_url}]);
 }
 
-$(document).on('click', '.archive-snapshot-list button', function (e) {
+$(document).on('click', '.archive-snapshot-list button', function () {
     $(this).toggleClass('outline-btn');
     $(this).next().slideToggle();
 });
@@ -82,7 +81,6 @@ $(document).on('click', '.archive-snapshot-list a', function (e) {
 
     e.preventDefault();
 });
-
 
 
 /* OnlyOffice editor embedded & modal */
@@ -105,7 +103,7 @@ function loadModalEditor() {
     }, {
         baseClass: 'fancybox-iframe-inline',
         closeExisting: true,
-        smallBtn : false
+        smallBtn: false
     });
 }
 
@@ -177,15 +175,17 @@ function attachEditor(elementId, editorType, configValues) {
             'onError': function (err) {
                 console.error(err);
             },
-            'onOutdatedVersion': function (event) {
-                location.reload(true);
+            'onOutdatedVersion': function () {
+                location.reload();
             },
             'onRequestHistoryData': function (event) {
+                // noinspection JSIgnoredPromiseFromCall
                 $.post(configValues.historyUrl + '?version=' + event.data + '&resourceId=' + configValues.document.resourceId, JSON.stringify(history_info), function (json) {
                     docEditor.setHistoryData(json);
                 }, 'json');
             },
             'onRequestHistory': function () {
+                // noinspection JSIgnoredPromiseFromCall
                 $.get(configValues.historyUrl + '?resourceId=' + configValues.document.resourceId, function (json) {
                     history_info = json;
                     docEditor.refreshHistory(json);
@@ -198,4 +198,4 @@ function attachEditor(elementId, editorType, configValues) {
     });
 
     window.docEditor = docEditor;
-};
+}

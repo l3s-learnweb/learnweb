@@ -24,13 +24,13 @@ var scrolling = false;
 })(jQuery);
 
 function prepareResources() {
-    if (view != 'list') {
+    if (view !== 'list') {
         $("#gallery").justifiedGallery({
             rowHeight: "160",
             maxRowHeight: "180",
             margins: 10,
-            captionsShowAlways : true,
-            captionsAnimation : true
+            captionsShowAlways: true,
+            captionsAnimation: true
         });
         $('[data-fancybox="search-gallery"]').fancybox({
             baseClass: "fancybox-search-layout",
@@ -44,11 +44,11 @@ function prepareResources() {
             preventCaptionOverlap: false,
             idleTime: false,
             gutter: 0,
-            caption: function(instance, current) {
+            caption: function (instance, current) {
                 var $caption = $(current.opts.captionid);
                 return $caption.html();
             },
-            onInit : function(instance) {
+            onInit: function (instance) {
                 instance.$refs.inner.wrap('<div class="fancybox-outer"></div>');
             }
         });
@@ -67,7 +67,7 @@ function loadNextPage() {
 }
 
 function displayNextPage(xhr, status, args) {
-    var results = $('#new_results > div > div > div');  // this can include additional html like the "Page x:" on textsearch
+    var results = $('#new_results > div > div > div');  // this can include additional html like the "Page x:" on text search
     var resources = results.filter('.resource');
     $('#search_loading_more_results').hide();
     if (resources.length === 0 || status !== "success") {
@@ -108,15 +108,10 @@ function createGroupTooltips() {
     });
 }
 
-$(document).ready(function () {
+$(function () {
     prepareResources();
-    <!-- TODO: this function doesn't exist, do we need this in future? -->
-    /*else if(view === 'list')
-    {
-        ajaxLoadFactsheet();
-    }*/
 
-    $(document).bind("scroll", function () {
+    $(document).on("scroll", function () {
         testIfResultsFillPage();
     });
 
@@ -127,8 +122,8 @@ $(document).ready(function () {
         return true;
     };
 
-    $('.resourceWebLink').mouseup(logResourceClick);
-    $('.resource > div a').mouseup(logResourceClick);
+    $('.resourceWebLink').on('mouseup', logResourceClick);
+    $('.resource > div a').on('mouseup', logResourceClick);
 
     createGroupTooltips();
 });

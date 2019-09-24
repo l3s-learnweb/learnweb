@@ -1,7 +1,8 @@
 /** @external selectGroupItemCommand */
 /** @external editGroupItemCommand */
 /** @external createGroupItemCommand */
-/** @external openFolderCommand*/
+/** @external openFolderCommand */
+/** @external updateSelectedItemsCommand */
 
 /** @external updateGroupItemsCommand */
 /** @external updateAddResourcePaneCommand */
@@ -9,118 +10,117 @@
 
 function SelectResource() {
     this.items = [];
-
-    this.select = function (element) {
-        if (element.length > 0) {
-            for (var i = 0, l = element.length; i < l; ++i) {
-                if (!element[i].classList.contains('ui-draggable-helper')) {
-                    this._selectElement(element[i]);
-                }
-            }
-        } else if (element.length !== 0) {
-            this._selectElement(element);
-        }
-    };
-
-    this._selectElement = function (el) {
-        var itemType = el.dataset.itemtype;
-        var itemId = el.dataset.itemid;
-
-        if (itemType && itemId) {
-            var index = this.indexOf(itemType, itemId);
-            if (index === -1) {
-                el.classList.add('ui-selected');
-                this.items.push({
-                    id: Number(itemId),
-                    type: itemType,
-                    element: el
-                });
-            }
-        } else {
-            console.error('Element type or ID is unknown', el);
-        }
-    };
-
-    this.unselect = function (el) {
-        var itemType = el.dataset.itemtype;
-        var itemId = el.dataset.itemid;
-
-        if (itemType && itemId) {
-            var index = this.indexOf(itemType, itemId);
-            if (index !== -1) {
-                this.items[index].element.classList.remove('ui-selected');
-                this.items.splice(index, 1);
-            }
-        }
-    };
-
-    this.unselectAll = function () {
-        $('.res-item.ui-selected').removeClass('ui-selected');
-        $('.res-item.ui-draggable-dragging').removeClass('ui-draggable-dragging');
-        this.items = [];
-    };
-
-    this.selectOnly = function (element) {
-        this.unselectAll();
-        this.select(element);
-    };
-
-    /**
-     * @param index
-     * @returns {{id: string, type: string, element: element }}
-     */
-    this.getItem = function (index) {
-        return this.items[index];
-    };
-
-    this.size = function () {
-        return this.items.length;
-    };
-
-    this.indexOf = function (itemType, itemId) {
-        for (var i = 0, l = this.items.length; i < l; ++i) {
-            if (this.items[i].type === itemType && this.items[i].id === Number(itemId)) {
-                return i;
-            }
-        }
-        return -1;
-    };
-
-    this.forEach = function (func) {
-        for (var l = this.items.length, i = 0; i < l; ++i) {
-            func(this.items[i], i, this.items)
-        }
-    };
-
-    this.toJSON = function () {
-        var exportItems = [];
-        for (var l = this.items.length, i = 0; i < l; ++i) {
-            exportItems.push({
-                itemType: this.items[i].type,
-                itemId: this.items[i].id
-            })
-        }
-        return exportItems;
-    };
-
-    this.getSelectedType = function () {
-        var isContainFolders = false, isContainResources = false;
-        for (var i = 0, l = this.items.length; i < l; ++i) {
-            if (this.items[i].type === 'resource') {
-                isContainResources = true;
-                if (isContainFolders) return 'mixed';
-            } else if (this.items[i].type === 'folder') {
-                isContainFolders = true;
-                if (isContainResources) return 'mixed';
-            }
-        }
-
-        return (isContainFolders ? 'folder' : 'resource') + (this.items.length > 1 ? 's' : '');
-    };
-
-    return this;
 }
 
+SelectResource.prototype.select = function(el) {
+    if (el.length > 0) {
+        for (var i = 0, l = el.length; i < l; ++i) {
+            if (!el[i].classList.contains('ui-draggable-helper')) {
+                this._selectElement(el[i]);
+            }
+        }
+    } else if (el.length !== 0) {
+        this._selectElement(el);
+    }
+};
+
+SelectResource.prototype._selectElement = function(el) {
+    var itemType = el.dataset.itemtype;
+    var itemId = el.dataset.itemid;
+
+    if (itemType && itemId) {
+        var index = this.indexOf(itemType, itemId);
+        if (index === -1) {
+            el.classList.add('ui-selected');
+            this.items.push({
+                id: Number(itemId),
+                type: itemType,
+                element: el
+            });
+        }
+    } else {
+        console.error('Element type or ID is unknown', el);
+    }
+};
+
+SelectResource.prototype.unselect = function(el) {
+    var itemType = el.dataset.itemtype;
+    var itemId = el.dataset.itemid;
+
+    if (itemType && itemId) {
+        var index = this.indexOf(itemType, itemId);
+        if (index !== -1) {
+            this.items[index].element.classList.remove('ui-selected');
+            this.items.splice(index, 1);
+        }
+    }
+};
+
+SelectResource.prototype.unselectAll = function() {
+    $('.res-item.ui-selected').removeClass('ui-selected');
+    $('.res-item.ui-draggable-dragging').removeClass('ui-draggable-dragging');
+    this.items = [];
+};
+
+SelectResource.prototype.selectOnly = function(element) {
+    this.unselectAll();
+    this.select(element);
+};
+
+/**
+ * @param {number} index
+ * @returns {{id: number, type: string, element: element }}
+ */
+SelectResource.prototype.getItem = function(index) {
+    return this.items[index];
+};
+
+SelectResource.prototype.size = function() {
+    return this.items.length;
+};
+
+SelectResource.prototype.indexOf = function(itemType, itemId) {
+    for (var i = 0, l = this.items.length; i < l; ++i) {
+        if (this.items[i].type === itemType && this.items[i].id === Number(itemId)) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+SelectResource.prototype.forEach = function(func) {
+    for (var l = this.items.length, i = 0; i < l; ++i) {
+        func(this.items[i], i, this.items)
+    }
+};
+
+SelectResource.prototype.toJSON = function() {
+    var exportItems = [];
+    for (var l = this.items.length, i = 0; i < l; ++i) {
+        exportItems.push({
+            itemType: this.items[i].type,
+            itemId: this.items[i].id
+        })
+    }
+    return exportItems;
+};
+
+SelectResource.prototype.getSelectedType = function() {
+    var isContainFolders = false, isContainResources = false;
+    for (var i = 0, l = this.items.length; i < l; ++i) {
+        if (this.items[i].type === 'resource') {
+            isContainResources = true;
+            if (isContainFolders) return 'mixed';
+        } else if (this.items[i].type === 'folder') {
+            isContainFolders = true;
+            if (isContainResources) return 'mixed';
+        }
+    }
+
+    return (isContainFolders ? 'folder' : 'resource') + (this.items.length > 1 ? 's' : '');
+};
+
+/** @type {SelectResource} */
 var selected = new SelectResource();
 
 
@@ -219,6 +219,7 @@ function createSelectable(resContainerId) {
         filter: 'div.res-item',
         cancel: 'div.res-item',
         start: function (e) {
+            // noinspection JSUnresolvedVariable
             if (!(e.ctrlKey || e.metaKey)) {
                 selected.unselectAll();
             }

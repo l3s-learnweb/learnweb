@@ -1,61 +1,62 @@
 .section-ted-transcript {
-  ul.ui-tabs-nav{
-    display: flex;
-    li{
-      width: 100%;
-    };
-  }
-
   #selectable {
-    .ui-selecting {
-      background: $themePrimaryColorDarker;
-    }
-    .ui-selected {
-      background: $themePrimaryDarkest;
-      color: white;
-    }
     list-style-type: none;
     margin: 0;
     padding: 0;
+
     li {
       padding: 8px;
       font-size: 1.6rem;
       color: rgb(0, 0, 0);
       display: block;
     }
+
+    .ui-selecting {
+      background: $themePrimaryColorDarker;
+    }
+
+    .ui-selected {
+      background: $themePrimaryDarkest;
+      color: white;
+    }
+  }
+
+  .transcript-container {
+    text-align: justify;
   }
 
   #ted_transcript {
-    &::selection, &::-moz-selection {
+    &::selection,
+    &::-moz-selection {
       background: yellow;
     }
   }
-/*  .highlight {
+
+  .note { // A selected text
     background-color: yellow;
+
+    &.ui-state-hover {
+      background-color: #c4fcff !important;
+    }
   }
 
-  .colorpicker {
-    background: yellow;
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    margin: auto;
-    border: 1px solid gray;
-    vertical-align: middle;
-    border-radius: 2px;
-  }*/
-
-/*  .noselect {
-    -webkit-touch-callout: none;
-    !* iOS Safari *!
-    -webkit-user-select: none;
-    !* Chrome/Safari/Opera *!
-    -khtml-user-select: none;
-    !* Konqueror *!
-    -moz-user-select: none;
-    !* Firefox *!
-    -ms-user-select: none;
-    !* Internet Explorer/Edge *!
+  .noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
-  }*/
+  }
+}
+
+// It is attached to context menu which is attached to body element, so we need keep it global
+.color-picker {
+  background: $themePrimaryColor;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: -3px auto;
+  border: 1px solid $gray-800;
+  border-radius: 2px;
 }

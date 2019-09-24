@@ -119,6 +119,16 @@ body {
     }
   }
 
+  .ui-tabs.ui-tabs-full-width {
+    ul.ui-tabs-nav {
+      display: flex;
+
+      li {
+        width: 100%;
+      }
+    }
+  }
+
   .ui-chkbox {
     display: inline-flex;
   }

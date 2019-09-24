@@ -3,7 +3,6 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
@@ -38,7 +37,7 @@
                         <c:forEach var="question" items="#{surveyBean.resource.questions}">
 							<c:if test="#{fn:startsWith(question.type,'FULLWIDTH_')}">
 								<c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
-                                    <h3 class="my-4">
+                                    <h3 class="my-3">
                                         <h:outputText value="${question.label}"/>
                                     </h3>
 								</c:if>

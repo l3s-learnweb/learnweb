@@ -3,6 +3,10 @@
  Include only methods which are required on every page.
  ****************************************************************/
 
+/** @external logQuerySuggestion */
+/** @external onUnloadCommand */
+/** @external setPreferenceRemote */
+
 /**
  * PrimeFaces LearnwebTheme Layout
  */
@@ -17,7 +21,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
         this.header = this.wrapper.children('.layout-header');
         this.menuButton = this.header.find('#menu-button');
 
-        this.mainPane = this.body.find('.layout-main-pane');
+        // this.mainPane = this.body.find('.layout-main-pane');
         this.rightPane = this.body.find('.layout-right-pane');
         this.isRightPaneOpen = false;
 
@@ -30,6 +34,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
                     xhr.abort();
                 } catch (e) {
                 }
+                // noinspection JSIgnoredPromiseFromCall
                 $.ajax({
                     url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
                     data: {
@@ -55,7 +60,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
                     }
                 });
             }
-        }).addClass('searchfield_autocomplete');
+        });
     },
 
     _bindEvents: function () {
@@ -74,7 +79,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
             $this.getWidgetVarById(this.id.replace('_modal', '')).hide();
         });
 
-        $this.overlay.on('mouseup', function (e) {
+        $this.overlay.on('mouseup', function () {
             if ($this.isRightPaneOpen) {
                 $this.hideRightPane();
             }
@@ -154,6 +159,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
      */
     getWidgetVarById: function (elementId) {
         for (var propertyName in PrimeFaces.widgets) {
+            // noinspection JSUnfilteredForInLoop
             var widget = PrimeFaces.widgets[propertyName];
             if (widget && widget.elementId === elementId) {
                 return widget;
@@ -179,7 +185,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     bindEvents: function () {
         var $this = this;
 
-        this.menuitemLinks.click(function (e) {
+        this.menuitemLinks.on('click', function (e) {
             var currentLink = $(this);
 
             if (e.target.className.indexOf('ui-menuitem-icon-expand') === -1) {
@@ -263,7 +269,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
  * Method required for the search field
  * TODO: why do we need it?
  */
-function removeViewstate(searchForm) {
+function removeViewState(searchForm) {
     $(searchForm).find("[name='javax.faces.ViewState']").remove();
 }
 
@@ -313,6 +319,7 @@ PrimeFaces.widget.Menu.prototype.show = function () {
     this.jq.css({'z-index': ++PrimeFaces.zindex}).show();
 };
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * This is used for adaptive PrimeFaces Carousel.
  * By default you can set only fixed amount of column and it will be changed only on mobile phones to single column.
@@ -328,7 +335,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
         this.columns = Math.floor(viewportInnerWidth / firstItemWidth);
         this.calculateItemWidths();
         this.totalPages = Math.ceil(this.itemsCount / this.columns);
-        if (this.totalPages == 1) {
+        if (this.totalPages === 1) {
             this.nextNav.hide();
             this.prevNav.hide();
         }
@@ -351,7 +358,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
         }
     }
 
-    this.page = parseInt(this.first / this.columns);
+    this.page = Math.ceil(this.first / this.columns);
     this.updateNavigators();
     this.itemsContainer.css('left', (-1 * (this.viewport.innerWidth() * this.page)));
 };

@@ -1,0 +1,60 @@
+.landing-header {
+  background-color: $gray-400;
+  background-size: cover;
+  padding: 5rem 0;
+
+  .header-news-list {
+    > h2 {
+      font-size: $font-size-base;
+      padding: .5rem 1rem;
+    }
+
+    .ui-datalist-data {
+      padding: 1rem 1rem 0;
+      list-style: none;
+    }
+
+    .ui-datalist-content {
+      border: none;
+      background: inherit;
+      min-height: 13.5rem;
+      max-height: 24rem;
+      overflow: auto;
+
+      .news-date {
+        display: block;
+        font-size: $font-size-sm;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .news-content {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.landing-cards {
+  background-color: $themePrimaryColorDarker;
+  border-top: 1px solid $themePrimaryColorDarker; // to avoid padding collapse
+
+  .card-single {
+    .card-header {
+      background-color: $themePrimaryDarkest;
+      color: $themeElementTextColor;
+      letter-spacing: 0.1rem;
+    }
+
+    .card-subheader {
+      background-color: $gray-200;
+      color: $themePrimaryDarkest;
+    }
+
+    .card-content {
+      img {
+        width: 100%;
+        max-width: 7rem;
+      }
+    }
+  }
+}
