@@ -11,6 +11,10 @@
         </a>
     </f:facet>
 
+    <p:blockUI block="right_pane" widgetVar="rightPaneOverlay">
+        <h:outputText value="#{msg.please_wait}"/>
+    </p:blockUI>
+
     <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFile'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_file.xhtml"/>
     </ui:fragment>

@@ -773,7 +773,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             {
                 JSONObject item = objects.getJSONObject(i);
                 String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
+                int itemId = item.getInt("itemId");
                 if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
@@ -857,7 +857,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             {
                 JSONObject item = objects.getJSONObject(i);
                 String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"));
+                int itemId = item.getInt("itemId");
                 if(itemType != null && itemType.equals("folder") && itemId > 0)
                 {
                     Folder sourceFolder = getLearnweb().getGroupManager().getFolder(itemId);
@@ -950,7 +950,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 JSONObject item = objects.getJSONObject(i);
 
                 String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"));
+                int itemId = item.getInt("itemId");
 
                 if(itemType != null && itemType.equals("folder") && itemId > 0)
                 {
@@ -1069,7 +1069,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 JSONObject item = objects.getJSONObject(i);
 
                 String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
+                int itemId = item.getInt("itemId");
 
                 if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {

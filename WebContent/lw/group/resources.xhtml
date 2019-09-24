@@ -38,23 +38,28 @@
 
 <ui:define name="group_layout">
     <h:form>
-        <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
-        <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView" oncomplete="onResourcesUpdated();"/>
+        <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
+                         global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+        <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
+                         global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+        <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}" update=":right_pane :growl"
+                         global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+        <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}" update=":right_pane :growl"
+                         global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
+        <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane :growl"
+                         global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
 
-        <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}"
-                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
-        <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}"
-                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
-        <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}"
-                         update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
-        <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}"
-                         update=":resourcesWrapper :growl" oncomplete="onResourcesUpdated();"/>
+        <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}" update=":resourcesWrapper :growl"
+                         global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+        <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
+                         global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+        <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
+                         global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+
         <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesWrapper :right_pane :growl" oncomplete="onResourcesUpdated();"/>
-        <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}"
-                         update=":right_pane :growl"/>
-        <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}"
-                         update=":right_pane :resourcesView :growl" oncomplete="onResourcesUpdated();"/>
+                         update=":resourcesWrapper :right_pane :growl" global="false"
+                         onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
+                         oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
     </h:form>
 
     <div class="row no-gutters resources-panel mb-n3">
@@ -122,6 +127,10 @@
             </h:form>
 
             <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0">
+                <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
+                    <h:outputText value="#{msg.please_wait}"/>
+                </p:blockUI>
+
                 <c:if test="${userBean.user.organisation.id ne 480}">
                     <!--suppress XmlDuplicatedId -->
                     <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{!groupResourcesBean.paginator.isEmpty()}">

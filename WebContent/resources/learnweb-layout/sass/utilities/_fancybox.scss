@@ -65,7 +65,7 @@
       height: 100%;
 
       iframe {
-        background: $themeSidebarDividerColor url("\#{resource['images:three-dots-spinner.svg']}") center center no-repeat;
+        background-color: rgba($gray-700, 0.75);
         width: 100%;
         height: 100%;
         z-index: 2;

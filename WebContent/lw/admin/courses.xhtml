@@ -43,16 +43,11 @@
     </div>
 
     <h:form id="courses_form">
-        <p:blockUI block="courses_table" widgetVar="courses_form_blocker">
-            <div class="float-left">#{msg.please_wait}. #{msg.courses_wait_message}</div>
-            <div class="loading-animation small float-left">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
+        <p:blockUI block="courses" widgetVar="coursesOverlay">
+            <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
         </p:blockUI>
 
-        <p:dataTable tableStyleClass="table-responsive" id="courses_table" var="course" value="#{adminCoursesBean.courses}">
+        <p:dataTable tableStyleClass="table-responsive" id="courses" var="course" value="#{adminCoursesBean.courses}">
             <f:facet name="header">#{msg.courses}</f:facet>
 
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
@@ -73,17 +68,17 @@
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
-                <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this"
+                <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" global="false"
                                update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
-                               onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
+                               onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
                     <p:confirm message="${utilBean.getLocaleMessage('courses_delete_question', course.title)}"/>
                 </p:commandLink>
 
                 <p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
-                               update="@form :growl" rendered="#{userBean.admin}"
-                               onstart="PF('courses_form_blocker').show()" oncomplete="PF('courses_form_blocker').hide()">
+                               update="@form :growl" rendered="#{userBean.admin}" global="false"
+                               onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
                     <h:outputText value="#{msg.anonymise}"/>
                     <p:confirm message="${utilBean.getLocaleMessage('courses_anonymise_question', course.title)}"/>

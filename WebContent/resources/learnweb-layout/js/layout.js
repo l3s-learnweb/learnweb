@@ -104,7 +104,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
             e.preventDefault();
         });
 
-        if ($this.rightPane.find('#right_pane_content div').length) {
+        if ($this.rightPane.find('#right_pane_content div:not(.ui-blockui-content)').length) {
             $this.showRightPane();
         }
     },

@@ -42,8 +42,23 @@ body {
         @include border-radius-right($border-radius);
     }
     .ui-widget-overlay {
-        background-color: $gray-700;
-        @include opacity(.7);
+        background-color: rgba($gray-700, 0.75);
+    }
+    .ui-blockui {
+        background-color: rgba(73,80,87,.75);
+        background-image: url("\#{resource['images:loader.svg']}");
+        background-size: 3rem;
+        background-repeat: no-repeat;
+        background-position: center 4rem;
+        z-index: 990 !important;
+
+        &.bg-center {
+            background-position: center;
+        }
+    }
+    .ui-blockui-content {
+        color: $white;
+        top: 7rem !important;
     }
     .ui-icon {
         min-width: $font-size-base;

@@ -107,18 +107,9 @@
 
             <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
-            <p:ajaxStatus styleClass="ajax-status-screen" onstart="$('.layout-overlay').addClass('show');" onsuccess="$('.layout-overlay').removeClass('show');">
+            <p:ajaxStatus styleClass="ajax-status-screen">
                 <f:facet name="start">
-                    <div class="layout-overlay ui-widget-overlay">
-                        <div class="la-pacman fa-5x text-secondary">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
+                    <div class="ui-blockui bg-center" style="z-index: 1050 !important;"></div>
                 </f:facet>
             </p:ajaxStatus>
 

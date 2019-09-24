@@ -63,7 +63,7 @@
                 </h:form>
             </p:panel>
 
-            <p:panel header="#{msg.members}">
+            <p:panel header="#{msg.members}" id="members">
                 <h:form>
                     <ul class="gridder clearfix">
                         <ui:repeat var="user" value="#{groupOverviewBean.members}">
@@ -96,9 +96,11 @@
                     </ul>
 
                     <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
-                        <p:commandButton value="#{msg.all_members}" styleClass="secondary-btn" oncomplete="initGridder();"
-                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
+                        <p:commandButton id="loadAllMembers" value="#{msg.all_members}" styleClass="secondary-btn" onstart="PF('membersOverlay').show()" oncomplete="initGridder();PF('membersOverlay').hide()"
+                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}" global="false"/>
                     </h:panelGroup>
+
+                    <p:blockUI block="members" widgetVar="membersOverlay"/>
                 </h:form>
             </p:panel>
         </div>
