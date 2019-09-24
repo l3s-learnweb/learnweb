@@ -34,21 +34,24 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -6297485484480890425L;
     private static final Logger log = Logger.getLogger(GroupOverviewBean.class);
 
+    private static final int MEMBERS_LIST_LIMIT = 12;
+    private static final int ACTIVITY_LIST_LIMIT = 10;
+    private final static Action[] OVERVIEW_ACTIONS = {
+            Action.forum_topic_added, Action.deleting_resource, Action.adding_resource, Action.group_joining,
+            Action.group_leaving, Action.forum_post_added, Action.changing_office_resource
+    };
+
     private int groupId;
     private Group group;
 
-    private String summaryTitle;
-    private boolean showAllLogs = false;
-
-    private List<LogEntry> logMessages;
-    private SummaryOverview groupSummary;
+    private boolean showAllMembers = false;
     private List<User> members;
 
-    private Resource clickedResource;
-    private User clickedUser;
+    private String summaryTitle;
+    private SummaryOverview groupSummary;
 
-    @Inject
-    private RightPaneBean rightPaneBean;
+    private boolean showAllLogs = false;
+    private List<LogEntry> logMessages;
 
     public void onLoad() throws SQLException
     {
@@ -68,34 +71,30 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
     }
 
-    public List<LogEntry> getLogMessages()
+    public void fetchAllMembers() throws SQLException
     {
-        if(null == logMessages)
-        {
-            loadLogs(25);
-        }
-        return logMessages;
+        showAllMembers = true;
+        members = getLearnweb().getUserManager().getUsersByGroupId(group.getId());
     }
 
-    public void fetchAllLogs()
+    public boolean isShowAllMembers() throws SQLException
+    {
+        return showAllMembers || MEMBERS_LIST_LIMIT >= group.getMemberCount();
+    }
+
+    public List<User> getMembers() throws SQLException
+    {
+        if(null == members && group != null)
+        {
+            members = getLearnweb().getUserManager().getUsersByGroupId(group.getId(), MEMBERS_LIST_LIMIT);
+        }
+        return members;
+    }
+
+    public void fetchAllLogs() throws SQLException
     {
         showAllLogs = true;
-        loadLogs(-1);
-    }
-
-    /**
-     * @param limit if limit is -1 all log entries are returned
-     */
-    private void loadLogs(int limit)
-    {
-        try
-        {
-            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, limit);
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
+        logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, -1);
     }
 
     public boolean isShowAllLogs()
@@ -103,8 +102,19 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         return showAllLogs;
     }
 
-    private final static Action[] OVERVIEW_ACTIONS = { Action.forum_topic_added, Action.deleting_resource,
-            Action.adding_resource, Action.group_joining, Action.group_leaving, Action.forum_post_added, Action.changing_office_resource };
+    public List<LogEntry> getLogMessages() throws SQLException
+    {
+        if(null == logMessages)
+        {
+            logMessages = getLearnweb().getLogManager().getLogsByGroup(groupId, null, ACTIVITY_LIST_LIMIT);
+        }
+        return logMessages;
+    }
+
+    public String getSummaryTitle()
+    {
+        return summaryTitle;
+    }
 
     public SummaryOverview getSummaryOverview()
     {
@@ -134,67 +144,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         }
     }
 
-    public AbstractMap.SimpleEntry<String, Resource> getChosenResourceFromSlider() throws SQLException
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String index = params.get("index");
-        String type = params.get("type");
-
-        if(groupSummary != null && index != null && type != null)
-        {
-            if(StringUtils.isEmpty(index))
-            { // TODO: remove later, added to investigate issue
-                log.error("getChosenResourceFromSlider: index is empty for type `" + type + "`.");
-            }
-
-            return new AbstractMap.SimpleEntry<>(type, getClickedResourceFromOverview(Integer.valueOf(index), type));
-        }
-        return null;
-    }
-
-    private Resource getClickedResourceFromOverview(Integer index, String type) throws SQLException
-    {
-        if("added".equals(type))
-        {
-            clickedResource = groupSummary.getAddedResources().get(index).getResource();
-            return groupSummary.getAddedResources().get(index).getResource();
-        }
-        List<Resource> updatedResources = new LinkedList<>();
-        updatedResources.addAll(groupSummary.getUpdatedResources().keySet());
-        clickedResource = updatedResources.get(index);
-        return updatedResources.get(index);
-    }
-
-    public Resource getClickedResource()
-    {
-        return clickedResource;
-    }
-
-    public void setClickedResource(Resource clickedResource)
-    {
-        this.clickedResource = clickedResource;
-    }
-
-    public List<LogEntry> getUpdatedResourceActivities()
-    {
-        return groupSummary.getUpdatedResources().get(clickedResource);
-    }
-
-    public void displayClickedResourceFromSlider() throws SQLException
-    {
-        SimpleEntry<String, Resource> clickedResourceFromSlider = getChosenResourceFromSlider();
-        if(clickedResourceFromSlider != null)
-        {
-            rightPaneBean.setPaneAction(RightPaneAction.viewResource);
-            rightPaneBean.setClickedAbstractResource(clickedResourceFromSlider.getValue());
-        }
-    }
-
-    public String getSummaryTitle()
-    {
-        return summaryTitle;
-    }
-
     public int getGroupId()
     {
         return groupId;
@@ -210,21 +159,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
         return group;
     }
 
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
-    {
-        this.rightPaneBean = rightPaneBean;
-    }
-
-    public User getClickedUser()
-    {
-        return clickedUser;
-    }
-
-    public void setClickedUser(User clickedUser)
-    {
-        this.clickedUser = clickedUser;
-    }
-
     public boolean isMember() throws SQLException
     {
         User user = getUser();
@@ -236,15 +170,6 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
             return false;
 
         return group.isMember(user);
-    }
-
-    public List<User> getMembers() throws SQLException
-    {
-        if(null == members && group != null)
-        {
-            members = group.getMembers();
-        }
-        return members;
     }
 
     public boolean isUserDetailsHidden()

@@ -157,6 +157,23 @@ public class UserManager
         return users;
     }
 
+    public List<User> getUsersByGroupId(int groupId, int limit) throws SQLException
+    {
+        List<User> users = new LinkedList<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?"))
+        {
+            select.setInt(1, groupId);
+            select.setInt(2, limit);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
+        }
+
+        return users;
+    }
+
     /**
      * Get a user by username and password
      *

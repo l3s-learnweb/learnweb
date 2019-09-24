@@ -69,8 +69,6 @@
                         <p:repeat var="user" value="#{groupOverviewBean.members}">
                             <li class="gridder-list" data-griddercontent="#user${user.id}">
                                 <p:commandLink onclick="return false;" styleClass="member-block">
-                                    <f:setPropertyActionListener target="#{groupOverviewBean.clickedUser}" value="#{user}"/>
-
                                     <div class="member-picture">
                                         <img src="#{user.image}" alt="#{user.fullName}"/>
                                     </div>
@@ -174,6 +172,11 @@
                             </div>
                         </p:repeat>
                     </ul>
+
+                    <h:panelGroup class="text-center mt-3" rendered="#{not groupOverviewBean.showAllMembers}" layout="block">
+                        <p:commandButton value="#{msg.all_members}" styleClass="secondary-btn" oncomplete="initGridder();"
+                                         update="@form" actionListener="#{groupOverviewBean.fetchAllMembers()}"/>
+                    </h:panelGroup>
                 </h:form>
             </p:panel>
         </div>
@@ -246,13 +249,17 @@
     </div>
 
     <script>
-        $(function() {
+        function initGridder() {
             $('.gridder').gridderExpander({
                 scroll: false,
                 showNav: false,
                 animationSpeed: 400,
                 animationEasing: "easeInOutExpo"
             });
+        }
+
+        $(function() {
+            initGridder();
         });
     </script>
 </ui:define>
