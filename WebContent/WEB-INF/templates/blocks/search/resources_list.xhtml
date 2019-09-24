@@ -17,29 +17,18 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource tooltip-trigger m-2" style="max-width: 48em;" id="resource_#{res.tempId}">
-            <div>
-                <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
-                    <span class="d-block text-truncate">
-                        <h:outputText value="#{res.title}" escape="false"/>
-                    </span>
-                </h:outputLink>
-            </div>
-            <div>
-                <div class="d-flex">
-                    <div class="text-truncate overflow-hidden" style="color: #006621;">
-                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
-                    <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
-                    </div>
-                    <div class="d-flex">
-                       <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;" class="tooltip-second text-center mx-1">
-                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-fw fa-plus"/>
-                            <span class="tooltip-second-data bg-gray200">#{msg.save}</span>
+        <div class="resource m-2 tooltip-trigger d-flex" style="max-width: 48em;" id="resource_#{res.tempId}">
+            <div style="max-width: 2rem;">
+                <div class="d-flex flex-column  mr-2 mt-2">
+                    <div class="d-flex mb-1">
+                       <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;" class="tooltip-container text-center">
+                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-fw fa-plus" style="color: black;"/>
+                            <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
                         </span>
                     </div>
                     <ui:fragment rendered="${res.archived}">
-                            <div class="fa fa-archive tooltip-second mx-1" aria-hidden="true">
-                                <span class="tooltip-second-data">
+                        <div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
+                                <span class="tooltip-data">
                                     #{msg['Archive.captured_between']}
                                     <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
                                         <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
@@ -49,22 +38,22 @@
                                                                                                                      dateStyle="short"/></h:outputText>
                                     </a>
                                 </span>
-                            </div>
+                        </div>
                     </ui:fragment>
                     <ui:fragment  rendered="#{not empty res.group}">
-                            <div class="fa fa-users tooltip-second  mx-1" aria-hidden="true">
-                                <div class="tooltip-second-data">
-                                    <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
-                                    <h:outputLink value="group/resources.jsf" title="#{res.group.description}">
-                                        <f:param name="group_id" value="#{res.group.id}"/>
-                                        <h:outputText value="#{res.group.title}"/>
-                                    </h:outputLink>
-                                </div>
+                        <div class="fa fa-users tooltip-container mb-1"  aria-hidden="true">
+                            <div class="tooltip-data">
+                                <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
+                                <h:outputLink value="group/resources.jsf" title="#{res.group.description}">
+                                    <f:param name="group_id" value="#{res.group.id}"/>
+                                    <h:outputText value="#{res.group.title}"/>
+                                </h:outputLink>
                             </div>
+                        </div>
                     </ui:fragment>
                     <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
-                        <div class="tooltip-second fa fa-user-plus mx-1">
-                            <div class="tooltip-second-data">
+                        <div class="tooltip-container fa fa-user-plus mb-1">
+                            <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="mr-1 font-weight-bold my-0"/>
                                 <h:outputText value="#{res.getMetadataValue('collector')}"/>
                             </div>
@@ -72,18 +61,29 @@
                     </ui:fragment>
 
                     <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
-                        <div class="tooltip-second fa fa-user-plus mx-1">
-                            <div class="tooltip-second-data">
-                            <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
-                            <h:outputText value="#{res.resource.ownerUser.fullName}"/>
+                        <div class="tooltip-container fa fa-user-plus mb-1">
+                            <div class="tooltip-data">
+                                <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
+                                <h:outputText value="#{res.resource.ownerUser.fullName}"/>
                             </div>
                         </div>
                     </ui:fragment>
                 </div>
             </div>
-            <span class="block-with-text d-block w-100">
-                 <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
-            </span>
+            <div>
+                <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                    <span class="d-block block-with-text w-100">
+                        <h:outputText value="#{res.title}" escape="false"/>
+                    </span>
+                </h:outputLink>
+                <div class="text-truncate overflow-hidden" style="color: #006621;">
+                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
+                    <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
+                </div>
+                <span class="block-with-text d-block w-100">
+                     <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
+                </span>
+            </div>
         </div>
     </p:repeat>
 </div>

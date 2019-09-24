@@ -108,56 +108,59 @@
       padding-left: 1rem;
     }
   }
-  .group-menu-title {
+  .source-icon-container{
     background-position: left center;
     background-repeat: no-repeat;
-    padding-left: 2rem;
+    height: 1rem;
+    width: 1rem;
+    margin: .1rem .2rem;
   }
-  .group-menu-header .source_bing, .source_bing .group-menu-title {
+
+  .group-menu-header .source_bing, .source_bing{
     background-image: url("\#{resource['images:services/bing.gif']}");
   }
 
-  .group-menu-header .source_flickr, .source_flickr .group-menu-title {
+  .group-menu-header .source_flickr, .source_flickr {
     background-image: url("\#{resource['images:services/flickr.png']}");
   }
 
-  .group-menu-header .source_youtube, .source_youtube .group-menu-title {
+  .group-menu-header .source_youtube, .source_youtube {
     background-image: url("\#{resource['images:services/youtube.png']}");
   }
 
-  .group-menu-header .source_vimeo, .source_vimeo .group-menu-title {
+  .group-menu-header .source_vimeo, .source_vimeo {
     background-image: url("\#{resource['images:services/vimeo.gif']}");
   }
 
-  .group-menu-header .source_ipernity, .source_ipernity .group-menu-title {
+  .group-menu-header .source_ipernity, .source_ipernity {
     background-image: url("\#{resource['images:services/ipernity.gif']}");
   }
 
-  .group-menu-header .source_ted, .source_ted .group-menu-title {
+  .group-menu-header .source_ted, .source_ted {
     background-image: url("\#{resource['images:services/ted.gif']}");
   }
 
-  .group-menu-header .source_tedx, .source_tedx .group-menu-title, .group-menu-header .source_teded, .group-menu-block.source_teded .group-menu-title {
+  .group-menu-header .source_tedx, .source_tedx, .group-menu-header .source_teded, .group-menu-block.source_teded .group-menu-title {
     background-image: url("\#{resource['images:services/tedx.gif']}");
   }
 
-  .group-menu-header .source_loro, .source_loro .group-menu-title {
+  .group-menu-header .source_loro, .source_loro{
     background-image: url("\#{resource['images:services/loro.gif']}");
   }
 
-  .group-menu-header .source_yovisto, .source_yovisto .group-menu-title {
+  .group-menu-header .source_yovisto, .source_yovisto {
     background-image: url("\#{resource['images:services/yovisto.gif']}");
   }
 
-  .group-menu-header .source_learnweb, .source_learnweb .group-menu-title {
+  .group-menu-header .source_learnweb, .source_learnweb {
     background-image: url("\#{resource['images:services/learnweb.gif']}");
   }
 
-  .group-menu-header .source_archiveit, .source_archiveit .group-menu-title {
+  .group-menu-header .source_archiveit, .source_archiveit {
     background-image: url("\#{resource['images:services/archiveit.gif']}");
   }
 
-  .group-menu-header .source_factcheck, .source_factcheck .group-menu-title {
+  .group-menu-header .source_factcheck, .source_factcheck {
     background-image: url("\#{resource['images:services/learnweb.gif']}");
   }
 
@@ -198,62 +201,7 @@
     }
   }
 
-/*  .content {
-    overflow: hidden;
-
-    .content-overlay {
-      background: rgba(0, 0, 0, 0.7);
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      opacity: 0;
-      -webkit-transition: all 0.4s ease-in-out 0s;
-      -moz-transition: all 0.4s ease-in-out 0s;
-      transition: all 0.4s ease-in-out 0s;
-    }
-
-    .content-details {
-      position: absolute;
-      text-align: center;
-      padding-left: 1em;
-      padding-right: 1em;
-      top: 50%;
-      left: 50%;
-      opacity: 0;
-      -webkit-transform: translate(-50%, -50%);
-      -moz-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
-      -webkit-transition: all 0.3s ease-in-out 0s;
-      -moz-transition: all 0.3s ease-in-out 0s;
-      transition: all 0.3s ease-in-out 0s;
-    }
-
-    &:hover {
-      .content-overlay {
-        opacity: 1;
-      }
-
-      .content-details {
-        top: 50%;
-        left: 50%;
-        opacity: 1;
-      }
-
-      .caption {
-        transform: translateY(100%);
-      }
-    }
-  }*/
   .tooltip-trigger {
-    &:hover {
-      .tooltip-container{
-        opacity: 1;
-        z-index: 2;
-      }
-    }
-
     .tooltip-container {
       position: relative;
       display: flex;
@@ -262,86 +210,47 @@
       align-items: center;
       cursor: pointer;
       opacity: 0;
+      transition: all 0.2s ease-in-out;
 
       .tooltip-data {
         position: absolute;
-        top: 100%;
-        margin-top: 0.5rem;
-        line-height: 1.2rem;
+        padding: .5rem;
         background-color: $gray-200;
         font-weight: 500;
         white-space: nowrap;
-        border-radius: 0.2rem;
-        transition: all 0.2s ease-in-out;
-        border-left: 0.25rem solid $gray-600;
+        border-radius: 0.5rem;
+        box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.07);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        pointer-events: none;
+        border: 1px solid $themePrimaryColor;
+        opacity: 0;
+        transition: all 0.2s ease-in;
+      }
 
-        .tooltip-item {
-          margin-left: 0.25rem;
-          padding-right: 1rem;
-          padding-top: 0.25rem;
-          padding-bottom: 0.25rem;
-
-          &:hover {
-            margin-left: 0;
-            border-left: 0.25rem solid $gray-600;
-            background-color: $gray-400;
-          }
-        }
-
-        &:before {
-          content: "";
-          display: block;
-          position: absolute;
-          width: 10px;
-          height: 10px;
-          transform-origin: 50% 50%;
-          transform: rotate(45deg) translateX(-50%) translateZ(-1px);
-          background-color: $gray-400;
-          left: 50%;
-          top: 0px;
-          z-index: -1;
+      &:hover {
+        .tooltip-data {
+          bottom: 100%;
+          left: 100%;
+          opacity: 1;
+          z-index: 3;
+          pointer-events: all;
         }
       }
-    }
-  }
-
-  .tooltip-second {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-
-    .tooltip-second-data {
-      position: absolute;
-      padding: .5rem;
-      background-color: $gray-200;
-      font-weight: 500;
-      white-space: nowrap;
-      border-radius: 0.5rem;
-      box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
-      0 5px 15px rgba(0, 0, 0, 0.07);
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      pointer-events: none;
-      border: 1px solid $themePrimaryColor;
-      opacity: 0;
-      transition: all 0.2s ease-in-out;
     }
 
     &:hover {
-      .tooltip-second-data {
-        bottom: 100%;
+      .tooltip-container{
         opacity: 1;
         z-index: 2;
-        pointer-events: all;
       }
     }
   }
-  }
+}
+
 .ui-carousel-light {
   .ui-carousel-header {
     background: $gray-400 !important;

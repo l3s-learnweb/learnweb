@@ -75,11 +75,14 @@
                             <f:param name="service" value="#{gr.groupAlias}"/>
                             <f:param name="action" value="#{searchBean.searchMode}"/>
                             <f:param name="query" value="#{searchBean.query}"/>
-                            <div class="group-menu-title font-weight-bold border-bottom">
-                                <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
-                                    <f:param value="#{gr.groupName}"/>
-                                    <f:param value="#{gr.totalResources}"/>
-                                </h:outputFormat>
+                            <div class="d-flex border-bottom">
+                                <div class="source-icon-container source_#{gr.groupAlias}"></div>
+                                <div class="group-menu-title font-weight-bold">
+                                    <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
+                                        <f:param value="#{gr.groupName}"/>
+                                        <f:param value="#{gr.totalResources}"/>
+                                    </h:outputFormat>
+                                </div>
                             </div>
 
                             <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" rendered="#{searchBean.searchMode == 'text'}">
