@@ -16,7 +16,7 @@
    id="svg4351"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="ppt3 - Copy.svg">
+   sodipodi:docname="ppt3.svg">
   <defs
      id="defs4353">
     <marker
@@ -378,7 +378,7 @@
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:12px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f80b21;fill-opacity:1;stroke:#f80b21;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       style="font-style:normal;font-weight:normal;font-size:12px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f80b21;fill-opacity:1;stroke:#f80b21;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="1006.1177"
        y="304.83133"
        id="text4818-5"><tspan
@@ -386,10 +386,10 @@
          x="1006.1177"
          y="304.83133"
          id="tspan4820-7"
-         style="font-size:40px;line-height:1.25;stroke-width:1px;fill:#f80b21;fill-opacity:1;stroke:#f80b21;stroke-opacity:1;"><tspan
+         style="font-size:40px;line-height:1.25;fill:#f80b21;fill-opacity:1;stroke:#f80b21;stroke-width:1px;stroke-opacity:1"><tspan
            x="1006.1177"
            y="304.83133"
-           style="font-size:37.5px;fill:#f80b21;stroke:#f80b21;stroke-width:1px;fill-opacity:1;stroke-opacity:1;"
-           id="tspan4822-5">Leave or delete your groups</tspan></tspan></text>
+           style="font-size:37.5px;fill:#f80b21;fill-opacity:1;stroke:#f80b21;stroke-width:1px;stroke-opacity:1"
+           id="tspan4822-5">Edit or leave your groups</tspan></tspan></text>
   </g>
 </svg>
