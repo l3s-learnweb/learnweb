@@ -4,7 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
-    <display-name>Learnweb 3.0.0-alpha1</display-name>
+    <display-name>Learnweb 3.0.0-beta1</display-name>
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
@@ -15,21 +15,8 @@
         <param-name>facelets.DEVELOPMENT</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-        <param-value>false</param-value> <!-- can't be enabled as long as we use comments on the search page to lazy load content. TODO: we need to change that now -->
-    </context-param>
-    <context-param>
-        <description>State saving method: 'client' or 'server' (=default). See JSF Specification 2.5.2</description>
-        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-        <param-value>server</param-value>
-    </context-param>
 
     <!-- PrimeFaces-->
-    <context-param>
-        <param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
-        <param-value>true</param-value> <!-- TODO: we need to remove it now -->
-    </context-param>
     <context-param>
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
