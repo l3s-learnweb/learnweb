@@ -27,15 +27,6 @@
     <p:menuitem value="#{msg.resources}" url=""/>
 </ui:define>
 
-<ui:define name="breadcrumb_right">
-    <h:form>
-        <p:commandButton rendered="${not groupResourcesBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-        </p:commandButton>
-    </h:form>
-</ui:define>
-
 <ui:define name="group_layout">
     <h:form>
         <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
@@ -122,6 +113,11 @@
                             <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
                             <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
                         </p:menuButton>
+
+                        <p:commandButton rendered="${not groupResourcesBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn ml-2" process="@this" value="#{msg.join_group}">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                        </p:commandButton>
                     </f:facet>
                 </p:toolbar>
             </h:form>

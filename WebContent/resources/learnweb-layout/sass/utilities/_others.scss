@@ -56,3 +56,14 @@ section:target .highlight {
     animation: highlight 1s ease;
   }
 }
+
+.modal-dialog {
+  max-width: 320px;
+  @include media-breakpoint-up(sm) {
+    max-width: 25rem;
+  }
+
+  @include media-breakpoint-up(md) {
+    max-width: 50rem;
+  }
+}

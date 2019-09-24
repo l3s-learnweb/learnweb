@@ -20,15 +20,6 @@
     <p:menuitem value="#{groupOverviewBean.group.title}" url="group/overview.jsf?group_id=#{groupOverviewBean.group.id}"/>
 </ui:define>
 
-<ui:define name="breadcrumb_right">
-    <h:form>
-        <p:commandButton rendered="${not groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-        </p:commandButton>
-    </h:form>
-</ui:define>
-
 <ui:define name="group_layout">
     <h:outputScript library="learnweb-layout" name="js/og-grid.js"/>
 
@@ -39,29 +30,40 @@
 
     <div class="row">
         <div class="col-md-6">
-            <p:panel header="Group details">
-                <h5>#{groupOverviewBean.group.title}</h5>
-                <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.members}: " styleClass="font-weight-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
-                </p>
-                <p class="mb-1">
-                    <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
-                    <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
-                </p>
+            <h:form>
+                <p:panel>
+                    <f:facet name="header">
+                        <span>Group details</span>
 
-                <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
-                    <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form"
-                                     partialSubmit="true" process="@this" styleClass="alt-btn">
-                        <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
-                    </p:commandButton>
-                </h:form>
-            </p:panel>
+                        <p:commandButton rendered="${not groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn float-right" process="@this" value="#{msg.join_group}">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                        </p:commandButton>
+                    </f:facet>
+
+                    <h5>#{groupOverviewBean.group.title}</h5>
+                    <p><h:outputText value="#{groupOverviewBean.group.description}" escape="false"/></p>
+                    <p class="mb-1">
+                        <h:outputText value="#{msg.resources}: " styleClass="font-weight-bold"/>
+                        <h:outputText value="#{groupOverviewBean.group.resourcesCount}"/>
+                    </p>
+                    <p class="mb-1">
+                        <h:outputText value="#{msg.members}: " styleClass="font-weight-bold"/>
+                        <h:outputText value="#{groupOverviewBean.group.memberCount}"/>
+                    </p>
+                    <p class="mb-1">
+                        <h:outputText value="#{msg.created_by}: " styleClass="font-weight-bold"/>
+                        <h:outputText value="#{groupOverviewBean.group.leader.username}"/>
+                    </p>
+
+                    <h:form id="group_details_form" styleClass="text-center mt-3" rendered="#{groupOverviewBean.group.canJoinGroup(userBean.user)}">
+                        <p:commandButton action="#{groupsBean.joinGroup}" value="#{msg.join_group}" update=":growl @form"
+                                         partialSubmit="true" process="@this" styleClass="alt-btn">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+                        </p:commandButton>
+                    </h:form>
+                </p:panel>
+            </h:form>
 
             <p:panel header="#{msg.members}" id="members">
                 <h:form>

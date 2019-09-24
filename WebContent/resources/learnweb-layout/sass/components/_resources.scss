@@ -497,16 +497,18 @@ ul.res-filters {
 
     .ui-toolbar-group-right {
       .ui-button {
-        background-color: $themePrimaryColorDarker;
-        border: $border-width solid $themePrimaryColorDarker;
+        &:not(.alt-btn) {
+          background-color: $themePrimaryColorDarker;
+          border: $border-width solid $themePrimaryColorDarker;
 
-        &.ui-state-hover, &.ui-state-focus {
-          background-color: $themePrimaryDarkerAlt;
-          border-color: $themePrimaryDarkerAlt;
-        }
+          &.ui-state-hover, &.ui-state-focus {
+            background-color: $themePrimaryDarkerAlt;
+            border-color: $themePrimaryDarkerAlt;
+          }
 
-        &:last-child {
-          margin-right: 0;
+          &:last-child {
+            margin-right: 0;
+          }
         }
       }
     }

@@ -22,13 +22,6 @@
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
 
-	<ui:define name="breadcrumb_right">
-		<h:form prependId="false">
-			<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-							 process="@this" oncomplete="PF('create_submission_dialog').show();"/>
-		</h:form>
-	</ui:define>
-
 	<ui:define name="center_layout">
 
 		<h:form>

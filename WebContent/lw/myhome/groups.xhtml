@@ -13,12 +13,6 @@
         <p:menuitem value="#{msg.groupsTitle}" url="myhome/groups.jsf#"/>
     </ui:define>
 
-    <ui:define name="breadcrumb_right">
-        <h:form>
-            <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" global="false"/>
-        </h:form>
-    </ui:define>
-
     <ui:define name="center_layout">
         <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
         <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
@@ -46,7 +40,10 @@
             <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
                     #{msg.myGroups}
+
+                    <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="float-right alt-btn" global="false"/>
                 </f:facet>
+
                 <p:ajax event="sort" oncomplete="applyTooltip()"/>
 
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}">

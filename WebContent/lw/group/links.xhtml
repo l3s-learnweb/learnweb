@@ -21,53 +21,54 @@
     <p:menuitem value="#{msg.links}" url=""/>
 </ui:define>
 
-<ui:define name="breadcrumb_right">
-    <h:form>
-        <p:commandButton rendered="${not groupLinksBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-        </p:commandButton>
-
-        <p:commandButton value="#{msg.addLink}" onclick="PF('addLinkDialog').show();" global="false"
-                         rendered="${groupLinksBean.group.isMember(userBean.user)}"/>
-    </h:form>
-</ui:define>
-
 <ui:define name="group_layout">
     <div class="row">
         <div class="col-md-12">
-            <p:panel header="#{msg.links}" id="group_links">
-                <ui:fragment rendered="${empty groupLinksBean.links}">
-                    No links have been added.
-                </ui:fragment>
+            <h:form id="group_links">
+                <p:panel>
+                    <f:facet name="header">
+                        <span>#{msg.links}</span>
 
-                <h:form rendered="${not empty groupLinksBean.links}">
-                    <ul class="pl-3 m-0">
-                        <p:repeat value="${groupLinksBean.links}" var="link">
-                            <li>
-                                <h:outputLink value="#{link.url}" target="_blank">
-                                    <h:outputText value="#{link.title}"/>
-                                </h:outputLink>
+                        <p:commandButton value="#{msg.addLink}" onclick="PF('addLinkDialog').show();" styleClass="alt-btn float-right ml-2" global="false"
+                                         rendered="${groupLinksBean.group.isMember(userBean.user)}"/>
 
-                                <p:commandLink title="#{msg.edit}" ariaLabel="#{msg.edit}"
-                                               process="@this" update=":edit_link_dialog" oncomplete="PF('editLinkDialog').show();"
-                                               rendered="${userBean.moderator || groupLinksBean.group.isMember(userBean.user)}">
-                                    <f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}"/>
-                                    <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-                                </p:commandLink>
+                        <p:commandButton rendered="${not groupLinksBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn float-right" process="@this" value="#{msg.join_group}">
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                        </p:commandButton>
+                    </f:facet>
 
-                                <p:commandLink title="#{msg.delete}" ariaLabel="#{msg.delete}" process="@this" update=":message :group_links"
-                                               actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}"
-                                               onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
-                                               rendered="${userBean.moderator || groupLinksBean.group.isLeader(userBean.user)}">
-                                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
-                                </p:commandLink>
-                            </li>
-                        </p:repeat>
-                    </ul>
-                </h:form>
-            </p:panel>
+                    <ui:fragment rendered="${empty groupLinksBean.links}">
+                        No links have been added.
+                    </ui:fragment>
 
+                    <h:panelGroup rendered="${not empty groupLinksBean.links}">
+                        <ul class="pl-3 m-0">
+                            <p:repeat value="${groupLinksBean.links}" var="link">
+                                <li>
+                                    <h:outputLink value="#{link.url}" target="_blank">
+                                        <h:outputText value="#{link.title}"/>
+                                    </h:outputLink>
+
+                                    <p:commandLink title="#{msg.edit}" ariaLabel="#{msg.edit}"
+                                                   process="@this" update=":edit_link_dialog" oncomplete="PF('editLinkDialog').show();"
+                                                   rendered="${userBean.moderator || groupLinksBean.group.isMember(userBean.user)}">
+                                        <f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}"/>
+                                        <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                                    </p:commandLink>
+
+                                    <p:commandLink title="#{msg.delete}" ariaLabel="#{msg.delete}" process="@this" update=":message :group_links"
+                                                   actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}"
+                                                   onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
+                                                   rendered="${userBean.moderator || groupLinksBean.group.isLeader(userBean.user)}">
+                                        <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                                    </p:commandLink>
+                                </li>
+                            </p:repeat>
+                        </ul>
+                    </h:panelGroup>
+                </p:panel>
+            </h:form>
             <p:panel header="#{msg.documents}" id="group_documents">
                 <ui:fragment rendered="${empty groupLinksBean.documentLinks}">
                     No documents have been added.
