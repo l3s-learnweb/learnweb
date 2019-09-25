@@ -1,52 +1,28 @@
-<svg width="135" height="140" viewBox="0 0 135 140" xmlns="http://www.w3.org/2000/svg" fill="#fff">
-    <rect y="10" width="15" height="120" rx="6">
-        <animate attributeName="height"
-             begin="0.5s" dur="1s"
-             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
-             repeatCount="indefinite" />
-        <animate attributeName="y"
-             begin="0.5s" dur="1s"
-             values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
-             repeatCount="indefinite" />
-    </rect>
-    <rect x="30" y="10" width="15" height="120" rx="6">
-        <animate attributeName="height"
-             begin="0.25s" dur="1s"
-             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
-             repeatCount="indefinite" />
-        <animate attributeName="y"
-             begin="0.25s" dur="1s"
-             values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
-             repeatCount="indefinite" />
-    </rect>
-    <rect x="60" width="15" height="140" rx="6">
-        <animate attributeName="height"
-             begin="0s" dur="1s"
-             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
-             repeatCount="indefinite" />
-        <animate attributeName="y"
-             begin="0s" dur="1s"
-             values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
-             repeatCount="indefinite" />
-    </rect>
-    <rect x="90" y="10" width="15" height="120" rx="6">
-        <animate attributeName="height"
-             begin="0.25s" dur="1s"
-             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
-             repeatCount="indefinite" />
-        <animate attributeName="y"
-             begin="0.25s" dur="1s"
-             values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
-             repeatCount="indefinite" />
-    </rect>
-    <rect x="120" y="10" width="15" height="120" rx="6">
-        <animate attributeName="height"
-             begin="0.5s" dur="1s"
-             values="120;110;100;90;80;70;60;50;40;140;120" calcMode="linear"
-             repeatCount="indefinite" />
-        <animate attributeName="y"
-             begin="0.5s" dur="1s"
-             values="10;15;20;25;30;35;40;45;50;0;10" calcMode="linear"
-             repeatCount="indefinite" />
-    </rect>
+<svg viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+    <g fill="#F9C642">
+        <circle cx="60" cy="50" r="7">
+            <animate attributeName="cx" calcMode="linear" values="160;0" keyTimes="0;1" dur="2" begin="-1.44s" repeatCount="indefinite"/>
+            <animate attributeName="fill-opacity" calcMode="linear" values="0;0.5;1;0;0" keyTimes="0;0.05;0.63;0.64;1" dur="2" begin="-1.44s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="60" cy="50" r="7">
+            <animate attributeName="cx" calcMode="linear" values="160;0" keyTimes="0;1" dur="2" begin="-1.94s" repeatCount="indefinite"/>
+            <animate attributeName="fill-opacity" calcMode="linear" values="0;0.5;1;0;0" keyTimes="0;0.05;0.63;0.64;1" dur="2" begin="-1.94s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="60" cy="50" r="7">
+            <animate attributeName="cx" calcMode="linear" values="160;0" keyTimes="0;1" dur="2" begin="-2.44s" repeatCount="indefinite"/>
+            <animate attributeName="fill-opacity" calcMode="linear" values="0;0.5;1;0;0" keyTimes="0;0.05;0.63;0.64;1" dur="2" begin="-2.44s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="60" cy="50" r="7">
+            <animate attributeName="cx" calcMode="linear" values="160;0" keyTimes="0;1" dur="2" begin="-2.94s" repeatCount="indefinite"/>
+            <animate attributeName="fill-opacity" calcMode="linear" values="0;0.5;1;0;0" keyTimes="0;0.05;0.63;0.64;1" dur="2" begin="-2.94s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+    <g fill="#F9C642" transform="translate(-15 0)">
+        <path d="M50 50L20 50A30 30 0 0 0 80 50Z">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;45 50 50;0 50 50;0 50 50" keyTimes="0;0.5;0.8;1" dur="0.5s" begin="0s" repeatCount="indefinite"/>
+        </path>
+        <path d="M50 50L20 50A30 30 0 0 1 80 50Z">
+            <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;-45 50 50;0 50 50;0 50 50" keyTimes="0;0.5;0.8;1" dur="0.5s" begin="0s" repeatCount="indefinite"/>
+        </path>
+    </g>
 </svg>
