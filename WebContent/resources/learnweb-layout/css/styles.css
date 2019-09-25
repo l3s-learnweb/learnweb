@@ -10726,6 +10726,12 @@ body .ui-commandlink:hover {
 body .ui-selectoneradio label {
   margin: 8px 1rem 8px 8px !important;
 }
+body blockquote {
+  border-left: 4px solid #adb5bd;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-left: 16px;
+}
 
 .table-responsive {
   table-layout: auto !important;

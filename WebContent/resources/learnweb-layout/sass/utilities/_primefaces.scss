@@ -152,4 +152,11 @@ body {
         margin: 8px 1rem 8px 8px!important;
       }
   }
+
+  blockquote {
+    border-left: 4px solid $gray-500;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-left: 16px;
+  }
 }

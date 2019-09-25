@@ -2,12 +2,12 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 				xmlns:p="http://primefaces.org/ui">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
     <ui:param name="helpText" value=""/>
-    <ui:param name="rightPane" value="true"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -22,19 +22,29 @@
 		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
 
-	<ui:define name="center_layout">
+	<ui:define name="head">
+		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+		<h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
 
+		<h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
+		<h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
+	</ui:define>
+
+	<ui:define name="center_layout">
 		<h:form>
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
-			<p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
+							 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+			<p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
+							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+			<p:remoteCommand name="resourceUpdatedHook" update=":submissions"
+							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 		</h:form>
 
-		<h:panelGroup id="resourcesView" layout="block">
-			<!-- dummy for right pane -->
-		</h:panelGroup>
+		<h:panelGroup layout="block" id="resourcesWrapper">
+			<p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
+				<h:outputText value="#{msg.please_wait}"/>
+			</p:blockUI>
 
-		<h:panelGroup layout="block">
 			<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
 				<p:panel>
 					Links to the resources that you have submitted:
@@ -64,7 +74,6 @@
 					</ul>
 				</p:panel>
 			</ui:fragment>
-
 
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false">
@@ -191,7 +200,7 @@
 
 			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:tabView id="submissions" styleClass="ui-tabs-transparent">
+			<p:tabView id="submissions" styleClass="ui-tabs-transparent" pt:data-canSelectResources="true">
 				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
 					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
 						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}"/>
@@ -279,18 +288,27 @@
 
 				return status;
 			}
+
+			function onResourcesUpdated() {
+				createSelectable('submissions');
+			}
+
 			$(document).ready(function(){
 				addSubmissionHeaderClickHandler();
 				toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
 				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
 				$('#current_submissions .submission_header').click();
+
+			});
+
+			$(function () {
+				$(document).on('dblclick', '.res-item', openItems);
+				onResourcesUpdated();
 			});
 		</script>
 	</ui:define>
 
 	<ui:define name="right_layout">
-		<ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-			<ui:param name="bean" value="#{submissionBean}"/>
-		</ui:decorate>
+		<ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
 	</ui:define>
 </ui:composition>

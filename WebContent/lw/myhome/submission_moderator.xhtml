@@ -8,7 +8,6 @@
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
     <ui:param name="helpText" value="" />
-    <ui:param name="rightPane" value="true"/>
 
     <ui:define name="metadata">
         <f:metadata>
@@ -23,18 +22,29 @@
         <p:menuitem value="#{submissionModeratorBean.submission.title}" url="myhome/submission_overview.jsf#"/>
     </ui:define>
 
+    <ui:define name="head">
+        <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+        <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+
+        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
+        <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
+    </ui:define>
+
     <ui:define name="center_layout">
         <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
-            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
-            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
+            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
+                             global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+            <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
+                             global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+            <p:remoteCommand name="resourceUpdatedHook" update=":user_submissions"
+                             global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
         </h:form>
 
-        <h:panelGroup id="resourcesView" layout="block">
-            <!-- dummy for right pane -->
-        </h:panelGroup>
+        <h:panelGroup layout="block" id="resourcesWrapper">
+            <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
+                <h:outputText value="#{msg.please_wait}"/>
+            </p:blockUI>
 
-        <h:panelGroup layout="block">
             <p:panel header="#{submissionModeratorBean.submission.title}">
                 <div class="form-group d-flex flex-column">
                     <span class="font-weight-lighter">#{msg['Submission.open_date']}:
@@ -56,7 +66,7 @@
 
                 <p class="font-weight-lighter">#{submissionModeratorBean.submission.description}</p>
 
-                <h:panelGroup layout="block" id="user_submissions">
+                <h:panelGroup layout="block" id="user_submissions" pt:data-canSelectResources="true">
                     <p:repeat var="userSubmission" varStatus="status" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
                         <div class="#{status.last ? '' : 'mb-4 border-bottom'}">
                             <div class="d-flex align-items-center p-2 bg-light">
@@ -102,29 +112,40 @@
 
                             <!--				(#{msg.student_id}: #{userSubmission.user.studentId})-->
 
-                            <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
-                                <h:panelGroup layout="block" styleClass="res-container">
-                                    <h:panelGroup styleClass="res-grid" layout="block">
-                                        <ui:repeat var="res" value="#{userSubmission.resources}">
-                                            <h:panelGroup styleClass="res-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-                                                <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                                    <ui:param name="res" value="#{res}"/>
-                                                </ui:decorate>
-                                            </h:panelGroup>
-                                        </ui:repeat>
-                                    </h:panelGroup>
-                                </h:panelGroup>
+                            <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
+                                <ui:repeat value="#{userSubmission.resources}" var="res">
+                                    <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+                                                  pt:data-itemType="resource"
+                                                  pt:data-itemId="#{res.id}">
+                                        <f:param name="resource_id" value="#{res.id}"/>
+
+                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                                            <ui:param name="res" value="#{res}"/>
+                                        </ui:decorate>
+                                    </h:outputLink>
+                                </ui:repeat>
                             </h:panelGroup>
                         </div>
                     </p:repeat>
                 </h:panelGroup>
             </p:panel>
         </h:panelGroup>
+        <script type="application/javascript">
+            /**
+             * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
+             */
+            function onResourcesUpdated() {
+                createSelectable('user_submissions');
+            }
+
+            $(function () {
+                $(document).on('dblclick', '.res-item', openItems);
+                onResourcesUpdated();
+            });
+        </script>
     </ui:define>
 
     <ui:define name="right_layout">
-        <ui:decorate  template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml">
-            <ui:param name="bean" value="#{submissionBean}"/>
-        </ui:decorate>
+        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
     </ui:define>
 </ui:composition>

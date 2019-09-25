@@ -89,18 +89,18 @@
 
 				<p class="font-weight-lighter mb-3">#{submission.description}</p>
 
-				<h:panelGroup layout="block" styleClass="mt-5" rendered="#{not empty submission.submittedResources}">
-					<h:panelGroup layout="block" styleClass="res-container">
-						<h:panelGroup styleClass="res-grid" layout="block">
-							<ui:repeat var="res" value="#{submission.submittedResources}">
-								<h:panelGroup styleClass="res-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{res}"/>
-									</ui:decorate>
-								</h:panelGroup>
-							</ui:repeat>
-						</h:panelGroup>
-					</h:panelGroup>
+				<h:panelGroup id="resourceGrid" styleClass="res-grid mt-5" layout="block" rendered="#{not empty submission.submittedResources}">
+					<ui:repeat value="#{submission.submittedResources}" var="res">
+						<h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+									  pt:data-itemType="resource"
+									  pt:data-itemId="#{res.id}">
+							<f:param name="resource_id" value="#{res.id}"/>
+
+							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+								<ui:param name="res" value="#{res}"/>
+							</ui:decorate>
+						</h:outputLink>
+					</ui:repeat>
 				</h:panelGroup>
 			</div>
 		</div>
