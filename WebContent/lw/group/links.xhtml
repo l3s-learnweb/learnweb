@@ -25,17 +25,19 @@
     <div class="row">
         <div class="col-md-12">
             <h:form id="group_links">
-                <p:panel>
+                <p:panel styleClass="panel-header-button">
                     <f:facet name="header">
                         <span>#{msg.links}</span>
 
-                        <p:commandButton value="#{msg.addLink}" onclick="PF('addLinkDialog').show();" styleClass="alt-btn float-right ml-2" global="false"
-                                         rendered="${groupLinksBean.group.isMember(userBean.user)}"/>
+                        <div>
+                            <p:commandButton value="#{msg.addLink}" onclick="PF('addLinkDialog').show();" styleClass="alt-btn float-right ml-2" global="false"
+                                             rendered="${groupLinksBean.group.isMember(userBean.user)}"/>
 
-                        <p:commandButton rendered="${not groupLinksBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn float-right" process="@this" value="#{msg.join_group}">
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-                        </p:commandButton>
+                            <p:commandButton rendered="${not groupLinksBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                                             update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+                                <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                            </p:commandButton>
+                        </div>
                     </f:facet>
 
                     <ui:fragment rendered="${empty groupLinksBean.links}">

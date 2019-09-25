@@ -495,7 +495,14 @@ ul.res-filters {
       pointer-events: none;
     }
 
+    .ui-toolbar-group-left {
+      width: 50%;
+    }
+
     .ui-toolbar-group-right {
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
       .ui-button {
         &:not(.alt-btn) {
           background-color: $themePrimaryColorDarker;

@@ -24,18 +24,19 @@
 <ui:define name="group_layout">
 	<h:form>
 		<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table" tableStyleClass="table-responsive"
-					 paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					 paginatorPosition="bottom" styleClass="panel-header-button" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 					 emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
 			<f:facet name="header">
 				<span>#{msg.forum}</span>
+				<div>
+					<p:commandButton value="#{msg['ForumIndex.new_topic']}" onclick="PF('newTopicDialog').show();" global="false"
+									 styleClass="alt-btn ml-2" rendered="${forumTopicsBean.group.isMember(userBean.user)}"/>
 
-				<p:commandButton value="#{msg['ForumIndex.new_topic']}" onclick="PF('newTopicDialog').show();" global="false"
-								 styleClass="alt-btn float-right ml-2" rendered="${forumTopicsBean.group.isMember(userBean.user)}"/>
-
-				<p:commandButton rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-								 update=":growl @form" partialSubmit="true" styleClass="alt-btn float-right" process="@this" value="#{msg.join_group}">
-					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-				</p:commandButton>
+					<p:commandButton rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+									 update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+					</p:commandButton>
+				</div>
 			</f:facet>
 
 			<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">

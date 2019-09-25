@@ -77,7 +77,7 @@
         </div>
         <div class="col-12 col-resources ui-panel ui-widget">
             <h:form>
-                <p:toolbar>
+                <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                     <f:facet name="left">
                         <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.gridView}">
                             <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="false"/>

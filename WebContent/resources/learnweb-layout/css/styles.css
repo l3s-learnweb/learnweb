@@ -10608,6 +10608,14 @@ body .fileupload-minimal .ui-fileupload-content {
   }
 }
 
+.panel-header-button .ui-panel-title, .panel-header-button .ui-datatable-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 !important;
+}
+
 body .ui-linkbutton a {
   text-decoration: none;
 }
@@ -12022,6 +12030,14 @@ ul.res-filters .clear-filters:hover a {
 }
 .resources-panel .ui-toolbar .ui-separator {
   pointer-events: none;
+}
+.resources-panel .ui-toolbar .ui-toolbar-group-left {
+  width: 50%;
+}
+.resources-panel .ui-toolbar .ui-toolbar-group-right {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
 }
 .resources-panel .ui-toolbar .ui-toolbar-group-right .ui-button:not(.alt-btn) {
   background-color: #348F6D;
