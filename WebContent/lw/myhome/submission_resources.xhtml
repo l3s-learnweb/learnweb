@@ -41,8 +41,8 @@
 			<p:remoteCommand name="resourceUpdatedHook" update=":submissions"
 							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
-							 update=":submissions" global="false"
-							 oncomplete="updateMaxResources();"/>
+							 update=":submittedResourcesGrid" global="false"
+							 oncomplete="updateMaxResources();onResourcesUpdated()"/>
 		</h:form>
 
 		<!-- only for eumade4all -->
@@ -63,19 +63,20 @@
                 <h3>The submitted resources</h3>
             </ui:fragment>
 
-            <h:panelGroup layout="block" id="submissions" styleClass="res-container mt-3" pt:data-canSelectResources="true">
-                <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top">
+            <h:panelGroup layout="block" id="submissions" styleClass="mt-3">
+                <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container" pt:data-canSelectResources="true">
                     <p:repeat var="res" value="#{submissionBean.selectedResources}">
-						<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
-							<ui:fragment>
+						<!--<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
+							&lt;!&ndash;<ui:fragment>
 								<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
 									<div class="context-menu-item-wrapper">
 										<span class="context-menu-item-icon"/>
-										<!--						<span class="context-menu-item-content">Remove</span>-->
+										&lt;!&ndash;						<span class="context-menu-item-content">Remove</span>&ndash;&gt;
 									</div>
 								</div>
-							</ui:fragment>
-						</h:panelGroup>
+							</ui:fragment>&ndash;&gt;
+						</h:panelGroup>-->
+
 						<h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
 									  pt:data-itemType="resource"
 									  pt:data-itemId="#{res.id}">
@@ -89,7 +90,7 @@
 
                     <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="res-empty-text"/>
 
-                    <h:panelGroup id="add_resource_sign" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+                    <h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
                         <a href="#" class="cancel" onclick="return false;">
 							<i class="fa fa-fw fa-3x fa-plus" aria-hidden="true"></i>
 							<span class="sr-only">Select a resource</span>
@@ -105,8 +106,8 @@
             </h:panelGroup>
         </p:panel>
 
-		<h:panelGroup styleClass="collapse p-0" layout="block" id="select_resources_modal">
-			<p:panel styleClass="ui-panel-scroll-content mb-0">
+		<h:panelGroup  styleClass="collapse p-0" layout="block" id="select_resources_modal">
+			<p:panel styleClass="ui-panel-scroll-content mb-0" >
 				<f:facet name="header">
 					<h:outputFormat value="#{msg['Submission.lightbox_header']}">
 						<f:param value="#{submissionBean.selectedSubmission.noOfResources}"/>
@@ -116,7 +117,9 @@
 					<a href="#" data-fancybox-close="true" class="text-white"><i class="fa fa-fw fa-times" aria-hidden="true"></i></a>
 				</f:facet>
 				<f:facet name="footer">
-					<p:commandButton value="#{msg.add}" onclick="confirmResourcesSelect();"/>
+					<h:form>
+						<p:commandButton value="#{msg.add}" onclick="confirmResourcesSelect();"/>
+					</h:form>
 				</f:facet>
 
 				<h:panelGroup layout="block" rendered="#{empty submissionBean.resources}">
@@ -124,7 +127,7 @@
 					First, add resources to <h:outputLink value="myhome/resources.jsf">#{msg.myResourcesTitle}.</h:outputLink>
 				</h:panelGroup>
 
-				<h:panelGroup id="submitResourcesGrid" styleClass="res-grid" layout="block" rendered="#{!empty submissionBean.resources}"
+				<h:panelGroup id="submitResourcesGrid" styleClass="res-container res-grid" layout="block" rendered="#{!empty submissionBean.resources}"
 							  pt:data-canSelectResources="true">
 					<p:repeat var="res" value="#{submissionBean.resources}">
 						<h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
@@ -144,6 +147,7 @@
 		<script type="application/javascript">
 			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
 			var resources_to_select = max_resources;
+			var num_selected_resources = 0;
 
 			/* global updateSelectedItemsCommand */
 
@@ -156,26 +160,34 @@
 			}
 
 			function confirmResourcesSelect() {
-				updateSelectedItemsCommand([
-					{name: 'action', value: 'add'},
-					{name: 'items', value: JSON.stringify(selected)}
-				]);
-				selected.unselectAll();
-				$.fancybox.close();
+				num_selected_resources = $('.res-item.ui-selected').length;
+				if (num_selected_resources > resources_to_select) {
+					alert("Maximum allowed items limit exceeded. You can't choose more than " + max_resources + " items.");
+				}else {
+					updateSelectedItemsCommand([
+						{name: 'action', value: 'add'},
+						{name: 'items', value: JSON.stringify(selected)}
+					]);
+					selected.unselectAll();
+					$.fancybox.close();
+				}
 			}
 
 			function updateMaxResources() {
-				var num_selected_resources = $('.res-item.ui-selected').length;
-				resources_to_select = max_resources - num_selected_resources;
-				if (resources_to_select === 0)
+				resources_to_select = resources_to_select - num_selected_resources;
+				if (resources_to_select > 0)
+				    /*When user delete an item the button has to be returned back;*/
+					$('#add_resource_sign').show();
+				else
 					$('#add_resource_sign').hide();
-				if (num_selected_resources > 0)
+				if (resources_to_select !== max_resources)
 					$('#submit_resources_button').show();
+
 			}
 
 			function onResourcesUpdated() {
-				createSelectable('submissions');
 				createSelectable('submitResourcesGrid');
+				createSelectable('submittedResourcesGrid');
 			}
 
             $(function () {

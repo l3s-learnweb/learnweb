@@ -1,27 +1,5 @@
 package de.l3s.learnweb.resource.submission;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -34,6 +12,26 @@ import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
@@ -187,7 +185,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String action = params.get("action");
-
         try
         {
             JSONArray items = new JSONArray(params.get("items"));
@@ -329,10 +326,11 @@ public class SubmissionBean extends ApplicationBean implements Serializable
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
-
                 String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
 
+                /*int itemId = StringHelper.parseInt(item.getString("itemId"), -1);*/
+
+                int itemId = item.getInt("itemId");
                 if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
