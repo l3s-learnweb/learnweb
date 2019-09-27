@@ -31,7 +31,7 @@ body {
 
   .ui-blockui-content {
     background: transparent;
-    border: none;
+    border: 0;
     box-shadow: none;
   }
 
@@ -118,7 +118,7 @@ body {
     @include media-breakpoint-down(sm) {
       .ui-tabs-header {
         width: 100%;
-        border-right: 1px solid $headerLightBorderColor!important;
+        border-right: 1px solid $headerLightBorderColor !important;
       }
     }
   }
@@ -148,9 +148,9 @@ body {
   }
 
   .ui-selectoneradio {
-      label {
-        margin: 8px 1rem 8px 8px!important;
-      }
+    label {
+      margin: 8px 1rem 8px 8px !important;
+    }
   }
 
   blockquote {

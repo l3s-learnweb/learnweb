@@ -1,6 +1,8 @@
 .section-search {
-
-  #search_loading_more_results, #search_nothing_found, #search_no_more_results, .metadata {
+  #search_loading_more_results,
+  #search_nothing_found,
+  #search_no_more_results,
+  .metadata {
     display: none;
   }
 
@@ -8,6 +10,7 @@
   .resource-web-link {
     span {
       color: $blue;
+
       &:visited {
         color: $blueDarkest;
       }
@@ -17,7 +20,7 @@
   /*add border on hover in video search*/
   .hover-border {
     &:hover {
-      border: 1px solid gray;
+      border: 1px solid $gray-600;
     }
   }
 
@@ -38,7 +41,7 @@
     background-repeat: no-repeat;
     height: 1rem;
     width: 1rem;
-    margin: .1rem .2rem;
+    margin: 0.1rem 0.2rem;
   }
 
   /*classes below sets bg image based on source*/
@@ -66,7 +69,8 @@
     background-image: url("\#{resource['images:services/ted.gif']}");
   }
 
-  .source_tedx, .source_teded {
+  .source_tedx,
+  .source_teded {
     background-image: url("\#{resource['images:services/tedx.gif']}");
   }
 
@@ -104,16 +108,12 @@
 
       .tooltip-data {
         position: absolute;
-        padding: .5rem;
+        padding: 0.5rem;
         background-color: $gray-200;
         font-weight: 500;
         white-space: nowrap;
         border-radius: 0.5rem;
-        box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1),
-        0 5px 15px rgba(0, 0, 0, 0.07);
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
+        box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
         user-select: none;
         pointer-events: none;
         border: 1px solid $themePrimaryColor;
@@ -152,13 +152,14 @@
 
       .ui-carousel-items {
         max-height: 9em;
+
         .ui-carousel-item {
           border-radius: 0.1rem;
           padding: 0 !important;
           margin: 0.1rem 0.5rem !important;
 
           &:hover {
-            box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+            box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
           }
         }
       }
@@ -172,7 +173,7 @@
     right: 2%;
     bottom: 3%;
     background-color: $dark;
-    color: white;
+    color: $white;
     border-radius: 0.1rem;
     font-size: 0.8rem;
     line-height: 0.9rem;
@@ -188,21 +189,21 @@
     margin-right: -1em;
     padding-right: 1em;
 
-    &:before {
+    &::before {
       content: '...';
       position: absolute;
       right: 0;
       bottom: 0;
     }
 
-    &:after {
+    &::after {
       content: '';
       position: absolute;
       right: 0;
       width: 1em;
       height: 1em;
       margin-top: 0.2em;
-      background: white;
+      background: $white;
     }
   }
 
@@ -217,7 +218,7 @@
       overflow: visible;
       background: #fff;
       box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
-      transition: opacity .3s;
+      transition: opacity 0.3s;
     }
 
     /* Make it to fade-out while closing */
@@ -252,7 +253,7 @@
       padding: 1rem;
       background: #333;
       pointer-events: all; /* Make text selectable */
-      border-right: 1px solid rgba(255, 255, 255, .08);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     /* Align buttons at the right side  */
@@ -277,7 +278,7 @@
 
     /* Remove background from all buttons */
     .fancybox-button,
-    .fancybox-navigation button:before {
+    .fancybox-navigation button::before {
       background: transparent;
     }
 

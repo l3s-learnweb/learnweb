@@ -9,7 +9,7 @@
       top: 50%;
       left: 0;
       width: 2em;
-      font-family: 'FontAwesome';
+      font-family: FontAwesome, sans-serif;
       font-size: 1em;
       font-style: normal;
       font-weight: normal;
@@ -25,11 +25,11 @@
     color: #bbb;
   }
 
-  &.context-menu-hover:before {
+  &.context-menu-hover::before {
     color: #fff;
   }
 
-  &.context-menu-icon-loading:before {
+  &.context-menu-icon-loading::before {
     animation: fa-spin 2s infinite;
   }
 }
@@ -39,24 +39,24 @@
   display: inline-block;
   min-width: 13em;
   max-width: 26em;
-  padding: .25em 0;
-  margin: .3em;
+  padding: 0.25em 0;
+  margin: 0.3em;
   font-family: inherit;
   font-size: inherit;
   list-style-type: none;
   background: #fff;
   border: 1px solid #bebebe;
   //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
-  border-radius: .2em;
+  border-radius: 0.2em;
   //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-  box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .context-menu-item {
   position: relative;
   //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: content-box;
-  padding: .2em 2em;
+  padding: 0.2em 2em;
   color: #2f2f2f;
   //Instead of the line below you could use @include user-select($select)
   user-select: none;
@@ -87,12 +87,12 @@
   }
 
   &.context-menu-input {
-    padding: .3em .6em;
+    padding: 0.3em 0.6em;
   }
 
   > .context-menu-list {
-    top: .3em;
-    right: -.3em;
+    top: 0.3em;
+    right: -0.3em;
     display: none;
   }
 
@@ -103,7 +103,7 @@
 
 .context-menu-separator {
   padding: 0;
-  margin: .35em 0;
+  margin: 0.35em 0;
   border-bottom: 1px solid #e6e6e6;
 }
 
@@ -124,19 +124,19 @@
       vertical-align: top;
     }
 
-    > input[type="checkbox"] {
+    > input[type='checkbox'] {
       position: relative;
-      top: .12em;
-      margin-right: .4em;
+      top: 0.12em;
+      margin-right: 0.4em;
     }
 
-    > input[type="radio"] {
+    > input[type='radio'] {
       position: relative;
-      top: .12em;
-      margin-right: .4em;
+      top: 0.12em;
+      margin-right: 0.4em;
     }
 
-    > input[type="text"] {
+    > input[type='text'] {
       display: block;
       width: 100%;
       //Instead of the line below you could use @include box-sizing($bs)
@@ -164,17 +164,17 @@
   text-decoration: underline;
 }
 
-.context-menu-submenu:after {
+.context-menu-submenu::after {
   position: absolute;
   top: 50%;
-  right: .5em;
+  right: 0.5em;
   z-index: 1;
   width: 0;
   height: 0;
   content: '';
   border-color: transparent transparent transparent #2f2f2f;
   border-style: solid;
-  border-width: .25em 0 .25em .25em;
+  border-width: 0.25em 0 0.25em 0.25em;
   //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
   transform: translateY(-50%);
 }

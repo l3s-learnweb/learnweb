@@ -8,20 +8,20 @@
     border-radius: 2px;
 
     /* Creates a small triangle extender for the tooltip */
-    &:after {
+    &::after {
       display: inline;
       font-size: 10px;
       width: 100%;
       line-height: 1;
       color: rgba(0, 0, 0, 0.8);
-      content: "\25BC";
+      content: '\25BC';
       position: absolute;
       text-align: center;
     }
 
     /* Style northward tooltips differently */
-    &.n:after {
-      margin: -1px 0 0 0;
+    &.n::after {
+      margin: -1px 0 0;
       top: 100%;
       left: 0;
     }
@@ -43,7 +43,6 @@
       }
 
       label {
-        -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -56,7 +55,7 @@
   .snippet-viewer {
     display: none;
     background-color: $white;
-    box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: -5px 0 8px rgba(0, 0, 0, 0.1);
     height: 100vh;
 
     .hideIcon {
@@ -114,8 +113,8 @@
         /*top: 80px;*/
       }
 
-      &:before {
-        content: "";
+      &::before {
+        content: '';
         display: block;
         width: 0;
         height: 100%;
@@ -128,14 +127,14 @@
       li {
         margin: 20px 10px 60px;
         position: relative;
-        padding: 10px 10px;
+        padding: 10px;
         background: $themePrimaryColor;
         color: $white;
         border-radius: 10px;
         line-height: 20px;
 
         > span {
-          content: "";
+          content: '';
           display: block;
           width: 0;
           height: 100%;
@@ -144,8 +143,9 @@
           top: 0;
           left: -17px;
 
-          &:before, &:after {
-            content: "";
+          &::before,
+          &::after {
+            content: '';
             display: block;
             width: 10px;
             height: 10px;
@@ -156,11 +156,11 @@
             left: -7px;
           }
 
-          &:before {
+          &::before {
             top: -10px;
           }
 
-          &:after {
+          &::after {
             top: 95%;
           }
         }
@@ -172,7 +172,7 @@
     }
 
     .info {
-      &:first-letter {
+      &::first-letter {
         /*text-transform: capitalize;*/
         line-height: 1.7;
       }
@@ -185,11 +185,11 @@
       }
 
       span {
-        &:after {
+        &::after {
           content: '\2192';
         }
 
-        &:last-child:after {
+        &:last-child::after {
           content: '';
         }
       }
@@ -215,7 +215,7 @@
     .time span {
       position: absolute;
       left: -85px;
-      color: black;
+      color: $black;
       /*font-size: 80%;*/
       font-weight: bold;
 
@@ -234,7 +234,7 @@
     }
 
     &.box-group ul {
-      &:before {
+      &::before {
         border: 1px dashed $gray-600;
       }
 
@@ -242,7 +242,8 @@
         > span {
           border: 1px solid $gray-600;
 
-          &:before, &:after {
+          &::before,
+          &::after {
             background: $gray-600;
           }
         }

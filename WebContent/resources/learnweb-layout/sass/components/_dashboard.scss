@@ -165,8 +165,8 @@ $profileTextColor: $gray-900;
     }
 
     img.profile-icon {
-      /*top: -15px;
-          margin-bottom: -5px;*/
+      // top: -15px;
+      // margin-bottom: -5px;
       height: 34px;
       width: 34px;
     }
@@ -461,11 +461,11 @@ $profileTextColor: $gray-900;
 
     tbody {
       tr:nth-child(even) {
-        background: $white
+        background: $white;
       }
 
       tr:nth-child(odd) {
-        background: $gray-200
+        background: $gray-200;
       }
 
       td {
@@ -696,7 +696,7 @@ $profileTextColor: $gray-900;
 
     .ui-button {
       margin-top: 1rem;
-      padding: 0px 35px;
+      padding: 0 35px;
       margin-right: 0;
     }
 

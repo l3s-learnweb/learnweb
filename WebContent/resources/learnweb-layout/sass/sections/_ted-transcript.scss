@@ -17,7 +17,7 @@
 
     .ui-selected {
       background: $themePrimaryDarkest;
-      color: white;
+      color: $white;
     }
   }
 
@@ -26,14 +26,13 @@
   }
 
   #ted_transcript {
-    &::selection,
-    &::-moz-selection {
-      background: yellow;
+    &::selection {
+      background: $yellow;
     }
   }
 
   .note { // A selected text
-    background-color: yellow;
+    background-color: $yellow;
 
     &.ui-state-hover {
       background-color: #c4fcff !important;
@@ -41,11 +40,6 @@
   }
 
   .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
   }
 }

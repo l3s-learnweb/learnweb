@@ -17,7 +17,7 @@
       width: 100%;
       text-align: center;
       margin-top: 30px;
-      color: #ffffff;
+      color: $white;
     }
 
     .closebtn {
@@ -29,7 +29,7 @@
       @media screen and (max-height: 450px) {
         font-size: 40px;
         top: 45px;
-        right: 0px;
+        right: 0;
       }
     }
   }
@@ -50,8 +50,8 @@
 
         a {
           display: inline-block;
-          background-color: black;
-          color: white;
+          background-color: $black;
+          color: $white;
           text-align: center;
           padding: 6px 8px;
           text-decoration: none;
@@ -62,13 +62,13 @@
 
           &:hover {
             background-color: #ddd;
-            color: #000000;
+            color: $black;
           }
 
           &:focus,
           &.active {
-            background-color: #ffffff !important;
-            color: #000000 !important;
+            background-color: $white !important;
+            color: $black !important;
           }
         }
       }
@@ -80,13 +80,13 @@
     position: fixed;
     float: left;
     height: 100%;
-    top: 0px;
+    top: 0;
     padding-top: 4.6rem;
     border-right: 5px solid #ccc;
     transition: $transition-duration;
 
     iframe {
-      border: 10px solid white;
+      border: 10px solid $white;
     }
   }
 }

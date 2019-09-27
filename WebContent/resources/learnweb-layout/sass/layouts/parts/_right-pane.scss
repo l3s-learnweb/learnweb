@@ -7,6 +7,7 @@
 
   .ui-panel-titlebar {
     display: flex;
+
     span {
       width: 100%;
     }
@@ -38,7 +39,7 @@
   }
 }
 
-body.right-pane-open {
+.right-pane-open {
   @include media-breakpoint-up(lg) {
     .layout-main-pane {
       flex: 0 0 66.6666666667%;

@@ -45,7 +45,7 @@
     > .ui-menuitem-link {
       margin-top: 2px;
       font-weight: 700;
-      padding: .5em 0.375rem .5em 0.125rem;
+      padding: 0.5em 0.375rem 0.5em 0.125rem;
       color: $themeElementTextColor;
       background-color: $themePrimaryColor;
 
@@ -87,8 +87,8 @@
     }
 
     &.ui-state-expand {
-      > .ui-menuitem-link > .ui-menuitem-icon-expand:before {
-        content: "\f107";
+      > .ui-menuitem-link > .ui-menuitem-icon-expand::before {
+        content: '\f107';
       }
 
       > .ui-menu-list {

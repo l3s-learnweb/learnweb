@@ -1,12 +1,12 @@
 body {
   .moderator-btn {
     color: $themeElementTextColor;
-    border: 1px solid $themePrimaryColorDarker!important;
+    border: 1px solid $themePrimaryColorDarker !important;
 
     .ui-button-text {
       position: relative;
 
-      &:before {
+      &::before {
         content: '\f013';
         display: inline-block;
         font: normal normal normal 14px/1 FontAwesome;

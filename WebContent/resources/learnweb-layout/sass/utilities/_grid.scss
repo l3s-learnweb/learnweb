@@ -4,6 +4,7 @@
   height: calc(100vh - #{$topbar-height});
   overflow-y: auto;
 }
+
 .col-xs-auto {
   @include media-breakpoint-down(xs) {
     flex: 0 0 auto;
@@ -17,7 +18,7 @@
 }
 
 .w-inherit {
-  width: inherit!important;
+  width: inherit !important;
 }
 
 .w-15 {

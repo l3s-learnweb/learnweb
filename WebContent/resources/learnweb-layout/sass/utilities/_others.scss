@@ -11,7 +11,7 @@
 .has-badge {
   position: relative;
 
-  &:after{
+  &::after {
     position: absolute;
     right: 0;
     top: 0;
@@ -69,11 +69,12 @@ section:target .highlight {
 }
 
 .panel-header-button {
-  .ui-panel-title, .ui-datatable-header {
+  .ui-panel-title,
+  .ui-datatable-header {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 0!important;
+    margin: 0 !important;
   }
 }

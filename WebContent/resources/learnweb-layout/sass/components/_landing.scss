@@ -6,7 +6,7 @@
   .header-news-list {
     > h2 {
       font-size: $font-size-base;
-      padding: .5rem 1rem;
+      padding: 0.5rem 1rem;
     }
 
     .ui-datalist-data {
@@ -15,7 +15,7 @@
     }
 
     .ui-datalist-content {
-      border: none;
+      border: 0;
       background: inherit;
       min-height: 13.5rem;
       max-height: 24rem;
