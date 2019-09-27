@@ -25,7 +25,7 @@
 
 // Styles from 3rd-part developers
 @import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
-@import 'california/theme/theme'; // California theme for PrimeFaces components
+@import 'vendor/california-theme-2.0.0/theme'; // California theme for PrimeFaces components
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import 'layouts/template';

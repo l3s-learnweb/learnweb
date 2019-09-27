@@ -565,7 +565,7 @@ body {
             font-weight: 700;
             text-align: left;
             font-size: $font-size-lg;
-            @include border-radius-bottom(0);
+            @include border-bottom-radius(0);
 
             .ui-carousel-header-title {
                 padding: 0;
@@ -764,7 +764,6 @@ body {
     .ui-tree {
         padding: 6px 12px;
         color: $treeTextColor;
-        @include border-box();
 
         .ui-treenode {
             padding: 2px 0;

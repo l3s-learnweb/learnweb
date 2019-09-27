@@ -147,7 +147,7 @@ body {
                 margin-left: 4px;
                 color: $overlayIconColor;
                 &:hover {
-                    @include scale(1.2);
+                    transform: scale(1.2);
                     color: $overlayIconHoverColor;
                 }
                 span {
@@ -161,7 +161,7 @@ body {
                 margin-right: 4px;
                 color: $overlayIconColor;
                 &:hover {
-                    @include scale(1.2);
+                    transform: scale(1.2);
                     color: $overlayIconHoverColor;
                 }
                 span {

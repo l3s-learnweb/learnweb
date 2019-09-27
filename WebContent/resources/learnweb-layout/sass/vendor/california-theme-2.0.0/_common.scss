@@ -30,16 +30,16 @@ body {
         @include border-radius($border-radius);
     }
     .ui-corner-top {
-        @include border-radius-top($border-radius);
+        @include border-top-radius($border-radius);
     }
     .ui-corner-bottom {
-        @include border-radius-bottom($border-radius);
+        @include border-bottom-radius($border-radius);
     }
     .ui-corner-left {
-        @include border-radius-left($border-radius);
+        @include border-left-radius($border-radius);
     }
     .ui-corner-right {
-        @include border-radius-right($border-radius);
+        @include border-right-radius($border-radius);
     }
     .ui-widget-overlay {
         background-color: rgba($gray-700, 0.75);

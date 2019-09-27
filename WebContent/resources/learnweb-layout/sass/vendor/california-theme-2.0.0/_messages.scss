@@ -98,7 +98,7 @@ body {
     .ui-growl {
         top: 85px;
         .ui-growl-item-container {
-            @include opacity(.95);
+            opacity: .95;
             @include overlay-shadow();
             &.ui-growl-info {
                 background-color: $infoMessageBgColor;

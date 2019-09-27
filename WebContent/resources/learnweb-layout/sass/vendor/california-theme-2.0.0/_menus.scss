@@ -42,8 +42,7 @@ body {
             background-color: $stepsItemBgColor;
             color: $stepsItemColor;
             border-top: 4px solid $stepsItemColor;
-            @include border-box();
-            @include opacity(1);
+            opacity: 1;
             .ui-steps-number {
                 display: none;
             }
@@ -87,7 +86,6 @@ body {
                 width: 100%;
                 float: none;
                 background-color: $primaryColor;
-                @include border-box();
                 @include border-radius(0);
                 @include transition(background-color .3s);
                 h3 {
@@ -129,7 +127,6 @@ body {
                     border-left: 4px solid transparent;
                     font-weight: 400;
                     color: $menuitemTextColor;
-                    @include border-box();
                     @include border-radius(0);
                     &.ui-state-hover {
                         background-color: $menuitemHoverBgColor;
@@ -251,7 +248,7 @@ body {
             .ui-menu-child {
                 padding: 0;
                 &.ui-shadow {
-                    @include no-shadow();
+                    box-shadow: none;
                 }
             }
         }
