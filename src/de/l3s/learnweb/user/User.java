@@ -513,7 +513,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
         // process image
         Image img = new Image(inputStream);
-        Image thumbnail = img.getResizedToSquare(100, 0.05);
+        Image thumbnail = img.getResizedToSquare2(100, 0.05);
 
         // save image file
         File file = new File();
@@ -618,7 +618,31 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public InputStream getDefaultAvatar() throws IOException
     {
-        URL obj = new URL("https://ui-avatars.com/api/?name=" + username + "&size=100");
+        String name = "";
+        if(fullName != null)
+            name = fullName;
+        else
+        {
+            if(StringUtils.isNumeric(username))
+                name = username.substring(username.length()-2);
+            else
+            {
+                if(username.equals(username.toLowerCase()))
+                {
+                    for(int i = 0; i < username.length(); i++)
+                    {
+                        if(Character.isUpperCase(username.charAt(i)))
+                        {
+                            name += i;
+                        }
+                        name = username;
+                    }
+                }
+                else
+                    name = username;
+            }
+        }
+        URL obj = new URL("https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+ name + "/100");
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
@@ -631,7 +655,6 @@ public class User implements Comparable<User>, Serializable, HasId
         {
             return  null;
         }
-
     }
 
     public void setId(int id)

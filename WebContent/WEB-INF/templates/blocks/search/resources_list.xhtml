@@ -71,8 +71,8 @@
                 </div>
             </div>
             <div>
-                <h:outputLink styleClass="resourceWebLink text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
-                    <span class="d-block block-with-text w-100">
+                <h:outputLink styleClass="resource-web-link text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                    <span class="d-block truncate-two-lines w-100">
                         <h:outputText value="#{res.title}" escape="false"/>
                     </span>
                 </h:outputLink>
@@ -80,7 +80,7 @@
                     <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
                     <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
                 </div>
-                <span class="block-with-text d-block w-100">
+                <span class="truncate-two-lines d-block w-100">
                      <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
                 </span>
             </div>

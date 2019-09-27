@@ -8,7 +8,7 @@
 
     <div id="gallery">
         <p:repeat var="res" value="#{resources}">
-            <div class="resource d-inline-block zoom">
+            <div class="resource d-inline-block hover-border">
                 <a href="#{res.thumbnail4.url}" data-fancybox="search-gallery" data-type="image" data-captionId="#product#{res.tempId}">
                     <img src="#{res.thumbnail2b.url}"  alt="#{res.title}"/>
                 </a>

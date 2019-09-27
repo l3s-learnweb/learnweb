@@ -61,7 +61,7 @@
                 </h:link>
             </li>
             </ul>
-            <p:outputPanel styleClass="group-menu-header text-center bg-gray400" layout="block" rendered="#{searchBean.searchService != null}">
+            <p:outputPanel styleClass="source-info text-center bg-gray400" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
                     <f:param value="#{searchBean.searchService.name()}"/>
@@ -70,7 +70,7 @@
             </p:outputPanel>
             <h:form>
                 <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" breakpoint="-1" styleClass="ui-carousel-light">
-                    <div class="mx-auto py-1" style="max-width:15em;">
+                    <div class="mx-auto" style="max-width:15em;">
                         <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
                             <f:param name="service" value="#{gr.groupAlias}"/>
                             <f:param name="action" value="#{searchBean.searchMode}"/>
@@ -95,20 +95,11 @@
                                 </span>
                                 </p:repeat>
                             </h:panelGroup>
-                            <h:panelGroup styleClass="row" style="max-height: 140px;" layout="block"
+                            <h:panelGroup styleClass="row justify-content-around" layout="block"
                                           rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                                <p:repeat value="#{gr.resources}" var="res">
-                                    <img src="${res.thumbnail2.url}" class="col-6"/>
-                                </p:repeat>
+                                    <img src="${gr.resources[0].thumbnail2.url}" class="col-6 pr-0"/>
+                                    <img src="${gr.resources[1].thumbnail2.url}" class="col-6 pl-0"/>
                             </h:panelGroup>
-                            <!--                        <h:panelGroup  style="max-height: 140px; display: grid; justify-content: stretch;   grid-template-columns: 20% 20% 20% 20% 20%;" layout="block"
-                                                                   rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}">
-                                                        <p:repeat value="#{gr.resources}" var="res">
-                                                            <div  style="">
-                                                                <img src="#{res.thumbnail4.url}" style="object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%;"/>
-                                                            </div>
-                                                        </p:repeat>
-                                                    </h:panelGroup>-->
                         </h:link>
                     </div>
                 </p:carousel>
@@ -147,7 +138,7 @@
             </p:repeat>
             <li class="filter #{(searchBean.searchFilters != null) ? 'active':'disabled'}">
                 <h:link value="#{msg.clear_filters}" outcome="search"
-                        styleClass="d-inline-block p-2 text-body custom-underline">
+                        styleClass="d-inline-block p-2 text-body">
                     <f:param name="action" value="#{searchBean.searchMode}"/>
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>

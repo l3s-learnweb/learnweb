@@ -38,7 +38,7 @@ function prepareResources() {
             touch: {
                 vertical: false
             },
-            buttons: ["close", "share"],
+            buttons: ["close"],
             animationEffect: "fade",
             transitionEffect: "fade",
             preventCaptionOverlap: false,
