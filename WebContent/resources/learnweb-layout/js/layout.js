@@ -1,18 +1,14 @@
-/****************************************************************
- This file will be loaded on every page.
- Include only methods which are required on every page.
- ****************************************************************/
-
-/** @external logQuerySuggestion */
-/** @external onUnloadCommand */
-/** @external setPreferenceRemote */
+/* global logQuerySuggestion, onUnloadCommand, setPreferenceRemote */
 
 /**
  * PrimeFaces LearnwebTheme Layout
+ *
+ * This file will be loaded on every page.
+ * Include only methods which are required on every page.
  */
 PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
-  init: function (cfg) {
+  init(cfg) {
     this._super(cfg);
     this.body = $(document.body);
     this.overlay = this.body.find('.layout-overlay');
@@ -27,46 +23,44 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     this._bindEvents();
 
-    var myMarket = PrimeFaces.settings.locale;
+    let currentRequest;
+    const myMarket = PrimeFaces.settings.locale;
     this.header.find('#searchfield').autoComplete({
-      source: function (term, response) {
-        try {
-          xhr.abort();
-        } catch (e) {
-        }
-        // noinspection JSIgnoredPromiseFromCall
-        $.ajax({
+      source(term, response) {
+        currentRequest = $.ajax({
           url: 'https://api.bing.com/osjson.aspx?JsonType=callback&JsonCallback=?',
           data: {
-            'query': term,
-            'market': myMarket
+            query: term,
+            market: myMarket,
           },
           dataType: 'jsonp',
-          success: function (data) {
-            var suggestions = [];
-            $.each(data[1], function (i, val) {
+          beforeSend() {
+            if (currentRequest != null) {
+              currentRequest.abort();
+            }
+          },
+          success(data) {
+            const suggestions = [];
+            $.each(data[1], (i, val) => {
               suggestions.push(val);
             });
             response(suggestions);
 
-            var logQuerySuggestionAsync = function () {
+            setTimeout(() => {
               logQuerySuggestion([
-                {name: 'query', value: term},
-                {name: 'market', value: myMarket},
-                {name: 'suggestions', value: suggestions}
+                { name: 'query', value: term },
+                { name: 'market', value: myMarket },
+                { name: 'suggestions', value: suggestions },
               ]);
-            };
-            setTimeout(logQuerySuggestionAsync, 0);
-          }
+            }, 0);
+          },
         });
-      }
+      },
     });
   },
 
-  _bindEvents: function () {
-    var $this = this;
-
-    $(window).on('beforeunload', function () {
+  _bindEvents() {
+    $(window).on('beforeunload', () => {
       if (typeof onUnloadCommand === 'function') {
         onUnloadCommand();
       }
@@ -75,45 +69,45 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     /**
      * Listener to trigger modal close, when clicked on dialog overlay.
      */
-    $(document).on('click', '.ui-dialog-mask', function () {
-      $this.getWidgetVarById(this.id.replace('_modal', '')).hide();
+    $(document).on('click', '.ui-dialog-mask', () => {
+      this.getWidgetVarById(this.id.replace('_modal', '')).hide();
     });
 
-    $this.overlay.on('mouseup', function () {
-      if ($this.isRightPaneOpen) {
-        $this.hideRightPane();
+    this.overlay.on('mouseup', () => {
+      if (this.isRightPaneOpen) {
+        this.hideRightPane();
       }
     });
 
-    $this.menuButton.off('click').on('click', function (e) {
-      if ($this.isDesktop()) {
-        $this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
-        $this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
+    this.menuButton.off('click').on('click', (e) => {
+      if (this.isDesktop()) {
+        this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
+        this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
       } else {
-        $this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
-        $this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
+        this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
+        this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
       }
 
       e.preventDefault();
     });
 
-    $this.rightPane.on('click', '.layout-right-pane-close', function (e) {
-      $this.hideRightPane();
-      $this.updateSearchParams({resource_id: null});
+    this.rightPane.on('click', '.layout-right-pane-close', (e) => {
+      this.hideRightPane();
+      this.updateSearchParams({ resource_id: null });
 
       e.preventDefault();
     });
 
-    if ($this.rightPane.find('#right_pane_content div:not(.ui-blockui-content)').length) {
-      $this.showRightPane();
+    if (this.rightPane.find('#right_pane_content div:not(.ui-blockui-content)').length) {
+      this.showRightPane();
     }
   },
 
-  updateSearchParams: function (searchParams, cleanExisting) {
-    var sp = new URLSearchParams(cleanExisting ? undefined : window.location.search);
+  updateSearchParams(searchParams, cleanExisting) {
+    const sp = new URLSearchParams(cleanExisting ? undefined : window.location.search);
 
-    Object.keys(searchParams).forEach(function (key) {
-      var value = searchParams[key];
+    Object.keys(searchParams).forEach((key) => {
+      const value = searchParams[key];
 
       if (value === null) {
         sp.delete(key);
@@ -122,31 +116,31 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
       }
     });
 
-    var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + sp.toString();
-    window.history.pushState({url: newUrl}, '', newUrl);
+    const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
+    window.history.pushState({ url: newUrl }, '', newUrl);
   },
 
-  showRightPane: function () {
+  showRightPane() {
     this.body.addClass('right-pane-open');
     this.isRightPaneOpen = true;
     this.resize();
   },
 
-  hideRightPane: function () {
+  hideRightPane() {
     this.body.removeClass('right-pane-open');
     this.isRightPaneOpen = false;
     this.resize();
   },
 
-  isDesktop: function () {
+  isDesktop() {
     return window.innerWidth > 1200; // Do not forget to change scss value according
   },
 
-  resize: function () {
+  resize() {
     if (window.cqApi && typeof window.cqApi.reevaluate === 'function') {
       window.cqApi.reevaluate(false);
 
-      setTimeout(function () {
+      setTimeout(() => {
         window.cqApi.reevaluate(false);
       }, 200);
     }
@@ -157,15 +151,9 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
    * @param elementId
    * @returns {*}
    */
-  getWidgetVarById: function (elementId) {
-    for (var propertyName in PrimeFaces.widgets) {
-      // noinspection JSUnfilteredForInLoop
-      var widget = PrimeFaces.widgets[propertyName];
-      if (widget && widget.elementId === elementId) {
-        return widget;
-      }
-    }
-  }
+  getWidgetVarById(elementId) {
+    return Object.values(PrimeFaces.widgets).find((widget) => widget && widget.elementId === elementId);
+  },
 });
 
 /**
@@ -173,7 +161,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
  */
 PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
-  init: function (cfg) {
+  init(cfg) {
     this._super(cfg);
     this.menuitemLinks = this.jq.find('.ui-menuitem-link:not(.ui-state-disabled)');
 
@@ -182,14 +170,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     this.markCurrentMenuItem();
   },
 
-  bindEvents: function () {
-    var $this = this;
-
-    this.menuitemLinks.on('click', function (e) {
-      var currentLink = $(this);
+  bindEvents() {
+    this.menuitemLinks.on('click', (e) => {
+      const currentLink = $(e.currentTarget);
 
       if (e.target.className.indexOf('ui-menuitem-icon-expand') === -1) {
-        var href = currentLink.attr('href');
+        const href = currentLink.attr('href');
 
         if (href && href !== '#') {
           window.location.href = href;
@@ -198,12 +184,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         }
       }
 
-      var submenu = currentLink.parent();
+      const submenu = currentLink.parent();
       if (submenu.hasClass('ui-menu-parent')) {
-        if ($this.isExpanded(submenu)) {
-          $this.collapseTreeItem(submenu);
+        if (this.isExpanded(submenu)) {
+          this.collapseTreeItem(submenu);
         } else {
-          $this.expandTreeItem(submenu, false);
+          this.expandTreeItem(submenu, false);
         }
       }
 
@@ -211,20 +197,20 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     });
   },
 
-  isExpanded: function (item) {
+  isExpanded(item) {
     return item.children('.ui-menu-list').is(':visible');
   },
 
-  collapseTreeItem: function (submenu) {
+  collapseTreeItem(submenu) {
     submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', false);
     submenu.children('.ui-menu-list').attr('aria-hidden', true);
 
-    submenu.children('.ui-menu-list').slideUp('normal', 'easeInOutCirc', function () {
+    submenu.children('.ui-menu-list').slideUp('normal', 'easeInOutCirc', () => {
       submenu.removeClass('ui-state-expand');
     });
   },
 
-  expandTreeItem: function (submenu, restoring) {
+  expandTreeItem(submenu, restoring) {
     submenu.find('> .ui-menuitem-link > .ui-menuitem-text').attr('aria-expanded', true);
     submenu.children('.ui-menu-list').attr('aria-hidden', false);
 
@@ -236,33 +222,29 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 
-  markCurrentMenuItem: function () {
-    var $this = this;
-
-    var currentPath = window.location.href;
-    this.menuitemLinks.filter(function () {
-      return currentPath.indexOf(this.href) === 0;
-    }).each(function () {
-      var $activeMenuLink = $(this);
-      var $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
+  markCurrentMenuItem() {
+    const currentPath = window.location.href;
+    this.menuitemLinks.filter(() => currentPath.indexOf(this.href) === 0).each((i, el) => {
+      const $activeMenuLink = $(el);
+      const $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
 
       $activeMenuLink.addClass('ui-state-active');
       $activeMenuItem[0].scrollIntoView();
 
-      $this.expandMenuItemThree($activeMenuItem);
+      this.expandMenuItemThree($activeMenuItem);
     });
   },
 
-  expandMenuItemThree: function (submenu) {
+  expandMenuItemThree(submenu) {
     if (!submenu.hasClass('ui-state-empty')) {
       this.expandTreeItem(submenu, true);
     }
 
-    var parentSubmenu = submenu.parent().closest('.ui-menu-parent');
+    const parentSubmenu = submenu.parent().closest('.ui-menu-parent');
     if (parentSubmenu.length) {
       this.expandMenuItemThree(parentSubmenu);
     }
-  }
+  },
 });
 
 /**
@@ -277,7 +259,7 @@ function removeViewState(searchForm) {
  * TODO: Find better way to call it
  */
 function updateCarousel2() {
-  PrimeFaces.cw('LimitedList', 'me', {id: 'learnweb'});
+  PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });
 }
 
 /*
@@ -285,28 +267,28 @@ function updateCarousel2() {
  */
 function setPreference(prefKey, prefValue) {
   setPreferenceRemote([
-    {name: 'key', value: prefKey},
-    {name: 'value', value: prefValue}
+    { name: 'key', value: prefKey },
+    { name: 'value', value: prefValue },
   ]);
 }
 
 /**
  * On document ready events
  */
-$(function () {
+$(() => {
   // We created a PrimeFaces widget without an active element, so we need manually tell PrimeFaces to run it
   // After that, we can access any method of it by using `PF('learnweb')`, like `PF('learnweb').showRightPane();`
-  PrimeFaces.cw('LearnwebTheme', 'learnweb', {id: 'learnweb'});
+  PrimeFaces.cw('LearnwebTheme', 'learnweb', { id: 'learnweb' });
 });
 
 /**
  * Reset center position of Dialog after content is loaded.
  */
 PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
-  show: function () {
+  show() {
     this._super();
     this.resetPosition();
-  }
+  },
 });
 
 /**
@@ -314,9 +296,9 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
  * https://github.com/primefaces/primefaces/issues/5035 (the issue was resolved and should be released in PF 7.1)
  * Fix for PrimeFaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
  */
-PrimeFaces.widget.Menu.prototype.show = function () {
+PrimeFaces.widget.Menu.prototype.show = () => {
   this.align();
-  this.jq.css({'z-index': ++PrimeFaces.zindex}).show();
+  this.jq.css({ 'z-index': ++PrimeFaces.zindex }).show();
 };
 
 // noinspection JSUnusedGlobalSymbols
@@ -326,12 +308,12 @@ PrimeFaces.widget.Menu.prototype.show = function () {
  * But this script allows to set dynamic number of column based on the size of first element.
  * To use it, set `breakpoint` property of `p:carousel` to `-1`.
  */
-PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
+PrimeFaces.widget.Carousel.prototype.refreshDimensions = () => {
   if (this.cfg.breakpoint === -1) {
-    var firstItem = this.items.eq(0);
+    const firstItem = this.items.eq(0);
     firstItem.css('width', 'auto');
-    var firstItemWidth = firstItem.length ? firstItem.width() : 150; // firstItem.outerWidth(true), firstItem.width()
-    var viewportInnerWidth = this.viewport.innerWidth();
+    const firstItemWidth = firstItem.length ? firstItem.width() : 150; // firstItem.outerWidth(true), firstItem.width()
+    const viewportInnerWidth = this.viewport.innerWidth();
     this.columns = Math.floor(viewportInnerWidth / firstItemWidth);
     this.calculateItemWidths();
     this.totalPages = Math.ceil(this.itemsCount / this.columns);
@@ -342,7 +324,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
     this.responsiveDropdown.hide();
     this.pageLinks.show();
   } else {
-    var win = $(window);
+    const win = $(window);
     if (win.width() <= this.cfg.breakpoint) {
       this.columns = 1;
       this.calculateItemWidths(this.columns);
@@ -375,7 +357,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
 //
 //     if (event === 'start') {
 //         $('body').css('cursor', 'progress');
-//         ajaxInProgress = setTimeout(function () {
+//         ajaxInProgress = setTimeout(() => {
 //             this.jq.children().hide().filter(this.toFacetId(event)).show();
 //         }.bind(this), 200);
 //     } else {
@@ -391,7 +373,7 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
  * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
  */
 PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
-  init: function (cfg) {
+  init(cfg) {
     this._super(cfg);
 
     this.defaultVisibleItems = 5;
@@ -399,21 +381,21 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
     this.targetLists.each(this._init);
   },
 
-  _init: function () {
-    var $list = $(this);
-    var visibleItems = $list.data('visible-items') || this.defaultVisibleItems;
-    var $items = $list.find('li:not(.expand-list)');
-    var $expandBtn = $list.find('li.expand-list');
+  _init(index, element) {
+    const $list = $(element);
+    const visibleItems = $list.data('visible-items') || this.defaultVisibleItems;
+    const $items = $list.find('li:not(.expand-list)');
+    const $expandBtn = $list.find('li.expand-list');
 
-    var totalRecords = $items.length;
+    const totalRecords = $items.length;
     if (visibleItems + 1 < totalRecords) {
       $list.addClass('list-collapsed');
       $expandBtn.show();
-      for (var i = visibleItems; i < totalRecords; ++i) {
+      for (let i = visibleItems; i < totalRecords; ++i) {
         $($items[i]).hide();
       }
 
-      $expandBtn.on('click', function (e) {
+      $expandBtn.on('click', (e) => {
         $list.removeClass('list-collapsed');
         $expandBtn.hide();
         $items.show();
@@ -422,5 +404,5 @@ PrimeFaces.widget.LimitedList = PrimeFaces.widget.BaseWidget.extend({
         return false;
       });
     }
-  }
+  },
 });

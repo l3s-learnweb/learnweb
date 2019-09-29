@@ -1,57 +1,14 @@
-/** @external updateThumbnailCommand */
-/** @external editorConfigValues */
-
-/* Show timeline/list of snapshots in resource_view */
-
-function archive_open_timeline() {
-  var $archiveListBtn = $('#archive_list_btn');
-  var $archiveTimelineBtn = $('#archive_timeline_btn');
-  var $archiveListView = $('#archive_list_view');
-  var $archiveTimelineView = $('#archive_timeline_view');
-
-  if ($archiveListView.is(':visible')) {
-    $archiveListView.slideToggle('slow');
-    $archiveListBtn.removeClass('ui-state-active');
-  }
-
-  $archiveTimelineView.slideToggle('slow', function () {
-    $archiveTimelineBtn.addClass('ui-state-active');
-    if ($archiveTimelineView.is(':visible')) {
-      var $container = $('#archive_timeline_container');
-      $container.show().width($archiveTimelineView.width());
-      chart.setSize($archiveTimelineView.width(), $container.height());
-      chart.reflow();
-    }
-  });
-}
-
-function archive_open_list() {
-  var $archiveListBtn = $('#archive_list_btn');
-  var $archiveTimelineBtn = $('#archive_timeline_btn');
-  var $archiveListView = $('#archive_list_view');
-  var $archiveTimelineView = $('#archive_timeline_view');
-
-  if ($archiveTimelineView.is(':visible')) {
-    $archiveTimelineView.slideToggle('slow');
-    $archiveTimelineBtn.removeClass('ui-state-active');
-  }
-
-  $archiveListView.slideToggle('slow', function () {
-    $archiveListBtn.addClass('ui-state-active');
-  });
-}
-
+/* global updateThumbnailCommand, editorConfigValues, DocsAPI */
 
 /* Modal to see archive versions */
-
 function loadArchiveUrlsModal() {
   $.fancybox.open({
     src: '#modal_archive_urls',
-    type: 'inline'
+    type: 'inline',
   }, {
     baseClass: 'fancybox-html-archive-urls',
     closeExisting: true,
-    smallBtn: false
+    smallBtn: false,
   });
 
   $('#archive_iframe').attr('src', function () {
@@ -60,24 +17,23 @@ function loadArchiveUrlsModal() {
 }
 
 function updateThumbnail() {
-  var archive_url = $('#archive_iframe').attr('src');
-  updateThumbnailCommand([{name: 'archive_url', value: archive_url}]);
+  const archiveUrl = $('#archive_iframe').attr('src');
+  updateThumbnailCommand([{ name: 'archive_url', value: archiveUrl }]);
 }
 
-$(document).on('click', '.archive-snapshot-list button', function () {
-  $(this).toggleClass('outline-btn');
-  $(this).next().slideToggle();
+$(document).on('click', '.archive-snapshot-list button', (e) => {
+  $(e.currentTarget).toggleClass('outline-btn');
+  $(e.currentTarget).next().slideToggle();
 });
 
-$(document).on('click', '.archive-snapshot-list a', function (e) {
-  var $this = $(this);
+$(document).on('click', '.archive-snapshot-list a', (e) => {
   // make button active and reset the previous active element
   $('.archive-snapshot-list span:not(.outline-btn) a').parent().addClass('outline-btn');
-  $this.parent().removeClass('outline-btn');
+  $(e.currentTarget).parent().removeClass('outline-btn');
 
   // update iframe
-  $('#archive_timestamp').text($this.text());
-  $('#archive_iframe').attr('src', $this.attr('href'));
+  $('#archive_timestamp').text($(e.currentTarget).text());
+  $('#archive_iframe').attr('src', $(e.currentTarget).attr('href'));
 
   e.preventDefault();
 });
@@ -85,7 +41,7 @@ $(document).on('click', '.archive-snapshot-list a', function (e) {
 
 /* OnlyOffice editor embedded & modal */
 
-var editorFrames = [];
+const editorFrames = [];
 
 function loadPreviewEditor() {
   if (document.getElementById('iframe_editor')) {
@@ -100,43 +56,44 @@ function loadModalEditor() {
 
   $.fancybox.open({
     src: '#modal_editor_wrapper',
-    type: 'inline'
+    type: 'inline',
   }, {
     baseClass: 'fancybox-iframe-inline',
     closeExisting: true,
-    smallBtn: false
+    smallBtn: false,
   });
 }
 
+
 function loadScript(scriptUrl, callback) {
-  var s = document.createElement('script');
+  const s = document.createElement('script');
   s.type = 'text/javascript';
   s.src = scriptUrl;
   s.async = true;
   s.onload = callback;
-  var t = document.getElementsByTagName('script')[0];
+  const t = document.getElementsByTagName('script')[0];
   t.parentNode.insertBefore(s, t);
 }
 
 function loadEditorScript(clientUrl) {
   if (!editorFrames.loaded) {
-    loadScript(clientUrl + '/apps/api/documents/api.js', function () {
+    loadScript(`${clientUrl}/apps/api/documents/api.js`, () => {
       editorFrames.loaded = true;
 
-      editorFrames.push = function (args) {
-        attachEditor.apply(null, args);
+      editorFrames.push = (args) => {
+        attachEditor(...args);
       };
 
-      for (var i = 0, l = editorFrames.length; i < l; ++i) {
-        attachEditor.apply(null, editorFrames[i]);
+      for (let i = 0, l = editorFrames.length; i < l; ++i) {
+        attachEditor(...editorFrames[i]);
       }
     });
   }
 }
 
 function attachEditor(elementId, editorType, configValues) {
-  var history_info = {};
-  var docEditor = new DocsAPI.DocEditor(elementId, {
+  let historyInfo = {};
+  const docEditor = new DocsAPI.DocEditor(elementId, {
     width: '100%',
     height: '100%',
     type: editorType,
@@ -149,56 +106,56 @@ function attachEditor(elementId, editorType, configValues) {
       permissions: {
         edit: configValues.document.canBeEdited === 'true',
         download: true,
-        comment: true
-      }
+        comment: true,
+      },
     },
     editorConfig: {
       mode: configValues.document.canBeEdited === 'true' ? 'edit' : 'view',
       lang: 'en',
-      callbackUrl: configValues.callbackUrl + '&userId=' + configValues.user.id,
+      callbackUrl: `${configValues.callbackUrl}&userId=${configValues.user.id}`,
       user: {
         id: configValues.user.id,
-        name: configValues.user.name
+        name: configValues.user.name,
       },
       embedded: {
         saveUrl: configValues.document.url,
-        toolbarDocked: 'top'
-      }
+        toolbarDocked: 'top',
+      },
     },
     events: {
-      'onAppReady': function () {
+      onAppReady() {
         console.log('Document editor ready');
       },
-      'onDocumentStateChange': function (event) {
-        var title = document.title.replace(/\*$/g, "");
-        document.title = title + (event.data ? '*' : "");
+      onDocumentStateChange(event) {
+        const title = document.title.replace(/\*$/g, '');
+        document.title = title + (event.data ? '*' : '');
       },
-      'onRequestEditRights': function () {
-        location.href = location.href.replace(RegExp('action=view\&?', 'i'), "");
+      onRequestEditRights() {
+        window.location.href = window.location.href.replace(RegExp('action=view&?', 'i'), '');
       },
-      'onError': function (err) {
+      onError(err) {
         console.error(err);
       },
-      'onOutdatedVersion': function () {
-        location.reload();
+      onOutdatedVersion() {
+        window.location.reload();
       },
-      'onRequestHistoryData': function (event) {
+      onRequestHistoryData(event) {
         // noinspection JSIgnoredPromiseFromCall
-        $.post(configValues.historyUrl + '?version=' + event.data + '&resourceId=' + configValues.document.resourceId, JSON.stringify(history_info), function (json) {
+        $.post(`${configValues.historyUrl}?version=${event.data}&resourceId=${configValues.document.resourceId}`, JSON.stringify(historyInfo), (json) => {
           docEditor.setHistoryData(json);
         }, 'json');
       },
-      'onRequestHistory': function () {
+      onRequestHistory() {
         // noinspection JSIgnoredPromiseFromCall
-        $.get(configValues.historyUrl + '?resourceId=' + configValues.document.resourceId, function (json) {
-          history_info = json;
+        $.get(`${configValues.historyUrl}?resourceId=${configValues.document.resourceId}`, (json) => {
+          historyInfo = json;
           docEditor.refreshHistory(json);
         });
       },
-      'onRequestHistoryClose': function () {
+      onRequestHistoryClose() {
         document.location.reload();
-      }
-    }
+      },
+    },
   });
 
   window.docEditor = docEditor;

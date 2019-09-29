@@ -1,15 +1,15 @@
-$(function () {
-  $('.checker').each(function () {
-    $(this).on('click', function () {
-      var checked = this.checked;
-      $(this).parent().find('input:checkbox').attr('checked', checked);
+$(() => {
+  $('.checker').each((i, el) => {
+    $(el).on('click', (e) => {
+      $(e.currentTarget).parent().find('input:checkbox').attr('checked', e.currentTarget.checked);
     });
   });
 
-  $('.klapper_zu').each(function () {
-    $(this).on('click', function () {
-      $(this).toggleClass('klapper_auf');
-      $(this).parent().find('ul').first().slideToggle();
+  $('.klapper_zu').each((i, el) => {
+    $(el).on('click', (e) => {
+      $(e.currentTarget).toggleClass('klapper_auf');
+      $(e.currentTarget).parent().find('ul').first()
+        .slideToggle();
     });
   });
 });

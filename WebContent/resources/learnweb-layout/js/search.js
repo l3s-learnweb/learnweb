@@ -1,6 +1,7 @@
-var no_more_results = false;
-var step = 200;
-var scrolling = false;
+/* global logResourceOpened, ajaxLoadNextPage */
+/* global view */
+
+let noMoreResults = false;
 
 // jquery extension: uncomment function
 (function ($) {
@@ -21,70 +22,65 @@ var scrolling = false;
       } */
     });
   };
-})(jQuery);
+}(jQuery));
 
 function prepareResources() {
   if (view !== 'list') {
-    $("#gallery").justifiedGallery({
-      rowHeight: "160",
-      maxRowHeight: "180",
+    $('#gallery').justifiedGallery({
+      rowHeight: '160',
+      maxRowHeight: '180',
       margins: 10,
       captionsShowAlways: true,
-      captionsAnimation: true
+      captionsAnimation: true,
     });
     $('[data-fancybox="search-gallery"]').fancybox({
-      baseClass: "fancybox-search-layout",
+      baseClass: 'fancybox-search-layout',
       infobar: false,
       touch: {
-        vertical: false
+        vertical: false,
       },
-      buttons: ["close"],
-      animationEffect: "fade",
-      transitionEffect: "fade",
+      buttons: ['close'],
+      animationEffect: 'fade',
+      transitionEffect: 'fade',
       preventCaptionOverlap: false,
       idleTime: false,
       gutter: 0,
-      caption: function (instance, current) {
-        var $caption = $(current.opts.captionid);
+      caption(instance, current) {
+        const $caption = $(current.opts.captionid);
         return $caption.html();
       },
-      onInit: function (instance) {
+      onInit(instance) {
         instance.$refs.inner.wrap('<div class="fancybox-outer"></div>');
-      }
+      },
     });
   }
 }
 
 
-var loading = false;
+let loading = false;
 
 function loadNextPage() {
-  if (no_more_results || loading) // nothing found || not searched
-    return;
+  if (noMoreResults || loading) { return; } // nothing found || not searched
   loading = true;
   $('#search_loading_more_results').show();
   ajaxLoadNextPage();
 }
 
-function displayNextPage(xhr, status, args) {
-  var results = $('#new_results > div > div > div');  // this can include additional html like the "Page x:" on text search
-  var resources = results.filter('.resource');
+function displayNextPage(xhr, status) {
+  const results = $('#new_results > div > div > div'); // this can include additional html like the "Page x:" on text search
+  const resources = results.filter('.resource');
   $('#search_loading_more_results').hide();
-  if (resources.length === 0 || status !== "success") {
-    if (status !== "success")
-      console.log('fehler', status);
-    if (results.length > 0)
-      $('#search_no_more_results').show();
-    else
-      $('#search_nothing_found').show();
-    no_more_results = true;
+  if (resources.length === 0 || status !== 'success') {
+    if (status !== 'success') console.log('fehler', status);
+    if (results.length > 0) $('#search_no_more_results').show();
+    else $('#search_nothing_found').show();
+    noMoreResults = true;
     return;
   }
   prepareResources();
   $('#results > div').append(results);
   loading = false;
-  if (view === 'list')
-    createGroupTooltips();
+  if (view === 'list') createGroupTooltips();
   testIfResultsFillPage();
 }
 
@@ -104,26 +100,23 @@ function createGroupTooltips() {
     interactive: true,
     multiple: true,
     interactiveTolerance: 150,
-    theme: 'tooltipster-custom-theme'
+    theme: 'tooltipster-custom-theme',
   });
 }
 
-$(function () {
+$(() => {
   prepareResources();
 
-  $(document).on("scroll", function () {
+  $(document).on('scroll', () => {
     testIfResultsFillPage();
   });
 
-  //To keep track of resource click in the web search or resources_list view
-  var logResourceClick = function () {
-    var tempResourceId = $(this).closest('div.resource').attr('id').substring(9);
-    logResourceOpened([{name: 'resource_id', value: tempResourceId}]);
+  // To keep track of resource click in the web search or resources_list view
+  $('.resourceWebLink, .resource > div a').on('mouseup', (e) => {
+    const tempResourceId = $(e.currentTarget).closest('div.resource').attr('id').substring(9);
+    logResourceOpened([{ name: 'resource_id', value: tempResourceId }]);
     return true;
-  };
-
-  $('.resourceWebLink').on('mouseup', logResourceClick);
-  $('.resource > div a').on('mouseup', logResourceClick);
+  });
 
   createGroupTooltips();
 });
