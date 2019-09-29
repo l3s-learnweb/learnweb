@@ -109,8 +109,8 @@ function draw() {
   const width = $canvas.width();
   const height = $canvas.height();
   console.log(`height: ${height} width: ${width}`);
-  let i; let
-    j;
+  let i;
+  let j;
   const G = new jsnx.Graph();
 
   const entities = new Set();
