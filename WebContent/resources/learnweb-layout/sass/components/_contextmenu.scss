@@ -16,7 +16,6 @@
       line-height: 1;
       color: #2980b9;
       text-align: center;
-      //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
       transform: translateY(-50%);
     }
   }
@@ -54,23 +53,19 @@
 
 .context-menu-item {
   position: relative;
-  //Instead of the line below you could use @include box-sizing($bs)
   box-sizing: content-box;
   padding: 0.2em 2em;
   color: #2f2f2f;
-  //Instead of the line below you could use @include user-select($select)
-  user-select: none;
+  @include user-select(none);
   background-color: #fff;
 
   > label {
     > input {
-      //Instead of the line below you could use @include user-select($select)
-      user-select: text;
+      @include user-select(text);
     }
 
     > textarea {
-      //Instead of the line below you could use @include user-select($select)
-      user-select: text;
+      @include user-select(text);
     }
   }
 
@@ -117,7 +112,6 @@
     margin: 0;
     display: block;
     width: 100%;
-    //Instead of the line below you could use @include box-sizing($bs)
     box-sizing: border-box;
 
     > * {
@@ -139,14 +133,12 @@
     > input[type='text'] {
       display: block;
       width: 100%;
-      //Instead of the line below you could use @include box-sizing($bs)
       box-sizing: border-box;
     }
 
     > textarea {
       display: block;
       width: 100%;
-      //Instead of the line below you could use @include box-sizing($bs)
       box-sizing: border-box;
       height: 7em;
     }
@@ -154,7 +146,6 @@
     > select {
       display: block;
       width: 100%;
-      //Instead of the line below you could use @include box-sizing($bs)
       box-sizing: border-box;
     }
   }
@@ -175,6 +166,5 @@
   border-color: transparent transparent transparent #2f2f2f;
   border-style: solid;
   border-width: 0.25em 0 0.25em 0.25em;
-  //Instead of the line below you could use @include transform($scale, $rotate, $transx, $transy, $skewx, $skewy, $originx, $originy)
   transform: translateY(-50%);
 }

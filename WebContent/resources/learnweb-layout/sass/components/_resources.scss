@@ -363,9 +363,10 @@ ul.res-filters {
         height: 100%;
         width: 100%;
         vertical-align: middle;
+        //noinspection Stylelint
         object-fit: cover;
         pointer-events: none;
-        user-select: none;
+        @include user-select(none);
       }
     }
   }
@@ -395,7 +396,7 @@ ul.res-filters {
       .res-bl-title,
       .res-bl-author {
         display: block;
-        user-select: none;
+        @include user-select(none);
         line-height: 1.25;
         overflow: hidden;
         text-overflow: ellipsis;

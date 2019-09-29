@@ -1,5 +1,5 @@
 .sticky-column {
-  position: sticky;
+  @include position-sticky();
   top: $topbar-height;
   height: calc(100vh - #{$topbar-height});
   overflow-y: auto;

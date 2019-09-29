@@ -55,7 +55,7 @@
                 // SCROLL TO CORRECT POSITION FIRST
                 if(settings.scroll){
                     $("html, body").animate({
-                        scrollTop: base.find(".selectedItem").offset().top - settings.scrollOffset
+                        scrollTop: base.find(".gridder-active").offset().top - settings.scrollOffset
                     }, {
                         duration: 200,
                         easing: settings.animationEasing
@@ -66,7 +66,7 @@
 
                 // REMOVES GRIDDER EXPAND AREA
                 visible = false;
-                base.find(".selectedItem").removeClass("selectedItem");
+                base.find(".gridder-active").removeClass("gridder-active");
 
                 base.find(".gridder-show").slideUp(settings.animationSpeed, settings.animationEasing, function() {
                     base.find(".gridder-show").remove();
@@ -85,9 +85,9 @@
                 _this.addClass("currentGridder");
 
                 /* ENSURES THE CORRECT BLOC IS ACTIVE */
-                if (!myself.hasClass("selectedItem")) {
-                    _this.find(".selectedItem").removeClass("selectedItem");
-                    myself.addClass("selectedItem");
+                if (!myself.hasClass("gridder-active")) {
+                    _this.find(".gridder-active").removeClass("gridder-active");
+                    myself.addClass("gridder-active");
                 } else {
                     // THE SAME IS ALREADY OPEN, LET"S CLOSE IT
                     closeExpander(_this, settings);
@@ -124,9 +124,9 @@
                 if(settings.showNav){
 
                     /* CHECK IF PREV AND NEXT BUTTON HAVE ITEMS */
-                    var selectedItem = $(".selectedItem");
-                    var prevItem = (selectedItem.prev());
-                    var nextItem = (selectedItem.next().next());
+                    var activeItem = $(".gridder-active");
+                    var prevItem = (activeItem.prev());
+                    var nextItem = (activeItem.next().next());
 
                     htmlContent += "<div class=\"gridder-navigation\">";
                     htmlContent += "<a href=\"#\" class=\"gridder-close\">"+settings.closeText+"</a>";
