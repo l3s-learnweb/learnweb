@@ -24,6 +24,23 @@
     }
   }
 
+  /*container for images for image and web search (used in carousel)*/
+  .carousel-image-container {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    background-position: 50% 50%;
+    background-repeat:   no-repeat;
+    background-size:     cover;
+  }
+
+  /*fix position */
+  @include media-breakpoint-down(sm) {
+      #groups_menu_bar{
+        padding-top: 3rem;
+      }
+  }
+
   /*info about source*/
   .source-info {
     span {
@@ -206,120 +223,121 @@
       background: $white;
     }
   }
+}
 
-  .fancybox-search-layout {
-    /* Give space around main area */
-    .fancybox-outer {
-      top: 2rem;
-      bottom: 2rem;
-      right: 2rem;
-      left: 2rem;
-      margin: auto;
-      overflow: visible;
-      background: #fff;
-      box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
-      transition: opacity 0.3s;
+
+.fancybox-search-layout {
+  /* Give space around main area */
+  .fancybox-outer {
+    top: 2rem;
+    bottom: 2rem;
+    right: 2rem;
+    left: 2rem;
+    margin: auto;
+    overflow: visible;
+    background: #fff;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s;
+  }
+
+  /* Make it to fade-out while closing */
+  &.fancybox-is-closing .fancybox-outer {
+    opacity: 0;
+  }
+
+  /* Set color for background element */
+  .fancybox-bg {
+    background-color: $gray-700;
+  }
+
+  &.fancybox-is-open .fancybox-bg {
+    opacity: 0.7;
+  }
+
+  /* Adjust content area position */
+  .fancybox-stage {
+    right: 256px;
+
+    .fancybox-slide {
+      padding: 2rem 1rem;
     }
+  }
 
-    /* Make it to fade-out while closing */
-    &.fancybox-is-closing .fancybox-outer {
-      opacity: 0;
-    }
+  /* Move caption area to the right side */
+  .fancybox-caption {
+    top: 2rem;
+    bottom: 0;
+    left: auto;
+    width: 256px;
+    padding: 1rem;
+    background: #333;
+    pointer-events: all; /* Make text selectable */
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
 
-    /* Set color for background element */
-    .fancybox-bg {
-      background-color: $gray-700;
-    }
+  /* Align buttons at the right side  */
+  .fancybox-toolbar {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    background: #333;
+    max-height: 2rem;
+    width: 256px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    flex-direction: row-reverse;
+  }
 
-    &.fancybox-is-open .fancybox-bg {
-      opacity: 0.7;
-    }
+  .fancybox-button {
+    max-height: 2rem;
+    max-width: 2rem;
+    padding: 0.2rem;
+  }
 
-    /* Adjust content area position */
-    .fancybox-stage {
-      right: 256px;
+  /* Remove background from all buttons */
+  .fancybox-button,
+  .fancybox-navigation button::before {
+    background: transparent;
+  }
 
-      .fancybox-slide {
-        padding: 2rem 1rem;
-      }
-    }
+  /* Change arrow color */
+  .fancybox-navigation button {
+    color: $themeElementTextColor !important;
+    padding: 10px;
+  }
 
-    /* Move caption area to the right side */
+  /* Reposition arrows */
+  .fancybox-button--arrow_left {
+    left: -60px !important;
+  }
+
+  .fancybox-button--arrow_right {
+    right: -60px !important;
+  }
+
+  &.fancybox-show-thumbs .fancybox-button--arrow_right {
+    right: -272px !important;
+  }
+
+  @media (max-width: 767.98px) {
     .fancybox-caption {
-      top: 2rem;
-      bottom: 0;
-      left: auto;
-      width: 256px;
-      padding: 1rem;
-      background: #333;
-      pointer-events: all; /* Make text selectable */
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      top: 70%;
+      width: 100%;
+      height: 30%;
+      overflow: overlay;
     }
 
-    /* Align buttons at the right side  */
-    .fancybox-toolbar {
-      top: 0;
+    .fancybox-stage {
+      bottom: 30%;
       right: 0;
-      bottom: 0;
-      left: auto;
-      background: #333;
-      max-height: 2rem;
-      width: 256px;
-      border-bottom: 1px solid #222;
-      display: flex;
-      flex-direction: row-reverse;
+      top: 2rem;
+      width: 100%;
     }
 
-    .fancybox-button {
-      max-height: 2rem;
-      max-width: 2rem;
-      padding: 0.2rem;
-    }
-
-    /* Remove background from all buttons */
-    .fancybox-button,
-    .fancybox-navigation button::before {
-      background: transparent;
-    }
-
-    /* Change arrow color */
-    .fancybox-navigation button {
-      color: $themeElementTextColor !important;
-      padding: 10px;
-    }
-
-    /* Reposition arrows */
-    .fancybox-button--arrow_left {
-      left: -60px !important;
-    }
-
-    .fancybox-button--arrow_right {
-      right: -60px !important;
-    }
-
-    &.fancybox-show-thumbs .fancybox-button--arrow_right {
-      right: -272px !important;
-    }
-
-    @media (max-width: 767.98px) {
-      .fancybox-caption {
-        position: relative;
-        top: 70%;
-        width: 100%;
-        height: 30%;
-        overflow: overlay;
-      }
-
-      .fancybox-stage {
-        bottom: 30%;
-        right: 0;
-        top: 2rem;
-        width: 100%;
-      }
-
-      .fancybox-toolbar {
-        width: 100%;
-      }
+    .fancybox-toolbar {
+      width: 100%;
     }
   }
 }
