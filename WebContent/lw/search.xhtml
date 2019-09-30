@@ -74,28 +74,25 @@
                             <f:param name="service" value="#{gr.groupAlias}"/>
                             <f:param name="action" value="#{searchBean.searchMode}"/>
                             <f:param name="query" value="#{searchBean.query}"/>
-                            <div style="max-width:15em;">
-                                <div class="d-flex border-bottom">
-                                    <div class="source-icon-container source_#{gr.groupAlias}"></div>
-                                    <div class="group-menu-title font-weight-bold">
-                                        <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
-                                            <f:param value="#{gr.groupName}"/>
-                                            <f:param value="#{gr.totalResources}"/>
-                                        </h:outputFormat>
-                                    </div>
+                            <div class="d-flex border-bottom">
+                                <div class="source-icon-container source_#{gr.groupAlias}"></div>
+                                <div class="group-menu-title font-weight-bold">
+                                    <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
+                                        <f:param value="#{gr.groupName}"/>
+                                        <f:param value="#{gr.totalResources}"/>
+                                    </h:outputFormat>
                                 </div>
-
-                                <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" rendered="#{searchBean.searchMode == 'text'}">
-                                    <p:repeat value="#{gr.resources}" var="res">
-                                    <span class="text-truncate d-block w-100 p-1">
-                                    <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
-                                    <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
-                                    </span>
-                                    </p:repeat>
-                                </h:panelGroup>
                             </div>
+                            <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" style="max-width: 15em;" rendered="#{searchBean.searchMode == 'text'}">
+                                <p:repeat value="#{gr.resources}" var="res">
+                                <span class="text-truncate d-block w-100 p-1">
+                                <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
+                                <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
+                                <br/>
+                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
+                                </span>
+                                </p:repeat>
+                            </h:panelGroup>
                             <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
                                 <div class="carousel-image-container col-6" style="background-image:url('#{gr.resources[0].thumbnail2.url}');"></div>
                                 <div class="carousel-image-container col-6" style="background-image:url('#{gr.resources[1].thumbnail2.url}');"></div>

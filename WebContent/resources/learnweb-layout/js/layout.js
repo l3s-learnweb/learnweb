@@ -308,7 +308,7 @@ PrimeFaces.widget.Menu.prototype.show = () => {
  * But this script allows to set dynamic number of column based on the size of first element.
  * To use it, set `breakpoint` property of `p:carousel` to `-1`.
  */
-PrimeFaces.widget.Carousel.prototype.refreshDimensions = () => {
+PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
   if (this.cfg.breakpoint === -1) {
     const firstItem = this.items.eq(0);
     firstItem.css('width', 'auto');
