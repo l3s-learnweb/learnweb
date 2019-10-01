@@ -75,9 +75,8 @@
                         <p:column style=" width:20px;" exportable="false">
                             <div class="text-right">
                                 <p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" styleClass="mr-2" process="@this">
-                                    <!-- <h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" update=":growl"/>-->
-                                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true" update=":growl"></i>
-                                    <p:confirm message="#{msg.delete_entry_confirm_message}"/>
+                                    <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                    				<p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', item.topics)} "/>
                                 </p:commandLink>
 
                                 <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add">
@@ -121,7 +120,7 @@
                             <h:outputText value="#{item.uses}"/>
                         </p:column>
                         <p:column headerText="#{msg['Glossary.pronounciation']}">
-                            <p:commandLink type="button" rendered="#{userBean.moderator and !empty item.term and !empty glossaryBean.getPronounciationVoice(item.language)}"
+                            <p:commandLink type="button" rendered="#{item.term ne null and glossaryBean.getPronounciationVoice(item.language) ne null}"
                                            onclick="responsiveVoice.speak('#{item.term}', '#{glossaryBean.getPronounciationVoice(item.language)}');return false;">
                                 <i class="fa fa-fw fa-volume-up"></i>
                             </p:commandLink>

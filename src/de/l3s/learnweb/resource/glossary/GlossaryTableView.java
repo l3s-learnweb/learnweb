@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.l3s.util.StringHelper;
+
 public class GlossaryTableView implements Serializable
 {
     private static final long serialVersionUID = -757320545292668593L;
@@ -102,5 +104,24 @@ public class GlossaryTableView implements Serializable
     public String getFulltext()
     {
         return entry.getFulltext();
+    }
+
+    public String getTopics()
+    {
+        StringBuilder sb = new StringBuilder(getEntry().getTopicOne());
+
+        if(StringUtils.isNotBlank(getEntry().getTopicTwo()))
+        {
+            sb.append(" - ");
+            sb.append(getEntry().getTopicTwo());
+        }
+
+        if(StringUtils.isNotBlank(getEntry().getTopicThree()))
+        {
+            sb.append(" - ");
+            sb.append(getEntry().getTopicThree());
+        }
+
+        return StringHelper.shortnString(sb.toString(), 20);
     }
 }

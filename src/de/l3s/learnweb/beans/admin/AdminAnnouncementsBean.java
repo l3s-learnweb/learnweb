@@ -63,7 +63,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
             announcement.setHidden(hidden);
             announcement.setUserId(getUser().getId());
             getLearnweb().getAnnouncementsManager().save(announcement);
-            addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was added !");
+            addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
             onLoad();
         }
         catch(Exception e)
@@ -77,7 +77,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
         try
         {
             getLearnweb().getAnnouncementsManager().delete(announcement);
-            addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was deleted !");
+            addGrowl(FacesMessage.SEVERITY_INFO, "entry_deleted");
             onLoad();
         }
         catch(Exception e)

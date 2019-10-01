@@ -16,18 +16,18 @@
         <p:panel>
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.title}:"/>
-                <p:inputText id="news_title" required="true" value="#{adminAnnouncementsBean.title}"/>
+                <p:inputText id="news_title" required="true" value="#{adminAnnouncementsBean.title}" label="#{msg.title}" />
                 <p:message for="@previous"/>
-            </div>
+            </div>             
 
             <div class="form-group">
                 <p:outputLabel for="@next" value="#{msg.date}:"/>
-                <p:calendar id="datetime" value="#{adminAnnouncementsBean.date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="#{userBean.timeZone}" timeInput="true"/>
+                <p:calendar id="datetime" value="#{adminAnnouncementsBean.date}" timeZone="#{userBean.timeZone}" timeInput="false" label="#{msg.date}:"/>
                 <p:message for="@previous"/>
             </div>
 
             <div class="form-group">
-                <p:textEditor styleClass="mt-4 mb-3" height="200" value="#{adminAnnouncementsBean.text}">
+                <p:textEditor styleClass="mt-4 mb-3" height="200" value="#{adminAnnouncementsBean.text}" label="#{msg.description}">
                     <f:facet name="toolbar">
                         <span class="ql-formats">
                             <select class="ql-font"></select>
@@ -49,7 +49,7 @@
                 <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}" itemLabel="#{msg.hide}"/>
             </div>
 
-            <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@form" update=":growl" rendered="#{userBean.admin}" value="#{msg.add}"/>
+            <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@form" update=":growl :news_form" rendered="#{userBean.admin}" value="#{msg.add}"/>
         </p:panel>
     </h:form>
 
@@ -57,7 +57,7 @@
         <p:blockUI block="news" widgetVar="newsOverlay"/>
 
         <p:dataTable id="news" var="news" tableStyleClass="table-responsive" value="#{adminAnnouncementsBean.announcements}">
-            <f:facet name="header">#{msg.announcements_all}</f:facet>
+            <f:facet name="header">#{msg.announcements}</f:facet>
 
             <p:column headerText="#{msg.title}" sortBy="#{news.title}">
                 <h:outputText value="#{news.title}"/>
@@ -88,7 +88,7 @@
                                onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     <h:outputText value="#{msg.delete}"/>
-                    <p:confirm message="${utilBean.getLocaleMessage('announcements_delete_question', news.title)} "/>
+                    <p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', news.title)} "/>
                 </p:commandLink>
             </p:column>
         </p:dataTable>
