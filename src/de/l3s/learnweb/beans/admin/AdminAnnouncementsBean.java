@@ -63,7 +63,7 @@ public class AdminAnnouncementsBean extends ApplicationBean implements Serializa
             announcement.setHidden(hidden);
             announcement.setUserId(getUser().getId());
             getLearnweb().getAnnouncementsManager().save(announcement);
-            addGrowl(FacesMessage.SEVERITY_INFO, "changes_saved");
+            addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
             onLoad();
         }
         catch(Exception e)
