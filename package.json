@@ -31,6 +31,7 @@
       "PrimeFaces": "readonly"
     },
     "rules": {
+      "linebreak-style": "off",
       "no-underscore-dangle": "off",
       "func-names": "off",
       "no-plusplus": "off",

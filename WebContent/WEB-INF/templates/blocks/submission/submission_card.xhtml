@@ -6,7 +6,7 @@
 
 <!--@elvariable id="submissions" type="java.util.List<de.l3s.learnweb.resource.submission.Submission>"-->
 
-	<h:panelGroup styleClass="w-100 d-flex justify-content-end pb-3" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}">
+	<h:panelGroup styleClass="w-100 d-flex justify-content-center justify-content-sm-end pb-3" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}">
 		<h:form prependId="false">
 			<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" process="@this" oncomplete="PF('create_submission_dialog').show();"/>
 		</h:form>

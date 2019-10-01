@@ -25,13 +25,13 @@
   text-overflow: ellipsis;
   font-size: 1.02em;
   color: #333;
-}
 
-.autocomplete-suggestion b {
-  font-weight: normal;
-  color: #1f8dd6;
-}
+  b {
+    font-weight: normal;
+    color: #1f8dd6;
+  }
 
-.autocomplete-suggestion.selected {
-  background: #f0f0f0;
+  &.selected {
+    background: #f0f0f0;
+  }
 }
