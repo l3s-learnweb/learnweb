@@ -10,53 +10,37 @@
 
     <c:if test="#{userBean.user.organisation.id eq 480}">
         <!-- Input fields for the yell course -->
-        <div class="form-group row">
-            <p:outputLabel for="@next" value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8">
-                <p:inputText value="#{res.title}" required="true"/>
-            </div>
-            <div class="col-sm-12">
-                <p:message for="@previous"/>
-            </div>
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.title}:"/>
+            <p:inputText value="#{res.title}" required="true"/>
+            <p:message for="@previous"/>
         </div>
 
-        <div class="form-group row">
-            <p:outputLabel for="@next" value="#{msg.language}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8">
-                <p:selectOneRadio value="#{res.language}">
-                    <f:selectItems value="#{searchFilterBean.langs}"/>
-                </p:selectOneRadio>
-            </div>
-            <div class="col-sm-12">
-                <p:message for="@previous"/>
-            </div>
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.language}:"/>
+            <p:selectOneRadio value="#{res.language}">
+                <f:selectItems value="#{searchFilterBean.langs}"/>
+            </p:selectOneRadio>
+            <p:message for="@previous"/>
         </div>
 
-        <div class="form-group row">
-            <p:outputLabel for="@next" value="#{msg.author}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8">
-                <p:inputText value="#{res.author}"/>
-            </div>
-            <div class="col-sm-12">
-                <p:message for="@previous"/>
-            </div>
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.author}:"/>
+            <p:inputText value="#{res.author}"/>
+            <p:message for="@previous"/>
         </div>
 
-        <div class="form-group row">
-            <p:outputLabel for="@next" value="#{msg.description}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8">
-                <p:inputText value="#{res.description}" rows="4"/>
-            </div>
-            <div class="col-sm-12">
-                <p:message for="@previous"/>
-            </div>
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.description}:"/>
+            <p:inputText value="#{res.description}" rows="4"/>
+            <p:message for="@previous"/>
         </div>
     </c:if>
 
     <c:if test="#{userBean.user.organisation.id ne 480}">
         <c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
 
-            <div class="form-group row">
+            <div class="form-group">
                 <c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
                     <div class="col-sm-12">
                         <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
@@ -68,8 +52,7 @@
                     </div>
                 </c:if>
                 <c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">
-                    <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:" styleClass="col-sm-4 col-form-label"/>
-                    <div class="col-sm-8">
+                    <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
                         <c:if test="#{field.moderatorOnly and not userBean.moderator}">
                             <h:outputText value="#{res.metadataWrapper[field.name]}"/>
                         </c:if>
@@ -126,24 +109,17 @@
                                            rendered="#{not empty field.info}"/>
                             </c:if>
                         </c:if>
-                    </div>
-                    <div class="col-sm-12">
-                        <p:message for="@previous"/>
-                    </div>
+                    <p:message for="@previous"/>
                 </c:if>
             </div>
         </c:forEach>
     </c:if>
 
 	<ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
-        <div class="form-group row">
-            <p:outputLabel for="@next" value="#{msg.content}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8">
-                <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
-            </div>
-            <div class="col-sm-12">
-                <p:message for="@previous"/>
-            </div>
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.content}:"/>
+            <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
+            <p:message for="@previous"/>
         </div>
 	</ui:fragment>
 

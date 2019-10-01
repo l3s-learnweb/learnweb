@@ -8,7 +8,7 @@
 
 <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
 <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
-<div class="d-flex flex-column bg-white">
+<div class="d-flex flex-column bg-white pt-2">
     <p:repeat value="#{resources}" var="res">
         <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
             <h:outputText value="#{msg.page} "/>
@@ -17,13 +17,13 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource m-2 tooltip-trigger d-flex" style="max-width: 48em;" id="resource_#{res.tempId}">
-            <div style="max-width: 2rem;">
-                <div class="d-flex flex-column  mr-2 mt-2">
+        <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.tempId}">
+            <div>
+                <div class="d-flex flex-column  mr-2 mt-1">
                     <div class="d-flex mb-1">
                        <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;" class="tooltip-container text-center">
-                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-fw fa-plus" style="color: black;"/>
-                            <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
+                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-fw fa-files-o text-decoration-none" style="color: black"/>
+                           <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
                         </span>
                     </div>
                     <ui:fragment rendered="${res.archived}">
@@ -70,6 +70,7 @@
                     </ui:fragment>
                 </div>
             </div>
+
             <div>
                 <h:outputLink styleClass="resource-web-link text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
                     <span class="d-block truncate-two-lines w-100">

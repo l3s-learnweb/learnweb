@@ -159,4 +159,11 @@ body {
     margin-top: 5px;
     padding-left: 16px;
   }
+
+  .ui-tree {
+    &:hover {
+      border: 1px solid $inputHoverBorderColor;
+    }
+    border-color: $inputBorderColor;
+  }
 }

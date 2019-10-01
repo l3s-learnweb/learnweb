@@ -196,79 +196,71 @@
 
         <h:panelGroup id="nothing"></h:panelGroup>
 
-        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" id="resource_dialog" modal="true">
+        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="false" resizable="false" id="resource_dialog" modal="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
                 <ui:fragment rendered="#{not empty searchBean.selectedResource}">
-                    <table id="add_attributes_table" class="full-width">
-                        <tr>
-                            <td><h:outputText value="#{msg.add_to}:" escape="false"/></td>
-                            <td>
-                                <p:tree  id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
-                                        selectionMode="single" selection="#{searchBean.selectedNode}">
-                                    <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 
-                                    <p:treeNode type="group">
-                                        <h:outputText id="group" value="#{node.title}"/>
-                                    </p:treeNode>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+                        <ui:param name="res" value="#{searchBean.selectedResource}"/>
+                    </ui:decorate>
 
-                                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                                        <h:outputText value="#{node.name}"/>
-                                    </p:treeNode>
-                                </p:tree>
-                            </td>
-                        </tr>
+                    <div class="form-group">
+                        <h:outputText value="#{msg.add_to}:" escape="false"/>
+                        <p:tree  id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
+                                 selectionMode="single" selection="#{searchBean.selectedNode}">
+                            <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 
+                            <p:treeNode type="group">
+                                <h:outputText id="group" value="#{node.title}"/>
+                            </p:treeNode>
 
-                        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
-                            <ui:param name="res" value="#{searchBean.selectedResource}"/>
-                        </ui:decorate>
+                            <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                <h:outputText value="#{node.name}"/>
+                            </p:treeNode>
+                        </p:tree>
+                        <p:message for="@previous"/>
+                    </div>
 
-                        <ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-                            <tr>
-                                <td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
-                                <td><h:panelGroup class="wayback_span"><a
-                                        href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}"
-                                        target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']}
-                                    <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}"
-                                       target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
-                                </td>
-                            </tr>
-                        </ui:fragment>
+                    <ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                        <div class="form-group">
+                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
+                            <h:panelGroup class="wayback_span"><a
+                                    href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}"
+                                    target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']}
+                                <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}"
+                                   target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a>
+                            </h:panelGroup>
+                            <p:message for="@previous"/>
+                        </div>
+                    </ui:fragment>
 
-                        <ui:fragment rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-                            <tr>
-                                <td><h:outputText value="#{msg['Archive.captured_between']}:"/></td>
-                                <td>
-                                    <h:panelGroup>
-                                        <h:panelGroup
-                                                      rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-                                            <a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank">
-                                                <h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}">
-                                                    <f:convertDateTime type="date" dateStyle="short"/>
-                                                </h:outputText>
-                                            </a>
-                                            #{msg['Archive.captured_between_and']}
-                                            <a href="${searchBean.selectedResource.lastArchivedObject.archiveUrl}" target="_blank">
-                                                <h:outputText value="${searchBean.selectedResource.lastArchivedObject.timestamp}">
-                                                    <f:convertDateTime type="date" dateStyle="short"/>
-                                                </h:outputText>
-                                            </a>
-                                        </h:panelGroup>
-                                    </h:panelGroup>
-                                </td>
-                            </tr>
-                        </ui:fragment>
+                    <ui:fragment rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                        <div class="form-group">
+                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
+                            <h:panelGroup>
+                                <h:panelGroup rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+                                    <a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank">
+                                        <h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}">
+                                            <f:convertDateTime type="date" dateStyle="short"/>
+                                        </h:outputText>
+                                    </a>
+                                    #{msg['Archive.captured_between_and']}
+                                    <a href="${searchBean.selectedResource.lastArchivedObject.archiveUrl}" target="_blank">
+                                        <h:outputText value="${searchBean.selectedResource.lastArchivedObject.timestamp}">
+                                            <f:convertDateTime type="date" dateStyle="short"/>
+                                        </h:outputText>
+                                    </a>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                            <p:message for="@previous"/>
+                        </div>
+                    </ui:fragment>
 
-                        <tr>
-                            <td></td>
-                            <td>
-                                <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form"
-                                                 update=":growl" oncomplete="PF('resource_dialog').hide()" async="true"
-                                                 onclick="PF('add_button').disable()" widgetVar="add_button"/>
-                                <p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" style="margin-left:0.5rem;"/>
-                            </td>
-                        </tr>
-                    </table>
+                    <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form"
+                                     update=":growl" oncomplete="PF('resource_dialog').hide()" async="true"
+                                     onclick="PF('add_button').disable()" widgetVar="add_button"/>
+                    <p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" styleClass="float-right"/>
+
                 </ui:fragment>
             </h:form>
         </p:dialog>
