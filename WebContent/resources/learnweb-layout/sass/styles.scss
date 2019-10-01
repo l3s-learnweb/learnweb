@@ -25,7 +25,12 @@
 @import 'common/variables';
 
 // Styles from 3rd-part developers
+// WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
 @import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
+@import 'vendor/autocomplete';
+@import 'vendor/contextmenu';
+@import 'vendor/justified-gallery';
+@import 'vendor/responsive-calendar';
 @import 'vendor/california-theme-2.0.0/theme'; // California theme for PrimeFaces components
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
@@ -43,8 +48,6 @@
 @import 'utilities/tables';
 
 // All other styles should be slitted by components, like forms, menus, panels, tables, etc.
-@import 'components/autocomplete';
-@import 'components/contextmenu';
 @import 'components/dashboard';
 @import 'components/groups';
 @import 'components/landing';
