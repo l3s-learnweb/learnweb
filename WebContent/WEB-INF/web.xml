@@ -93,6 +93,13 @@
         <session-timeout>100</session-timeout>
     </session-config>
 
+	<context-param>
+		<description>
+            Removes HTML comments from the output like <!--@elvariable id="pageTitle" type="java.lang.String"-->
+        </description>	
+	    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+	    <param-value>true</param-value>
+	</context-param>
     <context-param>
         <param-name>com.sun.faces.numberOfViewsInSession</param-name>
         <param-value>300</param-value>
