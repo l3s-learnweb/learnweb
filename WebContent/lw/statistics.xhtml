@@ -1,129 +1,60 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="pageTitle" value="#{msg.statistics}"/>
-	<ui:param name="smallPage" value="true"/>
 
 	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.statistics}" url="statistics.jsf"/>
 	</ui:define>
 
-	<ui:define name="center_layout">
-        <p:panel header="#{msg.general_statistics}">
-            <div class="ui-datatable ui-widget">
-                <table role="grid" class="table-responsive">
-                    <thead>
-                        <tr role="row">
-                            <th class="ui-state-default" role="columnheader">
-                                <div class="ui-dt-c">
-                                    <span>#{msg.description}</span>
-                                </div>
-                            </th>
+	<ui:define name="container_layout">
+        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
+            <f:facet name="header">#{msg.general_statistics}</f:facet>
 
-                            <th class="ui-state-default" role="columnheader">
-                                <div class="ui-dt-c">
-                                    <span>#{msg.value}</span>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="ui-datatable-data ui-widget-content">
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.registered_users}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.users}"/></div></td>
-                        </tr>
+            <p:column headerText="#{msg.description}" styleClass="text-left">
+                <h:outputText value="#{msg[stat.key]}" />
+            </p:column>
 
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.groupsTitle}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.groups}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.resources_overall}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.resources}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_rated_resources}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesCount}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_tagged_resources}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesCount}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_commented_resources}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesCount}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_rates}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.rateCount}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_tags}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.tagCount}"/></div></td>
-                        </tr>
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.number_of_comments}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentCount}"/></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.average_number_of_rates_per_rated_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.average_number_of_tags_per_tagged_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
-                        </tr>
-
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">#{msg.average_number_of_comments_per_commented_resource}</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText></div></td>
-                        </tr>
-                        <!--
-                        <tr class="ui-widget-content ui-datatable-even">
-                            <td><div class="ui-dt-c">average session length</div></td>
-                            <td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2"/></h:outputText> minutes</div></td>
-                        </tr>
-                         -->
-                    </tbody>
-                </table>
-            </div>
-        </p:panel>
-
+            <p:column headerText="#{msg.value}" styleClass="text-right">
+                <h:outputText value="#{stat.value}">
+                	<f:convertNumber groupingUsed="true" maxFractionDigits="1" />
+                </h:outputText>
+            </p:column>
+        </p:dataTable>
+        
         <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
             <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
-            <p:column headerText="#{msg.month}">
-                <h:outputText value="#{month.key}"/>
+            <p:column headerText="#{msg.month}" styleClass="text-left">
+                <h:outputText value="#{month.key}">                	
+                	<f:convertDateTime type="localDate" pattern="MMMM y" />
+                </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.active_users}">
-                <h:outputText value="#{month.value}"/>
+            <p:column headerText="#{msg.active_users}" styleClass="text-right">
+                <h:outputText value="#{month.value}">
+                	<f:convertNumber groupingUsed="true" />
+                </h:outputText>
             </p:column>
         </p:dataTable>
 
         <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
             <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
 
-            <p:column headerText="#{msg.source}">
+            <p:column headerText="#{msg.source}" styleClass="text-left">
                 <h:outputText value="#{row.key}"/>
             </p:column>
 
-            <p:column headerText="#{msg.resources}">
-                <h:outputText value="#{row.value}"/>
+            <p:column headerText="#{msg.resources}" styleClass="text-right">
+                <h:outputText value="#{row.value}">
+                	<f:convertNumber groupingUsed="true" />
+                </h:outputText>
             </p:column>
 
-            <f:facet name="footer">#{msg.resources_created_by_crawlers}</f:facet>
+            <f:facet name="footer"><small>#{msg.resources_created_by_crawlers}</small></f:facet>
         </p:dataTable>
 	</ui:define>		
 </ui:composition>

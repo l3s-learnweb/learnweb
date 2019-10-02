@@ -1,17 +1,19 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 import de.l3s.util.Sql;
 
@@ -20,52 +22,46 @@ import de.l3s.util.Sql;
 public class StatisticsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8540469716342151138L;
-    private Long users;
-    private Long groups;
-    private Long resources;
-    private Long ratedResourcesCount;
-    private Long taggedResourcesCount;
-    private Long commentedResourcesCount;
-    private double ratedResourcesAverage;
-    private double taggedResourcesAverage;
-    private double commentedResourcesAverage;
-    private Long rateCount;
-    private Long tagCount;
-    private Long commentCount;
-    private BigDecimal averageSessionTime;
-    private List<SimpleEntry<String, String>> activeUsersPerMonth;
-    private List<SimpleEntry<String, String>> resourcesPerSource;
+
+    private final List<SimpleEntry<LocalDate, Integer>> activeUsersPerMonth;
+    private final List<SimpleEntry<String, Number>> resourcesPerSource;
+    private final Map<String, Number> generalStatistics = new LinkedHashMap<String, Number>();
 
     public StatisticsBean() throws SQLException
     {
-        /*
-         * Weitere Statistiken:
-         *
-         * Mitglieder pro Gruppe
-         * SELECT COUNT(*) AS groups, o.users FROM ( SELECT group_id, COUNT(user_id) as users FROM `lw_group` LEFT JOIN lw_group_user USING (group_id) GROUP BY group_Id) o GROUP BY o.users
-         *
-         */
+        Long users = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user WHERE deleted = 0");
+        Long groups = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_group WHERE deleted = 0");
+        Long resources = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_resource WHERE deleted = 0");
+        Long courses = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_course");
 
-        users = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user WHERE deleted = 0");
-        groups = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_group WHERE deleted = 0");
-        resources = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_resource WHERE deleted = 0");
+        Long ratedResourcesCount = (Long) Sql.getSingleResult("SELECT (SELECT count(DISTINCT resource_id) FROM `lw_resource_rating`) + (SELECT count(DISTINCT resource_id) FROM `lw_thumb`)");
+        Long taggedResourcesCount = (Long) Sql.getSingleResult("SELECT count(DISTINCT resource_id) FROM lw_resource_tag");
+        Long commentedResourcesCount = (Long) Sql.getSingleResult("SELECT count(DISTINCT resource_id) FROM lw_comment");
 
-        ratedResourcesCount = (Long) Sql.getSingleResult("SELECT (SELECT count(DISTINCT resource_id) FROM `lw_resource_rating`) + (SELECT count(DISTINCT resource_id) FROM `lw_thumb`)");
-        taggedResourcesCount = (Long) Sql.getSingleResult("SELECT count(DISTINCT resource_id) FROM lw_resource_tag");
-        commentedResourcesCount = (Long) Sql.getSingleResult("SELECT count(DISTINCT resource_id) FROM lw_comment");
+        Long rateCount = (Long) Sql.getSingleResult("SELECT (SELECT count(*) FROM `lw_resource_rating`) + (SELECT count(*) FROM `lw_thumb`)");
+        Long tagCount = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_resource_tag");
+        Long commentCount = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_comment");
 
-        rateCount = (Long) Sql.getSingleResult("SELECT (SELECT count(*) FROM `lw_resource_rating`) + (SELECT count(*) FROM `lw_thumb`)");
-        tagCount = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_resource_tag");
-        commentCount = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_comment");
+        Double ratedResourcesAverage = (double) rateCount / (double) ratedResourcesCount;
+        Double taggedResourcesAverage = (double) tagCount / (double) taggedResourcesCount;
+        Double commentedResourcesAverage = (double) commentCount / (double) commentedResourcesCount;
 
-        ratedResourcesAverage = (double) rateCount / (double) ratedResourcesCount;
-        taggedResourcesAverage = (double) tagCount / (double) taggedResourcesCount;
-        commentedResourcesAverage = (double) commentCount / (double) commentedResourcesCount;
+        generalStatistics.put("users", users);
+        generalStatistics.put("groupsTitle", groups);
+        generalStatistics.put("courses", courses);
+        generalStatistics.put("resources", resources);
+        generalStatistics.put("number_of_rated_resources", ratedResourcesCount);
+        generalStatistics.put("number_of_tagged_resources", taggedResourcesCount);
+        generalStatistics.put("number_of_commented_resources", commentedResourcesCount);
+        generalStatistics.put("number_of_rates", rateCount);
+        generalStatistics.put("number_of_tags", tagCount);
+        generalStatistics.put("number_of_comments", commentCount);
+        generalStatistics.put("average_number_of_rates_per_rated_resource", ratedResourcesAverage);
+        generalStatistics.put("average_number_of_tags_per_tagged_resource", taggedResourcesAverage);
+        generalStatistics.put("average_number_of_comments_per_commented_resource", commentedResourcesAverage);
 
         //averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM `lw_user_log` GROUP BY session_id) AS DE");
-        activeUsersPerMonth = getEntriesForQuery(
-                "SELECT CONCAT(year(timestamp),'-',month(timestamp)) as month, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13",
-                null);
+        activeUsersPerMonth = calcActiveUsersPerMonth();
 
         HashSet<String> highlightedEntries = new HashSet<>();
         highlightedEntries.add("Archive-It");
@@ -75,13 +71,14 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         highlightedEntries.add("TED");
         highlightedEntries.add("TED-Ed");
         highlightedEntries.add("FactCheck");
+        highlightedEntries.add("speechrepository");
 
         resourcesPerSource = getEntriesForQuery("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC", highlightedEntries);
     }
 
-    private List<SimpleEntry<String, String>> getEntriesForQuery(String query, HashSet<String> highlightedEntries) throws SQLException
+    private List<SimpleEntry<String, Number>> getEntriesForQuery(String query, HashSet<String> highlightedEntries) throws SQLException
     {
-        LinkedList<SimpleEntry<String, String>> results = new LinkedList<>();
+        LinkedList<SimpleEntry<String, Number>> results = new LinkedList<>();
         ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(query);
         while(rs.next())
         {
@@ -89,85 +86,39 @@ public class StatisticsBean extends ApplicationBean implements Serializable
             if(highlightedEntries != null && highlightedEntries.contains(key))
                 key = key + " *";
 
-            SimpleEntry<String, String> row = new AbstractMap.SimpleEntry<>(key, rs.getString(2));
+            SimpleEntry<String, Number> row = new AbstractMap.SimpleEntry<>(key, rs.getInt(2));
             results.add(row);
         }
         return results;
     }
 
-    public Long getRatedResourcesCount()
+    private LinkedList<SimpleEntry<LocalDate, Integer>> calcActiveUsersPerMonth() throws SQLException
     {
-        return ratedResourcesCount;
+        LinkedList<SimpleEntry<LocalDate, Integer>> results = new LinkedList<>();
+        ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(
+                "SELECT timestamp, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13");
+        while(rs.next())
+        {
+            LocalDate date = rs.getObject(1, LocalDate.class);
+
+            SimpleEntry<LocalDate, Integer> row = new AbstractMap.SimpleEntry<>(date, rs.getInt(2));
+            results.add(row);
+        }
+        return results;
     }
 
-    public Long getTaggedResourcesCount()
-    {
-        return taggedResourcesCount;
-    }
-
-    public Long getCommentedResourcesCount()
-    {
-        return commentedResourcesCount;
-    }
-
-    public double getRatedResourcesAverage()
-    {
-        return ratedResourcesAverage;
-    }
-
-    public double getTaggedResourcesAverage()
-    {
-        return taggedResourcesAverage;
-    }
-
-    public double getCommentedResourcesAverage()
-    {
-        return commentedResourcesAverage;
-    }
-
-    public Long getRateCount()
-    {
-        return rateCount;
-    }
-
-    public Long getTagCount()
-    {
-        return tagCount;
-    }
-
-    public Long getCommentCount()
-    {
-        return commentCount;
-    }
-
-    public BigDecimal getAverageUsageTime()
-    {
-        return averageSessionTime;
-    }
-
-    public Long getUsers()
-    {
-        return users;
-    }
-
-    public Long getGroups()
-    {
-        return groups;
-    }
-
-    public Long getResources()
-    {
-        return resources;
-    }
-
-    public List<SimpleEntry<String, String>> getActiveUsersPerMonth()
+    public List<SimpleEntry<LocalDate, Integer>> getActiveUsersPerMonth()
     {
         return activeUsersPerMonth;
     }
 
-    public List<SimpleEntry<String, String>> getResourcesPerSource()
+    public List<SimpleEntry<String, Number>> getResourcesPerSource()
     {
         return resourcesPerSource;
     }
 
+    public Map<String, Number> getGeneralStatistics()
+    {
+        return generalStatistics;
+    }
 }
