@@ -284,12 +284,10 @@ $(() => {
 /**
  * Reset center position of Dialog after content is loaded.
  */
-PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
-  show() {
-    this._super();
-    this.resetPosition();
-  },
-});
+PrimeFaces.widget.Dialog.prototype.show = function () {
+  this._super();
+  this.resetPosition();
+};
 
 /**
  * Reproducible in PrimeFaces 7.0
