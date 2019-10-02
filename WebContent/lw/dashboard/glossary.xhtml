@@ -15,8 +15,8 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['glossary_dashboard']}" url="admin/dashboard/glossary.jsf"/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/index.jsf"/>
+    <p:menuitem value="#{msg['glossary_dashboard']}" url="dashboard/glossary.jsf"/>
     <p:menuitem value="#{glossaryDashboardBean.firstSelectedUser.username}" url="#" rendered="#{glossaryDashboardBean.singleUser}"/>
 </ui:define>
 
@@ -169,7 +169,7 @@
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
                                       filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                <a href="admin/dashboard/glossary.jsf?userId=#{gfs.userId}"> #{gfs.user.username}</a>
+                                <a href="dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.username}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
                                 #{gfs.entries}
@@ -252,7 +252,7 @@
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"
                                       filterBy="#{gds.user.username}" filterMatchMode="contains">
-                                <a href="admin/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
+                                <a href="dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
                             </p:column>
                             <p:column headerText="Definition" sortBy="#{gds.description}" sortable="true"
                                       filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">

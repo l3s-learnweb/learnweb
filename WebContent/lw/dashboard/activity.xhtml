@@ -15,8 +15,9 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['Activity.dashboard']}" url=""/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/index.jsf"/>
+    <p:menuitem value="#{msg['Activity.dashboard']}" url="dashboard/activity.jsf"/>
+    <p:menuitem value="#{glossaryDashboardBean.firstSelectedUser.username}" url="#" rendered="#{glossaryDashboardBean.singleUser}"/>
 </ui:define>
 
 <ui:define name="center_layout">
