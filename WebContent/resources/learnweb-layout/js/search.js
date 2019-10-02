@@ -30,7 +30,7 @@ function prepareResources() {
       rowHeight: '160',
       maxRowHeight: '180',
       margins: 10,
-      border:0,
+      border: 0,
       captionsShowAlways: true,
       captionsAnimation: true,
     });

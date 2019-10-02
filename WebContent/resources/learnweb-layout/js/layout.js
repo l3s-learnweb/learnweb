@@ -69,8 +69,8 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     /**
      * Listener to trigger modal close, when clicked on dialog overlay.
      */
-    $(document).on('click', '.ui-dialog-mask', () => {
-      this.getWidgetVarById(this.id.replace('_modal', '')).hide();
+    $(document).on('click', '.ui-dialog-mask', (e) => {
+      this.getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
     });
 
     this.overlay.on('mouseup', () => {
@@ -224,7 +224,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
   markCurrentMenuItem() {
     const currentPath = window.location.href;
-    this.menuitemLinks.filter(() => currentPath.indexOf(this.href) === 0).each((i, el) => {
+    this.menuitemLinks.filter((i, el) => currentPath.indexOf(el.href) === 0).each((i, el) => {
       const $activeMenuLink = $(el);
       const $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
 
