@@ -296,7 +296,7 @@ PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
  * https://github.com/primefaces/primefaces/issues/5035 (the issue was resolved and should be released in PF 7.1)
  * Fix for PrimeFaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
  */
-PrimeFaces.widget.Menu.prototype.show = () => {
+PrimeFaces.widget.Menu.prototype.show = function () {
   this.align();
   this.jq.css({ 'z-index': ++PrimeFaces.zindex }).show();
 };
@@ -308,7 +308,7 @@ PrimeFaces.widget.Menu.prototype.show = () => {
  * But this script allows to set dynamic number of column based on the size of first element.
  * To use it, set `breakpoint` property of `p:carousel` to `-1`.
  */
-PrimeFaces.widget.Carousel.prototype.refreshDimensions = function() {
+PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
   if (this.cfg.breakpoint === -1) {
     const firstItem = this.items.eq(0);
     firstItem.css('width', 'auto');

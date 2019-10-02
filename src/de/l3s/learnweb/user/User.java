@@ -619,7 +619,7 @@ public class User implements Comparable<User>, Serializable, HasId
     public InputStream getDefaultAvatar() throws IOException
     {
         String name = "";
-        if(fullName != null)
+        if(fullName!=null & !fullName.trim().isEmpty())
             name = fullName;
         else
         {
@@ -627,15 +627,14 @@ public class User implements Comparable<User>, Serializable, HasId
                 name = username.substring(username.length()-2);
             else
             {
-                if(username.equals(username.toLowerCase()))
+                if(!username.equals(username.toLowerCase()))
                 {
-                    for(int i = 0; i < username.length(); i++)
+                    for(int i = 0; i < username.length()-1; i++)
                     {
                         if(Character.isUpperCase(username.charAt(i)))
                         {
-                            name += i;
+                            name += username.charAt(i);
                         }
-                        name = username;
                     }
                 }
                 else
