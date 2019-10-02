@@ -62,10 +62,21 @@
                 <h:outputText value="#{msg.loginLabel}"/>
             </h:outputLink>
 
+			<h:form>
+				<p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
+	                    			update=":resource_form" process="@this"
+	                    			onstart="$.fancybox.close();"
+	                    			oncomplete="PF('resource_dialog').show();" 
+	                    			title="#{msg.addToMyResources}">
+	            	 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}        		
+	            </p:commandLink>
+            </h:form>
+                    <!-- 		
             <h:outputLink value="#" title="#{msg.addToMyResources}" rendered="#{userBean.loggedIn}"
-                          onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); $.fancybox.close(); return false;">
+                          onclick="setSelectedResource([{name:'rank', value:${res.rank}}]); PF('resource_dialog').show();  return false;">
                 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
             </h:outputLink>
+             -->
         </div>
     </div>
 </ui:composition>

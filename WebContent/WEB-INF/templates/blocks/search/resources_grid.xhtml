@@ -8,9 +8,9 @@
 	<div class="border-0 row mx-n1">
 		<p:repeat var="res" value="#{resources}">
 			<div class="col-6 col-md-4 col-lg-2 p-1 resource">
-				<div id="resource_#{res.tempId}"  class="card  hover-border shadow-sm"  data-src="#{res.urlProxied}" data-captionId="#product#{res.tempId}"  data-fancybox="search-gallery">
+				<div id="resource_#{res.rank}"  class="card  hover-border shadow-sm" data-src="#{res.urlProxied}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
 					<div class="position-relative">
-						<img id="#{res.tempId}"  class="card-img-top embed-responsive-16by9 border-bottom" src="#{res.thumbnail2b.url}"/>
+						<img id="#{res.rank}"  class="card-img-top embed-responsive-16by9 border-bottom" src="#{res.thumbnail2b.url}"/>
 						<div class="video-duration p-1">#{res.durationInMinutes}</div>
 					</div>
 					<div class="card-body p-2" style="height: 3rem;">
@@ -18,7 +18,7 @@
 						<h:outputText value="#{res.title}" styleClass="font-weight-bolder"  escape="false"></h:outputText>
 						</div>
 					</div>
-					<div class="product-form d-none" id="product#{res.tempId}">
+					<div class="product-form d-none" id="product#{res.rank}">
 						<ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
 							<ui:param name="res" value="#{res}"/>
 						</ui:decorate>

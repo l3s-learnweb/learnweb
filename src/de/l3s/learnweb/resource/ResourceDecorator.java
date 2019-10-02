@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -25,30 +24,31 @@ public class ResourceDecorator implements Serializable
 {
     private static final long serialVersionUID = -6611930555147350248L;
     private Resource resource;
-    private int tempId;
+    private int rank;
     private String snippet;
-    private boolean newResource; //Used to highlight new resources when we compare the current result set with a result set from a similar query posted earlier
-    private int rankAtService; // the rank which the resource had at its original service (youtube, flickr...)
+    // the rank which the resource has in the current search result
     private String title;
-
-    private User addedToGroupBy; // only set if the resource is loaded in a group context
-    private Date addedToGroupOn; // only set if the resource is loaded in a group context
 
     public ResourceDecorator(Resource resource)
     {
         this.resource = resource;
-        newResource = false;
     }
 
-    public int getTempId()
+    public int getRank()
     {
-        return tempId;
+        return rank;
     }
 
-    public void setTempId(int tempId)
+    public void setRank(int rank)
     {
-        this.tempId = tempId;
+        this.rank = rank;
     }
+
+    /**
+     * the rank which the resource has in the current search result
+     *
+     * @return
+     */
 
     public String getSnippet()
     {
@@ -185,31 +185,6 @@ public class ResourceDecorator implements Serializable
         return resource.getGroup();
     }
 
-    public boolean isNewResource()
-    {
-        return newResource;
-    }
-
-    public void setNewResource(boolean newResource)
-    {
-        this.newResource = newResource;
-    }
-
-    /**
-     * The rank this resource had at its source service
-     *
-     * @return
-     */
-    public int getRankAtService()
-    {
-        return rankAtService;
-    }
-
-    public void setRankAtService(int rankAtService)
-    {
-        this.rankAtService = rankAtService;
-    }
-
     public int getId()
     {
         return resource.getId();
@@ -280,7 +255,7 @@ public class ResourceDecorator implements Serializable
     @Override
     public String toString()
     {
-        return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + "]";
+        return "ResourceDecorator [resource=" + resource + ", rank=" + rank + ", snippet=" + snippet + ", title=" + title + "]";
     }
 
 }

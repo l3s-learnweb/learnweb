@@ -1,9 +1,14 @@
 body {
+	/*
+	These rules break Font awesome for Primefaces components like p:commandLink.
+	I can't imagine when these rule are ever needed.
     .ui-widget,
     .ui-widget .ui-widget {
         font-family: $font-family-base;
         text-decoration: none;
     }
+    */
+    
     .ui-widget-content {
         background-color: $contentBgColor;
         border: 1px solid $contentBorderColor;

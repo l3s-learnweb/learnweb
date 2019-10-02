@@ -50,7 +50,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 8540469716342051138L;
     private static final Logger log = Logger.getLogger(SearchBean.class);
 
-    // Values from views stored here
+    // Values from views are stored here
     private String query = "";
     private String queryMode;
     private String queryService;
@@ -64,7 +64,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private Search metaSearch;
     private SearchFilters metaFilters;
 
-    private Resource selectedResource;
+    private ResourceDecorator selectedResource;
     private TreeNode selectedNode;
     private int selectedResourceTargetGroupId = 0;
     private int selectedResourceTargetFolderId = 0;
@@ -78,19 +78,13 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     private final static int minResourcesPerGroup = 2;
 
-    /* For logging */
-    //private transient SearchLogClient searchLogClient;
-    //boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved
-    //HashSet<String> historyResources; //Stores resource URLs from a previous resultSet
-    //private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
-    //private int resultsetViewId;
-
     private List<GroupedResources> resourcesGroupedBySource = null;
     private List<FilterItem> availableSources = null;
-    private Integer selectedResourceTempId; // temp Id of the selected resource. Necessary because Interweb results have no unique id
 
     public SearchBean()
     {
+        log.debug("SearchBean()");
+
         interweb = getLearnweb().getInterweb();
         searchMode = MODE.image; // default search mode
         queryMode = getPreference("SEARCH_ACTION", "text");
@@ -212,14 +206,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             if(selectedResource.getId() == -1) // resource is not yet stored at the database
             {
-                newResource = selectedResource;
+                newResource = selectedResource.getResource();
                 if(newResource.getSource().equals(SERVICE.bing)) //resource which is already saved in database already has wayback captures stored
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
             }
             else
             {
                 // create a copy
-                newResource = selectedResource.clone();
+                newResource = selectedResource.getResource().clone();
             }
 
             newResource.setQuery(query);
@@ -249,8 +243,8 @@ public class SearchBean extends ApplicationBean implements Serializable
             Thread createThumbnailThread = new CreateThumbnailThread(newResource);
             createThumbnailThread.start();
 
-            search.logResourceSaved(selectedResourceTempId, getUser(), newResource.getId());
-            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResourceTempId);
+            search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());
+            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResource.getRank());
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         }
@@ -440,21 +434,25 @@ public class SearchBean extends ApplicationBean implements Serializable
         this.queryFilters = queryFilters;
     }
 
-    public Resource getSelectedResource()
+    public ResourceDecorator getSelectedResource()
     {
         return selectedResource;
     }
 
+    /**
+     * Was used in the past when called through JS methods. But it seams that this isn't necessary any more
+     */
+    @Deprecated
     public void setSelectedResource()
     {
         try
         {
-            selectedResourceTempId = getParameterInt("resource_id");
+            Integer rank = getParameterInt("rank");
 
-            Resource resource = search.getResourceByTempId(selectedResourceTempId);
+            ResourceDecorator resource = search.getResourceByRank(rank);
 
             if(null == resource)
-                throw new InvalidParameterException("unknown resource id:" + selectedResourceTempId);
+                throw new InvalidParameterException("unknown resource rank:" + rank);
 
             setSelectedResource(resource);
         }
@@ -464,9 +462,9 @@ public class SearchBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void setSelectedResource(Resource selectedResource)
+    public void setSelectedResource(ResourceDecorator decoratedResource)
     {
-        this.selectedResource = selectedResource;
+        this.selectedResource = decoratedResource;
     }
 
     public TreeNode getSelectedNode()
@@ -542,17 +540,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     public int getCounter()
     {
         return counter++;
-    }
-
-    /**
-     * Used by old search result history
-     */
-    public void updateSearchResources()
-    {
-        for(ResourceDecorator resource : search.getResources())
-        {
-            resource.setNewResource(false);
-        }
     }
 
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException

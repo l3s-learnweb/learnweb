@@ -10,21 +10,30 @@
 <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 <div class="d-flex flex-column bg-white pt-2">
     <p:repeat value="#{resources}" var="res">
-        <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+        <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
             <h:outputText value="#{msg.page} "/>
-            <h:outputText value="#{(res.tempId+9) / 10}">
+            <h:outputText value="#{(res.rank+9) / 10}">
                 <f:convertNumber maxFractionDigits="0"/>
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.tempId}">
+        <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
             <div>
                 <div class="d-flex flex-column  mr-2 mt-1">
                     <div class="d-flex mb-1">
-                       <span onclick="setSelectedResource([{name:'resource_id', value:#{res.tempId}}]); PF('resource_dialog').show(); return false;" class="tooltip-container text-center">
-                            <h:outputLink value="#" rendered="#{userBean.loggedIn}" styleClass="fa fa-fw fa-files-o text-decoration-none" style="color: black"/>
-                           <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
-                        </span>
+                    	<h:form>
+                    		<p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
+                    			update=":resource_form" process="@this"
+                    			oncomplete="PF('resource_dialog').show();" 
+                    			styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary">
+                    		
+                    		</p:commandLink>
+                    	</h:form>
+                    	<!--  
+                       TODO add better tooltip
+                         <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
+                        
+                        -->
                     </div>
                     <ui:fragment rendered="${res.archived}">
                         <div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
@@ -34,8 +43,7 @@
                                         <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
                                     </a> #{msg['Archive.captured_between_and']}
                                     <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date"
-                                                                                                                     dateStyle="short"/></h:outputText>
+                                        <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
                                     </a>
                                 </span>
                         </div>
