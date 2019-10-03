@@ -152,7 +152,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
    * @returns {*}
    */
   getWidgetVarById(elementId) {
-    return Object.values(PrimeFaces.widgets).find((widget) => widget && widget.elementId === elementId);
+    return Object.values(PrimeFaces.widgets).find((widget) => widget && widget.id === elementId);
   },
 });
 
@@ -283,13 +283,12 @@ $(() => {
 
 /**
  * Reset center position of Dialog after content is loaded.
+ * Override original show method and call `resetPosition` at the end of it.
  */
-PrimeFaces.widget.Dialog = PrimeFaces.widget.Dialog.extend({
-	  show() {
-	    this._super();
-	    this.resetPosition();
-	  },
-});
+PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
+  _show.call(this);
+  this.resetPosition();
+})(PrimeFaces.widget.Dialog.prototype.show));
 
 /**
  * Reproducible in PrimeFaces 7.0
