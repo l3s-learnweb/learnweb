@@ -5,8 +5,8 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-    <ui:param name="pageTitle" value="#{msg['Submission.title']}"/>
-    <ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg['Submission.title']}"/>
+	<ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -18,10 +18,10 @@
 		</f:metadata>
 	</ui:define>
 
-    <ui:define name="breadcrumb_ext">
-        <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
-        <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
-    </ui:define>
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
+		<p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
+	</ui:define>
 
 	<ui:define name="head">
 		<h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
@@ -47,25 +47,25 @@
 
 		<!-- only for eumade4all -->
 		<p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-            <h3 class="text-danger">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h3>
-        </p:panel>
+			<h3 class="text-danger">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h3>
+		</p:panel>
 
-        <p:panel styleClass="mt-3" id="resourcesWrapper">
+		<p:panel styleClass="mt-3" id="resourcesWrapper">
 			<p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
 				<h:outputText value="#{msg.please_wait}"/>
 			</p:blockUI>
 
 			<ui:fragment rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-                <h3>#{msg['Submission.select_resources_header']}</h3>
-            </ui:fragment>
+				<h3>#{msg['Submission.select_resources_header']}</h3>
+			</ui:fragment>
 
-            <ui:fragment rendered="#{submissionBean.submitted}">
-                <h3>The submitted resources</h3>
-            </ui:fragment>
+			<ui:fragment rendered="#{submissionBean.submitted}">
+				<h3>The submitted resources</h3>
+			</ui:fragment>
 
-            <h:panelGroup layout="block" id="submissions" styleClass="mt-3">
-                <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container" pt:data-canSelectResources="true">
-                    <p:repeat var="res" value="#{submissionBean.selectedResources}">
+			<h:panelGroup layout="block" id="submissions" styleClass="mt-3">
+				<h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container" pt:data-canSelectResources="true">
+					<p:repeat var="res" value="#{submissionBean.selectedResources}">
 						<!--<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
 							&lt;!&ndash;<ui:fragment>
 								<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
@@ -86,25 +86,25 @@
 								<ui:param name="res" value="#{res}"/>
 							</ui:decorate>
 						</h:outputLink>
-                    </p:repeat>
+					</p:repeat>
 
-                    <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="res-empty-text"/>
+					<h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="res-empty-text"/>
 
-                    <h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-                        <a href="#" class="cancel" onclick="return false;">
+					<h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+						<a href="#" class="cancel" onclick="return false;">
 							<i class="fa fa-fw fa-3x fa-plus" aria-hidden="true"></i>
 							<span class="sr-only">Select a resource</span>
-                        </a>
-                    </h:panelGroup>
+						</a>
+					</h:panelGroup>
 
-                    <div class="clear"></div>
+					<div class="clear"></div>
 				</h:panelGroup>
 
-                <h:form id="submit_resources_form" prependId="false">
-                    <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
-                </h:form>
-            </h:panelGroup>
-        </p:panel>
+				<h:form id="submit_resources_form" prependId="false">
+					<p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+				</h:form>
+			</h:panelGroup>
+		</p:panel>
 
 		<h:panelGroup  styleClass="collapse p-0" layout="block" id="select_resources_modal">
 			<p:panel styleClass="ui-panel-scroll-content mb-0" >
@@ -145,9 +145,9 @@
 		</h:panelGroup>
 
 		<script type="application/javascript">
-			var max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
-			var resources_to_select = max_resources;
-			var num_selected_resources = 0;
+			let max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
+			let resources_to_select = max_resources;
+			let set_of_resources = new Set();
 
 			/* global updateSelectedItemsCommand */
 
@@ -160,10 +160,16 @@
 			}
 
 			function confirmResourcesSelect() {
-				num_selected_resources = $('.res-item.ui-selected').length;
-				if (num_selected_resources > resources_to_select) {
+				let selected_resources = $('.res-item.ui-selected');
+				if (selected_resources.length > max_resources) {
 					alert("Maximum allowed items limit exceeded. You can't choose more than " + max_resources + " items.");
 				}else {
+					selected_resources.each(function () {
+						if(!set_of_resources.has(this)){
+							set_of_resources.add(this);
+							resources_to_select--;
+						}
+					});
 					updateSelectedItemsCommand([
 						{name: 'action', value: 'add'},
 						{name: 'items', value: JSON.stringify(selected)}
@@ -174,13 +180,12 @@
 			}
 
 			function updateMaxResources() {
-				resources_to_select = resources_to_select - num_selected_resources;
-				if (resources_to_select > 0)
-				    /*When user delete an item the button has to be returned back;*/
+				if (max_resources > set_of_resources.size)
+				/*When user delete an item the button has to be returned back;*/
 					$('#add_resource_sign').show();
 				else
 					$('#add_resource_sign').hide();
-				if (resources_to_select !== max_resources)
+				if (set_of_resources.size > 0)
 					$('#submit_resources_button').show();
 
 			}
@@ -190,26 +195,26 @@
 				createSelectable('submittedResourcesGrid');
 			}
 
-            $(function () {
-                $(document).on('click', '#add_resource_sign', function () {
-                    $.fancybox.open({
-                        src: '#select_resources_modal',
-                        type: 'inline'
-                    }, {
-                        // modal: true,
-                        touch: false,
-                        smallBtn: false,
-                        buttons: false
-                    });
-                });
+			$(function () {
+				$(document).on('click', '#add_resource_sign', function () {
+					$.fancybox.open({
+						src: '#select_resources_modal',
+						type: 'inline'
+					}, {
+						// modal: true,
+						touch: false,
+						smallBtn: false,
+						buttons: false
+					});
+				});
 
-                updateMaxResources();
+				updateMaxResources();
 
 				$(document).on('dblclick', '.res-item', openItems);
 
 				onResourcesUpdated();
 
-            });
+			});
 		</script>
 	</ui:define>
 
