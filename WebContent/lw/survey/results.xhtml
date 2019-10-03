@@ -23,7 +23,7 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:form rendered="#{surveyResultBean.questionColumns ne null}" styleClass="section-survey">
+		<h:form rendered="#{surveyResultBean.questionColumns ne null}">
 			<p:dataTable id="survey_result" var="result" tableStyleClass="table-responsive" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
 						 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 				<f:facet name="{Exporters}">

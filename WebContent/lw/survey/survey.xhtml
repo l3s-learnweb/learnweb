@@ -144,30 +144,26 @@
                             </c:if>
 						</c:forEach>
 					</h:panelGroup>
-					
-					<div class="mt-3">
-                        <div class="float-right">
-                            <p:commandButton value="#{msg.Print}" type="button">
+
+                    <div class="d-flex mt-3">
+                        <div class="mr-auto">
+                            <p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form"
+                                             oncomplete="$('.nano').nanoScroller({scrollTop: 0});">
+                                <p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
+                            </p:commandButton>
+
+                            <p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form :message" process="@form"
+                                             actionListener="#{surveyBean.onSave()}" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
+                                             rendered="#{surveyBean.resource.saveable}">
+                            </p:commandButton>
+                        </div>
+                        <div>
+                            <p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
                                 <p:printer target="questions"/>
                             </p:commandButton>
                         </div>
-
-                        <p:commandButton value="#{msg.submit}"
-							action="#{surveyBean.onSubmit()}" update=":message @form"
-							oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
-							ajax="true">
-							<p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
-						</p:commandButton>
-	
-						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
-							rendered="#{surveyBean.resource.saveable}" 
-							actionListener="#{surveyBean.onSave()}"
-							ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
-	                     	process="@form" 
-	                     	update="@form :message">
-						</p:commandButton>
-					</div>
-				</h:panelGroup>	
+                    </div>
+				</h:panelGroup>
 
 				<ui:fragment rendered="#{not surveyBean.formEnabled}">
 					<h:outputText value="#{msg['survey.cant_edit']}"/>
@@ -181,13 +177,8 @@
 					<h:outputLink value="#{surveyBean.goBackPageLink}" rendered="#{surveyBean.goBackPageLink ne null}">
 						<h:outputText value="#{surveyBean.goBackPageTitle}"/>
 					</h:outputLink>
-				</ui:fragment>	
-					
+				</ui:fragment>
 			</p:panel>
-
-		
-
-		
 		</h:form>
 	</ui:define>
 </ui:composition>

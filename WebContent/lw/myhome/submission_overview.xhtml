@@ -100,13 +100,13 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-						<p:calendar value="#{submissionBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						<p:calendar value="#{submissionBean.selectedSubmission.openDatetime}" locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-						<p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						<p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}" locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous"/>
 					</div>
 
@@ -131,9 +131,17 @@
 						<p:message for="@previous"/>
 					</div>
 
-					<p:commandButton value="#{msg.delete}"  onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/>
-
-					<p:commandButton value="#{msg.save}" styleClass="float-right" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submissionBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+					<div class="d-flex mt-3">
+						<div class="mr-auto">
+							<p:commandButton value="#{msg.delete}" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}"
+											 onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');"
+											 oncomplete="addSubmissionHeaderClickHandler();"/>
+						</div>
+						<div>
+							<p:commandButton value="#{msg.save}" update=":submissions" actionListener="#{submissionBean.updateSubmissionDetails()}"
+											 onclick="PF('submission_edit_dialog').hide();" oncomplete="addSubmissionHeaderClickHandler();"/>
+						</div>
+					</div>
 				</h:form>
 			</p:dialog>
 
@@ -163,13 +171,13 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-						<p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						<p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}" locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous" display="icon"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-						<p:calendar id="close_date" value="#{submissionBean.newSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						<p:calendar id="close_date" value="#{submissionBean.newSubmission.closeDatetime}" locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<p:message for="@previous" display="icon"/>
 					</div>
 
@@ -194,7 +202,10 @@
 						<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
 					</div>
 
-					<p:commandButton value="#{msg.save}" styleClass="float-right" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
+					<div class="text-right mt-3">
+						<p:commandButton value="#{msg.save}" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}"
+										 oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
+					</div>
 				</h:form>
 			</p:dialog>
 

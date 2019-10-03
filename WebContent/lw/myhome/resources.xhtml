@@ -225,10 +225,10 @@
                                 <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural"/>
                             </p>
 
-                            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-                                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('deleteConfirm').hide(); return false;"/>
-                                <p:button value="#{msg.delete}" styleClass="confirm greenbutton" onclick="return false"/>
-                            </h:panelGroup>
+                            <div class="text-right mt-3">
+                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
+                                <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false"/>
+                            </div>
                         </p:dialog>
 
                         <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
@@ -252,10 +252,10 @@
                                 </h:form>
                             </h:panelGrid>
 
-                            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-                                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('selectDestination').hide(); return false;"/>
-                                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
-                            </h:panelGroup>
+                            <div class="text-right mt-3">
+                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide(); return false;"/>
+                                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
+                            </div>
                         </p:dialog>
 
                         <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
@@ -263,10 +263,10 @@
                                 <p:inputText id="modal_tag_name"/>
                             </h:panelGrid>
 
-                            <h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-                                <p:button value="#{msg.cancel}" styleClass="graybutton" onclick="PF('addTag').hide(); return false;"/>
-                                <p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
-                            </h:panelGroup>
+                            <div class="text-right mt-3">
+                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTag').hide(); return false;"/>
+                                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
+                            </div>
                         </p:dialog>
                     </h:panelGroup>
                 </div>

@@ -19,7 +19,6 @@
                 <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                                  update=":growl anlyse_form"/>
 
-
                 <p class="my-3">
                     <h:outputFormat value="#{msg.text_analysis_comments_count}">
                         <f:param value="#{adminTextAnalysisBean.commentCount}"/>
@@ -30,8 +29,10 @@
                 <p:dataTable var="comment" tableStyleClass="table-responsive" value="#{adminTextAnalysisBean.comments}">
                     <p:column>
                         <f:facet name="header">
-                            <span class="float-left">#{msg.comments}</span>
-                            <span class="float-right"><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></span>
+                            <div class="d-flex align-items-center">
+                                <div class="mr-auto">#{msg.comments}</div>
+                                <div><p:button outcome="/lw/admin/wanderer.jsf" target="_blank" value="#{msg.comments_analyse}"/></div>
+                            </div>
                         </f:facet>
 
                         <h:outputText value="#{comment.text}"/>

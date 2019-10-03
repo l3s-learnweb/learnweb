@@ -37,11 +37,14 @@
         </script>
 
         <h:form id="my_groups">
-            <p:dataTable var="group" styleClass="mb-3 panel-header-button" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+            <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
-                    #{msg.myGroups}
-
-                    <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn" global="false"/>
+                    <div class="d-flex">
+                        <div class="mr-auto">#{msg.myGroups}</div>
+                        <div>
+                            <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn" global="false"/>
+                        </div>
+                    </div>
                 </f:facet>
 
                 <p:ajax event="sort" oncomplete="applyTooltip()"/>

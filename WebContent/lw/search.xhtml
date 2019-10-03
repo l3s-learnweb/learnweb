@@ -179,7 +179,7 @@
                              update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this"
                              global="false"
                              partialSubmit="true"/>
-                             
+
 			<!--  not used at the moment-->
             <p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true"
                              name="setSelectedResource" update=":resource_form" process="@this"
@@ -223,7 +223,7 @@
 
 					<ui:remove>
 						<!-- this feature isn't used at the moment -->
-						
+
 	                    <ui:fragment rendered="${not empty searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}">
 	                        <div class="form-group">
 	                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
@@ -235,8 +235,7 @@
 	                            </h:panelGroup>
 	                        </div>
 	                    </ui:fragment>
-	
-						
+
 	                    <ui:fragment rendered="${searchBean.selectedResource.resource.archived and empty searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}">
 	                        <div class="form-group">
 	                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
@@ -252,16 +251,16 @@
 	                                        <f:convertDateTime type="date" dateStyle="short"/>
 	                                    </h:outputText>
 	                                </a>
-	                            </h:panelGroup>             
+	                            </h:panelGroup>
 	                        </div>
 	                    </ui:fragment>
 					</ui:remove>
-					
-                    <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form"
-                                     update=":growl" oncomplete="PF('resource_dialog').hide()" async="true"
-                                     onclick="PF('add_button').disable()" widgetVar="add_button"/>
-                    <p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" styleClass="float-right"/>
 
+                    <div class="text-right mt-3">
+                        <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('resource_dialog').hide()"/>
+                        <p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" async="true" process="@form" update=":growl"
+                                         widgetVar="add_button" onclick="PF('add_button').disable()" oncomplete="PF('resource_dialog').hide()"/>
+                    </div>
                 </ui:fragment>
             </h:form>
         </p:dialog>

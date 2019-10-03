@@ -112,9 +112,13 @@
                     <h:form>
                         <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
                             <f:facet name="header">
-                                #{msg['Glossary.location']}
-                                <p:button icon="ui-icon-help" onclick="return false;" styleClass="float-right"/>
-                                <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.location']}</div>
+                                    <div>
+                                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                                        <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
+                                    </div>
+                                </div>
                             </f:facet>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}">
@@ -158,9 +162,9 @@
                                      emptyMessage="#{msg.no_data}">
 
                             <f:facet name="header">
-                                <div class="ui-helper-clearfix">
-                                    #{msg['Glossary.fields']}
-                                    <div class="float-right">
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.fields']}</div>
+                                    <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
                                     </div>
@@ -241,9 +245,9 @@
                                      rowsPerPageTemplate="25,50,100">
 
                             <f:facet name="header">
-                                <div class="ui-helper-clearfix">
-                                    #{msg['Glossary.Definitions']}
-                                    <div class="float-right">
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.Definitions']}</div>
+                                    <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>
                                     </div>

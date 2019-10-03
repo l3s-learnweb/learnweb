@@ -29,7 +29,7 @@
 
             <h:panelGroup id="main_component" styleClass="section-glossary" layout="block">
 
-                <h:form id="glossary_table_form" prependId="false" styleClass="mb-5">
+                <h:form id="glossary_table_form" prependId="false" styleClass="mb-3">
                     <p:dataTable id="glossary_table" var="item" value="#{glossaryBean.tableItems}" widgetVar="glossTable" tableStyle="table-layout: auto;"
                                  sortBy="#{item.getTimestamp()}" sortOrder="descending">
 
@@ -40,8 +40,8 @@
                         <f:facet name="header">
                             <div class="row">
                                 <p:outputPanel styleClass="col">
-                                    <p:autoUpdate />
-                                    <h:outputText value="#{msg['Glossary.search_all_field']}" styleClass="font-weight-light mr-2" />
+                                    <p:autoUpdate/>
+                                    <h:outputText value="#{msg['Glossary.search_all_field']}" styleClass="font-weight-light mr-2"/>
                                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px"
                                         placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                                 </p:outputPanel>
@@ -136,13 +136,13 @@
                         <p:column headerText="#{msg['Glossary.phraseology']}">
                             <h:outputText value="#{item.phraseology}"/>
                         </p:column>
- 
+
                         <p:column headerText="fulltext search" filterBy="#{item.fulltext}" exportable="false" style="display:none">
                             <h:outputText value="#{item.fulltext}"/>
                         </p:column>
                     </p:dataTable>
                 </h:form>
-                
+
                 <p:dialog header="#{msg['Glossary.import_glossary']}" widgetVar="excel_import_dialog" closable="true" responsive="true">
                     <div class="p-grid">
                         <h:form id="import_form" prependId="false">
@@ -187,13 +187,12 @@
                             <h:outputText value="#{error.errorMessage}"/>
                         </p:column>
                     </p:dataTable>
-
                 </p:dialog>
 
                 <p:panel header="#{msg['Glossary.add_new_entry']}" id="glossaryForm" style="display: none;">
                     <h:form id="glossary_add" prependId="false">
                         <p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
-                            <p:autoUpdate />
+                            <p:autoUpdate/>
                         </p:growl>
                         <div class="text-center">
                         <p:panelGrid id="grid" styleClass="my-0 mx-auto" columns="3">
@@ -221,7 +220,7 @@
                                 </p:selectOneMenu>
                                 <p:inputText rendered="#{empty glossaryBean.availableTopicThree}" styleClass="w-100" value="#{glossaryBean.formEntry.topicThree}"/>
                             </h:panelGroup>
-                            <h:outputText value="" />
+                            <h:outputText value=""/>
 
                             <p:outputLabel value="#{msg['Glossary.Definition']} " for="description" styleClass="font-weight-bold"/>
                             <p:inputText id="description" value="#{glossaryBean.formEntry.description}" styleClass="inputfield w-100" required="#{glossaryBean.optionMandatoryDescription}" pt:onpaste="setPasteStatus(this, 'description');"/>
@@ -230,7 +229,7 @@
                         </div>
                         <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
 
-                        <br />
+                        <br/>
                         <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
 
                             <p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
@@ -294,21 +293,21 @@
                                 <p:tooltip for="delete_term" value="#{msg['Glossary.remove_row']}" position="bottom"/>
                             </p:column>
                         </p:dataTable>
-                        <div class="mt-3">
-                        <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.addTerm()}" styleClass="float-left"
-                                         update=":glossary_add :lang_terms">
-                            <f:ajax execute="@this lang_terms"/>
-                        </p:commandButton>
-                        <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" styleClass="float-right" update=":glossary_add :growl" binding="#{save}" oncomplete="groupRow()">
-                            <f:ajax execute="@form"/>
-
-
-                        </p:commandButton>
-                        <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onCancel()}" styleClass="float-right" update="@form :glossary_add :lang_terms"
-                                         process="@this" resetValues="true" oncomplete="groupRow()">
-                        </p:commandButton>
+                        <div class="d-flex mt-3">
+                            <div class="mr-auto">
+                                <p:commandButton id="add_synonym" value="#{msg['Glossary.add_synonym']}" actionListener="#{glossaryBean.addTerm()}"
+                                                 update=":glossary_add :lang_terms" process="@this lang_terms" styleClass="alt-btn">
+                                </p:commandButton>
+                            </div>
+                            <div>
+                                <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onCancel()}" update="@form :glossary_add :lang_terms"
+                                                 process="@this" resetValues="true" oncomplete="groupRow()" styleClass="secondary-btn">
+                                </p:commandButton>
+                                <p:commandButton id="save" value="#{msg.save}" action="#{glossaryBean.onSave()}" update=":glossary_add :growl"
+                                                 process="@this" binding="#{save}" oncomplete="groupRow()">
+                                </p:commandButton>
+                            </div>
                         </div>
-                        <br />
                     </h:form>
                 </p:panel>
             </h:panelGroup>
