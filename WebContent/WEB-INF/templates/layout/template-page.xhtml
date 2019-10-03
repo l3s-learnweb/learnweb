@@ -32,13 +32,13 @@
             <div class="layout-wrapper layout-wrapper-sidebar-inactive">
                 <header class="layout-header bg-primary">
                     <div class="layout-container d-flex flex-row align-items-center">
-                        <div class="d-flex ml-sm-0 mx-auto">
+                        <div class="d-flex ml-sm-0 mr-auto">
                             <a href="#{request.contextPath}/" class="header-element header-logo no-hover-bg">
                                 <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo" styleClass="w-inherit"/>
                             </a>
                         </div>
 
-                        <h:form styleClass="d-flex mw-100 mx-auto mx-sm-0">
+                        <h:form styleClass="d-flex mw-100 ml-auto mx-sm-0">
                             <div class="header-element no-hover-bg row justify-content-end px-2">
                                 <ui:insert name="header_right"/>
                             </div>
@@ -48,10 +48,10 @@
                     </div>
                 </header>
 
-                <div class="layout-main d-flex flex-column mt-auto" id="main">
+                <div class="layout-main d-flex flex-column" id="main">
                     <main class="layout-main-content">
                         <ui:insert name="center_layout">
-                            <div class="container my-4">
+                            <div class="container my-3">
                                 <ui:insert name="container_layout"/>
                             </div>
                         </ui:insert>

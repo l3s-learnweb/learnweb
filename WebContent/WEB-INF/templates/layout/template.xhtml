@@ -58,7 +58,7 @@
                     <ui:include src="parts/sidebar.xhtml"/>
                 </ui:fragment>
 
-                <div class="layout-main d-flex flex-column pt-0 pt-md-5" id="main">
+                <div class="layout-main d-flex flex-column" id="main">
                     <main class="layout-main-content #{smallPage or loginRequired and !userBean.loggedIn? 'container':''}">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>

@@ -33,7 +33,7 @@ body,
     }
 
     @include media-breakpoint-down($topbar-two-row-display) {
-      margin-top: $topbar-height * 2;
+      padding-top: $topbar-height * 2;
     }
 
     .layout-main-content {

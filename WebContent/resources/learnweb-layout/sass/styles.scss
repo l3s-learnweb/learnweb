@@ -6,7 +6,7 @@
   - Install scss using npm `npm i -g sass` (https://sass-lang.com/install)
 
  Now you can build all scss files to css files
-  - `sass --watch C:\Users\Philipp\git\Learnweb\WebContent/resources/learnweb-layout/sass:C:\Users\Philipp\git\Learnweb\WebContent/resources/learnweb-layout/css --style=compressed`
+  - `sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
 
  Or you can setup to watch for changes in your files and build automatically (during active development phase)
   - `sass --watch WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed`
