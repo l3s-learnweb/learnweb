@@ -13,15 +13,15 @@
 
 	<div class="log-details">
 		<p class="mb-0 log-description">
-			<h:outputText value="#{logEntry.description}" escape="false"  />
+			<h:outputText value="#{logEntry.description}" escape="false"/>
 			<h:panelGroup rendered="#{logEntry.queryNeeded}">
-				<h:outputText value=" #{msg.with_query}" escape="false"  />
+				<h:outputText value=" #{msg.with_query}" escape="false"/>
 				<h:outputLink styleClass="log-query" value="search.jsf">
 					<h:outputText value=" #{logEntry.resource.query}" escape="false"/>
 					<f:param name="query" value="#{logEntry.resource.query}"/>
 					<f:param name="action" value="web"/>
 				</h:outputLink>
-				<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"  />
+				<h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"/>
 			</h:panelGroup>
 		</p>
 		<p class="small font-weight-light mb-0 log-date">

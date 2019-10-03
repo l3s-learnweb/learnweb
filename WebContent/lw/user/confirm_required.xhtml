@@ -25,8 +25,8 @@
 					$('#emailChangeForm').show();
 					return false;
 				}
-				</script> 
-				
+				</script>
+
 				<h:outputFormat value="#{msg['email_confirm_required_text']}" escape="false">
 					<f:param value="#{confirmRequiredBean.user.realUsername}"/>
 					<f:param value="#{confirmRequiredBean.user.email}"/>
@@ -40,9 +40,9 @@
                         <p:inputText id="email" type="email" value="#{confirmRequiredBean.email}" label="#{msg.email_address}" required="true" style="width:20rem"/>
                         <p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email"/>
 
-                        <h:outputText value="" />
+                        <h:outputText value=""/>
                         <p:commandButton actionListener="#{confirmRequiredBean.onSubmitNewEmail()}" value="#{msg.send_email}" update=":confirmRequiredContent" ajax="false"/>
-                        <h:outputText value="" />
+                        <h:outputText value=""/>
                     </h:panelGrid>
                 </h:form>
             </p:panel>

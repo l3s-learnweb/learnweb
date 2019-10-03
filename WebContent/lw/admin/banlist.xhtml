@@ -7,11 +7,11 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.banlist_header}"/>
-	
+
 	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.banlist_header}" url="admin/banlist.jsf#"/>
 	</ui:define>
-	
+
 	<ui:define name="center_layout">
         <ui:fragment>
             <div class="row">
@@ -124,7 +124,7 @@
                         <h:outputText value="#{aggrReqData.IP}"/>
                     </p:column>
 
-                    <p:column headerText="#{msg.requests_count}" sortBy="#{aggrReqData.requests}"  >
+                    <p:column headerText="#{msg.requests_count}" sortBy="#{aggrReqData.requests}">
                         <h:outputText value="#{aggrReqData.requests}"/>
                     </p:column>
 

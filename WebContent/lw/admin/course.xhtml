@@ -18,9 +18,9 @@
 		<p:menuitem value="#{msg.courses}" url="admin/courses.jsf"/>
 		<p:menuitem value="#{adminCourseBean.course.title}" url="admin/course.jsf?course_id=#{adminCourseBean.course.id}"/>
 	</ui:define>
-		
+
 	<ui:define name="center_layout">
-		<h:form id="editwelcomeform"  prependId="false" styleClass="form">
+		<h:form id="editwelcomeform" prependId="false" styleClass="form">
 			<div class="row">
 				<div class="col-12">
 					<p:panel header="#{msg.welcome_message}">

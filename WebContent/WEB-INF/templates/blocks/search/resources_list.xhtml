@@ -24,15 +24,15 @@
                     	<h:form>
                     		<p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                     			update=":resource_form" process="@this"
-                    			oncomplete="PF('resource_dialog').show();" 
+                    			oncomplete="PF('resource_dialog').show();"
                     			styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary">
-                    		
+
                     		</p:commandLink>
                     	</h:form>
-                    	<!--  
+                    	<!--
                        TODO add better tooltip
                          <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
-                        
+
                         -->
                     </div>
                     <ui:fragment rendered="${res.archived}">
@@ -49,7 +49,7 @@
                         </div>
                     </ui:fragment>
                     <ui:fragment  rendered="#{not empty res.group}">
-                        <div class="fa fa-users tooltip-container mb-1"  aria-hidden="true">
+                        <div class="fa fa-users tooltip-container mb-1" aria-hidden="true">
                             <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
                                 <h:outputLink value="group/resources.jsf" title="#{res.group.description}">

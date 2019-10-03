@@ -74,11 +74,11 @@
 		<h:form id="new_topic_form">
 			<div class="form-group">
 				<p:outputLabel for="@next" value="#{msg['ForumIndex.topic']}:"/>
-				<p:inputText id="post_topic" value="#{forumTopicsBean.newTopicTitle}" />
+				<p:inputText id="post_topic" value="#{forumTopicsBean.newTopicTitle}"/>
 				<p:message for="@previous"/>
 			</div>
 
-			<ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">						
+			<ui:fragment rendered="#{forumTopicBean.group.restrictionForumCategoryEnabled}">
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.category}:"/>
 					<p:selectOneMenu id="post_category" value="#{forumTopicsBean.newPost.category}" editable="true"

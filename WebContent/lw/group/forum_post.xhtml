@@ -100,7 +100,7 @@
                                 <div class="col text-right">
                                     <p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" update=":forum_post_table"
                                                    ajax="true" actionListener="#{forumPostBean.deletePost(post)}" styleClass="mx-2">
-                                        <p:confirm message="Are you sure that you want to delete the post?" />
+                                        <p:confirm message="Are you sure that you want to delete the post?"/>
                                     </p:commandLink>
 
                                     <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2" rendered="#{forumPostBean.canEditPost(post)}">

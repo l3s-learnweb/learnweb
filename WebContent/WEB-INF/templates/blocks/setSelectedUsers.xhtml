@@ -10,8 +10,8 @@
         <p:outputPanel styleClass="col-md-4 align-items-end" rendered="#{!cbean.singleUser}">
             <p:selectOneButton value="#{cbean.selectedType}">
                 <p:ajax event="change" update="usersSelectorPanel usersCountPanel"/>
-                <f:selectItem itemLabel="#{msg.users}" itemValue="1" />
-                <f:selectItem itemLabel="#{msg.groupsTitle}" itemValue="2" />
+                <f:selectItem itemLabel="#{msg.users}" itemValue="1"/>
+                <f:selectItem itemLabel="#{msg.groupsTitle}" itemValue="2"/>
             </p:selectOneButton>
 
             <p:outputPanel id="usersSelectorPanel" styleClass="my-2">

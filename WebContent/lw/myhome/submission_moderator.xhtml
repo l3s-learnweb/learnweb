@@ -7,7 +7,7 @@
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
-    <ui:param name="helpText" value="" />
+    <ui:param name="helpText" value=""/>
 
     <ui:define name="metadata">
         <f:metadata>
@@ -79,7 +79,7 @@
                                             <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                         </p:commandButton>
 
-                                        <p:commandButton  value="unlocked"  styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
+                                        <p:commandButton  value="unlocked" styleClass="moderator-btn" rendered="#{not userSubmission.submitStatus}"
                                                         process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
                                             <f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}"/>
                                         </p:commandButton>
