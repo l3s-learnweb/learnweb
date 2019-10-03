@@ -18,6 +18,10 @@ body {
     padding-top: 0;
   }
 
+  .ui-widget.ui-widget-content-border-0 > .ui-widget-content {
+    border: 0;
+  }
+
   .ui-accordion-mb-0 {
     .ui-accordion-content,
     .ui-accordion-header {
@@ -27,7 +31,7 @@ body {
 
   .ui-blockui-content {
     background: transparent;
-    border: none;
+    border: 0;
     box-shadow: none;
   }
 
@@ -85,6 +89,18 @@ body {
     .ui-tree-container {
       padding: 0;
     }
+
+    .ui-treenode {
+      &.ui-droppable-active {
+        background: lighten($themePrimaryAltColor, 30%);
+        border: 1px dashed $themePrimaryAltColor;
+      }
+
+      &.ui-droppable-hover {
+        background: $themePrimaryAltColorDarker;
+        border: 1px solid $themePrimaryAltColorDarker;
+      }
+    }
   }
 
   .ui-tabs.ui-tabs-transparent {
@@ -102,7 +118,17 @@ body {
     @include media-breakpoint-down(sm) {
       .ui-tabs-header {
         width: 100%;
-        border-right: 1px solid $headerLightBorderColor!important;
+        border-right: 1px solid $headerLightBorderColor !important;
+      }
+    }
+  }
+
+  .ui-tabs.ui-tabs-full-width {
+    ul.ui-tabs-nav {
+      display: flex;
+
+      li {
+        width: 100%;
       }
     }
   }
@@ -122,8 +148,22 @@ body {
   }
 
   .ui-selectoneradio {
-      label {
-        margin: 8px 1rem 8px 8px!important;
-      }
+    label {
+      margin: 8px 1rem 8px 8px !important;
+    }
+  }
+
+  blockquote {
+    border-left: 4px solid $gray-500;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-left: 16px;
+  }
+
+  .ui-dialog-content .ui-tree {
+    &:hover {
+      border: 1px solid $inputHoverBorderColor;
+    }
+    border-color: $inputBorderColor;
   }
 }

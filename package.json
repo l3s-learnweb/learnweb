@@ -1,0 +1,114 @@
+{
+  "name": "learnweb",
+  "private": true,
+  "version": "1.0.0",
+  "browserslist": [
+    "> 0.5% in DE",
+    "not dead",
+    "edge >= 17",
+    "firefox >= 54",
+    "chrome >= 54",
+    "safari >= 10.1",
+    "opera >= 41",
+    "not ie >= 0"
+  ],
+  "eslintConfig": {
+    "extends": [
+      "airbnb-base",
+      "plugin:compat/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "script"
+    },
+    "env": {
+      "browser": true,
+      "node": false,
+      "jquery": true
+    },
+    "globals": {
+      "PF": "readonly",
+      "PrimeFaces": "readonly"
+    },
+    "rules": {
+      "linebreak-style": "off",
+      "no-underscore-dangle": "off",
+      "func-names": "off",
+      "no-plusplus": "off",
+      "consistent-return": "off",
+      "no-console": "off",
+      "no-param-reassign": "off",
+      "no-unused-vars": "off",
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": false,
+          "classes": false,
+          "variables": true
+        }
+      ],
+      "max-len": [
+        "warn",
+        {
+          "code": 150
+        }
+      ]
+    }
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-sass-guidelines"
+    ],
+    "plugins": [
+      "stylelint-no-unsupported-browser-features"
+    ],
+    "rules": {
+      "selector-max-id": null,
+      "selector-class-pattern": null,
+      "scss/at-extend-no-missing-placeholder": null,
+      "max-nesting-depth": 6,
+      "selector-max-compound-selectors": 6,
+      "selector-no-qualifying-type": null,
+      "scss/dollar-variable-pattern": null,
+      "order/order": null,
+      "order/properties-alphabetical-order": null,
+      "plugin/no-unsupported-browser-features": [
+        true,
+        {
+          "ignore": [
+            "css-gradients",
+            "object-fit"
+          ]
+        }
+      ],
+      "property-blacklist": [
+        "user-select"
+      ],
+      "declaration-property-value-blacklist": {
+        "position": [
+          "sticky"
+        ]
+      },
+      "selector-pseudo-element-blacklist": [
+        "selection"
+      ]
+    }
+  },
+  "scripts": {
+    "scss:watch": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed --watch",
+    "scss:build": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed",
+    "scss:lint": "stylelint WebContent/resources/learnweb-layout/sass/**/*.scss !WebContent/resources/learnweb-layout/sass/vendor/**",
+    "js:lint": "eslint WebContent/resources/learnweb-layout/js/**"
+  },
+  "devDependencies": {
+    "browserslist": "^4.7.0",
+    "eslint": "^6.5.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-compat": "^3.3.0",
+    "sass": "^1.22.12",
+    "stylelint": "^11.0.0",
+    "stylelint-config-sass-guidelines": "^6.1.0",
+    "stylelint-no-unsupported-browser-features": "^3.0.2"
+  }
+}

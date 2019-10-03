@@ -24,5 +24,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="localLibs" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="tomcatLibs" level="project" />
+    <orderEntry type="library" name="@types/jquery" level="application" />
+    <orderEntry type="library" name="@types/jqueryui" level="application" />
+    <orderEntry type="library" name="@types/jquery.contextmenu" level="application" />
   </component>
 </module>

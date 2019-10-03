@@ -58,7 +58,7 @@
                     <ui:include src="parts/sidebar.xhtml"/>
                 </ui:fragment>
 
-                <div class="layout-main d-flex flex-column">
+                <div class="layout-main d-flex flex-column" id="main">
                     <main class="layout-main-content #{smallPage or loginRequired and !userBean.loggedIn? 'container':''}">
                         <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
                             <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
@@ -66,8 +66,8 @@
                             <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
                                 <p:panel header="#{msg.loginTitle}">
                                 	<div class="mw-md">
-                                		<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>    
-                                	</div>                                   
+                                		<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
+                                	</div>
                                 </p:panel>
                             </ui:fragment>
 
@@ -107,18 +107,9 @@
 
             <p:growl id="growl" rendered="#{not disableGrowl}"/>
 
-            <p:ajaxStatus styleClass="ajax-status-screen" onstart="$('.layout-overlay').addClass('show');" onsuccess="$('.layout-overlay').removeClass('show');">
+            <p:ajaxStatus styleClass="ajax-status-screen">
                 <f:facet name="start">
-                    <div class="layout-overlay ui-widget-overlay">
-                        <div class="la-pacman fa-5x text-secondary">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </div>
+                    <div class="ui-blockui bg-center position-fixed" style="z-index: 1050 !important;"></div>
                 </f:facet>
             </p:ajaxStatus>
 

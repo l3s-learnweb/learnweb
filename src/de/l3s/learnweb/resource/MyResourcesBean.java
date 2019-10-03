@@ -1,19 +1,10 @@
 package de.l3s.learnweb.resource;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.util.StringHelper;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +12,16 @@ import org.json.JSONObject;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.util.StringHelper;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -34,17 +30,15 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private final static long serialVersionUID = 5680533799976460331L;
     private final static Logger log = Logger.getLogger(MyResourcesBean.class);
 
-    public enum ResourcesView
-    {
-        grid,
-        list
-    }
+    // Group base attributes
+    private int groupId; // Current group id
+    private Group group; // Current group
 
-    private int groupId; // url param, force resource view
-    private Folder selectedFolder;
+    private Folder selectedFolder; // Current opened folder
     private boolean rootFolder = true;
 
-    private ResourcesView resourcesView = ResourcesView.grid;
+    //Grid or List view of group resources
+    private boolean gridView = true;
 
     private List<Resource> resources;
     private List<Folder> breadcrumb;
@@ -59,6 +53,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     @Inject
     private AddResourceBean addResourceBean;
+
+    @Inject
+    private AddFolderBean addFolderBean;
 
     public MyResourcesBean()
     {
@@ -82,7 +79,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(groupId > 0)
         {
             rootFolder = false;
-            Group group = getLearnweb().getGroupManager().getGroupById(groupId);
+            group = getLearnweb().getGroupManager().getGroupById(groupId);
             Folder folder = new Folder(0, groupId, group.getTitle());
             breadcrumb.add(0, folder);
             updateBreadcrumb();
@@ -482,6 +479,61 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void actionCreateItem() throws IllegalAccessException, InvocationTargetException, IOException
+    {
+        String type = getParameter("type");
+
+        // Set target group and folder in beans
+        switch(type)
+        {
+            case "folder":
+                addFolderBean.clearForm();
+                addFolderBean.setTargetGroup(group);
+                addFolderBean.setTargetFolder(selectedFolder);
+                break;
+            default:
+                addResourceBean.clearForm();
+                addResourceBean.setTargetGroup(group);
+                addResourceBean.setTargetFolder(selectedFolder);
+                addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
+                break;
+        }
+
+        // Set target view and defaults
+        switch(type)
+        {
+            case "folder":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+                break;
+            case "file":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(Resource.ResourceType.file);
+                break;
+            case "url":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(Resource.ResourceType.website);
+                addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
+                break;
+            case "glossary2":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(Resource.ResourceType.glossary2);
+                addResourceBean.setResourceAsGlossary();
+                break;
+            case "survey":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(Resource.ResourceType.survey);
+                break;
+            case "newFile":
+                Resource.ResourceType docType = Resource.ResourceType.parse(getParameter("docType"));
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+                addResourceBean.getResource().setType(docType);
+                break;
+            default:
+                log.warn("Unsupported item type: " + type);
+                break;
+        }
+    }
+
     public List<Resource> getResources()
     {
         return resources;
@@ -620,14 +672,14 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         addResourceBean.setTargetFolderId(selectedResourceTargetFolderId);
     }
 
-    public ResourcesView getResourcesView()
+    public boolean isGridView()
     {
-        return resourcesView;
+        return gridView;
     }
 
-    public void setResourcesView(ResourcesView resourcesView)
+    public void setGridView(boolean gridView)
     {
-        this.resourcesView = resourcesView;
+        this.gridView = gridView;
     }
 
     public TreeNode getSelectedTargetNode()

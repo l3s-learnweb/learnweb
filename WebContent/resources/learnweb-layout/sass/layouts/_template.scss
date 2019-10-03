@@ -1,7 +1,7 @@
-@import "parts/_header";
-@import "parts/_menu";
-@import "parts/_right-pane";
-@import "parts/_sidebar";
+@import 'parts/header';
+@import 'parts/menu';
+@import 'parts/right-pane';
+@import 'parts/sidebar';
 
 body,
 .layout-container {
@@ -21,23 +21,6 @@ body,
 }
 
 .layout-wrapper {
-  .layout-breadcrumb {
-    background-color: $white;
-    border: 1px solid $themePrimaryColor;
-    border-left: 0;
-    border-right: 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
-    > * {
-      margin: $grid-gutter-width/2 $grid-gutter-width;
-    }
-    @include media-breakpoint-down($topbar-two-row-display) {
-      margin-top: $topbar-height;
-    }
-  }
-
   .layout-main {
     position: relative;
     padding-top: $topbar-height;
@@ -47,6 +30,10 @@ body,
 
     @include media-breakpoint-down($sidebar-hide-display) {
       margin-left: 0;
+    }
+
+    @include media-breakpoint-down($topbar-two-row-display) {
+      padding-top: $topbar-height * 2;
     }
 
     .layout-main-content {
@@ -64,21 +51,35 @@ body,
       margin-left: 0;
     }
   }
+
+  .layout-breadcrumb {
+    background-color: $white;
+    border: 1px solid $themePrimaryColor;
+    border-left: 0;
+    border-right: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > div {
+      margin: $grid-gutter-width/2 $grid-gutter-width;
+    }
+  }
 }
 
 // adds before element so that the target of anchor links isn't hidden by the menu. Important for example for the privacy statement
 :target::before {
-  content: "";
+  content: '';
   display: block;
-  height: #{2*$topbar-height}; 
-  margin: -#{2*$topbar-height} 0 0; 
+  height: #{2*$topbar-height};
+  margin: -#{2*$topbar-height} 0 0;
 }
 
-@include media-breakpoint-up(md) {    
-:target::before {
-  content: "";
-  display: block;
-  height: $topbar-height; 
-  margin: -$topbar-height 0 0; 
-}
+@include media-breakpoint-up(md) {
+  :target::before {
+    content: '';
+    display: block;
+    height: $topbar-height;
+    margin: -$topbar-height 0 0;
+  }
 }

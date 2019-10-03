@@ -6,7 +6,6 @@
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
-    <ui:param name="smallPage" value="true"/>
     <ui:param name="rightPane" value="true"/>
 
 	<ui:define name="metadata">
@@ -21,28 +20,90 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.last_activities}" id="profile_news">
-			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
+		<div class="row">
+			<div class="col-lg">
+				<p:panel header="#{userDetailBean.user.username}">
+					<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
 
-			<ui:fragment rendered="#{not userDetailBean.pageHidden}">
-				<p:repeat value="#{newsFeedBean.newsList}" var="logEntry" varStatus="status">
-					<ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
-						<ui:param name="status" value="#{status}"/>
-						<ui:param name="logEntry" value="#{logEntry}"/>
-					</ui:decorate>
-				</p:repeat>
-			</ui:fragment>
-		</p:panel>
+					<p:panelGrid columns="2" styleClass="d-flex" rendered="#{not userDetailBean.pageHidden}">
+						<f:facet name="header">
+							<img src="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" alt="profile image"/>
+						</f:facet>
+						<h:outputText value="#{msg.username}:"/>
+						<h:outputText value="#{userDetailBean.user.username}"/>
+
+						<h:outputText value="#{msg.email_address}:" rendered="#{not empty userDetailBean.user.email}"/>
+						<h:outputText value="#{userDetailBean.user.email}" rendered="#{not empty userDetailBean.user.email}"/>
+
+						<h:outputText value="#{msg.gender}:"/>
+						<h:outputText value="-" rendered="#{userDetailBean.user.gender == 0}"/>
+						<h:outputText value="#{msg.gender_male}" rendered="#{userDetailBean.user.gender == 1}"/>
+						<h:outputText value="#{msg.gender_female}" rendered="#{userDetailBean.user.gender == 2}"/>
+
+						<h:outputText value="#{msg.address}:" rendered="#{not empty userDetailBean.user.address}"/>
+						<h:outputText value="#{userDetailBean.user.address}" rendered="#{not empty userDetailBean.user.address}"/>
+
+						<h:outputText value="#{msg.profession}:" rendered="#{not empty userDetailBean.user.profession}"/>
+						<h:outputText value="#{userDetailBean.user.profession}" rendered="#{not empty userDetailBean.user.profession}"/>
+
+						<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.user.interest}"/>
+						<h:outputText value="#{userDetailBean.user.interest}" rendered="#{not empty userDetailBean.user.interest}"/>
+
+						<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.user.additionalInformation}"/>
+						<h:outputText value="#{userDetailBean.user.additionalInformation}" rendered="#{not empty userDetailBean.user.additionalInformation}"/>
+
+						<h:outputText value="#{msg.registered_since}:"/>
+						<h:outputText value="#{userDetailBean.user.registrationDate}">
+							<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
+						</h:outputText>
+					</p:panelGrid>
+				</p:panel>
+
+				<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.user.username}" rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+					<ul class="list-unstyled">
+						<ui:repeat var="g" value="#{userDetailBean.user.groups}">
+							<li>
+								<h:outputLink value="group/overview.jsf">
+									<f:param name="group_id" value="#{g.id}"/>
+									<h:outputText value="#{g.title}"/>
+								</h:outputLink>
+							</li>
+						</ui:repeat>
+					</ul>
+				</p:panel>
+
+				<p:panel header="#{msg.awards}" rendered="#{not empty userDetailBean.user.credits}">
+					<h:outputText value="#{userDetailBean.user.credits}" escape="false"/>
+				</p:panel>
+
+				<p:panel header="#{msg.moderator_options}" rendered="${userBean.canModerateCourses(userDetailBean.user.courses)}">
+					<h:outputLink value="myhome/profile.jsf">
+						<f:param name="user_id" value="#{userDetailBean.user.id}"/>
+						<h:outputText value="#{msg.edit_profile}" escape="false"/>
+					</h:outputLink>
+					<br/>
+					<h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+						<f:param name="user_id" value="#{userDetailBean.user.id}"/>
+						<h:outputText value="#{msg.search_history}" escape="false"/>
+					</h:outputLink>
+				</p:panel>
+			</div>
+
+			<div class="col-lg">
+				<p:panel header="#{msg.last_activities}" id="profile_news">
+					<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}"/>
+
+					<ui:fragment rendered="#{not userDetailBean.pageHidden}">
+						<p:repeat value="#{newsFeedBean.newsList}" var="logEntry" varStatus="status">
+							<ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+								<ui:param name="status" value="#{status}"/>
+								<ui:param name="logEntry" value="#{logEntry}"/>
+							</ui:decorate>
+						</p:repeat>
+					</ui:fragment>
+				</p:panel>
+			</div>
+		</div>
 	</ui:define>
 
-	<ui:define name="right_layout">
-		<p:panel rendered="#{userBean.loggedIn}" styleClass="m-0 px-0 bg-transparent no-border">
-
-			<ui:decorate template="/WEB-INF/templates/blocks/user/profile.xhtml">
-				<ui:param name="user" value="#{userDetailBean.user}"/>
-				<ui:param name="userDetailsHidden" value="#{userDetailBean.pageHidden}"/>
-			</ui:decorate>
-
-		</p:panel>
-	</ui:define>
 </ui:composition>

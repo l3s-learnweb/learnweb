@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
+<!--@elvariable id="gridView" type="java.lang.Boolean"-->
+<!--@elvariable id="canAddResources" type="java.lang.Boolean"-->
+<!--@elvariable id="canMoveResources" type="java.lang.Boolean"-->
+<!--@elvariable id="query" type="java.lang.String"-->
+
+<h:panelGroup id="resourcesView" layout="block" styleClass="res-container"
+              pt:data-canSelectResources="true"
+              pt:data-canAddResources="#{canAddResources}"
+              pt:data-canMoveResources="#{canMoveResources}">
+
+    <h:panelGroup styleClass="mx-3" layout="block" rendered="#{query != null}">
+        <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>
+    </h:panelGroup>
+
+    <ui:fragment rendered="#{!gridView}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{gridView}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_grid_view.xhtml"></ui:decorate>
+    </ui:fragment>
+
+    <h:outputText value="${msg.no_resources_found}" class="res-empty-text"
+                  rendered="#{paginator.isEmpty() and paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+
+    <h:outputText value="#{msg.no_results_found}" class="res-empty-text"
+                  rendered="#{paginator.isEmpty() and (paginator.getClass().getSimpleName() eq 'SearchPaginator' or paginator.getClass().getSimpleName() eq 'FilterPaginator')}"/>
+</h:panelGroup>
+
+<h:panelGroup id="paginator" layout="block">
+    <ui:decorate template="/WEB-INF/templates/blocks/resources/paging.xhtml">
+        <ui:param name="paginator" value="${paginator}"/>
+    </ui:decorate>
+</h:panelGroup>
+
+<ul class="d-none" id="contextmenu_items">
+    <li data-type="folder" data-action="open-folder" data-per="canviewresource" data-icon="fa-icon fa-folder-open-o">#{msg.open}</li>
+    <li data-type="container" data-action="create-folder" data-per="canaddresources" data-icon="fa-icon fa-folder">#{msg.create_folder}</li>
+    <li data-type="container" data-action="upload-file" data-per="canaddresources" data-icon="fa-icon fa-floppy-o">#{msg.upload_file}</li>
+    <li data-type="container" data-action="add-website" data-per="canaddresources" data-icon="fa-icon fa-link">#{msg.upload_url}</li>
+    <li data-type="resource" data-action="details" data-per="canviewresource" data-icon="fa-icon fa-eye">#{msg.details_right_pane}</li>
+    <li data-type="resource" data-action="edit" data-per="caneditresource" data-icon="fa-icon fa-edit">#{msg.edit}</li>
+    <li data-type="resource|resources" data-action="add-tag" data-per="canannotateresource" data-icon="fa-icon fa-tag">#{msg.addTag}</li>
+    <li data-type="resource|resources" data-action="copy" data-per="canviewresource" data-icon="fa-icon fa-copy">#{msg.copy}</li>
+    <li data-type="resource|resources" data-action="move" data-per="candeleteresource" data-icon="fa-icon fa-arrows-h">#{msg.move}</li>
+    <li data-type="resource|resources" data-action="delete" data-per="candeleteresource" data-icon="fa-icon fa-trash">#{msg.removeFromGroup}</li>
+</ul>
+
+</ui:composition>

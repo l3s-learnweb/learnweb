@@ -52,7 +52,7 @@
                             </div>
                             <div class="col-md-4">
                                 <img class="d-block w-100 h-auto m-auto profile-picture" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"
-                                     alt="Profile image" style="max-width:10rem;"/>
+                                     alt="Profile image"/>
 
                                 <div class="form-group text-center">
                                     <p:outputLabel for="@next" value="#{msg.photo}"/>
@@ -113,7 +113,7 @@
                             </div>
 
                             <h:panelGroup layout="block" styleClass="form-group" rendered="false">
-                                <p:outputLabel for="@next"  value="#{msg.dateofbirth}:"/>
+                                <p:outputLabel for="@next" value="#{msg.dateofbirth}:"/>
                                 <p:calendar id="userdateofbirth" value="#{profileBean.dateOfBirth}" navigator="true" locale="de"
                                             maxdate="#{profileBean.maxBirthday}" inputStyleClass="w-100"/>
                                 <p:message for="@previous"/>

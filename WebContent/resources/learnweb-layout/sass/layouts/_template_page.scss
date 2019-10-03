@@ -5,6 +5,10 @@
 
   .layout-wrapper {
     .layout-main {
+      @include media-breakpoint-down($topbar-two-row-display) {
+        padding-top: $topbar-height;
+      }
+
       .layout-main-content {
         padding: 0;
       }

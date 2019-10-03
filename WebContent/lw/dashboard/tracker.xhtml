@@ -16,8 +16,8 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['Tracker.dashboard']}" url="admin/dashboard/tracker.jsf"/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/index.jsf"/>
+    <p:menuitem value="#{msg['Tracker.dashboard']}" url="dashboard/tracker.jsf"/>
     <p:menuitem value="#{trackerDashboardBean.firstSelectedUser.username}" url="#" rendered="#{trackerDashboardBean.singleUser}"/>
 </ui:define>
 
@@ -65,7 +65,7 @@
                             </f:facet>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{ts.user.username}">
-                                <a href="admin/dashboard/tracker.jsf?userId=#{ts.userId}"> #{ts.user.username}</a>
+                                <a href="dashboard/tracker.jsf?userId=#{ts.userId}">#{ts.user.username}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="#{msg.total_events}" sortBy="#{ts.totalEvents}" sortable="true">
                                 #{ts.totalEvents}

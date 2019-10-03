@@ -8,11 +8,11 @@
 
     <div id="gallery">
         <p:repeat var="res" value="#{resources}">
-            <div class="resource d-inline-block zoom">
-                <a href="#{res.thumbnail4.url}" data-fancybox="search-gallery" data-type="image" data-captionId="#product#{res.tempId}">
-                    <img src="#{res.thumbnail2b.url}"  alt="#{res.title}"/>
+            <div class="resource d-inline-block hover-border">
+                <a href="#{res.thumbnail4.url}" data-fancybox="search-gallery" data-type="image" data-captionId="#product#{res.rank}">
+                    <img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
                 </a>
-                <div class="product-form" id="product#{res.tempId}">
+                <div class="product-form" id="product#{res.rank}">
                     <ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
                         <ui:param name="res" value="#{res}"/>
                     </ui:decorate>

@@ -1,0 +1,20 @@
+// stylelint-disable all
+
+@mixin position-sticky() {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+}
+
+@mixin user-select($property) {
+  -webkit-user-select: $property;
+  -moz-user-select: $property;
+  -ms-user-select: $property;
+  user-select: $property;
+}
+
+@mixin selection() {
+  &::selection,
+  &::-moz-selection {
+    @content;
+  }
+}

@@ -15,8 +15,9 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['Activity.dashboard']}" url=""/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/index.jsf"/>
+    <p:menuitem value="#{msg['Activity.dashboard']}" url="dashboard/activity.jsf"/>
+    <p:menuitem value="#{glossaryDashboardBean.firstSelectedUser.username}" url="#" rendered="#{glossaryDashboardBean.singleUser}"/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -56,12 +57,8 @@
                 <div class="col">
                     <p:panel rendered="#{!empty activityDashboardBean.interactionsChart}" header="#{msg.activities}">
                         <f:facet name="actions">
-                            <div class="ui-helper-clearfix">
-                                <div class="float-right">
-                                    <p:button icon="ui-icon-help" onclick="return false;"/>
-                                    <p:tooltip for="@previous" value="#{msg['Activity.actions_list']}"/>
-                                </div>
-                            </div>
+                            <p:button icon="ui-icon-help" onclick="return false;"/>
+                            <p:tooltip for="@previous" value="#{msg['Activity.actions_list']}"/>
                         </f:facet>
 
                         <p:lineChart model="#{activityDashboardBean.interactionsChart}"/>

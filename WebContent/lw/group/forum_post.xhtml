@@ -22,102 +22,102 @@
     <p:menuitem value="#{forumPostBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumPostBean.topicId}"/>
 </ui:define>
 
-<ui:define name="breadcrumb_right">
-    <h:form>
-        <p:commandButton rendered="${not forumPostBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-        </p:commandButton>
-
-        <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" oncomplete="PF('reply_post_dialog').show();" update=":reply_post_dialog" rendered="#{forumPostBean.group.isMember(userBean.user)}" global="false"
-                         styleClass="alt-btn">
-        </p:commandButton>
-    </h:form>
-</ui:define>
-
 <ui:define name="group_layout">
-    <p:panel styleClass="ui-widget-content-p-0">
-        <f:facet name="header"><span class="text-light">#{msg['ForumIndex.messages']} #{msg.of}</span> "#{forumPostBean.topic.title}"</f:facet>
+    <h:form prependId="false">
+        <p:panel styleClass="ui-widget-content-p-0 ui-widget-content-border-0">
+            <f:facet name="header">
+                <span class="text-light">#{msg['ForumIndex.messages']} #{msg.of}</span> "#{forumPostBean.topic.title}"
+            </f:facet>
+            <f:facet name="actions">
+                <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" update=":reply_post_dialog"
+                                 rendered="#{forumPostBean.group.isMember(userBean.user)}" global="false"
+                                 styleClass="alt-btn ml-2" oncomplete="PF('reply_post_dialog').show();">
+                </p:commandButton>
 
-        <h:form prependId="false">
+                <p:commandButton rendered="${not forumPostBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
+                                 update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                </p:commandButton>
+            </f:facet>
+
             <p:dataTable id="forum_post_table" var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" lazy="false"
-                         tableStyleClass="table-responsive h-100"
-                         paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                             tableStyleClass="table-responsive h-100"
+                             paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-                <p:column headerText="#{msg.author}" styleClass="py-2 text-center w-15">
-                    <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
-                    <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
-                        <img class="img-fluid mx-auto" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
-                    </h:link>
+                    <p:column headerText="#{msg.author}" styleClass="py-2 text-center w-15">
+                        <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
+                        <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
+                            <img class="img-fluid mx-auto" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
+                        </h:link>
 
-                    <div class="text-muted small">
-                        <p class="mb-0">
-                            <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
-                            <h:outputText value="#{post.user.registrationDate}">
-                                <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
-                            </h:outputText>
-                        </p>
-                        <p class="mb-0">
-                            <h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}"/>
-                        </p>
-                    </div>
-                </p:column>
-
-                <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="h-100">
-                    <div class="d-flex flex-column h-100">
-                        <div class="row border-bottom pb-1">
-                            <ui:fragment rendered="#{not empty post.category}">
-                                <div class="col font-italic">
-                                    #{msg.category}: #{post.category}
-                                </div>
-                            </ui:fragment>
-                            <div class="col text-right">
-                                #{msg['ForumIndex.postedOn']}
-                                <h:outputText value="#{post.date}">
-                                    <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                        <div class="text-muted small">
+                            <p class="mb-0">
+                                <h:outputText value="#{msg.registered_since}: " styleClass="d-block"/>
+                                <h:outputText value="#{post.user.registrationDate}">
+                                    <f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
                                 </h:outputText>
-                            </div>
+                            </p>
+                            <p class="mb-0">
+                                <h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}"/>
+                            </p>
                         </div>
+                    </p:column>
 
-                        <div class="row">
-                            <div class="col">
-                                <h:outputText value="#{post.text}" escape="false"/>
-                            </div>
-                        </div>
-
-                        <div class="row border-top pt-1 mt-auto">
-                            <ui:fragment rendered="#{post.editCount gt 0}">
-                                <div class="col">
-                                    <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-                                        <f:param value="#{post.editCount}"/>
-                                        <f:param value="#{post.lastEditDate}"/>
-                                        <f:param value="#{post.editUser.username}"/>
-                                    </h:outputFormat>
+                    <p:column headerText="#{msg['ForumIndex.messages']}" styleClass="h-100">
+                        <div class="d-flex flex-column h-100">
+                            <div class="row border-bottom pb-1">
+                                <ui:fragment rendered="#{not empty post.category}">
+                                    <div class="col font-italic">
+                                        #{msg.category}: #{post.category}
+                                    </div>
+                                </ui:fragment>
+                                <div class="col text-right">
+                                    #{msg['ForumIndex.postedOn']}
+                                    <h:outputText value="#{post.date}">
+                                        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                                    </h:outputText>
                                 </div>
-                            </ui:fragment>
+                            </div>
 
-                            <div class="col text-right">
-                                <p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" update=":forum_post_table"
-                                               ajax="true" actionListener="#{forumPostBean.deletePost(post)}" styleClass="mx-2">
-                                    <p:confirm message="Are you sure that you want to delete the post?" />
-                                </p:commandLink>
+                            <div class="row">
+                                <div class="col">
+                                    <h:outputText value="#{post.text}" escape="false"/>
+                                </div>
+                            </div>
 
-                                <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2" rendered="#{forumPostBean.canEditPost(post)}">
-                                    <f:param name="post_id" value="#{post.id}"/>
-                                    <h:outputText value="#{msg.edit}"/>
-                                </h:outputLink>
+                            <div class="row border-top pt-1 mt-auto">
+                                <ui:fragment rendered="#{post.editCount gt 0}">
+                                    <div class="col">
+                                        <h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+                                            <f:param value="#{post.editCount}"/>
+                                            <f:param value="#{post.lastEditDate}"/>
+                                            <f:param value="#{post.editUser.username}"/>
+                                            <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+                                        </h:outputFormat>
+                                    </div>
+                                </ui:fragment>
 
-                                <p:commandLink value="#{msg['ForumIndex.quote']}" oncomplete="PF('reply_post_dialog').show();" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
-                                               update=":post_form:post_message" ajax="true"/>
+                                <div class="col text-right">
+                                    <p:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" update=":forum_post_table"
+                                                   ajax="true" actionListener="#{forumPostBean.deletePost(post)}" styleClass="mx-2">
+                                        <p:confirm message="Are you sure that you want to delete the post?"/>
+                                    </p:commandLink>
+
+                                    <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2" rendered="#{forumPostBean.canEditPost(post)}">
+                                        <f:param name="post_id" value="#{post.id}"/>
+                                        <h:outputText value="#{msg.edit}"/>
+                                    </h:outputLink>
+
+                                    <p:commandLink value="#{msg['ForumIndex.quote']}" oncomplete="PF('reply_post_dialog').show();" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
+                                                   update=":post_form:post_message" ajax="true"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-    </p:panel>
-
-    <p:dialog header="#{msg['ForumIndex.reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" id="reply_post_dialog" styleClass="modal-dialog-select mw-md" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="reply_post_dialog">
+                    </p:column>
+                </p:dataTable>
+        </p:panel>
+    </h:form>
+    <p:dialog header="#{msg['ForumIndex.reply']}" rendered="#{forumPostBean.group.isMember(userBean.user)}" id="reply_post_dialog" styleClass="modal-dialog" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="reply_post_dialog">
         <h:form id="post_form">
             <ui:fragment rendered="#{forumPostBean.group.restrictionForumCategoryEnabled}">
                 <div class="form-group">

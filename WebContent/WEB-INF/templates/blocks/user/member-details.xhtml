@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<!--@elvariable id="user" type="de.l3s.learnweb.user.User"-->
+
+<div class="d-flex member-details">
+	<div class="pt-1">
+		<img class="profile-picture w-auto h-auto" src="#{user.image}" alt="#{user.fullName}"/>
+	</div>
+
+	<div class="pl-3 flex-grow-1 overflow-auto">
+		<div class="d-flex">
+			<div class="flex-fill">
+				<h5>#{user.username}</h5>
+			</div>
+
+			<h:panelGroup styleClass="text-right" layout="block" rendered="#{userBean.canModerateCourses(user.courses)}">
+				<h:outputLink value="myhome/profile.jsf" styleClass="pr-1">
+					<f:param name="user_id" value="#{user.id}"/>
+					<h:outputText value="#{msg.edit_profile}"/>
+				</h:outputLink>
+				<h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+					<f:param name="user_id" value="#{user.id}"/>
+					<h:outputText value="#{msg.search_history}"/>
+				</h:outputLink>
+			</h:panelGroup>
+		</div>
+
+		<ui:fragment rendered="#{not empty user.credits}">
+			<div class="text-primary mb-1 border border-primary p-1">
+				<i class="fa fa-trophy text-warning pr-1" aria-hidden="true"></i>
+				<h:outputText value="#{user.credits}" escape="false"/>
+			</div>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{not empty user.email}">
+			<p class="text-muted small mb-0 text-truncate">
+				<b>#{msg.email_address}:</b>
+				<a href="mailto:#{user.email}">#{user.email}</a>
+			</p>
+		</ui:fragment>
+
+		<p class="text-muted small mb-0">
+			<b>#{msg.gender}: </b>
+			<h:outputText value="-" rendered="#{user.gender == 0}"/>
+			<h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}"/>
+			<h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}"/>
+		</p>
+
+		<ui:fragment rendered="#{not empty user.address}">
+			<p class="text-muted small mb-0"><b>#{msg.address}:</b> #{user.address}</p>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{not empty user.profession}">
+			<p class="text-muted small mb-0"><b>#{msg.profession}:</b> #{user.profession}</p>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{not empty user.interest}">
+			<p class="text-muted small mb-0"><b>#{msg.interest}:</b> #{user.interest}</p>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{not empty user.additionalInformation}">
+			<p class="text-muted small mb-0"><b>#{msg.additionalinformation}:</b> #{user.additionalInformation}</p>
+		</ui:fragment>
+
+		<p class="text-muted small mb-0">
+			<b>#{msg.registered_since}: </b>
+			<h:outputText value="#{user.registrationDate}">
+				<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}"/>
+			</h:outputText>
+		</p>
+
+		<ui:fragment rendered="#{not empty user.groups}">
+			<p class="text-muted small mb-0">
+				<b>#{msg.groupsTitle}: </b>
+				<ui:repeat var="g" value="#{user.groups}">
+					<span class="text-nowrap d-inline-block">
+						<h:outputLink value="group/overview.jsf">
+							<f:param name="group_id" value="#{g.id}"/>
+							<h:outputText value="#{g.title}"/>
+						</h:outputLink>
+					</span>
+				</ui:repeat>
+			</p>
+		</ui:fragment>
+	</div>
+</div>
+
+</ui:composition>

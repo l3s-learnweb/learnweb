@@ -1,9 +1,14 @@
 body {
+	/*
+	These rules break Font awesome for Primefaces components like p:commandLink.
+	I can't imagine when these rule are ever needed.
     .ui-widget,
     .ui-widget .ui-widget {
         font-family: $font-family-base;
         text-decoration: none;
     }
+    */
+    
     .ui-widget-content {
         background-color: $contentBgColor;
         border: 1px solid $contentBorderColor;
@@ -30,20 +35,35 @@ body {
         @include border-radius($border-radius);
     }
     .ui-corner-top {
-        @include border-radius-top($border-radius);
+        @include border-top-radius($border-radius);
     }
     .ui-corner-bottom {
-        @include border-radius-bottom($border-radius);
+        @include border-bottom-radius($border-radius);
     }
     .ui-corner-left {
-        @include border-radius-left($border-radius);
+        @include border-left-radius($border-radius);
     }
     .ui-corner-right {
-        @include border-radius-right($border-radius);
+        @include border-right-radius($border-radius);
     }
     .ui-widget-overlay {
-        background-color: $gray-700;
-        @include opacity(.7);
+        background-color: rgba($gray-700, 0.75);
+    }
+    .ui-blockui {
+        background-color: rgba(73,80,87,.75);
+        background-image: url("\#{resource['images:blockui-spinner.svg']}");
+        background-size: 6rem;
+        background-repeat: no-repeat;
+        background-position: center 4rem;
+        z-index: 990 !important;
+
+        &.bg-center {
+            background-position: center;
+        }
+    }
+    .ui-blockui-content {
+        color: $white;
+        top: 7rem !important;
     }
     .ui-icon {
         min-width: $font-size-base;

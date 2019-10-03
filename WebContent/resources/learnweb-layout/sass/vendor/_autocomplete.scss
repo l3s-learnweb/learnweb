@@ -4,7 +4,7 @@
   border: 1px solid #ccc;
   border-top: 0;
   background: #fff;
-  box-shadow: -1px 1px 3px rgba(0, 0, 0, .1);
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, 0.1);
 
   /* core styles should not be changed */
   position: absolute;
@@ -18,20 +18,20 @@
 
 .autocomplete-suggestion {
   position: relative;
-  padding: 0 .6em;
+  padding: 0 0.6em;
   line-height: 23px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1.02em;
   color: #333;
-}
 
-.autocomplete-suggestion b {
-  font-weight: normal;
-  color: #1f8dd6;
-}
+  b {
+    font-weight: normal;
+    color: #1f8dd6;
+  }
 
-.autocomplete-suggestion.selected {
-  background: #f0f0f0;
+  &.selected {
+    background: #f0f0f0;
+  }
 }

@@ -11,7 +11,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="peer_assessment_id"
-						 value="#{adminPeerAssessmentPairBeen.peerAssessmentId}" required="true" 
+						 value="#{adminPeerAssessmentPairBeen.peerAssessmentId}" required="true"
 						 requiredMessage="#{msg.missing_parameter}"/>
 			<f:viewAction action="#{adminPeerAssessmentPairBeen.onLoad}"/>
 		</f:metadata>
@@ -23,7 +23,7 @@
 
 	<ui:define name="center_layout">
 		<c:set var="showEmail" value="false" scope="request"/>
-	
+
 		<h:outputText value="#{msg.missing_authentication}" rendered="#{not userBean.moderator}"/>
 
 		<ui:fragment rendered="#{userBean.moderator and adminPeerAssessmentPairBeen.peerAssessmentId != 0}">
@@ -117,7 +117,7 @@
 
                                     <h:outputText value="#{msg.not_done}" rendered="#{not subpair.peerAssessmentUserAnswers.saved}"/>
                                     <h:outputText value="saved" rendered="#{subpair.peerAssessmentUserAnswers.saved and not subpair.peerAssessmentUserAnswers.submitted}"/>
-                                    <h:outputText value="Submitted" rendered="#{subpair.peerAssessmentUserAnswers.submitted}"  />
+                                    <h:outputText value="Submitted" rendered="#{subpair.peerAssessmentUserAnswers.submitted}"/>
                                 </p>
                             </p:repeat>
                         </span>
@@ -143,9 +143,9 @@
 							<h:outputText value="#{pair.peerAssessment.title}"/>
 						</h:outputLink>
 
-						<h:outputText value=" saved" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"  />
+						<h:outputText value=" saved" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}"/>
 
-						<h:outputText value=" Submitted" rendered="#{pair.peerAssessmentUserAnswers.submitted}"  />
+						<h:outputText value=" Submitted" rendered="#{pair.peerAssessmentUserAnswers.submitted}"/>
 					</p:column>
 
 					<p:column>
@@ -154,9 +154,9 @@
 							<h:outputText value="My"/>
 						</h:outputLink>
 
-						<h:outputText value=" saved" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+						<h:outputText value=" saved" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"/>
 
-						<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"  />
+						<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}"/>
 
 						<p:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
 							<ui:fragment rendered="#{user.id != userBean.user.id and (pair.assessedUser.courses[0].id != 1338 or user.id == 10135)}">
@@ -166,8 +166,8 @@
 									<f:param name="user_id" value="#{user.id}"/>
 									<h:outputText value="#{user.realUsername}"/>
 								</h:outputLink>
-								<h:outputText value=" saved" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"  />
-								<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"  />
+								<h:outputText value=" saved" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}"/>
+								<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}"/>
 							</ui:fragment>
 						</p:repeat>
 					</p:column>

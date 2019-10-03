@@ -40,15 +40,15 @@
 					<p:dataTable var="login" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
 						   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 						   currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})">
-						<p:column headerText="IP" sortBy="#{login.key}"  filterBy="#{login.key}" filterMatchMode="contains">
+						<p:column headerText="IP" sortBy="#{login.key}" filterBy="#{login.key}" filterMatchMode="contains">
 							<h:outputText value="#{login.key}"/>
 						</p:column>
 
-						<p:column headerText="#{msg.logins_amount}" sortBy="#{login.value.size()}"  filterBy="#{login.value.size()}" filterMatchMode="contains">
+						<p:column headerText="#{msg.logins_amount}" sortBy="#{login.value.size()}" filterBy="#{login.value.size()}" filterMatchMode="contains">
 							<h:outputText value="#{login.value.size()}"/>
 						</p:column>
 
-						<p:column headerText="#{msg.request_usernames}" sortBy="#{login.value.toString()}"  filterBy="#{login.value.toString()}" filterMatchMode="contains">
+						<p:column headerText="#{msg.request_usernames}" sortBy="#{login.value.toString()}" filterBy="#{login.value.toString()}" filterMatchMode="contains">
 							<h:outputText value="#{login.value.toString()}"/>
 						</p:column>
 					</p:dataTable>
@@ -65,15 +65,15 @@
 					</span>
 					<p:dataTable tableStyleClass="table-responsive mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
 						  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-						<p:column headerText="IP" sortBy="#{aRequest.IP}"  filterBy="#{aRequest.IP}" filterMatchMode="contains">
+						<p:column headerText="IP" sortBy="#{aRequest.IP}" filterBy="#{aRequest.IP}" filterMatchMode="contains">
 							<h:outputText value="#{aRequest.IP}"/>
 						</p:column>
 
-						<p:column headerText="#{msg.requests_count}" sortBy="#{aRequest.requests}"  filterBy="#{aRequest.requests}" filterMatchMode="contains">
+						<p:column headerText="#{msg.requests_count}" sortBy="#{aRequest.requests}" filterBy="#{aRequest.requests}" filterMatchMode="contains">
 							<h:outputText value="#{aRequest.requests}"/>
 						</p:column>
 
-						<p:column headerText="#{msg.logins_amount}" sortBy="#{aRequest.loginCount}"  filterBy="#{aRequest.loginCount}" filterMatchMode="contains">
+						<p:column headerText="#{msg.logins_amount}" sortBy="#{aRequest.loginCount}" filterBy="#{aRequest.loginCount}" filterMatchMode="contains">
 							<h:outputText value="#{aRequest.loginCount}"/>
 						</p:column>
 

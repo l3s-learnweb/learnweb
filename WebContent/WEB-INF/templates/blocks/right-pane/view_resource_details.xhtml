@@ -195,8 +195,8 @@
 				<dt class="col-sm-3">#{msg['Archive.versions']} (<span class="text-danger">#{rightPaneBean.clickedResource.archiveUrls.size()}</span>):</dt>
 				<dd class="col-sm-9">
 					<h:panelGroup layout="block">
-						<p:button id="archive_list_btn" styleClass="rounded-right mr-0" value="#{msg.list_view}" onclick="archive_open_list();return false;"/>
-						<p:button id="archive_timeline_btn" styleClass="rounded-left" value="#{msg.timeline_view}" onclick="archive_open_timeline();return false;"/>
+						<p:button id="archive_list_btn" styleClass="rounded-right mr-0" value="#{msg.list_view}" onclick="archiveOpenList();return false;"/>
+						<p:button id="archive_timeline_btn" styleClass="rounded-left" value="#{msg.timeline_view}" onclick="archiveOpenTimeline();return false;"/>
 					</h:panelGroup>
 
 					<h:panelGroup id="archive_list_view" layout="block" styleClass="my-2 collapse" style="max-height:20rem;overflow:auto;">

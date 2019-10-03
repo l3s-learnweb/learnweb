@@ -14,22 +14,22 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/user.jsf#"/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/user.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
     <p:panel header="List of all dashboards">
         <div class="row">
             <div class="col-12">
-                <h:outputLink value="admin/dashboard/glossary.jsf">#{msg.glossary_dashboard}</h:outputLink>
+                <h:outputLink value="dashboard/glossary.jsf">#{msg.glossary_dashboard}</h:outputLink>
                 <h:outputText class="d-block"> - it is a dashboard, which includes charts and tables regarding users, who work with the glossary</h:outputText>
             </div>
             <div class="col-12 my-2">
-                <h:outputLink value="admin/dashboard/activity.jsf">#{msg['Activity.dashboard']}</h:outputLink>
+                <h:outputLink value="dashboard/activity.jsf">#{msg['Activity.dashboard']}</h:outputLink>
                 <h:outputText class="d-block"> - a dashboard with the list of all activities, that was performed on the LearnWeb platfrom</h:outputText>
             </div>
             <div class="col-12">
-                <h:outputLink value="admin/dashboard/tracker.jsf">#{msg['Tracker.dashboard']}</h:outputLink>
+                <h:outputLink value="dashboard/tracker.jsf">#{msg['Tracker.dashboard']}</h:outputLink>
                 <h:outputText class="d-block"> - view of the tracked data (only for the courses, where tracker is enabled)</h:outputText>
             </div>
         </div>

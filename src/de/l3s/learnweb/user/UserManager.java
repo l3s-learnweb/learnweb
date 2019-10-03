@@ -1,6 +1,8 @@
 package de.l3s.learnweb.user;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
@@ -106,6 +108,23 @@ public class UserManager
         return users;
     }
 
+    /**
+     * sets default avatar for each user
+     */
+    public void setDefaultAvatars() throws SQLException, IOException
+    {
+        List<User> users = getUsers();
+        for(User user : users)
+        {
+            if (user.getImageFileId() <=0)
+            {
+                InputStream is = user.getDefaultAvatar();
+                if (is !=null)
+                    user.setImage(is);
+            }
+        }
+    }
+
     public List<User> getUsersByOrganisationId(int organisationId) throws SQLException
     {
         List<User> users = new LinkedList<>();
@@ -128,6 +147,23 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username"))
         {
             select.setInt(1, groupId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                users.add(createUser(rs));
+            }
+        }
+
+        return users;
+    }
+
+    public List<User> getUsersByGroupId(int groupId, int limit) throws SQLException
+    {
+        List<User> users = new LinkedList<>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY join_time LIMIT ?"))
+        {
+            select.setInt(1, groupId);
+            select.setInt(2, limit);
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
@@ -294,6 +330,7 @@ public class UserManager
         user.setPassword(password);
         user.setPreferences(new HashMap<>());
         user = save(user);
+        user.setImage(user.getDefaultAvatar());
 
         course.addUser(user);
 

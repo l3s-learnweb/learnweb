@@ -1,8 +1,8 @@
 // Load colors
-@import '_colors';
+@import 'colors';
 // change this if you want to use different color schema (see `themes` folder for all alternatives)
-//@import 'themes/_emerald';
-@import 'themes/_noir';
+@import 'themes/emerald';
+//@import 'themes/noir';
 
 /**
 * Theme color schema (This is NOT bootstrap colors)
@@ -17,7 +17,7 @@ $themeSidebarHoverBgColor: $gray-500 !default; // $sidebarMenuitemHoverBgColor, 
 $themeElementTextColor: $white !default; // $primaryTextColor, #ffffff
 
 $themeDarkBgColor: #242725 !default; // $gradientSidebarTopBgColor
-$themeLightBgColor: #446A51 !default; // $gradientSidebarBottomBgColor
+$themeLightBgColor: #446a51 !default; // $gradientSidebarBottomBgColor
 
 $themePrimaryColor: $green !default; // $primaryColor
 $themePrimaryColorDarker: $greenDarker !default; // $primaryColorDarker
@@ -31,7 +31,7 @@ $themePrimaryAltDarkerAlt: $yellowDarkerAlt !default; // $primaryAltButtonActive
 // layout variables
 $min-width: 320px;
 $grid-gutter-width: 1rem;
-$transition-duration: .2s;
+$transition-duration: 0.2s;
 
 $topbar-height: 3.125rem;
 $topbar-two-row-display: sm;
@@ -41,7 +41,7 @@ $sidebar-hide-display: lg; // Do not forget to change the JS according
 
 /*
 * Bootstrap variables
-* check variables here (vendor/bootstrap-4.3.1/_variables.scss) and override if you need
+* check variables here (vendor/bootstrap-4.3.1/variables.scss) and override if you need
 */
 $body-bg: $lightGray;
 $body-color: $gray-900;
@@ -50,27 +50,27 @@ $emphasized-link-hover-darken-percentage: 7.5%;
 
 $primary: $themePrimaryColor;
 $secondary: $themePrimaryAltColor;
-$success: $green;
+$success: $greenDarkest;
 $info: $cyan;
 $warning: $yellow;
 $danger: $red;
 $light: $gray-200;
 $dark: $themeDarkBgColor;
 
-$font-size-sm: .75rem; // 12px
-$font-size-base: .875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
+$font-size-sm: 0.75rem; // 12px
+$font-size-base: 0.875rem; // Assuming the browser's default (typically `16px`), then base font size is `14px`.
 $font-size-lg: 1rem; // 16px
 
-$box-shadow-sm: 0 1px 1px rgba($black, .15);
-$box-shadow: 0 .125rem .5rem rgba($black, .2);
-$box-shadow-lg: 0 0.5rem 1rem rgba($black, .25);
+$box-shadow-sm: 0 0 1px rgba($black, 0.15);
+$box-shadow: 0 0.125rem 0.5rem rgba($black, 0.2);
+$box-shadow-lg: 0 0.5rem 1rem rgba($black, 0.25);
 
 $border-radius: 0;
-$btn-border-radius: .2rem;
+$btn-border-radius: 0.2rem;
 
-$nav-link-padding-y: .2rem;
-$nav-link-padding-x: .5rem;
-$input-padding-y: .25rem;
-$input-padding-x: .25rem;
-$input-btn-padding-y: .25rem;
+$nav-link-padding-y: 0.2rem;
+$nav-link-padding-x: 0.5rem;
+$input-padding-y: 0.25rem;
+$input-padding-x: 0.25rem;
+$input-btn-padding-y: 0.21875rem; // 3.5px
 $input-btn-padding-x: $input-btn-padding-y * 3;

@@ -19,7 +19,7 @@
 
             <ui:fragment rendered="#{userBean.loggedIn}">
                 <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
-                    <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100" onsubmit="removeViewstate(this);">
+                    <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100" onsubmit="removeViewState(this);">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
                         <input id="searchfield" type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
 
@@ -36,7 +36,7 @@
                 </h:outputLink>
 
 				<ui:include src="language_switch.xhtml"/>
- 
+
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <h:outputLink value="#{userBean.bannerLink}" id="userMenuButton" styleClass="header-element usermenu-button" ariaLabel="Profile" onclick="return false;">
                         <img src="${learnwebBean.getProfileImage(userBean.user)}" class="profile-picture" alt="" title="#{userBean.user.fullName}"/>
@@ -44,7 +44,7 @@
 
                     <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                         <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/admin/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
+                        <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
                         <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}"/>
                         <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
                     </p:menu>

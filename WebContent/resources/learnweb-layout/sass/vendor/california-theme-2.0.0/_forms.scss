@@ -317,7 +317,6 @@ body {
             height: 20px;
             line-height: 18px;
             text-align: center;
-            @include border-box();
             @include transition(border-color $transition-duration,background-color $transition-duration);
 
             &.ui-state-hover {
@@ -370,7 +369,6 @@ body {
             height: 20px;
             line-height: 18px;
             text-align: center;
-            @include border-box();
             @include border-radius(50%);
             @include transition(border-color $transition-duration);
 
@@ -492,7 +490,7 @@ body {
                 color: $primaryTextColor;
                 
                 &:before {
-                    @include translateX(26px);
+                    transform: translateX(26px);
                 }
             }
         }
@@ -855,7 +853,6 @@ body {
 
         .ui-selectlistbox-filter {
             width: 100%;
-            @include border-box();
         }
 
         .ui-icon {
@@ -948,7 +945,6 @@ body {
             .ui-button-text {
                 height: 100%;
                 display: block;
-                @include border-box();
                 position: relative;
 
                 .ui-icon {
@@ -1057,11 +1053,11 @@ body {
             }
 
             &:first-child {
-                @include border-radius-left($buttonBorderRadius);
+                @include border-left-radius($buttonBorderRadius);
             }
 
             &:last-child {
-                @include border-radius-right($buttonBorderRadius);
+                @include border-right-radius($buttonBorderRadius);
             }
         }
     }
@@ -1183,7 +1179,7 @@ body {
 
     .ui-trigger-calendar {
         .ui-inputfield {
-            @include border-radius-right(0);
+            @include border-right-radius(0);
             border-right: 0 none;
         }
 
@@ -1254,7 +1250,7 @@ body {
                 
                 a,span {
                     width: 100%;
-                    @include box-sizing(border-box);
+                    box-sizing: border-box;
                 }
                 
                 &.ui-datepicker-today {
@@ -1290,7 +1286,7 @@ body {
             .ui-monthpicker {
                 .ui-monthpicker-month {
                     color: $body-color;
-                    @include box-sizing(border-box);
+                    box-sizing: border-box;
                     
                     &:hover {
                         background-color: $listItemHoverBgColor;
@@ -1436,11 +1432,11 @@ body {
             min-width: $inputGroupAddonMinWidth;
 
             &:first-child {
-                @include border-radius-left($border-radius);
+                @include border-left-radius($border-radius);
             }
 
             &:last-child {
-                @include border-radius-left($border-radius);
+                @include border-left-radius($border-radius);
             }
         }
 

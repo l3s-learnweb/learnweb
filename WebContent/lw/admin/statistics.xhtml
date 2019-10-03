@@ -3,7 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
- 
+
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
 
@@ -73,7 +73,7 @@
 										   onchange="$('.description').toggle();" value="off"/>
 					<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}"
 										   onchange="$('.admin_comments').toggle();" value="on"/>
-					<hr />
+					<hr/>
 					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false"/>
 				</p:panel>
 			</ui:fragment>

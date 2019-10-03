@@ -9,7 +9,7 @@
     margin: 0.25rem;
     width: 100px;
 
-    &.selectedItem a::after {
+    &.gridder-active a::after {
       content: ' ';
       position: absolute;
       top: auto;

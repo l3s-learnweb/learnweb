@@ -48,7 +48,7 @@ public class Search implements Serializable
     // resources grouped by pages
     private int temporaryId = 1;
     private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<>();
-    private HashMap<Integer, Resource> tempIdIndex = new HashMap<>(); // makes it possible to retrieve resources by its tempId
+    private HashMap<Integer, ResourceDecorator> rankIndex = new HashMap<>(); // makes it possible to retrieve resources by its rank
     private TreeSet<String> urlHashMap = new TreeSet<>(); // used to make sure that resources with the same url appear only once in the search results
 
     private int userId;
@@ -249,9 +249,9 @@ public class Search implements Serializable
                 continue;
             }
 
-            decoratedResource.setTempId(temporaryId);
+            decoratedResource.setRank(temporaryId);
 
-            tempIdIndex.put(temporaryId, decoratedResource.getResource());
+            rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
             //Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
             newResources.add(decoratedResource);
@@ -348,9 +348,9 @@ public class Search implements Serializable
                 continue;
             }
 
-            decoratedResource.setTempId(temporaryId);
+            decoratedResource.setRank(temporaryId);
 
-            tempIdIndex.put(temporaryId, decoratedResource.getResource());
+            rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
 
             if(configMode == MODE.text)
@@ -489,9 +489,9 @@ public class Search implements Serializable
         return hasMoreResults;
     }
 
-    public Resource getResourceByTempId(int tempId)
+    public ResourceDecorator getResourceByRank(int rank)
     {
-        return tempIdIndex.get(tempId);
+        return rankIndex.get(rank);
     }
 
     public void stop()

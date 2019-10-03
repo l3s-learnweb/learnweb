@@ -1,7 +1,7 @@
 .section-archive-thumbnail {
   body {
-    background: black;
-    color: white;
+    background: $black;
+    color: $white;
     font-size: 10pt;
     height: 100%;
     width: 100%;
@@ -26,7 +26,7 @@
   }
 
   .sliderContainer {
-    background-color: white;
+    background-color: $white;
     width: 100%;
     position: relative;
     left: 0;
@@ -35,7 +35,7 @@
 
   .timeline {
     font-size: 15px;
-    background-color: grey;
+    background-color: $gray-600;
     width: 96%;
     position: relative;
     left: 2%;
@@ -45,11 +45,11 @@
 
   .rightpanel {
     font-size: 10px;
-    border-top: 2px solid grey;
-    border-bottom: 1px solid grey;
+    border-top: 2px solid $gray-600;
+    border-bottom: 1px solid $gray-600;
     margin-bottom: 5px;
     box-shadow: 10px 30px 40px rgba(0, 0, 0, 0.4);
-    background-color: white;
+    background-color: $white;
     width: 25%;
     float: right;
     height: 100%;
@@ -59,19 +59,17 @@
     position: relative;
     width: 90%;
     height: auto;
-    padding: 10px 0px 0px 10px;
+    padding: 10px 0 0 10px;
   }
 
   .messageDiv {
-    color: black;
+    color: $black;
     font-size: 1rem;
     position: relative;
     width: 100%;
     text-align: center;
     line-height: 20px;
     border: 2px solid #489a83;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     margin-bottom: 10px;
   }
@@ -87,30 +85,30 @@
     text-align: left;
     position: relative;
     width: 10%;
-    color: black;
+    color: $black;
     display: inline;
     border-radius: 2px !important;
-    border: 1px solid black;
+    border: 1px solid $black;
   }
 
   .textInputLabel {
     font-size: 1.5rem;
     text-align: left;
-    color: black;
+    color: $black;
     margin-top: 5px;
     margin-right: 5px;
   }
 
   .title {
-    color: black;
+    color: $black;
     font-size: 1.5rem;
     text-align: justify;
   }
 
   .helptext {
-    color: black;
+    color: $black;
     font-size: 1.2rem;
-    margin: 2em 0em 2em 1em;
+    margin: 2em 0 2em 1em;
   }
 
   .simhashDiv {
@@ -121,8 +119,9 @@
 
   div {
     &.timeline-axis-text {
-      color: white;
+      color: $white;
     }
+
     &.timeline-axis {
       border-color: #489a83;
       background-color: #489a83;
@@ -130,12 +129,15 @@
       -moz-opacity: 1;
       opacity: 1;
     }
+
     &.selected {
       background: #489a83 none !important;
     }
+
     &.timeline-groups-axis {
       border-color: #489a83;
     }
+
     &.timeline-navigation {
       border-color: #489a83;
       background-color: #489a83;
@@ -146,30 +148,33 @@
 
   a {
     text-decoration: none;
-    color: white;
+    color: $white;
     font-weight: bold;
-    &:link, &:visited, &:active {
+
+    &:link,
+    &:visited,
+    &:active {
       text-decoration: none;
-      color: white;
+      color: $white;
       font-weight: bold;
     }
+
     &:hover {
-      text-decoration: none;
-      color: white;
+      color: $white;
       font-weight: bold;
       text-decoration: underline;
     }
   }
 
   img {
-    border: none;
+    border: 0;
   }
 
   h1 {
     text-align: center;
     text-decoration: underline;
     font-family: serif;
-    color: white;
+    color: $white;
     font-size: 1.8em;
   }
 
@@ -196,7 +201,7 @@
   }
 
   .simpleBlack {
-    background: black;
+    background: $black;
     width: 80ex;
     margin: 0 auto;
     font-family: sans-serif;
@@ -210,12 +215,14 @@
 
   dl {
     margin-left: 4ex;
+
     dt {
       font-size: 0.9em;
       font-weight: bold;
       color: #eee;
       font-family: monospace;
     }
+
     dd {
       margin-bottom: 1.5em;
       color: #ccc;
@@ -234,7 +241,7 @@
   }
 
   #title {
-    margin: 0px auto;
+    margin: 0 auto;
   }
 
   #sponsor {
@@ -247,7 +254,7 @@
   }
 
   div.maincontent {
-    margin: 0px auto 20pt auto;
+    margin: 0 auto 20pt;
   }
 
   #menu {
@@ -255,10 +262,11 @@
     text-align: center;
     background: #222;
     padding: 1em;
-    margin: 2em auto 4em auto;
+    margin: 2em auto 4em;
+
     li {
       display: inline;
-      padding: 0px 20px;
+      padding: 0 20px;
     }
   }
 
@@ -267,9 +275,10 @@
     margin: 4em 10%;
     padding: 0.25em;
     background: #161616;
+
     a {
       margin-right: 7%;
-      color: silver;
+      color: $gray-400;
     }
   }
 
@@ -280,28 +289,34 @@
   #browserComp {
     border-collapse: collapse;
     margin: 40px auto;
+
     caption {
       text-align: center;
       margin: 20px auto;
       font-size: 1.1em;
       font-weight: bold;
     }
+
     th {
       font-size: 10px;
       padding: 5px 10px;
-      border-bottom: 1px solid silver;
+      border-bottom: 1px solid $gray-400;
+
       img {
         width: 22px;
       }
     }
+
     td {
       text-align: center;
     }
-    th.feature, td.feature {
+
+    th.feature,
+    td.feature {
       text-align: right;
       padding: 5px;
       padding-right: 10px;
-      border-right: 1px solid silver;
+      border-right: 1px solid $gray-400;
     }
   }
 
@@ -310,38 +325,47 @@
     padding: 20px;
     margin-bottom: 20px;
     background: #222;
+
     .flowBox {
       width: 500px;
       margin-right: 40px;
       float: left;
     }
+
     .discription {
       margin-left: 540px;
     }
+
     .title {
       line-height: 1.3em;
+
       h3 {
         margin: 0;
         display: inline;
       }
+
       .by {
         margin-left: 2em;
         font-size: 0.8em;
         text-decoration: none;
       }
     }
+
     p {
       font-size: 0.9em;
     }
+
     .comment {
       margin-top: 2em;
       font-style: italic;
     }
+
     .download {
       font-size: 0.8em;
       float: right;
       margin: 0 0 2em 4em;
       line-height: 1.5em;
+
       a {
         font-weight: normal;
       }
@@ -349,6 +373,6 @@
   }
 
   #info {
-    color: white;
+    color: $white;
   }
 }

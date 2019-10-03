@@ -15,8 +15,8 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.dashboard}" url="admin/dashboard/index.jsf"/>
-    <p:menuitem value="#{msg['glossary_dashboard']}" url="admin/dashboard/glossary.jsf"/>
+    <p:menuitem value="#{msg.dashboard}" url="dashboard/index.jsf"/>
+    <p:menuitem value="#{msg['glossary_dashboard']}" url="dashboard/glossary.jsf"/>
     <p:menuitem value="#{glossaryDashboardBean.firstSelectedUser.username}" url="#" rendered="#{glossaryDashboardBean.singleUser}"/>
 </ui:define>
 
@@ -112,9 +112,13 @@
                     <h:form>
                         <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
                             <f:facet name="header">
-                                #{msg['Glossary.location']}
-                                <p:button icon="ui-icon-help" onclick="return false;" styleClass="float-right"/>
-                                <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.location']}</div>
+                                    <div>
+                                        <p:button icon="ui-icon-help" onclick="return false;"/>
+                                        <p:tooltip for="@previous" value="#{msg['Glossary.location_description']}"/>
+                                    </div>
+                                </div>
                             </f:facet>
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.title}" sortBy="#{glossary.title}">
@@ -158,9 +162,9 @@
                                      emptyMessage="#{msg.no_data}">
 
                             <f:facet name="header">
-                                <div class="ui-helper-clearfix">
-                                    #{msg['Glossary.fields']}
-                                    <div class="float-right">
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.fields']}</div>
+                                    <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.fields_description']}"/>
                                     </div>
@@ -169,7 +173,7 @@
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true"
                                       filterBy="#{gfs.user.username}" filterMatchMode="contains">
-                                <a href="admin/dashboard/glossary.jsf?userId=#{gfs.userId}"> #{gfs.user.username}</a>
+                                <a href="dashboard/glossary.jsf?userId=#{gfs.userId}">#{gfs.user.username}</a>
                             </p:column>
                             <p:column styleClass="ui-column-title" headerText="Concepts" sortBy="#{gfs.entries}" sortable="true">
                                 #{gfs.entries}
@@ -241,9 +245,9 @@
                                      rowsPerPageTemplate="25,50,100">
 
                             <f:facet name="header">
-                                <div class="ui-helper-clearfix">
-                                    #{msg['Glossary.Definitions']}
-                                    <div class="float-right">
+                                <div class="d-flex">
+                                    <div class="mr-auto">#{msg['Glossary.Definitions']}</div>
+                                    <div>
                                         <p:button icon="ui-icon-help" onclick="return false;"/>
                                         <p:tooltip for="@previous" value="#{msg['Glossary.definitions_description']}"/>
                                     </div>
@@ -252,7 +256,7 @@
 
                             <p:column styleClass="ui-column-title" headerText="#{msg.username}" sortable="true" sortBy="#{gds.user.username}" filterable="true"
                                       filterBy="#{gds.user.username}" filterMatchMode="contains">
-                                <a href="admin/dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
+                                <a href="dashboard/glossary.jsf?userId=#{gds.userId}">#{gds.user.username}</a>
                             </p:column>
                             <p:column headerText="Definition" sortBy="#{gds.description}" sortable="true"
                                       filterable="true" filterBy="#{gds.description}" filterMatchMode="contains">

@@ -175,7 +175,7 @@ public class SearchLogManager
             for(ResourceDecorator decoratedResource : resources)
             {
                 insert.setInt(1, searchId);
-                insert.setInt(2, decoratedResource.getTempId());
+                insert.setInt(2, decoratedResource.getRank());
                 if(decoratedResource.getResource().getId() > 0) // resource is stored in Learnweb, we do not need to save the title or description
                 {
                     insert.setInt(3, decoratedResource.getResource().getId());

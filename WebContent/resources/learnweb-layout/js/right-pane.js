@@ -1,201 +1,162 @@
-/** @external updateThumbnailCommand */
-/** @external editorConfigValues */
-
-/* Show timeline/list of snapshots in resource_view */
-
-function archive_open_timeline() {
-    var $archiveListBtn = $('#archive_list_btn');
-    var $archiveTimelineBtn = $('#archive_timeline_btn');
-    var $archiveListView = $('#archive_list_view');
-    var $archiveTimelineView = $('#archive_timeline_view');
-
-    if ($archiveListView.is(':visible')) {
-        $archiveListView.slideToggle('slow');
-        $archiveListBtn.removeClass('ui-state-active');
-    }
-
-    $archiveTimelineView.slideToggle('slow', function () {
-        $archiveTimelineBtn.addClass('ui-state-active');
-        if ($archiveTimelineView.is(':visible')) {
-            var $container = $('#archive_timeline_container');
-            $container.show().width($archiveTimelineView.width());
-            chart.setSize($archiveTimelineView.width(), $container.height());
-            chart.reflow();
-        }
-    });
-}
-
-function archive_open_list() {
-    var $archiveListBtn = $('#archive_list_btn');
-    var $archiveTimelineBtn = $('#archive_timeline_btn');
-    var $archiveListView = $('#archive_list_view');
-    var $archiveTimelineView = $('#archive_timeline_view');
-
-    if ($archiveTimelineView.is(':visible')) {
-        $archiveTimelineView.slideToggle('slow');
-        $archiveTimelineBtn.removeClass('ui-state-active');
-    }
-
-    $archiveListView.slideToggle('slow', function () {
-        $archiveListBtn.addClass('ui-state-active');
-    });
-}
-
-
+/* global updateThumbnailCommand, editorConfigValues, DocsAPI */
 
 /* Modal to see archive versions */
-
 function loadArchiveUrlsModal() {
-    $.fancybox.open({
-        src: '#modal_archive_urls',
-        type: 'inline'
-    }, {
-        baseClass: 'fancybox-html-archive-urls',
-        closeExisting: true,
-        smallBtn : false
-    });
+  $.fancybox.open({
+    src: '#modal_archive_urls',
+    type: 'inline',
+  }, {
+    baseClass: 'fancybox-html-archive-urls',
+    closeExisting: true,
+    smallBtn: false,
+  });
 
-    $('#archive_iframe').attr('src', function () {
-        return $(this).data('src');
-    });
+  $('#archive_iframe').attr('src', function () {
+    return $(this).data('src');
+  });
 }
 
 function updateThumbnail() {
-    var archive_url = $('#archive_iframe').attr('src');
-    updateThumbnailCommand([{name: 'archive_url', value: archive_url}]);
+  const archiveUrl = $('#archive_iframe').attr('src');
+  updateThumbnailCommand([{ name: 'archive_url', value: archiveUrl }]);
 }
 
-$(document).on('click', '.archive-snapshot-list button', function (e) {
-    $(this).toggleClass('outline-btn');
-    $(this).next().slideToggle();
+$(document).on('click', '.archive-snapshot-list button', (e) => {
+  $(e.currentTarget).toggleClass('outline-btn');
+  $(e.currentTarget).next().slideToggle();
 });
 
-$(document).on('click', '.archive-snapshot-list a', function (e) {
-    var $this = $(this);
-    // make button active and reset the previous active element
-    $('.archive-snapshot-list span:not(.outline-btn) a').parent().addClass('outline-btn');
-    $this.parent().removeClass('outline-btn');
+$(document).on('click', '.archive-snapshot-list a', (e) => {
+  // make button active and reset the previous active element
+  $('.archive-snapshot-list span:not(.outline-btn) a').parent().addClass('outline-btn');
+  $(e.currentTarget).parent().removeClass('outline-btn');
 
-    // update iframe
-    $('#archive_timestamp').text($this.text());
-    $('#archive_iframe').attr('src', $this.attr('href'));
+  // update iframe
+  $('#archive_timestamp').text($(e.currentTarget).text());
+  $('#archive_iframe').attr('src', $(e.currentTarget).attr('href'));
 
-    e.preventDefault();
+  e.preventDefault();
 });
-
 
 
 /* OnlyOffice editor embedded & modal */
 
-var editorFrames = [];
+const editorFrames = [];
+
 function loadPreviewEditor() {
-    if (document.getElementById('iframe_editor')) {
-        loadEditorScript(editorConfigValues.clientUrl);
-        editorFrames.push(['iframe_editor', 'embedded', editorConfigValues]);
-    }
+  if (document.getElementById('iframe_editor')) {
+    loadEditorScript(editorConfigValues.clientUrl);
+    editorFrames.push(['iframe_editor', 'embedded', editorConfigValues]);
+  }
 }
 
 function loadModalEditor() {
-    loadEditorScript(editorConfigValues.clientUrl);
-    attachEditor('modal_editor', 'desktop', editorConfigValues);
+  loadEditorScript(editorConfigValues.clientUrl);
+  attachEditor('modal_editor', 'desktop', editorConfigValues);
 
-    $.fancybox.open({
-        src: '#modal_editor_wrapper',
-        type: 'inline'
-    }, {
-        baseClass: 'fancybox-iframe-inline',
-        closeExisting: true,
-        smallBtn : false
-    });
+  $.fancybox.open({
+    src: '#modal_editor_wrapper',
+    type: 'inline',
+  }, {
+    baseClass: 'fancybox-iframe-inline',
+    closeExisting: true,
+    smallBtn: false,
+  });
 }
 
+
 function loadScript(scriptUrl, callback) {
-    var s = document.createElement('script');
-    s.type = 'text/javascript';s.src = scriptUrl;s.async = true;s.onload = callback;
-    var t = document.getElementsByTagName('script')[0];
-    t.parentNode.insertBefore(s, t);
+  const s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.src = scriptUrl;
+  s.async = true;
+  s.onload = callback;
+  const t = document.getElementsByTagName('script')[0];
+  t.parentNode.insertBefore(s, t);
 }
 
 function loadEditorScript(clientUrl) {
-    if (!editorFrames.loaded) {
-        loadScript(clientUrl + '/apps/api/documents/api.js', function () {
-            editorFrames.loaded = true;
+  if (!editorFrames.loaded) {
+    loadScript(`${clientUrl}/apps/api/documents/api.js`, () => {
+      editorFrames.loaded = true;
 
-            editorFrames.push = function (args) {
-                attachEditor.apply(null, args);
-            };
+      editorFrames.push = (args) => {
+        attachEditor(...args);
+      };
 
-            for (var i = 0, l = editorFrames.length; i < l; ++i) {
-                attachEditor.apply(null, editorFrames[i]);
-            }
-        });
-    }
+      for (let i = 0, l = editorFrames.length; i < l; ++i) {
+        attachEditor(...editorFrames[i]);
+      }
+    });
+  }
 }
 
 function attachEditor(elementId, editorType, configValues) {
-    var history_info = {};
-    var docEditor = new DocsAPI.DocEditor(elementId, {
-        width: '100%',
-        height: '100%',
-        type: editorType,
-        documentType: configValues.documentType,
-        document: {
-            title: configValues.document.title,
-            url: configValues.document.url,
-            fileType: configValues.document.fileType,
-            key: configValues.document.key,
-            permissions: {
-                edit: configValues.document.canBeEdited === 'true',
-                download: true,
-                comment: true
-            }
-        },
-        editorConfig: {
-            mode: configValues.document.canBeEdited === 'true' ? 'edit' : 'view',
-            lang: 'en',
-            callbackUrl: configValues.callbackUrl + '&userId=' + configValues.user.id,
-            user: {
-                id: configValues.user.id,
-                name: configValues.user.name
-            },
-            embedded: {
-                saveUrl: configValues.document.url,
-                toolbarDocked: 'top'
-            }
-        },
-        events: {
-            'onAppReady': function () {
-                console.log('Document editor ready');
-            },
-            'onDocumentStateChange': function (event) {
-                var title = document.title.replace(/\*$/g, "");
-                document.title = title + (event.data ? '*' : "");
-            },
-            'onRequestEditRights': function () {
-                location.href = location.href.replace(RegExp('action=view\&?', 'i'), "");
-            },
-            'onError': function (err) {
-                console.error(err);
-            },
-            'onOutdatedVersion': function (event) {
-                location.reload(true);
-            },
-            'onRequestHistoryData': function (event) {
-                $.post(configValues.historyUrl + '?version=' + event.data + '&resourceId=' + configValues.document.resourceId, JSON.stringify(history_info), function (json) {
-                    docEditor.setHistoryData(json);
-                }, 'json');
-            },
-            'onRequestHistory': function () {
-                $.get(configValues.historyUrl + '?resourceId=' + configValues.document.resourceId, function (json) {
-                    history_info = json;
-                    docEditor.refreshHistory(json);
-                });
-            },
-            'onRequestHistoryClose': function () {
-                document.location.reload();
-            }
-        }
-    });
+  let historyInfo = {};
+  const docEditor = new DocsAPI.DocEditor(elementId, {
+    width: '100%',
+    height: '100%',
+    type: editorType,
+    documentType: configValues.documentType,
+    document: {
+      title: configValues.document.title,
+      url: configValues.document.url,
+      fileType: configValues.document.fileType,
+      key: configValues.document.key,
+      permissions: {
+        edit: configValues.document.canBeEdited === 'true',
+        download: true,
+        comment: true,
+      },
+    },
+    editorConfig: {
+      mode: configValues.document.canBeEdited === 'true' ? 'edit' : 'view',
+      lang: 'en',
+      callbackUrl: `${configValues.callbackUrl}&userId=${configValues.user.id}`,
+      user: {
+        id: configValues.user.id,
+        name: configValues.user.name,
+      },
+      embedded: {
+        saveUrl: configValues.document.url,
+        toolbarDocked: 'top',
+      },
+    },
+    events: {
+      onAppReady() {
+        console.log('Document editor ready');
+      },
+      onDocumentStateChange(event) {
+        const title = document.title.replace(/\*$/g, '');
+        document.title = title + (event.data ? '*' : '');
+      },
+      onRequestEditRights() {
+        window.location.href = window.location.href.replace(RegExp('action=view&?', 'i'), '');
+      },
+      onError(err) {
+        console.error(err);
+      },
+      onOutdatedVersion() {
+        window.location.reload();
+      },
+      onRequestHistoryData(event) {
+        // noinspection JSIgnoredPromiseFromCall
+        $.post(`${configValues.historyUrl}?version=${event.data}&resourceId=${configValues.document.resourceId}`, JSON.stringify(historyInfo), (json) => {
+          docEditor.setHistoryData(json);
+        }, 'json');
+      },
+      onRequestHistory() {
+        // noinspection JSIgnoredPromiseFromCall
+        $.get(`${configValues.historyUrl}?resourceId=${configValues.document.resourceId}`, (json) => {
+          historyInfo = json;
+          docEditor.refreshHistory(json);
+        });
+      },
+      onRequestHistoryClose() {
+        document.location.reload();
+      },
+    },
+  });
 
-    window.docEditor = docEditor;
-};
+  window.docEditor = docEditor;
+}

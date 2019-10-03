@@ -1,6 +1,8 @@
 .profile-picture {
   width: 2.8125rem;
   height: 2.8125rem;
+  max-width: 6.25rem;
+  max-height: 6.25rem;
   border-radius: 50%;
   background: $themeElementTextColor;
   border: 1px solid $themePrimaryColor;
@@ -9,7 +11,7 @@
 .has-badge {
   position: relative;
 
-  &:after{
+  &::after {
     position: absolute;
     right: 0;
     top: 0;
@@ -24,10 +26,44 @@
     min-width: 1.75em;
     font-weight: bold;
   }
+
+  &.ui-draggable-helper::after {
+    background: $red;
+    right: -0.5rem;
+    top: -0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .modal-dialog-select {
   .ui-selectonemenu-label {
     max-width: 254px;
+  }
+}
+
+@keyframes highlight {
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+section:target .highlight {
+  @include media-breakpoint-up(md) {
+    animation: highlight 1s ease;
+  }
+}
+
+.modal-dialog {
+  max-width: 320px;
+  @include media-breakpoint-up(sm) {
+    max-width: 25rem;
+  }
+
+  @include media-breakpoint-up(md) {
+    max-width: 50rem;
   }
 }

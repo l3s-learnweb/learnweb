@@ -4,10 +4,9 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<!-- Edit resource block -->
-<h:form id="edit_form">
-
+<h:form id="edit_resource_form">
     <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}"/>
+    <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
 
     <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'text' or
                              rightPaneBean.clickedResource.type eq 'website' or
@@ -20,36 +19,27 @@
         </ui:decorate>
     </ui:fragment>
 
-    <table id="edit_table" class="full-width mt-2">
-        <colgroup>
-            <col span="1" style="width: 10%; min-width: 10rem;"/>
-            <col span="1"/>
-        </colgroup>
-        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
-            <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
-        </ui:decorate>
+    <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+        <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
+    </ui:decorate>
 
-        <tr>
-            <td colspan="2">
-                <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
-
-                <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
-                                 actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane"
-                                 oncomplete="resourceUpdatedHook();" style="margin-right:0;"/>
-                <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
-                                 actionListener="#{rightPaneBean.cancelEditClickedResource}" update=":right_pane"
-                                 style="margin-right:0.5em" immediate="true"/>
-            </td>
-        </tr>
-    </table>
-
-    <p:commandButton styleClass="graybutton" value="Recreate thumbnail"
-                     actionListener="#{resourceDetailBean.onUpdateThumbnail}"
-                     update=":right_pane" immediate="true" rendered="#{userBean.admin}">
-        <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewResource"/>
-        <f:setPropertyActionListener target="#{rightPaneBean.clickedResource}"
-                                     value="#{rightPaneBean.clickedAbstractResource}"/>
-    </p:commandButton>
+    <div class="d-flex">
+        <div class="mr-auto">
+            <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+                             update=":right_pane" global="false" immediate="true" rendered="#{userBean.admin}"
+                             onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()">
+                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewResource"/>
+                <f:setPropertyActionListener target="#{rightPaneBean.clickedResource}" value="#{rightPaneBean.clickedAbstractResource}"/>
+            </p:commandButton>
+        </div>
+        <div>
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" actionListener="#{rightPaneBean.cancelEditClickedResource}"
+                             update=":right_pane" global="false" immediate="true"
+                             onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
+            <p:commandButton value="#{msg.save}" actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane" global="false"
+                             onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();resourceUpdatedHook();"/>
+        </div>
+    </div>
 </h:form>
 
 </ui:composition>

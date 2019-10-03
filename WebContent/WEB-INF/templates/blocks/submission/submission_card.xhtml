@@ -6,6 +6,11 @@
 
 <!--@elvariable id="submissions" type="java.util.List<de.l3s.learnweb.resource.submission.Submission>"-->
 
+	<h:panelGroup styleClass="w-100 d-flex justify-content-center justify-content-sm-end pb-3" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}">
+		<h:form prependId="false">
+			<p:commandButton value="#{msg['Submission.create_new_submission']}" styleClass="moderator-btn" process="@this" oncomplete="PF('create_submission_dialog').show();"/>
+		</h:form>
+	</h:panelGroup>
 	<ui:repeat var="submission" varStatus="status" value="#{submissions}">
 		<div class="#{status.last ? '' : 'mb-4' }">
 			<div class="d-flex align-items-center justify-content-between p-2 bg-light flex-md-row flex-column">
@@ -84,18 +89,18 @@
 
 				<p class="font-weight-lighter mb-3">#{submission.description}</p>
 
-				<h:panelGroup layout="block" styleClass="mt-5" rendered="#{not empty submission.submittedResources}">
-					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
-						<h:panelGroup styleClass="res-grid" layout="block">
-							<ui:repeat var="res" value="#{submission.submittedResources}">
-								<h:panelGroup styleClass="res-grid-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{res}"/>
-									</ui:decorate>
-								</h:panelGroup>
-							</ui:repeat>
-						</h:panelGroup>
-					</h:panelGroup>
+				<h:panelGroup id="resourceGrid" styleClass="res-grid mt-5" layout="block" rendered="#{not empty submission.submittedResources}">
+					<ui:repeat value="#{submission.submittedResources}" var="res">
+						<h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+									  pt:data-itemType="resource"
+									  pt:data-itemId="#{res.id}">
+							<f:param name="resource_id" value="#{res.id}"/>
+
+							<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+								<ui:param name="res" value="#{res}"/>
+							</ui:decorate>
+						</h:outputLink>
+					</ui:repeat>
 				</h:panelGroup>
 			</div>
 		</div>

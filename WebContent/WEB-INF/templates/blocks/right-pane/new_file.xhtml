@@ -8,7 +8,7 @@
     <div class="form-group row">
         <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
-            <p:button onclick="selectNewResourceLocation();return false;" value="#{addResourceBean.currentPath}"/>
+            <p:button onclick="createConfirmDialog('selectDestination', updateAddResourcePaneCommand);return false;" value="#{addResourceBean.currentPath}"/>
         </div>
     </div>
 
@@ -32,19 +32,14 @@
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 
-            <p:commandButton id="create_file_button" value="#{msg.create}"
-                             update=":growl :right_pane" actionListener="#{addResourceBean.createFile}" ajax="true"
-                             oncomplete="resourceAddedHook();load_lightbox_editor();load_editor();">
+            <p:commandButton id="create_file_button" value="#{msg.create}" global="false"
+                             update=":growl :right_pane" actionListener="#{addResourceBean.createFile}" onstart="PF('rightPaneOverlay').show()"
+                             oncomplete="PF('rightPaneOverlay').hide();resourceAddedHook();load_lightbox_editor();load_editor();">
                 <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>
         </div>
     </div>
-
-    <p:blockUI block="right_pane" trigger="create_file_button" widgetVar="bui">
-        <i class="fa fa-cog fa-spin fa-3x fa-fw text-white" aria-hidden="true"></i>
-        <p class="text-white text-center">#{msg.please_wait}</p>
-    </p:blockUI>
 </h:form>
 
 </ui:composition>

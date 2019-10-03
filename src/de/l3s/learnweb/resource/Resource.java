@@ -625,7 +625,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -1197,11 +1197,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
-            {
-                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
-            }
-            else if(getType().equals(ResourceType.image))
+            if(getType().equals(ResourceType.image))
             {
                 // first the small thumbnail is shown. The large image is loaded async through JS
                 Thumbnail large = getLargestThumbnail();
@@ -1216,18 +1212,23 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
                 }
                 else
-                    embeddedCode = "<iframe src=\"" + getUrl() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" />";
+                    embeddedCode = "<iframe src=\"" + getUrl() + "\" width=\"100%\" height=\"100%\"  scrolling=\"no\" />";
             }
             else if(getType().equals(ResourceType.video))
             {
+                String iframeUrl = null;
+
                 if(getSource().equals(SERVICE.loro) || getSource().equals(SERVICE.yovisto) || getSource().equals(SERVICE.speechrepository) || getSource().equals(SERVICE.desktop))
-                    embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                    iframeUrl = "video.jsf?resource_id=" + id;
                 else if(getSource().equals(SERVICE.ted))
-                    embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed").replace("https://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                    iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
                 else if(getSource().equals(SERVICE.youtube))
-                    embeddedCode = "<iframe src=\"https://www.youtube-nocookie.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
+                    iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
                 else if(getSource().equals(SERVICE.vimeo))
-                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+                    iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
+
+                if(null != iframeUrl)
+                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" class=\"border-0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
                 if(isProcessing())
                 {
@@ -1238,7 +1239,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             }
             else if(getType().equals(ResourceType.audio))
             {
-                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\"  scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+            }
+            else if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
+            {
+                embeddedCode = getEmbeddedRaw();
+                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
             }
 
             // if no rule above works
@@ -1967,7 +1973,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-    
+
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();
