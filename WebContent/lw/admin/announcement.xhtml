@@ -30,7 +30,7 @@
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:calendar id="datetime" value="#{adminAnnouncementBean.date}" pattern="yyyy-MM-dd HH:mm:ss" timeZone="#{userBean.timeZone}" timeInput="true"/>
+					<p:calendar id="datetime" value="#{adminAnnouncementsBean.date}" timeZone="#{userBean.timeZone}" timeInput="false" label="#{msg.date}:"/>
 					<p:message for="@previous"/>
 				</div>
 

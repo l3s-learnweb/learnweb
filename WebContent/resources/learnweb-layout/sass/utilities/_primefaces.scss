@@ -160,7 +160,7 @@ body {
     padding-left: 16px;
   }
 
-  .ui-tree {
+  .ui-dialog-content .ui-tree {
     &:hover {
       border: 1px solid $inputHoverBorderColor;
     }

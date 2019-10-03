@@ -54,7 +54,9 @@
     </h:form>
 
     <h:form id="news_form" styleClass="mt-3">
-        <p:blockUI block="news" widgetVar="newsOverlay"/>
+        <p:blockUI block="news_form" widgetVar="newsOverlay">
+            <h:outputText value="#{msg.please_wait}"/>
+        </p:blockUI>
 
         <p:dataTable id="news" var="news" tableStyleClass="table-responsive" value="#{adminAnnouncementsBean.announcements}">
             <f:facet name="header">#{msg.announcements}</f:facet>
@@ -65,7 +67,7 @@
 
             <p:column headerText="#{msg.date}" sortBy="#{news.date}">
                 <h:outputText  value="#{news.date}">
-                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="date"/>
                 </h:outputText>
             </p:column>
 
