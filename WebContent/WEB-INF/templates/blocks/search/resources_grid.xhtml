@@ -8,7 +8,7 @@
 	<div class="border-0 row mx-n1">
 		<p:repeat var="res" value="#{resources}">
 			<div class="col-6 col-md-4 col-lg-2 p-1 resource">
-				<div id="resource_#{res.rank}"  class="card  hover-border shadow-sm" data-src="#{res.urlProxied}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
+				<div id="resource_#{res.rank}"  class="card  hover-border shadow-sm" data-src="#embedded-#{res.rank}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
 					<div class="position-relative">
 						<img id="#{res.rank}"  class="card-img-top embed-responsive-16by9 border-bottom" src="#{res.thumbnail2b.url}"/>
 						<div class="video-duration p-1">#{res.durationInMinutes}</div>

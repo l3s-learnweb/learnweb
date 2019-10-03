@@ -292,6 +292,11 @@
     padding: 0.2rem;
   }
 
+  /* hide close button in iframe */
+  .fancybox-close-small {
+    display: none;
+  }
+
   /* Remove background from all buttons */
   .fancybox-button,
   .fancybox-navigation button::before {

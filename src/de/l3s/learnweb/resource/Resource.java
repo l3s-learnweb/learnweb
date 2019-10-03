@@ -1228,7 +1228,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)
-                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" class=\"border-0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
 
                 if(isProcessing())
                 {

@@ -37,6 +37,7 @@ function prepareResources() {
     $('[data-fancybox="search-gallery"]').fancybox({
       baseClass: 'fancybox-search-layout',
       infobar: false,
+      toolbar: true,
       touch: {
         vertical: false,
       },
