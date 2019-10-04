@@ -18,6 +18,9 @@
 
 		<ui:fragment rendered="#{userBean.admin}">
 			<h:form>
+				<p:blockUI block="processTable" widgetVar="Overlay">
+					<h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
+				</p:blockUI>
 				<p:dataTable tableStyleClass="table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
 					<f:facet name="header">#{msg.database_connections}</f:facet>
 
@@ -59,12 +62,12 @@
 
 					<p:column headerText="#{msg.terminate}">
 						<p:commandButton styleClass="m-auto d-block text-lowercase" value="#{msg.terminate}"
-										 actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update="processTable">
+										 actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" onstart="PF('Overlay').show()" oncomplete="PF('Overlay').hide()" update="processTable">
 						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 
-				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" styleClass="mt-3" value="#{msg.clear_caches}"/>
+				<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" onstart="PF('Overlay').show()" oncomplete="PF('Overlay').hide()" styleClass="mt-3" value="#{msg.clear_caches}"/>
 			</h:form>
 		</ui:fragment>
 	</ui:define>
