@@ -1,29 +1,26 @@
 package de.l3s.learnweb.forum;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
+import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
-
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
-
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
 @Named
 @ViewScoped
 public class ForumTopicsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8303246537720508084L;
-
     private final static Logger log = Logger.getLogger(ForumTopicsBean.class);
 
     private int groupId;
@@ -89,6 +86,20 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
         log(Action.forum_topic_added, groupId, topic.getId(), newTopicTitle);
         return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
+    }
+
+    public void onDeleteTopic(ForumTopic topic)
+    {
+        try
+        {
+            getLearnweb().getForumManager().deleteTopic(topic);
+            topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
+            addMessage(FacesMessage.SEVERITY_INFO, "The topic '" + topic.getTitle() + "' has been deleted.");
+        }
+        catch(Exception e)
+        {
+            addErrorMessage(e);
+        }
     }
 
     public List<SelectItem> getCategories()

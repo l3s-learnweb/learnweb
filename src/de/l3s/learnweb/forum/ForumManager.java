@@ -1,15 +1,11 @@
 package de.l3s.learnweb.forum;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import de.l3s.learnweb.Learnweb;
+
+import java.sql.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import de.l3s.learnweb.Learnweb;
 
 public class ForumManager
 {
@@ -163,6 +159,15 @@ public class ForumManager
             }
         }
         return topic;
+    }
+
+    public void deleteTopic(ForumTopic topic) throws SQLException
+    {
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_forum_topic` WHERE topic_id = ?"))
+        {
+            delete.setInt(1, topic.getId());
+            delete.executeUpdate();
+        }
     }
 
     public ForumPost save(ForumPost post) throws SQLException
