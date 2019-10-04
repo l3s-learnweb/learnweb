@@ -68,11 +68,11 @@
                         </div>
                     </ui:fragment>
 
-                    <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
+                    <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
                         <div class="tooltip-container fa fa-user-plus mb-1">
                             <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
-                                <h:outputText value="#{res.resource.ownerUser.fullName}"/>
+                                <h:outputText value="#{res.resource.user.fullName}"/>
                             </div>
                         </div>
                     </ui:fragment>

@@ -147,12 +147,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<>(); // userId : hasRated
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
 
-    //glossary information
-    @Deprecated
-    private String languageOne; // TODO remove
-    @Deprecated
-    private String languageTwo; // TODO remove
-
     // caches
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
@@ -332,12 +326,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.ownerUserId = owner.getId();
     }
 
-    @Deprecated
-    public User getOwnerUser() throws SQLException
-    {
-        return getUser();
-    }
-
     public Group getOriginalGroup() throws SQLException
     {
         if(originalResourceId == 0)
@@ -417,16 +405,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return OnlineStatus.PROCESSING.equals(onlineStatus);
     }
 
-    public String getStringStorageType()
-    {
-        if(storageType == Resource.LEARNWEB_RESOURCE)
-            return "Learnweb";
-        else if(storageType == Resource.WEB_RESOURCE)
-            return UtilBean.getLocaleMessage("web");
-        else
-            throw new RuntimeException();
-    }
-
     public void setStorageType(int type)
     {
         if(type != LEARNWEB_RESOURCE && type != WEB_RESOURCE)
@@ -441,7 +419,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public void setRights(int rights)
     {
-        //this.rights = rights;
         switch(rights)
         {
         case 0:
@@ -702,23 +679,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.type = type;
     }
 
-    /**
-     * @deprecated Use {@link #setType(ResourceType)} instead
-     */
-    @Deprecated
-    public void setType(String type)
-    {
-        try
-        {
-            this.type = ResourceType.parse(type);
-        }
-        catch(IllegalArgumentException e)
-        {
-            log.warn("Have to guess type of resource: " + this);
-            this.setTypeFromFormat(format);
-        }
-    }
-
     public void setTypeFromFormat(String format)
     {
         if(StringUtils.isEmpty(format))
@@ -818,8 +778,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         if(null != value) // the answer is cached
             return value;
 
-        // the answer isn't cached we have to ask fedora
-
+        // the answer isn't cached load from db
         value = Learnweb.getInstance().getResourceManager().isResourceThumbRatedByUser(id, userId);
         isThumbRatedByUser.put(userId, value); // cache answer
 
@@ -851,7 +810,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public String getServiceIcon()
     {
-        if(getId() != -1) // is stored at fedora
+        if(getId() != -1) // is stored in Learnweb
             return "/resources/images/services/learnweb.gif";
 
         String format = ".gif";
@@ -869,11 +828,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public static Comparator<Resource> createTitleComparator()
     {
         return Comparator.comparing(Resource::getTitle);
-    }
-
-    public static Comparator<Resource> createSourceComparator()
-    {
-        return Comparator.comparing(Resource::getLocation);
     }
 
     public static Comparator<Resource> createTypeComparator()
@@ -1129,10 +1083,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      */
     public Thumbnail getThumbnail3()
     {
-        /*
-        if(null == thumbnail3)
-            return getThumbnail2();
-        */
         return thumbnail3;
     }
 
@@ -1212,45 +1162,45 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
                 }
                 else
-                    embeddedCode = "<iframe src=\"" + getUrl() + "\" width=\"100%\" height=\"100%\"  scrolling=\"no\" />";
+                    embeddedCode = "<iframe src=\"" + getUrl() + "\" scrolling=\"no\" />";
             }
             else if(getType().equals(ResourceType.video))
             {
+                if(isProcessing())
+                {
+                    // return immediately, do not cache the temporal warning
+                    return "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>" + embeddedCode;
+                }
+
                 String iframeUrl = null;
 
                 if(getSource().equals(SERVICE.loro) || getSource().equals(SERVICE.yovisto) || getSource().equals(SERVICE.speechrepository) || getSource().equals(SERVICE.desktop))
                     iframeUrl = "video.jsf?resource_id=" + id;
                 else if(getSource().equals(SERVICE.ted))
                     iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
-                else if(getSource().equals(SERVICE.youtube))
+                else if(getSource().equals(SERVICE.youtube) || getSource().equals(SERVICE.teded) || getSource().equals(SERVICE.tedx))
                     iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
                 else if(getSource().equals(SERVICE.vimeo))
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)
-                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" class=\"border-0\" webkitallowfullscreen mozallowfullscreen allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
+                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" webkitallowfullscreen mozallowfullscreen allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
 
-                if(isProcessing())
-                {
-                    String response = "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>" + embeddedCode;
-                    embeddedCode = null; // do not cache the temporal warning
-                    return response;
-                }
             }
             else if(getType().equals(ResourceType.audio))
             {
-                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\"  scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
-            }
-            else if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
-            {
-                embeddedCode = getEmbeddedRaw();
-                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
+                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
             }
 
             // if no rule above works
-
             if(embeddedCode == null)
             {
+                if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
+                {
+                    // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
+                    embeddedCode = getEmbeddedRaw();
+                }
+
                 log.warn("can't create embeddedCode for resource: " + toString());
             }
         }
@@ -1942,43 +1892,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         return Learnweb.getInstance().getLogManager().getLogsByResource(getId(), -1);
     }
-
-    @Deprecated
-    public String getLanguageOne()
-    {
-        return languageOne;
-    }
-
-    @Deprecated
-    public void setLanguageOne(String languageOne)
-    {
-        this.languageOne = languageOne;
-    }
-
-    @Deprecated
-    public String getLanguageTwo()
-    {
-        return languageTwo;
-    }
-
-    @Deprecated
-    public void setLanguageTwo(String languageTwo)
-    {
-        this.languageTwo = languageTwo;
-    }
-
-    /*
-    private void writeObject(ObjectOutputStream oos) throws IOException
-    {
-        log.debug("Serialize resource: " + id);
-        oos.writeObject(id);
-    }
-    
-    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
-    {
-        this.id = ois.readInt();
-        log.debug("Deserialize resource: " + id);
-    }*/
 
     protected Object readResolve()
     {

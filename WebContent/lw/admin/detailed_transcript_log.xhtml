@@ -41,8 +41,8 @@
 					<h:outputText value="#{log.resource.title}"/>
 				</p:column>
 
-				<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.ownerUser.username}" sortBy="#{log.resource.ownerUser.username}">
-					<h:outputText value="#{log.resource.ownerUser.username}"/>
+				<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.user.username}" sortBy="#{log.resource.user.username}">
+					<h:outputText value="#{log.resource.user.username}"/>
 				</p:column>
 
 				<p:column headerText="#{msg.word}">

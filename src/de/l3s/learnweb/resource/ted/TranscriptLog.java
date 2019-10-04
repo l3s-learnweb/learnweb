@@ -12,7 +12,6 @@ public class TranscriptLog implements Serializable
 {
     private static final long serialVersionUID = 6321296603254649454L;
 
-    //private int courseId;
     private int userId;
     private int resourceId;
     private String wordsSelected;
@@ -31,7 +30,6 @@ public class TranscriptLog implements Serializable
 
     public TranscriptLog(int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Date timestamp)
     {
-        //this.courseId = courseId;
         this.userId = userId;
         this.resourceId = resourceId;
         this.wordsSelected = wordsSelected;
@@ -39,16 +37,6 @@ public class TranscriptLog implements Serializable
         this.action = action;
         this.timestamp = timestamp;
     }
-
-    /*public int getCourseId()
-    {
-        return courseId;
-    }
-    
-    public void setCourseId(int courseId)
-    {
-        this.courseId = courseId;
-    }*/
 
     public int getUserId()
     {
@@ -125,14 +113,4 @@ public class TranscriptLog implements Serializable
             resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
         return resource;
     }
-    /*
-     * You can get the user in jsf by
-     * logEntry.user.username
-     *
-     * Do the same for the resource.
-     *
-
-     *
-     */
-
 }

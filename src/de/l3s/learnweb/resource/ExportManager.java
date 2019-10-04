@@ -39,7 +39,6 @@ import com.hp.gagawa.java.elements.Tr;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.gdpr.ResourcesFileNotFoundException;
-import de.l3s.learnweb.gdpr.UnknownResourceTypeException;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.user.User;
@@ -222,7 +221,7 @@ public class ExportManager
         return folderPath.toString();
     }
 
-    private Document createIndexFile(List<Resource> userResources) throws SQLException, UnknownResourceTypeException
+    private Document createIndexFile(List<Resource> userResources) throws SQLException
     {
         Document indexFile = new Document(DocumentType.HTMLStrict);
 
@@ -270,7 +269,7 @@ public class ExportManager
                 appendRow(composeRow(externalLink, metadata), resourcesTable);
                 break;
             default:
-                throw new UnknownResourceTypeException(lwResource.getStringStorageType());
+                throw new RuntimeException("Unknown resource storage type: " + lwResource.getStorageType());
             }
         }
 
