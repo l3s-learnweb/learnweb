@@ -18,10 +18,6 @@
                 <div class="col-12 col-md-10 col-lg-8 col-xl-6">
 					<p:panel header="#{msg.manual_ban}">
 						<h:form id="banformreg">
-                            <p:blockUI block="banformreg" widgetVar="banformregOverlay">
-                                <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
-                            </p:blockUI>
-
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.name_or_ip}:"/>
                                 <p:inputText value="#{adminBanlistBean.name}" id="name" required="true"/>
@@ -46,16 +42,17 @@
                                 <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>
                             </div>
 
-                            <p:commandButton onstart="PF('banformregOverlay').show()" oncomplete="PF('banformregOverlay').hide()" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" ajax="false"/>
+                            <p:commandButton onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" update=":banlistform" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form"/>
 						</h:form>
 					</p:panel>
                 </div>
             </div>
 
             <h:form id="banlistform">
-                <p:blockUI block="banlistform" widgetVar="Overlay">
+                <p:blockUI block="banlistform" widgetVar="banlistformOverlay">
                     <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
                 </p:blockUI>
+
                 <p:dataTable var="accessData" tableStyleClass="table-responsive" paginatorPosition="bottom" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
                              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
                     <p:column headerText="#{msg.name}" sortBy="#{accessData.name}">
@@ -79,7 +76,7 @@
                     </p:column>
 
                     <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                        <p:commandLink onstart="PF('Overlay').show()" oncomplete="PF('Overlay').hide()" actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
+                        <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
                                        update=":banlistform :growl"
                                        title="#{msg.unban}">
                             <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>

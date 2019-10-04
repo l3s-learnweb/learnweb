@@ -19,7 +19,7 @@
 		<ui:fragment rendered="#{userBean.admin}">
 			<h:form>
 				<p:blockUI block="processTable" widgetVar="processTableOverlay">
-					<h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
+					<h:outputText value="#{msg.please_wait}"/>
 				</p:blockUI>
 
 				<p:dataTable tableStyleClass="table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
