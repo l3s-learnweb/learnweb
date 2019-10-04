@@ -197,6 +197,10 @@ public class SubmissionBean extends ApplicationBean implements Serializable
             case "remove":
                 this.actionRemoveItems(items);
                 break;
+            case "update":
+                selectedResources.clear();
+                this.actionAddSelectedItems(items);
+                break;
             default:
                 log.warn("Unsupported action: " + action);
                 break;

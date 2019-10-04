@@ -36,13 +36,8 @@
 		<h:form styleClass="d-none">
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
 							 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
-							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-			<p:remoteCommand name="resourceUpdatedHook" update=":submissions"
-							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
-							 update=":submittedResourcesGrid" global="false"
-							 oncomplete="updateMaxResources();onResourcesUpdated()"/>
+							 update=":submittedResourcesGrid" global="false" oncomplete="onResourcesUpdated()"/>
 		</h:form>
 
 		<!-- only for eumade4all -->
@@ -145,75 +140,62 @@
 		</h:panelGroup>
 
 		<script type="application/javascript">
-			let max_resources = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
-			let resources_to_select = max_resources;
-			let set_of_resources = new Set();
-
 			/* global updateSelectedItemsCommand */
 
+			const maxResourcesToSubmit = parseInt('#{submissionBean.selectedSubmission.noOfResources}');
+
 			function confirmSubmitMessage() {
-				var confirmMessage = "Are you sure you want to submit? You will no longer be able to submit any more resources.";
-				//var no_selected_resources = $('.res-item').length;
-				if (resources_to_select > 0)
-					confirmMessage = "You should select " + resources_to_select + " more resource" + (resources_to_select > 1 ? "s" : "") + " for your submission. " + confirmMessage;
+				const neededMoreResources = maxResourcesToSubmit - selected.size();
+				let confirmMessage = 'Are you sure you want to submit? You will no longer be able to submit any more resources.';
+				if (neededMoreResources > 0)
+					confirmMessage = `You should select ${neededMoreResources} more resource${neededMoreResources > 1 ? 's' : ''} for your submission. ${confirmMessage}`;
 				return confirm(confirmMessage);
 			}
 
 			function confirmResourcesSelect() {
-				let selected_resources = $('.res-item.ui-selected');
-				if (selected_resources.length > max_resources) {
-					alert("Maximum allowed items limit exceeded. You can't choose more than " + max_resources + " items.");
-				}else {
-					selected_resources.each(function () {
-						if(!set_of_resources.has(this)){
-							set_of_resources.add(this);
-							resources_to_select--;
-						}
-					});
+				if (selected.size() > maxResourcesToSubmit) {
+					alert(`Maximum allowed items limit exceeded. You can't choose more than ${maxResourcesToSubmit} items.`);
+				} else {
 					updateSelectedItemsCommand([
-						{name: 'action', value: 'add'},
+						{name: 'action', value: 'update'},
 						{name: 'items', value: JSON.stringify(selected)}
 					]);
-					selected.unselectAll();
 					$.fancybox.close();
 				}
 			}
 
 			function updateMaxResources() {
-				if (max_resources > set_of_resources.size)
-				/*When user delete an item the button has to be returned back;*/
+				// When user delete an item the button has to be returned back
+				if (maxResourcesToSubmit > selected.size())
 					$('#add_resource_sign').show();
 				else
 					$('#add_resource_sign').hide();
-				if (set_of_resources.size > 0)
-					$('#submit_resources_button').show();
 
+				if (selected.size() > 0)
+					$('#submit_resources_button').show();
 			}
 
 			function onResourcesUpdated() {
-				createSelectable('submitResourcesGrid');
-				createSelectable('submittedResourcesGrid');
+				updateMaxResources();
+				// createSelectable('submittedResourcesGrid'); Why do we need the ability to select these resources?
 			}
 
 			$(function () {
 				$(document).on('click', '#add_resource_sign', function () {
 					$.fancybox.open({
 						src: '#select_resources_modal',
-						type: 'inline'
+						type: 'inline',
 					}, {
 						// modal: true,
 						touch: false,
 						smallBtn: false,
-						buttons: false
+						buttons: false,
 					});
 				});
 
-				updateMaxResources();
-
 				$(document).on('dblclick', '.res-item', openItems);
-
 				onResourcesUpdated();
-
+				createSelectable('submitResourcesGrid');
 			});
 		</script>
 	</ui:define>

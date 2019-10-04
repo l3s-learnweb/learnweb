@@ -178,8 +178,6 @@ function createSelectable(resContainerId) {
   if (!$resContainer || !$resContainer.data('canselectresources')) return;
 
   $resContainer.on('click', '.res-item', function (e) { // select using keyboard hot keys
-    e.preventDefault();
-
     if (e.shiftKey && selected.size() > 0) { // select all between
       const prevSelected = selected.getItem(selected.size() - 1);
       selected.select(this);
@@ -210,6 +208,8 @@ function createSelectable(resContainerId) {
     } else {
       selected.selectOnly(this);
     }
+
+    return false;
   });
 
   $resContainer.selectable({
