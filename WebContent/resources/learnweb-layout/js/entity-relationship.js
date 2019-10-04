@@ -138,7 +138,7 @@ function draw() {
   // queries
   for (i = 0; i < queriesJsonArr.length; i++) {
     const singleQuery = queriesJsonArr[i];
-    const color = selectedGroupId === 0 ? '#489a83' : '#919191';
+    const color = selectedGroupId === 0 ? '#4aa382' : '#919191';
     G.addNode(singleQuery.query, {
       count: width / 75,
       color: i === 0 ? 'yellowgreen' : color,
@@ -322,7 +322,7 @@ function drawQueryPath() {
 
   // add query nodes
   for (i = 0; i < queriesJsonArr.length; i++) {
-    G.addNode(queriesJsonArr[i].query, { count: 20, color: '#489a83', entities: queriesJsonArr[i].related_entities });
+    G.addNode(queriesJsonArr[i].query, { count: 20, color: '#4aa382', entities: queriesJsonArr[i].related_entities });
   }
 
   // add query edges

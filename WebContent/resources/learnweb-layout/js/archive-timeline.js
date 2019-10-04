@@ -1,7 +1,7 @@
-/* global Highcharts, no_of_versions, timeline_title, timeline_series_name, msgClickZoom, msgTouchZoom */
+/* global Highcharts, translatedShortMonthsNames, translatedMonthsNames,
+          msg_timelineNumVersions, msg_timelineTitle, msg_timelineSeriesName, msg_timelineClickZoom, msg_timelineTouchZoom */
 
 let chart; // handle to access the HighCharts methods
-
 
 // Show timeline/list of snapshots in resource_view
 function archiveOpenTimeline() {
@@ -49,25 +49,21 @@ function returnToTimeline() {
   // $('#archive_timeline_container').show("slide", { direction: "left" }, 1000);
   $('#archive_timeline_container').show().fadeTo(1000, 1.0);
   $('#archive_timeline_calendar').fadeTo(1000, 0.0).hide();
-
   return false;
 }
 
 // Creation of list of links to the archived versions in the calendar
-function archiveVersionsList(thisDayEvent) {
-  let list = "<ul style='padding-left:10px;list-style-type: circle;'>";
-  for (let i = 0, l = thisDayEvent.dayEvents.length; i < l; i++) {
-    list += `<li><a href='${thisDayEvent.dayEvents[i].url}' target='_blank'>${thisDayEvent.dayEvents[i].time}</a></li>`;
+function archiveVersionsList(events) {
+  let list = "<ul class='pl-2'>";
+  for (let i = 0, l = events.length; i < l; i++) {
+    list += `<li><a href='${events[i].url}' class='text-white' target='_blank'>${events[i].time}</a></li>`;
   }
   list += '</ul>';
   return list;
 }
 
 function addLeadingZero(num) {
-  if (num < 10) {
-    return `0${num}`;
-  }
-  return `${num}`;
+  return num < 10 ? `0${num}` : `${num}`;
 }
 
 // To handle resizing of the timeline on window resize event
@@ -91,6 +87,11 @@ function resizeChart() {
   chart.reflow();
 }
 
+$.fn.tooltipster('setDefaults', {
+  interactive: true,
+  interactiveTolerance: 150,
+});
+
 // Initialize highcharts with data from lw_resource_archiveurl
 function loadTimeline(dataVar) {
   // jsondata = JSON.parse(dataVar);
@@ -104,11 +105,11 @@ function loadTimeline(dataVar) {
       enabled: false,
     },
     title: {
-      text: timeline_title,
+      text: msg_timelineTitle,
     },
     subtitle: {
-      text: document.ontouchstart === undefined
-        ? msgClickZoom : msgTouchZoom,
+      // eslint-disable-next-line camelcase
+      text: document.ontouchstart === undefined ? msg_timelineClickZoom : msg_timelineTouchZoom,
     },
     xAxis: {
       type: 'datetime',
@@ -117,21 +118,19 @@ function loadTimeline(dataVar) {
     },
     yAxis: {
       title: {
-        text: no_of_versions,
+        text: msg_timelineNumVersions,
       },
     },
     tooltip: {
       headerFormat: '<b>{point.key}</b><br/>',
       xDateFormat: '%b, %Y',
-
-
     },
     legend: {
       enabled: false,
     },
     plotOptions: {
       series: {
-        color: '#489a83',
+        color: '#4aa382',
         cursor: 'pointer',
         point: {
           events: {
@@ -152,10 +151,29 @@ function loadTimeline(dataVar) {
 
     series: [{
       type: 'column',
-      name: timeline_series_name,
+      name: msg_timelineSeriesName,
       data: dataVar,
     }],
   });
   $('.highcharts-container').css('overflow', '');
   $('#archive_timeline_view').hide();
+}
+
+function loadCalendar(calendarData) {
+  $('.responsive-calendar').responsiveCalendar({
+    allRows: false,
+    translateMonths: translatedMonthsNames,
+    events: calendarData,
+    onActiveDayHover(events) {
+      const theDate = `${this.dataset.year}-${addLeadingZero(this.dataset.month)}-${addLeadingZero(this.dataset.day)}`;
+
+      const $calendarCell = $(this).parent();
+      if (!$calendarCell.hasClass('tooltipstered')) {
+        $calendarCell.tooltipster({
+          content: $(archiveVersionsList(events[theDate].dayEvents)),
+        });
+      }
+      $calendarCell.tooltipster('show');
+    },
+  });
 }
