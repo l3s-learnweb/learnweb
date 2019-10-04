@@ -60,7 +60,15 @@
 
 
 			<div id="div_right">
-			<ui:fragment rendered="#{!userBean.loggedIn}">
+			<h2 class="page_header">
+						#{msg['ArchiveWeb.sign_up']}
+					</h2>
+					<p>The public registration is temporarily closed.</p> 
+					<p>To register, please contact your teacher.</p>
+					
+
+
+			<ui:fragment rendered="#{false and !userBean.loggedIn}">
 
 					<h2 class="page_header">
 						#{msg['ArchiveWeb.sign_up']}

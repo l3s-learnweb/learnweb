@@ -1197,11 +1197,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
-            {
-                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
-            }
-            else if(getType().equals(ResourceType.image))
+            if(getType().equals(ResourceType.image))
             {
                 // first the small thumbnail is shown. The large image is loaded async through JS
                 Thumbnail large = getLargestThumbnail();
@@ -1239,6 +1235,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
             else if(getType().equals(ResourceType.audio))
             {
                 embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+            }
+            else if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
+            {
+                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
+                embeddedCode = getEmbeddedRaw();
             }
 
             // if no rule above works
