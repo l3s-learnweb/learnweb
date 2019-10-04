@@ -63,7 +63,7 @@
                 <h:form id="group_folders_tree">
                     <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
                             datakey="#{node.id}" animate="true" selectionMode="single" styleClass="ui-tree-responsive"
-                            rendered="#{groupResourcesBean.group.folders.size() > 0}" onNodeClick="openFolder(node.data('datakey'));">
+                            rendered="#{not empty groupResourcesBean.group.subFolders}" onNodeClick="openFolder(node.data('datakey'));">
 
                         <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                             <h:outputText value="#{node.name}"/>
@@ -71,7 +71,7 @@
                     </p:tree>
 
                     <h:outputText value="${msg.group_no_folders}" class="res-no-folders-text"
-                                  rendered="#{groupResourcesBean.group.folders.size() == 0}"/>
+                                  rendered="#{empty groupResourcesBean.group.subFolders}"/>
                 </h:form>
             </div>
         </div>

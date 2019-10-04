@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -114,17 +112,6 @@ public class UtilBean implements Serializable
     }
 
     // ------------------------
-
-    public static int time()
-    {
-        return (int) (System.currentTimeMillis() / 1000);
-    }
-
-    public Date StringToDate(String dateStr) throws ParseException
-    {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        return format.parse(dateStr);
-    }
 
     public String addSlashes(String input)
     {

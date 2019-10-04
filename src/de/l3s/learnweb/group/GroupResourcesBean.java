@@ -58,7 +58,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
     private static final Logger log = Logger.getLogger(GroupResourcesBean.class);
-    private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     // Group base attributes
     private int groupId; // Current group id
@@ -128,7 +128,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(null == user) // not logged in
             return;
 
-        if (user.getOrganisation().getId() == 480) {
+        if(user.getOrganisation().getId() == 480)
+        {
             gridView = false;
         }
 
@@ -472,7 +473,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         return log;
     }
 
-    public static DateFormat getSolrDateFormat()
+    public DateFormat getSolrDateFormat()
     {
         return SOLR_DATE_FORMAT;
     }

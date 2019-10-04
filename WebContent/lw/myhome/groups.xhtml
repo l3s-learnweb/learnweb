@@ -14,28 +14,6 @@
     </ui:define>
 
     <ui:define name="center_layout">
-        <h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
-        <h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
-
-        <script type="text/javascript">
-            function applyTooltip()
-            {
-                $('.tooltip').tooltipster({
-
-                    contentAsHTML:true,
-                    //maxWidth: 400,
-                    position:'top',
-                    //hideOnClick: true;,
-                    interactive:true,
-                    interactiveTolerance:150 // increase to debug
-                });
-            }
-            $(document).ready(function() {
-                applyTooltip();
-
-            });
-        </script>
-
         <h:form id="my_groups">
             <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
@@ -46,11 +24,9 @@
                         </div>
                     </div>
                 </f:facet>
-
-                <p:ajax event="sort" oncomplete="applyTooltip()"/>
-
+                
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}">
-                    <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                    <h:outputLink value="group/resources.jsf">
                         <f:param name="group_id" value="#{group.id}"/>
                         <h:outputText value="#{group.longTitle}"/>
                     </h:outputLink>
@@ -82,7 +58,7 @@
                     </h:outputLink>
 
                     <p:commandLink action="#{groupsBean.leaveGroup}" process="@this"
-                                   update=":other_groups :growl :my_groups" title="#{msg.leave}" oncomplete="applyTooltip()">
+                                   update=":other_groups :growl :my_groups" title="#{msg.leave}">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
                         <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
@@ -99,12 +75,12 @@
                         #{msg.otherGroups}
                     </f:facet>
 
-                    <p:ajax event="filter" oncomplete="applyTooltip()"/>
-                    <p:ajax event="sort" oncomplete="applyTooltip()"/>
+                    <p:ajax event="filter"/>
+                    <p:ajax event="sort"/>
 
                     <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
                               filterMatchMode="contains">
-                        <h:outputLink value="group/resources.jsf" styleClass="tooltip" title="#{group.tooltip}">
+                        <h:outputLink value="group/resources.jsf">
                             <f:param name="group_id" value="#{group.id}"/>
                             <h:outputText value="#{group.longTitle}"/>
                         </h:outputLink>
@@ -136,7 +112,7 @@
                         </h:outputLink>
 
                         <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
-                                       process="@this" title="#{msg.join}" oncomplete="applyTooltip()">
+                                       process="@this" title="#{msg.join}" >
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                             <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
                         </p:commandLink>
@@ -193,7 +169,7 @@
                     </div>
                     <div class="col text-right">
                         <p:commandButton ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}"
-                                         oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();applyTooltip()"
+                                         oncomplete="if (!args.validationFailed) PF('createGroupDialog').hide();"
                                          process="@form" update="@form :my_groups :growl"/>
                     </div>
                 </div>

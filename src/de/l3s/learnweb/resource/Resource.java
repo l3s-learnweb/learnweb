@@ -625,7 +625,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -1228,7 +1228,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)
-                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" class=\"border-0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" width=\"100%\" height=\"100%\" class=\"border-0\" webkitallowfullscreen mozallowfullscreen allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
 
                 if(isProcessing())
                 {
@@ -1973,7 +1973,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         log.debug("Serialize resource: " + id);
         oos.writeObject(id);
     }
-
+    
     private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException
     {
         this.id = ois.readInt();

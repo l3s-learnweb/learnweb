@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Link.LinkType;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
@@ -255,23 +254,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
     }
 
     /**
-     * @deprecated use {@link #getSubFolders} instead
-     */
-    @Deprecated
-    public List<Folder> getFolders() throws SQLException
-    {
-        return getSubFolders();
-    }
-
-    /* not used
-    public AbstractPaginator getResources(Order order) throws SQLException
-    {
-    	ResourceManager rm = Learnweb.getInstance().getResourceManager();
-    	return rm.getResourcesByGroupId(id, order);
-    }
-    */
-
-    /**
      * Copy resource from this group to another group referred to by groupId, and by which user
      */
     public void copyResourcesToGroupById(int groupId, User user) throws SQLException
@@ -441,9 +423,14 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
         documentLinks = null;
     }
 
+    public static int time()
+    {
+        return (int) (System.currentTimeMillis() / 1000);
+    }
+
     public void setLastVisit(User user) throws SQLException
     {
-        int time = UtilBean.time();
+        int time = time();
         Learnweb.getInstance().getGroupManager().setLastVisit(user, this, time);
         lastVisitCache.put(user.getId(), time);
     }
@@ -451,7 +438,7 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
     /**
      *
      * @param user
-     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never view the group
+     * @return unix timestamp when the user has visited the group the last time; returns -1 if he never viewed the group
      * @throws Exception
      */
     public int getLastVisit(User user) throws Exception
@@ -545,49 +532,6 @@ public class Group implements Comparable<Group>, HasId, Serializable, IResourceC
     public String toString()
     {
         return this.title;
-    }
-
-    public String getTooltip() throws SQLException
-    {
-        String tooltip = "<ul style='list-style: none; max-width:50rem; margin: 0px; padding: 0px;'><h2>" + getTitle() + "</h2>";
-
-        if(!StringUtils.isEmpty(getDescription()))
-        {
-            tooltip += "<li style='overflow: auto;max-height: 10rem;'>" + getDescription() + "</li>";
-        }
-
-        if(getResourcesCount() != 0)
-        {
-            tooltip += "<li><a href='group/resources.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("resources") + " (" + getResourcesCount() + ")</a></li>";
-        }
-        tooltip += "<li><a href='group/members.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("users") + " (" + getMemberCount() + ")</a></li>";
-
-        if(getFolders() != null && getFolders().size() > 0)
-        {
-            if(getFolders().size() == 1)
-            {
-                tooltip += "<li>" + UtilBean.getLocaleMessage("folder", getFolders().size()) + ":";
-
-                for(Folder folder : getFolders())
-                {
-                    tooltip += " <a href='group/resources.jsf?group_id=" + getId() + "&folder_id=" + folder.getId() + "&resource_id=0'>" + folder.getTitle() + "</a>";
-                }
-            }
-            else
-            {
-                tooltip += "<li>" + UtilBean.getLocaleMessage("folder", getFolders().size()) + ":" + "<ul>";
-
-                for(Folder folder : getFolders())
-                {
-                    tooltip += "<li><a href='group/resources.jsf?group_id=" + getId() + "&folder_id=" + folder.getId() + "&resource_id=0'>" + folder.getTitle() + "</a></li>";
-                }
-                tooltip += "</ul>";
-            }
-        }
-        tooltip += "</li>";
-
-        tooltip += "</ul>";
-        return tooltip;
     }
 
     public POLICY_JOIN getPolicyJoin()

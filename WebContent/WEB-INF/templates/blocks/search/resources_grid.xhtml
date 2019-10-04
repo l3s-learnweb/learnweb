@@ -11,7 +11,9 @@
 				<div id="resource_#{res.rank}" class="card  hover-border shadow-sm" data-src="#embedded-#{res.rank}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
 					<div class="position-relative">
 						<img id="#{res.rank}" class="card-img-top embed-responsive-16by9 border-bottom" src="#{res.thumbnail2b.url}"/>
-						<div class="video-duration p-1">#{res.durationInMinutes}</div>
+						<ui:fragment rendered="#{res.resource.duration gt 0}">
+							<div class="video-duration p-1">#{res.durationInMinutes}</div>
+						</ui:fragment>
 					</div>
 					<div class="card-body p-2" style="height: 3rem;">
 						<div class="truncate-two-lines w-100">

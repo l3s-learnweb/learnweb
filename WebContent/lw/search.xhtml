@@ -172,7 +172,6 @@
             </h:panelGroup>
         </div>
 
-        <!-- TODO: all remote commands cause an unintended update of :nextPage  -->
         <h:form class="d-none">
             <p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true"
                              onstart="console.log('loadNextPage')"
@@ -180,18 +179,10 @@
                              global="false"
                              partialSubmit="true"/>
 
-			<!--  not used at the moment-->
-            <p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true"
-                             name="setSelectedResource" update=":resource_form" process="@this"
-                             partialSubmit="true"/>
-
             <p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"
                              update=":nothing" name="logResourceOpened" async="true" process="@form"
+                             global="false"
                              partialSubmit="true"/>
-
-            <p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true"
-                             onstart="console.log('loadInterwebCounts')" name="loadFilterCounts"
-                             async="false" process="@this" partialSubmit="true"/>
         </h:form>
 
         <h:panelGroup id="nothing"></h:panelGroup>

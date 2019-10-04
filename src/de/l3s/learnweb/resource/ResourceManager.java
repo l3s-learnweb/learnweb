@@ -1066,7 +1066,7 @@ public class ResourceManager
         if(resource.getTitle().equals(resource.getDescription())) // delete description when equal to title
             resource.setDescription("");
 
-        if(!resource.getType().equals(Resource.ResourceType.image))
+        if(resource.getSource().equals(SERVICE.slideshare))
         {
             resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
             if(null == resource.getEmbeddedRaw())

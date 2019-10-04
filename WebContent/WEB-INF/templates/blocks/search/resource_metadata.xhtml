@@ -8,7 +8,7 @@
     <!--@elvariable id="view" type="java.lang.String"-->
 
     <div class="metadata">
-        <div class="d-none"><div class="w-100 h-100 overflow-hidden p-0" id="embedded-#{res.rank}"><h:outputText styleClass="border-0" value="#{res.embedded}" escape="false"/></div></div>
+        <div class="d-none"><div class="w-100 h-100 overflow-hidden p-0" id="embedded-#{res.rank}"><h:outputText value="#{res.embedded}" escape="false"/></div></div>
         <div>
             <p:outputLabel for="@next" value="#{msg.title}:" styleClass="font-weight-bold mr-1" escape="false"/>
             <h:outputText value="${res.title}" escape="false"/>
@@ -71,12 +71,6 @@
 	            	 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}        		
 	            </p:commandLink>
             </h:form>
-                    <!-- 		
-            <h:outputLink value="#" title="#{msg.addToMyResources}" rendered="#{userBean.loggedIn}"
-                          onclick="setSelectedResource([{name:'rank', value:${res.rank}}]); PF('resource_dialog').show();  return false;">
-                <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
-            </h:outputLink>
-             -->
         </div>
     </div>
 </ui:composition>

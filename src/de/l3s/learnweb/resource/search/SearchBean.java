@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -313,14 +312,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         page++;
     }
 
-    public void loadInterwebCounts()
-    {
-        if(search != null)
-        {
-            search.getResourcesByPage(2);
-        }
-    }
-
     public List<Filter> getAvailableFilters()
     {
         FILTERS[] except = { FILTERS.service };
@@ -437,29 +428,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     public ResourceDecorator getSelectedResource()
     {
         return selectedResource;
-    }
-
-    /**
-     * Was used in the past when called through JS methods. But it seams that this isn't necessary any more
-     */
-    @Deprecated
-    public void setSelectedResource()
-    {
-        try
-        {
-            Integer rank = getParameterInt("rank");
-
-            ResourceDecorator resource = search.getResourceByRank(rank);
-
-            if(null == resource)
-                throw new InvalidParameterException("unknown resource rank:" + rank);
-
-            setSelectedResource(resource);
-        }
-        catch(Throwable e)
-        {
-            log.fatal(e);
-        }
     }
 
     public void setSelectedResource(ResourceDecorator decoratedResource)
