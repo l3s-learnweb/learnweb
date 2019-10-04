@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-10 col-lg-8 col-xl-6">
 					<p:panel header="#{msg.manual_ban}">
 						<h:form id="banformreg">
-                            <p:blockUI block="banformreg" widgetVar="Overlay">
+                            <p:blockUI block="banformreg" widgetVar="banformregOverlay">
                                 <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
                             </p:blockUI>
 
@@ -46,7 +46,7 @@
                                 <p:selectBooleanCheckbox value="#{adminBanlistBean.permaban}" itemLabel="#{msg.permaban}" id="permabancheckbox"/>
                             </div>
 
-                            <p:commandButton onstart="PF('Overlay').show()" oncomplete="PF('Overlay').hide()" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" ajax="false"/>
+                            <p:commandButton onstart="PF('banformregOverlay').show()" oncomplete="PF('banformregOverlay').hide()" action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" ajax="false"/>
 						</h:form>
 					</p:panel>
                 </div>
