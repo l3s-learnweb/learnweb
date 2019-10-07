@@ -22,7 +22,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.loginProtection.ProtectionManager;
 import de.l3s.util.bean.BeanHelper;
 
-@Named()
+@Named
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {

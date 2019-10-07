@@ -85,58 +85,56 @@ public class SearchBean extends ApplicationBean implements Serializable
         log.debug("SearchBean()");
 
         interweb = getLearnweb().getInterweb();
-        searchMode = MODE.image; // default search mode
-        queryMode = getPreference("SEARCH_ACTION", "text");
 
         searchFilters = new SearchFilters();
 
         metaFilters = new SearchFilters();
-
-        //historyResources = new HashSet<String>();
     }
 
     public void preRenderView() throws SQLException
     {
+        log.debug("mode/action: " + queryMode + "; filter: " + queryFilters + " - service: " + queryService + "; query:" + query);
+
         if(isAjaxRequest())
         {
             return;
         }
 
+        if(null == queryMode)
+            queryMode = getPreference("SEARCH_ACTION", "text");
+
         if(queryMode != null)
         {
-            String modeTemp = queryMode;
-            queryMode = null;
-
-            if(modeTemp.equals("text") || modeTemp.equals("web"))
+            if(queryMode.equals("text") || queryMode.equals("web"))
                 onSearchText();
-            else if(modeTemp.equals("image"))
+            else if(queryMode.equals("image"))
                 onSearchImage();
-            else if(modeTemp.equals("video"))
+            else if(queryMode.equals("video"))
                 onSearchVideo();
         }
 
-        getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
+        //getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
         // stop caching (back button problem)
         forceRevalidation();
     }
 
     // -------------------------------------------------------------------------
 
-    public String onSearchVideo()
+    private String onSearchVideo()
     {
         searchMode = MODE.video;
         setView("grid");
         return onSearch();
     }
 
-    public String onSearchImage()
+    private String onSearchImage()
     {
         searchMode = MODE.image;
         setView("float");
         return onSearch();
     }
 
-    public String onSearchText()
+    private String onSearchText()
     {
         searchMode = MODE.text;
         setView("list");
@@ -164,14 +162,14 @@ public class SearchBean extends ApplicationBean implements Serializable
             searchFilters.setFilter(FILTERS.service, searchService);
             searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
 
-            search.logQuery(query, searchMode, searchService, searchFilters.getLanguageFilter(), queryFilters, getUser());
+            search.logQuery(query, searchService, searchFilters.getLanguageFilter(), queryFilters);
             search.getResourcesByPage(1); // load first page
 
             log(Action.searching, 0, search.getId(), query);
 
             resourcesGroupedBySource = null;
             availableSources = null;
-            queryFilters = null;
+            //TODO queryFilters = null;
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -251,7 +249,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         {
             addErrorMessage(e);
         }
-
     }
 
     // -------------------------------------------------------------------------
@@ -495,7 +492,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         return view;
     }
 
-    public void setView(String view)
+    private void setView(String view)
     {
         this.view = view;
     }

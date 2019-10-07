@@ -66,6 +66,7 @@ public class Search implements Serializable
     private transient SearchLogManager searchLogger;
     private int searchId;
     private boolean logHTML;
+    private User user;
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
     {
@@ -73,6 +74,7 @@ public class Search implements Serializable
         this.query = query;
         this.searchFilters = sf;
         this.userId = (null == user) ? -1 : user.getId();
+        this.user = user;
         this.solrSearch = new SolrSearch(query, user);
 
         String logHTMLPreference = (null == user) ? null : user.getPreference("SEARCH_LOG_HTML");
@@ -437,7 +439,8 @@ public class Search implements Serializable
         {
             GroupedResources gr = new GroupedResources();
             gr.setGroupName(res.getLocation());
-            log.warn("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
+
+            //log.debug("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
 
             if(groupedResources.contains(gr))
             {
@@ -597,9 +600,9 @@ public class Search implements Serializable
         return searchId;
     }
 
-    public void logQuery(String query, MODE searchMode, SERVICE searchService, String language, String queryFilters, User user)
+    public void logQuery(String query, SERVICE searchService, String language, String queryFilters)
     {
-        searchId = getSearchLogger().logQuery(query, searchMode, searchService, language, queryFilters, user);
+        searchId = getSearchLogger().logQuery(query, getMode(), searchService, language, queryFilters, this.user);
     }
 
     private SearchLogManager getSearchLogger()
@@ -612,15 +615,13 @@ public class Search implements Serializable
 
     private void logResources(List<ResourceDecorator> resources, int pageId)
     {
-        /*if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
+        /*if(searchId > 0) // log resources only when logQuery() was called before; This isn't the case on the group search page
             getSearchLogger().logResources(searchId, resources);*/
 
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
-        if(searchId > 0 && configMode.equals(MODE.text) && logHTML)
-            getSearchLogger().logResources(searchId, resources, true, pageId);
-        else if(searchId > 0)
-            getSearchLogger().logResources(searchId, resources, false, pageId);
+        if(searchId > 0)
+            getSearchLogger().logResources(searchId, resources, configMode.equals(MODE.text) && logHTML, pageId);
     }
 
     public void logResourceClicked(int rank, User user)

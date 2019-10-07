@@ -210,7 +210,7 @@ public class ResourceDecorator implements Serializable
         return resource.getLastArchivedObject();
     }
 
-    public User getOwnerUser() throws SQLException
+    public User getUser() throws SQLException
     {
         return resource.getUser();
     }

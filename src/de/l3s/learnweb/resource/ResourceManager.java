@@ -221,20 +221,24 @@ public class ResourceManager
 
     private Resource getResource(int resourceId, boolean useCache) throws SQLException
     {
+        if(resourceId < 0)
+            return null;
+
         Resource resource = cache.get(resourceId);
 
         if(null != resource && useCache)
             return resource;
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ?"); //  and deleted = 0
-        select.setInt(1, resourceId);
-        ResultSet rs = select.executeQuery();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ?"))
+        {
+            select.setInt(1, resourceId);
+            ResultSet rs = select.executeQuery();
 
-        if(!rs.next())
-            return null;
+            if(!rs.next())
+                return null;
 
-        resource = createResource(rs);
-        select.close();
+            resource = createResource(rs);
+        }
 
         return resource;
     }
