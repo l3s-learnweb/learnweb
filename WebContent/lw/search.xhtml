@@ -187,7 +187,7 @@
 
         <h:panelGroup id="nothing"></h:panelGroup>
 
-        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="true" resizable="true" id="resource_dialog" modal="true">
+        <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="true" resizable="false" id="resource_dialog" modal="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
                 <ui:fragment rendered="#{null ne searchBean.selectedResource}">
 

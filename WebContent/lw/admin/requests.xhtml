@@ -57,13 +57,16 @@
 
 			<p:tab title="#{msg.aggr_requests}">
 				<h:form id="aggrrequestform">
+					<p:blockUI block="requestsTable" widgetVar="requestsTableOverlay">
+						<h:outputText value="#{msg.please_wait}"/>
+					</p:blockUI>
 					<span>
 						#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
 														<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
 														</h:outputText>
-						<p:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" styleClass="ml-3" immediate="true"/>
+						<p:commandButton onstart="PF('requestsTableOverlay').show()" oncomplete="PF('requestsTableOverlay').hide()" action="${adminRequestListBean.onUpdateAggregatedRequests}" global="false" value="#{msg.update}" styleClass="ml-3" immediate="true"/>
 					</span>
-					<p:dataTable tableStyleClass="table-responsive mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
+					<p:dataTable id="requestsTable" tableStyleClass="table-responsive mt-3" var="aRequest" paginatorPosition="bottom" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
 						  paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 						<p:column headerText="IP" sortBy="#{aRequest.IP}" filterBy="#{aRequest.IP}" filterMatchMode="contains">
 							<h:outputText value="#{aRequest.IP}"/>

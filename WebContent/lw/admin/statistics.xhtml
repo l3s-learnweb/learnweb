@@ -13,12 +13,15 @@
 
 	<ui:define name="center_layout">
 		<h:form id="anlyse_form">
+			<p:blockUI block="output" widgetVar="anlyseFormOverlay">
+				<h:outputText value="#{msg.please_wait}"/>
+			</p:blockUI>
 			<p:panel header="#{msg.select_groups}" styleClass="mb-3">
 				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 				<div class="form-group">
 					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" itemLabel="#{msg.statistics_show_detailed}"/>
 				</div>
-				<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
+				<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
 			</p:panel>
 
 			<p:dataTable id="output" var="entry" tableStyleClass="table-responsive" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">

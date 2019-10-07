@@ -49,7 +49,7 @@
                 <p:selectBooleanCheckbox value="#{adminAnnouncementsBean.hidden}" itemLabel="#{msg.hide}"/>
             </div>
 
-            <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" process="@form" update=":growl :news_form" rendered="#{userBean.admin}" value="#{msg.add}"/>
+            <p:commandButton action="#{adminAnnouncementsBean.onCreateNews}" onstart="PF('newsOverlay').show()" global="false" oncomplete="PF('newsOverlay').hide()" process="@form" update=":growl :news_form" rendered="#{userBean.admin}" value="#{msg.add}"/>
         </p:panel>
     </h:form>
 

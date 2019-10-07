@@ -34,7 +34,7 @@
 
             <p:column headerText="#{msg.moderator}" sortBy="#{user.moderator}">
                 <p:selectBooleanCheckbox value="#{user.moderator}">
-                    <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl"/>
+                    <p:ajax listener="#{adminUserBean.updateUser(user)}" update=":growl" global="false"/>
                 </p:selectBooleanCheckbox>
             </p:column>
 

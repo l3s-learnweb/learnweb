@@ -14,9 +14,12 @@
     <ui:define name="center_layout">
         <p:panel header="#{msg.select_users}">
             <h:form id="anlyse_form">
+                <p:blockUI block="output" widgetVar="anlyseFormOverlay">
+                    <h:outputText value="#{msg.please_wait}"/>
+                </p:blockUI>
                 <ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
-                <p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
+                <p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}"
                                  update=":growl anlyse_form"/>
 
                 <p class="my-3">
@@ -26,7 +29,7 @@
                     </h:outputFormat>
                 </p>
 
-                <p:dataTable var="comment" tableStyleClass="table-responsive" value="#{adminTextAnalysisBean.comments}">
+                <p:dataTable id="output" var="comment" tableStyleClass="table-responsive" value="#{adminTextAnalysisBean.comments}">
                     <p:column>
                         <f:facet name="header">
                             <div class="d-flex align-items-center">

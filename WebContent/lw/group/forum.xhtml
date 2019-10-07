@@ -24,7 +24,7 @@
 	<ui:define name="group_layout">
 		<h:form>
 			<p:blockUI block="forum_table" widgetVar="topicsOverlay">
-				<h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
+				<h:outputText value="#{msg.please_wait}"/>
 			</p:blockUI>
 
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table" tableStyleClass="table-responsive"
