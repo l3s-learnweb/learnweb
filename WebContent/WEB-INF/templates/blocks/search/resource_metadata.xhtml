@@ -8,7 +8,7 @@
     <!--@elvariable id="view" type="java.lang.String"-->
 
     <div class="metadata">
-        <div class="d-none"><div class="w-100 h-100 overflow-hidden p-0" id="embedded-#{res.rank}"><h:outputText value="#{res.embedded}" escape="false"/></div></div>
+        <div class="d-none"><div class="w-100 h-100 overflow-hidden p-0 embed-responsive embed-responsive-16by9" id="embedded-#{res.rank}"><h:outputText  value="#{res.embedded}" escape="false"/></div></div>
         <div>
             <p:outputLabel for="@next" value="#{msg.title}:" styleClass="font-weight-bold mr-1" escape="false"/>
             <h:outputText value="${res.title}" escape="false"/>

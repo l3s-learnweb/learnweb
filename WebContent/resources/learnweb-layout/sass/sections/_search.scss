@@ -17,8 +17,9 @@
     }
   }
 
-  /*add border on hover in video search*/
-  .hover-border {
+  /*cards used in video search*/
+  .card {
+    cursor: pointer;
     &:hover {
       border: 1px solid $gray-600;
     }
@@ -34,12 +35,6 @@
     background-size:     cover;
   }
 
-  /*fix position */
-  @include media-breakpoint-down(sm) {
-      #groups_menu_bar{
-        padding-top: 3rem;
-      }
-  }
 
   /*info about source*/
   .source-info {
@@ -321,7 +316,12 @@
   &.fancybox-show-thumbs .fancybox-button--arrow_right {
     right: -272px !important;
   }
-
+  /*remove padding on mobile devices */
+  @include media-breakpoint-down(sm) {
+    .fancybox-slide {
+      padding: 0 !important;
+    }
+  }
   @media (max-width: 767.98px) {
     .fancybox-caption {
       position: relative;
