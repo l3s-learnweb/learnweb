@@ -50,7 +50,7 @@
                     <p><h:outputText value="#{msg.homepage}"/></p>
                 </div>
                 <div class="col-lg-6">
-                    <!--<ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>-->
+                    <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
                 </div>
             </div>
         </div>
@@ -63,6 +63,7 @@
                 <div class="col-md-6">
                     <div class="card-single bg-white h-100 mb-5 pb-4">
                         <h6 class="card-header py-3 m-0">#{msg.public_courses}</h6>
+                        <!-- 
                         <h5 class="card-subheader py-1 m-0">Playground</h5>
                         <div class="card-content row mx-auto my-3">
                             <div class="col-4 col-lg-3">
@@ -77,11 +78,12 @@
                                 <h:outputText value="Explore Learnweb (without registration)" styleClass="ui-button-text"/>
                             </h:outputLink>
                         </div>
+                         -->
                         <div>
                             <h5 class="card-subheader py-1 m-0">Public course</h5>
                             <div class="card-content row mx-auto my-3">
                                 <div class="col-4 col-lg-3">
-                                    <h:graphicImage library="frontpage" name="public_course_icon.png" alt="Playground Logo"/>
+                                    <h:graphicImage library="frontpage" name="public_course_icon.png" alt="Public course"/>
                                 </div>
                                 <div class="col-8 col-lg-9 text-left">
                                     ​<h:outputText value="#{msg.standard_version_description}"/>
