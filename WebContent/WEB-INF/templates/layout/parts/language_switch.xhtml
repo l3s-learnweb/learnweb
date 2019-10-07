@@ -31,6 +31,10 @@
 				<img src="#{request.contextPath}/resources/images/flags/flag_pt.png" alt=""/>
 				<span>Português</span>
 			</p:menuitem>
+			<p:menuitem action="#{userBean.setLocaleCode('uk')}">
+				<img src="#{request.contextPath}/resources/images/flags/flag_uk.png" alt="" />
+				<span>Українська</span>
+			</p:menuitem>
 			<p:menuitem action="#{userBean.setLocaleCode('xx')}" rendered="#{userBean.admin}">
 				<img src="#{request.contextPath}/resources/images/flags/flag_xx.png" alt=""/>
 				<span>Developer</span>

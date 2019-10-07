@@ -231,6 +231,9 @@ public class UserBean implements Serializable
         case "es":
             locale = new Locale("es", "ES", languageVariant);
             break;
+        case "uk":
+            locale = new Locale("uk", "UA", languageVariant);
+            break;
         case "xx":
             // only for translation editors
             locale = new Locale("xx");
