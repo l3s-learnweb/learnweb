@@ -1,8 +1,8 @@
 <ui:composition
         template="/WEB-INF/templates/layout/template.xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:p="http://primefaces.org/ui">
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:param name="pageTitle" value="Create Survey"/>
     <ui:param name="loginRequired" value="true"/>
@@ -25,24 +25,42 @@
                             <h:outputText styleClass="font-weight-bold" for="desc" value="Description: "></h:outputText>
                             <p:inputTextarea id="desc" styleClass="w-100" value="#{createSurveyBean.description}"></p:inputTextarea>
 
-                            <div class="d-flex flex-column mb-3">
+            <!--                <div class="d-flex flex-column mb-3">
                                 <h:outputText styleClass="font-weight-bold" for="open" value="Survey Open Date: "></h:outputText>
-                                <p:calendar id="open" value="#{createSurveyBean.open}" showOn="button"></p:calendar>
+                                <p:calendar id="open" value="#{c.open}" showOn="button"></p:calendar>
                             </div>
 
                             <div class="d-flex flex-column mb-3">
                                 <h:outputText styleClass="font-weight-bold" for="close" value="Survey Close Date: "></h:outputText>
-                                <p:calendar id="close" value="#{createSurveyBean.close}" showOn="button"></p:calendar>
-                            </div>
+                                <p:calendar id="close" value="#{CreateSurveyBean.close}" showOn="button"></p:calendar>
+                            </div>-->
 
 
-
-
-                            <p:commandButton ajax="false" id="submit" value="Submit"
-                                             action="#{createSurveyBean.submit()}" update=":growlSurvey">
-
-
-                            </p:commandButton>
+                            <h:panelGroup id="question-container">
+                                <ui:repeat value="#{createSurveyBean.questions}" var="question">
+                                    <p:panel>
+                                            <div class="row">
+                                                <div class="mr-1">
+                                                    <p:outputLabel for="@next" styleClass="font-weight-bold mr-1" value="Info: " />
+                                                    <p:inputText value="#{question.info}" />
+                                                </div>
+                                                <div class="ml-2">
+                                                    <p:selectOneMenu  value="#{question.type}">
+                                                        <f:selectItems value="#{question.questionTypes}" />
+                                                    </p:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <h:panelGroup id="answers" styleClass="d-flex flex-column">
+                                                <ui:repeat value="#{question.forCreateAnswers}" var="answer">
+                                                    <p:inputText value="#{answer.value}" styleClass="my-2" />
+                                                </ui:repeat>
+                                            </h:panelGroup>
+                                            <p:commandButton value="add-answer"  actionListener="#{question.addEmptyAnswer}" update="answers" process="@this"/>
+                                    </p:panel>
+                                </ui:repeat>
+                            </h:panelGroup>
+                                <p:commandButton value="add question" actionListener="#{createSurveyBean.addEmptyQuestion}" update="question-container" process="@this"/>
+                                <p:commandButton value="submit survey" actionListener="#{createSurveyBean.createSurvey}" update="@form" process="@form"/>
                         </h:form>
                     </div>
                 </div>

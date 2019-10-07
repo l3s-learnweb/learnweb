@@ -48,6 +48,11 @@ public class SurveyQuestion implements Serializable
         }
     }
 
+    public QuestionType[] getQuestionTypes()
+    {
+        return QuestionType.values();
+    }
+
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private QuestionType type;
@@ -57,7 +62,28 @@ public class SurveyQuestion implements Serializable
     private boolean required = false;
     private List<SelectItem> optionsList;
     private String extra; // if the options are rating or otherwise
-    private List<String> answers; // predefined answers for question with options
+    private List<String>  answers; // predefined answers for question with options
+    private List<SurveyQuestionAnswer> forCreateAnswers; //map for questions creation
+
+    public List<SurveyQuestionAnswer> getForCreateAnswers()
+    {
+        return forCreateAnswers;
+    }
+
+    public void setForCreateAnswers(final List<SurveyQuestionAnswer> forCreateAnswers)
+    {
+        this.forCreateAnswers = forCreateAnswers;
+    }
+
+    public void addEmptyAnswer()
+    {
+        forCreateAnswers.add(new SurveyQuestionAnswer());
+    }
+
+    public SurveyQuestion ()
+    {
+        forCreateAnswers = new ArrayList<>();
+    }
 
     public SurveyQuestion(QuestionType type)
     {
