@@ -13,7 +13,7 @@
 
 	<ui:define name="center_layout">
 		<p:panel header="#{msg.notification}">
-			<h:panelGroup layout="block" styleClass="w-100 mb-1" rendered="#{userBean.moderator}">
+			<h:panelGroup layout="block" styleClass="w-100 mb-3" rendered="#{userBean.moderator}">
 				<h:outputText value="#{msg.moderator}: "/>
 				<a href="#{request.contextPath}/lw/admin/notification.jsf">
 					<h:outputText value="#{msg.send_notification}"/>
@@ -23,25 +23,25 @@
 			<h:outputText value="#{msg.no_notifications}" rendered="#{empty messageBean.receivedMessages}"/>
 
 			<ui:repeat var="message" value="#{messageBean.receivedMessages}" varStatus="status">
-				<div class="d-flex align-items-center #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
+				<div class="d-flex #{status.first ? 'pb-3 border-bottom' : (status.last ? 'pt-3' : 'py-3 border-bottom') } log-entry">
 					<img class="profile-picture mr-3" src="#{message.fromUser.image}" alt="Profile picture"/>
 
-					<div class="log-details">
+					<div class="text-break">
 						<p class="mb-0">
 							<h:outputText value="#{message.title}" escape="false"/>
 							<h:outputText rendered="#{message.read}" value="(#{msg.new_word})" escape="false"/>
 						</p>
-						<p class="mb-0 log-description">
+						<div class="message-container m-1">
 							<h:outputText value="#{message.text}" escape="false"/>
-						</p>
-						<p class="small font-weight-light mb-0 log-date">
+						</div>
+						<span class="small font-weight-light">
 							<h:outputText value="#{msg.from_user} " escape="false"/>
 							<h:outputText value="#{message.fromUser.username} " styleClass="font-weight-bold" escape="false"/>
 							<h:outputText value="#{msg.on_date} " escape="false" styleClass="font-weight-light"/>
 							<h:outputText value="#{message.time}">
 								<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 							</h:outputText>
-						</p>
+						</span>
 					</div>
 				</div>
 			</ui:repeat>
