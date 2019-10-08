@@ -1,6 +1,10 @@
 package de.l3s.learnweb.user;
 
-import java.io.*;
+import static org.apache.http.HttpHeaders.USER_AGENT;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
@@ -10,9 +14,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -21,12 +27,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.forum.ForumPost;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
@@ -37,8 +43,6 @@ import de.l3s.util.MD5;
 import de.l3s.util.PBKDF2;
 import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
-
-import static org.apache.http.HttpHeaders.USER_AGENT;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
@@ -504,30 +508,21 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setImage(InputStream inputStream) throws SQLException, IOException, IllegalArgumentException
     {
-        FileManager fileManager = Learnweb.getInstance().getFileManager();
-
-        if(imageFileId != 0) // delete old image
-        {
-            fileManager.delete(imageFileId);
-        }
-
         // process image
         Image img = new Image(inputStream);
-        Image thumbnail = img.getResizedToSquare2(100, 0.05);
+        Image thumbnail = img.getResizedToSquare2(200, 0.0);
 
         // save image file
         File file = new File();
         file.setType(TYPE.PROFILE_PICTURE);
         file.setName("user_icon.png");
         file.setMimeType("image/png");
-        file = fileManager.save(file, thumbnail.getInputStream());
+        file = Learnweb.getInstance().getFileManager().save(file, thumbnail.getInputStream());
         thumbnail.dispose();
         inputStream.close();
 
-        imageFileId = file.getId();
+        setImageFileId(file.getId());
         imageUrl = file.getUrl();
-
-        this.save();
     }
 
     /**
@@ -592,67 +587,106 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         if(imageUrl == null)
         {
-            imageUrl = getImage(imageFileId);
+            File imageFile = getImageFile();
+
+            if(null == imageFile)
+            {
+                imageUrl = Learnweb.getInstance().getSecureServerUrl() + "/resources/images/no-profile-picture.jpg";
+
+                imageUrl = getDefaultImage();
+            }
+            else
+                imageUrl = imageFile.getUrl();
         }
 
         return imageUrl;
     }
 
     /**
-     * creates the URL for a given fileId of a profile image
+     * return the File of the profile picture
      *
-     * @param fileId
-     * @return
+     * @return Null if not present
+     * @throws SQLException
      */
-    public static String getImage(int fileId)
+    public File getImageFile() throws SQLException
     {
-        Learnweb learnweb = Learnweb.getInstance();
-
-        if(fileId > 0)
-            return learnweb.getFileManager().createUrl(fileId, "user_icon.png");
-        return learnweb.getSecureServerUrl() + "/resources/images/no-profile-picture.jpg";
+        if(imageFileId > 0)
+            return Learnweb.getInstance().getFileManager().getFileById(imageFileId);
+        return null;
     }
 
     /**
-     * get default avatar for  user
+     * get default avatar for user
      */
-    public InputStream getDefaultAvatar() throws IOException
+    public String getDefaultImage()
     {
-        String name = "";
-        if(fullName!=null & !fullName.trim().isEmpty())
-            name = fullName;
-        else
+        String name = StringUtils.isNotBlank(fullName) ? fullName : username;
+        String initials = "";
+
+        if(StringUtils.isNumeric(name)) // happens when users use their student id as name
+            initials = name.substring(name.length() - 2);
+        else if(name.contains(" ") || name.contains(".")) // name consists of multiple terms separated by whitespaces or dots
         {
-            if(StringUtils.isNumeric(username))
-                name = username.substring(username.length()-2);
-            else
+            for(String part : name.split("[\\s\\.]+"))
             {
-                if(!username.equals(username.toLowerCase()))
-                {
-                    for(int i = 0; i < username.length()-1; i++)
-                    {
-                        if(Character.isUpperCase(username.charAt(i)))
-                        {
-                            name += username.charAt(i);
-                        }
-                    }
-                }
-                else
-                    name = username;
+                if(part.length() == 0)
+                    continue;
+                int index = StringUtils.isNumeric(part) ? part.length() - 1 : 0; // if is number use last digit as initial
+
+                initials += part.charAt(index);
             }
         }
-        URL obj = new URL("https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=https%3A%2F%2Fui-avatars.com%2Fapi%2F/"+ name + "/100");
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        else if(!name.equals(name.toLowerCase()))
+        {
+            initials += name.charAt(0); // always at first char
+
+            for(int i = 1; i < name.length() - 1; i++)
+            {
+                if(Character.isUpperCase(name.charAt(i)))
+                {
+                    initials += name.charAt(i);
+                }
+            }
+        }
+
+        if(StringUtils.isBlank(initials))
+            initials = name.substring(0, 1);
+
+        if(initials.startsWith(".")) // ui-avatars can't handle dots in the beginning
+            initials.replace(".", "X");
+
+        return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode("https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff");
+    }
+
+    /**
+     * Returns a color for the user
+     * If the user is registered this method will return always the same color otherwise a "random" color is returned
+     *
+     * @return color code without hash mark
+     */
+    private String getDefaultColor()
+    {
+        return ColorUtils.getColor(getId() > 0 ? getId() : (int) (System.currentTimeMillis() / 1000L)).substring(1);
+    }
+
+    /**
+     * get default avatar for user
+     */
+    public InputStream getDefaultImageIS() throws IOException
+    {
+        URL url = new URL(getDefaultImage());
+        log.debug(url);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
         int responseCode = con.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK)
+        if(responseCode == HttpURLConnection.HTTP_OK)
         {
             return con.getInputStream();
         }
         else
         {
-            return  null;
+            return null;
         }
     }
 
@@ -668,7 +702,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setImageFileId(int imageFileId)
     {
-        if(imageFileId == 0 && this.imageFileId != 0) // delete existing image
+        if(this.imageFileId != 0 && imageFileId != this.imageFileId) // delete existing image
         {
             try
             {

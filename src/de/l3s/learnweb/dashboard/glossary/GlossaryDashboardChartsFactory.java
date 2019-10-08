@@ -4,12 +4,12 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import de.l3s.learnweb.dashboard.ChartJsUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
 
+import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
@@ -73,7 +73,7 @@ class GlossaryDashboardChartsFactory
         values.add(system);
         values.add(resource);
         barDataSet.setData(values);
-        barDataSet.setBackgroundColor(ChartJsUtils.getColorList(4));
+        barDataSet.setBackgroundColor(ColorUtils.getColorList(4));
         data.addChartDataSet(barDataSet);
 
         model.setData(data);
@@ -107,7 +107,7 @@ class GlossaryDashboardChartsFactory
         dataSet.setData(values);
         data.setLabels(labels);
         data.addChartDataSet(dataSet);
-        dataSet.setBackgroundColor(ChartJsUtils.getColorList(4));
+        dataSet.setBackgroundColor(ColorUtils.getColorList(4));
 
         model.setData(data);
         return model;
@@ -172,7 +172,7 @@ class GlossaryDashboardChartsFactory
             }
         }
         concepts.setData(conceptsData);
-        concepts.setBackgroundColor(ChartJsUtils.getColorList(10));
+        concepts.setBackgroundColor(ColorUtils.getColorList(10));
 
         BarChartDataSet terms = new BarChartDataSet();
         terms.setLabel("Terms");
@@ -190,7 +190,7 @@ class GlossaryDashboardChartsFactory
             }
         }
         terms.setData(termsData);
-        terms.setBackgroundColor(ChartJsUtils.getColorList(10));
+        terms.setBackgroundColor(ColorUtils.getColorList(10));
 
         data.setLabels(labels);
         data.addChartDataSet(terms);

@@ -1,8 +1,6 @@
 package de.l3s.learnweb.user;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
@@ -106,23 +104,6 @@ public class UserManager
         }
 
         return users;
-    }
-
-    /**
-     * sets default avatar for each user
-     */
-    public void setDefaultAvatars() throws SQLException, IOException
-    {
-        List<User> users = getUsers();
-        for(User user : users)
-        {
-            if (user.getImageFileId() <=0)
-            {
-                InputStream is = user.getDefaultAvatar();
-                if (is !=null)
-                    user.setImage(is);
-            }
-        }
     }
 
     public List<User> getUsersByOrganisationId(int organisationId) throws SQLException
@@ -329,8 +310,8 @@ public class UserManager
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password);
         user.setPreferences(new HashMap<>());
+        user.setImage(user.getDefaultImageIS());
         user = save(user);
-        user.setImage(user.getDefaultAvatar());
 
         course.addUser(user);
 

@@ -23,16 +23,10 @@ public class LogEntry implements Serializable
     private Date date;
     private String params;
     private String username;
-
-    public void setDescription(final String description)
-    {
-        this.description = description;
-    }
-
     private String description;
     private int resourceId;
     private int groupId;
-    private String userImage;
+    private String userImage = "";
 
     // cache
     private transient Resource resource;
@@ -42,7 +36,10 @@ public class LogEntry implements Serializable
         userId = rs.getInt(1);
         User user = Learnweb.getInstance().getUserManager().getUser(userId);
         if(user != null)
+        {
             username = user.getUsername();
+            userImage = user.getImage();
+        }
         else
             username = rs.getString(2);
 
@@ -50,7 +47,6 @@ public class LogEntry implements Serializable
         params = rs.getString(5);
         date = new Date(rs.getTimestamp(6).getTime());
         groupId = rs.getInt(7);
-        userImage = User.getImage(rs.getInt("image_file_id"));
 
         int targetId = rs.getInt(4);
 
@@ -60,7 +56,7 @@ public class LogEntry implements Serializable
             resourceId = targetId;
             break;
         default:
-            break; // right no other id types are not handled
+            break; // right now other id types are not handled
         }
 
         String url = "";//Learnweb.getInstance().getServerUrl() + "/lw/";
@@ -203,12 +199,12 @@ public class LogEntry implements Serializable
             break;
 
         case adding_resource_metadata:
-           description = usernameLink + UtilBean.getLocaleMessage("log_add_resource_metadata", params) + resourceTitle;
-           break;
+            description = usernameLink + UtilBean.getLocaleMessage("log_add_resource_metadata", params) + resourceTitle;
+            break;
 
         case login:
-           description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
-           break;
+            description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
+            break;
 
         case changing_profile:
             description = usernameLink + UtilBean.getLocaleMessage("log_change_profile", params);
@@ -232,7 +228,7 @@ public class LogEntry implements Serializable
 
         case logout:
             description = usernameLink + UtilBean.getLocaleMessage("log_logout", params);
-           break;
+            break;
 
         default:
             description = "no message for action " + action.name(); // should never happen;

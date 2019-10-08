@@ -26,7 +26,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import de.l3s.learnweb.resource.*;
 import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.Client;
@@ -36,7 +35,13 @@ import com.sun.jersey.api.client.WebResource;
 import de.l3s.archiveSearch.CDXClient;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.Tag;
 import de.l3s.learnweb.user.User;
 
 public class ArchiveUrlManager
@@ -252,7 +257,7 @@ public class ArchiveUrlManager
             if(rs.getInt("httpstatuscode") != 200 || fileId == 0)
                 return null;
             else
-                return learnweb.getFileManager().createUrl(fileId, "wayback_thumbnail.png");
+                return learnweb.getFileManager().getFileById(fileId).getUrl();
         }
         return null;
     }
@@ -710,7 +715,7 @@ public class ArchiveUrlManager
         	try
         	{
         	    info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
-
+        
         	    if(info != null)
         	    {
         		log.debug(info.getFileName() + " " + info.getMimeType());
@@ -727,12 +732,12 @@ public class ArchiveUrlManager
         	{
         	    log.error("unhandled error", e);
         	}
-
+        
             }
         }
         PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE url LIKE '%facebook%' AND online_status = 'OFFLINE' AND deleted = 0 AND source= 'Archive-It'");
         ResultSet rs = select.executeQuery();
-
+        
         while(rs.next())
         {
             if(rs.getInt("resource_id") <= 0)
@@ -740,9 +745,9 @@ public class ArchiveUrlManager
         	log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
         	continue;
             }
-
+        
             Resource resource = rm.getResource(rs.getInt("resource_id"));
-
+        
             try
             {
         	HttpURLConnection con;
@@ -758,7 +763,7 @@ public class ArchiveUrlManager
         		con = (HttpURLConnection) new URL(con.getHeaderField("Location")).openConnection();
         		con.setInstanceFollowRedirects(true);
         		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
-
+        
         		if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
         		    break;
         	    }
@@ -792,7 +797,7 @@ public class ArchiveUrlManager
             try
             {
         	String url = rs.getString("url");
-
+        
         	Document doc = Jsoup.connect(url).timeout(60000).userAgent("Mozilla").get();
         	log.debug(rs.getInt("resource_id") + " " + doc.title());
         	pStmt2.setString(1, doc.title());
@@ -809,9 +814,9 @@ public class ArchiveUrlManager
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
         formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
         ClientResponse response = webResource.get(ClientResponse.class);
-
+        
         String refreshHeader = null;
-
+        
         if(response.getHeaders().containsKey("Refresh"))
             refreshHeader = response.getHeaders().get("Refresh").get(0);
         Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");

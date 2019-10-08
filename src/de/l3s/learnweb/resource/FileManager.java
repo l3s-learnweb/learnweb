@@ -92,7 +92,7 @@ public class FileManager
         if(null != file)
             return file;
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE file_id = ?"); // AND deleted = 0
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE file_id = ?");
         select.setInt(1, id);
         ResultSet rs = select.executeQuery();
         if(rs.next())
@@ -134,39 +134,39 @@ public class FileManager
     public static void main(String[] args) throws SQLException
     {
     // delete files which are not stored on the server
-
+    
     FileManager fm = Learnweb.getInstance().getFileManager();
     List<File> files = fm.getAllFiles();
-
+    
     HashSet<Integer> set = new HashSet<Integer>();
-
+    
     for(File file : files)
     {
         if(file.actualFile == null)
         {
-
+    
     	set.add(file.getResourceId());
-
+    
     	//fm.delete(file);
         }
     }
-
+    
     Iterator<Integer> iter = set.iterator();
-
+    
     // delete the resources
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
-
+    
     while(iter.hasNext())
     {
         Integer id = iter.next();
-
+    
         if(id == 0)
     	continue;
-
+    
         rm.deleteResourcePermanent(id);
-
+    
     }
-
+    
     }
     */
 
@@ -333,6 +333,14 @@ public class FileManager
         return createUrl(file.getId(), file.getName());
     }
 
+    /**
+     * This method should have package scope. Retrieve a full File object and use file.getUrl()
+     *
+     * @param fileId
+     * @param fileName
+     * @return
+     */
+    @Deprecated
     public String createUrl(int fileId, String fileName)
     {
         return basePath + fileId + "/" + StringHelper.urlEncode(fileName);
@@ -373,9 +381,9 @@ public class FileManager
 
         /*
         Learnweb learnweb = Learnweb.getInstance();
-
+        
         findAbandonedFiles();
-
+        
         learnweb.onDestroy();
         */
     }

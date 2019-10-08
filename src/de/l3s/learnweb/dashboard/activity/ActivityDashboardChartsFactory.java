@@ -8,11 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import de.l3s.learnweb.dashboard.ChartJsUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.line.LineChartDataSet;
 import org.primefaces.model.charts.line.LineChartModel;
+
+import de.l3s.learnweb.beans.ColorUtils;
 
 public class ActivityDashboardChartsFactory
 {
@@ -22,7 +23,7 @@ public class ActivityDashboardChartsFactory
     {
         LineChartModel model = new LineChartModel();
         ChartData chartData = new ChartData();
-        List<String> colors = ChartJsUtils.getColorList(data.size());
+        List<String> colors = ColorUtils.getColorList(data.size());
 
         for(ActivityGraphData activityData : data)
         {
