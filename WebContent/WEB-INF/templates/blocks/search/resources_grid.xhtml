@@ -5,12 +5,11 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
-	<div class="border-0 row mx-n1">
+	<div class="border-0 gallery">
 		<p:repeat var="res" value="#{resources}">
-			<div class="col-12 col-md-4 col-lg-3 col-xl-2 p-1 resource">
-				<div id="resource_#{res.rank}" class="card  hover-border shadow-sm" data-src="#embedded-#{res.rank}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
-					<div class="position-relative embed-responsive embed-responsive-16by9">
-						<img id="#{res.rank}" class="card-img-top embed-responsive-item border-bottom" src="#{res.thumbnail2b.url}"/>
+				<div id="resource_#{res.rank}" class="card  hover-border shadow-sm item" data-src="#embedded-#{res.rank}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
+					<div class="ratio-16-9-wrapper">
+						<img id="#{res.rank}" class="card-img-top" src="#{res.thumbnail2b.url}"/>
 						<ui:fragment rendered="#{res.resource.duration gt 0}">
 							<div class="video-duration p-1">#{res.durationInMinutes}</div>
 						</ui:fragment>
@@ -26,7 +25,6 @@
 						</ui:decorate>
 					</div>
 				</div>
-			</div>
 		</p:repeat>
 	</div>
 </ui:composition>
