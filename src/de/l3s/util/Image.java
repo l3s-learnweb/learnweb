@@ -4,21 +4,26 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.image.BufferedImageOp;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 
 import org.apache.log4j.Logger;
 
-import com.mortennobel.imagescaling.AdvancedResizeOp;
-import com.mortennobel.imagescaling.MultiStepRescaleOp;
+import com.twelvemonkeys.image.ResampleOp;
+
+//import com.mortennobel.imagescaling.AdvancedResizeOp;
+//import com.mortennobel.imagescaling.MultiStepRescaleOp;
 
 /**
  * This is a utility class for performing basic functions on an image,
@@ -104,10 +109,16 @@ public class Image
             log.warn("Width " + width + " exceeds width of image, which is " + getWidth());
             return this;
         }
-        int nHeight = width * img.getHeight() / img.getWidth();
+        int newHeight = width * img.getHeight() / img.getWidth();
+
+        BufferedImageOp resampler = new ResampleOp(width, newHeight, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
+        BufferedImage resizedImage = resampler.filter(img, null);
+
+        /*
         MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);
         rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
         BufferedImage resizedImage = rescale.filter(img, null);
+        */
 
         return new Image(resizedImage);
     }
@@ -167,9 +178,13 @@ public class Image
             newHeight = maxHeight;
         }
 
+        /*
         MultiStepRescaleOp rescale = new MultiStepRescaleOp(newWidth, newHeight);
         rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
         BufferedImage resizedImage = rescale.filter(img, null);
+        */
+        BufferedImageOp resampler = new ResampleOp(newWidth, newHeight, ResampleOp.FILTER_LANCZOS); // A good default filter, see class documentation for more info
+        BufferedImage resizedImage = resampler.filter(img, null);
 
         return new Image(resizedImage);
     }
@@ -248,58 +263,7 @@ public class Image
      *            focus of the image is reduced. Specifying a value such as 0.1 may help preserve
      *            this detail. You should experiment with it. The value must be between 0 and 0.5
      *            (representing 0% to 50%)
-     * @return Image cropped and resized to a square
-     */
-    public Image getResizedToSquare(int width, double cropEdgesPct)
-    {
-        if(cropEdgesPct < 0 || cropEdgesPct > 0.5)
-            throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
-        if(width > getWidth())
-            throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
-        //crop to square first. determine the coordinates.
-        int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
-        int x1 = 0;
-        int y1 = 0;
-        int x2 = getWidth();
-        int y2 = getHeight();
-        if(getWidth() > getHeight())
-        {
-            x1 = cropMargin;
-            x2 = x1 + y2;
-        }
-        else
-        {
-            y1 = cropMargin;
-            y2 = y1 + x2;
-        }
-
-        //should there be any edge cropping?
-        if(cropEdgesPct != 0)
-        {
-            int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
-            x1 += cropEdgeAmt;
-            x2 -= cropEdgeAmt;
-            y1 += cropEdgeAmt;
-            y2 -= cropEdgeAmt;
-        }
-
-        // generate the image cropped to a square
-        Image cropped = crop(x1, y1, x2, y2);
-
-        // now resize. we do crop first then resize to preserve detail
-        Image resized = cropped.getResizedToWidth(width);
-        cropped.dispose();
-
-        return resized;
-    }
-
-    /**
-     * error tolerant version
-     * returns the same image if image is smaller than width parameter
-     *
-     * @param width
-     * @param cropEdgesPct
-     * @return
+     * @return Image cropped and resized to a square; returns the same image if image is smaller than width parameter
      */
     public Image getResizedToSquare2(int width, double cropEdgesPct)
     {
@@ -346,26 +310,6 @@ public class Image
     }
 
     /**
-     * Soften the image to reduce pixelation. Helps JPGs look better after resizing.
-     *
-     * @param softenFactor Strength of softening. 0.08 is a good value
-     * @return New Image object post-softening, unless softenFactor == 0, in which
-     *         case the same object is returned
-     */
-    public Image soften(float softenFactor)
-    {
-        if(softenFactor == 0f)
-            return this;
-        else
-        {
-            float[] softenArray = { 0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0 };
-            Kernel kernel = new Kernel(3, 3, softenArray);
-            ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-            return new Image(cOp.filter(img, null));
-        }
-    }
-
-    /**
      * Write image to a file, specify image type
      * This method will overwrite a file that exists with the same name
      *
@@ -407,5 +351,18 @@ public class Image
     public void dispose()
     {
         img.flush();
+    }
+
+    public static void main(String[] args) throws FileNotFoundException, IOException
+    {
+        Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("SVG");
+        while(readers.hasNext())
+        {
+            System.out.println("reader: " + readers.next());
+        }
+
+        BufferedImage image = ImageIO.read(new FileInputStream("D:\\Learnweb\\test_pattern.webp"));
+        if(null == image)
+            System.err.println("mist");
     }
 }

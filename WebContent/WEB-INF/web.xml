@@ -148,6 +148,15 @@
         <param-value>.xhtml</param-value>
     </context-param>
 
+	<!-- 
+	Because the ImageIO plugin registry (the IIORegistry) is "VM global", it doesn't by default work well with servlet contexts. 
+	https://github.com/haraldk/TwelveMonkeys#deploying-the-plugins-in-a-web-app
+	 -->
+	<listener>
+		<display-name>ImageIO service provider loader/unloader</display-name>
+		<listener-class>com.twelvemonkeys.servlet.image.IIOProviderContextListener</listener-class>
+	</listener>
+	
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -229,4 +238,6 @@
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
     -->
+
+
 </web-app>

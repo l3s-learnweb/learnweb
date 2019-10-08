@@ -3,9 +3,13 @@
 # file name                                     description
 
 activation-1.1.1.jar                            Dependencies missing in Java 11 (for backward compatibility)
+batik-all-1.11.jar								required by imagio
 boilerpipe-1.1.0.jar
 cdi-api-2.0.jar                                 required for myfaces-bundle-2.3.1
 classmate-1.3.4.jar					            required by Hibernate validator, added by Philipp
+common-image-3.4.2.jar							required by imagio (this isn't apache commons)
+common-io-3.4.2.jar								required by imagio (this isn't apache commons)
+common-lang-3.4.2.jar							required by imagio (this isn't apache commons)
 commons-beanutils-1.9.3.jar			            JSF Base (MyFaces)
 commons-codec-1.3.jar				            JSF Base, Dependency of Google API
 commons-collections-3.2.2.jar		            JSF Base (MyFaces)
@@ -13,7 +17,7 @@ commons-collections4-4.1.jar		            Used by ActivityDashboardBean
 commons-csv-1.5.jar
 commons-digester-1.8.jar			            JSF Base (MyFaces)
 commons-fileupload-1.3.jar			            primefaces file upload
-commons-io-2.5.jar					            required by FileManager, Primefaces file upload, Dependency of solr-solrj
+commons-io-2.6.jar					            required by FileManager, Primefaces file upload, Dependency of solr-solrj
 commons-lang3-3.4.jar				            Interweb, Others, ArchiveSearch
 commons-logging-1.2.jar			                JSF Base, Dependency of Google API
 commons-math3-3.6.1.jar				            Dependency of solr-solrj
@@ -21,7 +25,6 @@ core.jar							            Added by Trevor; for TEDWordNet // What the source is
 cron4j-2.2.5.jar					            Job Scheduler, added by Siyu
 dd-plist-1.21.jar								Resource ExportManager to handle MacOs files
 ffmpeg-0.6.2.jar                                video processing and converting
-Filters-2.0.235.jar					            image scaling (Thumbnails)
 gagawa-1.0.1.jar								Resource ExportManager to create HTML index files
 geronimo-atinject_1.0_spec-1.0.jar              required by my-faces-bundle
 google-api-client-1.20.0.jar					Google API Client
@@ -39,9 +42,9 @@ http2-http-client-transport-9.4.19.v20190610.jar Dependency of solr-solrj
 httpclient-4.5.9.jar				            Dependency of solr-solrj, Google API, crawler4j
 httpcore-4.4.11.jar					            Dependency of solr-solrj, Google API, crawler4j
 httpmime-4.5.9.jar					            Dependency of solr-solrj
+imageio-*.jar									Image processing, Thumbnails 
 itext-2.1.7.jar						            Dependency for PDF exporter
 jackson-core-2.1.3.jar				            Dependency of Google API
-java-image-scaling-0.8.5.jar		            Thumbnails
 javax.servlet.jsp.jstl-1.2.1.jar	            JSF Base
 javax.servlet.jsp.jstl-api-1.2.1.jar            JSF Base
 jaxb-api-2.3.1.jar                              Dependencies missing in Java 11 (for backward compatibility)
@@ -76,6 +79,7 @@ poi-4.1.0.jar                                   Primefaces table exporter, added
 prettytime-4.0.0.Final.jar			            Date formatting
 primefaces-7.0.jar					            JSF Base
 ritaWN.jar							            TEDWordnet, added by Trevor
+servlet-3.4.2.jar								required by imageio
 slf4j-api-1.7.24.jar				            Dependency of solr-solrj
 slf4j-log4j12-1.7.22.jar
 solr-solrj-8.2.0.jar                            SolrClient
@@ -87,6 +91,8 @@ validation-api-2.0.1.Final.jar		            required by Hibernate validator adde
 weld-servlet-shaded-3.0.4.Final.jar             Required by Tomcat to work with Java EE CDI API
 woodstox-core-asl-4.4.1.jar                     Dependency of solr-solrj
 wstx-asl-3.2.7.jar					            added by Siyu for Solr
-xml-apis-1.4.01.jar
+xercesImpl.jar									required by boilerplate
+xml-apis-1.4.01.jar								required by boilerplate
+xml-apis-ext.jar								required by imageio
 zookeeper-3.5.5.jar					            Dependency of solr-solrj
 zookeeper-jute-3.5.5.jar                        Dependency of solr-solrj

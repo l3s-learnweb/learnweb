@@ -163,26 +163,29 @@ public class ResourceMetadataExtractor
             resource.setType(Resource.ResourceType.website);
             FileInfo fileInfo = getFileInfo(resource.getUrl());
 
-            try
-            {
-
-                String htmlContent = hh.process(new URL(resource.getUrl()), extractor);
-                Document jsoupDoc = Jsoup.parse(htmlContent);
-                jsoupDoc.outputSettings(new OutputSettings().prettyPrint(false));
-                jsoupDoc.select("br").after("\\n");
-                jsoupDoc.select("p").before("\\n");
-                String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
-
-                resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
-
-            }
-            catch(IOException | BoilerpipeProcessingException | SAXException e)
-            {
-                Level logLevel = e.getMessage().contains("HTTP response code: 40") ? Level.WARN : Level.ERROR;
-                log.log(logLevel, "Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
-            }
-
             processFileResource(resource, fileInfo);
+
+            if(resource.getType() == Resource.ResourceType.website)
+                try
+                {
+                    //ArticleExtractor.INSTANCE.getText(arg0)
+                    String htmlContent = hh.process(new URL(resource.getUrl()), extractor);
+                    Document jsoupDoc = Jsoup.parse(htmlContent);
+                    jsoupDoc.outputSettings(new OutputSettings().prettyPrint(false));
+                    jsoupDoc.select("br").after("\\n");
+                    jsoupDoc.select("p").before("\\n");
+                    String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
+
+                    log.debug("machine:" + resource.getMachineDescription());
+                    log.debug("boiler :" + str);
+                    resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
+
+                }
+                catch(IOException | BoilerpipeProcessingException | SAXException e)
+                {
+                    Level logLevel = e.getMessage().contains("HTTP response code: 40") ? Level.WARN : Level.ERROR;
+                    log.log(logLevel, "Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
+                }
         }
         catch(JSONException | IOException e)
         {
@@ -436,9 +439,10 @@ public class ResourceMetadataExtractor
 
         if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getDescription()))
             resource.setDescription(StringHelper.shortnString(fileInfo.getTextContent(), DESCRIPTION_LIMIT));
-
+        /*
         if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getTranscript()) && resource.getType() == Resource.ResourceType.website)
             resource.setTranscript(fileInfo.getTextContent());
+            */
     }
 
     private String base58_decode(String snipCode)

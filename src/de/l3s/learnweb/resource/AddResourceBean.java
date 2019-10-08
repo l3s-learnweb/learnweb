@@ -27,8 +27,8 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.GroupResourcesBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.group.GroupResourcesBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
@@ -310,7 +310,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if (resource.getType().equals(ResourceType.survey)) {
+            if(resource.getType().equals(ResourceType.survey))
+            {
                 addSurvey();
                 return;
             }
@@ -348,7 +349,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.postConstruct();
 
             // create thumbnails for the resource
-            if(!resource.isProcessing() && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0 || resource.getType().equals(Resource.ResourceType.video)))
+            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType().equals(Resource.ResourceType.video)))
             {
                 new CreateThumbnailThread(resource).start();
             }

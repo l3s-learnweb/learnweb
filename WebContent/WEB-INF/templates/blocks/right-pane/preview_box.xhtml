@@ -53,9 +53,9 @@
             </a>
         </ui:fragment>
 
-        <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail3 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+        <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail0 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
             <div class="preview-wrapper">
-                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto d-block"/>
+                <img src="#{res.largestThumbnail.url}" alt="#{res.title}" class="img-fluid mx-auto d-block"/>
             </div>
         </ui:fragment>
     </div>

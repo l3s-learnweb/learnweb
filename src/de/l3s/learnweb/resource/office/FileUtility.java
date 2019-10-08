@@ -125,7 +125,6 @@ public class FileUtility
                 if(path.startsWith("www."))
                     path = path.substring(4);
             }
-            System.out.println("path: " + path);
 
             return Paths.get(path).getFileName().toString();
         }

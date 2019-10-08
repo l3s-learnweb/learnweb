@@ -232,6 +232,8 @@ public class SearchBean extends ApplicationBean implements Serializable
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
                 FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
                 rme.processFileResource(newResource, fileInfo);
+                // TODO check if it would be better to use rme.processWebResource
+
             }
 
             newResource = user.addResource(newResource);
