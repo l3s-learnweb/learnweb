@@ -18,6 +18,14 @@ class SelectResource {
     }
   }
 
+  _addContainerClass() {
+    if (this.items.length > 0) {
+      $('.res-container').addClass('res-highlight-select');
+    } else {
+      $('.res-container').removeClass('res-highlight-select');
+    }
+  }
+
   _selectElement(el) {
     const itemType = el.dataset.itemtype;
     const itemId = el.dataset.itemid;
@@ -31,6 +39,7 @@ class SelectResource {
           type: itemType,
           element: el,
         });
+        this._addContainerClass();
       }
     } else {
       console.error('Element type or ID is unknown', el);
@@ -46,6 +55,7 @@ class SelectResource {
       if (index !== -1) {
         this.items[index].element.classList.remove('ui-selected');
         this.items.splice(index, 1);
+        this._addContainerClass();
       }
     }
   }
@@ -54,6 +64,7 @@ class SelectResource {
     $('.res-item.ui-selected').removeClass('ui-selected');
     $('.res-item.ui-draggable-dragging').removeClass('ui-draggable-dragging');
     this.items = [];
+    this._addContainerClass();
   }
 
   selectOnly(element) {
@@ -176,6 +187,20 @@ function createSelectable(resContainerId) {
   const $resContainer = $(document.getElementById(resContainerId));
   // check if container is selectable
   if (!$resContainer || !$resContainer.data('canselectresources')) return;
+
+  $resContainer.on('click', '.res-item .res-selector', function (e) { // select using keyboard hot keys
+    const resItem = this.closest('.res-item');
+    const itemType = resItem.dataset.itemtype;
+    const itemId = resItem.dataset.itemid;
+
+    if (selected.indexOf(itemType, itemId) !== -1) {
+      selected.unselect(resItem);
+    } else {
+      selected.select(resItem);
+    }
+
+    return false;
+  });
 
   $resContainer.on('click', '.res-item', function (e) { // select using keyboard hot keys
     if (e.shiftKey && selected.size() > 0) { // select all between

@@ -16,6 +16,22 @@
     }
 }
 
+@mixin icon($icon) {
+    content: $icon;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    text-indent: 0px !important;
+    background: none;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+}
+
 //[class^="ui-icon-"]:before,
 //[class*=" ui-icon-"]:before,
 .ui-icon {
