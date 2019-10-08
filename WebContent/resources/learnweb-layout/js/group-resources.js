@@ -200,6 +200,8 @@ function createSelectable(resContainerId) {
     }
 
     return false;
+  }).on('dblclick', '.res-item .res-selector', (e) => {
+    e.stopPropagation();
   });
 
   $resContainer.on('click', '.res-item', function (e) { // select using keyboard hot keys
