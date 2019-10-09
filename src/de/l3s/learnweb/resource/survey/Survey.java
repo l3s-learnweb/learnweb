@@ -22,8 +22,7 @@ public class Survey implements Serializable, HasId
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
 
-    //private ArrayList<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
-    private LinkedHashMap<Integer, SurveyQuestion> questions = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, SurveyQuestion> questions = new LinkedHashMap<>(); // maps questions ids to questions
 
     @Override
     public int getId()

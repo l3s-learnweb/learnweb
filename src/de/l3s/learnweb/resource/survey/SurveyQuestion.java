@@ -48,7 +48,7 @@ public class SurveyQuestion implements Serializable
         }
     }
 
-    public QuestionType[] getQuestionTypes()
+    public static QuestionType[] getQuestionTypes()
     {
         return QuestionType.values();
     }
@@ -62,27 +62,11 @@ public class SurveyQuestion implements Serializable
     private boolean required = false;
     private List<SelectItem> optionsList;
     private String extra; // if the options are rating or otherwise
-    private List<String>  answers; // predefined answers for question with options
-    private List<SurveyQuestionAnswer> forCreateAnswers; //map for questions creation
+    private List<SurveyQuestionAnswer> answers; // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
-    public List<SurveyQuestionAnswer> getForCreateAnswers()
+    public SurveyQuestion()
     {
-        return forCreateAnswers;
-    }
 
-    public void setForCreateAnswers(final List<SurveyQuestionAnswer> forCreateAnswers)
-    {
-        this.forCreateAnswers = forCreateAnswers;
-    }
-
-    public void addEmptyAnswer()
-    {
-        forCreateAnswers.add(new SurveyQuestionAnswer());
-    }
-
-    public SurveyQuestion ()
-    {
-        forCreateAnswers = new ArrayList<>();
     }
 
     public SurveyQuestion(QuestionType type)
@@ -197,20 +181,20 @@ public class SurveyQuestion implements Serializable
      *
      * @return
      */
-    public List<String> getEUMadeAnswersWithout()
+    public List<SurveyQuestionAnswer> getEUMadeAnswersWithout()
     {
-        LinkedList<String> copy = new LinkedList<>(answers);
-        copy.remove("Don't show");
+        LinkedList<SurveyQuestionAnswer> copy = new LinkedList<>(answers);
+        copy.remove(new SurveyQuestionAnswer("Don't show"));
 
         return copy;
     }
 
-    public List<String> getAnswers()
+    public List<SurveyQuestionAnswer> getAnswers()
     {
         return answers;
     }
 
-    public void setAnswers(List<String> answers)
+    public void setAnswers(List<SurveyQuestionAnswer> answers)
     {
         this.answers = answers;
     }

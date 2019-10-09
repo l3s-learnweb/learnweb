@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -285,7 +286,8 @@ public class SurveyManager
                 String answers = rs.getString("answers");
                 if(!StringUtils.isEmpty(answers))
                 {
-                    question.setAnswers(Arrays.asList(answers.trim().split("\\s*\\|\\|\\|\\s*")));
+                    // wrap answers into SurveyQuestionAnswer object
+                    question.setAnswers(Arrays.stream(answers.trim().split("\\s*\\|\\|\\|\\s*")).map(answer -> new SurveyQuestionAnswer(answer)).collect(Collectors.toList()));
                 }
 
                 String options = rs.getString("option");

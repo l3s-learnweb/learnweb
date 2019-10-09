@@ -24,7 +24,7 @@ body {
     }
     .ui-state-error,
     .ui-state-default.ui-state-error {
-        border: 1px solid $inputInvalidBorderColor;
+        border: 1px solid $inputInvalidBorderColor !important;
     }
     .ui-state-disabled {
         opacity: .35;

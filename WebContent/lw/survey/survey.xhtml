@@ -6,7 +6,7 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
 
-    <ui:param name="pageTitle" value="Survey"/>
+    <ui:param name="pageTitle" value="#{msg.survey}"/>
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="disableGrowl" value="true"/>
 
@@ -21,7 +21,6 @@
 	</ui:define>
 
 	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
 		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
 	</ui:define>
 
