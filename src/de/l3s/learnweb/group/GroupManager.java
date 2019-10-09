@@ -355,8 +355,7 @@ public class GroupManager
     {
         for(Resource resource : group.getResources())
         {
-            resource.setGroupId(0);
-            resource.save();
+            resource.delete();
         }
 
         PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?");
