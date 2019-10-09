@@ -433,32 +433,32 @@ public class Search implements Serializable
      */
     public List<GroupedResources> getResourcesGroupedBySource(Integer limit)
     {
-        List<GroupedResources> groupedResources = new ArrayList<>();
+        List<GroupedResources> resourcesByGroups = new ArrayList<>();
 
         for(ResourceDecorator res : resources)
         {
-            GroupedResources gr = new GroupedResources();
-            gr.setGroupName(res.getLocation());
+            GroupedResources resGroup = new GroupedResources();
+            resGroup.setGroupName(res.getLocation());
 
             //log.debug("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
 
-            if(groupedResources.contains(gr))
+            if(resourcesByGroups.contains(resGroup))
             {
-                gr = groupedResources.get(groupedResources.indexOf(gr));
-                if(gr.getResources().size() < limit)
+                resGroup = resourcesByGroups.get(resourcesByGroups.indexOf(resGroup));
+                if(resGroup.getResources().size() < limit)
                 {
-                    gr.addResource(res);
+                    resGroup.addResource(res);
                 }
             }
             else
             {
-                gr.setTotalResources(searchFilters.getTotalResources(FILTERS.service, gr.getGroupAlias()).intValue());
-                gr.addResource(res);
-                groupedResources.add(gr);
+                resGroup.setTotalResources(searchFilters.getTotalResources(FILTERS.service, resGroup.getGroupAlias()).intValue());
+                resGroup.addResource(res);
+                resourcesByGroups.add(resGroup);
             }
         }
 
-        return groupedResources;
+        return resourcesByGroups;
     }
 
     /**
@@ -562,7 +562,7 @@ public class Search implements Serializable
 
         public Integer getTotalResources()
         {
-            return totalResources;
+            return totalResources > resources.size() ? totalResources : resources.size();
         }
 
         public void setTotalResources(Integer totalResources)

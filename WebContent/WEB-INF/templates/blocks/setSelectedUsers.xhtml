@@ -17,16 +17,16 @@
             <p:outputPanel id="usersSelectorPanel" styleClass="my-2">
                 <p:selectCheckboxMenu id="selectedUsersIds" value="#{cbean.selectedUsersIds}" var="user" label="#{msg.users}"
                                       filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 1}" styleClass="no-borders">
-                    <p:ajax event="change" update="usersCountPanel submitBtnPanel"/>
-                    <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel"/>
+                    <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
+                    <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 
                     <f:selectItems value="#{cbean.allUsers}" var="user" itemValue="#{user.id}" itemLabel="#{user.username}"/>
                 </p:selectCheckboxMenu>
 
                 <p:selectCheckboxMenu id="selectedGroupsIds" value="#{cbean.selectedGroupsIds}" var="group" label="#{msg.groupsTitle}"
                                       filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 2}" styleClass="no-borders">
-                    <p:ajax event="change" update="usersCountPanel submitBtnPanel"/>
-                    <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel"/>
+                    <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
+                    <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 
                     <f:selectItems value="#{cbean.allGroups}" var="group" itemValue="#{group.id}" itemLabel="#{group.title}"/>
                 </p:selectCheckboxMenu>
@@ -56,7 +56,7 @@
         </p:outputPanel>
         <p:outputPanel id="submitBtnPanel" styleClass="col-md-4 d-flex align-items-center">
             <p:commandButton value="#{msg.update}" icon="ui-icon-check" update=":content" action="#{cbean.cleanAndUpdateStoredData}"
-                             disabled="#{empty cbean.selectedUsersIds}">
+                             disabled="#{empty cbean.selectedUsersIds or cbean.usersLimitReached}">
             </p:commandButton>
         </p:outputPanel>
     </div>

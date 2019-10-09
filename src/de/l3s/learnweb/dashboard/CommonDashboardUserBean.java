@@ -14,15 +14,19 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
+import javax.faces.application.FacesMessage;
+
 public abstract class CommonDashboardUserBean extends ApplicationBean
 {
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
+    private static int USERS_LIMIT = 500;
 
     private Integer paramUserId;
 
     private int selectedType = 1; // Users = 1, Groups = 2
     private boolean singleUser = true;
+    private boolean usersLimitReached = false;
     private List<Integer> selectedUsersIds;
     private List<Integer> selectedGroupsIds;
     protected Date startDate;
@@ -111,6 +115,11 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
         return singleUser;
     }
 
+    public boolean isUsersLimitReached()
+    {
+        return usersLimitReached;
+    }
+
     public int getSelectedType()
     {
         return selectedType;
@@ -123,6 +132,13 @@ public abstract class CommonDashboardUserBean extends ApplicationBean
 
     public void setSelectedUsersIds(List<Integer> selectedUsersIds)
     {
+        if (selectedUsersIds.size() > USERS_LIMIT) {
+            usersLimitReached = true;
+            addMessage(FacesMessage.SEVERITY_ERROR, "Please, choose less than 500 users");
+        } else {
+            usersLimitReached = false;
+        }
+
         this.selectedUsersIds = selectedUsersIds;
     }
 
