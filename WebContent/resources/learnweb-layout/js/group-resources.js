@@ -493,7 +493,7 @@ function doAction(action, extraAttr1, extraAttr2) {
       PF('learnweb').updateSearchParams({ resource_id: null });
       break;
     default:
-      console.log('Unimplemented or unsupported action: ', action);
+      console.error('Unimplemented or unsupported action: ', action);
   }
 }
 

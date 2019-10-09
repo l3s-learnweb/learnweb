@@ -730,7 +730,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                 this.addTagToGroupItems(items, tag);
                 break;
             default:
-                log.warn("Unsupported action: " + action);
+                log.error("Unsupported action: " + action);
                 break;
             }
         }

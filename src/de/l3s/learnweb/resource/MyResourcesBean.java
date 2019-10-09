@@ -253,10 +253,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             case "copy":
                 this.actionCopyGroupItems(items);
                 break;
-            /*case "move":
+            case "move":
                 JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
                 this.moveGroupItems(items, dest);
-                break;*/
+                break;
             case "delete":
                 this.deleteItems(items);
                 break;
@@ -265,7 +265,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 this.addTagToGroupItems(items, tag);
                 break;
             default:
-                log.warn("Unsupported action: " + action);
+                log.error("Unsupported action: " + action);
                 break;
             }
         }
@@ -407,6 +407,127 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             if(numFolders + numResources > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
+            }
+
+            if(numSkipped > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+            }
+        }
+        catch(NullPointerException | JSONException | SQLException e)
+        {
+            addErrorMessage(e);
+        }
+    }
+
+    private void moveGroupItems(JSONArray objects, JSONObject dest)
+    {
+        try
+        {
+            int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
+
+            if(dest != null)
+            {
+                try
+                {
+                    targetGroupId = Integer.parseInt(dest.getString("groupId"));
+                }
+                catch(JSONException | NumberFormatException e)
+                {
+                    targetGroupId = groupId;
+                }
+
+                try
+                {
+                    targetFolderId = Integer.parseInt(dest.getString("folderId"));
+                }
+                catch(JSONException | NumberFormatException e)
+                {
+                    targetFolderId = 0;
+                }
+            }
+
+            if(targetGroupId != 0)
+            {
+                Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+                if(!targetGroup.canAddResources(getUser()))
+                {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
+                    return;
+                }
+            }
+
+            for(int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+                String itemType = item.getString("itemType");
+                int itemId = item.getInt("itemId");
+                if(itemType != null && itemType.equals("folder") && itemId > 0)
+                {
+                    Folder sourceFolder = getLearnweb().getGroupManager().getFolder(itemId);
+                    if(sourceFolder != null)
+                    {
+                        if(!sourceFolder.canDeleteResource(getUser()))
+                        {
+                            numSkipped++;
+                            log.warn("The user don't have permissions to delete folder which it want to move.");
+                            continue;
+                        }
+
+                        if(!sourceFolder.isEditPossible())
+                        {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceFolder.getLockUsername());
+                            return;
+                        }
+
+                        log(Action.move_folder, sourceFolder.getGroupId(), itemId, sourceFolder.getTitle());
+                        sourceFolder.moveTo(targetGroupId, targetFolderId);
+                        numFolders++;
+                    }
+                    else
+                    {
+                        numSkipped++;
+                        log.warn("Source folder does not exists on actionMoveGroupItems");
+                    }
+                }
+                else if(itemType != null && itemType.equals("resource") && itemId > 0)
+                {
+                    Resource sourceResource = getLearnweb().getResourceManager().getResource(itemId);
+                    if(sourceResource != null)
+                    {
+                        if(!sourceResource.canDeleteResource(getUser()))
+                        {
+                            numSkipped++;
+                            log.warn("The user don't have permissions to delete resource which it want to move.");
+                            continue;
+                        }
+
+                        if(!sourceResource.isEditPossible())
+                        {
+                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceResource.getLockUsername());
+                            return;
+                        }
+
+                        log(Action.move_resource, sourceResource.getGroupId(), itemId, sourceResource.getTitle());
+                        sourceResource.moveTo(targetGroupId, targetFolderId);
+                        numResources++;
+                    }
+                    else
+                    {
+                        numSkipped++;
+                        log.warn("Target folder does not exists on actionMoveGroupItems");
+                    }
+                }
+                else
+                {
+                    numSkipped++;
+                    log.warn("Unsupported itemType");
+                }
+            }
+
+            if(numFolders + numResources > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
             }
 
             if(numSkipped > 0)

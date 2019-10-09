@@ -202,7 +202,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
                 this.actionAddSelectedItems(items);
                 break;
             default:
-                log.warn("Unsupported action: " + action);
+                log.error("Unsupported action: " + action);
                 break;
             }
         }
