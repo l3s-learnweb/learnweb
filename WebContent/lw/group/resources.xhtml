@@ -99,22 +99,16 @@
                     </f:facet>
 
                     <f:facet name="right">
-                        <p:commandButton value="#{msg.create}" title="#{msg.create_folder}" icon="fa fa-folder" onclick="doAction('create-folder');return false;"/>
-
-                        <p:menuButton value="#{msg.add}" icon="fa fa-file" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
-                            <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" onclick="doAction('new-file', 'document');return false;"
-                                        update=":right_pane" actionListener="#{addResourceBean.clearForm()}">
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" onclick="doAction('new-file','spreadsheet');return false;"
-                                        update=":right_pane" actionListener="#{addResourceBean.clearForm()}">
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"
-                                        update=":right_pane" actionListener="#{addResourceBean.clearForm()}">
-                            </p:menuitem>
+                        <p:menuButton value="#{msg.add}" icon="fa fa-plus" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
+                            <p:menuitem value="#{msg.create_folder}" icon="fa fa-folder" onclick="doAction('create-folder');return false;"/>
                             <p:separator/>
                             <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
                             <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
-                            <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
+                            <p:separator/>
+                            <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" onclick="doAction('new-file', 'document');return false;"/>
+                            <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" onclick="doAction('new-file','spreadsheet');return false;"/>
+                            <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"/>
+                            <p:menuitem value="#{msg['Glossary.glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
                         </p:menuButton>
 
                         <p:commandButton rendered="${not groupResourcesBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
@@ -354,7 +348,7 @@
         <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"/>
     </p:dialog>
 	</ui:remove>
-	
+
     <script type="application/javascript">
         /**
          * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
