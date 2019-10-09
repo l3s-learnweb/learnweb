@@ -61,7 +61,7 @@
 
             <div class="ui-panel-content ui-widget-content flex-grow-1">
                 <h:form id="group_folders_tree">
-                    <p:tree value="#{groupResourcesBean.getFoldersOnlyTree(group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
+                    <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
                             datakey="#{node.id}" animate="true" selectionMode="single" styleClass="ui-tree-responsive"
                             rendered="#{not empty groupResourcesBean.group.subFolders}" onNodeClick="openFolder(node.data('datakey'));">
 

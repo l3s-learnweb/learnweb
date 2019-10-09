@@ -411,14 +411,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         return null;
     }
 
-    public TreeNode getFoldersTree(int groupId) throws SQLException
+    public TreeNode getFoldersTree(Group group) throws SQLException
     {
-        return getLearnweb().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
-    }
-
-    public TreeNode getFoldersOnlyTree(Group group) throws SQLException
-    {
-        return getLearnweb().getGroupManager().getFoldersOnlyTree(group, getSelectedFolderId());
+        return getLearnweb().getGroupManager().getFoldersTree(group, getSelectedFolderId());
     }
 
     public Folder getSelectedFolder()

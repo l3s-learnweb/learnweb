@@ -778,32 +778,19 @@ public class GroupManager
         return category;
     }
 
-    public TreeNode getFoldersTree(int groupId, int selectedFolderId) throws SQLException
+    public TreeNode getFoldersTree(Group group, int selectedFolderId) throws SQLException
     {
-        if(groupId < 1)
-        {
+        if(group == null)
             return null;
-        }
 
-        Group group = getGroupById(groupId);
         TreeNode root = new DefaultTreeNode("GroupFolders");
-        TreeNode rootFolder = new DefaultTreeNode("root", new Folder(0, group.getId(), group.getTitle()), root);
+        TreeNode rootFolder = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), root);
         if(selectedFolderId == 0)
         {
             rootFolder.setSelected(true);
             rootFolder.setExpanded(true);
         }
-        getChildNodesRecursively(groupId, 0, rootFolder, selectedFolderId);
-        return root;
-    }
-
-    public TreeNode getFoldersOnlyTree(Group group, int selectedFolderId) throws SQLException
-    {
-        if(group == null)
-            return null;
-
-        TreeNode root = new DefaultTreeNode("Root", null);
-        getChildNodesRecursively(group.getId(), 0, root, selectedFolderId);
+        getChildNodesRecursively(group.getId(), 0, rootFolder, selectedFolderId);
         return root;
     }
 
