@@ -15,11 +15,16 @@ public class ReindexAllResources
 
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {
-
         Learnweb learnweb = Learnweb.createInstance(null);
         SolrClient solr = learnweb.getSolrClient();
 
-        //solr.deleteAllResource();
+        /* Reindex resources of single user */
+        // final List<Resource> resources = learnweb.getResourceManager().getResourcesByUserId(9289);
+        // log.debug("Found " + resources.size() + " resources.");
+        // resources.forEach(solr::reIndexResource);
+
+        /* Reindex all resources */
+        // solr.deleteAllResource();
         solr.indexAllResources();
 
         learnweb.onDestroy();

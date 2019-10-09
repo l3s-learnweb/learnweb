@@ -43,8 +43,6 @@
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
                 <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="updateThumbnailCommand" actionListener="#{myResourcesBean.setResourceThumbnail}" update=":right_pane :growl"
-                                 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
                 <p:remoteCommand name="createGroupItemCommand" actionListener="#{myResourcesBean.actionCreateItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
