@@ -3,7 +3,7 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Announcement implements Serializable
+public final class Announcement implements Serializable
 {
     private static final long serialVersionUID = 4219676681480459859L;
 
@@ -24,9 +24,15 @@ public class Announcement implements Serializable
         this.userId = userId;
     }
 
-    public void setDate(final Date date) { this.date = date; }
+    public void setDate(final Date date)
+    {
+        this.date = date;
+    }
 
-    public Date getDate() { return date; }
+    public Date getDate()
+    {
+        return date;
+    }
 
     public int getId()
     {
@@ -38,7 +44,10 @@ public class Announcement implements Serializable
         this.id = id;
     }
 
-    public String getTitle() { return title; }
+    public String getTitle()
+    {
+        return title;
+    }
 
     public void setTitle(final String title)
     {
@@ -50,7 +59,10 @@ public class Announcement implements Serializable
         return text;
     }
 
-    public boolean isHidden() { return hidden; }
+    public boolean isHidden()
+    {
+        return hidden;
+    }
 
     public void setHidden(final boolean hidden)
     {
@@ -65,6 +77,11 @@ public class Announcement implements Serializable
     @Override
     public String toString()
     {
-        return "Announcement [id=" + id + ", title=" + title + ", message=" + text + ", created_at=" + date + ", userId=" + userId + ", hidden=" + hidden + "]";
+        return "Announcement [id=" + id +
+                ", title=" + title +
+                ", message=" + text +
+                ", created_at=" + date +
+                ", userId=" + userId +
+                ", hidden=" + hidden + "]";
     }
 }
