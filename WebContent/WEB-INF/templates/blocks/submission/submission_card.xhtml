@@ -33,7 +33,7 @@
 						</p:commandButton>
 
 						<p:commandButton value="#{msg.edit}" styleClass="moderator-btn my-1 my-md-0" rendered="#{(userBean.moderator) and not submissionBean.submissionOverviewReadOnly}"
-								  process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
+								  process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 							<f:setPropertyActionListener target="#{submissionBean.selectedSubmission}" value="#{submission}"/>
 						</p:commandButton>
 

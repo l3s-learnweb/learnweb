@@ -76,7 +76,7 @@
 			</ui:fragment>
 
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
-				<h:form prependId="false">
+				<h:form prependId="false" id="form">
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
 						<p:inputText value="#{submissionBean.selectedSubmission.title}"/>
@@ -118,7 +118,7 @@
 
 					<div class="form-group">
 						<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
-							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
+							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');"/>
 						</p:selectBooleanCheckbox>
 					</div>
 
@@ -133,7 +133,7 @@
 
 					<div class="d-flex mt-3">
 						<div class="mr-auto">
-							<p:commandButton value="#{msg.delete}" update=":submissions" actionListener="#{submissionBean.deleteSubmission()}"
+							<p:commandButton value="#{msg.delete}" update=":submissions" process="@this" actionListener="#{submissionBean.deleteSubmission()}"
 											 onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');"
 											 oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
@@ -274,7 +274,7 @@
 				if (args.validationFailed) {
 					PF(dialogWidgetVar).show();
 					var surveySelectType = dialogWidgetVar === 'create_submission_dialog' ? 'create' : 'edit';
-					toggleSurveySelectField(surveyCheckBox.input.is(':checked'), surveySelectType);
+					toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), surveySelectType);
 				} else {
 					PF(dialogWidgetVar).hide();
 					addSubmissionHeaderClickHandler();
@@ -286,8 +286,8 @@
 				var status = data.status;
 				if(status === "success")
 				{
-					toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
-					toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
+					toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
+					toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
 				}
 			}
 
@@ -306,8 +306,8 @@
 
 			$(document).ready(function(){
 				addSubmissionHeaderClickHandler();
-				toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
-				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
+				toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
+				toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
 				$('#current_submissions .submission_header').click();
 
 			});
