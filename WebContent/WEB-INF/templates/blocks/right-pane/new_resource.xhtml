@@ -124,7 +124,7 @@
             </p:commandButton>
 
             <p:commandButton value="#{msg.addResource}" ajax="true" action="#{addResourceBean.addResource}" update=":growl :right_pane"
-                             oncomplete="resourceAddedHook();load_editor();" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2'or addResourceBean.resource.type eq 'survey'}">
+                             oncomplete="resourceAddedHook();" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2'or addResourceBean.resource.type eq 'survey'}">
                 <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>

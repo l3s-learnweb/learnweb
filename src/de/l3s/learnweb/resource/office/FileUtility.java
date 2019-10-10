@@ -14,27 +14,18 @@ import de.l3s.learnweb.resource.Resource.ResourceType;
 public class FileUtility
 {
     private static final String TEXT = "text";
-
     private static final String PRESENTATION = "presentation";
-
     private static final String SPREADSHEET = "spreadsheet";
 
-    public static final List<String> EXT_DOCUMENT = Arrays.asList(".docx", ".doc", ".odt", ".rtf", ".txt", ".html", ".htm", ".mht", ".pdf", ".djvu", ".fb2", ".epub", ".xps");
-
-    public static final List<String> EXT_SPREADSHEET = Arrays.asList(".xls", ".xlsx", ".ods", ".csv");
-
-    public static final List<String> EXT_PRESENTATION = Arrays.asList(".pps", ".ppsx", ".ppt", ".pptx", ".odp");
-
-    public static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList(".mht", ".docm", ".dot", ".dotm", ".dotx", ".fodt");
-
-    public static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList(".fods", ".xlsm", ".xlt", ".xltm", ".xltx");
-
-    public static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList(".fodp", ".pot", ".potm", ".potx", ".pps", ".ppsx", ".pptm", ".ppsm");
+    public static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "pdf", "djvu", "fb2", "epub", "xps");
+    public static final List<String> EXT_SPREADSHEET = Arrays.asList("xls", "xlsx", "ods", "csv");
+    public static final List<String> EXT_PRESENTATION = Arrays.asList("pps", "ppsx", "ppt", "pptx", "odp");
+    public static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList("mht", "docm", "dot", "dotm", "dotx", "fodt");
+    public static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList("fods", "xlsm", "xlt", "xltm", "xltx");
+    public static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList("fodp", "pot", "potm", "potx", "pps", "ppsx", "pptm", "ppsm");
 
     private static final String SAMPLE_PPTX = "sample.pptx";
-
     private static final String SAMPLE_XLSX = "sample.xlsx";
-
     private static final String SAMPLE_DOCX = "sample.docx";
 
     public static boolean canBeViewed(String fileExt)
@@ -45,13 +36,8 @@ public class FileUtility
     public static String getFileType(String fileName)
     {
         String ext = getFileExtension(fileName);
-
-        if(EXT_SPREADSHEET.contains(ext))
-            return SPREADSHEET;
-
-        if(EXT_PRESENTATION.contains(ext))
-            return PRESENTATION;
-
+        if(EXT_SPREADSHEET.contains(ext)) return SPREADSHEET;
+        if(EXT_PRESENTATION.contains(ext)) return PRESENTATION;
         return TEXT;
     }
 
@@ -80,10 +66,9 @@ public class FileUtility
     {
         if(fileName != null)
         {
-            int lastIndex = fileName.lastIndexOf(".");
-            if(lastIndex <= 0)
-                return null;
-            String fileExt = fileName.substring(lastIndex);
+            int lastIndex = fileName.lastIndexOf('.');
+            if(lastIndex <= 0) return null;
+            String fileExt = fileName.substring(lastIndex + 1);
             return fileExt.toLowerCase();
         }
         return null;
@@ -156,17 +141,14 @@ public class FileUtility
         {
             switch(fileType)
             {
-            case document:
-                return SAMPLE_DOCX;
-
-            case spreadsheet:
-                return SAMPLE_XLSX;
-
-            case presentation:
-                return SAMPLE_PPTX;
-
-            default:
-                break;
+                case document:
+                    return SAMPLE_DOCX;
+                case spreadsheet:
+                    return SAMPLE_XLSX;
+                case presentation:
+                    return SAMPLE_PPTX;
+                default:
+                    break;
             }
         }
         return null;

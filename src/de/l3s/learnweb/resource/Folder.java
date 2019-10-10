@@ -10,7 +10,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 
-public class Folder extends AbstractResource implements Serializable, IResourceContainer
+public class Folder extends AbstractResource implements Serializable, ResourceContainer
 {
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);
@@ -246,7 +246,7 @@ public class Folder extends AbstractResource implements Serializable, IResourceC
                 folder = folder.getParentFolder();
             }
 
-            sb.append(" > ").append(name);
+            if(folderId != 0) sb.append(" > ").append(name);
             sb.insert(0, getGroup() != null ? getGroup().getTitle() : "Private resources");
             prettyPath = sb.toString();
         }

@@ -658,8 +658,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             break;
         default:
             addResourceBean.clearForm();
-            addResourceBean.setTargetGroup(group);
-            addResourceBean.setTargetFolder(selectedFolder);
+            addResourceBean.setTarget(group, selectedFolder);
             addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         }

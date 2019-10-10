@@ -2,7 +2,7 @@ package de.l3s.learnweb.component;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.IResourceContainer;
+import de.l3s.learnweb.resource.ResourceContainer;
 import org.primefaces.model.menu.MenuElement;
 
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ public class ResourceContainerMenuItem extends ActiveSubMenu
 
     private String baseUrl;
     private String foldersIcons;
-    private IResourceContainer resourceContainer;
+    private ResourceContainer resourceContainer;
     private List<MenuElement> elements;
 
     public ResourceContainerMenuItem(Group group, String groupIcon, String foldersIcons, String baseUrl) {

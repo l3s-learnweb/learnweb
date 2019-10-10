@@ -17,7 +17,6 @@ import de.l3s.learnweb.logging.Action;
 @ViewScoped
 public class AddFolderBean extends ApplicationBean implements Serializable
 {
-    //private final static Logger log = Logger.getLogger(AddFolderBean.class);
     private static final long serialVersionUID = 3716630972434428811L;
 
     private Folder folder;
@@ -39,27 +38,16 @@ public class AddFolderBean extends ApplicationBean implements Serializable
     {
         if(targetGroup.canAddResources(getUser()) && StringUtils.isNotEmpty(folder.getTitle()))
         {
-            folder.setGroupId(getTargetGroupId());
-            folder.setParentFolderId(getTargetFolderId());
+            folder.setGroupId(targetGroup != null ? targetGroup.getId() : 0);
+            folder.setParentFolderId(targetFolder != null ? targetFolder.getId() : 0);
             folder.setUser(getUser());
             folder.save();
 
             log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-
             addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
         }
 
         clearForm();
-    }
-
-    private int getTargetGroupId()
-    {
-        return targetGroup != null ? targetGroup.getId() : 0;
-    }
-
-    private int getTargetFolderId()
-    {
-        return targetFolder != null ? targetFolder.getId() : 0;
     }
 
     public Group getTargetGroup()

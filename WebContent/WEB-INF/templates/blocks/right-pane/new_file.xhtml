@@ -34,7 +34,7 @@
 
             <p:commandButton id="create_file_button" value="#{msg.create}" global="false"
                              update=":growl :right_pane" actionListener="#{addResourceBean.createFile}" onstart="PF('rightPaneOverlay').show()"
-                             oncomplete="PF('rightPaneOverlay').hide();resourceAddedHook();load_lightbox_editor();load_editor();">
+                             oncomplete="PF('rightPaneOverlay').hide();resourceAddedHook();load_lightbox_editor();">
                 <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>

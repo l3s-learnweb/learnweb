@@ -12,12 +12,12 @@
                 <div id="iframe_editor"></div>
 
                 <h:outputScript>
-                    var editorConfigValues = {
-                        documentType: '#{fileEditorBean.fileType}',
+                    const editorConfigValues = {
                         user: {
                             id: '#{userBean.user.id}',
                             name: '#{userBean.user.username}'
                         },
+                        documentType: '#{fileEditorBean.fileType}',
                         document: {
                             title: '#{fileEditorBean.resource.fileName}',
                             url: '#{fileEditorBean.fullFilesUrl}',

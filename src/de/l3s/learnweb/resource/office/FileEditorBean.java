@@ -1,8 +1,5 @@
 package de.l3s.learnweb.resource.office;
 
-import static de.l3s.learnweb.resource.office.FileUtility.canBeViewed;
-import static de.l3s.learnweb.resource.office.FileUtility.getFileExtension;
-
 import java.io.Serializable;
 
 import javax.faces.view.ViewScoped;
@@ -23,68 +20,31 @@ public class FileEditorBean extends ApplicationBean implements Serializable
     private Resource resource;
 
     private File mainFile;
-
     private String filesExtension;
-
     private String fileType;
-
     private String fullFilesUrl;
-
     private String key;
 
     private String onlyOfficeClientUrl;
 
     public void fillInFileInfo(Resource resource)
     {
-        if(!canBeViewed(getFileExtension(resource.getFileName())))
+        filesExtension = FileUtility.getFileExtension(resource.getFileName());
+
+        if(FileUtility.canBeViewed(filesExtension))
         {
-            resource.setOnlineStatus(OnlineStatus.OFFLINE);
+            this.resource = resource;
+
+            mainFile = resource.getFile(TYPE.FILE_MAIN);
+            fullFilesUrl = resource.getFileUrl();
+            fileType = FileUtility.getFileType(resource.getFileName());
+            filesExtension = FileUtility.getFileExtension(resource.getFileName());
+            if(mainFile != null) key = FileUtility.generateRevisionId(mainFile);
         }
         else
         {
-            this.resource = resource;
-            if(resource != null)
-                mainFile = resource.getFile(TYPE.FILE_MAIN);
-            setFullFilesUrl();
-            setKey();
-            setFileType(FileUtility.getFileType(resource.getFileName()));
-            setFilesExtension(FileUtility.getFileExtension(resource.getFileName()).replace(".", ""));
+            resource.setOnlineStatus(OnlineStatus.OFFLINE);
         }
-    }
-
-    public void setKey()
-    {
-        if(mainFile != null)
-            key = FileUtility.generateRevisionId(mainFile);
-    }
-
-    public String getCallbackUrl()
-    {
-        return getLearnweb().getSecureServerUrl() + "/save" + "?fileId=" + getMainFileId();
-    }
-
-    public String getHistoryUrl()
-    {
-        return getLearnweb().getSecureServerUrl() + "/history";
-    }
-
-    /*
-    private String getServerUrl()
-    {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return getServerUrlWithoutContextPath() + request.getContextPath();
-    }
-    
-    private String getServerUrlWithoutContextPath()
-    {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort();
-    }
-    */
-
-    private String getMainFileId()
-    {
-        return mainFile != null ? Integer.toString(mainFile.getId()) : "";
     }
 
     public Resource getResource()
@@ -92,34 +52,14 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         return resource;
     }
 
-    public void setResource(Resource file)
-    {
-        this.resource = file;
-    }
-
     public String getFilesExtension()
     {
         return filesExtension;
     }
 
-    public void setFilesExtension(String filesExtension)
-    {
-        this.filesExtension = filesExtension;
-    }
-
     public String getFileType()
     {
         return fileType;
-    }
-
-    public void setFileType(String fileType)
-    {
-        this.fileType = fileType;
-    }
-
-    public void setFullFilesUrl()
-    {
-        fullFilesUrl = resource.getFileUrl();
     }
 
     public String getFullFilesUrl()
@@ -135,8 +75,20 @@ public class FileEditorBean extends ApplicationBean implements Serializable
     public String getOnlyOfficeClientUrl()
     {
         if(null == onlyOfficeClientUrl)
+        {
             onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
+        }
         return onlyOfficeClientUrl;
     }
 
+    public String getCallbackUrl()
+    {
+        final String fileId = mainFile != null ? Integer.toString(mainFile.getId()) : "";
+        return getLearnweb().getSecureServerUrl() + "/save?fileId=" + fileId;
+    }
+
+    public String getHistoryUrl()
+    {
+        return getLearnweb().getSecureServerUrl() + "/history";
+    }
 }

@@ -15,73 +15,57 @@ public abstract class AbstractResource implements HasId
 {
     private EditLocker editLocker;
 
-    abstract public int getId();
+    public abstract void setId(int id);
 
-    abstract public void setId(int id);
+    public abstract String getTitle();
 
-    abstract public String getTitle();
+    public abstract void setTitle(String title);
 
-    abstract public void setTitle(String title);
+    public abstract int getGroupId();
 
-    abstract public int getGroupId();
+    public abstract void setGroupId(int groupId);
 
-    abstract public void setGroupId(int groupId);
+    public abstract Group getGroup() throws SQLException;
 
-    abstract public Group getGroup() throws SQLException;
+    public abstract int getUserId();
 
-    abstract public int getUserId();
+    public abstract void setUserId(int userId);
 
-    abstract public void setUserId(int userId);
+    public abstract User getUser() throws SQLException;
 
-    abstract public User getUser() throws SQLException;
+    public abstract void setUser(User user);
 
-    abstract public void setUser(User user);
+    public abstract AbstractResource save() throws SQLException;
 
-    abstract public AbstractResource save() throws SQLException;
+    public abstract void delete() throws SQLException;
 
-    abstract public void delete() throws SQLException;
+    public abstract String getPath() throws SQLException;
 
-    abstract public String getPath() throws SQLException;
+    public abstract String getPrettyPath() throws SQLException;
 
-    abstract public String getPrettyPath() throws SQLException;
-
-    abstract public boolean canViewResource(User user) throws SQLException;
+    public abstract boolean canViewResource(User user) throws SQLException;
 
     public boolean canEditResource(User user) throws SQLException
     {
-        if(user == null) // not logged in
-            return false;
+        if(user == null) return false; // not logged in
 
-        Group group = getGroup();
-
-        if(group != null)
-            return group.canEditResource(user, this);
-
-        if(user.isAdmin() || getUserId() == user.getId())
-            return true;
-
-        return false;
+        if(getGroup() != null) return getGroup().canEditResource(user, this);
+        return user.isAdmin() || getUserId() == user.getId();
     }
 
     public boolean canDeleteResource(User user) throws SQLException
     {
-        if(user == null) // not logged in
-            return false;
+        if(user == null) return false; // not logged in
 
-        Group group = getGroup();
-
-        if(group != null) // if the resource is part of a group the group policy has priority
-            return group.canDeleteResource(user, this);
-
-        if(user.isAdmin() || getUserId() == user.getId())
-            return true;
-
-        return false;
+        // if the resource is part of a group the group policy has priority
+        if(getGroup() != null) return getGroup().canDeleteResource(user, this);
+        return user.isAdmin() || getUserId() == user.getId();
     }
 
     public boolean lockResource(User user)
     {
-        if (isEditPossible()) {
+        if(isEditPossible())
+        {
             editLocker = new EditLocker(user);
             return true;
         }
@@ -91,7 +75,8 @@ public abstract class AbstractResource implements HasId
 
     public boolean unlockResource(User user)
     {
-        if (editLocker != null && editLocker.getUser().equals(user)) {
+        if(editLocker != null && editLocker.getUser().equals(user))
+        {
             editLocker = null;
             return true;
         }
@@ -101,7 +86,8 @@ public abstract class AbstractResource implements HasId
 
     public boolean lockerUpdate(User user)
     {
-        if (editLocker != null && editLocker.getUser().equals(user)) {
+        if(editLocker != null && editLocker.getUser().equals(user))
+        {
             editLocker.setLastActivity(new Date());
             return true;
         }
@@ -116,7 +102,8 @@ public abstract class AbstractResource implements HasId
 
     public String getLockUsername()
     {
-        if (editLocker != null) {
+        if(editLocker != null)
+        {
             return editLocker.getUser().getUsername();
         }
 
@@ -125,10 +112,10 @@ public abstract class AbstractResource implements HasId
 
     public boolean isEditPossible()
     {
-        if (!isEditLocked())
-            return true;
+        if(!isEditLocked()) return true;
 
-        if (editLocker.isSessionExpired()) {
+        if(editLocker.isSessionExpired())
+        {
             editLocker = null;
             return true;
         }

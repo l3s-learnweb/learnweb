@@ -43,8 +43,8 @@ import de.l3s.util.StringHelper;
 @ViewScoped
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
-    private final static Logger log = Logger.getLogger(AddResourceBean.class);
-    private final static long serialVersionUID = 1736402639245432708L;
+    private static final Logger log = Logger.getLogger(AddResourceBean.class);
+    private static final long serialVersionUID = 1736402639245432708L;
 
     private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
 
@@ -52,8 +52,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private Group targetGroup;
     private Folder targetFolder;
-
-    private String newUrl;
 
     private int formStep = 1;
 
@@ -251,21 +249,20 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setThumbnail4(iconResource.getThumbnail4());
 
             // add resource to a group if selected
-            resource.setGroupId(getTargetGroupId());
-            resource.setFolderId(getTargetFolderId());
-            getUser().setActiveGroup(getTargetGroupId());
+            resource.setGroupId(targetGroup.getId());
+            resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
+            getUser().setActiveGroup(targetGroup);
 
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
 
             else
             {
-
                 resource.save();
             }
 
             //getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
-            log(Action.adding_resource, getTargetGroupId(), resource.getId());
+            log(Action.adding_resource, targetGroup.getId(), resource.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             groupResourcesBean.updateResourcesFromSolr();
@@ -291,19 +288,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
 
         this.resource = glossaryResource;
-    }
-
-    /**
-     * TODO: remove it, use default validation instead
-     */
-    public void validateNewDocName(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-        String fileName = (String) value;
-
-        if(StringUtils.isEmpty(fileName))
-        {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "empty_file_name"));
-        }
     }
 
     public void addResource()
@@ -336,9 +320,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected
-            resource.setGroupId(getTargetGroupId());
-            resource.setFolderId(getTargetFolderId());
-            getUser().setActiveGroup(getTargetGroupId());
+            resource.setGroupId(targetGroup.getId());
+            resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
+            getUser().setActiveGroup(targetGroup.getId());
 
             if(resource.getId() == -1) // a new resource which is not stored in the database yet
                 resource = getUser().addResource(resource);
@@ -354,16 +338,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 new CreateThumbnailThread(resource).start();
             }
 
-            log(Action.adding_resource, getTargetGroupId(), resource.getId());
+            log(Action.adding_resource, targetGroup.getId(), resource.getId());
 
             //detailed logging of new metadata (author, language, media source, media type
             if(resource.getAuthor() != null)
             {
-                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Author");
+                log(Action.adding_resource_metadata, targetGroup.getId(), resource.getId(), "added Author");
             }
             if(resource.getLanguage() != null)
             {
-                log(Action.adding_resource_metadata, getTargetGroupId(), resource.getId(), "added Language");
+                log(Action.adding_resource_metadata, targetGroup.getId(), resource.getId(), "added Language");
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
@@ -377,17 +361,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             addErrorMessage(e);
         }
-    }
-
-    public String getNewUrl()
-    {
-        return newUrl;
-    }
-
-    public void setNewUrl(String newUrl)
-    {
-        this.newUrl = newUrl;
-
     }
 
     public String getCurrentPath() throws SQLException
@@ -516,36 +489,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public int getTargetGroupId()
-    {
-        if(targetGroup != null)
-            return targetGroup.getId();
-
-        return targetFolder != null ? targetFolder.getGroupId() : 0;
-    }
-
-    public int getTargetFolderId()
-    {
-        return targetFolder != null ? targetFolder.getId() : 0;
-    }
-
-    public Group getTargetGroup()
-    {
-        return targetGroup;
-    }
-
-    public void setTargetGroup(Group targetGroup)
+    public void setTarget(Group targetGroup, Folder targetFolder)
     {
         this.targetGroup = targetGroup;
-    }
-
-    public Folder getTargetFolder()
-    {
-        return targetFolder;
-    }
-
-    public void setTargetFolder(Folder targetFolder)
-    {
         this.targetFolder = targetFolder;
     }
 

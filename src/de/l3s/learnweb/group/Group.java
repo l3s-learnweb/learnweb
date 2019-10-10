@@ -18,7 +18,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.IResourceContainer;
+import de.l3s.learnweb.resource.ResourceContainer;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.user.Course;
@@ -26,7 +26,7 @@ import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
 
-public class Group implements Comparable<Group>, HasId, Serializable, IResourceContainer
+public class Group implements Comparable<Group>, HasId, Serializable, ResourceContainer
 {
     private static final long serialVersionUID = -6209978709028007958L;
     private static final Logger log = Logger.getLogger(Group.class);
