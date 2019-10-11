@@ -54,14 +54,13 @@
                                  global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
                 <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
-                                 update=":resourcesWrapper :right_pane :growl" global="false"
-                                 onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
-                                 oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
+                                 update=":resourcesView :right_pane :growl"
+                                 onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();"/>
             </h:form>
 
             <div class="row no-gutters resources-panel">
                 <div class="col-12 col-resources ui-panel ui-widget mb-n3">
-                    <h:form>
+                    <h:form prependId="false">
                         <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                             <f:facet name="left">
                                 <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{myResourcesBean.gridView}">
@@ -140,25 +139,23 @@
                                 <h5 class="w-100 mx-3 mt-3">#{msg.myhomeVirtualFolders}</h5>
                             </ui:fragment>
 
-                            <ui:fragment>
-                                <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block">
-                                    <ui:repeat var="folder" value="#{myResourcesBean.folders}">
-                                        <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" rendered="#{folder.groupId != 0}"
-                                                      pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
-                                                      pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
-                                                      pt:data-canViewResource="true"
-                                                      pt:data-canEditResource="true"
-                                                      pt:data-canDeleteResource="true">
-                                            <f:param name="group_id" value="#{folder.groupId}"/>
-                                            <f:param name="folder_id" value="#{folder.folderId}"/>
+                            <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block">
+                                <ui:repeat var="folder" value="#{myResourcesBean.folders}">
+                                    <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" rendered="#{folder.groupId != 0}"
+                                                  pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
+                                                  pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
+                                                  pt:data-canViewResource="true"
+                                                  pt:data-canEditResource="true"
+                                                  pt:data-canDeleteResource="true">
+                                        <f:param name="group_id" value="#{folder.groupId}"/>
+                                        <f:param name="folder_id" value="#{folder.folderId}"/>
 
-                                            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                                <ui:param name="folder" value="#{folder}"/>
-                                            </ui:decorate>
-                                        </h:outputLink>
-                                    </ui:repeat>
-                                </h:panelGroup>
-                            </ui:fragment>
+                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
+                                            <ui:param name="folder" value="#{folder}"/>
+                                        </ui:decorate>
+                                    </h:outputLink>
+                                </ui:repeat>
+                            </h:panelGroup>
 
                             <ui:fragment rendered="#{myResourcesBean.gridView}">
 
@@ -214,62 +211,62 @@
                                 <li data-type="resource|resources" data-action="delete" data-per="candeleteresource" data-icon="fa-icon fa-trash">#{msg.removeFromGroup}</li>
                             </ul>
                         </h:panelGroup>
-
-                        <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource_title}" widgetVar="deleteConfirm" appendTo="@(body)" closable="false"
-                                  minWidth="540" modal="true">
-                            <p>
-                                <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="single-folder"/>
-                                <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="single-resource"/>
-                                <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural"/>
-                            </p>
-
-                            <div class="text-right mt-3">
-                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
-                                <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false"/>
-                            </div>
-                        </p:dialog>
-
-                        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
-                                  minWidth="540" modal="true">
-                            <h:panelGrid columns="2">
-                                <h:outputText value="#{msg.add_to}:"/>
-
-                                <h:form>
-                                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single"
-                                            selection="#{myResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
-                                        <p:ajax event="select" listener="#{myResourcesBean.onTargetNodeSelect}"/>
-
-                                        <p:treeNode type="group">
-                                            <h:outputText id="group" value="#{node.title}"/>
-                                        </p:treeNode>
-
-                                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                                            <h:outputText value="#{node.name}"/>
-                                        </p:treeNode>
-                                    </p:tree>
-                                </h:form>
-                            </h:panelGrid>
-
-                            <div class="text-right mt-3">
-                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide(); return false;"/>
-                                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
-                            </div>
-                        </p:dialog>
-
-                        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
-                            <h:panelGrid columns="1">
-                                <p:inputText id="modal_tag_name"/>
-                            </h:panelGrid>
-
-                            <div class="text-right mt-3">
-                                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTag').hide(); return false;"/>
-                                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
-                            </div>
-                        </p:dialog>
                     </h:panelGroup>
                 </div>
             </div>
         </p:outputPanel>
+
+        <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource_title}" widgetVar="deleteConfirm" appendTo="@(body)" closable="false"
+                  minWidth="540" modal="true">
+            <p>
+                <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="single-folder"/>
+                <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="single-resource"/>
+                <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural"/>
+            </p>
+
+            <div class="text-right mt-3">
+                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
+                <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false"/>
+            </div>
+        </p:dialog>
+
+        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
+                  minWidth="540" modal="true">
+            <h:panelGrid columns="2">
+                <h:outputText value="#{msg.add_to}:"/>
+
+                <h:form>
+                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single"
+                            selection="#{myResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
+                        <p:ajax event="select" listener="#{myResourcesBean.onTargetNodeSelect}"/>
+
+                        <p:treeNode type="group">
+                            <h:outputText id="group" value="#{node.title}"/>
+                        </p:treeNode>
+
+                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                            <h:outputText value="#{node.name}"/>
+                        </p:treeNode>
+                    </p:tree>
+                </h:form>
+            </h:panelGrid>
+
+            <div class="text-right mt-3">
+                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide(); return false;"/>
+                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
+            </div>
+        </p:dialog>
+
+        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
+            <h:panelGrid columns="1">
+                <p:inputText id="modal_tag_name"/>
+            </h:panelGrid>
+
+            <div class="text-right mt-3">
+                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTag').hide(); return false;"/>
+                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
+            </div>
+        </p:dialog>
 
         <script type="application/javascript">
             /**

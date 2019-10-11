@@ -268,6 +268,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 log.error("Unsupported action: " + action);
                 break;
             }
+
+            updateResources();
         }
         catch(JSONException e)
         {
