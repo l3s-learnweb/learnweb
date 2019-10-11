@@ -7,9 +7,9 @@
     "not dead",
     "edge >= 17",
     "firefox >= 54",
-    "chrome >= 54",
+    "chrome >= 58",
     "safari >= 10.1",
-    "opera >= 41",
+    "opera >= 44",
     "not ie >= 0"
   ],
   "eslintConfig": {
@@ -77,7 +77,8 @@
         {
           "ignore": [
             "css-gradients",
-            "object-fit"
+            "object-fit",
+            "multicolumn"
           ]
         }
       ],

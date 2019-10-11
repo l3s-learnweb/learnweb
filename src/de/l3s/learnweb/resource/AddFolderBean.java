@@ -50,24 +50,20 @@ public class AddFolderBean extends ApplicationBean implements Serializable
         clearForm();
     }
 
+    public void setTarget(Group targetGroup, Folder targetFolder)
+    {
+        this.targetGroup = targetGroup;
+        this.targetFolder = targetFolder;
+    }
+
     public Group getTargetGroup()
     {
         return targetGroup;
     }
 
-    public void setTargetGroup(Group targetGroup)
-    {
-        this.targetGroup = targetGroup;
-    }
-
     public Folder getTargetFolder()
     {
         return targetFolder;
-    }
-
-    public void setTargetFolder(Folder targetFolder)
-    {
-        this.targetFolder = targetFolder;
     }
 
     public Folder getFolder()

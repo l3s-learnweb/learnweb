@@ -1,12 +1,12 @@
 .gridder {
   padding: 0;
+  margin: 0;
   list-style: none;
-  margin: -0.25rem;
 
   .gridder-list {
     display: inline-block;
     vertical-align: top;
-    margin: 0.25rem;
+    margin: $grid-gutter-width / 2;
     width: 100px;
 
     &.gridder-active a::after {
@@ -18,7 +18,7 @@
       width: 0;
       border: 1rem solid transparent;
       border-bottom-color: $gray-200;
-      margin: -0.7rem 0 0 -1rem;
+      margin: -1rem 0 0 -1rem;
     }
   }
 
@@ -28,7 +28,7 @@
     width: 100%;
     position: relative;
     background: $gray-200;
-    margin-top: 1rem;
+    margin: $grid-gutter-width / 2;
     padding: 1rem;
   }
 }

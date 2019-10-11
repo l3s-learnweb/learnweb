@@ -65,9 +65,9 @@
 
             <p:panel header="#{msg.members}" id="members">
                 <h:form>
-                    <ul class="gridder clearfix">
+                    <ul class="gridder clearfix member-grid">
                         <ui:repeat var="user" value="#{groupOverviewBean.members}">
-                            <li class="gridder-list" data-griddercontent="#user${user.id}">
+                            <li class="gridder-list member-item" data-griddercontent="#user${user.id}">
                                 <p:commandLink onclick="return false;" styleClass="member-block">
                                     <div class="member-picture">
                                         <img src="#{user.image}" alt="#{user.fullName}"/>

@@ -653,8 +653,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
         case "folder":
             addFolderBean.clearForm();
-            addFolderBean.setTargetGroup(group);
-            addFolderBean.setTargetFolder(selectedFolder);
+            addFolderBean.setTarget(group, selectedFolder);
             break;
         default:
             addResourceBean.clearForm();

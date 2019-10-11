@@ -62,7 +62,7 @@
             <div class="ui-panel-content ui-widget-content flex-grow-1">
                 <h:form id="group_folders_tree">
                     <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
-                            datakey="#{node.id}" animate="true" selectionMode="single" styleClass="ui-tree-responsive"
+                            datakey="#{node.id}" animate="true" selectionMode="single" styleClass="ui-tree-responsive ui-tree-no-root-icons"
                             rendered="#{not empty groupResourcesBean.group.subFolders}" onNodeClick="openFolder(node.data('datakey'));">
 
                         <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
@@ -75,7 +75,7 @@
                 </h:form>
             </div>
         </div>
-        <div class="col-12 col-resources ui-panel ui-widget">
+        <div class="col-12 col-resources ui-panel ui-widget d-flex flex-column">
             <h:form>
                 <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                     <f:facet name="left">
@@ -119,7 +119,7 @@
                 </p:toolbar>
             </h:form>
 
-            <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0">
+            <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column">
                 <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
                     <h:outputText value="#{msg.please_wait}"/>
                 </p:blockUI>

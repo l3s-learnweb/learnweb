@@ -1,3 +1,20 @@
+.member-grid {
+  display: grid;
+  grid-gap: 0;
+  grid-auto-flow: row dense;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+
+  .member-item {
+    box-shadow: $box-shadow-sm;
+    width: auto !important;
+  }
+
+  .gridder-show {
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
+}
+
 .member-block {
   display: block;
   position: relative;

@@ -88,6 +88,20 @@ body {
 
     .ui-tree-container {
       padding: 0;
+      overflow: hidden;
+    }
+
+    .ui-treenode-content {
+      display: flex;
+      align-items: center;
+
+      .ui-treenode-leaf-icon {
+        min-width: 16px;
+      }
+
+      .ui-treenode-label {
+        @include text-truncate;
+      }
     }
 
     .ui-treenode {
@@ -99,6 +113,18 @@ body {
       &.ui-droppable-hover {
         background: $themePrimaryAltColorDarker;
         border: 1px solid $themePrimaryAltColorDarker;
+      }
+    }
+  }
+
+  .ui-tree.ui-tree-no-root-icons {
+    .ui-tree-container > li {
+      > .ui-treenode-content > .ui-icon {
+        display: none;
+      }
+
+      > .ui-treenode-children {
+        padding-left: 2px;
       }
     }
   }

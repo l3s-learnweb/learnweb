@@ -1,7 +1,6 @@
 | Source | Version | Description | Note |
 |----------------------------------------------|---------|--------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | https://github.com/swisnl/jQuery-contextMenu | v2.8.0 | Used to create context menu |  |
-| https://github.com/ausi/cq-prolyfill | v0.4.0 | Allows to use media queries which depends of container width |  |
 | https://github.com/d3/d3 | v3.5.17 | Used to create charts | NEW VERSION AVAILABLE |
 | https://github.com/fancyapps/fancybox | v3.5.7 | lightbox script for displaying images, videos and more |  |
 | https://github.com/highcharts/highcharts | v4.2.1 | also for charts | NEW VERSION AVAILABLE, should be replaced by PrimeFaces ChartJS |
