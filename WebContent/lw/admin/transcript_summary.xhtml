@@ -13,15 +13,18 @@
 
 	<ui:define name="center_layout">
 		<h:form id="us_form" prependId="false" styleClass="form">
+			<p:blockUI block="transcript_table" widgetVar="transcriptTableOverlay">
+				<h:outputText value="#{msg.please_wait}"/>
+			</p:blockUI>
 			<p:panel header="#{msg.select_users}">
 				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-								 process="@form" update=":transcript_table"/>
+								 process="@form" update=":transcript_table" global="false" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
 			</p:panel>
 		</h:form>
 
 		<h:form prependId="false" styleClass="mt-3">
-			<p:dataTable paginatorPosition="bottom" id = "transcript_table" var="log" tableStyleClass="table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
+			<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" tableStyleClass="table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
 						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 						 rowsPerPageTemplate="20,25,30">
 				<f:facet name="{Exporters}">
