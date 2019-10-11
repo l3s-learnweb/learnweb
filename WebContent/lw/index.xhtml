@@ -9,7 +9,7 @@
 <ui:define name="header_right">
     <ul class="header-menu row justify-content-end px-0">
         <li><a href="#login"><span>#{msg.loginLabel}</span></a></li>
-        <li><a href="#about"><span>About us</span></a></li>
+        <li><a href="#about"><span>#{msg['frontpage.about_learnweb']}</span></a></li>
         <li><a href="#courses"><span>#{msg.registerLabel}</span></a></li>
     </ul>
 </ui:define>
@@ -46,12 +46,14 @@
         <div class="container py-5 highlight">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2 class="text-center text-primary">About us</h2>
+                    <h2 class="text-center text-primary">#{msg['frontpage.about_learnweb']}</h2>
                     <p><h:outputText value="#{msg.homepage}"/></p>
                 </div>
+                <!-- 
                 <div class="col-lg-6">
                     <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
                 </div>
+                 -->
             </div>
         </div>
     </section>
@@ -64,10 +66,12 @@
                     <div class="card-single bg-white h-100 mb-5 pb-4">
                         <h6 class="card-header py-3 m-0">#{msg.public_courses}</h6>
                         <!-- 
+                        Playground isn't implemented yet.
+                        
                         <h5 class="card-subheader py-1 m-0">Playground</h5>
                         <div class="card-content row mx-auto my-3">
                             <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="icons8-playground-96.png" alt="Playground Logo"/>
+                                <h:graphicImage library="frontpage" name="course_playground.png" alt="Playground Logo"/>
                             </div>
                             <div class="col-8 col-lg-9 text-left">
                                 ​<h:outputText value="Use our playground to take a quick look at the features Learnweb offers. You don't need to register and can directly explore all functionalities"/>
@@ -79,44 +83,53 @@
                             </h:outputLink>
                         </div>
                          -->
-                        <div>
-                            <h5 class="card-subheader py-1 m-0">Public course</h5>
-                            <div class="card-content row mx-auto my-3">
-                                <div class="col-4 col-lg-3">
-                                    <h:graphicImage library="frontpage" name="public_course_icon.png" alt="Public course"/>
-                                </div>
-                                <div class="col-8 col-lg-9 text-left">
-                                    ​<h:outputText value="#{msg.standard_version_description}"/>
-                                </div>
-                            </div>
-                            <div class="course-footer mt-3">
-                                <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
-                                    <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
-                                </h:outputLink>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card-single bg-white h-100 mb-5 pb-4">
-                        <h6 class="card-header py-3 m-0">#{msg.specific_courses}</h6>
-                        <h5 class="card-subheader py-1 m-0">YELL</h5>
-                        <div class="card-content row mx-auto py-3">
+                        
+                        <h5 class="card-subheader py-1 m-0">​<h:outputText value="#{msg['frontpage.public_environment']}"/></h5>
+                        <div class="card-content row mx-auto my-3">
                             <div class="col-4 col-lg-3">
-                                <h:graphicImage library="frontpage" name="interactive_puzzle.png" alt="YELL Logo"/>
+                                <h:graphicImage library="frontpage" name="course_public.png" alt="​#{msg['frontpage.public_environment']} logo"/>
                             </div>
                             <div class="col-8 col-lg-9 text-left">
-                                ​<h:outputText value="#{msg.yell_description}"/>
+                                ​<h:outputText value="#{msg['frontpage.public_env_description']}"/>
                             </div>
                         </div>
                         <div class="course-footer mt-3">
                             <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
                                 <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
+                            </h:outputLink>
+                        </div>                       
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-single bg-white h-100 mb-5">
+                        <h6 class="card-header py-3 m-0">#{msg.specific_courses}</h6>
+                        <h5 class="card-subheader py-1 m-0">YELL</h5>
+                        <div class="card-content row mx-auto my-3">
+                            <div class="col-4 col-lg-3">
+                                <h:graphicImage library="frontpage" name="course_yell.png" alt="YELL Logo"/>
+                            </div>
+                            <div class="col-8 col-lg-9 text-left">
+                                ​<h:outputText value="#{msg.yell_description}"/>
+                            </div>
+                        </div>
+                        <div class="course-footer mb-4">
+                            <h:outputLink styleClass="ui-button ui-button-text-only" value="#{request.contextPath}/lw/user/register.jsf">
+                                <h:outputText value="#{msg.join}" styleClass="ui-button-text"/>
                                 <f:param name="wizard" value="yell"/>
                             </h:outputLink>
                         </div>
-                    </div>
+
+                        <h5 class="card-subheader py-1 m-0">#{msg['frontpage.other_courses']}</h5>
+                        <div class="card-content row mx-auto py-3">
+                            <div class="col-4 col-lg-3">
+                                <span style="font-size:50px; font-weight:bold">?</span>
+                            </div>
+                            <div class="col-8 col-lg-9 text-left">
+                                ​<h:outputText value="#{msg['frontpage.other_courses_description']}"/>
+                            </div>
+                        </div>
+                    </div>                    
                 </div>
             </div>
         </div>

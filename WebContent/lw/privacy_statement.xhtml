@@ -1,31 +1,32 @@
-<ui:composition template="/WEB-INF/templates/layout/template-page.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<ui:param name="pageTitle" value="#{msg['privacy_statement']}"/>
-<ui:param name="smallPage" value="true"/>
-<ui:param name="disableGrowl" value="true"/>
-
-<ui:define name="container_layout">
-    <h:outputScript name="vendor/scrollspy-v1.0.0/scrollspy.min.js"/>
-
-    <p:panel header="#{msg['privacy_statement']}">
-    	<h1 style="color:red; text-align:center; font-size:5rem;">Placeholder. Don't read</h1>
-
-        <ui:fragment rendered="#{userBean.localeCode eq 'de'}">
-            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_de.xhtml"/>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{userBean.localeCode ne 'de'}">
-            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_en.xhtml"/>
-        </ui:fragment>
-
-        <script>
-            var headerHeight = $('.layout-header').height();
-            $('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
-        </script>
-    </p:panel>
-</ui:define>
+	<ui:param name="pageTitle" value="#{msg['privacy_statement']}"/>	
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="hideBreadcrumbs" value="true"/>	
+	
+	<ui:define name="center_layout">
+	    <h:outputScript name="vendor/scrollspy-v1.0.0/scrollspy.min.js"/>
+	
+	    <p:panel header="#{msg['privacy_statement']}">    	
+	        <ui:fragment rendered="#{userBean.localeCode eq 'de'}">
+	            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_de.xhtml"/>
+	        </ui:fragment>
+	
+	        <ui:fragment rendered="#{userBean.localeCode ne 'de'}">
+	            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_en.xhtml"/>
+	        </ui:fragment>
+	
+	        <script>
+		        function enableScollSpy() {
+		            var headerHeight = $('.layout-header').height();
+		            $('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
+	        	};
+	        	$(enableScollSpy);
+	        </script>
+	    </p:panel>
+	</ui:define>
 </ui:composition>

@@ -6,54 +6,31 @@
 
 	<ui:param name="pageTitle" value="#{msg['imprint.title']}"/>
 	<ui:param name="smallPage" value="true"/>
-
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg['imprint.title']}" url="imprint.jsf"/>
-	</ui:define>
+	<ui:param name="hideBreadcrumbs" value="true"/>	
 
 	<ui:define name="center_layout">
-		<p:panel>
-		<div class="lw_imprint">
-			<table class="table no-borders">
-				<tbody>
-					<tr>
-						<td class="w-25"><strong>Forschungszentrum L3S</strong></td>
-						<td>Appelstraße 9a<br/>
-							30167 Hannover<br/>
-							Tel. +49 511 762 - 17715<br/>
-							Fax +49 511 762 - 17779</td>
-					</tr>
-					<tr>
-						<td>Vertreten durch:</td>
-						<td>Prof. Dr. Wolfgang Nejdl (Geschäftsführender Direktor)<br/> Dr. Claudia Niederée (Geschäftsführerin)</td>
-					</tr>
-					<tr>
-						<td><strong>Gottfried Wilhelm Leibniz<br/> Universität  Hannover</strong></td>
-						<td>Welfengarten 1<br/>
-							30167 Hannover<br/>
-							Tel. +49 511 762-0<br/>
-							Fax +49 511 762-3456</td>
-					</tr>
-					<tr>
-						<td>Vertreten durch:</td>
-						<td>Präsident der Leibniz Universität Hannover</td>
-					</tr>
-					<tr>
-						<td><strong>Technische Realisierung</strong></td>
-						<td>Forschungszentrum L3S / Learnweb Team</td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="ml-1 pl-2">
-				<p>Die Gottfried Wilhelm Leibniz Universität Hannover ist eine Körperschaft des öffentlichen Rechts. Sie wird durch den Präsidenten Prof. Dr.
-					iur. Volker Epping gesetzlich vertreten.</p>
-				<p>
-					Zuständige Aufsichtsbehörde: <br/>Niedersächsisches Ministerium für Wissenschaft und Kultur, Leibnizufer 9, 30169 Hannover 
-				</p>
-				<p>Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: DE 811 245 527</p>
-			</div>
-		</div>
+		<p:panel header="#{msg['imprint.title']}">		
+			<dl class="row no-glutters" style="max-width: 40rem;">					
+				<dt class="col-sm-4">Forschungszentrum L3S</dt>
+				<dd class="col-sm-8">Appelstraße 9a<br/>
+					30167 Hannover<br/>
+					Tel. +49 511 762 17715<br/>
+					Fax +49 511 762 17779</dd>
+		
+				<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
+				<dd class="col-sm-8">Prof. Dr. Wolfgang Nejdl (Geschäftsführender Direktor)<br/> Dr. Claudia Niederée (Geschäftsführerin)</dd>
+		
+				<dt class="col-sm-4">Gottfried Wilhelm Leibniz<br/> Universität  Hannover</dt>
+				<dd class="col-sm-8">Welfengarten 1<br/>
+					30167 Hannover<br/>
+					Tel. +49 511 762 0<br/>
+					Fax +49 511 762 3456</dd>
+			
+				<dt class="col-sm-4"><h:outputText value="#{msg['imprint.represented_by']}" /></dt>
+				<dd class="col-sm-8"><a href="https://www.uni-hannover.de/universitaet/praesidium/praesident/">Präsident der Leibniz Universität Hannover</a></dd>				
+			</dl>
+			
+			<p><h:outputText value="#{msg['imprint.description']}" escape="false" /></p>	
 		</p:panel>
 	</ui:define>		
 </ui:composition>
