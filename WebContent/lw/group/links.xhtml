@@ -32,7 +32,7 @@
 
                         <p:commandButton rendered="${not groupLinksBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
                                          update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
+                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupLinksBean.group}"/>
                         </p:commandButton>
                     </f:facet>
 
