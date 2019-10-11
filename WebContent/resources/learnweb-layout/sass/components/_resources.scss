@@ -191,6 +191,19 @@ ul.res-filters {
     }
   }
 
+  .search-box {
+    // it is used when search started
+    &.active {
+      .filter-title {
+        display: none;
+      }
+
+      .res-search-form {
+        display: block;
+      }
+    }
+  }
+
   .res-search-form {
     padding: 0.35rem 0.5rem;
     white-space: nowrap;

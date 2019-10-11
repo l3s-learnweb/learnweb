@@ -126,7 +126,7 @@
 
                 <c:if test="${userBean.user.organisation.id ne 480}">
                     <!--suppress XmlDuplicatedId -->
-                    <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{!groupResourcesBean.paginator.isEmpty()}">
+                    <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
                         <ul class="res-filters">
                             <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                                 <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
