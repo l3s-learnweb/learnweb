@@ -242,4 +242,21 @@ body {
       }
     }
   }
+
+  .ui-commandlink,
+  .icon-link {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .icon-link {
+    @include media-breakpoint-down(md) {
+      font-size: 0;
+
+      .fa {
+        font-size: initial;
+      }
+    }
+  }
 }

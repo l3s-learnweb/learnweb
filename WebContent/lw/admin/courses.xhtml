@@ -22,7 +22,7 @@
                         <p:message for="@previous"/>
                     </div>
 
-                    <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" update=":growl :courses_form" process="@form"/>
+                    <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}"  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()" value="#{msg.add}" update=":growl :courses_form" process="@form" global="false"/>
                 </h:form>
             </p:panel>
         </div>
@@ -63,12 +63,12 @@
             </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                <h:outputLink value="admin/course.jsf?course_id=#{course.id}">
+                <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">
                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
                 </h:outputLink>
 
-                <p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" global="false"
+                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" global="false"
                                update="@form :growl" rendered="#{course.memberCount == 0 || userBean.admin}" title="#{msg.delete}"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
@@ -76,7 +76,7 @@
                     <p:confirm message="${utilBean.getLocaleMessage('courses_delete_question', course.title)}"/>
                 </p:commandLink>
 
-                <p:commandLink actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
+                <p:commandLink styleClass="icon-link" actionListener="#{adminCoursesBean.onAnonymiseCourse(course)}" process="@this"
                                update="@form :growl" rendered="#{userBean.admin}" global="false"
                                onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()">
                     <i class="fa fa-fw fa-eye-slash text-muted" aria-hidden="true"></i>
@@ -84,7 +84,7 @@
                     <p:confirm message="${utilBean.getLocaleMessage('courses_anonymise_question', course.title)}"/>
                 </p:commandLink>
 
-                <h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}">
+                <h:outputLink styleClass="icon-link" value="admin/users_submissions.jsf?course_id=#{course.id}">
                     <i class="fa fa-fw fa-check-circle-o text-success" aria-hidden="true"></i>
                     <h:outputText value="#{msg['Submission.view_user_submissions']}"/>
                 </h:outputLink>

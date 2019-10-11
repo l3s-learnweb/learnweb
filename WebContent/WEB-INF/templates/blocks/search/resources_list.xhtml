@@ -18,18 +18,20 @@
         </h:panelGroup>
 
         <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
-            <div>
-                <div class="d-flex flex-column  mr-2 mt-1">
+            <div class="opacity-hover">
+                <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
                     <div class="d-flex mb-1">
-                    	<h:form>
-                    		<p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
-                    			update=":resource_form" process="@this"
-                    			oncomplete="PF('resource_dialog').show();"
-                    			styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary">
+                        <h:form>
+                            <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
+                                           update=":resource_form" process="@this"
+                                           oncomplete="PF('resource_dialog').show();"
+                                           styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary">
 
-                    		</p:commandLink>
-                    	</h:form>
-                    	<!--
+                            </p:commandLink>
+                            <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip" />
+                        </h:form>
+
+                        <!--
                        TODO add better tooltip
                          <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
 
@@ -37,19 +39,26 @@
                     </div>
                     <ui:fragment rendered="${res.archived}">
                         <div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
-                                <span class="tooltip-data">
-                                    #{msg['Archive.captured_between']}
-                                    <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                                    </a> #{msg['Archive.captured_between_and']}
-                                    <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                        <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                                    </a>
-                                </span>
+                            <span class="tooltip-data">
+                                #{msg['Archive.captured_between']}
+                                <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                    <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                                </a>
+                                #{msg['Archive.captured_between_and']}
+                                <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
+                                    <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                                </a>
+                            </span>
                         </div>
                     </ui:fragment>
-                    <ui:fragment  rendered="#{not empty res.group}">
-                        <div class="fa fa-users tooltip-container mb-1" aria-hidden="true">
+                    <!--rendered="#{not empty res.group}"-->
+                    <ui:fragment rendered="#{not empty res.group}">
+                        <h:outputLink id="group" value="#">
+                            <h:outputText styleClass="fa fa-users mb-1" value="" />
+                            <f:param name="group_id" value="#{res.group.id}"/>
+                        </h:outputLink>
+                        <p:tooltip for="group" value="#{msg.group}: #{res.group.title}" position="right" hideEffect="clip" />
+                        <!--<div class="fa fa-users tooltip-container mb-1" aria-hidden="true">
                             <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
                                 <h:outputLink value="group/resources.jsf" title="#{res.group.description}">
@@ -57,35 +66,40 @@
                                     <h:outputText value="#{res.group.title}"/>
                                 </h:outputLink>
                             </div>
-                        </div>
+                        </div>-->
                     </ui:fragment>
+                    <!--rendered="#{not empty res.getMetadataValue('collector')}"-->
                     <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
-                        <div class="tooltip-container fa fa-user-plus mb-1">
+                        <p:outputLabel id="collector" class="fa fa-user-plus mb-1"/>
+                        <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip" />
+                        <!--<div class="tooltip-container fa fa-user-plus mb-1">
                             <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="mr-1 font-weight-bold my-0"/>
                                 <h:outputText value="#{res.getMetadataValue('collector')}"/>
                             </div>
-                        </div>
+                        </div>-->
                     </ui:fragment>
-
+                    <!--rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}"-->
                     <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
-                        <div class="tooltip-container fa fa-user-plus mb-1">
+                        <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
+                        <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip" />
+                        <!--<div class="tooltip-container fa fa-user-plus mb-1">
                             <div class="tooltip-data">
                                 <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
                                 <h:outputText value="#{res.resource.user.fullName}"/>
                             </div>
-                        </div>
+                        </div>-->
                     </ui:fragment>
                 </div>
             </div>
 
-            <div>
-                <h:outputLink styleClass="resource-web-link text-truncate overflow-hidden" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
-                    <span class="d-block truncate-two-lines w-100">
+            <div class="overflow-hidden">
+                <h:outputLink styleClass="resource-web-link text-truncate" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                    <span class="d-block text-truncate w-100">
                         <h:outputText value="#{res.title}" escape="false"/>
                     </span>
                 </h:outputLink>
-                <div class="text-truncate overflow-hidden" style="color: #006621;">
+                <div class="text-truncate" style="color: #006621;">
                     <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
                     <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
                 </div>

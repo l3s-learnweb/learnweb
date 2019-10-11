@@ -84,3 +84,16 @@ video {
     margin-bottom: 0;
   }
 }
+
+.opacity-hover {
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    opacity: 1;
+  }
+}
