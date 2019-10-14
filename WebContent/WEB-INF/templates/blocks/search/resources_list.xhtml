@@ -15,8 +15,8 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="search-item-web resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
-            <div class="opacity-hover text-center">
+        <div class="search-item-web m-sm-2 ml-sm-3 m-1 d-flex" id="resource_#{res.rank}">
+            <div class="text-center">
                 <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
                     <div class="d-flex">
                         <h:form>
@@ -28,12 +28,6 @@
                             </p:commandLink>
                             <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip" />
                         </h:form>
-
-                        <!--
-                       TODO add better tooltip
-                         <span class="tooltip-data bg-gray400">#{msg.addToMyResources}</span>
-
-                        -->
                     </div>
                     <ui:fragment rendered="${res.archived}">
                         <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
@@ -45,57 +39,24 @@
                             #{msg['Archive.captured_between_and']}
                             <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
                         </p:tooltip>
-                        <!--<div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
-                            <span class="tooltip-data">
-                                #{msg['Archive.captured_between']}
-                                <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                    <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                                </a>
-                                #{msg['Archive.captured_between_and']}
-                                <a href="#{res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank">
-                                    <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                                </a>
-                            </span>
-                        </div>-->
                     </ui:fragment>
-                    <!--rendered="#{not empty res.group}"-->
+
                     <ui:fragment rendered="#{not empty res.group}">
                         <h:outputLink id="group" value="group/overview.jsf">
                             <h:outputText styleClass="fa fa-users mb-1" value="" />
                             <f:param name="group_id" value="#{res.group.id}"/>
                         </h:outputLink>
                         <p:tooltip for="group" value="#{msg.group}: #{res.group.title}" position="right" hideEffect="clip" />
-                        <!--<div class="fa fa-users tooltip-container mb-1" aria-hidden="true">
-                            <div class="tooltip-data">
-                                <p:outputLabel for="@next" value="#{msg.group}:" styleClass="mr-1 font-weight-bold my-0"/>
-                                <h:outputLink value="group/resources.jsf" title="#{res.group.description}">
-                                    <f:param name="group_id" value="#{res.group.id}"/>
-                                    <h:outputText value="#{res.group.title}"/>
-                                </h:outputLink>
-                            </div>
-                        </div>-->
                     </ui:fragment>
-                    <!--rendered="#{not empty res.getMetadataValue('collector')}"-->
+
                     <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
                         <p:outputLabel id="collector" class="fa fa-user-plus mb-1"/>
                         <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip" />
-                        <!--<div class="tooltip-container fa fa-user-plus mb-1">
-                            <div class="tooltip-data">
-                                <p:outputLabel for="@next" value="#{msg.collector}: " styleClass="mr-1 font-weight-bold my-0"/>
-                                <h:outputText value="#{res.getMetadataValue('collector')}"/>
-                            </div>
-                        </div>-->
                     </ui:fragment>
-                    <!--rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}"-->
+
                     <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
                         <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
                         <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip" />
-                        <!--<div class="tooltip-container fa fa-user-plus mb-1">
-                            <div class="tooltip-data">
-                                <p:outputLabel for="@next" value="#{msg.collector}:" styleClass="mr-1 font-weight-bold my-0"/>
-                                <h:outputText value="#{res.resource.user.fullName}"/>
-                            </div>
-                        </div>-->
                     </ui:fragment>
                 </div>
             </div>

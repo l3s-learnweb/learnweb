@@ -177,50 +177,6 @@
     background-image: url("\#{resource['images:services/learnweb.gif']}");
   }
 
-  /*container for tooltips for web search*/
-  .tooltip-trigger {
-    .tooltip-container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      opacity: 1;
-
-
-      .tooltip-data {
-        position: absolute;
-        padding: 0.5rem;
-        background-color: $gray-200;
-        font-weight: 500;
-        white-space: nowrap;
-        border-radius: 0.5rem;
-        @include user-select(none);
-        pointer-events: none;
-        border: 1px solid $themePrimaryColor;
-        opacity: 0;
-      }
-
-      &:hover {
-        .tooltip-data {
-          bottom: 100%;
-          left: 100%;
-          opacity: 1;
-          z-index: 3;
-          pointer-events: all;
-        }
-      }
-    }
-
-    &:hover {
-      .tooltip-container {
-        opacity: 1;
-        z-index: 2;
-      }
-    }
-  }
-
   /*container for images for image and web search (used in carousel)*/
   .carousel-image-container {
     position: relative;
@@ -253,6 +209,29 @@
             box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
           }
         }
+      }
+    }
+  }
+
+  .search-item-web {
+    max-width: 68rem;
+
+    >div:first-child {
+      opacity: 0;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      >div:first-child {
+        opacity: 1;
       }
     }
   }
