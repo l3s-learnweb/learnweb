@@ -18,9 +18,9 @@
         </h:panelGroup>
 
         <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
-            <div class="opacity-hover">
+            <div class="opacity-hover text-center">
                 <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
-                    <div class="d-flex mb-1">
+                    <div class="d-flex">
                         <h:form>
                             <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                                            update=":resource_form" process="@this"
@@ -38,7 +38,16 @@
                         -->
                     </div>
                     <ui:fragment rendered="${res.archived}">
-                        <div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
+                        <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
+                            <h:outputText styleClass="fa fa-floppy-o mb-1" value="" />
+                        </h:outputLink>
+                        <p:tooltip for="archive" position="right" hideEffect="clip">
+                            #{msg['Archive.captured_between']}
+                            <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                            #{msg['Archive.captured_between_and']}
+                            <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
+                        </p:tooltip>
+                        <!--<div class="fa fa-floppy-o tooltip-container mb-1" aria-hidden="true">
                             <span class="tooltip-data">
                                 #{msg['Archive.captured_between']}
                                 <a href="#{res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank">
@@ -49,11 +58,11 @@
                                     <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
                                 </a>
                             </span>
-                        </div>
+                        </div>-->
                     </ui:fragment>
                     <!--rendered="#{not empty res.group}"-->
                     <ui:fragment rendered="#{not empty res.group}">
-                        <h:outputLink id="group" value="#">
+                        <h:outputLink id="group" value="group/overview.jsf">
                             <h:outputText styleClass="fa fa-users mb-1" value="" />
                             <f:param name="group_id" value="#{res.group.id}"/>
                         </h:outputLink>
@@ -94,13 +103,13 @@
             </div>
 
             <div class="overflow-hidden">
-                <h:outputLink styleClass="resource-web-link text-truncate" target="_blank" style="font-size: 1.2rem;" value="#{res.urlProxied}">
+                <h:outputLink styleClass="resource-web-link text-truncate h4" target="_blank" value="#{res.urlProxied}">
                     <span class="d-block text-truncate w-100">
                         <h:outputText value="#{res.title}" escape="false"/>
                     </span>
                 </h:outputLink>
-                <div class="text-truncate" style="color: #006621;">
-                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{res.url}</h:outputLink>
+                <div class="text-truncate">
+                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span>&#187;</span> #{res.url}</h:outputLink>
                     <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
                 </div>
                 <span class="truncate-two-lines d-block w-100">
