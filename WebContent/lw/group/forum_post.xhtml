@@ -103,7 +103,7 @@
                                         <p:confirm message="Are you sure that you want to delete the post?"/>
                                     </p:commandLink>
 
-                                    <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2" rendered="#{forumPostBean.canEditPost(post)}">
+                                    <h:outputLink value="group/forum_post_edit.jsf" styleClass="mx-2 text-decoration-none" rendered="#{forumPostBean.canEditPost(post)}">
                                         <f:param name="post_id" value="#{post.id}"/>
                                         <h:outputText value="#{msg.edit}"/>
                                     </h:outputLink>

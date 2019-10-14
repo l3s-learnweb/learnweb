@@ -77,7 +77,7 @@
 
                     <p:column headerText="#{msg.options}" styleClass="td-text-right">
                         <p:commandLink onstart="PF('banlistformOverlay').show()" oncomplete="PF('banlistformOverlay').hide()" actionListener="#{adminBanlistBean.onUnban(accessData.name)}" process="@this"
-                                       update=":banlistform :growl"
+                                       update=":banlistform :growl" styleClass="icon-link"
                                        title="#{msg.unban}" global="false">
                             <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
                             <h:outputText value="#{msg.unban}"/>
@@ -148,14 +148,16 @@
 
                     <p:column headerText="#{msg.options}" styleClass="td-text-right">
                         <p:commandLink onclick="PF('bandialog').show(); setname('#{entry.IP}')" process="@this"
-                            update=":suspiciouslistform :growl" title="#{msg.ban}">
+                            update=":suspiciouslistform :growl" styleClass="icon-link">
                             <i class="fa fa-fw fa-ban text-danger" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.ban}"/>
                         </p:commandLink>
 
                         <p:commandLink actionListener="#{adminBanlistBean.onRemoveSuspicious(aggrReqData.IP)}"
-                                       update=":suspiciouslistform :growl" title="#{msg.remove}">
+                                       update=":suspiciouslistform :growl" styleClass="icon-link">
                             <p:confirm message="#{msg.remove} #{aggrReqData.IP}?"/>
                             <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                            <h:outputText value="#{msg.remove}"/>
                         </p:commandLink>
                     </p:column>
                 </p:dataTable>

@@ -53,13 +53,13 @@
                 </p:column>
 
                 <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                    <h:outputLink value="group/options.jsf" styleClass="ui-outputlink" rendered="#{groupsBean.canDeleteGroup(group)}">
+                    <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{groupsBean.canDeleteGroup(group)}">
                         <f:param name="group_id" value="#{group.id}"/>
                         <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                         <h:outputText value="#{msg.edit}"/>
                     </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="ui-outputlink" process="@this"
+                    <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this"
                                    update=":other_groups :growl :my_groups">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>

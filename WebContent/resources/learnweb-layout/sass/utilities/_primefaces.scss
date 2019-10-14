@@ -251,6 +251,10 @@ body {
   }
 
   .icon-link {
+    &:not(:first-child) {
+      margin-left: 0.25rem;
+    }
+
     @include media-breakpoint-down(md) {
       font-size: 0;
 

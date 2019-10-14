@@ -44,22 +44,24 @@
                         <ul class="pl-3 m-0">
                             <p:repeat value="${groupLinksBean.links}" var="link">
                                 <li>
-                                    <h:outputLink value="#{link.url}" target="_blank">
+                                    <h:outputLink value="#{link.url}" styleClass="mr-3" target="_blank">
                                         <h:outputText value="#{link.title}"/>
                                     </h:outputLink>
 
-                                    <p:commandLink title="#{msg.edit}" ariaLabel="#{msg.edit}"
+                                    <p:commandLink title="#{msg.edit}" styleClass="icon-link"
                                                    process="@this" update=":edit_link_dialog" oncomplete="PF('editLinkDialog').show();"
                                                    rendered="${userBean.moderator || groupLinksBean.group.isMember(userBean.user)}">
                                         <f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}"/>
                                         <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                                        <h:outputText value="#{msg.edit}"/>
                                     </p:commandLink>
 
-                                    <p:commandLink title="#{msg.delete}" ariaLabel="#{msg.delete}" process="@this" update=":message :group_links"
+                                    <p:commandLink title="#{msg.delete}" styleClass="icon-link" process="@this" update=":growl :group_links"
                                                    actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}"
                                                    onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
                                                    rendered="${userBean.moderator || groupLinksBean.group.isLeader(userBean.user)}">
                                         <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                                        <h:outputText value="#{msg.delete}"/>
                                     </p:commandLink>
                                 </li>
                             </p:repeat>
@@ -76,22 +78,23 @@
                     <ul class="pl-3 m-0">
                         <p:repeat value="${groupLinksBean.documentLinks}" var="link">
                             <li>
-                                <h:outputLink value="#{link.url}" target="_blank">
+                                <h:outputLink value="#{link.url}" styleClass="mr-3" target="_blank">
                                     <h:outputText value="#{link.title}"/>
                                 </h:outputLink>
 
-                                <p:commandLink title="#{msg.edit}" ariaLabel="#{msg.edit}"
-                                               process="@this" update=":edit_link_dialog" oncomplete="PF('editLinkDialog').show();"
+                                <p:commandLink title="#{msg.edit}" process="@this" styleClass="icon-link" update=":edit_link_dialog" oncomplete="PF('editLinkDialog').show();"
                                                rendered="${userBean.moderator || groupLinksBean.group.isMember(userBean.user)}">
                                     <f:setPropertyActionListener value="#{link}" target="#{groupLinksBean.selectedLink}"/>
                                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+                                    <h:outputText value="#{msg.edit}"/>
                                 </p:commandLink>
 
-                                <p:commandLink title="#{msg.delete}" ariaLabel="#{msg.delete}" process="@this" update=":message :group_documents"
+                                <p:commandLink title="#{msg.delete}" process="@this" styleClass="icon-link" update=":growl :group_documents"
                                                actionListener="#{groupLinksBean.onDeleteLinkFromGroup(link.id)}"
                                                onstart="return confirm('#{utilBean.getLocaleMessage('link_delete_question', link.title)}');"
                                                rendered="${userBean.moderator || groupLinksBean.group.isLeader(userBean.user)}">
                                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
+                                    <h:outputText value="#{msg.delete}"/>
                                 </p:commandLink>
                             </li>
                         </p:repeat>

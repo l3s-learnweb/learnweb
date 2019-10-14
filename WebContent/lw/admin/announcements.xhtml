@@ -79,13 +79,13 @@
             </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                <h:outputLink value="admin/announcement.jsf" title="#{msg.edit}">
+                <h:outputLink value="admin/announcement.jsf" styleClass="icon-link" title="#{msg.edit}">
                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>
                     <f:param name="announcement_id" value="#{news.id}"/>
                 </h:outputLink>
 
-                <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" process="@this" global="false"
+                <p:commandLink actionListener="#{adminAnnouncementsBean.onDeleteNews(news)}" styleClass="icon-link" process="@this" global="false"
                                update="@form :growl" rendered="#{userBean.admin}" title="#{msg.delete}"
                                onstart="PF('newsOverlay').show()" oncomplete="PF('newsOverlay').hide()">
                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
