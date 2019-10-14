@@ -19,15 +19,20 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.searchTitle}" url="search.jsf"/>
+<ui:define name="head">
+    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
+    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript name="vendor/justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js"/>
+    <h:outputScript library="learnweb-layout" name="js/search.js"/>
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js" target="head"/>
-    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css" target="head"/>
-    <h:outputScript name="vendor/justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="head"/>
-    <h:outputScript library="learnweb-layout" name="js/search.js" target="head"/>
+    <h:form class="d-none">
+        <p:remoteCommand name="ajaxLoadNextPage" actionListener="${searchBean.loadNextPage()}" update=":searchResultsNext" immediate="true" global="false"
+                         onstart="console.log('loadNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
+
+        <p:remoteCommand name="logResourceOpened" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
+    </h:form>
 
     <div class="container-fluid section-search">
         <h:panelGroup id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
@@ -140,18 +145,25 @@
             </li>
         </ul>
         </h:form>
+
         <script type="text/javascript">
-            var view = '#{searchBean.view}';
-            var userId = '#{userBean.user.id}';
+            const view = '#{searchBean.view}';
+            const userId = '#{userBean.user.id}';
         </script>
 
-
-        <div id="results" class="#{searchBean.view}_view mt-3">
+        <div id="searchResults" class="#{searchBean.view}_view mt-3">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
             </ui:decorate>
         </div>
+
+        <h:panelGroup id="searchResultsNext" layout="block" styleClass="d-none">
+            <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
+                <ui:param name="view" value="#{searchBean.view}"/>
+                <ui:param name="resources" value="#{searchBean.nextPage}"/>
+            </ui:decorate>
+        </h:panelGroup>
 
         <div id="search_loading_more_results" class="text-center font-weight-bold m-2">
             #{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i>
@@ -162,30 +174,6 @@
         <div id="search_nothing_found" class="text-center font-weight-bold m-2">
             #{msg.nothingFound}
         </div>
-
-        <div id="new_results" style="display:none;">
-            <h:panelGroup id="nextPage" layout="block">
-                <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
-                    <ui:param name="view" value="#{searchBean.view}"/>
-                    <ui:param name="resources" value="#{searchBean.nextPage}"/>
-                </ui:decorate>
-            </h:panelGroup>
-        </div>
-
-        <h:form class="d-none">
-            <p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true"
-                             onstart="console.log('loadNextPage')"
-                             update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this"
-                             global="false"
-                             partialSubmit="true"/>
-
-            <p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"
-                             update=":nothing" name="logResourceOpened" async="true" process="@form"
-                             global="false"
-                             partialSubmit="true"/>
-        </h:form>
-
-        <h:panelGroup id="nothing"></h:panelGroup>
 
         <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="true" resizable="false" id="resource_dialog" modal="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">

@@ -6,8 +6,6 @@
 
 <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-<h:outputStylesheet name="vendor/tooltipster-v3.3.0/tooltipster.min.css"/>
-<h:outputScript name="vendor/tooltipster-v3.3.0/jquery.tooltipster.min.js" target="head"/>
 <div class="d-flex flex-column bg-white pt-2">
     <p:repeat value="#{resources}" var="res">
         <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
