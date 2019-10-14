@@ -22,7 +22,9 @@
 <ui:define name="head">
     <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
     <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
+
     <h:outputScript name="vendor/justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js"/>
+
     <h:outputScript library="learnweb-layout" name="js/search.js"/>
 </ui:define>
 
@@ -34,7 +36,7 @@
         <p:remoteCommand name="logResourceOpened" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
     </h:form>
 
-    <div class="container-fluid section-search">
+    <div class="section-search">
         <h:panelGroup id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
             <ul class="res-filters bg-gray200">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
@@ -151,7 +153,7 @@
             const userId = '#{userBean.user.id}';
         </script>
 
-        <div id="searchResults" class="#{searchBean.view}_view mt-3">
+        <div id="searchResults" class="search-results search-#{searchBean.view}">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
@@ -165,14 +167,10 @@
             </ui:decorate>
         </h:panelGroup>
 
-        <div id="search_loading_more_results" class="text-center font-weight-bold m-2">
-            #{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i>
-        </div>
-        <div id="search_no_more_results" class="text-center font-weight-bold m-2">
-            #{msg.no_more_results}
-        </div>
-        <div id="search_nothing_found" class="text-center font-weight-bold m-2">
-            #{msg.nothingFound}
+        <div class="text-center font-weight-bold mt-3">
+            <span id="search_loading_more_results" class="collapse">#{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i></span>
+            <span id="search_no_more_results" class="collapse">#{msg.no_more_results}</span>
+            <span id="search_nothing_found" class="collapse">#{msg.nothingFound}</span>
         </div>
 
         <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="true" resizable="false" id="resource_dialog" modal="true">

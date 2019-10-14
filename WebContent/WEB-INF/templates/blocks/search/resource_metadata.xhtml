@@ -1,80 +1,77 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    xmlns:h="http://xmlns.jcp.org/jsf/html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
     <!--@elvariable id="view" type="java.lang.String"-->
 
-    <div class="metadata">
-        <div class="d-none">
-            <div class="ratio-16-9-wrapper w-100 h-100 overflow-hidden p-0" id="embedded-#{res.rank}">
-                <h:outputText  value="#{res.embedded}" escape="false"/>
-            </div>
-        </div>
-        <div>
-            <p:outputLabel for="@next" value="#{msg.title}:" styleClass="font-weight-bold mr-1" escape="false"/>
+    <div class="metadata text-left">
+        <div class="form-group">
+            <h:outputText value="#{msg.title}: " styleClass="font-weight-bold"/>
             <h:outputText value="${res.title}" escape="false"/>
-            <br/>
-            <ui:fragment rendered="#{not empty res.description and view ne 'grid'}">
-                <p:outputLabel for="@next" value="#{msg.description}:" styleClass="font-weight-bold mr-1" escape="false"/>
-                <h:outputText value="${res.descriptionHTML}" escape="false"/>
-                <br/>
-            </ui:fragment>
+        </div>
 
-            <p:outputLabel for="@next" value="#{msg.location}:" styleClass="font-weight-bold mr-1" escape="false"/>
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.description}">
+            <h:outputText value="#{msg.description}: " styleClass="font-weight-bold"/>
+            <h:outputText value="${res.descriptionHTML}" escape="false"/>
+            <br/>
+        </h:panelGroup>
+
+        <div class="form-group">
+            <h:outputText value="#{msg.location}: " styleClass="font-weight-bold"/>
             <h:outputLink value="${res.urlProxied}">
                 <h:outputText value="${res.location}" escape="false"/>
             </h:outputLink>
-            <br/>
+        </div>
 
-            <p:outputLabel for="@next" value="#{msg.resource_found_at}:" styleClass="font-weight-bold mr-1" escape="false"/>
+        <div class="form-group">
+            <h:outputText value="#{msg.resource_found_at}: " styleClass="font-weight-bold"/>
             <h:outputText value="#{res.source.label}" escape="false"/>
-            <br/>
+        </div>
 
-            <ui:fragment rendered="#{not empty res.description and not empty res.resource.author}">
-                <p:outputLabel for="@next" value="#{msg.author}: " styleClass="font-weight-bold mr-1" escape="false"/>
-                <h:outputText value="#{res.resource.author}"/>
-                <br/>
-            </ui:fragment>
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.description and not empty res.resource.author}">
+            <h:outputText value="#{msg.author}: " styleClass="font-weight-bold"/>
+            <h:outputText value="#{res.resource.author}"/>
+        </h:panelGroup>
 
-            <ui:fragment rendered="#{not empty res.group}">
-                <p:outputLabel for="@next" value="#{msg.group}: " styleClass="font-weight-bold mr-1" escape="false"/>
-                <h:outputLink value="group/resources.jsf">
-                    <f:param name="group_id" value="#{res.group.id}"/>
-                    <f:param name="resource_id" value="#{res.id}"/>
-                    <h:outputText value="#{res.group.title}"/>
-                </h:outputLink>
-                <br/>
-            </ui:fragment>
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.group}">
+            <h:outputText value="#{msg.group}: " styleClass="font-weight-bold"/>
+            <h:outputLink value="group/resources.jsf">
+                <f:param name="group_id" value="#{res.group.id}"/>
+                <f:param name="resource_id" value="#{res.id}"/>
 
-            <ui:fragment rendered="#{not empty res.resource.tags}">
-                <p:outputLabel for="@next" value="#{msg.tags}:" styleClass="font-weight-bold mr-1" escape="false"/>
-                <p:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
-                    <h:outputText value="#{tag.name}"/><h:outputText value=", " rendered="#{!status.last}" escape="false"/>
-                </p:repeat>
-                <br/>
-            </ui:fragment>
-            <ui:fragment rendered="#{(not empty res.snippet) and false}">
-                <p:outputLabel for="@next" value="#{msg.snippet}:" styleClass="font-weight-bold mr-1" escape="false"/><br/>
-                <h:outputText value="${res.snippet}" escape="false"/>
-                <br/>
-            </ui:fragment>
-            <p:outputLabel for="@next" value="#{msg.options}:" styleClass="font-weight-bold mr-1" escape="false"/><br/>
+                <h:outputText value="#{res.group.title}"/>
+            </h:outputLink>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{not empty res.resource.tags}">
+            <h:outputText value="#{msg.tags}: " styleClass="font-weight-bold"/>
+            <ui:repeat var="tag" value="#{res.resource.tags}">
+                <span class="text-nowrap d-inline-block">
+                    <span class="bg-highlight">
+                        <h:outputText value="#{tag.name}"/>
+                    </span>
+                </span>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup layout="block" styleClass="form-group" rendered="#{(not empty res.snippet) and false}">
+            <h:outputText value="#{msg.snippet}: " styleClass="font-weight-bold d-block"/>
+            <h:outputText value="${res.snippet}" escape="false"/>
+        </h:panelGroup>
+
+        <h:form styleClass="form-group">
+            <h:outputText value="#{msg.options}: " styleClass="font-weight-bold d-block"/>
             <h:outputLink value="#{request.contextPath}/lw/user/login.jsf" rendered="#{!userBean.loggedIn}">
                 <h:outputText value="#{msg.loginLabel}"/>
             </h:outputLink>
 
-			<h:form>
-				<p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
-	                    			update=":resource_form" process="@this"
-	                    			onstart="$.fancybox.close();"
-	                    			oncomplete="PF('resource_dialog').show();" 
-	                    			title="#{msg.addToMyResources}">
-	            	 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}        		
-	            </p:commandLink>
-            </h:form>
-        </div>
+            <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}" title="#{msg.addToMyResources}"
+                           update=":resource_form" process="@this" onstart="$.fancybox.close();" oncomplete="PF('resource_dialog').show();">
+                 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
+            </p:commandLink>
+        </h:form>
     </div>
 </ui:composition>

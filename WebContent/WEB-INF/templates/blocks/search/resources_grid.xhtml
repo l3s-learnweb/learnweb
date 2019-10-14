@@ -1,30 +1,32 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 	<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
-	<div class="border-0 gallery">
-		<p:repeat var="res" value="#{resources}">
-				<div id="resource_#{res.rank}" class="card  hover-border shadow-sm item" data-src="#embedded-#{res.rank}" data-captionId="#product#{res.rank}" data-fancybox="search-gallery">
-					<div class="ratio-16-9-wrapper">
-						<img id="#{res.rank}" class="card-img-top" src="#{res.thumbnail2b.url}"/>
-						<ui:fragment rendered="#{res.resource.duration gt 0}">
-							<div class="video-duration p-1">#{res.durationInMinutes}</div>
-						</ui:fragment>
-					</div>
-					<div class="card-body p-2" style="height: 3rem;">
-						<div class="truncate-two-lines w-100">
-						<h:outputText value="#{res.title}" styleClass="font-weight-bolder" escape="false"></h:outputText>
-						</div>
-					</div>
-					<div class="product-form d-none" id="product#{res.rank}">
-						<ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
-							<ui:param name="res" value="#{res}"/>
-						</ui:decorate>
-					</div>
+
+	<ui:repeat var="res" value="#{resources}">
+		<div id="resource_#{res.rank}" class="search-item search-item-video" data-fancybox="search-gallery" data-src="#embedded_#{res.rank}" data-captionId="#meta_#{res.rank}">
+			<div class="item-thumbnail">
+				<img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
+
+				<h:outputText value="#{res.durationInMinutes}" styleClass="video-duration" rendered="#{res.resource.duration gt 0}"/>
+			</div>
+
+			<div class="item-title">
+				<h:outputText value="#{res.title}" escape="false"/>
+			</div>
+
+			<div class="d-none">
+				<div id="embedded_#{res.rank}" class="w-100 h-100 overflow-hidden p-0">
+					<h:outputText value="#{res.embedded}" escape="false"/>
 				</div>
-		</p:repeat>
-	</div>
+				<div id="meta_#{res.rank}">
+					<ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
+						<ui:param name="res" value="#{res}"/>
+					</ui:decorate>
+				</div>
+			</div>
+		</div>
+	</ui:repeat>
 </ui:composition>

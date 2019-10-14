@@ -27,8 +27,7 @@ function prepareResources() {
       idleTime: false,
       gutter: 0,
       caption(instance, current) {
-        return $(current.opts.captionid)
-          .html();
+        return $(current.opts.captionid).html();
       },
       onInit(instance) {
         instance.$refs.inner.wrap('<div class="fancybox-outer"></div>');
@@ -68,8 +67,13 @@ function displayNextPage(xhr, status, args) {
 
   if (newResults.length === 0 || status !== 'success') {
     if (status !== 'success') console.error('Error on requesting more resources:', status);
-    if (totalResults.length > 0) $('#search_no_more_results').show();
-    else $('#search_nothing_found').show();
+
+    if (totalResults.length > 0) {
+      $('#search_no_more_results').show();
+    } else {
+      $('#search_nothing_found').show();
+    }
+
     noMoreResults = true;
     return;
   }

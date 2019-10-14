@@ -1,11 +1,101 @@
-.section-search {
-  #search_loading_more_results,
-  #search_nothing_found,
-  #search_no_more_results,
-  .metadata {
-    display: none;
+.search-results {
+  background: $themeElementTextColor;
+  padding: $grid-gutter-width;
+}
+
+.search-grid {
+  display: grid;
+  grid-gap: $grid-gutter-width / 2;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+
+.search-item-video {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  word-wrap: break-word;
+  background-color: $gray-200;
+  border: $border-width solid $gray-300;
+  box-shadow: $box-shadow-sm;
+
+  &:hover {
+    color: $themeElementTextColor;
+    background: $themePrimaryColor;
+    border-color: $themePrimaryColor;
   }
 
+  .item-thumbnail {
+    position: relative;
+    padding-bottom: 56.25%;
+
+    img {
+      position: absolute;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .item-title {
+    font-weight: $font-weight-bold;
+    padding: 0.3rem 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    //noinspection Stylelint
+    @supports (display: -webkit-box) {
+      white-space: initial;
+      height: 3.225rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+  }
+
+  .video-duration {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0.25rem;
+    opacity: 0.75;
+    background-color: $themeDarkBgColor;
+    color: $themeElementTextColor;
+    border-radius: $btn-border-radius;
+    font-size: $font-size-sm;
+    padding: 0 0.2rem;
+  }
+}
+
+/*truncate two lines (used in web and video searches)*/
+.truncate-two-lines {
+  overflow: hidden;
+  position: relative;
+  line-height: 1.2em;
+  max-height: 2.4em;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+
+  &::before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $white;
+  }
+}
+
+.section-search {
   /*result link in web search*/
   .resource-web-link {
     span {
@@ -16,25 +106,6 @@
       }
     }
   }
-
-  /*cards used in video search*/
-  .card {
-    cursor: pointer;
-    &:hover {
-      border: 1px solid $gray-600;
-    }
-  }
-
-  /*container for images for image and web search (used in carousel)*/
-  .carousel-image-container {
-    position: relative;
-    height: 100px;
-    width: 100px;
-    background-position: 50% 50%;
-    background-repeat:   no-repeat;
-    background-size:     cover;
-  }
-
 
   /*info about source*/
   .source-info {
@@ -106,35 +177,6 @@
     background-image: url("\#{resource['images:services/learnweb.gif']}");
   }
 
-  .ratio-16-9-wrapper {
-    position: relative;
-    padding-bottom: 56.25%;
-
-    img {
-      position: absolute;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-
-    iframe {
-      position: absolute;
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  /*used in video-search*/
-  .gallery {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    .item {
-      width: 100%;
-    }
-  }
-
   /*container for tooltips for web search*/
   .tooltip-trigger {
     .tooltip-container {
@@ -179,6 +221,16 @@
     }
   }
 
+  /*container for images for image and web search (used in carousel)*/
+  .carousel-image-container {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
   .ui-carousel-light {
     .ui-carousel-header {
       background: $gray-400 !important;
@@ -204,48 +256,9 @@
       }
     }
   }
-
-  /*video duration for video search*/
-  .video-duration {
-    opacity: 0.75;
-    position: absolute;
-    right: 2%;
-    bottom: 3%;
-    background-color: $dark;
-    color: $white;
-    border-radius: 0.1rem;
-    font-size: 0.8rem;
-    line-height: 0.9rem;
-  }
-
-  /*truncate two lines (used in web and video searches)*/
-  .truncate-two-lines {
-    overflow: hidden;
-    position: relative;
-    line-height: 1.2em;
-    max-height: 2.4em;
-    text-align: justify;
-    margin-right: -1em;
-    padding-right: 1em;
-
-    &::before {
-      content: '...';
-      position: absolute;
-      right: 0;
-      bottom: 0;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      width: 1em;
-      height: 1em;
-      margin-top: 0.2em;
-      background: $white;
-    }
-  }
 }
+
+$caption-toolbar-width: 18rem;
 
 .fancybox-search-layout {
   /* Give space around main area */
@@ -277,7 +290,7 @@
 
   /* Adjust content area position */
   .fancybox-stage {
-    right: 256px;
+    right: $caption-toolbar-width;
 
     .fancybox-slide {
       padding: 2rem 1rem;
@@ -289,11 +302,19 @@
     top: 2rem;
     bottom: 0;
     left: auto;
-    width: 256px;
+    width: $caption-toolbar-width;
     padding: 1rem;
     background: #333;
     pointer-events: all; /* Make text selectable */
     border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    .form-group {
+      margin-bottom: 0.5rem;
+    }
+
+    .fancybox-caption__body {
+      max-height: inherit;
+    }
   }
 
   /* Align buttons at the right side  */
@@ -304,7 +325,7 @@
     left: auto;
     background: #333;
     max-height: 2rem;
-    width: 256px;
+    width: $caption-toolbar-width;
     border-bottom: 1px solid #222;
     display: flex;
     flex-direction: row-reverse;
@@ -345,18 +366,19 @@
   &.fancybox-show-thumbs .fancybox-button--arrow_right {
     right: -272px !important;
   }
+
   /*remove padding on mobile devices */
   @include media-breakpoint-down(sm) {
     .fancybox-slide {
       padding: 0 !important;
     }
-  }
-  @media (max-width: 767.98px) {
+
     .fancybox-caption {
       position: relative;
       top: 70%;
       width: 100%;
       height: 30%;
+      //noinspection CssInvalidPropertyValue
       overflow: overlay;
     }
 

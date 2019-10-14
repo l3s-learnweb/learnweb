@@ -2,7 +2,7 @@
   display: grid;
   grid-gap: 0;
   grid-auto-flow: row dense;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr));
 
   .member-item {
     box-shadow: $box-shadow-sm;

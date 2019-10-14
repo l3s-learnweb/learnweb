@@ -7,8 +7,8 @@
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
     <div id="gallery">
-        <p:repeat var="res" value="#{resources}">
-            <div class="resource d-inline-block hover-border">
+        <ui:repeat var="res" value="#{resources}">
+            <div class="search-item-image resource d-inline-block hover-border">
                 <a href="#{res.thumbnail4.url}" data-fancybox="search-gallery" data-type="image" data-captionId="#product#{res.rank}">
                     <img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
                 </a>
@@ -18,7 +18,7 @@
                     </ui:decorate>
                 </div>
             </div>
-        </p:repeat>
+        </ui:repeat>
     </div>
 
 </ui:composition>

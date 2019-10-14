@@ -7,7 +7,7 @@
 <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
 <div class="d-flex flex-column bg-white pt-2">
-    <p:repeat value="#{resources}" var="res">
+    <ui:repeat value="#{resources}" var="res">
         <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
             <h:outputText value="#{msg.page} "/>
             <h:outputText value="#{(res.rank+9) / 10}">
@@ -15,7 +15,7 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
+        <div class="search-item-web resource m-sm-2 ml-sm-3 m-1 tooltip-trigger d-flex" style="max-width: 68em;" id="resource_#{res.rank}">
             <div class="opacity-hover text-center">
                 <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
                     <div class="d-flex">
@@ -115,7 +115,7 @@
                 </span>
             </div>
         </div>
-    </p:repeat>
+    </ui:repeat>
 </div>
 
 </ui:composition>
