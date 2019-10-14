@@ -15,7 +15,7 @@
             </h:outputText>
         </h:panelGroup>
 
-        <div class="search-item-web m-sm-2 ml-sm-3 m-1 d-flex" id="resource_#{res.rank}">
+        <div class="search-item-web mt-sm-2 mt-1 d-flex" id="resource_#{res.rank}">
             <div class="text-center">
                 <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
                     <div class="d-flex">
@@ -61,19 +61,26 @@
                 </div>
             </div>
 
-            <div class="overflow-hidden">
-                <h:outputLink styleClass="resource-web-link text-truncate h4" target="_blank" value="#{res.urlProxied}">
-                    <span class="d-block text-truncate w-100">
+            <div class="text-truncate resource">
+                <h:outputLink styleClass="resource-web-link h4" target="_blank" value="#{res.urlProxied}">
+                    <span class="text-truncate">
                         <h:outputText value="#{res.title}" escape="false"/>
                     </span>
+                    <br/>
+                    <div class="text-truncate d-inline-block mw-100 small">
+                        <cite>#{res.url}</cite>
+                    </div>
                 </h:outputLink>
-                <div class="text-truncate">
-                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true">#{msg['application.name']} <span>&#187;</span> #{res.url}</h:outputLink>
-                    <h:outputLink rendered="#{res.id == -1}" value="#{res.learnwebUrl}" escape="true" target="_blank">#{res.url}</h:outputLink>
+
+                <div class="white-space-normal">
+                    <div class="truncate-two-lines w-100 mt-n1">
+                        <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
+                    </div>
                 </div>
-                <span class="truncate-two-lines d-block w-100">
-                     <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
-                </span>
+
+                <div class="text-truncate mt-1">
+                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true"><span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> #{msg['application.name']} link to #{res.group.title} : #{res.url}</h:outputLink>
+                </div>
             </div>
         </div>
     </ui:repeat>

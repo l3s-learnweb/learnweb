@@ -1,6 +1,5 @@
 .search-results {
   background: $themeElementTextColor;
-  padding: $grid-gutter-width;
 }
 
 .search-grid {
@@ -232,6 +231,20 @@
     &:hover {
       >div:first-child {
         opacity: 1;
+      }
+    }
+
+    .resource {
+      max-width: inherit;
+
+      a {
+        max-width: inherit;
+      }
+
+      cite {
+        font-size: $font-size-lg;
+        font-style: normal;
+        color: $link-color;
       }
     }
   }

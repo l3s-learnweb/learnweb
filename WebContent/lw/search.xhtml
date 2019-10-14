@@ -153,7 +153,7 @@
             const userId = '#{userBean.user.id}';
         </script>
 
-        <div id="searchResults" class="search-results search-#{searchBean.view}">
+        <div id="searchResults" class="search-results px-3 px-sm-2 search-#{searchBean.view}">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
