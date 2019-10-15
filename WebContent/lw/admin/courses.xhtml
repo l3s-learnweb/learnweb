@@ -12,35 +12,17 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <div class="row">
-        <div class="col-12 col-sm-6">
-            <p:panel header="#{msg.add_new_course}">
-                <h:form id="addcourse">
-                    <div class="form-group">
-                        <p:outputLabel for="@next" value="#{msg.course_title}:"/>
-                        <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
-                        <p:message for="@previous"/>
-                    </div>
 
-                    <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}"  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide()" value="#{msg.add}" update=":growl :courses_form" process="@form" global="false"/>
-                </h:form>
-            </p:panel>
-        </div>
-
-        <div class="col-12 col-sm-6">
-            <p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
-                <h:form id="addorganisation">
-                    <div class="form-group">
-                        <p:outputLabel for="@next" value="#{msg.organization_title}:"/>
-                        <p:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>
-                        <p:message for="@previous"/>
-                    </div>
-
-                    <p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" process="@form" update=":growl"/>
-                </h:form>
-            </p:panel>
-        </div>
-    </div>
+    <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
+        <h:form id="addcourse">
+            <div class="form-group">
+                <p:outputLabel for="@next" value="#{msg.course_title}:"/>
+                <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
+                <p:message for="@previous"/>
+            </div>
+            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}"  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();" value="#{msg.add}" update=":growl :courses_form" process="@form" global="false"/>
+        </h:form>
+    </p:dialog>
 
     <h:form id="courses_form">
         <p:blockUI block="courses" widgetVar="coursesOverlay">
@@ -48,8 +30,10 @@
         </p:blockUI>
 
         <p:dataTable tableStyleClass="table-responsive" id="courses" var="course" value="#{adminCoursesBean.courses}">
-            <f:facet name="header">#{msg.courses}</f:facet>
-
+            <f:facet name="header">
+                #{msg.courses}
+                <p:commandButton value="#{msg.create}" type="button" styleClass="float-right" onclick="PF('createCourseWidget').show();" />
+            </f:facet>
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
             </p:column>
@@ -59,7 +43,7 @@
             </p:column>
 
             <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-                <h:outputLink value="users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
+                <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>
 
             <p:column headerText="#{msg.options}" styleClass="td-text-right">
