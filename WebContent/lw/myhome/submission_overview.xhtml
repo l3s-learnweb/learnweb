@@ -125,7 +125,7 @@
 
 					<div class="form-group">
 						<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
-							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');"/>
+							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');" global="false"/>
 						</p:selectBooleanCheckbox>
 					</div>
 
@@ -201,14 +201,15 @@
 
 					<div class="form-group">
 						<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="surveyCheckBox" id="survey_checkbox">
-							<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
+							<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');" global="false"/>
 						</p:selectBooleanCheckbox>
 					</div>
 
 					<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
-						<p:outputLabel for="@next" value="#{msg['Submission.survey']}:"/>
+						<p:outputLabel for="@next" value="#{msg['survey']}:"/>
 						<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
-							<f:selectItems value="#{submissionBean.surveyResourcesList}"/>
+							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
+							<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
 						</p:selectOneMenu>
 						<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
 					</div>
@@ -311,8 +312,12 @@
 				return status;
 			}
 
+			function  test() {
+				console.log(arguments);
+			}
 			function checkCloseDate(startDateid, endDateid, widgetVarId)
 			{
+				console.log(startDateid.toString());
 				let startDate = new Date (document.getElementById(startDateid+'_input').value);
 				let endDate  = new Date (document.getElementById(endDateid+'_input').value);
 
