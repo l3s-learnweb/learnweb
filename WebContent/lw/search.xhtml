@@ -67,7 +67,7 @@
                 </h:link>
             </li>
             </ul>
-            <p:outputPanel styleClass="source-info text-center bg-gray400" layout="block" rendered="#{searchBean.searchService != null}">
+            <p:outputPanel styleClass="source-info text-center bg-gray400 pt-2" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
                     <f:param value="#{searchBean.searchService.name()}"/>
@@ -153,7 +153,7 @@
             const userId = '#{userBean.user.id}';
         </script>
 
-        <div id="searchResults" class="search-results px-3 px-sm-2 search-#{searchBean.view}">
+        <div id="searchResults" class="search-results p-3 p-sm-2 search-#{searchBean.view}">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>

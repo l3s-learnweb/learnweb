@@ -243,6 +243,10 @@ body {
     }
   }
 
+  .ui-panel-content+.ui-panel-footer {
+    border-top: 0; /* hide top border if panel has a footer */
+  }
+
   .ui-commandlink,
   .icon-link {
     &:hover {
