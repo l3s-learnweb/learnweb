@@ -81,7 +81,6 @@ public class Learnweb
     private final TimelineManager timelineManager; //DAO for resource archive versions
     private final MementoClient mementoClient;
     private final SolrClient solrClient;
-    private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
     private final JobScheduler jobScheduler;
@@ -295,7 +294,6 @@ public class Learnweb
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
         timelineManager = new TimelineManager(this);
         mementoClient = new MementoClient(this);
-        loroManager = new LoroManager(this);
         jobScheduler = new JobScheduler(this);
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
@@ -538,11 +536,6 @@ public class Learnweb
     public TedManager getTedManager()
     {
         return tedManager;
-    }
-
-    public LoroManager getLoroManager()
-    {
-        return loroManager;
     }
 
     public ArchiveUrlManager getArchiveUrlManager()

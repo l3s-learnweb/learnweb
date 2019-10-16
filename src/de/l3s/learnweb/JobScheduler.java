@@ -8,8 +8,6 @@ import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
 import de.l3s.util.email.BounceFetcher;
 import it.sauronsoftware.cron4j.Scheduler;
-import it.sauronsoftware.cron4j.Task;
-import it.sauronsoftware.cron4j.TaskExecutionContext;
 
 public class JobScheduler
 {
@@ -60,49 +58,6 @@ public class JobScheduler
     {
         if(scheduler.isStarted())
             scheduler.stop();
-    }
-
-    @SuppressWarnings("unused")
-    private class UpdateLoroResources extends Task
-    {
-
-        @Override
-        public boolean canBePaused()
-        {
-            return true;
-        }
-
-        @Override
-        public boolean canBeStopped()
-        {
-            return true;
-        }
-
-        @Override
-        public boolean supportsCompletenessTracking()
-        {
-            return true;
-        }
-
-        @Override
-        public boolean supportsStatusTracking()
-        {
-            return true;
-        }
-
-        @Override
-        public void execute(TaskExecutionContext context)
-        {
-
-            try
-            {
-                learnweb.getLoroManager().saveLoroResource();
-            }
-            catch(Throwable t)
-            {
-                log.fatal("Can't update LORO resources to learnweb", t);
-            }
-        }
     }
 
     public static void main(String[] args)
