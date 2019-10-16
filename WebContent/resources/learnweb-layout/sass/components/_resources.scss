@@ -314,7 +314,6 @@ ul.res-filters {
   color: $body-color;
   background: $gray-200;
   box-shadow: $box-shadow-sm;
-  border: $border-width solid $gray-200;
 
   .res-selector {
     border: none;
@@ -354,7 +353,6 @@ ul.res-filters {
   .res-bl-preview {
     padding-top: 75%; // 4:3 Aspect Ratio
     position: relative;
-    border-bottom: $border-width solid $gray-200;
 
     &::after {
       content: '';
@@ -445,7 +443,6 @@ ul.res-filters {
   &:hover {
     color: $themeElementTextColor;
     background: $themePrimaryColor;
-    border-color: $themePrimaryColor;
 
     .res-selector {
       opacity: 1;
@@ -456,8 +453,6 @@ ul.res-filters {
     }
 
     .res-bl-preview {
-      border-color: $themePrimaryColor;
-
       &::after {
         opacity: 0.25;
       }
@@ -476,7 +471,6 @@ ul.res-filters {
   .ui-selected & { // after a successful selection
     color: $themeElementTextColor;
     background: $themePrimaryDarkerAlt;
-    border-color: $themePrimaryDarkerAlt;
 
     .res-selector {
       opacity: 1;
@@ -490,8 +484,6 @@ ul.res-filters {
     }
 
     .res-bl-preview {
-      border-color: $themePrimaryDarkerAlt;
-
       &::after {
         opacity: 0.25;
         background: $themePrimaryColor;
