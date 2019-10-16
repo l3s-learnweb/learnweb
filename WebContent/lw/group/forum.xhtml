@@ -76,7 +76,7 @@
 				<p:column headerText="#{msg.options}" styleClass="text-center" rendered="#{(userBean.moderator)}" >
 					<p:commandButton value="#{msg.delete}" styleClass="moderator-btn ml-2" actionListener="#{forumTopicsBean.onDeleteTopic(topic)}" process="@this" global="false"
 									 update="@form :message" onstart="PF('topicsOverlay').show()" oncomplete="PF('topicsOverlay').hide()">
-						<p:confirm message="${utilBean.getLocaleMessage('forum_delete_question', topic.title)}"/>
+						<p:confirm message="${utilBean.getLocaleMessage('delete_message', topic.title)}"/>
 					</p:commandButton>
 				</p:column>
 			</p:dataTable>
