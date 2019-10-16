@@ -1184,12 +1184,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)
-                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" webkitallowfullscreen mozallowfullscreen allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
+                    embeddedCode = "<iframe src=\"" + iframeUrl + "\" allowfullscreen referrerpolicy=\"origin\">Your browser has blocked this iframe</iframe>";
 
             }
             else if(getType().equals(ResourceType.audio))
             {
-                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                embeddedCode = "<iframe src=\"audio.jsf?resource_id=" + id + "\" scrolling=\"no\" allowfullscreen></iframe>";
             }
 
             // if no rule above works

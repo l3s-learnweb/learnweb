@@ -64,9 +64,6 @@
 
         <h:form styleClass="form-group">
             <h:outputText value="#{msg.options}: " styleClass="font-weight-bold d-block"/>
-            <h:outputLink value="#{request.contextPath}/lw/user/login.jsf" rendered="#{!userBean.loggedIn}">
-                <h:outputText value="#{msg.loginLabel}"/>
-            </h:outputLink>
 
             <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}" title="#{msg.addToMyResources}"
                            update=":resource_form" process="@this" onstart="$.fancybox.close();" oncomplete="PF('resource_dialog').show();">

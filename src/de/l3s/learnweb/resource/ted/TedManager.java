@@ -411,7 +411,7 @@ public class TedManager
         resource.setMaxImageUrl(rs.getString("photo2_url"));
         resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));
         resource.setCreationDate(rs.getTimestamp("published_at"));
-        resource.setEmbeddedRaw("<iframe src=\"https://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
+        resource.setEmbeddedRaw("<iframe src=\"https://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" allowfullscreen></iframe>");
         resource.setTranscript("");
         return resource;
     }

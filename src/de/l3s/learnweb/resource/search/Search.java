@@ -31,7 +31,7 @@ import de.l3s.util.StringHelper;
 public class Search implements Serializable
 {
     private static final long serialVersionUID = -2405235188000105509L;
-    private final static Logger log = Logger.getLogger(Search.class);
+    private static final Logger log = Logger.getLogger(Search.class);
 
     private final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // SimpleDateFormat isn't thread save don't make it static again
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

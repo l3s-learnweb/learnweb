@@ -344,29 +344,6 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
   this.itemsContainer.css('left', (-1 * (this.viewport.innerWidth() * this.page)));
 };
 
-// /**
-//  * Uncomment if we don't want to show overlay for fast requests
-//  */
-// var ajaxInProgress;
-// PrimeFaces.widget.AjaxStatus.prototype.trigger = function(event, args) {
-//     var callback = this.cfg[event];
-//     if(callback) {
-//         callback.apply(document, args);
-//     }
-//
-//     if (event === 'start') {
-//         $('body').css('cursor', 'progress');
-//         ajaxInProgress = setTimeout(() => {
-//             this.jq.children().hide().filter(this.toFacetId(event)).show();
-//         }.bind(this), 200);
-//     } else {
-//         $('body').css('cursor', 'default');
-//         clearTimeout(ajaxInProgress);
-//         ajaxInProgress = null;
-//         this.jq.children().hide().filter(this.toFacetId(event)).show();
-//     }
-// };
-
 /**
  * This is a new implementation of old script which changes size of filters list.
  * If list contains more than N items, then all after N will be hidden and 'Show more' will be displayed instead.
