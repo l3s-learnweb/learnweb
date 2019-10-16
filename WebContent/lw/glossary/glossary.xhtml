@@ -45,7 +45,7 @@
                                     <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px"
                                         placeholder="#{msg['Glossary.search_filter_placeholder']}"/>
                                 </p:outputPanel>
-                                <p:commandButton type="button" onclick="openGlossForm();scrollToAnchor();" styleClass="mr-2" value="#{msg['Glossary.add_new_entry']}"/>
+                                <p:commandButton type="button " onclick="openGlossForm();scrollToAnchor();" styleClass="alt-btn mr-2" value="#{msg['addEntry']}"/>
                             </div>
                         </f:facet>
 
@@ -74,12 +74,12 @@
 
                         <p:column style=" width:20px;" exportable="false">
                             <div class="text-right">
-                                <p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" styleClass="mr-2" process="@this">
+                                <p:commandLink id="edit" action="#{glossaryBean.deleteEntry(item)}" styleClass="mr-2" process="@this" title="#{msg.delete}">
                                     <i class="fa fa-fw fa-trash text-danger" aria-hidden="true"></i>
                     				<p:confirm message="${utilBean.getLocaleMessage('delete_entry_confirm_message', item.topics)} "/>
                                 </p:commandLink>
 
-                                <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add">
+                                <p:commandLink action="#{glossaryBean.setGlossaryForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add" title="#{msg.edit_entry}">
                                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                                 </p:commandLink>
                             </div>
@@ -189,7 +189,7 @@
                     </p:dataTable>
                 </p:dialog>
 
-                <p:panel header="#{msg['Glossary.add_new_entry']}" id="glossaryForm" style="display: none;">
+                <p:panel header="#{msg['Glossary.edit_glossary']}" id="glossaryForm" style="display: none;">
                     <h:form id="glossary_add" prependId="false">
                         <p:growl id="glossgrowl" redisplay="true" globalOnly="true" showDetail="true">
                             <p:autoUpdate/>
@@ -230,7 +230,7 @@
                         <h:inputHidden value="#{glossaryBean.formEntry.descriptionPasted}" id="paste_status_description"></h:inputHidden>
 
                         <br/>
-                        <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms" tableStyle="width:100%">
+                        <p:dataTable value="#{glossaryBean.formEntry.terms}" var="term" id="lang_terms"  tableStyle="table-layout: auto;">
 
                             <p:column headerText="#{msg['Glossary.term']}" rendered="#{not term.deleted}">
 
