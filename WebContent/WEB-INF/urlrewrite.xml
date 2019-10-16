@@ -13,13 +13,7 @@
 		<from>/v2/(.*)</from>
 		<to type="redirect">/v3/$1</to>
 	</rule>
-	<!--
-	<rule>
-		<from>/new/(.*)</from>
-		<to type="redirect">/$1</to>
-	</rule>
-	 -->
-
+	
 	<rule>
 		<from>/lw/wizard=(.*)</from>
 		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
