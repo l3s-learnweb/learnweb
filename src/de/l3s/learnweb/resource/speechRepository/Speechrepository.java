@@ -1,4 +1,4 @@
-package de.l3s.learnweb.resource.importer;
+package de.l3s.learnweb.resource.speechRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

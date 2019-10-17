@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.archive;
 
 import java.util.Date;
 

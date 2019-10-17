@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.archive;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.archiveSearch.CDXClient;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.resource.Resource;
 
@@ -94,9 +94,7 @@ public class WaybackCapturesLogger
             {
                 while(true)
                 {
-                    Container container;
-
-                    container = queue.take();
+                    Container container = queue.take();
 
                     if(container == LAST_ENTRY) // stop method was called
                         break;

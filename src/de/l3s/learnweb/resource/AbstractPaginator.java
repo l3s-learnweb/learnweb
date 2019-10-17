@@ -44,7 +44,7 @@ public abstract class AbstractPaginator implements Serializable
 
     /**
      * Starting from 0
-     * 
+     *
      * @return
      */
     public int getPageIndex()
@@ -79,7 +79,7 @@ public abstract class AbstractPaginator implements Serializable
         this.currentPageCache = currentPageCache;
     }
 
-    public List<Integer> listPages()
+    public List<Integer> getPageList()
     {
         List<Integer> pages = new LinkedList<>();
         int fromIndex = 0, endIndex = 0;

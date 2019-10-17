@@ -5,23 +5,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.WaybackUrlManager.UrlRecord;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.SERVICE;
@@ -29,7 +25,6 @@ import de.l3s.learnweb.resource.Thumbnail;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
-import de.l3s.util.URL;
 
 public class SearchLogManager
 {
@@ -39,10 +34,6 @@ public class SearchLogManager
     private static final String RESOURCE_COLUMNS = "`search_id`, `rank`, `resource_id`, `url`, `title`, `description`, `thumbnail_url`, `thumbnail_height`, `thumbnail_width`";
     private static final String ACTION_COLUMNS = "`search_id`, `rank`, `user_id`, `action`, `timestamp`";
     private static final String LAST_ENTRY = "last_entry"; // this element indicates that the consumer thread should stop
-
-    //Queue to hold the URLs whose HTML needs to be logged
-    private final LinkedBlockingQueue<String> queue;
-    private final Thread consumerThread;
 
     //Queue to hold the search ids that needs to be annotated using yahooFEL
     private LinkedBlockingQueue<String> searchIdQueue;
@@ -62,9 +53,6 @@ public class SearchLogManager
     {
         super();
         this.learnweb = learnweb;
-        this.queue = new LinkedBlockingQueue<>();
-        this.consumerThread = new Thread(new Consumer());
-        this.consumerThread.start();
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
 
         if(StringUtils.isEmpty(felAnnotatorPath))
@@ -78,7 +66,7 @@ public class SearchLogManager
                 /*
                 this.felAnnotationConsumerThread = new Thread(new FELAnnotationConsumer());
                 this.felAnnotationConsumerThread.start();
-
+                
                 felAnnotate = true;
                 */
 
@@ -160,7 +148,7 @@ public class SearchLogManager
         return -1;
     }
 
-    public void logResources(int searchId, List<ResourceDecorator> resources, boolean logHTML, int pageId)
+    public void logResources(int searchId, List<ResourceDecorator> resources, int pageId)
     {
         if(resources.size() == 0)
         {
@@ -208,19 +196,10 @@ public class SearchLogManager
                     }
                 }
                 insert.addBatch();
-
-                try
-                {
-                    if(logHTML && !queue.contains(decoratedResource.getUrl()))
-                        queue.put(decoratedResource.getUrl());
-                }
-                catch(InterruptedException e)
-                {
-                    log.error("Couldn't log html for url: " + decoratedResource.getUrl(), e);
-                }
             }
 
             insert.executeBatch();
+
             if(felAnnotate)
             {
                 if(pageId == 1 && resources.size() >= 10)
@@ -276,9 +255,6 @@ public class SearchLogManager
     {
         try
         {
-            queue.put(LAST_ENTRY);
-            consumerThread.join();
-
             log.debug("SearchLogManager url html fetcher thread was stopped");
 
             if(felAnnotate)
@@ -296,7 +272,7 @@ public class SearchLogManager
         }
     }
 
-    public boolean checkRelatedEntitiesForSearch(String searchId)
+    private boolean checkRelatedEntitiesForSearch(String searchId)
     {
         boolean relatedEntitiesExists = false;
         try
@@ -312,72 +288,6 @@ public class SearchLogManager
             log.error("Error while retrieving related entities for search id: " + searchId, e);
         }
         return relatedEntitiesExists;
-    }
-
-    private class Consumer implements Runnable
-    {
-        @Override
-        public void run()
-        {
-            try
-            {
-                while(true)
-                {
-                    String url;
-
-                    url = queue.take();
-
-                    if(Objects.equals(url, LAST_ENTRY)) // stop method was called
-                        break;
-
-                    try
-                    {
-                        String asciiUrl = new URL(url).toString();
-
-                        Date crawlTime;
-                        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id, crawl_time FROM `learnweb_large`.`sl_resource_html` WHERE url = ? ORDER BY crawl_time DESC LIMIT 1");
-                        select.setString(1, asciiUrl);
-                        ResultSet rs = select.executeQuery();
-                        if(rs.next())
-                        {
-                            crawlTime = rs.getDate(2);
-                            long timeSinceLastCrawl = System.currentTimeMillis() - crawlTime.getTime();
-                            if(timeSinceLastCrawl < TimeUnit.DAYS.toMillis(1))
-                                continue;
-                        }
-
-                        UrlRecord urlRecord = Learnweb.getInstance().getWaybackUrlManager().getHtmlContent(url);
-
-                        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_resource_html` (`url`, `html`, `crawl_time`, `status_code`) VALUES (?, ?, ?, ?)");
-
-                        insert.setString(1, urlRecord.getUrl().toString());
-                        insert.setString(2, urlRecord.getContent());
-                        insert.setTimestamp(3, new java.sql.Timestamp(urlRecord.getStatusCodeDate().getTime()));
-                        insert.setInt(4, urlRecord.getStatusCode());
-                        insert.executeUpdate();
-                    }
-                    catch(SQLException e)
-                    {
-                        log.error("Exception while inserting the url record into database: " + url, e);
-                    }
-                    catch(IOException e)
-                    {
-                        log.error("Exception while retrieving html for url:" + url, e);
-                    }
-                    catch(URISyntaxException e)
-                    {
-                        log.error("Invalid url error: " + url, e);
-                    }
-
-                }
-
-                log.debug("Search logger thread for logging html was stopped");
-            }
-            catch(InterruptedException e)
-            {
-                log.error("Search logger thread for logging html has crashed", e);
-            }
-        }
     }
 
     private class FELAnnotationConsumer implements Runnable

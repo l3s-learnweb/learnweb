@@ -63,38 +63,6 @@ public class TedCrawlerSimple implements Runnable
     }
 
     /**
-     * Its deprecated as the tags used to display the transcripts are no longer the same.
-     */
-    @Deprecated
-    public void extractTranscriptElements(Document doc, int resourceId, String lang)
-    {
-        try
-        {
-            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
-            pStmt.setInt(1, resourceId);
-            pStmt.setString(2, lang);
-
-            Element transcriptBody = doc.select(".talk-article__body").first();
-            int preRollOffset = 11820;
-            Elements elements = transcriptBody.getElementsByClass("talk-transcript__para");
-            for(Element element : elements)
-            {
-                Element firstFragment = element.getElementsByClass("talk-transcript__fragment").get(0);
-                int startTime = Integer.parseInt(firstFragment.attr("data-time")) + preRollOffset;
-                pStmt.setInt(3, startTime);
-
-                String text = element.getElementsByClass("talk-transcript__para__text").get(0).text();
-                pStmt.setString(4, text);
-                pStmt.executeUpdate();
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while inserting transcript paragraphs for resource id: " + resourceId, e);
-        }
-    }
-
-    /**
      * Extract the transcript corresponding to a particular TED talk (TED id) and language
      *
      * @param tedId
@@ -313,7 +281,7 @@ public class TedCrawlerSimple implements Runnable
                      log.warn("Http exception while fetching page: " + slug, e);
                  else if(response != null)
                      log.warn("Http exception other than service unavailable while fetching page: " + slug, e);
-
+              
                  lastException = e;
                  Misc.sleep(60000);
               }*/

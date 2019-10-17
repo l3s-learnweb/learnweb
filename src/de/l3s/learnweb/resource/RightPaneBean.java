@@ -18,12 +18,12 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.archive.ArchiveUrl;
+import de.l3s.learnweb.resource.archive.TimelineData;
 import de.l3s.learnweb.resource.office.FileEditorBean;
 import org.primefaces.PrimeFaces;
 

@@ -20,6 +20,7 @@ import de.l3s.learnweb.Learnweb;
 
 public class SearchSessionEdgeComputator
 {
+
     public final static Logger log = Logger.getLogger(SearchSessionEdgeComputator.class);
 
     private static SearchSessionEdgeComputator instance = null;
@@ -49,19 +50,6 @@ public class SearchSessionEdgeComputator
         return wikipediaSolrClient;
     }
 
-    public void insertEdgesForAllSessions() throws SQLException
-    {
-        PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-                "SELECT t2.session_id, t1.timestamp FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' GROUP BY t2.session_id HAVING t1.timestamp > '2018-02-14' ORDER BY t1.timestamp ASC");
-        ResultSet rs = pStmt.executeQuery();
-        while(rs.next())
-        {
-            String sessionId = rs.getString("session_id");
-            insertEdgesForSessionId(sessionId);
-        }
-        pStmt.close();
-    }
-
     public String insertEdgesForSessionGivenSearchId(String searchId)
     {
         //log.info("insertEdgesForSessionGivenSearchId is applied.");
@@ -89,7 +77,7 @@ public class SearchSessionEdgeComputator
         return null;
     }
 
-    public void insertEdgesForSessionId(String sessionId)
+    private void insertEdgesForSessionId(String sessionId)
     {
         List<String> entities = new ArrayList<>();
         try
@@ -121,14 +109,14 @@ public class SearchSessionEdgeComputator
         log.info("No. of entity pairs inserted for session " + sessionId + " are: " + entityCooccurrences.size());
     }
 
-    public List<String> getRelatedEntitiesForSearchId(int searchId)
+    private List<String> getRelatedEntitiesForSearchId(int searchId)
     {
         List<Entity> relatedEntities = learnweb.getSearchHistoryManager().getRelatedEntitiesForSearchId(searchId);
         List<String> entityNames = relatedEntities.stream().map(Entity::getEntityName).collect(Collectors.toList());
         return entityNames;
     }
 
-    public void insertEdgeScores(Map<EntityPair, Double> entityCooccurrences)
+    private void insertEdgeScores(Map<EntityPair, Double> entityCooccurrences)
     {
         try
         {
@@ -154,7 +142,7 @@ public class SearchSessionEdgeComputator
         }
     }
 
-    public Map<EntityPair, Double> getEntityPairScores(List<String> entityList)
+    private Map<EntityPair, Double> getEntityPairScores(List<String> entityList)
     {
         Map<EntityPair, Double> entityCooccurrence = new HashMap<>();
         try
@@ -178,7 +166,7 @@ public class SearchSessionEdgeComputator
         return entityCooccurrence;
     }
 
-    public Map<EntityPair, Double> getEdgeScore(List<String> entitylist) throws SolrServerException, IOException
+    private Map<EntityPair, Double> getEdgeScore(List<String> entitylist) throws SolrServerException, IOException
     {
         Map<EntityPair, Double> entity_cooc = new HashMap<>();
         String q1, q2;
@@ -210,13 +198,14 @@ public class SearchSessionEdgeComputator
     }
 
     //sort entity pairs by score
-    public static List<Map.Entry<EntityPair, Double>> sortByScore(Map<EntityPair, Double> m)
+    private static List<Map.Entry<EntityPair, Double>> sortByScore(Map<EntityPair, Double> m)
     {
         List<Map.Entry<EntityPair, Double>> sorted = new ArrayList<>(m.entrySet());
         sorted.sort((o1, o2) -> (int) (o2.getValue() - o1.getValue()));
         return sorted;
     }
 
+    /*
     //get denominator--the most popular occurred entity pair
     public static Double getDenorminator(List<Map.Entry<EntityPair, Double>> list)
     {
@@ -230,8 +219,23 @@ public class SearchSessionEdgeComputator
         return denorminator;
     }
 
+
+    public void insertEdgesForAllSessions() throws SQLException
+    {
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
+                "SELECT t2.session_id, t1.timestamp FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' GROUP BY t2.session_id HAVING t1.timestamp > '2018-02-14' ORDER BY t1.timestamp ASC");
+        ResultSet rs = pStmt.executeQuery();
+        while(rs.next())
+        {
+            String sessionId = rs.getString("session_id");
+            insertEdgesForSessionId(sessionId);
+        }
+        pStmt.close();
+    }
+    
     public static void main(String[] args) throws SolrServerException, IOException, ClassNotFoundException, SQLException
     {
         System.exit(0);
     }
+    */
 }

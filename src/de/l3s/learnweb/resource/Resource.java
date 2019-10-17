@@ -24,12 +24,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.safety.Whitelist;
 
-import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
+import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadata;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;

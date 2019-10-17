@@ -22,6 +22,10 @@ import de.l3s.learnweb.resource.FileManager;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.archive.ArchiveUrlManager;
+import de.l3s.learnweb.resource.archive.TimelineManager;
+import de.l3s.learnweb.resource.archive.WaybackCapturesLogger;
+import de.l3s.learnweb.resource.archive.WaybackUrlManager;
 import de.l3s.learnweb.resource.glossary.GlossaryManager;
 import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.office.HistoryManager;
@@ -79,7 +83,6 @@ public class Learnweb
     private final TedManager tedManager; //For logging transcript actions by users
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
     private final TimelineManager timelineManager; //DAO for resource archive versions
-    private final MementoClient mementoClient;
     private final SolrClient solrClient;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
@@ -293,7 +296,6 @@ public class Learnweb
         tedManager = new TedManager(this);
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
         timelineManager = new TimelineManager(this);
-        mementoClient = new MementoClient(this);
         jobScheduler = new JobScheduler(this);
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
@@ -541,11 +543,6 @@ public class Learnweb
     public ArchiveUrlManager getArchiveUrlManager()
     {
         return archiveUrlManager;
-    }
-
-    public MementoClient getMementoClient()
-    {
-        return mementoClient;
     }
 
     public TimelineManager getTimelineManager()

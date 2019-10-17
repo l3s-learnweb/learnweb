@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.archive;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -57,6 +57,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.util.Misc;
 import de.l3s.util.URL;
 
@@ -69,7 +70,7 @@ public class WaybackUrlManager
     private CDXClient cdxClient;
 
     // there should exist only one instance of this class because of the cache
-    protected static WaybackUrlManager getInstance(Learnweb application)
+    public static WaybackUrlManager getInstance(Learnweb application)
     {
         if(instance == null)
         {

@@ -11,8 +11,10 @@ import it.sauronsoftware.cron4j.Scheduler;
 
 public class JobScheduler
 {
+    @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(JobScheduler.class);
     private Scheduler scheduler;
+    @SuppressWarnings("unused")
     private Learnweb learnweb;
 
     protected JobScheduler(Learnweb learnweb)
@@ -21,11 +23,6 @@ public class JobScheduler
         this.scheduler = new Scheduler();
 
         //description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
-
-        //Schedules the task at 1:00 on 14th and 28th of every month
-        // the loro crawler is not running at the moment
-        //UpdateLoroResources loroTask = new UpdateLoroResources();
-        //scheduler.schedule("0 1 14,28 * *", loroTask);
 
         if(learnweb.getService().equals(Learnweb.SERVICE.LEARNWEB))
         {
@@ -58,20 +55,5 @@ public class JobScheduler
     {
         if(scheduler.isStarted())
             scheduler.stop();
-    }
-
-    public static void main(String[] args)
-    {
-        Learnweb learnweb = Learnweb.getInstance();
-        JobScheduler job = new JobScheduler(learnweb);
-        job.startAllJobs();
-        try
-        {
-            Thread.sleep(2L * 60L * 1000L);
-        }
-        catch(InterruptedException e)
-        {
-        }
-        job.stopAllJobs();
     }
 }

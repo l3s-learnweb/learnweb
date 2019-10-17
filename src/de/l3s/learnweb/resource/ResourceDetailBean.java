@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;

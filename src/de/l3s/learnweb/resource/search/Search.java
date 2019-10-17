@@ -65,7 +65,6 @@ public class Search implements Serializable
     private boolean stopped;
     private transient SearchLogManager searchLogger;
     private int searchId;
-    private boolean logHTML;
     private User user;
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
@@ -76,9 +75,6 @@ public class Search implements Serializable
         this.userId = (null == user) ? -1 : user.getId();
         this.user = user;
         this.solrSearch = new SolrSearch(query, user);
-
-        String logHTMLPreference = (null == user) ? null : user.getPreference("SEARCH_LOG_HTML");
-        this.logHTML = Boolean.parseBoolean(logHTMLPreference);
 
         if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
         {
@@ -621,7 +617,7 @@ public class Search implements Serializable
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
         if(searchId > 0)
-            getSearchLogger().logResources(searchId, resources, configMode.equals(MODE.text) && logHTML, pageId);
+            getSearchLogger().logResources(searchId, resources, pageId);
     }
 
     public void logResourceClicked(int rank, User user)

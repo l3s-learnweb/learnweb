@@ -1262,7 +1262,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
         if(searchLogId > 0)
-            getSearchLogger().logResources(searchLogId, resources, false, pageId);
+            getSearchLogger().logResources(searchLogId, resources, pageId);
     }
 
     private SearchLogManager getSearchLogger() // TODO remove just use getLearnweb().getSearchLogManager() which is already cached

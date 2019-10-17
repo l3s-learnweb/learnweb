@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.learnweb.resource.archive;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,12 +11,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import de.l3s.learnweb.Learnweb;
+
 public class TimelineManager
 {
     //private final static Logger log = Logger.getLogger(TimelineManager.class);
     private final Learnweb learnweb;
 
-    protected TimelineManager(Learnweb learnweb)
+    public TimelineManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
     }
