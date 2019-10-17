@@ -126,12 +126,10 @@
             </h:form>
         </p:dialog>
 
-        <p:dialog header="#{msg.otherGroups}" widgetVar="findGroupDialog"
-                  modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-
+        <p:dialog header="#{msg.otherGroups}" styleClass="modal-dialog-other-groups" widgetVar="findGroupDialog" modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
             <h:form id="other_groups">
                 <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-                    <p:dataTable tableStyleClass="table-responsive" rows="10" paginator="true" lazy="false" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" paginatorPosition="bottom" var="group"
+                    <p:dataTable tableStyleClass="table-responsive" lazy="false" var="group"
                                  value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
 
                         <p:ajax event="filter"/>

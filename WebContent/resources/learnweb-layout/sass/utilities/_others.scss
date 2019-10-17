@@ -70,6 +70,16 @@ section:target .highlight {
   }
 }
 
+.modal-dialog-other-groups {
+  overflow: hidden !important;
+
+  .ui-dialog-content {
+    overflow-y: auto;
+    max-height: 90vh;
+    max-width: 90vmax;
+  }
+}
+
 iframe,
 embed,
 object,
