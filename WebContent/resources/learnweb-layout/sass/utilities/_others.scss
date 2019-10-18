@@ -37,6 +37,21 @@
   }
 }
 
+.text-truncate-multiline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // if this feature is supported, it would show two lines, if not, just single line
+  //noinspection Stylelint
+  @supports (display: -webkit-box) {
+    white-space: initial;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
 .overflow-auto {
   overflow: auto;
 }

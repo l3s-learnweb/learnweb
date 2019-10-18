@@ -6,19 +6,10 @@
 
     <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-    <div id="gallery">
-        <ui:repeat var="res" value="#{resources}">
-            <div class="search-item-image resource d-inline-block hover-border">
-                <a href="#{res.thumbnail4.url}" data-fancybox="search-gallery" data-type="image" data-captionId="#product#{res.rank}">
-                    <img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
-                </a>
-                <div class="product-form" id="product#{res.rank}">
-                    <ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
-                        <ui:param name="res" value="#{res}"/>
-                    </ui:decorate>
-                </div>
-            </div>
-        </ui:repeat>
-    </div>
+    <ui:repeat var="res" value="#{resources}">
+        <a id="resource_#{res.rank}" href="#{res.url}" class="search-item search-item-image search-item-lightbox d-inline-block">
+            <img src="#{res.thumbnail2b.url}" alt="#{res.title}"/>
+        </a>
+    </ui:repeat>
 
 </ui:composition>

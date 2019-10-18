@@ -4,86 +4,72 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
+    <!--@elvariable id="resources" type="java.util.LinkedList<de.l3s.learnweb.resource.ResourceDecorator>"-->
 
-<div class="d-flex flex-column bg-white pt-2">
     <ui:repeat value="#{resources}" var="res">
-        <h:panelGroup layout="block" styleClass="m-2 font-weight-bold border-bottom" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
-            <h:outputText value="#{msg.page} "/>
-            <h:outputText value="#{(res.rank+9) / 10}">
-                <f:convertNumber maxFractionDigits="0"/>
-            </h:outputText>
+        <h:panelGroup layout="block" styleClass="search-page-sep m-3" rendered="#{res.rank gt 1 and res.rank % 10 eq 1}">
+            <h:outputFormat value="#{msg.page_number}" styleClass="text-muted font-weight-bold">
+                <f:param value="#{(res.rank + 9) / 10}"/>
+            </h:outputFormat>
         </h:panelGroup>
 
-        <div class="search-item-web mt-sm-2 mt-1 d-flex" id="resource_#{res.rank}">
-            <div class="text-center">
-                <div class="d-flex flex-column mr-md-2 mr-1 mt-1">
-                    <div class="d-flex">
-                        <h:form>
-                            <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
-                                           update=":resource_form" process="@this"
-                                           oncomplete="PF('resource_dialog').show();"
-                                           styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary">
+        <div class="search-item search-item-web my-2 d-flex" id="resource_#{res.rank}">
+            <h:form styleClass="item-controls d-flex flex-column mr-2 mt-2 text-center">
+                <ui:fragment>
+                    <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
+                                   update=":resource_form" process="@this" oncomplete="PF('resource_dialog').show();"
+                                   styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary"/>
+                    <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip"/>
+                </ui:fragment>
 
-                            </p:commandLink>
-                            <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip" />
-                        </h:form>
-                    </div>
-                    <ui:fragment rendered="${res.archived}">
-                        <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
-                            <h:outputText styleClass="fa fa-floppy-o mb-1" value="" />
-                        </h:outputLink>
-                        <p:tooltip for="archive" position="right" hideEffect="clip">
-                            #{msg['Archive.captured_between']}
-                            <h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                            #{msg['Archive.captured_between_and']}
-                            <h:outputText value="#{res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText>
-                        </p:tooltip>
-                    </ui:fragment>
+                <ui:fragment rendered="${res.archived}">
+                    <h:outputLink id="archive" value="#{res.firstArchivedObject.archiveUrl}">
+                        <h:outputText styleClass="fa fa-floppy-o mb-1" value=""/>
+                    </h:outputLink>
+                    <p:tooltip for="archive" position="right" hideEffect="clip">
+                        <h:outputFormat value="#{msg['Archive.captured_between']}">
+                            <f:param value="${res.firstArchivedObject.timestamp}"/>
+                            <f:param value="${res.lastArchivedObject.timestamp}"/>
+                        </h:outputFormat>
+                    </p:tooltip>
+                </ui:fragment>
 
-                    <ui:fragment rendered="#{not empty res.group}">
-                        <h:outputLink id="group" value="group/overview.jsf">
-                            <h:outputText styleClass="fa fa-users mb-1" value="" />
-                            <f:param name="group_id" value="#{res.group.id}"/>
-                        </h:outputLink>
-                        <p:tooltip for="group" value="#{msg.group}: #{res.group.title}" position="right" hideEffect="clip" />
-                    </ui:fragment>
+                <ui:fragment rendered="#{not empty res.group}">
+                    <h:outputLink id="group" value="group/overview.jsf">
+                        <h:outputText styleClass="fa fa-users mb-1" value=""/>
+                        <f:param name="group_id" value="#{res.group.id}"/>
+                    </h:outputLink>
+                    <p:tooltip for="group" value="#{msg.group}: #{res.group.title}" position="right" hideEffect="clip"/>
+                </ui:fragment>
 
-                    <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
-                        <p:outputLabel id="collector" class="fa fa-user-plus mb-1"/>
-                        <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip" />
-                    </ui:fragment>
+                <ui:fragment rendered="#{not empty res.getMetadataValue('collector')}">
+                    <p:outputLabel id="collector" class="fa fa-user-plus mb-1"/>
+                    <p:tooltip for="collector" value="#{msg.collector}: #{res.getMetadataValue('collector')}" position="right" hideEffect="clip"/>
+                </ui:fragment>
 
-                    <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
-                        <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
-                        <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip" />
-                    </ui:fragment>
-                </div>
-            </div>
+                <ui:fragment rendered="#{empty res.getMetadataValue('collector') and not empty res.user.fullName}">
+                    <p:outputLabel id="collector-fullname" class="fa fa-user-plus mb-1"/>
+                    <p:tooltip for="collector-fullname" value="#{msg.collector}: #{res.resource.user.fullName}" position="right" hideEffect="clip"/>
+                </ui:fragment>
+            </h:form>
 
-            <div class="text-truncate resource">
-                <h:outputLink styleClass="resource-web-link h4" target="_blank" value="#{res.urlProxied}">
-                    <span class="text-truncate">
-                        <h:outputText value="#{res.title}" escape="false"/>
-                    </span>
-                    <br/>
-                    <div class="text-truncate d-inline-block mw-100 small">
-                        <cite>#{res.url}</cite>
-                    </div>
+            <div class="item-description">
+                <h:outputLink styleClass="res-link d-block text-decoration-none" target="_blank" value="#{res.urlProxied}">
+                    <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 d-block mb-0 text-truncate"/>
+                    <h:outputText value="#{res.url}" escape="false" styleClass="item-origin d-block text-truncate"/>
                 </h:outputLink>
 
-                <div class="white-space-normal">
-                    <div class="truncate-two-lines w-100 mt-n1">
-                        <h:outputText value="#{res.snippet}" escape="false"></h:outputText>
-                    </div>
+                <div class="text-truncate-multiline">
+                    <h:outputText value="#{res.snippet}" escape="false"/>
                 </div>
 
-                <div class="text-truncate mt-1">
-                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}" escape="true"><span style="font-family:Verdana, Arial, sans-serif;">&#187;</span> Stored in #{msg['application.name']} group : #{res.group.title}</h:outputLink>
+                <div class="text-truncate">
+                    <h:outputLink rendered="#{res.id != -1}" value="#{res.learnwebUrl}">
+                        <i class="fa fa-angle-double-right" aria-hidden="true"></i> Stored in #{msg['application.name']} group : #{res.group.title}
+                    </h:outputLink>
                 </div>
             </div>
         </div>
     </ui:repeat>
-</div>
 
 </ui:composition>

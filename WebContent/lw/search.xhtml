@@ -31,14 +31,14 @@
 <ui:define name="center_layout">
     <h:form class="d-none">
         <p:remoteCommand name="ajaxLoadNextPage" actionListener="${searchBean.loadNextPage()}" update=":searchResultsNext" immediate="true" global="false"
-                         onstart="console.log('loadNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
-
-        <p:remoteCommand name="logResourceOpened" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
+                         onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>
+        <p:remoteCommand name="logResourceOpenedCommand" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
+        <p:remoteCommand name="getResourceDetailsCommand" actionListener="${searchBean.getResourceDetailsCommand}" immediate="true" global="false"
+                         update=":search_item_meta" oncomplete="updateSlideDetails(xhr, status, args);"/>
     </h:form>
 
-    <div class="section-search">
-        <h:panelGroup id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
-            <ul class="res-filters bg-gray200">
+    <h:panelGroup id="search_header_panel" layout="block" rendered="#{searchBean.searchFilters == null}" styleClass="bg-gray200">
+        <ul class="res-filters">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
                 <h:link outcome="search">
                     <span class="filter-title">
@@ -66,47 +66,55 @@
                     <f:param name="query" value="#{searchBean.query}"/>
                 </h:link>
             </li>
-            </ul>
-            <p:outputPanel styleClass="source-info text-center bg-gray400 pt-2" layout="block" rendered="#{searchBean.searchService != null}">
+        </ul>
+
+        <h:form id="search_source_carousel" styleClass="bg-gray400 p-2">
+            <p:outputPanel styleClass="text-center mb-2" layout="block" rendered="#{searchBean.searchService != null}">
                 <h:outputFormat value="#{searchBean.getResourcesGroupedBySource().size() == 1   ? msg.search_groups_header_empty  : msg.search_groups_header}" escape="false">
                     <f:param value="#{searchBean.totalFromCurrentService}"/>
-                    <f:param value="#{searchBean.searchService.name()}"/>
                     <f:param value="#{searchBean.searchService}"/>
                 </h:outputFormat>
             </p:outputPanel>
-            <h:form>
-                <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true" breakpoint="-1" styleClass="ui-carousel-light">
-                        <h:link outcome="search" styleClass="source_#{gr.groupAlias} text-decoration-none">
-                            <f:param name="service" value="#{gr.groupAlias}"/>
-                            <f:param name="action" value="#{searchBean.searchMode}"/>
-                            <f:param name="query" value="#{searchBean.query}"/>
-                            <div class="d-flex border-bottom">
-                                <div class="source-icon-container source_#{gr.groupAlias}"></div>
-                                <div class="group-menu-title font-weight-bold">
-                                    <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
-                                        <f:param value="#{gr.groupName}"/>
-                                        <f:param value="#{gr.totalResources}"/>
-                                    </h:outputFormat>
-                                </div>
-                            </div>
-                            <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" style="max-width: 15em;" rendered="#{searchBean.searchMode == 'text'}">
-                                <p:repeat value="#{gr.resources}" var="res">
-                                <span class="text-truncate d-block w-100 p-1">
-                                <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
-                                <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
-                                <br/>
-                                <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
-                                </span>
-                                </p:repeat>
-                            </h:panelGroup>
-                            <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
-                                <div class="carousel-image-container col-6" style="background-image:url('#{gr.resources[0].thumbnail2.url}');"></div>
-                                <div class="carousel-image-container col-6" style="background-image:url('#{gr.resources[1].thumbnail2.url}');"></div>
-                            </h:panelGroup>
-                        </h:link>
-                </p:carousel>
-            </h:form>
-        </h:panelGroup>
+
+            <p:carousel value="#{searchBean.getResourcesGroupedBySource()}" var="gr" widgetVar="carousel" responsive="true" circular="true"
+                        breakpoint="-1" styleClass="ui-carousel-light search-source-carousel" itemStyleClass="p-0 mx-2">
+                <h:link outcome="search" styleClass="text-decoration-none">
+                    <f:param name="service" value="#{gr.groupAlias}"/>
+                    <f:param name="action" value="#{searchBean.searchMode}"/>
+                    <f:param name="query" value="#{searchBean.query}"/>
+
+                    <div class="d-flex border-bottom">
+                        <div class="search-source-icon source-#{gr.groupAlias}"></div>
+                        <div class="group-menu-title font-weight-bold">
+                            <h:outputFormat value="#{msg.search_groups_title}" style="font-size: 0.8rem;" escape="false">
+                                <f:param value="#{gr.groupName}"/>
+                                <f:param value="#{gr.totalResources}"/>
+                            </h:outputFormat>
+                        </div>
+                    </div>
+
+                    <h:panelGroup layout="block" styleClass="d-flex flex-wrap align-items-start flex-column" style="max-width: 15em;" rendered="#{searchBean.searchMode == 'text'}">
+                        <p:repeat value="#{gr.resources}" var="res">
+                            <span class="text-truncate d-block w-100 p-1">
+                            <h:outputText value="#{res.title}" style=" color: #4b6cb7;" styleClass="mr-1 w-50 small" escape="false"/>
+                            <h:outputText value="#{res.url}" style="color: #006621;" styleClass="text-truncate overflow-hidden w-50 small" escape="false"/>
+                            <br/>
+                            <h:outputText value="#{res.snippet}" styleClass="text-truncate d-block text-dark small" escape="false"/>
+                            </span>
+                        </p:repeat>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="row mx-0" rendered="#{searchBean.searchMode == 'image' || searchBean.searchMode == 'video'}" layout="block">
+                        <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[0].thumbnail2.url}');"></div>
+                        <div class="search-carousel-image col-6" style="background-image:url('#{gr.resources[1].thumbnail2.url}');"></div>
+                    </h:panelGroup>
+                </h:link>
+            </p:carousel>
+        </h:form>
+    </h:panelGroup>
+
+    <div class="bg-white">
+
         <h:form id="resourcesFilters" styleClass="bg-gray200">
         <ul class="res-filters">
             <p:repeat value="#{searchBean.availableFilters}" var="filter">
@@ -153,7 +161,7 @@
             const userId = '#{userBean.user.id}';
         </script>
 
-        <div id="searchResults" class="search-results p-3 p-sm-2 search-#{searchBean.view}">
+        <div id="searchResults" class="p-2 search-#{searchBean.view}">
             <ui:decorate template="/WEB-INF/templates/blocks/search/resources.xhtml">
                 <ui:param name="resources" value="#{searchBean.search.resources}"/>
                 <ui:param name="view" value="#{searchBean.view}"/>
@@ -167,11 +175,17 @@
             </ui:decorate>
         </h:panelGroup>
 
-        <div class="text-center font-weight-bold mt-3">
+        <div class="text-center font-weight-bold pb-2">
             <span id="search_loading_more_results" class="collapse">#{msg.loading_more_results} <i aria-hidden="true" class="fa fa-fw fa-cog fa-spin fa-fw"></i></span>
             <span id="search_no_more_results" class="collapse">#{msg.no_more_results}</span>
             <span id="search_nothing_found" class="collapse">#{msg.nothingFound}</span>
         </div>
+
+        <h:panelGroup id="search_item_meta" layout="block" styleClass="d-none">
+            <ui:decorate template="/WEB-INF/templates/blocks/search/resource_metadata.xhtml">
+                <ui:param name="res" value="#{searchBean.selectedResource}"/>
+            </ui:decorate>
+        </h:panelGroup>
 
         <p:dialog header="#{msg.options}" widgetVar="resource_dialog" responsive="true" draggable="true" resizable="false" id="resource_dialog" modal="true">
             <h:form id="resource_form" rendered="#{userBean.loggedIn}">
@@ -197,41 +211,6 @@
                         </p:tree>
                         <p:message for="@previous"/>
                     </div>
-
-					<ui:remove>
-						<!-- this feature isn't used at the moment -->
-
-	                    <ui:fragment rendered="${not empty searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}">
-	                        <div class="form-group">
-	                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
-	                            <h:panelGroup class="wayback_span"><a
-	                                    href="https://web.archive.org/web/#{searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.resource.url}"
-	                                    target="_blank">#{searchBean.formatDate(searchBean.selectedResource.resource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']}
-	                                <a href="https://web.archive.org/web/#{searchBean.selectedResource.resource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.resource.url}"
-	                                   target="_blank">#{searchBean.formatDate(searchBean.selectedResource.resource.getMetadataValue('last_timestamp'))}</a>
-	                            </h:panelGroup>
-	                        </div>
-	                    </ui:fragment>
-
-	                    <ui:fragment rendered="${searchBean.selectedResource.resource.archived and empty searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}">
-	                        <div class="form-group">
-	                            <h:outputText value="#{msg['Archive.captured_between']}:"/>
-	                            <h:panelGroup rendered="${searchBean.selectedResource.resource.archived and empty searchBean.selectedResource.resource.getMetadataValue('first_timestamp')}">
-	                                <a href="${searchBean.selectedResource.resource.firstArchivedObject.archiveUrl}" target="_blank">
-	                                    <h:outputText value="${searchBean.selectedResource.resource.firstArchivedObject.timestamp}">
-	                                        <f:convertDateTime type="date" dateStyle="short"/>
-	                                    </h:outputText>
-	                                </a>
-	                                #{msg['Archive.captured_between_and']}
-	                                <a href="${searchBean.selectedResource.resource.lastArchivedObject.archiveUrl}" target="_blank">
-	                                    <h:outputText value="${searchBean.selectedResource.resource.lastArchivedObject.timestamp}">
-	                                        <f:convertDateTime type="date" dateStyle="short"/>
-	                                    </h:outputText>
-	                                </a>
-	                            </h:panelGroup>
-	                        </div>
-	                    </ui:fragment>
-					</ui:remove>
 
                     <div class="text-right mt-3">
                         <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('resource_dialog').hide()"/>

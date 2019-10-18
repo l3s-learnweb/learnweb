@@ -53,9 +53,9 @@
 @import 'components/landing';
 @import 'components/og-grid';
 @import 'components/resources';
+@import 'components/search';
 
 // The old styles used on specific pages, should be refactored and moved into components later
 @import 'sections/entity-relationship';
 @import 'sections/resource-transcript';
-@import 'sections/search';
 @import 'sections/ted-transcript';

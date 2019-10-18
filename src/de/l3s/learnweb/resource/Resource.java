@@ -1149,17 +1149,15 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         {
             if(getType().equals(ResourceType.image))
             {
-                // first the small thumbnail is shown. The large image is loaded async through JS
                 Thumbnail large = getLargestThumbnail();
-                embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
+                embeddedCode = "<img src=\"" + large.getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\"/>";
             }
             else if(getType().equals(ResourceType.website))
             {
                 if(thumbnail4 != null)
                 {
-                    // first the small thumbnail is shown. The large image is loaded async through JS
                     Thumbnail large = thumbnail4;
-                    embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
+                    embeddedCode = "<img src=\"" + large.getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\"/>";
                 }
                 else
                     embeddedCode = "<iframe src=\"" + getUrl() + "\" scrolling=\"no\" />";

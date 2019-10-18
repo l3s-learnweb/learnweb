@@ -12,13 +12,16 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
@@ -251,6 +254,19 @@ public class SearchBean extends ApplicationBean implements Serializable
         {
             addErrorMessage(e);
         }
+    }
+
+    public void getResourceDetailsCommand()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int rank = Integer.parseInt(params.get("resourceRank"));
+
+        ResourceDecorator resource = search.getResourceByRank(rank);
+        setSelectedResource(resource);
+
+        PrimeFaces.current().ajax().update();
+        PrimeFaces.current().ajax().addCallbackParam("resourceRank", resource.getRank());
+        PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
     }
 
     // -------------------------------------------------------------------------

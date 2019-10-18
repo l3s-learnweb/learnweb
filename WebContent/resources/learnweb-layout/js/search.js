@@ -1,44 +1,89 @@
 /* global view */
-/* global logResourceOpened, ajaxLoadNextPage */
+/* global ajaxLoadNextPage, logResourceOpenedCommand, getResourceDetailsCommand */
 
 function prepareResources() {
   if (view !== 'list') {
-    $('#gallery').justifiedGallery({
+    $('.search-float').justifiedGallery({
       rowHeight: '160',
       maxRowHeight: '180',
-      margins: 10,
-      border: 0,
+      margins: 8,
+      border: 8,
       captionsShowAlways: true,
       captionsAnimation: true,
     });
 
     $().fancybox({
-      selector: '[data-fancybox="search-gallery"]',
+      selector: '.search-item-lightbox',
       baseClass: 'fancybox-search-layout',
+      type: 'inline',
+      smallBtn: false,
       infobar: false,
       toolbar: true,
-      touch: {
-        vertical: false,
-      },
       buttons: ['close'],
       animationEffect: 'fade',
       transitionEffect: 'fade',
       preventCaptionOverlap: false,
       idleTime: false,
       gutter: 0,
-      caption(instance, current) {
-        return $(current.opts.captionid).html();
-      },
       onInit(instance) {
         instance.$refs.inner.wrap('<div class="fancybox-outer"></div>');
+
+        instance.loadSlide = function (slide) {
+          if (slide.isLoading || slide.isLoaded) {
+            return;
+          }
+
+          instance.showLoading(slide);
+
+          slide.isLoading = true;
+          if (instance.trigger('beforeLoad', slide) === false) {
+            slide.isLoading = false;
+            return false;
+          }
+
+          slide.$slide.off('refresh').trigger('onReset').addClass(slide.opts.slideClass);
+
+          const resourceRank = parseInt(slide.opts.$orig[0].id.replace('resource_', ''), 10);
+          getResourceDetailsCommand([
+            { name: 'slideIndex', value: slide.index },
+            { name: 'resourceRank', value: resourceRank },
+          ]);
+
+          window.updateSlideDetails = function (xhr, status, { resourceRank: retRank, embeddedCode }) {
+            if (retRank !== resourceRank) return;
+
+            slide.isComplete = true;
+
+            slide.opts.caption = $('#search_item_meta').html();
+            // Set caption
+            if (slide.opts.caption && slide.opts.caption.length) {
+              instance.$caption = instance.$refs.caption;
+              instance.$caption.children().eq(0).html(slide.opts.caption);
+            }
+
+            instance.setContent(slide, embeddedCode);
+            instance.showControls();
+
+            slide.$slide.one('onReset', function () {
+              // Pause all html5 video/audio
+              $(this).find('video,audio').trigger('pause');
+            });
+          };
+
+          return true;
+        };
       },
     });
   }
 }
 
+function updateSlideDetails() {
+  // just a placeholder to avoid errors
+}
+
 function prepareNewResources() {
   if (view !== 'list') {
-    $('#gallery').justifiedGallery('norewind');
+    $('.search-float').justifiedGallery('norewind');
   }
 }
 
@@ -60,9 +105,9 @@ function loadNextPage() {
 }
 
 // noinspection JSUnusedGlobalSymbols
-function displayNextPage(xhr, status, args) {
-  const totalResults = $('#searchResults > div > .resource');
-  const newResults = $('#searchResultsNext > div > .resource');
+function displayNextPage(xhr, status) {
+  const totalResults = $('#searchResults .search-item');
+  const newResults = $('#searchResultsNext .search-item');
   $('#search_loading_more_results').hide();
 
   if (newResults.length === 0 || status !== 'success') {
@@ -79,7 +124,7 @@ function displayNextPage(xhr, status, args) {
   }
 
   // copy from #searchResultsNext to #searchResults
-  $('#searchResultsNext > div > *').appendTo('#searchResults > div');
+  $('#searchResultsNext > *').appendTo('#searchResults');
 
   loading = false;
   prepareNewResources();
@@ -95,8 +140,8 @@ $(() => {
   });
 
   // To keep track of resource click in the web search or resources_list view
-  $(document).on('mouseup', '.resource a.resource-web-link', (e) => {
+  $(document).on('mouseup', '.search-item-web a.res-link', (e) => {
     const tempResourceId = $(e.currentTarget).closest('.resource').attr('id').substring(9);
-    logResourceOpened([{ name: 'resource_id', value: tempResourceId }]);
+    logResourceOpenedCommand([{ name: 'resource_id', value: tempResourceId }]);
   });
 });

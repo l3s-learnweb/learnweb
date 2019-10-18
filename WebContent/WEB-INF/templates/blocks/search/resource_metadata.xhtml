@@ -5,9 +5,8 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <!--@elvariable id="res" type="de.l3s.learnweb.resource.ResourceDecorator"-->
-    <!--@elvariable id="view" type="java.lang.String"-->
 
-    <div class="metadata text-left">
+    <h:panelGroup layout="block" styleClass="metadata text-left" rendered="#{res ne null}">
         <div class="form-group">
             <h:outputText value="#{msg.title}: " styleClass="font-weight-bold"/>
             <h:outputText value="${res.title}" escape="false"/>
@@ -67,8 +66,8 @@
 
             <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}" title="#{msg.addToMyResources}"
                            update=":resource_form" process="@this" onstart="$.fancybox.close();" oncomplete="PF('resource_dialog').show();">
-                 <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
+                <i class="fa fa-fw fa-plus text-success" aria-hidden="true"></i> #{msg.save}
             </p:commandLink>
         </h:form>
-    </div>
+    </h:panelGroup>
 </ui:composition>
