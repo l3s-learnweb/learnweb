@@ -75,9 +75,9 @@
 				</p:panel>
 			</ui:fragment>
 
-			<p:dialog header="#{msg['Submission.edit_submission']}" onShow="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false" id="form">
-					<p:growl id="msgs" showDetail="true"/>
+					<p:growl showDetail="true"/>
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
 						<p:inputText value="#{submissionBean.selectedSubmission.title}" required="true"/>
@@ -101,18 +101,16 @@
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-                        <p:calendar value="#{submissionBean.selectedSubmission.openDatetime}" id="edit-dialog-open-date" required="true" update="@this edit-dialog-close-date" pattern="MM-dd-yy" mask="true" locale="#{userBean.locale}" navigator="true" showOn="button">
-                            <p:ajax event="dateSelect" update="edit-dialog-close-date msgs" oncomplete="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" onerror="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" global="false"/>
-							<p:ajax event="change" update="edit-dialog-close-date msgs" oncomplete="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" onerror="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" global="false"/>
+                        <p:calendar value="#{submissionBean.selectedSubmission.openDatetime}" id="editDialogOpenDate" binding="#{startDateComponent}" required="true" locale="#{userBean.locale}" navigator="true" showOn="button">
                         </p:calendar>
 						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-                        <p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}" required="true" mindate="#{submissionBean.selectedSubmission.openDatetime}" pattern="MM-dd-yy" mask="true" update="@this" id="edit-dialog-close-date"  locale="#{userBean.locale}"  navigator="true" showOn="button">
-                            <p:ajax event="dateSelect" update="msgs"  oncomplete="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" global="false"/>
-							<p:ajax event="change" update="msgs" oncomplete="checkCloseDate('edit-dialog-open-date','edit-dialog-close-date', 'sumbit-button-eddit-dialog');" global="false"/>
+                        <p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}" id="editDialogCloseDate" required="true"  locale="#{userBean.locale}"  navigator="true" showOn="button">
+							<f:validator validatorId="dateRangeValidator" />
+							<f:attribute name="startDate" value="#{startDateComponent}" />
                         </p:calendar>
 						<p:message for="@previous"/>
 					</div>
@@ -145,19 +143,20 @@
 											 oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
 						<div>
-							<p:commandButton value="#{msg.save}" id="edit-dialog-submit-button" update=":submissions" widgetVar="sumbit-button-eddit-dialog" actionListener="#{submissionBean.updateSubmissionDetails()}"
-											  oncomplete="addSubmissionHeaderClickHandler(); PF('submission_edit_dialog').hide();"/>
+							<p:commandButton value="#{msg.save}" id="edit-dialog-submit-button" update=":submissions @form" actionListener="#{submissionBean.updateSubmissionDetails()}"
+											  oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
 					</div>
 				</h:form>
 			</p:dialog>
 
-			<p:dialog header="#{msg['Submission.create_new_submission']}" onShow="checkCloseDate('open_date','close_date', 'create-dialog-sumbit-button-widget');" id="create_submission_dialog1" draggable="false" responsive="true" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
+			<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" draggable="false" responsive="true" resizable="false" modal="true" appendTo="@(body)" widgetVar="create_submission_dialog">
 				<h:form prependId="false">
+					<p:growl showDetail="true"/>
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.title}:"/>
 						<p:inputText id="title_input" required="true" value="#{submissionBean.newSubmission.title}"/>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
@@ -166,37 +165,35 @@
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 							<f:ajax listener="#{submissionBean.onCreateSurveyChangeCourse}" render="create_dialog_survey_menu" onevent="courseChange"/>
 						</p:selectOneMenu>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg.description}:"/>
 						<p:inputTextarea  id="description" autoResize="1" rows="2" maxHeight="20" value="#{submissionBean.newSubmission.description}"/>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-                        <p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}"  required="true" update="@this close_date" pattern="MM-dd-yy" mask="true" locale="#{userBean.locale}" navigator="true" showOn="button">
-							<p:ajax event="dateSelect" update="close_date msgs" oncomplete="checkCloseDate('open_date','close_date', 'create-dialog-sumbit-button-widget');" global="false"/>
-							<p:ajax event="change" update="close_date msgs" oncomplete="checkCloseDate('open_date','close_date', 'create-dialog-sumbit-button-widget');" global="false"/>
+                        <p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}"  required="true" binding="#{createStartDateComponent}" locale="#{userBean.locale}" navigator="true" showOn="button">
                         </p:calendar>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-                        <p:calendar id="close_date" required="true"  value="#{submissionBean.newSubmission.closeDatetime}" update="@this" pattern="MM-dd-yy" mask="true" locale="#{userBean.locale}" navigator="true" showOn="button">
-							<p:ajax event="dateSelect" update="msgs" oncomplete="checkCloseDate('open_date','close_date', 'create-dialog-sumbit-button-widget');" global="false"/>
-							<p:ajax event="change" update="msgs" oncomplete="checkCloseDate('open_date','close_date', 'create-dialog-sumbit-button-widget');" global="false"/>
+                        <p:calendar id="close_date" required="true" value="#{submissionBean.newSubmission.closeDatetime}"   locale="#{userBean.locale}" navigator="true" showOn="button">
+							<f:validator validatorId="dateRangeValidator" />
+							<f:attribute name="startDate" value="#{createStartDateComponent}" />
                         </p:calendar>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
 						<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
 						<p:inputText id="max_resources" value="#{submissionBean.newSubmission.noOfResources}" required="true"/>
-						<p:message for="@previous" display="icon"/>
+						<p:message for="@previous"/>
 					</div>
 
 					<div class="form-group">
@@ -215,8 +212,7 @@
 					</div>
 
 					<div class="text-right mt-3">
-						<p:commandButton value="#{msg.save}" id="create-dialog-sumbit-button" widgetVar="create-dialog-sumbit-button-widget" update=":submissions :create_submission_dialog1" actionListener="#{submissionBean.createNewSubmission()}"
-										 oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
+						<p:commandButton value="#{msg.save}" id="create-dialog-sumbit-button" update=":submissions @form" actionListener="#{submissionBean.createNewSubmission()}"/>
 					</div>
 				</h:form>
 			</p:dialog>
@@ -282,17 +278,6 @@
 				}
 			}
 
-			function handleDialogSubmit(xhr, status, args, dialogWidgetVar) {
-				if (args.validationFailed) {
-					PF(dialogWidgetVar).show();
-					var surveySelectType = dialogWidgetVar === 'create_submission_dialog' ? 'create' : 'edit';
-					toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), surveySelectType);
-				} else {
-					PF(dialogWidgetVar).hide();
-					addSubmissionHeaderClickHandler();
-				}
-			}
-
 			function courseChange(data)
 			{
 				var status = data.status;
@@ -315,17 +300,6 @@
 			function  test() {
 				console.log(arguments);
 			}
-			function checkCloseDate(startDateid, endDateid, widgetVarId)
-			{
-				console.log(startDateid.toString());
-				let startDate = new Date (document.getElementById(startDateid+'_input').value);
-				let endDate  = new Date (document.getElementById(endDateid+'_input').value);
-
-				if(isNaN(startDate) || isNaN(endDate) || (endDate &lt; startDate))
-					PF(widgetVarId).disable();
-				else
-					PF(widgetVarId).enable();
-            }
 
 			function onResourcesUpdated() {
 				createSelectable('submissions');

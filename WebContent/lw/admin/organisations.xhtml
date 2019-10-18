@@ -13,23 +13,12 @@
 
 	<ui:define name="center_layout">
 
-		<p:dialog header="#{msg.add_new_organization}" styleClass="overflow-hidden" widgetVar="createOrgWidget" rendered="#{userBean.admin}">
-			<h:form id="addorganisation">
-				<div class="form-group">
-					<p:outputLabel for="@next" value="#{msg.organization_title}:"/>
-					<p:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>
-					<p:message for="@previous"/>
-				</div>
-				<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform :growl" global="false"/>
-			</h:form>
-		</p:dialog>
-
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" tableStyleClass="table-responsive">
 				<f:facet name="header">#{msg.organizations_all}</f:facet>
 				<f:facet name="header">
 					#{msg.courses}
-					<p:commandButton value="#{msg.create}" type="button" styleClass="float-right" onclick="PF('createOrgWidget').show();" />
+					<p:commandButton value="#{msg.create}" styleClass="float-right create-btn" onclick="PF('createOrgWidget').show();" />
 				</f:facet>
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
 					<h:outputText value="#{organisation.title}"/>
@@ -48,5 +37,17 @@
 				</p:column>
 			</p:dataTable>
 		</h:form>
+
 	</ui:define>
+
+	<p:dialog header="#{msg.add_new_organization}" styleClass="overflow-hidden" widgetVar="createOrgWidget" rendered="#{userBean.admin}">
+		<h:form id="addorganisation">
+			<div class="form-group">
+				<p:outputLabel for="@next" value="#{msg.organization_title}:"/>
+				<p:inputText value="#{adminCoursesBean.newOrganisationTitle}"/>
+				<p:message for="@previous"/>
+			</div>
+			<p:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" type="submit" oncomplete="PF('createOrgWidget').hide();" process="@form" update=":organisationform :growl" global="false"/>
+		</h:form>
+	</p:dialog>
 </ui:composition>

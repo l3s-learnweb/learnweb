@@ -1,0 +1,13 @@
+.create-btn {
+  background-color: $themePrimaryAltColor !important;
+  border: $border-width solid $themePrimaryAltColor !important;
+
+  &:hover, &:focus {
+    background-color: $themePrimaryAltColorDarker !important;
+    border-color: $themePrimaryAltColorDarker !important;
+  }
+
+  &:last-child {
+    margin-right: 0 !important;
+  }
+}

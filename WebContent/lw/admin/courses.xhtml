@@ -13,17 +13,6 @@
 
 <ui:define name="center_layout">
 
-    <p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
-        <h:form id="addcourse">
-            <div class="form-group">
-                <p:outputLabel for="@next" value="#{msg.course_title}:"/>
-                <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
-                <p:message for="@previous"/>
-            </div>
-            <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}"  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();" value="#{msg.add}" update=":growl :courses_form" process="@form" global="false"/>
-        </h:form>
-    </p:dialog>
-
     <h:form id="courses_form">
         <p:blockUI block="courses" widgetVar="coursesOverlay">
             <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
@@ -32,7 +21,7 @@
         <p:dataTable tableStyleClass="table-responsive" id="courses" var="course" value="#{adminCoursesBean.courses}">
             <f:facet name="header">
                 #{msg.courses}
-                <p:commandButton value="#{msg.create}" type="button" styleClass="float-right" onclick="PF('createCourseWidget').show();" />
+                <p:commandButton value="#{msg.create}"  styleClass="float-right create-btn" onclick="PF('createCourseWidget').show();" />
             </f:facet>
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
@@ -77,4 +66,15 @@
     </h:form>
 
 </ui:define>
+
+<p:dialog widgetVar="createCourseWidget" header="#{msg.add_new_course}" styleClass="overflow-hidden">
+    <h:form id="addcourse">
+        <div class="form-group">
+            <p:outputLabel for="@next" value="#{msg.course_title}:"/>
+            <p:inputText value="#{adminCoursesBean.newCourseTitle}" required="true"/>
+            <p:message for="@previous"/>
+        </div>
+        <p:commandButton type="submit" action="${adminCoursesBean.onCreateCourse}"  onstart="PF('coursesOverlay').show()" oncomplete="PF('coursesOverlay').hide(); PF('createCourseWidget').hide();" value="#{msg.add}" update=":growl :courses_form" process="@form" global="false"/>
+    </h:form>
+</p:dialog>
 </ui:composition>
