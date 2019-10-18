@@ -44,6 +44,12 @@
                     </ui:decorate>
                 </p:repeat>
             </p:tab>
+
+            <c:if test="${not empty rightPaneBean.clickedResource.archiveUrls}">
+                <p:tab title="#{msg['Archive.versions']} (#{rightPaneBean.clickedResource.archiveUrls.size()})">
+                    <ui:decorate template="/WEB-INF/templates/blocks/user/archived-view.xhtml"/>
+                </p:tab>
+            </c:if>
         </p:tabView>
     </h:form>
 </ui:fragment>

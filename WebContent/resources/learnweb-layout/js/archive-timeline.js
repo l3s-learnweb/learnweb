@@ -3,45 +3,6 @@
 
 let chart; // handle to access the HighCharts methods
 
-// Show timeline/list of snapshots in resource_view
-function archiveOpenTimeline() {
-  const $archiveListBtn = $('#archive_list_btn');
-  const $archiveTimelineBtn = $('#archive_timeline_btn');
-  const $archiveListView = $('#archive_list_view');
-  const $archiveTimelineView = $('#archive_timeline_view');
-
-  if ($archiveListView.is(':visible')) {
-    $archiveListView.slideToggle('slow');
-    $archiveListBtn.removeClass('ui-state-active');
-  }
-
-  $archiveTimelineView.slideToggle('slow', () => {
-    $archiveTimelineBtn.addClass('ui-state-active');
-    if ($archiveTimelineView.is(':visible')) {
-      const $container = $('#archive_timeline_container');
-      $container.show().width($archiveTimelineView.width());
-      chart.setSize($archiveTimelineView.width(), $container.height());
-      chart.reflow();
-    }
-  });
-}
-
-function archiveOpenList() {
-  const $archiveListBtn = $('#archive_list_btn');
-  const $archiveTimelineBtn = $('#archive_timeline_btn');
-  const $archiveListView = $('#archive_list_view');
-  const $archiveTimelineView = $('#archive_timeline_view');
-
-  if ($archiveTimelineView.is(':visible')) {
-    $archiveTimelineView.slideToggle('slow');
-    $archiveTimelineBtn.removeClass('ui-state-active');
-  }
-
-  $archiveListView.slideToggle('slow', () => {
-    $archiveListBtn.addClass('ui-state-active');
-  });
-}
-
 // Slide transitions between calendar and timeline view
 function returnToTimeline() {
   resizeChart();
@@ -156,7 +117,6 @@ function loadTimeline(dataVar) {
     }],
   });
   $('.highcharts-container').css('overflow', '');
-  $('#archive_timeline_view').hide();
 }
 
 function loadCalendar(calendarData) {

@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
+
+<dl class="row mb-n2">
+	<ui:fragment rendered="${rightPaneBean.clickedResource.storageType == 2 and rightPaneBean.clickedResource.canEditResource(userBean.user)}">
+		<dt class="col-sm-4">#{msg.current_version}:</dt>
+		<dd class="col-sm-8">
+			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
+							 value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
+		</dd>
+	</ui:fragment>
+
+	<h:form id="archive_view_options" styleClass="col-sm-12" prependId="false">
+		<div id="archive_timeline_view" class="my-2">
+			<ui:decorate template="/WEB-INF/templates/blocks/right-pane/archive_timeline_template.xhtml"/>
+		</div>
+		<h:panelGroup id="archive_list_view" layout="block" styleClass="mt-3 d-flex flex-column overflow-auto" style="max-height:20rem;">
+			<p:repeat var="archiveUrl" value="#{rightPaneBean.clickedResource.archiveUrls}">
+				<p:linkButton href="#{archiveUrl.archiveUrl}" value="#{userBean.formatDate(archiveUrl.timestamp)}" target="_blank" styleClass="outline-btn w-100 my-1"/>
+			</p:repeat>
+		</h:panelGroup>
+	</h:form>
+</dl>
+</ui:composition>

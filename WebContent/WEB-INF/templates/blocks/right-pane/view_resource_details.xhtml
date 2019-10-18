@@ -181,43 +181,6 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="${rightPaneBean.clickedResource.storageType == 2 and rightPaneBean.clickedResource.canEditResource(userBean.user)}">
-		<dt class="col-sm-3">#{msg.current_version}:</dt>
-		<dd class="col-sm-9">
-			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
-							 value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
-		</dd>
-	</ui:fragment>
-
-	<h:form id="archive_view_options" styleClass="col-sm-12" prependId="false">
-		<div class="row">
-			<ui:fragment rendered="${not empty rightPaneBean.clickedResource.archiveUrls}">
-				<dt class="col-sm-3">#{msg['Archive.versions']} (<span class="text-danger">#{rightPaneBean.clickedResource.archiveUrls.size()}</span>):</dt>
-				<dd class="col-sm-9">
-					<h:panelGroup layout="block">
-						<p:button id="archive_list_btn" styleClass="rounded-right mr-0" value="#{msg.list_view}" onclick="archiveOpenList();return false;"/>
-						<p:button id="archive_timeline_btn" styleClass="rounded-left" value="#{msg.timeline_view}" onclick="archiveOpenTimeline();return false;"/>
-					</h:panelGroup>
-
-					<h:panelGroup id="archive_list_view" layout="block" styleClass="my-2 collapse" style="max-height:20rem;overflow:auto;">
-						<ul class="list-inline list-unstyled mb-0">
-							<p:repeat var="archiveUrl" value="#{rightPaneBean.clickedResource.archiveUrls}">
-								<li class="list-inline-item mr-0 mb-1" style="width:10rem;">
-									<p:linkButton href="#{archiveUrl.archiveUrl}" value="#{userBean.formatDate(archiveUrl.timestamp)}"
-												  target="_blank" styleClass="outline-btn w-100"/>
-								</li>
-							</p:repeat>
-						</ul>
-					</h:panelGroup>
-
-					<h:panelGroup id="archive_timeline_view" layout="block" styleClass="my-2 collapse">
-						<ui:decorate template="/WEB-INF/templates/blocks/right-pane/archive_timeline_template.xhtml"/>
-					</h:panelGroup>
-				</dd>
-			</ui:fragment>
-		</div>
-	</h:form>
-
 	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.tags or rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.tags}:</dt>
 		<dd class="col-sm-9">
