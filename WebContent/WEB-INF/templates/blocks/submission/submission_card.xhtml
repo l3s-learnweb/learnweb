@@ -49,7 +49,7 @@
 							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
-						<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="moderator-btn my-1 my-md-0"
+						<p:button outcome="submission_moderator" value="#{msg['Submission.view_user_submissions']}" styleClass="moderator-btn m-1 my-md-0"
 								  rendered="#{userBean.moderator}">
 							<f:param name="submission_id" value="#{submission.id}"/>
 						</p:button>
@@ -60,7 +60,7 @@
 							<f:param name="user_id" value="#{submissionBean.userId}"/>
 						</p:button>
 
-						<p:button outcome="../survey/survey" value="Please submit the survey first" styleClass="my-1 my-md-0"
+						<p:button outcome="../survey/survey" value="Please, submit the survey first" styleClass="alt-btn my-1 my-md-0"
 								  rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submissionBean.submissionOverviewReadOnly}">
 							<f:param name="resource_id" value="#{submission.surveyResourceId}"/>
 						</p:button>

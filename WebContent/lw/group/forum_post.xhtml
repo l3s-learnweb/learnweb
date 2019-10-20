@@ -30,7 +30,7 @@
             </f:facet>
             <f:facet name="actions">
                 <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" update=":reply_post_dialog"
-                                 rendered="#{forumPostBean.group.isMember(userBean.user)}" global="false"
+                                 rendered="#{forumPostBean.group.isMember(userBean.user)}" actionListener="#{forumPostBean.newPost}" global="false"
                                  styleClass="alt-btn ml-2" oncomplete="PF('reply_post_dialog').show();">
                 </p:commandButton>
 

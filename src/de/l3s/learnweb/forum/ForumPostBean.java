@@ -152,7 +152,12 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     {
         String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
 
-        newPost.setText("<blockquote>" + "<strong>" + username + "</strong><p>" + post.getText()+"</p></blockquote>");
+        newPost.setText("<blockquote><strong>" + username + ":&nbsp;</strong><p>" + post.getText()+"</p></blockquote><br/>");
+    }
+
+    public void newPost() throws SQLException
+    {
+        newPost.setText("");
     }
 
     public int getTopicId()
