@@ -1,7 +1,6 @@
 package de.l3s.learnweb.resource.archive;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,9 +28,7 @@ import com.sun.jersey.api.client.WebResource;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
 
 public class ArchiveUrlManager
 {
@@ -252,37 +249,6 @@ public class ArchiveUrlManager
             }
         }
         return response;
-    }
-
-    class ProcessWebsiteWorker implements Callable<String>
-    {
-        Resource archiveResource;
-        ResourcePreviewMaker rpm;
-        PrintWriter writer;
-
-        public ProcessWebsiteWorker(Resource archiveResource, ResourcePreviewMaker rpm, PrintWriter writer)
-        {
-            this.archiveResource = archiveResource;
-            this.rpm = rpm;
-            this.writer = writer;
-        }
-
-        @Override
-        public String call() throws Exception
-        {
-            try
-            {
-                rpm.processWebsite(archiveResource);
-                archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
-            }
-            catch(Exception e)
-            {
-                log.error(e);
-                writer.println("prometheus url: " + archiveResource.getUrl());
-                archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
-            }
-            return "website thumbnails created";
-        }
     }
 
     public void onDestroy()

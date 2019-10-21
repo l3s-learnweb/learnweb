@@ -28,13 +28,13 @@ public class SearchQuery implements Serializable
     private final static Logger log = Logger.getLogger(SearchQuery.class);
 
     private static final long serialVersionUID = 681547180910687848L;
-    protected List<ResourceDecorator> results;
-    protected String elapsedTime;
-    protected long totalResults;
+    private List<ResourceDecorator> results;
+
+    private long totalResults;
     private List<Count> serviceCount = new ArrayList<>(); //service name, number of results at this service
     private List<String> serviceCountSaver = new ArrayList<>();
 
-    public SearchQuery(InputStream inputStream) throws IllegalResponseException
+    SearchQuery(InputStream inputStream) throws IllegalResponseException
     {
         parse(inputStream);
     }

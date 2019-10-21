@@ -113,18 +113,14 @@ public class UtilBean implements Serializable
 
     // ------------------------
 
-    public String addSlashes(String input)
-    {
-        return input.replace("\"", "\\\"");
-    }
-
-    public String formatDate(Date date, Locale locale)
-    {
-        if(dateFormatter == null)
-            dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-        return dateFormatter.format(date);
-    }
-
+    /**
+     * Use JSF f:convertDateTime instead
+     * 
+     * @param date
+     * @param locale
+     * @return
+     */
+    @Deprecated
     public String formatTime(Date date, Locale locale)
     {
         if(timeFormatter == null)
