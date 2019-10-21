@@ -14,7 +14,7 @@
         </h:panelGroup>
 
         <div class="search-item search-item-web my-2 d-flex" id="resource_#{res.rank}">
-            <h:form styleClass="item-controls d-flex flex-column mr-2 mt-2 text-center">
+            <h:form styleClass="item-controls d-flex flex-column mr-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
                                    update=":resource_form" process="@this" oncomplete="PF('resource_dialog').show();"
@@ -54,9 +54,9 @@
             </h:form>
 
             <div class="item-description">
-                <h:outputLink styleClass="res-link d-block text-decoration-none" target="_blank" value="#{res.urlProxied}">
-                    <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 d-block mb-0 text-truncate"/>
-                    <h:outputText value="#{res.url}" escape="false" styleClass="item-origin d-block text-truncate"/>
+                <h:outputLink styleClass="res-link text-decoration-none" target="_blank" value="#{res.urlProxied}">
+                    <h:outputText value="#{res.title}" escape="false" styleClass="item-title h5 mb-0 text-truncate"/><br/>
+                    <h:outputText value="#{res.url}" escape="false" styleClass="item-origin text-truncate"/>
                 </h:outputLink>
 
                 <div class="text-truncate-multiline">

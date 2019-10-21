@@ -188,17 +188,30 @@
 }
 
 .fancybox-search-layout {
+  $search-lightbox-space-around: 2rem;
+  $search-lightbox-toolbar-height: 2.5rem;
+
   /* Give space around main area */
   .fancybox-outer {
-    top: 2rem;
-    bottom: 2rem;
-    right: 2rem;
-    left: 2rem;
+    top: $search-lightbox-space-around;
+    bottom: $search-lightbox-space-around;
+    right: $search-lightbox-space-around;
+    left: $search-lightbox-space-around;
     margin: auto;
     overflow: visible;
-    background: #fff;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+    background: $white;
+    box-shadow: $box-shadow-lg;
     transition: opacity 0.3s;
+  }
+
+  .fancybox-inner::before {
+    content: '';
+    background: $themeDarkBgColor;
+    right: 0;
+    top: 0;
+    width: $search-lightbox-caption-width;
+    position: absolute;
+    bottom: 0;
   }
 
   /* Make it to fade-out while closing */
@@ -212,7 +225,7 @@
   }
 
   &.fancybox-is-open .fancybox-bg {
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   /* Adjust content area position */
@@ -224,43 +237,52 @@
     }
   }
 
+  .fancybox-content {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+
+    img {
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
   /* Move caption area to the right side */
   .fancybox-caption {
-    top: 2rem;
+    top: $search-lightbox-toolbar-height;
     bottom: 0;
     left: auto;
     width: $search-lightbox-caption-width;
-    padding: 1rem;
-    background: #333;
-    pointer-events: all; /* Make text selectable */
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-
-    .form-group {
-      margin-bottom: 0.5rem;
-    }
+    padding: 0;
+    background: $themeDarkBgColor;
 
     .fancybox-caption__body {
-      max-height: inherit;
+      max-height: 100%;
+      padding: $grid-gutter-width;
+    }
+
+    /* Make space between elements smaller */
+    .form-group {
+      margin-bottom: 0.5rem;
     }
   }
 
   /* Align buttons at the right side  */
   .fancybox-toolbar {
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: auto;
-    background: #333;
-    max-height: 2rem;
+    background: $themeDarkBgColor;
+    max-height: $search-lightbox-toolbar-height;
     width: $search-lightbox-caption-width;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid $gray-900;
     display: flex;
     flex-direction: row-reverse;
   }
 
   .fancybox-button {
-    max-height: 2rem;
-    max-width: 2rem;
+    max-height: $search-lightbox-toolbar-height;
+    max-width: $search-lightbox-toolbar-height;
     padding: 0.2rem;
   }
 
@@ -277,21 +299,18 @@
 
   /* Change arrow color */
   .fancybox-navigation button {
-    color: $themeElementTextColor !important;
-    padding: 10px;
+    color: $themeDarkBgColor !important;
+    top: calc(50% - #{$search-lightbox-toolbar-height / 2});
+    padding: 0;
   }
 
   /* Reposition arrows */
   .fancybox-button--arrow_left {
-    left: -60px !important;
+    left: 0 !important;
   }
 
   .fancybox-button--arrow_right {
-    right: -60px !important;
-  }
-
-  &.fancybox-show-thumbs .fancybox-button--arrow_right {
-    right: -272px !important;
+    right: $search-lightbox-caption-width !important;
   }
 
   /*remove padding on mobile devices */
