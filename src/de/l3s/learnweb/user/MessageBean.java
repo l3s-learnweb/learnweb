@@ -26,6 +26,11 @@ public class MessageBean extends ApplicationBean implements Serializable // TODO
 
     }
 
+    public  void setAllMessagesSeen() throws SQLException
+    {
+        Message.setAllMessagesSeen(getUser().getId());
+    }
+
     public ArrayList<Message> getReceivedMessages() throws SQLException
     {
         if(receivedMessages == null)

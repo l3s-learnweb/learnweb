@@ -7,6 +7,10 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.notification}"/>
 
+	<f:metadata>
+		<f:viewAction action="#{messageBean.setAllMessagesSeen}" />
+	</f:metadata>
+
 	<ui:define name="breadcrumb_ext">
 		<p:menuitem value="#{msg.notification}" url="myhome/notification.jsf#"/>
 	</ui:define>
