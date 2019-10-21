@@ -42,6 +42,7 @@ httpmime-4.5.9.jar					            Dependency of solr-solrj
 itext-2.1.7.jar						            Dependency for PDF exporter
 jackson-core-2.1.3.jar				            Dependency of Google API
 java-image-scaling-0.8.5.jar		            Thumbnails
+javax.mail.jar									Mail
 javax.servlet.jsp.jstl-1.2.1.jar	            JSF Base
 javax.servlet.jsp.jstl-api-1.2.1.jar            JSF Base
 jaxb-api-2.3.1.jar                              Dependencies missing in Java 11 (for backward compatibility)
@@ -69,7 +70,6 @@ json-simple-1.1.1.jar				            Archive, generating json data for timeline 
 jsoup-1.7.2.jar						            Resource, remove Html from String
 jsr305-1.3.9.jar					            Dependency of Google API
 log4j-1.2.17.jar					            Logging
-mail-1.4.4.jar						            Interweb (Jersey)
 mariadb-java-client-2.3.0.jar		            MariaDB
 myfaces-bundle-2.3.4.jar			            JSF Base
 nekohtml-1.9.18.jar

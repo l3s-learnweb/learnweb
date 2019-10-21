@@ -69,7 +69,7 @@ public class BounceManager extends Observable
         }
 
         Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, authenticator);
+        Session session = Session.getInstance(props, authenticator);
 
         SearchTerm newerThan = new ReceivedDateTerm(ComparisonTerm.GT, lastBounceCheck);
 
@@ -393,7 +393,7 @@ public class BounceManager extends Observable
     private void checkBounceFolder() throws MessagingException
     {
         Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, authenticator);
+        Session session = Session.getInstance(props, authenticator);
         Store store = session.getStore(provider);
         store.connect(host, login, pass);
 

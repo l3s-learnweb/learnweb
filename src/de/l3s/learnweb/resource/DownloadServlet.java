@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import javax.mail.Message;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -28,6 +29,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.BeanHelper;
+import de.l3s.util.email.Mail;
 
 /**
  * Servlet Class
@@ -78,11 +80,35 @@ public class DownloadServlet extends HttpServlet
             {
                 fileManager.setFileNotFoundErrorImage(new java.io.File(fileNotFoundResource.toURI()));
             }
-
         }
         catch(Exception e)
         {
             log.fatal("fatal error: ", e);
+        }
+
+        testMail();
+    }
+
+    /**
+     * Recently it wasn't possible to send mails.
+     * This simple method sends a test mail during startup.
+     */
+    private void testMail()
+    {
+        try
+        {
+            if(!Learnweb.isInDevelopmentMode())
+            {
+                Mail message = new Mail();
+                message.setSubject("Learnweb Started");
+                message.setRecipient(Message.RecipientType.TO, "kemkes@kbs.uni-hannover.de");
+                message.setText(learnweb.getServerUrl());
+                message.sendMail();
+            }
+        }
+        catch(Exception e)
+        {
+            log.error("Can't send test mail", e);
         }
     }
 
