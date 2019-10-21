@@ -1,5 +1,7 @@
 package de.l3s.learnweb;
 
+import javax.mail.Message;
+
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.resource.speechRepository.SpeechRepositoryCrawlerSimple;
@@ -7,14 +9,14 @@ import de.l3s.learnweb.resource.ted.TedCrawlerSimple;
 import de.l3s.learnweb.user.loginProtection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
 import de.l3s.util.email.BounceFetcher;
+import de.l3s.util.email.Mail;
 import it.sauronsoftware.cron4j.Scheduler;
 
 public class JobScheduler
 {
-    @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(JobScheduler.class);
     private Scheduler scheduler;
-    @SuppressWarnings("unused")
+
     private Learnweb learnweb;
 
     protected JobScheduler(Learnweb learnweb)
@@ -42,6 +44,9 @@ public class JobScheduler
         {
             //Checks bounced mail every day at 3:00AM
             scheduler.schedule("0 3 * * *", new BounceFetcher());
+
+            scheduler.schedule("0 2 * * *", new MailTest());
+
         }
     }
 
@@ -55,5 +60,27 @@ public class JobScheduler
     {
         if(scheduler.isStarted())
             scheduler.stop();
+    }
+
+    private class MailTest implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            try
+            {
+                Mail message = new Mail();
+
+                message.setSubject("Learnweb still running");
+                message.setRecipient(Message.RecipientType.TO, "kemkes@kbs.uni-hannover.de");
+                message.setText(learnweb.getServerUrl());
+                message.sendMail();
+            }
+            catch(Exception e)
+            {
+                log.error("Can't send test mail", e);
+            }
+
+        }
     }
 }
