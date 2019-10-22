@@ -190,28 +190,15 @@
 .fancybox-search-layout {
   $search-lightbox-space-around: 2rem;
   $search-lightbox-toolbar-height: 2.5rem;
+  $search-lightbox-caption-width: 35%;
+  $search-lightbox-mobile-preview-height: 40%;
 
-  /* Give space around main area */
   .fancybox-outer {
-    top: $search-lightbox-space-around;
-    bottom: $search-lightbox-space-around;
-    right: $search-lightbox-space-around;
-    left: $search-lightbox-space-around;
     margin: auto;
     overflow: visible;
     background: $white;
     box-shadow: $box-shadow-lg;
     transition: opacity 0.3s;
-  }
-
-  .fancybox-inner::before {
-    content: '';
-    background: $themeDarkBgColor;
-    right: 0;
-    top: 0;
-    width: $search-lightbox-caption-width;
-    position: absolute;
-    bottom: 0;
   }
 
   /* Make it to fade-out while closing */
@@ -233,7 +220,7 @@
     right: $search-lightbox-caption-width;
 
     .fancybox-slide {
-      padding: 2rem 1rem;
+      padding: $search-lightbox-toolbar-height !important;
     }
   }
 
@@ -313,30 +300,54 @@
     right: $search-lightbox-caption-width !important;
   }
 
-  /*remove padding on mobile devices */
-  @include media-breakpoint-down(sm) {
-    .fancybox-slide {
-      padding: 0 !important;
+  @include media-breakpoint-up(sm) {
+    /* Give space around main area */
+    .fancybox-outer {
+      top: $search-lightbox-space-around;
+      bottom: $search-lightbox-space-around;
+      right: $search-lightbox-space-around;
+      left: $search-lightbox-space-around;
     }
 
+    .fancybox-inner::before {
+      content: '';
+      background: $themeDarkBgColor;
+      right: 0;
+      top: 0;
+      width: $search-lightbox-caption-width;
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  /*remove padding on mobile devices */
+  @include media-breakpoint-down(sm) {
     .fancybox-caption {
       position: relative;
-      top: 70%;
+      top: 100 - $search-lightbox-mobile-preview-height;
       width: 100%;
-      height: 30%;
+      height: $search-lightbox-mobile-preview-height;
       //noinspection CssInvalidPropertyValue
       overflow: overlay;
     }
 
     .fancybox-stage {
-      bottom: 30%;
+      bottom: $search-lightbox-mobile-preview-height;
       right: 0;
-      top: 2rem;
+      top: $search-lightbox-toolbar-height;
       width: 100%;
+
+      .fancybox-slide {
+        padding: 0 !important;
+      }
     }
 
     .fancybox-toolbar {
       width: 100%;
+    }
+
+    .fancybox-navigation {
+      display: none;
     }
   }
 }

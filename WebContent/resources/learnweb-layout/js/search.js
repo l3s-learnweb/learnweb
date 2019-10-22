@@ -54,15 +54,15 @@ function prepareResources() {
 
             slide.isComplete = true;
 
+            instance.setContent(slide, embeddedCode);
+
             slide.opts.caption = $('#search_item_meta').html();
             // Set caption
-            if (slide.opts.caption && slide.opts.caption.length) {
+            if (slide.opts.caption && slide.opts.caption.length && slide.index === instance.currIndex) {
               instance.$caption = instance.$refs.caption;
               instance.$caption.children().eq(0).html(slide.opts.caption);
+              instance.showControls();
             }
-
-            instance.setContent(slide, embeddedCode);
-            instance.showControls();
 
             slide.$slide.one('onReset', function () {
               // Pause all html5 video/audio
