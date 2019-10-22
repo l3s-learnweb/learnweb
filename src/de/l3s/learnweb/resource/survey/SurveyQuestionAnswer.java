@@ -13,6 +13,11 @@ public class SurveyQuestionAnswer implements Serializable
 
     private String value;
 
+    public SurveyQuestionAnswer()
+    {
+
+    }
+
     public SurveyQuestionAnswer(String value)
     {
         super();

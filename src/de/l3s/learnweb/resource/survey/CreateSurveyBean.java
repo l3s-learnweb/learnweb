@@ -1,7 +1,11 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -13,70 +17,67 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class CreateSurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2130517411614243639L;
-    @Deprecated
-    private ArrayList<SurveyQuestion> questions;
-    @Deprecated
-    private String title;
-    @Deprecated
-    private String description;
-    private Survey survey;
+
+    private Survey survey = new Survey();
+    private static final AtomicInteger questionIdCount = new AtomicInteger(0);
 
     public CreateSurveyBean()
     {
-        questions = new ArrayList<>();
-
-        survey = new Survey(); // you can directly edit this survy. no need to redefine title desc and so on
-        survey.setOrganizationId(getUser().getOrganisationId());
     }
 
-    public String getTitle() // TODO use
+    public Survey getSurvey()
     {
-        return title;
+        return survey;
     }
 
-    public void setTitle(final String title)
+    public void setSurvey(final Survey survey)
     {
-        this.title = title;
+        this.survey = survey;
     }
 
-    public String getDescription()
+
+    public void createSurvey() throws SQLException
     {
-        return description;
+        try(PreparedStatement query = getLearnweb().getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+        {
+            query.setInt(1, getUser().getOrganisationId());
+            query.setString(2, survey.getTitle());
+            query.setString(3, survey.getDescription());
+            query.executeUpdate();
+            System.out.println(1);
+            ResultSet rs = query.getGeneratedKeys();
+            if(!rs.next())
+                throw new SQLException("database error: no id generated");
+            survey.setId(rs.getInt(1));
+            createSurveyQuestions();
+        }
     }
 
-    public void setDescription(final String description)
+    private void createSurveyQuestions() throws SQLException
     {
-        this.description = description;
-    }
-
-    public void addQuestion(SurveyQuestion question)
-    {
-        questions.add(question);
-    }
-
-    public void removeQuestion(SurveyQuestion question)
-    {
-        questions.remove(question);
-    }
-
-    public ArrayList<SurveyQuestion> getQuestions()
-    {
-        return questions;
-    }
-
-    public void setQuestions(final ArrayList<SurveyQuestion> questions)
-    {
-        this.questions = questions;
+        for (SurveyQuestion question : survey.getQuestions())
+        {
+            try(PreparedStatement query = getLearnweb().getConnection().prepareStatement("INSERT INTO `lw_survey_question`(`survey_id`, `question`, `question_type`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+            {
+                query.setInt(1, survey.getId());
+                query.setString(2, question.getInfo());
+                query.setString(3, question.getType().toString());
+                query.executeUpdate();
+                ResultSet rs = query.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+            }
+        }
     }
 
     public void addEmptyQuestion()
     {
-        questions.add(new SurveyQuestion());
+        survey.addQuestion(new SurveyQuestion(questionIdCount.incrementAndGet()));
     }
 
-    public void createSurvey()
+    public void addEmptyAnswer(int questionId)
     {
-        System.out.println(questions);
+        survey.getQuestion(questionId).getAnswers().add(new SurveyQuestionAnswer());
     }
 
 }

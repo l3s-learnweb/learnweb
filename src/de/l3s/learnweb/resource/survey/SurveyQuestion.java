@@ -48,7 +48,7 @@ public class SurveyQuestion implements Serializable
         }
     }
 
-    public static QuestionType[] getQuestionTypes()
+    public QuestionType[] getQuestionTypes()
     {
         return QuestionType.values();
     }
@@ -62,11 +62,11 @@ public class SurveyQuestion implements Serializable
     private boolean required = false;
     private List<SelectItem> optionsList;
     private String extra; // if the options are rating or otherwise
-    private List<SurveyQuestionAnswer> answers; // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
+    private List<SurveyQuestionAnswer> answers = new ArrayList<>(); // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
-    public SurveyQuestion()
+    public SurveyQuestion(int id)
     {
-
+        this.id = id;
     }
 
     public SurveyQuestion(QuestionType type)

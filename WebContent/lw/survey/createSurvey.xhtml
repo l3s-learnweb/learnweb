@@ -20,10 +20,10 @@
                                 <p:autoUpdate/>
                             </p:growl>
                             <h:outputText styleClass="font-weight-bold" for="title" value="Title: "></h:outputText>
-                            <p:inputTextarea id="title" styleClass="w-100" value="#{createSurveyBean.title}"></p:inputTextarea>
+                            <p:inputTextarea id="title" styleClass="w-100" value="#{createSurveyBean.survey.title}"></p:inputTextarea>
 
                             <h:outputText styleClass="font-weight-bold" for="desc" value="Description: "></h:outputText>
-                            <p:inputTextarea id="desc" styleClass="w-100" value="#{createSurveyBean.description}"></p:inputTextarea>
+                            <p:inputTextarea id="desc" styleClass="w-100" value="#{createSurveyBean.survey.description}"></p:inputTextarea>
 
             <!--                <div class="d-flex flex-column mb-3">
                                 <h:outputText styleClass="font-weight-bold" for="open" value="Survey Open Date: "></h:outputText>
@@ -37,7 +37,7 @@
 
 
                             <h:panelGroup id="question-container">
-                                <ui:repeat value="#{createSurveyBean.questions}" var="question">
+                                <ui:repeat value="#{createSurveyBean.survey.questions}" var="question">
                                     <p:panel>
                                             <div class="row">
                                                 <div class="mr-1">
@@ -51,15 +51,15 @@
                                                 </div>
                                             </div>
                                             <h:panelGroup id="answers" styleClass="d-flex flex-column">
-                                                <ui:repeat value="#{question.forCreateAnswers}" var="answer">
+                                                <ui:repeat value="#{question.answers}" var="answer">
                                                     <p:inputText value="#{answer.value}" styleClass="my-2" />
                                                 </ui:repeat>
                                             </h:panelGroup>
-                                            <p:commandButton value="add-answer"  actionListener="#{question.addEmptyAnswer}" update="answers" process="@this"/>
+                                            <p:commandButton value="add-answer" actionListener="#{createSurveyBean.addEmptyAnswer(question.id)}" update="answers" global="false"/>
                                     </p:panel>
                                 </ui:repeat>
                             </h:panelGroup>
-                                <p:commandButton value="add question" actionListener="#{createSurveyBean.addEmptyQuestion}" update="question-container" process="@this"/>
+                                <p:commandButton value="add question" actionListener="#{createSurveyBean.addEmptyQuestion()}" update="question-container" process="@this"/>
                                 <p:commandButton value="submit survey" actionListener="#{createSurveyBean.createSurvey}" update="@form" process="@form"/>
                         </h:form>
                     </div>
