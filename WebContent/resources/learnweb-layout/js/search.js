@@ -49,10 +49,11 @@ function prepareResources() {
             { name: 'resourceRank', value: resourceRank },
           ]);
 
-          window.updateSlideDetails = function (xhr, status, { resourceRank: retRank, embeddedCode }) {
-            if (retRank !== resourceRank) return;
-
-            slide.isComplete = true;
+          window.updateSlideDetails = function (xhr, status, { slideIndex, resourceRank: retRank, embeddedCode }) {
+            if (retRank !== resourceRank) {
+              instance.slides[slideIndex].isLoading = false;
+              return false;
+            }
 
             instance.setContent(slide, embeddedCode);
 
