@@ -135,7 +135,7 @@ public class Learnweb
             }
             catch(Exception e)
             {
-                throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
+                throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)", e);
             }
         }
         return learnweb;
@@ -210,7 +210,7 @@ public class Learnweb
             propertiesFileName = "lw_local_tetiana";
         else if((new File("C:\\Users\\astappiev").exists()))
             propertiesFileName = "lw_local_oleh";
-        else if((new File("/home/oleh").exists()))
+        else if((new File("/home/astappiev").exists()))
             propertiesFileName = "lw_local_oleh_uni";
         else if((new File("/home/matt").exists()))
             propertiesFileName = "lw_local_matviei";
