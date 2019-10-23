@@ -255,6 +255,7 @@ public class ResourcePreviewMaker
     public void processVideo(Resource resource)
     {
         File originalFile = null;
+        FFmpegProbeResult ffProbeResult = null;
         try
         {
             if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0))
@@ -263,11 +264,13 @@ public class ResourcePreviewMaker
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
-                if(!tmpDir.mkdir())
-                    log.fatal("Couldn't create temp directory for thumbnail creation");
+                if(!tmpDir.mkdir()) log.fatal("Couldn't create temp directory for thumbnail creation");
+
+                // get video details
+                ffProbeResult = this.getFFProbe(inputPath);
 
                 // take multiple frames at different positions from the video and use the largest (highest contrast) as preview image
-                String bestImagePath = createVideoPreviewImage(inputPath, tmpDir);
+                String bestImagePath = createVideoPreviewImage(ffProbeResult, tmpDir);
 
                 // generate thumbnail
                 Image img = new Image(new FileInputStream(bestImagePath));
@@ -286,15 +289,19 @@ public class ResourcePreviewMaker
         // convert videos that are not in mp4 format
         try
         {
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && !resource.getFormat().equals("video/mp4"))
+            if (ffProbeResult == null) return;
+
+            boolean isSupported = resource.getFormat().equals("video/mp4") &&
+                    ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
+
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && !isSupported)
             {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
 
                 java.io.File tempVideoFile = java.io.File.createTempFile(originalFile.getId() + "_video_", ".mp4");
 
-                String inputPath = originalFile.getActualFile().getAbsolutePath();
                 String outputPath = tempVideoFile.getAbsolutePath();
-                convertVideo(inputPath, outputPath);
+                convertVideo(ffProbeResult, outputPath);
 
                 // move original file
                 originalFile.setType(TYPE.FILE_ORIGINAL);
@@ -328,11 +335,6 @@ public class ResourcePreviewMaker
         return ffprobe.probe(mediaPath);
     }
 
-    private void convertVideo(String inputMediaPath, String outputMediaPath) throws IOException
-    {
-        convertVideo(this.getFFProbe(inputMediaPath), outputMediaPath);
-    }
-
     private void convertVideo(FFmpegProbeResult in, String outputMediaPath) throws IOException
     {
         FFmpegError error = in.getError();
@@ -350,13 +352,11 @@ public class ResourcePreviewMaker
         log.info("Converting done.");
     }
 
-    private String createVideoPreviewImage(String inputMediaPath, java.io.File tmpDir) throws IOException
+    private String createVideoPreviewImage(FFmpegProbeResult in, java.io.File tmpDir)
     {
         final int candidateCount = 5;
         String bestImagePath = null;
         long bestImageFileSize = 0;
-
-        FFmpegProbeResult ffProbeResult = this.getFFProbe(inputMediaPath);
 
         for(int i = 0; i < candidateCount; i++)
         {
@@ -365,7 +365,7 @@ public class ResourcePreviewMaker
             {
                 java.io.File tempThumbnailFile = java.io.File.createTempFile("image_" + i, ".jpg", tmpDir);
                 String outputPath = tempThumbnailFile.getAbsolutePath();
-                saveVideoThumbnail(ffProbeResult, outputPath, seconds);
+                saveVideoThumbnail(in, outputPath, seconds);
 
                 long fileSize = (new java.io.File(outputPath)).length();
                 if(fileSize > bestImageFileSize)
