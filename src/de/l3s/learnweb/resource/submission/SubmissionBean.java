@@ -1,5 +1,27 @@
 package de.l3s.learnweb.resource.submission;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
@@ -12,26 +34,6 @@ import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
-import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.model.SelectItem;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
@@ -418,7 +420,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
         clearSubmissionLists();
         this.newSubmission = new Submission();
-        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public Submission getNewSubmission()
@@ -430,14 +432,14 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     {
         getLearnweb().getSubmissionManager().saveSubmission(selectedSubmission);
         clearSubmissionLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void deleteSubmission()
     {
         getLearnweb().getSubmissionManager().deleteSubmission(selectedSubmission.getId());
         clearSubmissionLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void clearSubmissionLists()
@@ -627,7 +629,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         {
             selectedSubmission.setSubmitted(false);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, false);
-            addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
     }
 
@@ -637,7 +639,7 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         {
             selectedSubmission.setSubmitted(true);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, true);
-            addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         }
     }
 

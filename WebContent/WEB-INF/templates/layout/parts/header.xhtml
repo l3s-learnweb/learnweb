@@ -45,7 +45,9 @@
                     <p:menu overlay="true" trigger="userMenuButton" my="right bottom" at="right top" styleClass="ui-menu-navbar-submenu ui-menu-primary">
                         <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-user" value="#{msg.profile}"/>
                         <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
-                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}"/>
+                        
+                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}" rendered="false"/>
+                        
                         <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
                     </p:menu>
                 </ui:fragment>

@@ -12,23 +12,28 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 @FacesValidator("dateRangeValidator")
-public class DateRangeValidator implements Validator {
+public class DateRangeValidator implements Validator<Object>
+{
 
     @Override
-    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (value == null) {
+    public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException
+    {
+        if(value == null)
+        {
             return;
         }
 
         UIInput startDateComponent = (UIInput) component.getAttributes().get("startDate");
 
-        if (!startDateComponent.isValid()) {
+        if(!startDateComponent.isValid())
+        {
             return;
         }
 
         Date startDate = (Date) startDateComponent.getValue();
 
-        if (startDate == null) {
+        if(startDate == null)
+        {
             return;
         }
 
@@ -44,9 +49,11 @@ public class DateRangeValidator implements Validator {
         }
         endDate = c.getTime();
 
-        if (startDate.after(endDate)) {
+        if(startDate.after(endDate))
+        {
             startDateComponent.setValid(false);
             FacesContext.getCurrentInstance().addMessage("msg", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date may not be after end date.", null));
         }
     }
+
 }
