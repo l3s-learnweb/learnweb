@@ -1,13 +1,22 @@
 .profile-picture {
-  width: 2.8125rem;
-  min-width: 2.8125rem;
-  height: 2.8125rem;
-  min-height: 2.8125rem;
-  max-width: 6.25rem;
-  max-height: 6.25rem;
-  border-radius: 50%;
+  $pictureMinSize: 2.8125rem;
+  $pictureMaxSize: 6.25rem;
+
+  min-width: $pictureMinSize;
+  min-height: $pictureMinSize;
+  max-width: $pictureMaxSize;
+  max-height: $pictureMaxSize;
   background: $themeElementTextColor;
   border: 1px solid $themePrimaryColor;
+
+  &:not(.square) {
+    border-radius: 50%;
+  }
+
+  &:not(.fluent) {
+    width: $pictureMinSize;
+    height: $pictureMinSize;
+  }
 }
 
 .has-badge {

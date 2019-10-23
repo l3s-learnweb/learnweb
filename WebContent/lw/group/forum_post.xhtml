@@ -47,7 +47,7 @@
                     <p:column headerText="#{msg.author}" styleClass="py-2 text-center w-15">
                         <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>
                         <h:link outcome="/lw/user/detail.jsf?user_id=#{post.userId}">
-                            <img class="img-fluid mx-auto" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
+                            <img class="img-fluid mx-auto profile-picture square fluent" src="${learnwebBean.getProfileImage(post.user)}" alt="#{post.user.fullName}"/>
                         </h:link>
 
                         <div class="text-muted small">
