@@ -64,11 +64,6 @@ public class SurveyQuestion implements Serializable
     private String extra; // if the options are rating or otherwise
     private List<SurveyQuestionAnswer> answers = new ArrayList<>(); // predefined answers for types like ONE_MENU, ONE_RADIO, MANY_CHECKBOX ...
 
-    public SurveyQuestion(int id)
-    {
-        this.id = id;
-    }
-
     public SurveyQuestion(QuestionType type)
     {
         this.type = type;
@@ -204,7 +199,7 @@ public class SurveyQuestion implements Serializable
         return id;
     }
 
-    public void setId(int id)
+    void setId(int id)
     {
         this.id = id;
     }

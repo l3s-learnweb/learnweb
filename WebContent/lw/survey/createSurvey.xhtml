@@ -7,6 +7,13 @@
     <ui:param name="pageTitle" value="Create Survey"/>
     <ui:param name="loginRequired" value="true"/>
 
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="survey_id" value="#{resourceBean.id}" required="true"/>
+			<f:viewAction action="#{resourceBean.loadResource}"/>
+		</f:metadata>
+	</ui:define>
+	
     <ui:define name="center_layout">
 
         <h:outputScript library="learnweb-layout" name="js/glossary.js"/>
@@ -55,12 +62,12 @@
                                                     <p:inputText value="#{answer.value}" styleClass="my-2" />
                                                 </ui:repeat>
                                             </h:panelGroup>
-                                            <p:commandButton value="add-answer" actionListener="#{createSurveyBean.addEmptyAnswer(question.id)}" update="answers" global="false"/>
+                                            <p:commandButton value="add-answer" actionListener="#{createSurveyBean.addEmptyAnswer(question)}" update="answers" global="false"/>
                                     </p:panel>
                                 </ui:repeat>
                             </h:panelGroup>
-                                <p:commandButton value="add question" actionListener="#{createSurveyBean.addEmptyQuestion()}" update="question-container" process="@this"/>
-                                <p:commandButton value="submit survey" actionListener="#{createSurveyBean.createSurvey}" update="@form" process="@form"/>
+                                <p:commandButton value="add question" actionListener="#{createSurveyBean.onAddEmptyQuestion}" update="question-container" process="@this"/>
+                                <p:commandButton value="submit survey" actionListener="#{createSurveyBean.onCreateSurvey}" update="@form" process="@form"/>
                         </h:form>
                     </div>
                 </div>

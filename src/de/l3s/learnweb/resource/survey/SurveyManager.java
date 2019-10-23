@@ -3,6 +3,7 @@ package de.l3s.learnweb.resource.survey;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -463,6 +464,56 @@ public class SurveyManager
             }
         }
         return users;
+    }
+
+    /**
+     * Persits the survey. Updates ids if not yet stored
+     *
+     * @param survey
+     * @throws SQLException
+     */
+    public void save(Survey survey) throws SQLException
+    {
+        if(survey.getId() <= 0)
+            createSurvey(survey);
+        else
+            updateSurvey(survey);
+    }
+
+    private void updateSurvey(Survey survey)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void createSurvey(Survey survey) throws SQLException
+    {
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+        {
+            insert.setInt(1, survey.getOrganizationId());
+            insert.setString(2, survey.getTitle());
+            insert.setString(3, survey.getDescription());
+            insert.executeUpdate();
+            ResultSet rs = insert.getGeneratedKeys();
+            if(!rs.next())
+                throw new SQLException("database error: no id generated");
+            survey.setId(rs.getInt(1));
+        }
+
+        for(SurveyQuestion question : survey.getQuestions())
+        {
+            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_survey_question`(`survey_id`, `question`, `question_type`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+            {
+                insert.setInt(1, survey.getId());
+                insert.setString(2, question.getInfo());
+                insert.setString(3, question.getType().toString());
+                insert.executeUpdate();
+                ResultSet rs = insert.getGeneratedKeys();
+                if(!rs.next())
+                    throw new SQLException("database error: no id generated");
+                question.setId(rs.getInt(1));
+            }
+        }
     }
 
 }
