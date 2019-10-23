@@ -26,9 +26,6 @@ public class UtilBean implements Serializable
     private final static long serialVersionUID = 6252597111468136574L;
     private final static Logger log = Logger.getLogger(UtilBean.class);
 
-    private DateFormat dateFormatter;
-    private DateFormat timeFormatter;
-
     public static ExternalContext getExternalContext()
     {
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -113,9 +110,17 @@ public class UtilBean implements Serializable
 
     // ------------------------
 
+    @Deprecated
+    public String formatDate(Date date, Locale locale)
+    {
+
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormatter.format(date);
+    }
+
     /**
      * Use JSF f:convertDateTime instead
-     * 
+     *
      * @param date
      * @param locale
      * @return
@@ -123,8 +128,8 @@ public class UtilBean implements Serializable
     @Deprecated
     public String formatTime(Date date, Locale locale)
     {
-        if(timeFormatter == null)
-            timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+
+        DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
         return timeFormatter.format(date);
     }
 
