@@ -1,8 +1,9 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.List;
 
 import de.l3s.util.HasId;
 
@@ -22,7 +23,8 @@ public class Survey implements Serializable, HasId
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
 
-    private LinkedHashMap<Integer, SurveyQuestion> questions = new LinkedHashMap<>(); // maps questions ids to questions
+    //private LinkedHashMap<Integer, SurveyQuestion> questions = new LinkedHashMap<>(); // maps questions ids to questions
+    private List<SurveyQuestion> questions = new ArrayList<>();
 
     @Override
     public int getId()
@@ -67,16 +69,21 @@ public class Survey implements Serializable, HasId
 
     public Collection<SurveyQuestion> getQuestions()
     {
-        return questions.values();
+        return questions;
+        //return questions.values();
     }
 
     public void addQuestion(SurveyQuestion question)
     {
-        questions.put(question.getId(), question);
+        //questions.put(question.getId(), question);
+
+        questions.add(question);
     }
 
     public SurveyQuestion getQuestion(int questionId)
     {
-        return questions.get(questionId);
+        return questions.stream().filter(q -> q.getId() == questionId).findFirst().get();
+
+        //return questions.get(questionId);
     }
 }

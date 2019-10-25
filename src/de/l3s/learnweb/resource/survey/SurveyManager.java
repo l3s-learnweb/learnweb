@@ -39,132 +39,14 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
-    /*
+    /**
+     * Returns all answers a user has given for a particular survey resource
      *
-     Philipp: Old methods that might be useful in context of the eu made4all project.
-     Can be deleted after the project.
-
-
-    public LinkedHashMap<Integer, String> getAnsweredQuestions(int resourceId) throws SQLException
-    {
-        LinkedHashMap<Integer, String> questions = new LinkedHashMap<>();
-        int surveyId;
-    
-        String getQuestionByOrder = "SELECT distinct(r.question_id), r.question, r.survey_id FROM `lw_survey_question` r, lw_survey_answer t2 where (t2.question_id = r.question_id or (r.deleted=? and r.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and r.survey_id=? and t2.resource_id=? order by r.`order`";
-        //Check if all questions are fetched.
-    
-        PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id` = ?");
-        preparedStatement.setInt(1, resourceId);
-        ResultSet idResult = preparedStatement.executeQuery();
-        if(idResult.next())
-        {
-            surveyId = idResult.getInt("survey_id");
-    
-            preparedStatement = learnweb.getConnection().prepareStatement(getQuestionByOrder);
-            preparedStatement.setBoolean(1, false);
-            preparedStatement.setInt(2, surveyId);
-            preparedStatement.setInt(3, resourceId);
-            ResultSet result = preparedStatement.executeQuery();
-            while(result.next())
-            {
-                questions.put(result.getInt("question_id"), result.getString("question"));
-            }
-        }
-    
-        return questions;
-    }
-    
-    //Same survey resources in a course to merge answers
-    
-    public HashSet<Integer> getSameSurveyResources(int resourceId) throws SQLException
-    {
-        HashSet<Integer> surveyResources = new HashSet<Integer>();
-        surveyResources.add(resourceId);
-        Resource surveyResource;
-        int groupId;
-    
-        int surveyId = 0;
-    
-        surveyResource = learnweb.getResourceManager().getResource(resourceId);
-    
-        groupId = surveyResource.getGroupId();
-        //Fetching course id for given resource
-        //Fetching other resource Ids with same survey id in the current course.
-        if(groupId > 0)
-        {
-            int courseId = learnweb.getGroupManager().getGroupById(groupId).getCourseId();
-    
-            String getOtherResources = "SELECT r.resource_id FROM `lw_resource` r, lw_group t2, lw_survey_resource t3 WHERE r.group_id =t2.group_id and r.`type`='survey' and r.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
-            String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
-            PreparedStatement ps = learnweb.getConnection().prepareStatement(getSurveyId);
-            ps.setInt(1, resourceId);
-            ResultSet rs = ps.executeQuery();
-            if(rs.next())
-            {
-                surveyId = rs.getInt("survey_id");
-                ps = learnweb.getConnection().prepareStatement(getOtherResources);
-                ps.setInt(1, courseId);
-                ps.setInt(2, surveyId);
-                rs = ps.executeQuery();
-                while(rs.next())
-                {
-                    surveyResources.add(rs.getInt("resource_id"));
-                }
-            }
-        }
-    
-        return surveyResources;
-    }
-    
-    
-    public List<SurveyUserAnswers> getAnswerOfAllUserForSurveyResource(int surveyResourceId, HashMap<Integer, String> question) throws SQLException
-    {
-        List<SurveyUserAnswers> answers = new ArrayList<SurveyUserAnswers>();
-    
-        PreparedStatement answerSelect = learnweb.getConnection().prepareStatement("SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?");
-    
-        PreparedStatement userSelect = learnweb.getConnection().prepareStatement("SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?");
-        userSelect.setInt(1, surveyResourceId);
-        ResultSet ids = userSelect.executeQuery();
-        while(ids.next())
-        {
-            SurveyUserAnswers userSurveyAnswers = new SurveyUserAnswers(ids.getInt("user_id"), surveyResourceId);
-            HashMap<Integer, String> ans = userSurveyAnswers.getAnswers();
-    
-            // TODO this is extremely inefficient
-            for(Integer qid : question.keySet())
-            {
-                answerSelect.setInt(1, qid);
-                answerSelect.setInt(2, ids.getInt("user_id"));
-                answerSelect.setInt(3, surveyResourceId);
-                ResultSet result = answerSelect.executeQuery();
-                if(result.next())
-                {
-                    String answerOfUser = result.getString("answer");
-    
-                    answerOfUser = answerOfUser == null ? "" : answerOfUser.replaceAll("\\|\\|\\|", ",");
-    
-                    ans.put(qid, answerOfUser);
-    
-                    userSurveyAnswers.setSaved(true);
-                }
-                else
-                {
-                    if(!ans.containsKey(qid))
-                        ans.put(qid, "Unanswered");
-                }
-            }
-    
-            if(userSurveyAnswers.isSaved())
-                userSurveyAnswers.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, ids.getInt("user_id")));
-    
-            answers.add(userSurveyAnswers);
-        }
-        return answers;
-    }
-    */
-    // new and refactored methods:
-
+     * @param surveyResource
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
     protected SurveyUserAnswers getAnswersOfUser(final SurveyResource surveyResource, int userId) throws SQLException
     {
         Validate.notNull(surveyResource);
@@ -467,7 +349,7 @@ public class SurveyManager
     }
 
     /**
-     * Persits the survey. Updates ids if not yet stored
+     * Persists the survey. Updates ids if not yet stored
      *
      * @param survey
      * @throws SQLException
