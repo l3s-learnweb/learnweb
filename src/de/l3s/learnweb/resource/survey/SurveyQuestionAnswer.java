@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * TODO add description
+ * A predefined answer that a user can select for a SurveyQuestion.
  *
  */
 public class SurveyQuestionAnswer implements Serializable

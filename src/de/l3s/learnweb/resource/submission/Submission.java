@@ -37,7 +37,7 @@ public class Submission implements Serializable
 
     private transient Course course;
     private transient List<SubmittedResources> submittedResourcesGroupedByUser;
-    private SurveyUserAnswers surveyAnswer;
+    private transient SurveyUserAnswers surveyAnswer;
 
     public Submission()
     {
@@ -198,7 +198,7 @@ public class Submission implements Serializable
         {
             try
             {
-                SurveyResource surveyResource = (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(surveyResourceId);
+                SurveyResource surveyResource = Learnweb.getInstance().getSurveyManager().getSurveyResource(surveyResourceId);
                 surveyAnswer = surveyResource.getAnswersOfUser(userId);
             }
             catch(SQLException e)
