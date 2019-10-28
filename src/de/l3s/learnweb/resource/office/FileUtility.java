@@ -36,8 +36,10 @@ public class FileUtility
     public static String getFileType(String fileName)
     {
         String ext = getFileExtension(fileName);
-        if(EXT_SPREADSHEET.contains(ext)) return SPREADSHEET;
-        if(EXT_PRESENTATION.contains(ext)) return PRESENTATION;
+        if(EXT_SPREADSHEET.contains(ext))
+            return SPREADSHEET;
+        if(EXT_PRESENTATION.contains(ext))
+            return PRESENTATION;
         return TEXT;
     }
 
@@ -67,30 +69,12 @@ public class FileUtility
         if(fileName != null)
         {
             int lastIndex = fileName.lastIndexOf('.');
-            if(lastIndex <= 0) return null;
+            if(lastIndex <= 0)
+                return null;
             String fileExt = fileName.substring(lastIndex + 1);
             return fileExt.toLowerCase();
         }
         return null;
-    }
-
-    public static void main(String[] arg)
-    {
-        System.out.println(getFileName("https://www.google.de"));
-        System.out.println("--------");
-        System.out.println(getFileName("http://www.google.de/"));
-        System.out.println("--------");
-
-        System.out.println(getFileName("http://127.0.0.1"));
-        System.out.println("--------");
-
-        System.out.println(getFileName("https://www.google.de/dfgdfgdfg"));
-        System.out.println("--------");
-
-        System.out.println(getFileName("https://www.google.de/dfgdfgdfg/"));
-        System.out.println("--------");
-
-        System.out.println(getFileName("https://www.google.de/dfgdfgdfg/asd.xmk"));
     }
 
     public static String getFileName(String url)
@@ -141,14 +125,14 @@ public class FileUtility
         {
             switch(fileType)
             {
-                case document:
-                    return SAMPLE_DOCX;
-                case spreadsheet:
-                    return SAMPLE_XLSX;
-                case presentation:
-                    return SAMPLE_PPTX;
-                default:
-                    break;
+            case document:
+                return SAMPLE_DOCX;
+            case spreadsheet:
+                return SAMPLE_XLSX;
+            case presentation:
+                return SAMPLE_PPTX;
+            default:
+                break;
             }
         }
         return null;

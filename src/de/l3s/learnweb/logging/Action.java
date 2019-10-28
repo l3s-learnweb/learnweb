@@ -2,9 +2,7 @@ package de.l3s.learnweb.logging;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 // import de.l3s.learnweb.logging.ActionTargetId.*;
@@ -126,33 +124,4 @@ public enum Action
     {
         return ACTIONS_BY_CATEGORY.get(category.ordinal());
     }
-
-    public static void main(String[] arg)
-    {
-
-        for(ActionCategory category : ActionCategory.values())
-        {
-            System.out.print("\n" + category + ": ");
-
-            List<Action> categoryActions = new ArrayList<>(Action.getActionsByCategory(category));
-            categoryActions.sort(Comparator.comparing(Enum::name));
-            for(Action action : categoryActions)
-            {
-                System.out.print("" + action.name() + ", ");
-            }
-        }
-
-        /*
-        Action[] actions = { Action.unused };
-
-        System.out.print("\nCASE action");
-
-        for(Action action : actions)
-        {
-            System.out.print(" WHEN " + action.ordinal() + " THEN '" + action.name() + "'");
-        }
-        System.out.println(" END CASE");
-        */
-    }
-
 }

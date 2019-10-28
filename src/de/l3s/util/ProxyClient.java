@@ -13,8 +13,12 @@ import java.security.spec.RSAPublicKeySpec;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.log4j.Logger;
+
 public class ProxyClient
 {
+    public static Logger log = Logger.getLogger(ProxyClient.class);
+
     public static void main(String[] args) throws Exception
     {
         /*
@@ -28,8 +32,8 @@ public class ProxyClient
         RSAPrivateCrtKey privateCrtKey = (RSAPrivateCrtKey) privateKey;
         RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(privateCrtKey.getModulus(), privateCrtKey.getPublicExponent());
         PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-        System.out.println(DatatypeConverter.printHexBinary(publicKey.getEncoded()));
-        System.out.println(publicKey.getEncoded().length);
+        log.debug(DatatypeConverter.printHexBinary(publicKey.getEncoded()));
+        log.debug(publicKey.getEncoded().length);
 
         final String url = "http://www.google.com";
         final String userId = "23478123743";
@@ -40,7 +44,7 @@ public class ProxyClient
         signature.initSign(privateKey);
         signature.update(payload.getBytes(StandardCharsets.UTF_8));
         byte[] sig = signature.sign();
-        System.out.println(DatatypeConverter.printBase64Binary(sig));
+        log.debug(DatatypeConverter.printBase64Binary(sig));
     }
 
     @SuppressWarnings("unused")
@@ -52,9 +56,8 @@ public class ProxyClient
         byte[] publicKey = keyPair.getPublic().getEncoded();
         byte[] privateKey = keyPair.getPrivate().getEncoded();
 
-        System.out.println(DatatypeConverter.printBase64Binary(privateKey));
-        System.out.println(privateKey.length);
-
+        log.debug(DatatypeConverter.printBase64Binary(privateKey));
+        log.debug(privateKey.length);
     }
 
 }

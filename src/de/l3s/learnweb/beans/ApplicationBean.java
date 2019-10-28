@@ -297,7 +297,7 @@ public class ApplicationBean
      */
     protected void addInvalidParameterMessage(String parameter)
     {
-        addMessage(FacesMessage.SEVERITY_FATAL, "Invalid Parameter given. Check the URL you used.");
+        addMessage(FacesMessage.SEVERITY_FATAL, "Invalid Parameter given for '" + parameter + "'. Check the URL you used.");
 
         Logger.getLogger(ApplicationBean.class).warn("Invalid parameter for " + parameter + "; " + BeanHelper.getRequestSummary(), new IllegalArgumentException());
     }

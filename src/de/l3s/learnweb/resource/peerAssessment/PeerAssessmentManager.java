@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -21,7 +19,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.resource.survey.SurveyResource;
-import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.email.Mail;
@@ -418,46 +415,6 @@ public class PeerAssessmentManager
         }
     }
 
-    /**
-     * Sends an email to all eumade4all students who submitted successfully
-     *
-     * @throws SQLException
-     * @throws MessagingException
-     */
-    @SuppressWarnings("unused")
-    private void sendConsentMail() throws SQLException, MessagingException
-    {
-        for(int peerAssessmentId = 1; peerAssessmentId <= 3; peerAssessmentId++)
-        {
-            List<PeerAssessmentPair> pairs = getPairsByPeerAssessmentId(peerAssessmentId);
-
-            for(PeerAssessmentPair pair : pairs)
-            {
-                // check if user is part of aarhus course
-                Stream<Course> courses = pair.getAssessedUser().getCourses().stream();
-                boolean aarhusUser = 1 == courses.filter(course -> course.getTitle().equals("EU-Aarhus")).count();
-
-                if(!aarhusUser)
-                {
-                    System.out.println(pair.getAssessedUser().getRealUsername() + " <" + pair.getAssessedUser().getEmail() + ">");
-                    //System.out.println(pair.getAssessedUser().getEmail());
-                }
-                /*
-                Mail mail = new Mail();
-                mail.setSubject("EUMADE4LL assessment");
-                mail.setText(getEUMADe4ALLConsentMailText(pair.getAssessedUser().getRealUsername()));
-
-                mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
-                */
-
-                //mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessedUser().getEmail()));
-
-                //log.debug("Send to: " + pair.getAssessedUser().getEmail());
-                // mail.sendMail();
-            }
-        }
-    }
-
     private String getEUMADe4ALLInvitationMailText(String username, String submissionUrl, String surveyUrl)
     {
         return "Dear " + username + ",\r\n\r\n" +
@@ -581,12 +538,4 @@ public class PeerAssessmentManager
             return listA;
         return listB;
     }
-
-    /*
-     * create submission for new course but copy old descriptions
-     * insert into lw_submit (`course_id`,`title`,`description`, `open_datetime`, `close_datetime`,`number_of_resources`,`survey_resource_id`)
-     * SELECT 1338 as `course_id`,`title`,`description`,'2018-03-26 00:00:00' as `open_datetime`,'2018-05-22 23:59:59' as
-     * `close_datetime`,`number_of_resources`,`survey_resource_id` FROM `lw_submit` WHERE `deleted` = 0 AND `course_id` = 1301
-     */
-
 }

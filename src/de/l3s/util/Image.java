@@ -358,7 +358,7 @@ public class Image
         Iterator<ImageReader> readers = ImageIO.getImageReadersByFormatName("SVG");
         while(readers.hasNext())
         {
-            System.out.println("reader: " + readers.next());
+            log.debug("reader: " + readers.next());
         }
 
         BufferedImage image = ImageIO.read(new FileInputStream("D:\\Learnweb\\test_pattern.webp"));

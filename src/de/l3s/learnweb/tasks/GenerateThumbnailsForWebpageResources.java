@@ -10,14 +10,14 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
 import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
 
 /**
  * Find webpage resources that have no thumbnail and create it
- * 
+ *
  * @author Kemkes
  *
  */
@@ -34,8 +34,7 @@ public class GenerateThumbnailsForWebpageResources
      */
     public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
     {
-        //System.out.println(AddResourceBean.checkUrl("http://www.teachingideas.co.uk/"));
-        //System.exit(0);
+        System.exit(0);
 
         Learnweb learnweb = Learnweb.createInstance(null);
         ResourceManager rm = learnweb.getResourceManager();

@@ -123,7 +123,8 @@ public class SpeechRepositoryEntity
     {
         String[] tokens = durationstr.split(":");
         int duration = 0, multiply = 0;
-        for (int i = tokens.length - 1; i >= 0; --i) {
+        for(int i = tokens.length - 1; i >= 0; --i)
+        {
             duration += Integer.parseInt(tokens[i]) * Math.pow(60, multiply++);
         }
 
@@ -188,27 +189,5 @@ public class SpeechRepositoryEntity
     public void setTerminology(String terminology)
     {
         this.terminology = terminology;
-    }
-
-    void print() {
-        // demo output
-        System.out.println("Entity ID: " + this.id);
-        System.out.println("Title: " + this.title);
-        System.out.println("Url: " + this.url);
-        System.out.println("Rights: " + this.rights);
-        System.out.println("Date: " + this.date);
-        System.out.println("Description: " + this.description);
-        System.out.println("Notes: " + this.notes);
-        System.out.println("Video link: " + this.videoLink);
-        System.out.println("Image link: " + this.imageLink);
-
-        System.out.println("Speech details: ");
-        System.out.println("Duration: " + this.duration);
-        System.out.println("Language: " + this.language);
-        System.out.println("Level: " + this.level);
-        System.out.println("Use: " + this.use);
-        System.out.println("Type: " + this.type);
-        System.out.println("Domains: " + this.domains);
-        System.out.println("Terminology: " + this.terminology);
     }
 }

@@ -31,6 +31,12 @@ import org.json.JSONObject;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 
+/**
+ * Used to extract activities from hypothes.is
+ *
+ * @author Kate
+ *
+ */
 @Named
 @RequestScoped
 public class AdminGroupDiscussionActivityBean extends ApplicationBean implements Serializable
@@ -144,7 +150,6 @@ public class AdminGroupDiscussionActivityBean extends ApplicationBean implements
 
         if(target.length() > 1)
         {
-            System.out.print("Sublist length: " + target.getJSONArray(1).length());
             snippet = target.getJSONArray(1).getJSONObject(3).getString("exact");
             snippet = StringUtils.abbreviate(snippet, 100);
         }
