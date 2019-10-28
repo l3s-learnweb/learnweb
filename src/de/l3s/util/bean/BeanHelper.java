@@ -33,6 +33,17 @@ public class BeanHelper
      */
     public static String getIp(HttpServletRequest request)
     {
+        return getIp(request, false);
+    }
+
+    /**
+     *
+     * @param request
+     * @param ignoreForwardheader
+     * @return
+     */
+    public static String getIp(HttpServletRequest request, boolean ignoreForwardheader)
+    {
         if(request == null)
         {
             ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
@@ -40,7 +51,7 @@ public class BeanHelper
         }
 
         String ip = request.getHeader("X-FORWARDED-FOR");
-        if(ip != null)
+        if(ip != null && !ignoreForwardheader)
         {
             // the x forward header can contain all the ips of all rely proxies
             String[] ips = ip.split(",");
@@ -72,6 +83,7 @@ public class BeanHelper
         String url = null;
         String referrer = null;
         String ip = null;
+        String ipForwardedForHeader = null;
         String userAgent = null;
         Integer userId = null;
         String user = null;
@@ -86,7 +98,9 @@ public class BeanHelper
             }
 
             referrer = request.getHeader("referer");
-            ip = getIp(request);
+            ip = getIp(request, true);
+
+            ipForwardedForHeader = request.getHeader("X-FORWARDED-FOR");
 
             userAgent = request.getHeader("User-Agent");
             url = request.getRequestURL().toString();
@@ -112,7 +126,7 @@ public class BeanHelper
         {
             // ignore
         }
-        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
+        return "page: " + url + "; user: " + user + "; ip: " + ip + "; ipHeader: " + ipForwardedForHeader + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
     }
 
     /**

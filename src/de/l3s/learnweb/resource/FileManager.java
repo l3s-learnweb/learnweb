@@ -55,7 +55,7 @@ public class FileManager
         this.urlPattern = properties.getProperty("FILE_MANAGER_URL_PATTERN");
         this.cache = cacheSize == 0 ? new DummyCache<>() : new Cache<>(cacheSize);
         this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
-        setServerUrl(learnweb.getSecureServerUrl());
+        setServerUrl(learnweb.getServerUrl());
 
         if(!folder.exists())
             throw new RuntimeException("Folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "' does not exist.");

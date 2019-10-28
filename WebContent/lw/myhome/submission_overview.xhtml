@@ -45,36 +45,6 @@
 				<h:outputText value="#{msg.please_wait}"/>
 			</p:blockUI>
 
-			<ui:fragment rendered="#{userBean.isMemberOfCourse(1297)}">
-				<p:panel>
-					Links to the resources that you have submitted:
-					<ul>
-						<ui:repeat var="submission" value="#{submissionBean.pastSubmissions}">
-							<ui:repeat var="res" value="#{submission.submittedResources}">
-								<li>
-									<a href="#{learnwebBean.learnweb.secureServerUrl}/lw/myhome/submission_overview.jsf?user_id=#{submissionBean.userId}&amp;resource_id=#{res.id}">
-										#{learnwebBean.learnweb.secureServerUrl}/lw/myhome/submission_overview.jsf?user_id=#{submissionBean.userId}&amp;resource_id=#{res.id}
-									</a>
-								</li>
-							</ui:repeat>
-						</ui:repeat>
-					</ul>
-					Link to the peer assessment form that you have to submit:
-					<ul>
-						<ui:repeat var="pair" value="#{submissionBean.peerAssessmentPairs}">
-							<li>
-								<a href="#{learnwebBean.learnweb.secureServerUrl}/lw/survey/answer.jsf?resource_id=#{pair.peerAssessment.id}&amp;user_id=#{submissionBean.userId}">
-									#{learnwebBean.learnweb.secureServerUrl}/lw/survey/answer.jsf?resource_id=#{pair.peerAssessment.id}&amp;user_id=#{submissionBean.userId}
-								</a>
-
-								<h:outputText value=" Not submitted yet" rendered="#{not pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="red bold"/>
-								<h:outputText value=" Submitted successfully" rendered="#{pair.peerAssessment.getAnswersOfUser(submissionBean.userId).submitted}" styleClass="green bold"/>
-							</li>
-						</ui:repeat>
-					</ul>
-				</p:panel>
-			</ui:fragment>
-
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form prependId="false" id="form">
 					<div class="form-group">

@@ -3,27 +3,17 @@ package de.l3s.learnweb.group;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.LogEntry;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.RightPaneBean;
-import de.l3s.learnweb.resource.RightPaneBean.RightPaneAction;
 import de.l3s.learnweb.user.Organisation;
 import de.l3s.learnweb.user.User;
 

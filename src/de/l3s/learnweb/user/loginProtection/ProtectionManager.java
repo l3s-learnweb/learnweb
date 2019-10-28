@@ -398,9 +398,7 @@ public class ProtectionManager
 
     public void removeSuspicious(String name)
     {
-        System.out.print("Removed suspicious " + name);
         suspiciousActivityList.removeIf(s -> name.equals(s.getIP()));
-
     }
 
     public List<AggregatedRequestData> getSuspiciousActivityList()

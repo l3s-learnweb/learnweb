@@ -591,7 +591,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
             if(null == imageFile)
             {
-                imageUrl = Learnweb.getInstance().getSecureServerUrl() + "/resources/images/no-profile-picture.jpg";
+                imageUrl = Learnweb.getInstance().getServerUrl() + "/resources/images/no-profile-picture.jpg";
 
                 imageUrl = getDefaultImage();
             }

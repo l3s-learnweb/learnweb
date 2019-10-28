@@ -8,12 +8,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-import javax.faces.event.ValueChangeEvent;
+import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 
@@ -22,7 +20,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class SearchFilterBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 987526892886356642L;
-    private static final Logger log = Logger.getLogger(SearchFilterBean.class);
+    //    private static final Logger log = Logger.getLogger(SearchFilterBean.class);
 
     private String[] selectedAuthors;
     private String[] selectedTargets;
@@ -32,7 +30,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     private String selectedLang = "";
 
-    private List<String> authors;
+    //private List<String> authors;
     private List<String> targets;
     private List<String> purposes;
     private List<String> langs;
@@ -46,15 +44,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     @PostConstruct
     public void init()
     {
-        //media sources and authors from database
-
-        //author filter values (must get it from db)
-        authors = new ArrayList<>();
-        authors.add("Shakespear");
-        authors.add("Brian C.");
-        authors.add("Chloe H.");
-        authors.add("Thomas Hardy");
-
         //target learner values (fixed values)
         targets = new ArrayList<>();
         targets.add("Teachers");
@@ -74,22 +63,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         {
             addErrorMessage(e);
         }
-
-        /*
-
-        purposes.add("Listening Skills");
-        purposes.add("Reading Skills");
-        purposes.add("Writing Skills");
-        purposes.add("Speaking Skills");
-        purposes.add("Class Activities");
-        purposes.add("Lesson Plans");
-        purposes.add("Cross-curricular resources / CLIL");
-        purposes.add("Story-telling");
-        purposes.add("Plurallingualism");
-        purposes.add("Special Learning Needs");
-        purposes.add("Assessment");
-        purposes.add("Teacher Education Resources");
-        purposes.add("Other");*/
 
         //languages values (fixed values)
         langs = new ArrayList<>();
@@ -131,11 +104,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public void setSelectedAuthors(String[] selectedAuthors)
     {
         this.selectedAuthors = selectedAuthors;
-    }
-
-    public List<String> getAuthors()
-    {
-        return authors;
     }
 
     //targets getter and setter

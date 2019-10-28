@@ -46,6 +46,16 @@ public class RequestFilter implements Filter
                 if(!InetAddresses.isInetAddress(ip))
                 {
                     log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));
+
+                    if(ip.contains("JDatabaseDriverMysqli")) // Joomla Unserialize Vulnerability
+                    {
+                        // TODO block real ip
+                        protectionManager.ban(ip, 200, 1, 1, true);
+
+                        if(redirectToBlockedRequestErrorPage(req, response))
+                            return;
+                    }
+
                     chain.doFilter(request, response);
                     return;
                 }
@@ -54,19 +64,11 @@ public class RequestFilter implements Filter
 
                 requestManager.recordRequest(ip, url);
 
-                if(protectionManager.isBanned(ip))
+                if(protectionManager.isBanned(ip) && redirectToBlockedRequestErrorPage(req, response))
                 {
-                    String path = req.getRequestURI().substring(req.getContextPath().length());
-
-                    // block requests except for some special pages and folders
-                    if(!path.equals("/lw/error-blocked.jsf") && !path.startsWith("/javax.faces.resource/") && !path.startsWith("/resources/"))
-                    {
-                        HttpServletResponse httpResponse = (HttpServletResponse) response;
-                        httpResponse.sendRedirect(request.getServletContext().getContextPath() + "/lw/error-blocked.jsf");
-                        httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        return;
-                    }
+                    return; // stop processig if error page is displayed
                 }
+
             }
             catch(Throwable e)
             {
@@ -74,6 +76,22 @@ public class RequestFilter implements Filter
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private static boolean redirectToBlockedRequestErrorPage(HttpServletRequest request, ServletResponse response) throws IOException
+    {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+
+        // block requests except for some special pages and folders
+        if(!path.equals("/lw/error-blocked.jsf") && !path.startsWith("/javax.faces.resource/") && !path.startsWith("/resources/"))
+        {
+            HttpServletResponse httpResponse = (HttpServletResponse) response;
+            httpResponse.sendRedirect(request.getServletContext().getContextPath() + "/lw/error-blocked.jsf");
+            httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return true;
+        }
+
+        return false;
     }
 
     @Override

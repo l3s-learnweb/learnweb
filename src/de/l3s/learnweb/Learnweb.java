@@ -62,7 +62,6 @@ public class Learnweb
 
     private PropertiesBundle properties;
     private String serverUrl;
-    private String secureServerUrl;
 
     // list of Learnweb installations
     public enum SERVICE
@@ -495,21 +494,11 @@ public class Learnweb
 
     /**
      *
-     * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @return Returns the servername + contextpath. For the default installation this is: https://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl()
     {
         return serverUrl;
-    }
-
-    /**
-     *
-     * @return Returns the HTTPS version of getServerUrl(). Returns HTTP if Learnweb is run in development mode.
-     *         For the default installation this is: https://learnweb.l3s.uni-hannover.de
-     */
-    public String getSecureServerUrl()
-    {
-        return secureServerUrl;
     }
 
     public void setServerUrl(String serverUrl)
@@ -521,13 +510,12 @@ public class Learnweb
 
         this.serverUrl = serverUrl;
 
+        // enforce HTTPS on the production server
         if(serverUrl.startsWith("http://") && !Learnweb.isInDevelopmentMode())
-            this.secureServerUrl = "https://" + serverUrl.substring(7);
-        else
-            this.secureServerUrl = this.serverUrl;
+            this.serverUrl = "https://" + serverUrl.substring(7);
 
         if(fileManager != null)
-            fileManager.setServerUrl(secureServerUrl);
+            fileManager.setServerUrl(serverUrl);
 
         log.debug("Server base url updated: " + serverUrl);
     }

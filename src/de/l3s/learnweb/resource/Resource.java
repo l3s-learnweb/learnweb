@@ -182,7 +182,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
-            String serverUrl = Learnweb.getInstance().getSecureServerUrl();
+            String serverUrl = Learnweb.getInstance().getServerUrl();
             Thumbnail dummyImage;
 
             switch(type)

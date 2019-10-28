@@ -40,6 +40,7 @@ public class UsersAddMissingProfilePictures
         learnweb.onDestroy();
     }
 
+    @SuppressWarnings("unused")
     private void setDefaultAvatars() throws SQLException, IOException
     {
         List<User> users = um.getUsers();

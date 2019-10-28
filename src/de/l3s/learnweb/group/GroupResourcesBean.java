@@ -1177,6 +1177,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.selectedLevels = selectedLevels;
     }
 
+    /**
+     * Method is only used by the YELL search interface
+     * 
+     * @return
+     */
     public List<String> getAuthors()
     {
 
@@ -1185,7 +1190,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         {
             if(null == this.group)
             {
-                log.fatal("group must not be null; " + BeanHelper.getRequestSummary());
+                // Philipp: This error occurs very often. I don't understand why.
+                // TODO remove this method and replace it with SOLR facets
+                log.warn("group must not be null; " + BeanHelper.getRequestSummary());
                 return null;
             }
 
