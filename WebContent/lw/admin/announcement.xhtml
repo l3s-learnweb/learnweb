@@ -5,37 +5,38 @@
                 xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="disableGrowl" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.announcements}"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="false" requiredMessage="#{msg.missing_parameter}"/>
+			<f:viewParam name="announcement_id" value="#{adminAnnouncementBean.announcementId}" required="true" requiredMessage="#{msg.missing_parameter}"/>
 			<f:viewAction action="#{adminAnnouncementBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
 	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf#"/>
-		<p:menuitem value="#{adminAnnouncementBean.announcement.title}" url="admin/announcement.jsf?announcement_id=#{adminAnnouncementBean.announcementId}"/>
+		<p:menuitem value="#{msg.announcements}" url="admin/announcements.jsf"/>
+		<p:menuitem value="#{adminAnnouncementBean.pageTitle}" url="#"/>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:form id="announcementform">
+		<h:form rendered="#{adminAnnouncementBean.announcement ne null}">
 			<p:panel>
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
-					<p:inputText id="news_title" value="#{adminAnnouncementBean.title}"/>
+					<p:inputText value="#{adminAnnouncementBean.announcement.title}" label="#{msg.title}"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.date}:"/>
-					<p:calendar id="datetime" value="#{adminAnnouncementsBean.date}" timeZone="#{userBean.timeZone}" timeInput="false" label="#{msg.date}:"/>
+					<p:calendar id="datetime" value="#{adminAnnouncementBean.announcement.date}" timeZone="#{userBean.timeZone}" timeInput="false" label="#{msg.date}"/>
 					<p:message for="@previous"/>
 				</div>
 
 				<div class="form-group">
-					<p:textEditor height="200" value="#{adminAnnouncementBean.text}">
+					<p:textEditor height="200" value="#{adminAnnouncementBean.announcement.text}" label="#{msg.description}">
 						<f:facet name="toolbar">
 							<span class="ql-formats">
 								<select class="ql-font"></select>
@@ -47,19 +48,17 @@
 								<button class="ql-italic"></button>
 								<button class="ql-underline"></button>
 								<button class="ql-strike"></button>
-								 <button class="ql-link"></button>
+								<button class="ql-link"></button>
 							</span>
 						</f:facet>
 					</p:textEditor>
 				</div>
 
 				<div class="form-group">
-					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.hidden}" itemLabel="#{msg.hide}"/>
+					<p:selectBooleanCheckbox value="#{adminAnnouncementBean.announcement.hidden}" itemLabel="#{msg.hide}"/>
 				</div>
 
-				<p:commandButton action="#{adminAnnouncementBean.onUpdateNews(adminAnnouncementBean.announcement.id)}" value="#{msg.update}" update="@form :growl">
-					<f:param name="announcement_id" value="#{adminAnnouncementBean.announcementId}"/>
-				</p:commandButton>
+				<p:commandButton action="#{adminAnnouncementBean.onSave}" value="#{msg.save}" ajax="false" />
 			</p:panel>
 		</h:form>
 	</ui:define>

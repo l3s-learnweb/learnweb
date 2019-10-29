@@ -4,7 +4,7 @@
 
 activation-1.1.1.jar                            Dependencies missing in Java 11 (for backward compatibility)
 batik-all-1.11.jar								required by imagio
-boilerpipe-1.1.0.jar
+boilerpipe-1.1.0.jar							Biolerpip text extraction used when adding websites
 cdi-api-2.0.jar                                 required for myfaces-bundle-2.3.1
 classmate-1.3.4.jar					            required by Hibernate validator, added by Philipp
 common-image-3.4.2.jar							required by imagio (this isn't apache commons)
@@ -92,7 +92,7 @@ weld-servlet-shaded-3.0.4.Final.jar             Required by Tomcat to work with 
 woodstox-core-asl-4.4.1.jar                     Dependency of solr-solrj
 wstx-asl-3.2.7.jar					            added by Siyu for Solr
 xercesImpl.jar									required by boilerplate
-xml-apis-1.4.01.jar								required by boilerplate
+* xml-apis-1.4.01.jar								required by boilerplate, removed when upgrading to java 11
 xml-apis-ext.jar								required by imageio
 zookeeper-3.5.5.jar					            Dependency of solr-solrj
 zookeeper-jute-3.5.5.jar                        Dependency of solr-solrj

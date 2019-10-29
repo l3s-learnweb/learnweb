@@ -1,45 +1,69 @@
 package de.l3s.learnweb;
 
-import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import de.l3s.util.Sql;
 
 public class AnnouncementsManager
 {
-    private final static Logger log = Logger.getLogger(AnnouncementsManager.class);
+    // private final static Logger log = Logger.getLogger(AnnouncementsManager.class);
+
+    private static final int MAX_TOP_ANNOUNCEMENTS = 5; // maximal number of announcements that will be shown
 
     private Learnweb learnweb;
-    private Map<Integer, Announcement> cache;
+    private List<Announcement> cachedTopAnnouncements;
 
-    public AnnouncementsManager(Learnweb learnweb)
+    public AnnouncementsManager(Learnweb learnweb) throws SQLException
     {
         super();
         this.learnweb = learnweb;
-        this.cache = new LinkedHashMap<>();
+
+        resetCache();
     }
 
-    public void resetCache(int limit) throws SQLException
+    /**
+     * Reloads the top X announcements.
+     *
+     * The caching strategy used in this class is only acceptable for many read and very few write operations.
+     * Don't copy it for other use cases!
+     *
+     * @throws SQLException
+     */
+    private void resetCache() throws SQLException
     {
-        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE hidden = ? ORDER BY created_at DESC limit ?"))
+        var cache = new ArrayList<Announcement>(MAX_TOP_ANNOUNCEMENTS);
+
+        try(PreparedStatement preparedStatement = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE hidden = false ORDER BY created_at DESC limit ?"))
         {
-            preparedStatement.setBoolean(1, false);
-            preparedStatement.setInt(2, limit);
+            preparedStatement.setInt(1, MAX_TOP_ANNOUNCEMENTS);
             ResultSet resultSet = preparedStatement.executeQuery();
-            cache.clear();
+
             while(resultSet.next())
             {
-                Announcement announcement = createAnnouncement(resultSet);
-                cache.put(announcement.getId(), announcement);
+                cache.add(createAnnouncement(resultSet));
             }
         }
+
+        cachedTopAnnouncements = Collections.unmodifiableList(cache);
+    }
+
+    /**
+     *
+     * @return The x newest announcements that are not hidden
+     */
+    public List<Announcement> getTopAnnouncements() throws SQLException
+    {
+        return cachedTopAnnouncements;
     }
 
     private static Announcement createAnnouncement(ResultSet rs) throws SQLException
     {
-        Announcement announcement = new Announcement();
+        var announcement = new Announcement();
         announcement.setId(rs.getInt("news_id"));
         announcement.setTitle(rs.getString("title"));
         announcement.setText(rs.getString("message"));
@@ -51,16 +75,12 @@ public class AnnouncementsManager
 
     public void save(Announcement announcement) throws SQLException
     {
-        try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id, created_at, hidden) VALUES (?, ?, ?, ?, ?)"))
-        {
-            stmt.setString(1, announcement.getTitle());
-            stmt.setString(2, announcement.getText());
-            stmt.setInt(3, announcement.getUserId());
-            stmt.setTimestamp(4, sqlDate(announcement.getDate()));
-            stmt.setBoolean(5, announcement.isHidden());
-            stmt.executeUpdate();
-        }
-        //return announcement;
+        if(announcement.getId() <= 0)
+            insert(announcement);
+        else
+            update(announcement);
+
+        resetCache();
     }
 
     public void delete(Announcement announcement) throws SQLException
@@ -70,41 +90,38 @@ public class AnnouncementsManager
             delete.setInt(1, announcement.getId());
             delete.executeUpdate();
         }
-        cache.remove(announcement.getId());
+        resetCache();
     }
 
-    public void update(Announcement announcement) throws SQLException
+    private void insert(Announcement announcement) throws SQLException
+    {
+        try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("INSERT INTO lw_news (title, message, user_id, created_at, hidden) VALUES (?, ?, ?, ?, ?)"))
+        {
+            stmt.setString(1, announcement.getTitle());
+            stmt.setString(2, announcement.getText());
+            stmt.setInt(3, announcement.getUserId());
+            stmt.setTimestamp(4, Sql.convertDateTime(announcement.getDate()));
+            stmt.setBoolean(5, announcement.isHidden());
+            stmt.executeUpdate();
+
+            //due to the simplified caching strategy there is no need to retrieve the generated id.
+        }
+    }
+
+    private void update(Announcement announcement) throws SQLException
     {
         try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("UPDATE lw_news SET title = ?, message = ?, created_at = ?, hidden = ?  WHERE news_id = ?"))
         {
             stmt.setString(1, announcement.getTitle());
             stmt.setString(2, announcement.getText());
-            stmt.setTimestamp(3, sqlDate(announcement.getDate()));
+            stmt.setTimestamp(3, Sql.convertDateTime(announcement.getDate()));
             stmt.setBoolean(4, announcement.isHidden());
             stmt.setInt(5, announcement.getId());
             stmt.executeUpdate();
         }
     }
 
-    public void hide(Announcement announcement) throws SQLException
-    {
-        try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("UPDATE lw_news SET hidden = ?  WHERE news_id = ?"))
-        {
-            stmt.setBoolean(1, !announcement.isHidden());
-            stmt.setInt(2, announcement.getId());
-            stmt.executeUpdate();
-        }
-    }
-
-    private static java.sql.Timestamp sqlDate(java.util.Date calendarDate)
-    {
-        if(calendarDate != null)
-            return new java.sql.Timestamp(calendarDate.getTime());
-        else
-            return null;
-    }
-
-    public List<Announcement> getAnnouncementsAll()
+    public List<Announcement> getAnnouncementsAll() throws SQLException
     {
         List<Announcement> newList = new ArrayList<Announcement>();
         try(ResultSet resultSet = learnweb.getConnection().createStatement().executeQuery("SELECT * FROM lw_news ORDER BY created_at DESC"))
@@ -115,33 +132,21 @@ public class AnnouncementsManager
                 newList.add(announcement);
             }
         }
-        catch(Exception e)
-        {
-            log.error(e);
-        }
+
         return newList;
     }
 
     public Announcement getAnnouncementById(int newsId) throws SQLException
     {
-        PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE news_id = ?");
-        stmt.setInt(1, newsId);
-        try(ResultSet resultSet = stmt.executeQuery())
+        try(PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_news WHERE news_id = ?"))
         {
-            resultSet.next();
+            stmt.setInt(1, newsId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if(!resultSet.next())
+                return null;
+
             return createAnnouncement(resultSet);
         }
     }
-
-    /**
-     *
-     * @param maxAnnouncements
-     * @return The x newest announcements that are not hidden
-     */
-    public List<Announcement> getTopAnnouncements(int maxAnnouncements) throws SQLException
-    {
-        resetCache(maxAnnouncements);
-        return new ArrayList<Announcement>(cache.values());
-    }
-
 }

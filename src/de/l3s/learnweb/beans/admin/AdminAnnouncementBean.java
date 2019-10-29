@@ -1,35 +1,28 @@
 package de.l3s.learnweb.beans.admin;
 
-import de.l3s.learnweb.Announcement;
-import de.l3s.learnweb.beans.ApplicationBean;
-import org.apache.log4j.Logger;
-import javax.validation.constraints.NotBlank;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import org.apache.commons.lang3.StringUtils;
+
+import de.l3s.learnweb.Announcement;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @Named
 @ViewScoped
 public class AdminAnnouncementBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5638619327036890427L;
-    private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
-
-    @NotBlank
-    private String text;
-    @NotBlank
-    private String title;
-    @NotBlank
-    private Date date;
-    private boolean hidden;
+    //    private static final Logger log = Logger.getLogger(AdminAnnouncementsBean.class);
 
     private int announcementId;
     private Announcement announcement;
+    private String pageTitle;
 
     public void onLoad() throws SQLException
     {
@@ -42,55 +35,44 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
             return;
         }
 
-        announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
-        if(announcement == null)
+        if(announcementId == 0) // create new announcement
         {
-            addGrowl(FacesMessage.SEVERITY_FATAL, "invalid announcement_id parameter");
-        }else{
-            setDate(announcement.getDate());
-            setText(announcement.getText());
-            setTitle(announcement.getTitle());
-            setHidden(announcement.isHidden());
+            pageTitle = StringUtils.capitalize(getLocaleMessage("new_word"));
+
+            announcement = new Announcement();
+            announcement.setUserId(getUser().getId());
+            announcement.setDate(new Date());
+        }
+        else
+        {
+            announcement = getLearnweb().getAnnouncementsManager().getAnnouncementById(announcementId);
+            if(announcement == null)
+            {
+                addInvalidParameterMessage("announcement_id");
+                return;
+            }
+            pageTitle = announcement.getTitle();
         }
     }
 
-    public void onUpdateNews(int announcementId)
+    public String onSave()
     {
         try
         {
-            Announcement announcement = new Announcement();
-            announcement.setTitle(this.getTitle());
-            announcement.setText(this.getText());
-            announcement.setDate(this.getDate());
-            announcement.setId(this.getAnnouncementId());
-            announcement.setHidden(this.isHidden());
-            getLearnweb().getAnnouncementsManager().update(announcement);
-            addGrowl(FacesMessage.SEVERITY_INFO, "Announcement was updated !");
+            announcement.save();
+
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+
+            setKeepMessages();
+
+            return "/lw/admin/announcements.xhtml?faces-redirect=true";
         }
         catch(Exception e)
         {
             addErrorMessage(e);
+
+            return null;
         }
-    }
-
-    public String getText()
-    {
-        return text;
-    }
-
-    public void setText(String text)
-    {
-        this.text = text;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 
     public Announcement getAnnouncement()
@@ -108,11 +90,9 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         this.announcementId = announcementId;
     }
 
-    public Date getDate() { return date; }
+    public String getPageTitle()
+    {
+        return pageTitle;
+    }
 
-    public void setDate(final Date date) { this.date = date; }
-
-    public boolean isHidden() { return hidden; }
-
-    public void setHidden(final boolean hidden) { this.hidden = hidden; }
 }
