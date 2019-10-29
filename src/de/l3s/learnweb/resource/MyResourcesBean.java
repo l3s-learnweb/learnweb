@@ -47,7 +47,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private ResourcesView resourcesView = ResourcesView.grid;
 
     private List<Resource> resources;
-    private List<Folder> breadcrumb;
+    private List<Folder> breadcrumb = new ArrayList<>();
 
     // Folders tree (dialog)
     private TreeNode selectedTargetNode;
@@ -64,8 +64,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         if(getUser() == null) // not logged in
             return;
-
-        breadcrumb = new ArrayList<>();
     }
 
     public void onLoad() throws SQLException
@@ -516,11 +514,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(folder != null)
         {
             rootFolder = false;
-            if(breadcrumb.contains(folder))
-                deleteEntriesFromBreadcrumb();
-            else
-                breadcrumb.add(folder);
-
+            if(breadcrumb != null)
+            {
+                if(breadcrumb.contains(folder))
+                    deleteEntriesFromBreadcrumb();
+                else
+                    breadcrumb.add(folder);
+            }
             selectedFolder = folder;
             addResourceBean.setTargetFolderId(getSelectedFolderId());
 
