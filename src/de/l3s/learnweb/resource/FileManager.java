@@ -24,6 +24,7 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
+import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
 
 /**
@@ -134,39 +135,39 @@ public class FileManager
     public static void main(String[] args) throws SQLException
     {
     // delete files which are not stored on the server
-    
+
     FileManager fm = Learnweb.getInstance().getFileManager();
     List<File> files = fm.getAllFiles();
-    
+
     HashSet<Integer> set = new HashSet<Integer>();
-    
+
     for(File file : files)
     {
         if(file.actualFile == null)
         {
-    
+
     	set.add(file.getResourceId());
-    
+
     	//fm.delete(file);
         }
     }
-    
+
     Iterator<Integer> iter = set.iterator();
-    
+
     // delete the resources
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
-    
+
     while(iter.hasNext())
     {
         Integer id = iter.next();
-    
+
         if(id == 0)
     	continue;
-    
+
         rm.deleteResourcePermanent(id);
-    
+
     }
-    
+
     }
     */
 
@@ -213,7 +214,7 @@ public class FileManager
         replace.setString(4, file.getName());
         replace.setString(5, file.getMimeType());
         replace.setInt(6, file.isDownloadLogActivated() ? 1 : 0);
-        replace.setTimestamp(7, new java.sql.Timestamp(file.getLastModified().getTime()));
+        replace.setTimestamp(7, Sql.convertDateTime(file.getLastModified()));
         replace.executeUpdate();
 
         if(file.getId() < 0) // it's a new file -> get the assigned id
@@ -381,9 +382,9 @@ public class FileManager
 
         /*
         Learnweb learnweb = Learnweb.getInstance();
-        
+
         findAbandonedFiles();
-        
+
         learnweb.onDestroy();
         */
     }

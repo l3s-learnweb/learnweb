@@ -394,7 +394,7 @@ public class ResourceManager
         replace.setInt(44, resource.getDuration());
         replace.setInt(45, resource.isRestricted() ? 1 : 0);
         replace.setString(46, resource.getLanguage());
-        replace.setTimestamp(47, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
+        replace.setTimestamp(47, Sql.convertDateTime(resource.getCreationDate()));
         Sql.setSerializedObject(replace, 48, resource.getMetadata());
         replace.setInt(49, resource.getGroupId());
         replace.setInt(50, resource.getFolderId());
@@ -711,7 +711,7 @@ public class ResourceManager
         replace.setInt(2, comment.getResourceId());
         replace.setInt(3, comment.getUserId());
         replace.setString(4, comment.getText());
-        replace.setTimestamp(5, new java.sql.Timestamp(comment.getDate().getTime()));
+        replace.setTimestamp(5, Sql.convertDateTime(comment.getDate()));
         replace.executeUpdate();
 
         if(comment.getId() < 0) // get the assigned id
@@ -770,7 +770,7 @@ public class ResourceManager
             PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
             prepStmt.setInt(1, resourceId);
             prepStmt.setString(2, version.getArchiveUrl());
-            prepStmt.setTimestamp(3, new java.sql.Timestamp(version.getTimestamp().getTime()));
+            prepStmt.setTimestamp(3, Sql.convertDateTime(version.getTimestamp()));
             prepStmt.executeUpdate();
             prepStmt.close();
         }

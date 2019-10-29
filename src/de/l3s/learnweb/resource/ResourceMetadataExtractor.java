@@ -166,6 +166,7 @@ public class ResourceMetadataExtractor
             processFileResource(resource, fileInfo);
 
             if(resource.getType() == Resource.ResourceType.website)
+            {
                 try
                 {
                     //ArticleExtractor.INSTANCE.getText(arg0)
@@ -186,6 +187,7 @@ public class ResourceMetadataExtractor
                     Level logLevel = e.getMessage().contains("HTTP response code: 40") ? Level.WARN : Level.ERROR;
                     log.log(logLevel, "Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
                 }
+            }
         }
         catch(JSONException | IOException e)
         {
