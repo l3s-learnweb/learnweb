@@ -47,7 +47,7 @@ public class EUMade4AllStatisticsBean extends ApplicationBean implements Seriali
       addAccessDeniedMessage();
       return;
      }
-     
+
      205861  107     EU-Aarhus,Public
      213674  30      EU-Florence
      204489  31      EU-Leeds
@@ -329,7 +329,7 @@ public class EUMade4AllStatisticsBean extends ApplicationBean implements Seriali
 
     public static class UserStatistic implements Serializable
     {
-        private static final long serialVersionUID = -4241273453267455330L;
+        private static final long serialVersionUID = -4241278453267455330L;
 
         private final PeerAssessmentPair peerAssessmentPair;
         private final int baselineSurveyResourceId;

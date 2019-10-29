@@ -34,7 +34,7 @@ import de.l3s.util.Misc;
 @ViewScoped
 public class AdminOrganisationBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = -4815509777068370043L;
+    private static final long serialVersionUID = -4815509777068373043L;
     private static final Logger log = Logger.getLogger(AdminOrganisationBean.class);
 
     private int organisationId;

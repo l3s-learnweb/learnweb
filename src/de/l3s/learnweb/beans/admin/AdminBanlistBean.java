@@ -18,7 +18,7 @@ import de.l3s.util.email.BounceManager;
 @ViewScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = -5469152668344315959L;
+    private static final long serialVersionUID = -4469152668344315959L;
     private List<AccessData> banlist;
     private List<AggregatedRequestData> suspiciousActivityList;
 

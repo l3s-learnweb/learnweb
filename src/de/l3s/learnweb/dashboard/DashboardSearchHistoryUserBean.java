@@ -34,7 +34,7 @@ import de.l3s.learnweb.user.User;
 @ViewScoped
 public class DashboardSearchHistoryUserBean extends ApplicationDebuggingBean implements Serializable
 {
-    private static final long serialVersionUID = 6265758951073418345L;
+    private static final long serialVersionUID = 2265758951073418345L;
     private static final Logger log = Logger.getLogger(DashboardSearchHistoryUserBean.class);
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";

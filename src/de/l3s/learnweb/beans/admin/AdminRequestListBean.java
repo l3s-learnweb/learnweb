@@ -22,7 +22,7 @@ import de.l3s.learnweb.web.RequestData;
 @RequestScoped
 public class AdminRequestListBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = -5469152668344315959L;
+    private static final long serialVersionUID = -3469152668344315959L;
     private List<RequestData> requests;
     private List<RequestData> filteredRequests;
 

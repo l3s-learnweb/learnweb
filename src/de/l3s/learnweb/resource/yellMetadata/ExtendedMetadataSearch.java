@@ -20,8 +20,8 @@ import de.l3s.learnweb.user.User;
 public class ExtendedMetadataSearch extends ApplicationBean implements Serializable
 {
 
-    //populate search filter options (from MetadataSearchFilter.java) 
-    //set selected values for each metadata search filter 
+    //populate search filter options (from MetadataSearchFilter.java)
+    //set selected values for each metadata search filter
 
     private static final long serialVersionUID = 3635253409650813764L;
     private final static Logger log = Logger.getLogger(ExtendedMetadataSearch.class);
@@ -155,7 +155,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public List<ResourceDecorator> convertToFinalResults(List<Resource> fResults)
     {
-        //we change the list of resources to list of resource decorator... 
+        //we change the list of resources to list of resource decorator...
         List<ResourceDecorator> temp = new LinkedList<>();
         for(Resource fResult : fResults)
         {
@@ -316,7 +316,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
 
     public static class FilterPaginator extends AbstractPaginator
     {
-        private final static long serialVersionUID = 3823389610985272265L;
+        private final static long serialVersionUID = 3423389610985272265L;
 
         private final ExtendedMetadataSearch filter;
 
