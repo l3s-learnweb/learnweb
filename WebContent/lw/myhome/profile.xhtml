@@ -9,22 +9,16 @@
 <ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.myProfileTitle}" url="myhome/profile.jsf#"/>
+    <p:menuitem value="#{msg.settings}" url="myhome/profile.jsf#"/>
 </ui:define>
 
 <ui:define name="center_layout">
     <div class="row flex-column-reverse flex-lg-row">
         <div class="col-12 col-lg-6">
-            <p:panel header="#{msg.last_activities}" id="profile_news">
-                <p:repeat value="#{newsFeedBean.newsList}" var="logEntry" varStatus="status">
-                    <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
-                        <ui:param name="status" value="#{status}"/>
-                        <ui:param name="logEntry" value="#{logEntry}"/>
-                    </ui:decorate>
-                </p:repeat>
+            <p:panel header="#{msg.awards}" rendered="#{not empty profileBean.selectedUser.credits}" styleClass="mb-3">
+                <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
             </p:panel>
-        </div>
-        <div class="col-12 col-lg-6">
+
             <p:panel header="#{msg.edit_profile}" styleClass="mb-3">
                 <h:form enctype="multipart/form-data">
                     <f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
@@ -141,16 +135,13 @@
                             </h:panelGroup>
 
                             <p:commandButton actionListener="#{profileBean.onSaveProfile}" value="#{msg.save}"
-                                             process="@form" update=":growl @form :profile_news"/>
+                                             process="@form" update=":growl @form"/>
                         </div>
                     </h:panelGroup>
                 </h:form>
             </p:panel>
-
-            <p:panel header="#{msg.awards}" rendered="#{not empty profileBean.selectedUser.credits}" styleClass="mb-3">
-                <h:outputText value="#{profileBean.selectedUser.credits}" escape="false"/>
-            </p:panel>
-
+        </div>
+        <div class="col-12 col-lg-6">
             <p:panel header="#{msg.change_password}" styleClass="mb-3">
                 <h:form id="passwordform">
                     <div class="form-group">
