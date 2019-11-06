@@ -19,7 +19,7 @@
 
             <ui:fragment rendered="#{userBean.loggedIn}">
                 <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
-                    <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form pl-0 w-100" onsubmit="removeViewState(this);">
+                    <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100" onsubmit="removeViewState(this);">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
                         <input id="searchfield" type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
 

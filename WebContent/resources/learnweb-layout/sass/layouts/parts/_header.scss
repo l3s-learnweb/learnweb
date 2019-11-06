@@ -35,7 +35,7 @@ $topbar-button-padding: 1rem;
 
     .header-logo {
       padding: 0 $topbar-button-padding / 2;
-      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding);
+      width: $sidebar-width - ($topbar-button-size + $topbar-button-padding) - 1rem;
     }
 
     .lang-button {
