@@ -13,7 +13,7 @@
             </h:outputFormat>
         </h:panelGroup>
 
-        <div class="search-item search-item-web my-2 d-flex" id="resource_#{res.rank}">
+        <div class="search-item search-item-web my-3 d-flex" id="resource_#{res.rank}">
             <h:form styleClass="item-controls d-flex flex-column mr-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
@@ -59,7 +59,7 @@
                     <h:outputText value="#{res.url}" escape="false" styleClass="item-origin text-truncate"/>
                 </h:outputLink>
 
-                <div class="text-truncate-multiline">
+                <div class="text-truncate-multiline line-height-sm">
                     <h:outputText value="#{res.snippet}" escape="false"/>
                 </div>
 

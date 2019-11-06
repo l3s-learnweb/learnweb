@@ -39,6 +39,12 @@
   }
 
   .res-link {
+    span {
+      display: inline-block;
+      max-width: 100%;
+      line-height: 1;
+    }
+
     .item-origin {
       color: $blue;
     }
