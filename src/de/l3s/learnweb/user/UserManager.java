@@ -1,6 +1,7 @@
 package de.l3s.learnweb.user;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
@@ -30,18 +31,25 @@ import de.l3s.util.Sql;
  * DAO for the User class.
  *
  * @author Philipp
- *
  */
 public class UserManager
 {
-    private final static Logger log = Logger.getLogger(UserManager.class);
+    private static final Logger log = Logger.getLogger(UserManager.class);
+
+    /**
+     * Saves the User to the database.
+     * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
+     */
+    private static final String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, " +
+            "active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, " +
+            "is_moderator, registration_date, password, hashing, preferences, credits, fullname, affiliation, accept_terms_and_conditions, deleted";
 
     // if you change this, you have to change createUser() too
 
     private Learnweb learnweb;
     private ICache<User> cache;
 
-    public UserManager(Learnweb learnweb) throws SQLException
+    public UserManager(Learnweb learnweb)
     {
         super();
         Properties properties = learnweb.getProperties();
@@ -60,7 +68,6 @@ public class UserManager
     }
 
     /**
-     *
      * @return number of cached objects
      */
     public int getCacheSize()
@@ -74,10 +81,12 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_user_course USING(user_id) WHERE course_id = ? AND deleted = 0 ORDER BY username"))
         {
             select.setInt(1, courseId);
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -85,21 +94,19 @@ public class UserManager
     }
 
     /**
-     * returns a list of all users
-     *
-     * @return
-     * @throws SQLException
+     * Returns a list of all users.
      */
-
     public List<User> getUsers() throws SQLException
     {
         List<User> users = new LinkedList<>();
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE deleted = 0 ORDER BY username"))
         {
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -112,10 +119,12 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE organisation_id = ? AND deleted = 0 ORDER BY username"))
         {
             select.setInt(1, organisationId);
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -128,10 +137,12 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` JOIN lw_group_user USING(user_id) WHERE group_id = ? AND deleted = 0 ORDER BY username"))
         {
             select.setInt(1, groupId);
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -145,10 +156,12 @@ public class UserManager
         {
             select.setInt(1, groupId);
             select.setInt(2, limit);
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -156,7 +169,7 @@ public class UserManager
     }
 
     /**
-     * Get a user by username and password
+     * Get a user by username and password.
      *
      * @param username
      * @param password
@@ -168,24 +181,25 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ?"))
         {
             select.setString(1, username);
-            ResultSet rs = select.executeQuery();
-
-            if(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                User user = createUser(rs);
-                if(user.validatePassword(password))
+                if(rs.next())
                 {
-                    if(!user.getHashing().equals(User.PasswordHashing.PBKDF2))
+                    User user = createUser(rs);
+                    if(user.validatePassword(password))
                     {
-                        user.setPassword(password);
-                        save(user);
+                        if(!user.getHashing().equals(User.PasswordHashing.PBKDF2))
+                        {
+                            user.setPassword(password);
+                            save(user);
+                        }
+
+                        return user;
                     }
-
-                    return user;
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
     }
 
@@ -195,11 +209,12 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ?"))
         {
             select.setString(1, email);
-            ResultSet rs = select.executeQuery();
-
-            while(rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                users.add(createUser(rs));
+                while(rs.next())
+                {
+                    users.add(createUser(rs));
+                }
             }
         }
 
@@ -207,14 +222,10 @@ public class UserManager
     }
 
     /**
-     * Get a User by his id
-     * returns null if the user does not exist
+     * Get a User by his id.
      *
-     * @param userId
-     * @return
-     * @throws SQLException
+     * @return returns null if the user does not exist
      */
-
     public User getUser(int userId) throws SQLException
     {
         if(userId == 0)
@@ -230,19 +241,38 @@ public class UserManager
         try(PreparedStatement stmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?"))
         {
             stmtGetUser.setInt(1, userId);
-            ResultSet rs = stmtGetUser.executeQuery();
-
-            if(!rs.next())
+            try(ResultSet rs = stmtGetUser.executeQuery())
             {
-                log.warn("invalid user id was requested: " + userId, new IllegalArgumentException());
-                return null;
+                if(!rs.next())
+                {
+                    log.warn("invalid user id was requested: " + userId, new IllegalArgumentException());
+                    return null;
+                }
+
+                user = createUser(rs);
             }
-            user = createUser(rs);
         }
 
         user = cache.put(user);
 
         return user;
+    }
+
+    public User getUserByUsername(String username) throws SQLException
+    {
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE username = ?"))
+        {
+            select.setString(1, username);
+            try(ResultSet rs = select.executeQuery())
+            {
+                if(rs.next())
+                {
+                    return createUser(rs);
+                }
+
+                return null;
+            }
+        }
     }
 
     public User getUserByEmailAndConfirmationToken(String email, String emailConfirmationToken) throws SQLException
@@ -251,123 +281,90 @@ public class UserManager
         {
             select.setString(1, email);
             select.setString(2, emailConfirmationToken);
-            ResultSet rs = select.executeQuery();
-
-            if(!rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                return null;
-            }
+                if(!rs.next())
+                {
+                    return null;
+                }
 
-            return createUser(rs);
+                return createUser(rs);
+            }
         }
     }
 
     /**
-     * Get a User ID given the username
+     * Get a User ID given the username.
      *
-     * @param username
      * @return Returns -1 if an invalid username was given
-     * @throws SQLException
      */
     public int getUserIdByUsername(String username) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT user_id FROM `lw_user` WHERE username = ?"))
         {
             select.setString(1, username);
-            ResultSet rs = select.executeQuery();
-
-            if(!rs.next())
+            try(ResultSet rs = select.executeQuery())
             {
-                return -1;
-            }
+                if(!rs.next())
+                {
+                    return -1;
+                }
 
-            return rs.getInt("user_id");
+                return rs.getInt("user_id");
+            }
         }
     }
 
-    /**
-     * @param username
-     * @param password
-     * @param email
-     * @param wizardTitle
-     * @throws Exception
-     */
-    public User registerUser(String username, String password, String email, String wizardTitle) throws Exception
+    public User registerUser(String username, String password, String email, Course course) throws SQLException, IOException
     {
-        if(null == wizardTitle || wizardTitle.length() == 0)
-            wizardTitle = "default";
-
-        // get the course corresponding to the wizard
-        Course course = learnweb.getCourseManager().getCourseByWizard(wizardTitle);
-
-        if(null == course)
-            throw new IllegalArgumentException("Invalid registration wizard parameter");
+        if(null == course) course = learnweb.getCourseManager().getCourseByWizard("default");
 
         User user = new User();
         user.setUsername(username);
-        user.setEmail(""); // set something to make sure that
-        user.setEmail(email); // the mail confirmation token is created now
+        user.setEmail(email);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password);
         user.setPreferences(new HashMap<>());
+        // TODO: we should create it by first request, now when we create a user
         user.setImage(user.getDefaultImageIS());
         user = save(user);
 
         course.addUser(user);
-
-        if(course.getDefaultGroupId() != 0)
-            user.joinGroup(course.getDefaultGroupId());
-
         return user;
     }
 
     /**
-     * Returns true if username is already in use
+     * Checks whether the username is already taken.
      *
-     * @param username
-     * @return
-     * @throws SQLException
+     * @return Returns true if username is already in use
      */
-
     public boolean isUsernameAlreadyTaken(String username) throws SQLException
     {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_user WHERE username = ?");
-        select.setString(1, username);
-        ResultSet rs = select.executeQuery();
-        boolean result = rs.next();
-        select.close();
-
-        return result;
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_user WHERE username = ?"))
+        {
+            select.setString(1, username);
+            try(ResultSet rs = select.executeQuery())
+            {
+                return rs.next();
+            }
+        }
     }
 
     /**
      * Returns 1.1.1970 00:00:00 if the user never logged in
-     *
-     * @param userId
-     * @return
-     * @throws SQLException
      */
-
     public Date getLastLoginDate(int userId) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1"))
         {
             select.setInt(1, userId);
-            ResultSet rs = select.executeQuery();
-            if(!rs.next())
-                return new Date(0);
-
-            return new Date(rs.getTimestamp(1).getTime());
+            try(ResultSet rs = select.executeQuery())
+            {
+                if(!rs.next()) return new Date(0);
+                return new Date(rs.getTimestamp(1).getTime());
+            }
         }
     }
-
-    /**
-     * Saves the User to the database.
-     * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
-     */
-    private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, active_group_id, image_file_id, "
-            + "gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, registration_date, password, hashing, preferences, "
-            + "credits, fullname, affiliation, accept_terms_and_conditions, deleted";
 
     public User save(User user) throws SQLException
     {
@@ -408,12 +405,13 @@ public class UserManager
 
             if(user.getId() < 0) // get the assigned id
             {
-                ResultSet rs = replace.getGeneratedKeys();
-                if(!rs.next())
-                    throw new SQLException("database error: no id generated");
-                user.setId(rs.getInt(1));
+                try(ResultSet rs = replace.getGeneratedKeys())
+                {
+                    if(!rs.next()) throw new SQLException("database error: no id generated");
 
-                cache.put(user); // add the createUser to the cache
+                    user.setId(rs.getInt(1));
+                    cache.put(user); // add the createUser to the cache
+                }
             }
         }
 
@@ -434,7 +432,7 @@ public class UserManager
         user.setId(rs.getInt("user_id"));
         user.setDeleted(rs.getBoolean("deleted"));
         user.setUsername(rs.getString("username"));
-        user.setEmail(rs.getString("email"));
+        user.setEmailRaw(rs.getString("email"));
         user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
         user.setEmailConfirmed(rs.getBoolean("is_email_confirmed"));
         user.setPasswordRaw(rs.getString("password"));
@@ -468,14 +466,12 @@ public class UserManager
 
         if(preferenceBytes != null && preferenceBytes.length > 0)
         {
-            ByteArrayInputStream preferenceBAIS = new ByteArrayInputStream(preferenceBytes);
-
             try
             {
-                ObjectInputStream preferencesOIS = new ObjectInputStream(preferenceBAIS);
+                ObjectInputStream preferencesStream = new ObjectInputStream(new ByteArrayInputStream(preferenceBytes));
 
                 // re-create the object
-                preferences = (HashMap<String, String>) preferencesOIS.readObject();
+                preferences = (HashMap<String, String>) preferencesStream.readObject();
             }
             catch(Exception e)
             {
@@ -517,9 +513,7 @@ public class UserManager
         user.setProfession("");
         user.setStudentId("");
         user.setUsername("Anonym " + user.getId());
-
-        user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
-        user.setEmailConfirmed(true); // disable mail validation
+        user.setEmailRaw(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
 
         user.save();
     }
@@ -610,8 +604,7 @@ public class UserManager
         }
 
         user.setDeleted(true);
-        user.setEmail(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
-        user.setEmailConfirmed(true); // disable mail validation
+        user.setEmailRaw(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();

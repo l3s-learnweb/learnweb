@@ -51,6 +51,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public enum PasswordHashing
     {
+        EMPTY,
         MD5,
         PBKDF2
     }
@@ -138,8 +139,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public List<Course> getCourses() throws SQLException
     {
-        if(courses != null)
-            return courses;
+        if(courses != null) return courses;
 
         courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
 
@@ -149,6 +149,16 @@ public class User implements Comparable<User>, Serializable, HasId
         }
 
         return courses;
+    }
+
+    public boolean isMemberOfCourse(int courseId) throws SQLException
+    {
+        for(Course course : getCourses())
+        {
+            if(courseId == course.getId()) return true;
+        }
+
+        return false;
     }
 
     public String getAdditionalInformation()
@@ -245,7 +255,7 @@ public class User implements Comparable<User>, Serializable, HasId
         return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
     }
 
-    public List<Tag> getTags() throws Exception
+    public List<Tag> getTags() throws SQLException
     {
         return Learnweb.getInstance().getResourceManager().getTagsByUserId(this.getId());
     }
@@ -286,15 +296,24 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setEmail(String email)
     {
-        // if email was changed (but not by the initial createUser() call)
-        if(this.email != null && StringUtils.isNotEmpty(email) && !StringUtils.equals(email, this.email))
+        if(StringUtils.isNotBlank(email) && !StringUtils.equalsIgnoreCase(email, this.email))
         {
+            this.email = email;
             this.emailConfirmed = false;
             this.emailConfirmationToken = MD5.hash(RandomStringUtils.randomAlphanumeric(26) + this.id + email);
         }
+        else
+        {
+            this.email = StringUtils.isNotBlank(email) ? email : null;
+        }
+    }
 
-        this.email = StringUtils.defaultString(email); // make sure it's not null
-        this.email = this.email.trim();
+    /**
+     * This method should be used when we read the email from database, but never for user input fields.
+     */
+    public void setEmailRaw(String email)
+    {
+        this.email = email;
     }
 
     public void setEmailConfirmationToken(String emailConfirmationToken)
@@ -365,10 +384,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private long groupsCacheTime = 0L;
 
     /**
-     * returns the groups the user is member off
-     *
-     * @return
-     * @throws SQLException
+     * Returns the groups the user is member off.
      */
     public List<Group> getGroups() throws SQLException
     {
@@ -381,9 +397,7 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
-     *
      * @return number of groups this user is member of
-     * @throws SQLException
      */
     public int getGroupCount() throws SQLException
     {
@@ -391,16 +405,12 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
-     * returns the groups the user can add resources to
-     *
-     * @return
-     * @throws SQLException
+     * Returns the groups the user can add resources to.
      */
     public List<Group> getWriteAbleGroups() throws SQLException
     {
         LinkedList<Group> writeAbleGroups = new LinkedList<>();
-        List<Group> groups = getGroups();
-        for(Group group : groups)
+        for(Group group : getGroups())
         {
             if(group.canAddResources(this))
                 writeAbleGroups.add(group);
@@ -408,12 +418,12 @@ public class User implements Comparable<User>, Serializable, HasId
         return writeAbleGroups;
     }
 
-    public void joinGroup(int groupId) throws Exception
+    public void joinGroup(int groupId) throws SQLException
     {
         joinGroup(Learnweb.getInstance().getGroupManager().getGroupById(groupId));
     }
 
-    public void joinGroup(Group group) throws Exception
+    public void joinGroup(Group group) throws SQLException
     {
         Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
 
@@ -424,19 +434,19 @@ public class User implements Comparable<User>, Serializable, HasId
         setActiveGroup(group);
     }
 
-    public void leaveGroup(Group group) throws Exception
+    public void leaveGroup(Group group) throws SQLException
     {
         Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
 
         groups = null; // force reload
 
-        group.clearCaches(); // removeMember(this);
+        group.clearCaches();
 
         if(activeGroup == group)
             setActiveGroup(null);
     }
 
-    public void deleteGroup(Group group) throws Exception
+    public void deleteGroup(Group group) throws SQLException
     {
         Learnweb.getInstance().getGroupManager().deleteGroup(group);
 
@@ -457,9 +467,8 @@ public class User implements Comparable<User>, Serializable, HasId
      * Defines the group, the user ist currently working on
      *
      * @param group
-     * @throws SQLException
      */
-    public void setActiveGroup(Group group) throws SQLException
+    public void setActiveGroup(Group group)
     {
         setActiveGroup(null == group ? 0 : group.getId());
 
@@ -470,9 +479,8 @@ public class User implements Comparable<User>, Serializable, HasId
      * Defines the group, the user ist currently working on
      *
      * @param groupId
-     * @throws SQLException
      */
-    public void setActiveGroup(int groupId) throws SQLException
+    public void setActiveGroup(int groupId)
     {
         this.activeGroup = null; // force to reload group
         this.activeGroupId = groupId;
@@ -506,17 +514,18 @@ public class User implements Comparable<User>, Serializable, HasId
         return activeGroupId;
     }
 
-    public void setImage(InputStream inputStream) throws SQLException, IOException, IllegalArgumentException
+    public void setImage(InputStream inputStream) throws SQLException, IOException
     {
         // process image
         Image img = new Image(inputStream);
-        Image thumbnail = img.getResizedToSquare2(200, 0.0);
 
         // save image file
         File file = new File();
         file.setType(TYPE.PROFILE_PICTURE);
         file.setName("user_icon.png");
         file.setMimeType("image/png");
+
+        Image thumbnail = img.getResizedToSquare2(200, 0.0);
         file = Learnweb.getInstance().getFileManager().save(file, thumbnail.getInputStream());
         thumbnail.dispose();
         inputStream.close();
@@ -577,11 +586,7 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
-     * returns the url of the users image
-     * or a default image if no image has been added
-     *
-     * @return
-     * @throws SQLException
+     * @return the url of the users image or a default image if no image has been added
      */
     public String getImage() throws SQLException
     {
@@ -653,9 +658,13 @@ public class User implements Comparable<User>, Serializable, HasId
             initials = name.substring(0, 1);
 
         if(initials.startsWith(".")) // ui-avatars can't handle dots in the beginning
-            initials.replace(".", "X");
+            initials = initials.replace(".", "X");
 
-        return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode("https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff");
+        // TODO: we should do that locally
+        String defaultAvatarUrl = "https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff";
+
+        if (email != null) return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode(defaultAvatarUrl);
+        else return defaultAvatarUrl;
     }
 
     /**
@@ -748,8 +757,15 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setPassword(String password)
     {
-        this.password = PBKDF2.hashPassword(password);
-        this.hashing = PasswordHashing.PBKDF2;
+        if (password != null)
+        {
+            this.password = PBKDF2.hashPassword(password);
+            this.hashing = PasswordHashing.PBKDF2;
+        }
+        else
+        {
+            this.hashing = PasswordHashing.EMPTY;
+        }
     }
 
     public boolean validatePassword(String password)

@@ -1,11 +1,11 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
@@ -14,9 +14,9 @@ import javax.inject.Named;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.Course.Option;
@@ -35,9 +35,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private String password;
 
     @NotBlank
-    private String confirmPassword;
-
-    @NotBlank
     private String studentId;
 
     @Email
@@ -46,7 +43,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private boolean acceptPrivacyPolicy = false;
     private boolean acceptTracking = false;
 
-    private String wizardTitle;
+    private String wizard;
+    private String fastLogin;
     private boolean wizardParamInvalid = false; // true if an invalid wizard parameter was given; no parameter is ok for the public course
 
     private String affiliation;
@@ -59,6 +57,103 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private ConfirmRequiredBean confirmRequiredBean;
 
     private Course course;
+
+    public String onLoad() throws IOException, SQLException
+    {
+        if(StringUtils.isNotEmpty(wizard))
+        {
+            course = getLearnweb().getCourseManager().getCourseByWizard(wizard);
+            if(null == course)
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
+                wizardParamInvalid = true;
+            }
+            else if(course.getOption(Option.Users_Disable_wizard))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
+                wizardParamInvalid = true;
+            }
+            else
+            {
+                // special message for yell
+                if(course.getId() == 505) addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
+                else addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+
+                mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
+                affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
+                studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
+
+                if(StringUtils.isNotEmpty(fastLogin)) return fastLogin();
+            }
+        }
+        else
+        {
+            addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
+        }
+
+        return null;
+    }
+
+    private String fastLogin() throws SQLException, IOException
+    {
+        User user = getLearnweb().getUserManager().getUserByUsername(fastLogin);
+
+        if(user != null)
+        {
+            if(user.getPassword() == null && user.isMemberOfCourse(course.getId()))
+            {
+                return LoginBean.loginUser(this, user);
+            }
+            else
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "You should use password to login.");
+                return "/lw/user/login.xhtml?faces-redirect=true";
+            }
+        }
+        else
+        {
+            user = getLearnweb().getUserManager().registerUser(fastLogin, null, null, course);
+            return LoginBean.loginUser(this, user);
+        }
+    }
+
+    public String register() throws Exception
+    {
+        final User user = getLearnweb().getUserManager().registerUser(username, password, email, course);
+
+        if(StringUtils.isNotEmpty(studentId) || StringUtils.isNotEmpty(affiliation))
+        {
+            user.setStudentId(studentId);
+            user.setAffiliation(affiliation);
+            user.save();
+        }
+
+        log(Action.register, 0, 0, null, user);
+        if(null != course && course.getDefaultGroupId() != 0)
+        {
+            user.joinGroup(course.getDefaultGroupId());
+            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
+        }
+
+        if(mailRequired && !user.isEmailConfirmed())
+        {
+            user.sendEmailConfirmation();
+            confirmRequiredBean.setLoggedInUser(user);
+
+            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+        }
+
+        return LoginBean.loginUser(this, user);
+    }
+
+    @SuppressWarnings("unused")
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws SQLException
+    {
+        if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
+        }
+    }
 
     public String getUsername()
     {
@@ -80,16 +175,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         this.password = password;
     }
 
-    public String getConfirmPassword()
-    {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword)
-    {
-        this.confirmPassword = confirmPassword;
-    }
-
     public String getEmail()
     {
         return email;
@@ -102,110 +187,22 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     public String getWizard()
     {
-        return wizardTitle;
+        return wizard;
     }
 
     public void setWizard(String wizard)
     {
-        this.wizardTitle = wizard;
+        this.wizard = wizard;
     }
 
-    public String register() throws Exception
+    public String getFastLogin()
     {
-        Course course = null;
-        Learnweb learnweb = getLearnweb();
-
-        if(null != wizardTitle && wizardTitle.length() != 0)
-        {
-            course = learnweb.getCourseManager().getCourseByWizard(wizardTitle);
-
-            if(null == course)
-            {
-                addMessage(FacesMessage.SEVERITY_FATAL, "invalid wizard parameter");
-                return null;
-            }
-        }
-
-        final User user = learnweb.getUserManager().registerUser(username, password, email, wizardTitle);
-
-        if(studentIdRequired || affiliationRequired)
-        {
-            user.setStudentId(studentId);
-            user.setAffiliation(affiliation);
-            user.save();
-        }
-        //addMessage(FacesMessage.SEVERITY_INFO, "register_success");
-
-        //logging
-        log(Action.register, 0, 0, null, user);
-        if(null != course && course.getDefaultGroupId() != 0)
-            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
-
-        if(!user.isEmailConfirmed())
-        {
-            user.sendEmailConfirmation();
-            confirmRequiredBean.setLoggedInUser(user);
-
-            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
-        }
-
-        return LoginBean.loginUser(this, user);
+        return fastLogin;
     }
 
-    public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
+    public void setFastLogin(final String fastLogin)
     {
-        // Find the actual JSF component for the first password field.
-        UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("registerform:password");
-
-        // Get its value, the entered password of the first field.
-        String password = (String) passwordInput.getValue();
-
-        if(null != password && !password.equals(value))
-        {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
-        }
-    }
-
-    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-        if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
-        {
-            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
-        }
-    }
-
-    public void preRenderView() throws ValidatorException, SQLException
-    {
-        if(wizardTitle == null)
-            wizardTitle = getFacesContext().getExternalContext().getRequestParameterMap().get("wizard");
-
-        if(null != wizardTitle && wizardTitle.length() != 0)
-        {
-            course = getLearnweb().getCourseManager().getCourseByWizard(wizardTitle);
-            if(null == course)
-            {
-                addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
-                wizardParamInvalid = true;
-            }
-            else if(course.getOption(Option.Users_Disable_wizard))
-            {
-                addMessage(FacesMessage.SEVERITY_ERROR, "registration.wizard_disabled");
-                wizardParamInvalid = true;
-            }
-            else
-            {
-                if(course.getId() == 505) // special message for yell
-                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
-                else
-                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
-
-                mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
-                affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
-                studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
-            }
-        }
-        else
-            addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
+        this.fastLogin = fastLogin;
     }
 
     public boolean isMailRequired()
