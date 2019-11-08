@@ -13,12 +13,13 @@ body {
             @include border-bottom-radius(0px);
             .ui-panel-titlebar-icon {
                 position: relative;
-                top: 2px;
+                top: 7px;
                 color: $headerTextColor;
                 margin: 0 0 0 4px;
                 @include transition(color .3s);
                 &.ui-state-hover {
                     color: $dialogTitlebarIconHover;
+                    text-decoration: none;
                 }
             }
         }        
