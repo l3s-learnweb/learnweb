@@ -1,102 +1,103 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-	<!--@elvariable id="summary" type="de.l3s.learnweb.group.SummaryOverview"-->
-	<!--@elvariable id="summaryTitle" type="java.lang.String"-->
+<!--@elvariable id="summary" type="de.l3s.learnweb.group.SummaryOverview"-->
+<!--@elvariable id="summaryTitle" type="java.lang.String"-->
 
-	<p:panel header="#{summaryTitle}" rendered="#{not empty summary.isEmpty()}" styleClass="mb-3">
-		<h:form id="summary_overview_form">
-			<p:accordionPanel styleClass="last-activity-overview ui-widget-content-pt-0" multiple="true">
-				<p:tab rendered="#{not empty summary.addedResources}">
-					<f:facet name="title">
-						<i class="fa fa-fw fa-plus text-success pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['added_resources']}"><f:param value="#{summary.addedResources.size()}"/></h:outputFormat>
-					</f:facet>
+<p:panel header="#{summaryTitle}" rendered="#{not empty summary.isEmpty()}" styleClass="mb-3">
+    <h:form id="summary_overview_form">
+        <p:accordionPanel styleClass="last-activity-overview ui-widget-content-pt-0" multiple="true">
+            <p:tab rendered="#{not empty summary.addedResources}">
+                <f:facet name="title">
+                    <i class="fa fa-fw fa-plus text-success pr-1" aria-hidden="true"></i>
+                    <h:outputFormat value="#{msg['added_resources']}"><f:param value="#{summary.addedResources.size()}"/></h:outputFormat>
+                </f:facet>
 
-					<div class="activity-feed-slider activity-feed-added-resources">
-						<p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-							<p:commandLink update=":right_pane">
-								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
+                <div class="activity-feed-slider activity-feed-added-resources">
+                    <p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
+                        <p:commandLink update=":right_pane" onstart="PF('learnweb').showRightPane();">
+                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
-								<div class="mx-auto" style="min-width:10rem;">
-									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{item.resource}"/>
-									</ui:decorate>
-								</div>
-							</p:commandLink>
-						</p:carousel>
-					</div>
-				</p:tab>
+                            <div class="mx-auto" style="min-width:10rem;">
+                                <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                                    <ui:param name="res" value="#{item.resource}"/>
+                                </ui:decorate>
+                            </div>
+                        </p:commandLink>
+                    </p:carousel>
+                </div>
+            </p:tab>
 
-				<p:tab rendered="#{not empty summary.deletedResources}">
-					<f:facet name="title">
-						<i class="fa fa-fw fa-times text-danger pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['deleted_resources']}"><f:param value="#{summary.deletedResources.size()}"/></h:outputFormat>
-					</f:facet>
+            <p:tab rendered="#{not empty summary.deletedResources}">
+                <f:facet name="title">
+                    <i class="fa fa-fw fa-times text-danger pr-1" aria-hidden="true"></i>
+                    <h:outputFormat value="#{msg['deleted_resources']}"><f:param value="#{summary.deletedResources.size()}"/></h:outputFormat>
+                </f:facet>
 
-					<div class="activity-feed">
-						<p:repeat value="#{summary.deletedResources}" var="item">
-							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false"/>
-							</div>
-						</p:repeat>
-					</div>
-				</p:tab>
+                <div class="activity-feed">
+                    <p:repeat value="#{summary.deletedResources}" var="item">
+                        <div class="feed-entry-text">
+                            <h:outputText value="#{item.description}" escape="false"/>
+                        </div>
+                    </p:repeat>
+                </div>
+            </p:tab>
 
-				<p:tab rendered="#{not empty summary.updatedResources}">
-					<f:facet name="title">
-						<i class="fa fa-fw fa-pencil text-warning pr-1" aria-hidden="true"></i>
-						<h:outputFormat value="#{msg['updated_resources']}"><f:param value="#{summary.updatedResources.size()}"/></h:outputFormat>
-					</f:facet>
+            <p:tab rendered="#{not empty summary.updatedResources}">
+                <f:facet name="title">
+                    <i class="fa fa-fw fa-pencil text-warning pr-1" aria-hidden="true"></i>
+                    <h:outputFormat value="#{msg['updated_resources']}"><f:param value="#{summary.updatedResources.size()}"/></h:outputFormat>
+                </f:facet>
 
-					<div class="activity-feed-slider activity-feed-updated-resources">
-						<p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
-							<p:commandLink update=":right_pane">
-								<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
+                <div class="activity-feed-slider activity-feed-updated-resources">
+                    <p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true"
+                                circular="true" breakpoint="-1">
+                        <p:commandLink update=":right_pane" onstart="PF('learnweb').showRightPane();">
+                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
 
-								<div class="mx-auto" style="min-width:10rem;">
-									<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-										<ui:param name="res" value="#{item.resource}"/>
-									</ui:decorate>
-								</div>
-							</p:commandLink>
-						</p:carousel>
-					</div>
-				</p:tab>
+                            <div class="mx-auto" style="min-width:10rem;">
+                                <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+                                    <ui:param name="res" value="#{item.resource}"/>
+                                </ui:decorate>
+                            </div>
+                        </p:commandLink>
+                    </p:carousel>
+                </div>
+            </p:tab>
 
-				<p:tab rendered="#{not empty summary.forumsInfo}">
-					<f:facet name="title">
-						<i class="fa fa-fw fa-commenting-o text-info pr-1" aria-hidden="true"></i>
-						<h:outputText value="#{msg.forum}"/>
-					</f:facet>
+            <p:tab rendered="#{not empty summary.forumsInfo}">
+                <f:facet name="title">
+                    <i class="fa fa-fw fa-commenting-o text-info pr-1" aria-hidden="true"></i>
+                    <h:outputText value="#{msg.forum}"/>
+                </f:facet>
 
-					<div class="activity-feed activity-feed-forum">
-						<p:repeat value="#{summary.forumsInfo}" var="item">
-							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false"/>
-							</div>
-						</p:repeat>
-					</div>
-				</p:tab>
+                <div class="activity-feed activity-feed-forum">
+                    <p:repeat value="#{summary.forumsInfo}" var="item">
+                        <div class="feed-entry-text">
+                            <h:outputText value="#{item.description}" escape="false"/>
+                        </div>
+                    </p:repeat>
+                </div>
+            </p:tab>
 
-				<p:tab rendered="#{not empty summary.membersInfo}">
-					<f:facet name="title">
-						<i class="fa fa-fw fa-users text-info pr-1" aria-hidden="true"></i>
-						<h:outputText value="#{msg.members}"/>
-					</f:facet>
+            <p:tab rendered="#{not empty summary.membersInfo}">
+                <f:facet name="title">
+                    <i class="fa fa-fw fa-users text-info pr-1" aria-hidden="true"></i>
+                    <h:outputText value="#{msg.members}"/>
+                </f:facet>
 
-					<div class="activity-feed activity-feed-members">
-						<p:repeat value="#{summary.membersInfo}" var="item">
-							<div class="feed-entry-text">
-								<h:outputText value="#{item.description}" escape="false"/>
-							</div>
-						</p:repeat>
-					</div>
-				</p:tab>
-			</p:accordionPanel>
-		</h:form>
-	</p:panel>
+                <div class="activity-feed activity-feed-members">
+                    <p:repeat value="#{summary.membersInfo}" var="item">
+                        <div class="feed-entry-text">
+                            <h:outputText value="#{item.description}" escape="false"/>
+                        </div>
+                    </p:repeat>
+                </div>
+            </p:tab>
+        </p:accordionPanel>
+    </h:form>
+</p:panel>
 </ui:composition>

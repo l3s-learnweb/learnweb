@@ -17,6 +17,7 @@
 
                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
                     <ui:param name="folder" value="#{folder}"/>
+                    <ui:param name="showSelectIcon" value="true"/>
                 </ui:decorate>
             </h:outputLink>
         </ui:repeat>
@@ -35,6 +36,7 @@
 
                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
                     <ui:param name="res" value="#{res.resource}"/>
+                    <ui:param name="showSelectIcon" value="true"/>
                 </ui:decorate>
             </h:outputLink>
         </ui:repeat>

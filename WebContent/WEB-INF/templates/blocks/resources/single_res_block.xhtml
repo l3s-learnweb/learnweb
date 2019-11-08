@@ -4,9 +4,12 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+<!--@elvariable id="showSelectIcon" type="java.lang.Boolean"-->
 
 <div class="res-block">
-    <button class="res-selector"></button>
+    <ui:fragment rendered="#{showSelectIcon}">
+        <button class="res-selector"></button>
+    </ui:fragment>
 
     <div class="res-bl-preview">
         <div class="res-bl-preview-wrap">
@@ -20,7 +23,7 @@
         </div>
         <div class="res-bl-desc">
             <h:outputText value="#{res.title}" escape="false" styleClass="res-bl-title"/>
-            <span class="res-bl-author">#{msg.by} <b>#{res.user.username}</b></span>
+            <span class="res-bl-author">#{msg.by} <strong>#{res.user.username}</strong></span>
         </div>
     </div>
 </div>
