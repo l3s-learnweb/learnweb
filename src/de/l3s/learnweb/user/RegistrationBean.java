@@ -49,14 +49,13 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     private String affiliation;
 
+    private Course course;
     private boolean mailRequired = false;
     private boolean affiliationRequired = false;
     private boolean studentIdRequired = false;
 
     @Inject
     private ConfirmRequiredBean confirmRequiredBean;
-
-    private Course course;
 
     public String onLoad() throws IOException, SQLException
     {
@@ -117,7 +116,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         }
     }
 
-    public String register() throws Exception
+    public String register() throws IOException, SQLException
     {
         final User user = getLearnweb().getUserManager().registerUser(username, password, email, course);
 
