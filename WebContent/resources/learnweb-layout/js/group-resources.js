@@ -262,6 +262,8 @@ function createSelectable(resContainerId) {
  * Require to re-create when resources updated (re-bind events)
  */
 function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
+  if (PF('learnweb').isTouchDevice()) return; // disable on mobile device
+
   const $resContainer = $(document.getElementById(resContainerId));
 
   // check if abe to move resources here

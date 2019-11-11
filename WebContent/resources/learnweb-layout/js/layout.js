@@ -17,7 +17,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     this.header = this.wrapper.children('.layout-header');
     this.menuButton = this.header.find('#menu-button');
 
-    // this.mainPane = this.body.find('.layout-main-pane');
     this.rightPane = this.body.find('.layout-right-pane');
     this.isRightPaneOpen = false;
 
@@ -136,6 +135,10 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     return window.innerWidth > 1200; // Do not forget to change scss value according
   },
 
+  isTouchDevice() {
+    return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0));// eslint-disable-line compat/compat
+  },
+
   resize() {
     if (window.cqApi && typeof window.cqApi.reevaluate === 'function') {
       window.cqApi.reevaluate(false);
@@ -172,10 +175,10 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
 
   bindEvents() {
     this.menuitemLinks.on('click', (e) => {
-      const currentLink = $(e.currentTarget);
+      const $currentLink = $(e.currentTarget);
 
       if (e.target.className.indexOf('ui-menuitem-icon-expand') === -1) {
-        const href = currentLink.attr('href');
+        const href = $currentLink.attr('href');
 
         if (href && href !== '#') {
           window.location.href = href;
@@ -184,7 +187,7 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
         }
       }
 
-      const submenu = currentLink.parent();
+      const submenu = $currentLink.parent();
       if (submenu.hasClass('ui-menu-parent')) {
         if (this.isExpanded(submenu)) {
           this.collapseTreeItem(submenu);
@@ -246,14 +249,6 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
-
-/**
- * Method required for the search field
- * TODO: why do we need it?
- */
-function removeViewState(searchForm) {
-  $(searchForm).find("[name='javax.faces.ViewState']").remove();
-}
 
 /**
  * TODO: Find better way to call it
@@ -322,21 +317,18 @@ PrimeFaces.widget.Carousel.prototype.refreshDimensions = function () {
     }
     this.responsiveDropdown.hide();
     this.pageLinks.show();
+  } else if ($(window).width() <= this.cfg.breakpoint) {
+    this.columns = 1;
+    this.calculateItemWidths(this.columns);
+    this.totalPages = this.itemsCount;
+    this.responsiveDropdown.show();
+    this.pageLinks.hide();
   } else {
-    const win = $(window);
-    if (win.width() <= this.cfg.breakpoint) {
-      this.columns = 1;
-      this.calculateItemWidths(this.columns);
-      this.totalPages = this.itemsCount;
-      this.responsiveDropdown.show();
-      this.pageLinks.hide();
-    } else {
-      this.columns = this.cfg.numVisible;
-      this.calculateItemWidths();
-      this.totalPages = Math.ceil(this.itemsCount / this.cfg.numVisible);
-      this.responsiveDropdown.hide();
-      this.pageLinks.show();
-    }
+    this.columns = this.cfg.numVisible;
+    this.calculateItemWidths();
+    this.totalPages = Math.ceil(this.itemsCount / this.cfg.numVisible);
+    this.responsiveDropdown.hide();
+    this.pageLinks.show();
   }
 
   this.page = Math.ceil(this.first / this.columns);
