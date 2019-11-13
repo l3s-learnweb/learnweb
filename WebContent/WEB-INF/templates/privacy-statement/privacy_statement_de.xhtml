@@ -4,293 +4,270 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<div class="row">
-    <div class="col-4 sticky-column">
-        <h5 class="px-2">Inhalte auf dieser Seite</h5>
+    <div class="row">
+        <div class="col-md-4 sticky-column-md">
+            <h5 class="px-2">Inhalte auf dieser Seite</h5>
 
-        <nav id="content-list" class="nav nav-pills flex-column">
-            <a class="nav-link text-uppercase" href="#item-1">1 Name und Anschrift des Verantwortlichen</a>
-            <a class="nav-link text-uppercase" href="#item-2">2 Name und Anschrift des technisch Verantwortlichen</a>
-            <a class="nav-link text-uppercase" href="#item-3">3 Name und Anschrift des Datenschutzbeauftragten</a>
-            <a class="nav-link text-uppercase" href="#item-4">4 Verarbeitung personenbezogener Daten</a>
-            <nav class="nav nav-pills flex-column">
-                <a class="nav-link ml-3 my-1" href="#item-4-1">4.1 Profilinformationen</a>
-                <a class="nav-link ml-3 my-1" href="#item-4-2">4.2 Inhalte</a>
-                <a class="nav-link ml-3 my-1" href="#item-4-3">4.3 Nutzerverhalten</a>
+            <nav id="content-list" class="flex-column">
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-1" value="1 Name und Anschrift des Verantwortlichen"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-2" value="2 Name und Anschrift des technisch Verantwortlichen"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-3" value="3 Name und Anschrift des Datenschutzbeauftragten"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4" value="4 Verarbeitung personenbezogener Daten"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-1" value="4.1 Profilinformationen"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-2" value="4.2 Inhalte"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-3" value="4.3 Nutzerverhalten"></h:link>
+                </nav>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-5" value="5 Rollen und Zugriffsrechte"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-6" value="6 Zeitspanne der Speicherung personenbezogener Daten"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Einbindung von fremden Inhalten"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Rechte der betroffenen Person"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-1" value="8.1 Widerruflichkeit der Einwilligung"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-2" value="8.2 Weitere Rechte"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-3" value="8.3 Recht auf Widerspruch"></h:link>
+                </nav>
             </nav>
-            <a class="nav-link text-uppercase" href="#item-5">5 Rollen und Zugriffsrechte</a>
-            <a class="nav-link text-uppercase" href="#item-6">6 Zeitspanne der Speicherung personenbezogener Daten</a>
-            <a class="nav-link text-uppercase" href="#item-7">7 Einbindung von fremden Inhalten</a>
-            <a class="nav-link text-uppercase" href="#item-8">8 Rechte der betroffenen Person</a>
-            <nav class="nav nav-pills flex-column">
-                <a class="nav-link ml-3 my-1" href="#item-8-1">8.1 Widerruflichkeit der Einwilligung</a>
-                <a class="nav-link ml-3 my-1" href="#item-8-2">8.2 Weitere Rechte</a>
-                <a class="nav-link ml-3 my-1" href="#item-8-3">8.3 Recht auf Widerspruch</a>
-            </nav>
-        </nav>
-    </div>
-    <div class="col-8">
-        <div id="item-1" class="mb-4">
-            <h3 class="text-uppercase">1 Name und Anschrift des Verantwortlichen</h3>
-
-            <div class="c-section-text">
-                <p>Der Verantwortliche im Sinne der Datenschutz-Grundverordnung und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher Bestimmungen ist die:</p>
-
-                <p>
-                    Gottfried Wilhelm Leibniz Universität Hannover<br/>
-                    Welfengarten 1<br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 0">+49 511 762 - 0</a><br/>
-                    Fax <a href="tel:+49 511 762 3456">+49 511 762 - 3456</a><br/>
-                    <a href="https://www.uni-hannover.de" target="_blank">www.uni-hannover.de</a>
-                </p>
-
-                <p>
-                    Die Leibniz Universität Hannover ist eine Körperschaft des öffentlichen Rechts und wird durch den <a href="/de/universitaet/praesidium/praesident/" target="_blank">Präsidenten</a>, Herrn Prof. Dr. iur. Volker Epping gesetzlich vertreten.
-                </p>
-            </div>
         </div>
 
-        <div id="item-2" class="mb-4">
-            <h3 class="text-uppercase">2 Name und Anschrift des technisch Verantwortlichen</h3>
-
-            <div class="c-section-text">
-                <p>Für die technische Umsetzung und den Betrieb der Plattform ist das Forschungszentrum L3S verantwortlich:</p>
-
-                <p>
-                    Forschungszentrum L3S<br/>
-                    Appelstraße 9a<br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br/>
-                    Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br/>
-                    <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
-                </p>
-
-                <p>
-                    Vertreten durch: Prof. Dr. Wolfgang Nejdl (Direktor), Dr. Claudia Niederée (Geschäftsführende Direktorin)
-                </p>
-            </div>
-        </div>
-
-        <div id="item-3" class="mb-4">
-            <h3 class="text-uppercase">3 Name und Anschrift des Datenschutzbeauftragten</h3>
-
-            <div class="c-section-text">
-                <p>Behördlicher Datenschutzbeauftragter der Leibniz Universität Hannover:</p>
-
-                <p>
-                    Gottfried Wilhelm Leibniz Universität Hannover<br/>
-                    - Datenschutzbeauftragter - <br/>
-                    Königsworther Platz 1 <br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br/>
-                    Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br/>
-                    E-Mail: <a href="mailto:datenschutz@uni-hannover.de">datenschutz@uni-hannover.de</a><br/>
-                    <a href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
-                </p>
-            </div>
-        </div>
-
-        <div id="item-4" class="mb-4">
-            <h3 class="text-uppercase">4 Verarbeitung personenbezogener Daten</h3>
-
-            <div class="c-section-text">
-                <p>
-                    LearnWeb ist eine Lernplattform zum kollaborativen Finden, Teilen und Bearbeiten von Ressourcen (Webseiten, Bilder, Videos usw.).
-                    Um das System verwenden zu können ist die Angabe einiger personenbezogener Daten erforderlich. <br/>
-                    Die Rechtsgrundlage zur Verarbeitung der personenbezogenen Daten ist die Einwilligung gemäß Art. 6 Abs. 1lit. a), Art. 7  Datenschutzgrundverordnung (DSGVO). Im Folgenden sind alle personenbezogenen Daten, die bei der Nutzung von Learnweb in der Datenbank gespeichert werden, und der Grund der Speicherung bzw. Verarbeitung gelistet. Wer die gespeicherten Daten einsehen kann ist unter 2. Rollen und Zugriffsrechte zu erfahren. Wie lange die Daten vorgehalten werden ist unter 3. Zeitspanne der Speicherung personenbezogener Daten zu lesen.
-                </p>
-            </div>
-
-            <div id="item-4-1" class="mb-3">
-                <h5 class="my-2">4.1 Profilinformationen</h5>
+        <div class="col-md-8">
+            <div id="item-1" class="mb-4">
+                <h3>1 Name und Anschrift des Verantwortlichen</h3>
 
                 <div class="c-section-text">
-                    <p>Daten die Benutzer in ihrem Profil speichern:</p>
+                    <p>Der Verantwortliche im Sinne der Datenschutz-Grundverordnung und anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger datenschutzrechtlicher
+                        Bestimmungen ist die:</p>
 
-                    <ol>
-                        <li>Benutzername, E-Mail-Adresse und Passwort: Diese Daten dienen der Authentifizierung des Benutzers am System. Das Passwort wird verschlüsselt gespeichert.</li>
-                        <li>Name und Matrikelnummer: Über den realen Namen oder die Matrikelnummer können Lehrende die einzelnen Nutzer in den Lehrveranstaltungen identifizieren
-                            (vor allem bei Prüfungs- oder Studienleistungen erforderlich)</li>
-                        <li>Profilfoto, Geschlecht, Adresse, Organisation und Interessen: Sind absolut freiwillig und dienen ausschließlich der Information anderer Nutzer </li>
-                    </ol>
-                </div>
-            </div>
-
-            <div id="item-4-2" class="mb-3">
-                <h5 class="my-2">4.2 Inhalte</h5>
-
-                <div class="c-section-text">
-                    <p>Daten die auf Learnweb erstellt oder hochgeladen werden:</p>
-
-                    <ol>
-                        <li>Fotos, Videos</li>
-                        <li>Texte, Tabellen, Präsentationen</li>
-                        <li>Umfragen, Glossare</li>
-                        <li>sonstige Dateien (z.B. ZIP und andere Binärdateien)</li>
-                        <li>Forenbeiträge</li>
-                        <li>Kommentare und Bewertungen zu Ressourcen</li>
-                    </ol>
-                </div>
-            </div>
-
-            <div id="item-4-3" class="mb-3">
-                <h5 class="my-2">4.3 Nutzerverhalten</h5>
-
-                <div class="c-section-text">
                     <p>
-                        Zur Bereitstellung und zur Verbesserung seiner Funktionalitäten ist es notwendig, dass Learnweb allgemeine Benutzeraktionen wie Login und Logout
-                        aber vor allem Aktionen, die im Umgang mit Ressourcen und Gruppen erfolgen aufzeichnet. Dazu zählt das Erstellen, Bearbeiten, Ansehen, Kommentieren
-                        und Suchen, aber auch alle weiteren Aktionen, die auf Ressourcen und Gruppen angewendet werden können. Es wird jeweils gespeichert welcher Benutzer,
-                        zu welchem Zeitpunkt, welche Aktion ausgeführt hat. Dies dient dazu die Nachverfolgbarkeit von Änderungen sicherzustellen.
-                        Außerdem werden die Informationen benutzt, um Benutzer über Änderungen an ihren Gruppen und Ressourcen zu informieren.
+                        Gottfried Wilhelm Leibniz Universität Hannover<br /> Welfengarten 1<br /> 30167 Hannover
                     </p>
 
                     <p>
-                        Ihr Kurs ist Teil eines Forschungsprojektes, für dessen gelingen es erforderlich ist weitere Nutzungsstatistiken zu erheben.
-                        Werden Einzelseiten unserer Website aufgerufen, so werden folgende Daten gespeichert:
+                        Tel. <a href="tel:+49 511 762 0">+49 511 762 - 0</a><br /> Fax <a href="tel:+49 511 762 3456">+49 511 762 - 3456</a><br /> <a href="https://www.uni-hannover.de"
+                            target="_blank">www.uni-hannover.de</a>
                     </p>
 
-                    <ol>
-                        <li>Die aufgerufene Webseite</li>
+                    <p>
+                        Die Leibniz Universität Hannover ist eine Körperschaft des öffentlichen Rechts und wird durch den <a href="https://www.uni-hannover.de/de/universitaet/praesidium/praesident/"
+                            target="_blank">Präsidenten</a>, Herrn Prof. Dr. iur. Volker Epping gesetzlich vertreten.
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-2" class="mb-4">
+                <h3>2 Name und Anschrift des technisch Verantwortlichen</h3>
+
+                <div class="c-section-text">
+                    <p>Für die technische Umsetzung und den Betrieb der Plattform ist das Forschungszentrum L3S verantwortlich:</p>
+
+                    <p>
+                        Forschungszentrum L3S<br /> Appelstraße 9a<br /> 30167 Hannover
+                    </p>
+
+                    <p>
+                        Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br /> Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br /> E-Mail: <a
+                            href="mailto:#{msg['application.serverAdmin']}">#{msg['application.serverAdmin']}</a><br /> <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
+                    </p>
+
+                    <p>Vertreten durch: Prof. Dr. Wolfgang Nejdl (Direktor), Dr. Claudia Niederée (Geschäftsführende Direktorin)</p>
+                </div>
+            </div>
+
+            <div id="item-3" class="mb-4">
+                <h3>3 Name und Anschrift des Datenschutzbeauftragten</h3>
+
+                <div class="c-section-text">
+                    <p>Behördlicher Datenschutzbeauftragter der Leibniz Universität Hannover:</p>
+
+                    <p>
+                        Gottfried Wilhelm Leibniz Universität Hannover<br /> - Datenschutzbeauftragter - <br /> Königsworther Platz 1 <br /> 30167 Hannover
+                    </p>
+
+                    <p>
+                        Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br /> Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br /> E-Mail: <a
+                            href="mailto:datenschutz@uni-hannover.de">datenschutz@uni-hannover.de</a><br /> <a
+                            href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-4" class="mb-4">
+                <h3>4 Verarbeitung personenbezogener Daten</h3>
+
+                <div class="c-section-text">
+                    <p>
+                        #{msg['application.name']} ist eine Lernplattform zum kollaborativen Finden, Teilen und Bearbeiten von Ressourcen (Webseiten, Bilder, Videos usw.). Um das System verwenden zu
+                        können ist die Angabe einiger personenbezogener Daten erforderlich. <br /> Die Rechtsgrundlage zur Verarbeitung der personenbezogenen Daten ist die Einwilligung gemäß Art. 6
+                        Abs. 1lit. a), Art. 7 Datenschutzgrundverordnung (DSGVO). Im Folgenden sind alle personenbezogenen Daten, die bei der Nutzung von #{msg['application.name']} in der Datenbank
+                        gespeichert werden, und der Grund der Speicherung bzw. Verarbeitung gelistet. Wer die gespeicherten Daten einsehen kann ist unter
+                        <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-5" value="5 Rollen und Zugriffsrechte"></h:link>
+                        zu erfahren. Wie lange die Daten vorgehalten werden wird unter
+                        <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-6" value="6 Zeitspanne der Speicherung personenbezogener Daten"></h:link>
+                        beschrieben.
+                    </p>
+                </div>
+
+                <div id="item-4-1" class="mb-3">
+                    <h5 class="my-2">4.1 Profilinformationen</h5>
+
+                    <div class="c-section-text">
+                        <p>Daten die Benutzer in ihrem Profil speichern:</p>
+
+                        <ul>
+                            <li>Benutzername, E-Mail-Adresse und Passwort: Diese Daten dienen der Authentifizierung des Benutzers am System. Das Passwort wird verschlüsselt gespeichert.</li>
+                            <li>Name und Matrikelnummer: Über den realen Namen oder die Matrikelnummer können Lehrende die einzelnen Nutzer in den Lehrveranstaltungen identifizieren (vor allem
+                                bei Prüfungs- oder Studienleistungen erforderlich)</li>
+                            <li>Profilfoto, Geschlecht, Adresse, Organisation und Interessen: Sind absolut freiwillig und dienen ausschließlich der Information anderer Nutzer</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="item-4-2" class="mb-3">
+                    <h5 class="my-2">4.2 Inhalte</h5>
+
+                    <div class="c-section-text">
+                        <p>Daten die auf #{msg['application.name']} erstellt oder hochgeladen werden:</p>
+
+                        <ul>
+                            <li>Fotos, Videos</li>
+                            <li>Texte, Tabellen, Präsentationen</li>
+                            <li>Umfragen, Glossare</li>
+                            <li>sonstige Dateien (z.B. ZIP und andere Binärdateien)</li>
+                            <li>Forenbeiträge</li>
+                            <li>Kommentare und Bewertungen zu Ressourcen</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="item-4-3" class="mb-3">
+                    <h5 class="my-2">4.3 Nutzerverhalten</h5>
+
+                    <div class="c-section-text">
+                        <p>Zur Bereitstellung und zur Verbesserung seiner Funktionalitäten ist es notwendig, dass #{msg['application.name']} allgemeine Benutzeraktionen wie Login und Logout aber
+                            vor allem Aktionen, die im Umgang mit Ressourcen und Gruppen erfolgen aufzeichnet. Dazu zählt das Erstellen, Bearbeiten, Ansehen, Kommentieren und Suchen, aber auch alle
+                            weiteren Aktionen, die auf Ressourcen und Gruppen angewendet werden können. Es wird jeweils gespeichert welcher Benutzer, zu welchem Zeitpunkt, welche Aktion ausgeführt
+                            hat. Dies dient dazu die Nachverfolgbarkeit von Änderungen sicherzustellen. Außerdem werden die Informationen benutzt, um Benutzer über Änderungen an ihren Gruppen und
+                            Ressourcen zu informieren.</p>
+
+                        <ui:fragment rendered="#{privacyStatementBean.trackingEnabled}">
+                            <p>Ihr Kurs ist Teil eines Forschungsprojektes, für dessen gelingen es erforderlich ist weitere Nutzungsstatistiken zu erheben. Werden Einzelseiten unserer Website
+                                aufgerufen, so werden folgende Daten gespeichert:</p>
+
+                            <ul>
+                                <li>Die aufgerufene Webseite</li>
+                                <li>Die Webseite, von der der Nutzer auf die aufgerufene Webseite gelangt ist (Referrer)</li>
+                                <li>Webseiten, die vom System des Nutzers über unsere Website aufgerufen werden</li>
+                                <li>Informationen über den Browsertyp und die verwendete Version</li>
+                                <li>Das Betriebssystem des Nutzers</li>
+                                <li>Datum und Uhrzeit des Zugriffs</li>
+                                <li>Die aktive Nutzungsdauer der Webseite, um diese zu ermitteln wird gespeichert wann der Benutzer seine Maus bewegt oder Tastatureingaben auf der Webseite tätigt</li>
+                                <li>Um zu bestimmen welche Bereiche der Webseite von besonderem Interesse für den Nutzer sind, speichern wir über welchen Elementen der Webseite (Links, Buttons,
+                                    Eingabefelder usw.) die Maus bewegt wird</li>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-5" class="mb-4">
+                <h3>5 Rollen und Zugriffsrechte</h3>
+
+                <div class="c-section-text">
+                    <p>In diesem Abschnitt werden die einzelnen Zugriffsrechte auf die gespeicherten personenbezogenen Daten (siehe vorigen Abschnitt) erläutert („wer kann was von wem einsehen“).</p>
+
+                    <p>
+                        Administratoren: Das Forschungszentrum L3S hat als Betreiber der Plattform hat technisch bedingt vollen Zugriff auf alle in der Datenbank gespeicherten Informationen. <br />
+                        Moderatoren (Lehrer): Haben vollständigen Zugriff auf die Daten, der Benutzer ihres eigenen Kurses. <br /> Normale Benutzer: Können Ressourcen-, Gruppen- und Forenaktionen
+                        einsehen, die Mitglieder ihrer eigenen und öffentlicher Gruppen ausgeführt haben. Benutzer können außerdem alle eigenen Logeinträge einsehen und exportieren.
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-6" class="mb-4">
+                <h3>6 Zeitspanne der Speicherung personenbezogener Daten</h3>
+
+                <div class="c-section-text">
+                    <p>Grundsätzlich werden die Nutzerdaten solange in der Datenbank vorgehalten, bis das Nutzerkonto gelöscht wird. Dies geschieht automatisiert zwei Jahre nach Beendigung eines
+                        Kurses oder nach Anfrage durch den Benutzer. Die Datenbestände des #{msg['application.name']}-Systems werden in regelmäßigen Abständen (i.d.R. täglich) gesichert und verbleiben
+                        dort für einen Zeitraum von 60 Tagen.</p>
+                </div>
+            </div>
+
+            <div id="item-7" class="mb-4">
+                <h3>7 Einbindung von fremden Inhalten</h3>
+
+                <div class="c-section-text">
+                    <p>Wir betten Bilder und Videos von Drittanbietern (Youtube, Vimeo, Flickr, Ipernity, Bing, TED) in #{msg['application.name']} ein. Dabei erhält der Drittanbieter mindestens
+                        folgende Informationen über den #{msg['application.name']} Benutzer:</p>
+
+                    <ul>
+                        <li>Besuchte Seite</li>
+                        <li>Browsertyp und Version</li>
+                        <li>IP</li>
                         <li>Die Webseite, von der der Nutzer auf die aufgerufene Webseite gelangt ist (Referrer)</li>
-                        <li>Webseiten, die vom System des Nutzers über unsere Website aufgerufen werden</li>
-                        <li>Informationen über den Browsertyp und die verwendete Version</li>
-                        <li>Das Betriebssystem des Nutzers</li>
-                        <li>Datum und Uhrzeit des Zugriffs</li>
-                        <li>Die aktive Nutzungsdauer der Webseite, um diese zu ermitteln wird gespeichert wann der Benutzer seine Maus bewegt oder Tastatureingaben auf
-                            der Webseite tätigt</li>
-                        <li>Um zu bestimmen welche Bereiche der Webseite von besonderem Interesse für den Nutzer sind, speichern wir über welchen Elementen der Webseite
-                            (Links, Buttons, Eingabefelder usw.) die Maus bewegt wird</li>
-                    </ol>
+                        <li>Zeitpunkt des Zugriffs</li>
+                    </ul>
+
+                    <p>Wo möglich binden wir die Inhalte im erweiterten Datenschutzmodus ein. Wie die meisten Websites verwenden aber auch diese Anbieter Cookies, um Informationen über die
+                        Besucher ihrer Internetseite zu sammeln. YouTube und Vimeo verwenden diese z.B. unter anderem zur Erfassung von Videostatistiken, zur Vermeidung von Betrug und zur Verbesserung
+                        der Benutzerfreundlichkeit. Wenn Sie das Video starten, könnte dies weitere Datenverarbeitungsvorgänge auslösen. Darauf haben wir keinen Einfluss. Weitere Informationen über
+                        den Datenschutz erhalten Sie bei den Anbietern.</p>
+
+                    <ul>
+                        <li><a href="https://account.microsoft.com/account/privacy" target="_blank">Bing</a></li>
+                        <li><a href="http://www.ipernity.com/about/you" target="_blank">Ipernity</a></li>
+                        <li><a href="https://flickr.com/help/privacy" target="_blank">Flickr</a></li>
+                        <li><a href="https://www.ted.com/about/our-organization/our-policies-terms/privacy-policy" target="_blank">TED</a></li>
+                        <li><a href="https://vimeo.com/privacy" target="_blank">Vimeo</a></li>
+                        <li><a href="https://www.google.de/intl/de/policies/privacy" target="_blank">YouTube</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <div id="item-5" class="mb-4">
-            <h3 class="text-uppercase">5 Rollen und Zugriffsrechte</h3>
-
-            <div class="c-section-text">
-                <p>In diesem Abschnitt werden die einzelnen Zugriffsrechte auf die gespeicherten personenbezogenen Daten (siehe vorigen Abschnitt)
-                    erläutert („wer kann was von wem einsehen“).</p>
-
-                <p>Administratoren: Das Forschungszentrum L3S hat als Betreiber der Plattform hat technisch bedingt vollen Zugriff auf alle in der Datenbank gespeicherten
-                    Informationen.  <br/>
-                    Moderatoren (Lehrer): Haben vollständigen Zugriff auf die Daten, der Benutzer ihres eigenen Kurses. <br/>
-                    Normale Benutzer: Können Ressourcen-, Gruppen- und Forenaktionen einsehen, die Mitglieder ihrer eigenen und öffentlicher Gruppen ausgeführt haben.
-                    Benutzer können außerdem alle eigenen Logeinträge einsehen und exportieren.</p>
-            </div>
-        </div>
-
-        <div id="item-6" class="mb-4">
-            <h3 class="text-uppercase">6 Zeitspanne der Speicherung personenbezogener Daten</h3>
-
-            <div class="c-section-text">
-                <p>Grundsätzlich werden die Nutzerdaten solange in der Datenbank vorgehalten, bis das Nutzerkonto gelöscht wird. Dies geschieht automatisiert zwei Jahre nach
-                    Beendigung eines Kurses oder nach Anfrage durch den Benutzer. Die Datenbestände des Learnweb-Systems werden in regelmäßigen Abständen (i.d.R. täglich) gesichert
-                    und verbleiben dort für einen Zeitraum von 60 Tagen. </p>
-            </div>
-        </div>
-
-        <div id="item-7" class="mb-4">
-            <h3 class="text-uppercase">7 Einbindung von fremden Inhalten</h3>
-
-            <div class="c-section-text">
-                <p>Wir betten Bilder und Videos von Drittanbietern (Youtube, Vimeo, Flickr, Ipernity, Bing, TED) in LearnWeb ein. Dabei erhält
-                    der Drittanbieter mindestens folgende Informationen über den LearnWeb Benutzer:</p>
-
-                <ol>
-                    <li>Besuchte Seite</li>
-                    <li>Browsertyp und Version</li>
-                    <li>IP</li>
-                    <li>Die Webseite, von der der Nutzer auf die aufgerufene Webseite gelangt ist (Referrer)</li>
-                    <li>Zeitpunkt des Zugriffs</li>
-                </ol>
-
-                <p>Wo möglich binden wir die Inhalte im erweiterten Datenschutzmodus ein. Wie die meisten Websites verwenden aber auch diese Anbieter Cookies,
-                    um Informationen über die Besucher ihrer Internetseite zu sammeln. YouTube und Vimeo verwenden diese z.B. unter anderem zur Erfassung von Videostatistiken,
-                    zur Vermeidung von Betrug und zur Verbesserung der Benutzerfreundlichkeit. Wenn Sie das Video starten, könnte dies weitere Datenverarbeitungsvorgänge auslösen.
-                    Darauf haben wir keinen Einfluss. Weitere Informationen über den Datenschutz erhalten Sie bei den Anbietern.</p>
-
-                <ol>
-                    <li><a href="https://account.microsoft.com/account/privacy" target="_blank">Bing</a></li>
-                    <li><a href="http://www.ipernity.com/about/you" target="_blank">Ipernity</a></li>
-                    <li><a href="https://flickr.com/help/privacy" target="_blank">Flickr</a></li>
-                    <li><a href="https://www.ted.com/about/our-organization/our-policies-terms/privacy-policy" target="_blank">TED</a></li>
-                    <li><a href="https://vimeo.com/privacy" target="_blank">Vimeo</a></li>
-                    <li><a href="https://www.google.de/intl/de/policies/privacy" target="_blank">YouTube</a></li>
-                </ol>
-            </div>
-        </div>
-
-        <div id="item-8" class="mb-4">
-            <h3 class="text-uppercase">8 Rechte der betroffenen Person</h3>
-
-            <div class="c-section-text">
-                <p>
-                    Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i.S.d. DSGVO und es stehen Ihnen folgende Rechte gegenüber
-                    dem Verantwortlichen zu:
-                </p>
-            </div>
-
-            <div id="item-8-1" class="mb-3">
-                <h5 class="my-2">8.1 Widerruflichkeit der Einwilligung</h5>
+            <div id="item-8" class="mb-4">
+                <h3>8 Rechte der betroffenen Person</h3>
 
                 <div class="c-section-text">
-                    <p>
-                        Die Einwilligung in die Datenverarbeitung können Sie jederzeit mit Wirkung für die Zukunft widerrufen. In diesem Fall werden wir diese Daten nicht
-                        mehr weiterverarbeiten und diese Daten löschen. Die Rechtmäßigkeit der Datenverarbeitung bis zum Widerruf wird durch diesen nicht berührt.
-                        Der Widerruf ist formlos über die o.g. Kontaktdaten des technisch Verantwortlichen möglich.
-                    </p>
+                    <p>Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener i.S.d. DSGVO und es stehen Ihnen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
                 </div>
-            </div>
 
-            <div id="item-8-2" class="mb-3">
-                <h5 class="my-2">8.2 Weitere Rechte</h5>
+                <div id="item-8-1" class="mb-3">
+                    <h5 class="my-2">8.1 Widerruflichkeit der Einwilligung</h5>
 
-                <div class="c-section-text">
-                    <p>Sie haben ggfs. folgende Rechte hinsichtlich Ihrer personenbezogenen Daten (entsprechend Art. 15 bis 21 DSGVO):</p>
-
-                    <ol>
-                        <li>Recht auf Auskunft</li>
-                        <li>Recht auf Berichtigung und Vervollständigung</li>
-                        <li>Recht auf Löschung</li>
-                        <li>Recht auf Einschränkung der Bearbeitung</li>
-                        <li>Recht auf Datenübertragbarkeit / Recht auf Erhalt einer Kopie</li>
-                    </ol>
+                    <div class="c-section-text">
+                        <p>Die Einwilligung in die Datenverarbeitung können Sie jederzeit mit Wirkung für die Zukunft widerrufen. In diesem Fall werden wir diese Daten nicht mehr weiterverarbeiten
+                            und diese Daten löschen. Die Rechtmäßigkeit der Datenverarbeitung bis zum Widerruf wird durch diesen nicht berührt. Der Widerruf ist formlos über die o.g. Kontaktdaten des
+                            technisch Verantwortlichen möglich.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="item-8-3" class="mb-3">
-                <h5 class="my-2">8.3 Recht auf Widerspruch</h5>
+                <div id="item-8-2" class="mb-3">
+                    <h5 class="my-2">8.2 Weitere Rechte</h5>
 
-                <div class="c-section-text">
-                    <p>
-                        Zudem haben Sie das Recht der Datenverarbeitung jederzeit zu widersprechen. Wir werden Ihre Daten dann nicht mehr verarbeiten, außer es bestehen
-                        zwingende schutzwürdige Gründe für die Verarbeitung oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.
-                    </p>
+                    <div class="c-section-text">
+                        <p>Sie haben ggfs. folgende Rechte hinsichtlich Ihrer personenbezogenen Daten (entsprechend Art. 15 bis 21 DSGVO):</p>
 
-                    <p>
-                        Sollten Sie von den genannten Rechten Gebrauch machen, prüft die Verantwortliche, ob die gesetzlichen Voraussetzungen vorliegen.
-                    </p>
+                        <ul>
+                            <li>Recht auf Auskunft</li>
+                            <li>Recht auf Berichtigung und Vervollständigung</li>
+                            <li>Recht auf Löschung</li>
+                            <li>Recht auf Einschränkung der Bearbeitung</li>
+                            <li>Recht auf Datenübertragbarkeit / Recht auf Erhalt einer Kopie</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row text-center">
-            <div class="col">
-                <a href="https://www.uni-hannover.de/de/universitaet/organisation/beauftragte-vertretungen/datenschutz/">Zur Website des Datenschutzbeauftragten</a>
+                <div id="item-8-3" class="mb-3">
+                    <h5 class="my-2">8.3 Recht auf Widerspruch</h5>
+
+                    <div class="c-section-text">
+                        <p>Zudem haben Sie das Recht der Datenverarbeitung jederzeit zu widersprechen. Wir werden Ihre Daten dann nicht mehr verarbeiten, außer es bestehen zwingende schutzwürdige
+                            Gründe für die Verarbeitung oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.</p>
+
+                        <p>Sollten Sie von den genannten Rechten Gebrauch machen, prüft die Verantwortliche, ob die gesetzlichen Voraussetzungen vorliegen.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </ui:composition>

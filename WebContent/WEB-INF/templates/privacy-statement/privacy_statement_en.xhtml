@@ -4,300 +4,268 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<div class="row">
-    <div class="col-4 sticky-column">
-        <h5 class="px-2">Content on this page</h5>
+    <div class="row">
+        <div class="col-md-4 sticky-column-md">
+            <h5 class="px-2">Inhalte auf dieser Seite</h5>
 
-        <nav id="content-list" class="nav nav-pills flex-column">
-            <a class="nav-link text-uppercase" href="#item-1">1 Name and address of the person responsible</a>
-            <a class="nav-link text-uppercase" href="#item-2">2 Name and address of the technically responsible person</a>
-            <a class="nav-link text-uppercase" href="#item-3">3 Name and address of data protection officer</a>
-            <a class="nav-link text-uppercase" href="#item-4">4 Processing of personal data</a>
-            <nav class="nav nav-pills flex-column">
-                <a class="nav-link ml-3 my-1" href="#item-4-1">4.1 Profile information</a>
-                <a class="nav-link ml-3 my-1" href="#item-4-2">4.2 Contents</a>
-                <a class="nav-link ml-3 my-1" href="#item-4-3">4.3 User behaviour</a>
+            <nav id="content-list" class="flex-column">
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-1" value="1 Name and address of the data controller"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-2" value="2 Name and address of the technically responsible person"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-3" value="3 Name and address of data protection officer"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4" value="4 Processing of personal data"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-1" value="4.1 Profile information"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-2" value="4.2 Contents"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-4-3" value="4.3 User behaviour"></h:link>
+                </nav>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-5" value="5 Roles and access rights"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-6" value="6 Period of storage of personal data"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-7" value="7 Integration of external content"></h:link>
+                <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8" value="8 Rights of the data subject"></h:link>
+                <nav class="flex-column pl-3">
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-1" value="8.1 Revocability of consent"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-2" value="8.2 Further rights"></h:link>
+                    <h:link includeViewParams="true" outcome="privacy_statement" styleClass="nav-link" fragment="item-8-3" value="8.3 Right of opposition"></h:link>
+                </nav>
             </nav>
-            <a class="nav-link text-uppercase" href="#item-5">5 Roles and access rights</a>
-            <a class="nav-link text-uppercase" href="#item-6">6 Period of storage of personal data</a>
-            <a class="nav-link text-uppercase" href="#item-7">7 Integration of external content</a>
-            <a class="nav-link text-uppercase" href="#item-8">8 Rights of the data subject</a>
-            <nav class="nav nav-pills flex-column">
-                <a class="nav-link ml-3 my-1" href="#item-8-1">8.1 Revocability of consent</a>
-                <a class="nav-link ml-3 my-1" href="#item-8-2">8.2 Further rights</a>
-                <a class="nav-link ml-3 my-1" href="#item-8-3">8.3 Right of opposition</a>
-            </nav>
-        </nav>
-    </div>
-
-    <div class="col-8">
-        <div id="item-1" class="mb-4">
-            <h3 class="text-uppercase">1 Name and address of the person responsible</h3>
-
-            <div class="c-section-text">
-                <p>
-                    The person responsible within the meaning of the Basic Data Protection Regulation and other national data protection laws of the member states
-                    as well as other provisions of data protection law is the Data Protection Officer:
-                </p>
-
-                <p>
-                    Gottfried Wilhelm Leibniz Universität Hannover<br/>
-                    Welfengarten 1<br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 0">+49 511 762 - 0</a><br/>
-                    Fax <a href="tel:+49 511 762 3456">+49 511 762 - 3456</a><br/>
-                    <a href="https://www.uni-hannover.de" target="_blank">www.uni-hannover.de</a>
-                </p>
-
-                <p>
-                    Leibniz Universität Hannover is a public corporation and is legally represented by its <a href="/de/universitaet/praesidium/praesident/" target="_blank">President</a>, Prof. Dr. Volker Epping.
-                </p>
-            </div>
         </div>
 
-        <div id="item-2" class="mb-4">
-            <h3 class="text-uppercase">2 Name and address of the technically responsible person</h3>
-
-            <div class="c-section-text">
-                <p>The L3S Research Centre is responsible for the technical implementation and operation of the platform:</p>
-
-                <p>
-                    Forschungszentrum L3S<br/>
-                    Appelstraße 9a<br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br/>
-                    Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br/>
-                    <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
-                </p>
-
-                <p>
-                    Represented by: Prof. Dr. Wolfgang Nejdl (Director), Dr. Claudia Niederée (Managing Director)
-                </p>
-            </div>
-        </div>
-
-        <div id="item-3" class="mb-4">
-            <h3 class="text-uppercase">3 Name and address of data protection officer</h3>
-
-            <div class="c-section-text">
-                <p>Official data protection officer of Leibniz Universität Hannover:</p>
-
-                <p>
-                    Gottfried Wilhelm Leibniz Universität Hannover<br/>
-                    - Datenschutzbeauftragter - <br/>
-                    Königsworther Platz 1 <br/>
-                    30167 Hannover
-                </p>
-
-                <p>
-                    Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br/>
-                    Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br/>
-                    E-Mail: <a href="mailto:datenschutz@uni-hannover.de">datenschutz@uni-hannover.de</a><br/>
-                    <a href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
-                </p>
-            </div>
-        </div>
-
-        <div id="item-4" class="mb-4">
-            <h3 class="text-uppercase">4 Processing of personal data</h3>
-
-            <div class="c-section-text">
-                <p>
-                    LearnWeb is a learning platform for collaboratively finding, sharing and editing resources (websites, images, videos, etc.).
-                    In order to use the system it is necessary to provide some personal data. <br/>
-                    The legal basis for the processing of personal data is the consent pursuant to Art. 6 para. 1 lit. a), Art. 7 Basic Data Protection Ordinance (DSGVO).
-                    Below is a list of all personal data stored in the database during the use of Learnweb and the reason for storage or processing.
-                    Who can view the stored data can be found under 2. roles and access rights. How long the data are kept is to be read under 3.
-                    Time span of the storage of personal data.
-                </p>
-            </div>
-
-            <div id="item-4-1" class="mb-3">
-                <h5 class="my-2">4.1 Profile information</h5>
+        <div class="col-md-8">
+            <div id="item-1" class="mb-4">
+                <h3>1 Name and address of the data controller</h3>
 
                 <div class="c-section-text">
-                    <p>Save user data in their profile:</p>
+                    <p>Within the meaning of the General Data Protection Regulation (GDPR) and other German national data protection laws and regulations, the data controller is:</p>
 
-                    <ol>
-                        <li>User name, e-mail address and password: This data is used to authenticate the user to the system. The password is stored encrypted.</li>
-                        <li>Name and matriculation number: Teachers can use the real name or matriculation number to identify individual users in the courses
-                            (this is particularly necessary for examinations or study achievements).</li>
-                        <li>Profile photo, gender, address, organization and interests: are absolutely voluntary and only for the information of other users.</li>
-                    </ol>
-                </div>
-            </div>
-
-            <div id="item-4-2" class="mb-3">
-                <h5 class="my-2">4.2 Contents</h5>
-
-                <div class="c-section-text">
-                    <p>Data created or uploaded to Learnweb:</p>
-
-                    <ol>
-                        <li>Photos, Videos</li>
-                        <li>Texts, tables, presentations</li>
-                        <li>Surveys, glossaries</li>
-                        <li>other files (e.g. ZIP and other binary files)</li>
-                        <li>forum posts</li>
-                        <li>Comments and ratings on resources</li>
-                    </ol>
-                </div>
-            </div>
-
-            <div id="item-4-3" class="mb-3">
-                <h5 class="my-2">4.3 User behaviour</h5>
-
-                <div class="c-section-text">
                     <p>
-                        In order to provide and improve its functionality, Learnweb needs to record general user actions such as login and logout, but especially actions
-                        that occur when dealing with resources and groups. This includes creating, editing, viewing, commenting and searching, but also any other actions
-                        that can be applied to resources and groups. It is stored in each case which user, at which time, which action has executed. This serves to ensure
-                        the traceability of changes. The information is also used to notify users of changes to their groups and resources.
+                        Gottfried Wilhelm Leibniz Universität Hannover<br /> Welfengarten 1<br /> 30167 Hannover
                     </p>
 
                     <p>
-                        Your course is part of a research project for which it is necessary to collect further usage statistics.
-                        If individual pages of our website are accessed, the following data is stored:
+                        Tel. <a href="tel:+49 511 762 0">+49 511 762 - 0</a><br /> Fax <a href="tel:+49 511 762 3456">+49 511 762 - 3456</a><br /> <a href="https://www.uni-hannover.de"
+                            target="_blank">www.uni-hannover.de</a>
                     </p>
 
-                    <ol>
-                        <li>The website accessed</li>
+                    <p>
+                        Leibniz Universität Hannover is a public corporation and is legally represented by its <a href="https://www.uni-hannover.de/en/universitaet/praesidium/praesident/"
+                            target="_blank">President</a>, Prof. Dr. Volker Epping.
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-2" class="mb-4">
+                <h3>2 Name and address of the technically responsible person</h3>
+
+                <div class="c-section-text">
+                    <p>The L3S Research Centre is responsible for the technical implementation and operation of the platform:</p>
+
+                    <p>
+                        Forschungszentrum L3S<br /> Appelstraße 9a<br /> 30167 Hannover
+                    </p>
+
+                    <p>
+                        Tel. <a href="tel:+49 511 762 17715">+49 511 762 - 17715</a><br /> Fax <a href="tel:+49 511 762 17719">+49 511 762 - 17779</a><br /> E-Mail: <a
+                            href="mailto:#{msg['application.serverAdmin']}">#{msg['application.serverAdmin']}</a><br /> <a href="http://www.l3s.de" target="_blank">www.l3s.de</a>
+                    </p>
+
+                    <p>Represented by: Prof. Dr. Wolfgang Nejdl (Director), Dr. Claudia Niederée (Managing Director)</p>
+                </div>
+            </div>
+
+            <div id="item-3" class="mb-4">
+                <h3>3 Name and address of data protection officer</h3>
+
+                <div class="c-section-text">
+                    <p>Data protection officer of Leibniz University Hannover is:</p>
+
+                    <p>
+                        Gottfried Wilhelm Leibniz Universität Hannover<br /> - Datenschutzbeauftragter - <br /> Königsworther Platz 1 <br /> 30167 Hannover
+                    </p>
+
+
+                    <p>
+                        Tel. <a href="tel:+49 511 762 8132">+49 511 762 - 8132</a><br /> Fax <a href="tel:+49 511 762 8258">+49 511 762 - 8258</a><br /> E-Mail: <a
+                            href="mailto:datenschutz@uni-hannover.de">datenschutz@uni-hannover.de</a><br /> <a
+                            href="https://www.uni-hannover.de/de/universitaet/organisation/praesidialstab-und-stabsstellen/datenschutz/" target="_blank">Website</a>
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-4" class="mb-4">
+                <h3>4 Processing of personal data</h3>
+
+                <div class="c-section-text">
+                    <p>
+                        #{msg['application.name']} is a learning platform for collaboratively finding, sharing and editing resources (websites, images, videos, etc.). In order to use the system it is
+                        necessary to provide some personal data. <br /> The legal basis for the processing of personal data is the consent pursuant to Article 6 paragraph 1 lit. a), Article 7 General
+                        Data Protection Regulation (GDPR)). Below is a list of all personal data stored in the database during the use of #{msg['application.name']} and the reason for storage or
+                        processing. Who can view the stored data can be found under
+                        <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-5" value="5 Roles and access rights"></h:link>
+                        . How long the data are kept is described in section
+                        <h:link includeViewParams="true" outcome="privacy_statement" fragment="item-6" value="6 Period of storage of personal data"></h:link>
+                        .
+                    </p>
+                </div>
+
+                <div id="item-4-1" class="mb-3">
+                    <h5 class="my-2">4.1 Profile information</h5>
+
+                    <div class="c-section-text">
+                        <p>Data users can store in their profile:</p>
+
+                        <ul>
+                            <li>User name, e-mail address and password: This data is used to authenticate the user to the system. The password is stored encrypted.</li>
+                            <li>Name and matriculation number: Teachers can use the real name or matriculation number to identify individual users in the courses (this is particularly necessary
+                                for examinations or study achievements).</li>
+                            <li>Profile photo, gender, address, organization and interests: are absolutely voluntary and only for the information of other users.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="item-4-2" class="mb-3">
+                    <h5 class="my-2">4.2 Contents</h5>
+
+                    <div class="c-section-text">
+                        <p>Data created or uploaded to #{msg['application.name']}:</p>
+
+                        <ul>
+                            <li>Photos, Videos</li>
+                            <li>Texts, tables, presentations</li>
+                            <li>Surveys, glossaries</li>
+                            <li>Other files (e.g. ZIP and other binary files)</li>
+                            <li>Forum posts</li>
+                            <li>Comments and ratings on resources</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="item-4-3" class="mb-3">
+                    <h5 class="my-2">4.3 User behaviour</h5>
+
+                    <div class="c-section-text">
+                        <p>In order to provide and improve its functionality, #{msg['application.name']} needs to record general user actions such as login and logout, but especially actions that
+                            occur when dealing with resources and groups. This includes creating, editing, viewing, commenting and searching, but also any other actions that can be applied to
+                            resources and groups. It is stored in each case which user, at which time, which action has executed. This serves to ensure the traceability of changes. The information is
+                            also used to notify users of changes to their groups and resources.</p>
+
+                        <ui:fragment rendered="#{privacyStatementBean.trackingEnabled}">
+                            <p>Your course is part of a research project for which it is necessary to collect further usage statistics. If individual pages of our website are accessed, the
+                                following data is stored:</p>
+
+                            <ul>
+                                <li>The website accessed</li>
+                                <li>The web page from which the user accessed the called web page (referrer)</li>
+                                <li>Web pages accessed by the user's system via our website</li>
+                                <li>Information about the browser type and the version used</li>
+                                <li>The user's operating system</li>
+                                <li>Date and time of access</li>
+                                <li>To determine the usage time of the web page we store when the user moves the mouse or enters keystrokes on the web page.</li>
+                                <li>In order to determine which areas of the website are of particular interest to the user, we store the elements of the website (links, buttons, input fields,
+                                    etc.) over which the mouse is moved.</li>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                </div>
+            </div>
+
+            <div id="item-5" class="mb-4">
+                <h3>5 Roles and access rights</h3>
+
+                <div class="c-section-text">
+                    <p>This section explains the individual access rights to the stored personal data (see previous section) ("who can see what from whom").</p>
+
+                    <p>
+                        Administrators: The Research Center L3S, as the operator of the platform, has full access to all information stored in the database for technical reasons. <br /> Moderators
+                        (teachers): Have full access to the data of the users of their own course. <br /> Normal users: Can view resource, group and forum actions performed by members of their own
+                        and public groups. Users can also view and export their own log entries.
+                    </p>
+                </div>
+            </div>
+
+            <div id="item-6" class="mb-4">
+                <h3>6 Period of storage of personal data</h3>
+
+                <div class="c-section-text">
+                    <p>In principle, user data is kept in the database until the user account is deleted. This happens automatically two years after completion of a course or upon request by the
+                        user. The data in the #{msg['application.name']} system is backed up at regular intervals (usually daily) and remains there for a period of 60 days.</p>
+                </div>
+            </div>
+
+            <div id="item-7" class="mb-4">
+                <h3>7 Integration of external content</h3>
+
+                <div class="c-section-text">
+                    <p>We embed third-party images and videos (Youtube, Vimeo, Flickr, Ipernity, Bing, TED) into #{msg['application.name']}. The third party provider receives at least the
+                        following information about the #{msg['application.name']} user:</p>
+
+                    <ul>
+                        <li>Visited page</li>
+                        <li>Browser type and version</li>
+                        <li>IP</li>
                         <li>The web page from which the user accessed the called web page (referrer)</li>
-                        <li>Web pages accessed by the user's system via our website</li>
-                        <li>Information about the browser type and the version used</li>
-                        <li>The user's operating system</li>
-                        <li>Date and time of access</li>
-                        <li>The active life of the web page to determine it is stored when the user moves the mouse or enters keystrokes on the web page.</li>
-                        <li>In order to determine which areas of the website are of particular interest to the user, we store the elements of the website
-                            (links, buttons, input fields, etc.) over which the mouse is moved.</li>
-                    </ol>
+                        <li>Time of access</li>
+                    </ul>
+
+                    <p>Where possible, we integrate the contents in the extended data protection mode. Like most websites, however, these providers also use cookies to collect information about
+                        visitors to their website. YouTube and Vimeo use these, for example, to collect video statistics, to prevent fraud and to improve user-friendliness. When you start the video,
+                        it may trigger further data processing. We have no influence on that. Further information on data protection can be obtained from the providers.</p>
+
+                    <ul>
+                        <li><a href="https://account.microsoft.com/account/privacy" target="_blank">Bing</a></li>
+                        <li><a href="http://www.ipernity.com/about/you" target="_blank">Ipernity</a></li>
+                        <li><a href="https://flickr.com/help/privacy" target="_blank">Flickr</a></li>
+                        <li><a href="https://www.ted.com/about/our-organization/our-policies-terms/privacy-policy" target="_blank">TED</a></li>
+                        <li><a href="https://vimeo.com/privacy" target="_blank">Vimeo</a></li>
+                        <li><a href="https://www.google.de/intl/de/policies/privacy" target="_blank">YouTube</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
 
-        <div id="item-5" class="mb-4">
-            <h3 class="text-uppercase">5 Roles and access rights</h3>
-
-            <div class="c-section-text">
-                <p>This section explains the individual access rights to the stored personal data (see previous section) ("who can see what from whom").</p>
-
-                <p>Administrators: The Research Center L3S, as the operator of the platform, has full access to all information stored in the database for technical reasons. <br/>
-                    Moderators (teachers): Have full access to the data of the users of their own course. <br/>
-                    Normal users: Can view resource, group and forum actions performed by members of their own and public groups.
-                    Users can also view and export their own log entries.</p>
-            </div>
-        </div>
-
-        <div id="item-6" class="mb-4">
-            <h3 class="text-uppercase">6 Period of storage of personal data</h3>
-
-            <div class="c-section-text">
-                <p>
-                    In principle, user data is kept in the database until the user account is deleted. This happens automatically two years after completion of a course
-                    or upon request by the user. The data in the Learnweb system is backed up at regular intervals (usually daily) and remains there for a period of 60 days.
-                </p>
-            </div>
-        </div>
-
-        <div id="item-7" class="mb-4">
-            <h3 class="text-uppercase">7 Integration of external content</h3>
-
-            <div class="c-section-text">
-                <p>We embed third-party images and videos (Youtube, Vimeo, Flickr, Ipernity, Bing, TED) into LearnWeb. The third party provider receives at least
-                    the following information about the LearnWeb user:</p>
-
-                <ol>
-                    <li>Visited page</li>
-                    <li>Browser type and version</li>
-                    <li>IP</li>
-                    <li>The web page from which the user accessed the called web page (referrer)</li>
-                    <li>Time of access</li>
-                </ol>
-
-                <p>
-                    Where possible, we integrate the contents in the extended data protection mode. Like most websites, however, these providers also use cookies
-                    to collect information about visitors to their website. YouTube and Vimeo use these, for example, to collect video statistics, to prevent fraud and
-                    to improve user-friendliness. When you start the video, it may trigger further data processing. We have no influence on that.
-                    Further information on data protection can be obtained from the providers.
-                </p>
-
-                <ol>
-                    <li><a href="https://account.microsoft.com/account/privacy" target="_blank">Bing</a></li>
-                    <li><a href="http://www.ipernity.com/about/you" target="_blank">Ipernity</a></li>
-                    <li><a href="https://flickr.com/help/privacy" target="_blank">Flickr</a></li>
-                    <li><a href="https://www.ted.com/about/our-organization/our-policies-terms/privacy-policy" target="_blank">TED</a></li>
-                    <li><a href="https://vimeo.com/privacy" target="_blank">Vimeo</a></li>
-                    <li><a href="https://www.google.de/intl/de/policies/privacy" target="_blank">YouTube</a></li>
-                </ol>
-            </div>
-        </div>
-
-        <div id="item-8" class="mb-4">
-            <h3 class="text-uppercase">8 Rights of the data subject</h3>
-
-            <div class="c-section-text">
-                <p>
-                    If personal data is processed by you, you are the data subject within the meaning of the DSGVO and you are entitled to the following rights vis-à-vis
-                    the person responsible:
-                </p>
-            </div>
-
-            <div id="item-8-1" class="mb-3">
-                <h5 class="my-2">8.1 Revocability of consent</h5>
+            <div id="item-8" class="mb-4">
+                <h3>8 Rights of the data subject</h3>
 
                 <div class="c-section-text">
-                    <p>
-                        You can revoke your consent to data processing at any time with effect for the future. In this case we will no longer process this data and delete it.
-                        The legality of the data processing until the revocation is not affected by this. The revocation is possible informally via the above-mentioned
-                        contact data of the technically responsible person.
-                    </p>
+                    <p>If personal data is processed by you, you are the data subject within the meaning of the GDPR and you are entitled to the following rights vis-à-vis the person responsible:</p>
                 </div>
-            </div>
 
-            <div id="item-8-2" class="mb-3">
-                <h5 class="my-2">8.2 Further rights</h5>
+                <div id="item-8-1" class="mb-3">
+                    <h5 class="my-2">8.1 Revocability of consent</h5>
 
-                <div class="c-section-text">
-                    <p>You may have the following rights with regard to your personal data (according to Art. 15 to 21 DSGVO):</p>
-
-                    <ol>
-                        <li>Right of access</li>
-                        <li>Right to rectification and completion</li>
-                        <li>Right to deletion</li>
-                        <li>Right to restrict processing</li>
-                        <li>Right to data transfer / right to receive a copy</li>
-                    </ol>
+                    <div class="c-section-text">
+                        <p>You can revoke your consent to data processing at any time with effect for the future. In this case we will no longer process this data and delete it. The legality of
+                            the data processing until the revocation is not affected by this. The revocation is possible informally via the above-mentioned contact data of the technically responsible
+                            person.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div id="item-8-3" class="mb-3">
-                <h5 class="my-2">8.3 Right of opposition</h5>
+                <div id="item-8-2" class="mb-3">
+                    <h5 class="my-2">8.2 Further rights</h5>
 
-                <div class="c-section-text">
-                    <p>
-                        You also have the right to object to data processing at any time. We will then no longer process your data unless there are compelling reasons
-                        worthy of protection for the processing or the processing serves the assertion, exercise or defence of legal claims.
-                    </p>
+                    <div class="c-section-text">
+                        <p>You may have the following rights with regard to your personal data (according to Article 15 to 21 GDPR):</p>
 
-                    <p>
-                        If you make use of these rights, the person responsible will check whether the legal requirements are met.
-                    </p>
+                        <ul>
+                            <li>Right of access</li>
+                            <li>Right to rectification and completion</li>
+                            <li>Right to deletion</li>
+                            <li>Right to restrict processing</li>
+                            <li>Right to data transfer / right to receive a copy</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row text-center">
-            <div class="col">
-                <a href="https://www.uni-hannover.de/en/universitaet/organisation/beauftragte-und-vertretungen/datenschutz/">Go to DPO website</a>
+                <div id="item-8-3" class="mb-3">
+                    <h5 class="my-2">8.3 Right of opposition</h5>
+
+                    <div class="c-section-text">
+                        <p>You also have the right to object to data processing at any time. We will then no longer process your data unless there are compelling reasons worthy of protection for
+                            the processing or the processing serves the assertion, exercise or defence of legal claims.</p>
+
+                        <p>If you make use of these rights, the person responsible will check whether the legal requirements are met.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 </ui:composition>
