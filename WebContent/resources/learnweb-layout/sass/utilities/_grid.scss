@@ -1,8 +1,17 @@
 .sticky-column {
   @include position-sticky();
   top: $topbar-height;
-  height: calc(100vh - #{$topbar-height});
+  height: 100%;
   overflow-y: auto;
+}
+
+@include media-breakpoint-up(md) {
+  .sticky-column-md {
+    @include position-sticky();
+    top: $topbar-height;
+    height: 100%;
+    overflow-y: auto;
+  }
 }
 
 .col-xs-auto {

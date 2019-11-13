@@ -6,11 +6,29 @@
 
 	<ui:param name="pageTitle" value="#{msg['privacy_statement']}"/>	
 	<ui:param name="smallPage" value="true"/>
-	<ui:param name="hideBreadcrumbs" value="true"/>	
-	
-	<ui:define name="center_layout">
+	<ui:param name="hideBreadcrumbs" value="true"/>
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="organisation_id" value="#{privacyStatementBean.organisationId}" />
+            <f:viewAction action="#{privacyStatementBean.onLoad}" /> 
+        </f:metadata>
+    </ui:define>
+
+    <ui:define name="center_layout">
+        <!-- 
+        disabled until scroll problems are fixed
+        
 	    <h:outputScript name="vendor/scrollspy-v1.0.0/scrollspy.min.js"/>
-	
+        <script>
+	        function enableScollSpy() {
+	            var headerHeight = $('.layout-header').height();
+	            $('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
+        	};
+        	//$(enableScollSpy); 
+        </script>
+	     -->
+             	
 	    <p:panel header="#{msg['privacy_statement']}">    	
 	        <ui:fragment rendered="#{userBean.localeCode eq 'de'}">
 	            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_de.xhtml"/>
@@ -20,13 +38,6 @@
 	            <ui:include src="/WEB-INF/templates/privacy-statement/privacy_statement_en.xhtml"/>
 	        </ui:fragment>
 	
-	        <script>
-		        function enableScollSpy() {
-		            var headerHeight = $('.layout-header').height();
-		            $('#content-list').scrollspy({offset: -(headerHeight + 10), animate: true, replaceState: true});
-	        	};
-	        	$(enableScollSpy);
-	        </script>
 	    </p:panel>
 	</ui:define>
 </ui:composition>

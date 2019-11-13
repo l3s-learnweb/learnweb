@@ -76,7 +76,7 @@
 								label="#{msg.privacy_statement}:" validator="requiredCheckboxValidator"/>
 							<p:outputLabel for="@previous" styleClass="form-check-label pl-1">
 								<h:outputFormat value="#{msg['registration.accept_privacy_policy']}" escape="false">
-									<f:param value="privacy_statement.jsf"/>
+									<f:param value="privacy_statement.jsf?organisation_id=#{registrationBean.course.organisationId}"/>
 								</h:outputFormat>
 							</p:outputLabel>
 						</div>
