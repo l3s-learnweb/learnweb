@@ -252,9 +252,7 @@ ul.res-filters {
 
 .res-row {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  padding: $grid-gutter-width $grid-gutter-width / 2;
+  padding: $grid-gutter-width / 2;
   border-bottom: $border-width solid $themeSidebarDividerColor;
 
   &:hover {
@@ -267,10 +265,10 @@ ul.res-filters {
   }
 
   .res-col-type {
-    flex: 0 0 4rem;
+    flex: 0 0 2rem;
     display: flex;
     justify-content: center;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
 
   .res-col-preview {
