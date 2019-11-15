@@ -671,3 +671,27 @@ ul.res-filters {
   }
 }
 
+.archive-snapshot-list {
+  a {
+    background-color: transparent;
+    border: 1px solid $themePrimaryColor;
+    color: $themePrimaryColor;
+    border-radius: $btn-border-radius;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    display: inline-block;
+    position: relative;
+    padding: 0;
+    text-decoration: none !important;
+    cursor: pointer;
+    text-align: center;
+    overflow: visible;
+
+    &:hover {
+      background-color: transparent;
+      border-color: $themePrimaryColorDarker;
+      color: $themePrimaryColorDarker;
+    }
+  }
+}
+

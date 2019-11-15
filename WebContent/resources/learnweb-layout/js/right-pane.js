@@ -26,7 +26,7 @@ $(document).on('click', '.archive-snapshot-list button', (e) => {
   $(e.currentTarget).next().slideToggle();
 });
 
-$(document).on('click', '.archive-snapshot-list a', (e) => {
+$(document).on('click', '.archive-snapshot-list a.set-thumbnail', (e) => {
   // make button active and reset the previous active element
   $('.archive-snapshot-list span:not(.outline-btn) a').parent().addClass('outline-btn');
   $(e.currentTarget).parent().removeClass('outline-btn');
