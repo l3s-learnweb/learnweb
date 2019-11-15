@@ -125,6 +125,19 @@ video {
   }
 }
 
+.forum-message-container {
+  p {
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+  }
+}
+
 .white-space-normal {
   white-space: normal !important;
 }
+
+blockquote {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
