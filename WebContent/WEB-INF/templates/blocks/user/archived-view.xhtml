@@ -17,11 +17,33 @@
 		<div id="archive_timeline_view" class="my-2">
 			<ui:decorate template="/WEB-INF/templates/blocks/right-pane/archive_timeline_template.xhtml"/>
 		</div>
-		<h:panelGroup id="archive_list_view" layout="block" styleClass="mt-3 d-flex flex-column overflow-auto" style="max-height:20rem;">
-			<p:repeat var="archiveUrl" value="#{rightPaneBean.clickedResource.archiveUrls}">
-				<p:linkButton href="#{archiveUrl.archiveUrl}" value="#{userBean.formatDate(archiveUrl.timestamp)}" target="_blank" styleClass="outline-btn w-100 my-1"/>
-			</p:repeat>
-		</h:panelGroup>
+		<hr/>
+		<ul class="archive-snapshot-list list-unstyled mb-0 mt-3 w-100">
+			<ui:repeat var="ay" value="#{rightPaneBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
+				<li class="row no-gutters align-items-baseline">
+					<p:button value="#{ay.key}" style="height: 25px;" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 w-100 col-3 col-md-2 mr-3" onclick="return false;"/>
+
+					<h:outputFormat value="#{msg.archive_stored}" escape="false">
+						<f:param value="#{ay.value.size()}"/>
+						<f:param value="#{ay.key}"/>
+					</h:outputFormat>
+
+					<div class="ml-0 ml-sm-3 list-unstyled pl-0 pl-sm-3 my-1 collapse col-12">
+						<div class="d-flex flex-wrap">
+							<ui:repeat var="au2" value="#{ay.value}">
+								<div style="width:12rem;" class="mx-2">
+									<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1">
+										<h:outputText value="#{au2.timestamp}">
+											<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+										</h:outputText>
+									</a>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</li>
+			</ui:repeat>
+		</ul>
 	</h:form>
 </dl>
 </ui:composition>

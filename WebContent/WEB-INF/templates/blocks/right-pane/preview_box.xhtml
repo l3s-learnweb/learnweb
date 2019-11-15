@@ -74,13 +74,16 @@
                     <h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
                 </div>
                 <div class="d-flex h-100">
-                    <div class="mr-3 archive-snapshots-wrapper content-scroll">
+                    <div class="mr-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
                         <ui:fragment rendered="${res.archiveUrls.size() le 100}">
                             <ul class="archive-snapshot-list list-unstyled mb-0">
                                 <ui:repeat var="au" value="#{rightPaneBean.clickedResource.archiveUrls}">
                                     <li style="width:12rem;">
-                                        <p:linkButton href="#{au.archiveUrl}" value="#{userBean.formatDate(au.timestamp)}"
-                                                      styleClass="outline-btn w-100 m-0 mb-1"/>
+                                        <a href="#{au.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
+                                            <h:outputText value="#{au.timestamp}">
+                                                <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                            </h:outputText>
+                                        </a>
                                     </li>
                                 </ui:repeat>
                             </ul>
@@ -93,8 +96,11 @@
                                         <ul class="list-unstyled pl-3 collapse">
                                             <ui:repeat var="au2" value="#{ay.value}">
                                                 <li style="width:12rem;">
-                                                    <p:linkButton href="#{au2.archiveUrl}" value="#{userBean.formatDate(au2.timestamp)}"
-                                                                  styleClass="outline-btn w-100 m-0 mb-1"/>
+                                                    <a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
+                                                        <h:outputText value="#{au2.timestamp}">
+                                                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                                        </h:outputText>
+                                                    </a>
                                                 </li>
                                             </ui:repeat>
                                         </ul>
@@ -112,7 +118,9 @@
                                 <div class="col-md">
                                     <span class="text-muted">
                                         <h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
-                                        <h:outputText value="#{userBean.formatDate(res.thumbnailUpdateInfo.date)}"/>
+                                        <h:outputText value="#{res.thumbnailUpdateInfo.date}">
+                                            <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                        </h:outputText>
                                         <h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
                                     </span>
                                 </div>
@@ -120,7 +128,9 @@
                             <div class="col-md text-right">
                                 <span>
                                     <h:outputText value="#{msg['Archive.show_version']}: "/>
-                                    <h:outputText id="archive_timestamp" value="${userBean.formatDate(res.lastArchivedObject.timestamp)}"/>
+                                    <h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
+                                        <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                    </h:outputText>
                                     <p:button value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn" onclick="updateThumbnail();return false;"/>
                                 </span>
                             </div>

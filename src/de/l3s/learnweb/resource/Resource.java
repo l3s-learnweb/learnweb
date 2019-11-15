@@ -1301,13 +1301,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(ArchiveUrl a : archiveUrls)
         {
             String year = df.format(a.getTimestamp());
-            if(versions.containsKey(year))
-                versions.get(year).add(a);
-            else
-            {
-                versions.put(year, new ArrayList<>());
-                versions.get(year).add(a);
-            }
+            if(!versions.containsKey(year)) versions.put(year, new ArrayList<>());
+            versions.get(year).add(a);
         }
         return versions;
     }
