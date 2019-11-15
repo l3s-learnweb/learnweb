@@ -107,44 +107,4 @@ public class UtilBean implements Serializable
         Object[] args = new Object[0];
         return getLocaleMessage(msgKey, args);
     }
-
-    // ------------------------
-
-    @Deprecated
-    public String formatDate(Date date, Locale locale)
-    {
-
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-        return dateFormatter.format(date);
-    }
-
-    /**
-     * Use JSF f:convertDateTime instead
-     *
-     * @param date
-     * @param locale
-     * @return
-     */
-    @Deprecated
-    public String formatTime(Date date, Locale locale)
-    {
-
-        DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-        return timeFormatter.format(date);
-    }
-
-    /**
-     * TODO this method must be replaced with a JSF component that will take the frontend locale into account
-     *
-     * @param value
-     * @param total
-     * @return
-     */
-    @Deprecated
-    public static String formatValAndPct(int value, int total)
-    {
-        if(total == 0 || value == 0)
-            return "0";
-        return String.format("%d (%.2f%%)", value, (double) value / total * 100);
-    }
 }

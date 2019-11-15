@@ -47,7 +47,7 @@
                                 </h:panelGroup>
                             </p>
                             <p class="small font-weight-light mb-0 log-date">
-                                <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${userBean.formatDate(logEntry.date)}" escape="false"/>
+                                <h:outputText value="${userBean.getPrettyDate(logEntry.date)}" title="${utilBean.getLocaleMessage('format_date_and_time', logEntry.date)}" escape="false"/>
                             </p>
                         </div>
                     </div>

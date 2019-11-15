@@ -183,50 +183,77 @@
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.termsPasted/gfs.terms}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.pasted_terms']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.termsPasted, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.termsPasted}"/>
+                                    <f:param value="#{(gfs.termsPasted / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciation/gfs.terms}" sortable="true">
                                 <f:facet name="header">#{msg['Glossary.pronounciation']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.pronounciation, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}" escape="true">
+                                    <f:param value="#{gfs.pronounciation}"/>
+                                    <f:param value="#{(gfs.pronounciation / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.pronounciationPasted/gfs.pronounciation}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.pasted_pronounciations']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.pronounciationPasted, gfs.pronounciation)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.pronounciationPasted}"/>
+                                    <f:param value="#{(gfs.pronounciationPasted / gfs.pronounciation) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.acronym/gfs.terms}" sortable="true">
                                 <f:facet name="header">#{msg['Glossary.acronym']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.acronym, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.acronym}"/>
+                                    <f:param value="#{(gfs.acronym / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.acronymPasted/gfs.acronym}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.pasted_acronyms']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.acronymPasted, gfs.acronym)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.acronymPasted}"/>
+                                    <f:param value="#{(gfs.acronymPasted / gfs.acronym) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseology/gfs.terms}" sortable="true">
                                 <f:facet name="header">#{msg['Glossary.phraseology']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.phraseology, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.phraseology}"/>
+                                    <f:param value="#{(gfs.phraseology / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.phraseologyPasted/gfs.phraseology}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.pasted_phraseologies']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.phraseologyPasted, gfs.phraseology)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.phraseologyPasted}"/>
+                                    <f:param value="#{(gfs.phraseologyPasted / gfs.phraseology) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.uses/gfs.terms}" sortable="true">
                                 <f:facet name="header">#{msg['Glossary.use']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.uses, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.uses}"/>
+                                    <f:param value="#{(gfs.uses / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.source/gfs.terms}" sortable="true">
                                 <f:facet name="header">#{msg['Glossary.sources']}</f:facet>
-                                #{utilBean.formatValAndPct(gfs.source, gfs.terms)}
+                                <h:outputFormat value="#{msg.format_zero_or_number_with_pct}">
+                                    <f:param value="#{gfs.source}"/>
+                                    <f:param value="#{(gfs.source / gfs.terms) * 100}"/>
+                                </h:outputFormat>
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.avg}" sortable="true">
                                 <f:facet name="header">AVG %</f:facet>
                                 <h:outputText value="#{gfs.avg*100}">
-                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
                             </p:column>
                             <p:column styleClass="ui-column-title" sortBy="#{gfs.totalPastedPct}" sortable="true" rendered="#{!glossaryDashboardBean.singleUser}">
                                 <f:facet name="header">#{msg['Glossary.total_pasted']}</f:facet>
                                 <h:outputText value="#{gfs.totalPastedPct*100}">
-                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2"/>
+                                    <f:convertNumber locale="#{userBean.locale}" maxFractionDigits="3" minFractionDigits="3"/>
                                 </h:outputText>%
                             </p:column>
                         </p:dataTable>
