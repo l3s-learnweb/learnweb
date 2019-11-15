@@ -81,11 +81,22 @@ body {
     }
   }
 
+  .ui-dialog-content .ui-tree {
+    &:hover {
+      border: 1px solid $inputHoverBorderColor;
+    }
+    border-color: $inputBorderColor;
+  }
+
   .ui-tree.ui-tree-responsive {
     border: 0;
     padding: 0;
     background: none;
     width: auto;
+
+    &:hover {
+      border: 0;
+    }
 
     .ui-tree-container {
       padding: 0;
@@ -187,13 +198,6 @@ body {
     padding-left: 16px;
   }
 
-  .ui-dialog-content .ui-tree {
-    &:hover {
-      border: 1px solid $inputHoverBorderColor;
-    }
-    border-color: $inputBorderColor;
-  }
-
   .ui-menu {
     .ui-separator {
       margin: 0;
@@ -250,6 +254,7 @@ body {
 
   .ui-commandlink,
   .icon-link {
+    white-space: nowrap;
     &:hover {
       text-decoration: none;
     }
