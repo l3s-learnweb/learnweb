@@ -201,10 +201,13 @@
 				</ul>
 			</h:form>
 
-			<h:form id="tag_input_form" rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}" styleClass="d-flex">
-				<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
-				<p:message for="@previous"/>
-				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}" styleClass="rounded-0"
+			<h:form id="tag_input_form" rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+				<div class="form-group mb-0">
+					<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
+					<p:message for="@previous"/>
+				</div>
+
+				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}"
 								 update=":tag_form :growl tag_name" partialSubmit="true" process="@form">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
@@ -218,7 +221,7 @@
 			<h:form styleClass="mb-2" id="new_comment_form">
 				<ui:fragment rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 					<div class="form-group mb-0">
-						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
+						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true" styleClass="d-block"/>
 						<p:message for="@previous"/>
 					</div>
 
