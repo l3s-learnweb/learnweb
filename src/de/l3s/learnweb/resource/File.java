@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,6 +16,8 @@ import de.l3s.util.HasId;
 public class File implements Serializable, HasId
 {
     private static final long serialVersionUID = 6573841175365679674L;
+
+    private static final Pattern NAME_FORBIDDEN_CHARACTERS = Pattern.compile("[\\\\/:*?\"<>|]");
 
     public enum TYPE
     {
@@ -48,6 +51,24 @@ public class File implements Serializable, HasId
     {
     }
 
+    public File(final TYPE type, final String name, final String mimeType)
+    {
+        this.type = type;
+        this.name = name;
+        this.mimeType = mimeType;
+    }
+
+    @Override
+    public int getId()
+    {
+        return fileId;
+    }
+
+    public void setId(int fileId)
+    {
+        this.fileId = fileId;
+    }
+
     public String getName()
     {
         return name;
@@ -55,7 +76,7 @@ public class File implements Serializable, HasId
 
     public void setName(String name)
     {
-        this.name = StringUtils.defaultString(name).replaceAll("[\\\\/:*?\"<>|]", "_"); // replace invalid characters
+        this.name = NAME_FORBIDDEN_CHARACTERS.matcher(StringUtils.defaultString(name)).replaceAll("_"); // replace invalid characters
     }
 
     public String getMimeType()
@@ -76,17 +97,6 @@ public class File implements Serializable, HasId
     public void setResourceId(int resourceId)
     {
         this.resourceId = resourceId;
-    }
-
-    @Override
-    public int getId()
-    {
-        return fileId;
-    }
-
-    public void setId(int fileId)
-    {
-        this.fileId = fileId;
     }
 
     public String getUrl()
@@ -110,7 +120,6 @@ public class File implements Serializable, HasId
     }
 
     /**
-     *
      * @return The actual file in the file system
      */
     public java.io.File getActualFile()
@@ -140,9 +149,7 @@ public class File implements Serializable, HasId
     public OutputStream getOutputStream() throws FileNotFoundException
     {
         // if the actual file doesn't exist it is replaced with an error image. Make sure that this image isn't changed
-        if(!exists())
-            throw new FileNotFoundException();
-
+        if(!exists()) throw new FileNotFoundException();
         return new FileOutputStream(getActualFile());
     }
 

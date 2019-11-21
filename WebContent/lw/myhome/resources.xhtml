@@ -41,8 +41,6 @@
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
                 <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{myResourcesBean.updateTargetForAddResourceBean}" update=":right_pane :growl"
-                                 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
                 <p:remoteCommand name="createGroupItemCommand" actionListener="#{myResourcesBean.actionCreateItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
@@ -231,9 +229,9 @@
                 <h:outputText value="#{msg.add_to}:"/>
 
                 <h:form>
-                    <p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single"
-                            selection="#{myResourcesBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
-                        <p:ajax event="select" listener="#{myResourcesBean.onTargetNodeSelect}"/>
+                    <p:tree id="folders_tree" value="#{selectLocationBean.foldersTree}" var="node" animate="true" dynamic="true" selectionMode="single"
+                            selection="#{selectLocationBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
+                        <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
                         <p:treeNode type="group">
                             <h:outputText id="group" value="#{node.title}"/>

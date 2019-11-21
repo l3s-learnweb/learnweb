@@ -1,13 +1,10 @@
 package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
-
-import org.apache.commons.lang3.StringUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -20,34 +17,38 @@ public class AddFolderBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 3716630972434428811L;
 
     private Folder folder;
-
     private Group targetGroup;
     private Folder targetFolder;
 
-    public AddFolderBean()
-    {
-        clearForm();
-    }
-
-    public void clearForm()
+    public void reset()
     {
         folder = new Folder();
     }
 
-    public void addFolder() throws SQLException
+    public void addFolder()
     {
-        if(targetGroup.canAddResources(getUser()) && StringUtils.isNotEmpty(folder.getTitle()))
+        try
         {
-            folder.setGroupId(targetGroup != null ? targetGroup.getId() : 0);
+            if (!targetGroup.canAddResources(getUser()))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
+                return;
+            }
+
+            folder.setGroupId(targetGroup.getId());
             folder.setParentFolderId(targetFolder != null ? targetFolder.getId() : 0);
             folder.setUser(getUser());
             folder.save();
 
             log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
-            addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
-        }
 
-        clearForm();
+            addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
+            reset();
+        }
+        catch(Exception e)
+        {
+            addErrorMessage(e);
+        }
     }
 
     public void setTarget(Group targetGroup, Folder targetFolder)
@@ -69,10 +70,5 @@ public class AddFolderBean extends ApplicationBean implements Serializable
     public Folder getFolder()
     {
         return folder;
-    }
-
-    public void setFolder(Folder folder)
-    {
-        this.folder = folder;
     }
 }

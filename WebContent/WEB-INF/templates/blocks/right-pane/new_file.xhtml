@@ -5,10 +5,14 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <h:form id="new_file_form">
+    <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":right_pane :growl"
+                     global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
+
     <div class="form-group row">
         <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
-            <p:button onclick="createConfirmDialog('selectDestination', updateAddResourcePaneCommand);return false;" value="#{addResourceBean.currentPath}"/>
+            <p:commandButton update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
+                             oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
         </div>
     </div>
 
@@ -28,14 +32,13 @@
         </div>
         <div class="col text-right">
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true"
-                             actionListener="#{addResourceBean.clearForm}">
+                             actionListener="#{addResourceBean.reset}">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 
             <p:commandButton id="create_file_button" value="#{msg.create}" global="false"
-                             update=":growl :right_pane" actionListener="#{addResourceBean.createFile}" onstart="PF('rightPaneOverlay').show()"
+                             update=":growl :right_pane" actionListener="#{addResourceBean.createDocument}" onstart="PF('rightPaneOverlay').show()"
                              oncomplete="PF('rightPaneOverlay').hide();resourceAddedHook();load_lightbox_editor();">
-                <f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0"/>
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>
         </div>

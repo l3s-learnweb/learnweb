@@ -237,44 +237,6 @@ public class StringHelper
         return true;
     }
 
-    /**
-     * Encodes the domain using punycode and the query using percent-encoding
-     *
-     * @param url
-     * @return
-     * @throws URISyntaxException
-     */
-    public static String convertUnicodeURLToAscii(String url) throws URISyntaxException
-    {
-        if(url != null)
-        {
-            url = url.trim();
-            // Handle international domains by detecting non-ascii and converting them to punycode
-            if(!isASCII(url))
-            {
-                URI uri = new URI(url);
-
-                // URI needs a scheme to work properly with authority parsing
-                if(uri.getScheme() == null)
-                {
-                    uri = new URI("http://" + url);
-                }
-
-                String scheme = uri.getScheme() != null ? uri.getScheme() + "://" : null;
-                String authority = uri.getRawAuthority() != null ? uri.getRawAuthority() : ""; // includes domain and port
-                String path = uri.getRawPath() != null ? uri.getRawPath() : "";
-                String queryString = uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "";
-
-                // Must convert domain to punycode separately from the path
-                url = scheme + IDN.toASCII(authority) + path + queryString;
-
-                // Convert path from unicode to ascii encoding
-                url = new URI(url).toASCIIString();
-            }
-        }
-        return url;
-    }
-
     public static String filenameChangeExt(String originalFilename, String newExt)
     {
         return originalFilename.substring(0, originalFilename.lastIndexOf('.')) + "." + newExt;

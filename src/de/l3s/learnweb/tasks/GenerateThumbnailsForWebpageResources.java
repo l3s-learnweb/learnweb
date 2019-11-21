@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.List;
 
+import de.l3s.util.UrlHelper;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
@@ -51,7 +52,7 @@ public class GenerateThumbnailsForWebpageResources
             String url = resource.getUrl();
             log.debug(resource.getId() + "\t" + url);
 
-            url = AddResourceBean.checkUrl(url);
+            url = UrlHelper.validateUrl(url);
 
             if(url == null)
             {

@@ -1,6 +1,5 @@
 package de.l3s.learnweb.resource.glossary;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,9 +12,8 @@ import de.l3s.learnweb.resource.SERVICE;
 
 /**
  * @author Rishita
- *
  */
-public class GlossaryResource extends Resource implements Serializable
+public class GlossaryResource extends Resource
 {
     private static final long serialVersionUID = 8388778401614338522L;
 
@@ -24,7 +22,6 @@ public class GlossaryResource extends Resource implements Serializable
     private boolean deleted = false;
     private boolean clonedButNotSaved = false;
 
-    //constructor does nothing
     public GlossaryResource()
     {
         this.setSource(SERVICE.learnweb);
@@ -35,8 +32,6 @@ public class GlossaryResource extends Resource implements Serializable
 
     /**
      * copy constructor
-     *
-     * @param otherGlossaryResource
      */
     public GlossaryResource(GlossaryResource otherGlossaryResource)
     {

@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.l3s.util.UrlHelper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
@@ -486,7 +487,7 @@ public class ResourceMetadataExtractor
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException
     {
         String url = "https://flic.kr/p/tcT8oi";
-        url = AddResourceBean.checkUrl(url);
+        url = UrlHelper.validateUrl(url);
 
         Resource resource = new Resource();
         resource.setStorageType(Resource.WEB_RESOURCE);

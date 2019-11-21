@@ -35,8 +35,6 @@
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
         <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-        <p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupResourcesBean.updateTargetForAddResourceBean}" update=":right_pane :growl"
-                         global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
         <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
 
@@ -87,14 +85,14 @@
                             <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="true"/>
                         </p:commandButton>
 
-						<ui:remove>
-						<!-- The download dialog and its bean must be improved before it can be shown -->
-                        <span class="ui-separator">
-                            <span class="ui-icon fa fa-ellipsis-v"/>
-                        </span>
+                        <ui:remove>
+                            <!-- The download dialog and its bean must be improved before it can be shown -->
+                            <span class="ui-separator">
+                                <span class="ui-icon fa fa-ellipsis-v"/>
+                            </span>
 
-                        <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();"
-                                         type="button" rendered="#{true or learnwebBean.learnweb.service == 'AMA'}"/>
+                            <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();"
+                                             type="button" rendered="#{true or learnwebBean.learnweb.service == 'AMA'}"/>
                         </ui:remove>
                     </f:facet>
 
@@ -296,9 +294,9 @@
         <h:outputText value="#{msg.add_to}:"/>
 
         <h:form>
-            <p:tree value="#{userBean.writeAbleGroupsTree}" var="node" styleClass="ui-tree-responsive" animate="true"
-                    selectionMode="single" selection="#{groupResourcesBean.selectedTargetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
-                <p:ajax event="select" listener="#{groupResourcesBean.onTargetNodeSelect}"/>
+            <p:tree value="#{selectLocationBean.foldersTree}" var="node" styleClass="ui-tree-responsive" animate="true"
+                    selectionMode="single" selection="#{selectLocationBean.targetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
+                <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
                 <p:treeNode type="group">
                     <h:outputText id="group" value="#{node.title}"/>

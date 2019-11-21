@@ -504,6 +504,34 @@ public class ResourcePreviewMaker
         }
     }
 
+    public static class CreateThumbnailThread extends Thread
+    {
+        private Resource resource;
+
+        public CreateThumbnailThread(Resource resource)
+        {
+            log.debug("Create CreateThumbnailThread for " + resource.toString());
+            this.resource = resource;
+        }
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+                resource.setOnlineStatus(Resource.OnlineStatus.PROCESSING);
+                rpm.processResource(resource);
+                resource.setOnlineStatus(Resource.OnlineStatus.ONLINE);
+                resource.save();
+            }
+            catch(Exception e)
+            {
+                log.error("Error in CreateThumbnailThread " + e);
+            }
+        }
+    }
+
     public static void main(String[] ar)
     {
         try

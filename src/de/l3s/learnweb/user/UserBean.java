@@ -216,32 +216,32 @@ public class UserBean implements Serializable
 
         switch(localeCode)
         {
-        case "de":
-            locale = new Locale("de", "DE", languageVariant);
-            break;
-        case "en":
-            locale = new Locale("en", "UK", languageVariant);
-            break;
-        case "it":
-            locale = new Locale("it", "IT", languageVariant);
-            break;
-        case "pt":
-            locale = new Locale("pt", "BR", languageVariant);
-            break;
-        case "es":
-            locale = new Locale("es", "ES", languageVariant);
-            break;
-        case "uk":
-            locale = new Locale("uk", "UA", languageVariant);
-            break;
-        case "xx":
-            // only for translation editors
-            locale = new Locale("xx");
-            break;
-        default:
-            locale = new Locale("en", "UK");
-            log.error("Unsupported language: " + localeCode);
-            break;
+            case "de":
+                locale = new Locale("de", "DE", languageVariant);
+                break;
+            case "en":
+                locale = new Locale("en", "UK", languageVariant);
+                break;
+            case "it":
+                locale = new Locale("it", "IT", languageVariant);
+                break;
+            case "pt":
+                locale = new Locale("pt", "BR", languageVariant);
+                break;
+            case "es":
+                locale = new Locale("es", "ES", languageVariant);
+                break;
+            case "uk":
+                locale = new Locale("uk", "UA", languageVariant);
+                break;
+            case "xx":
+                // only for translation editors
+                locale = new Locale("xx");
+                break;
+            default:
+                locale = new Locale("en", "UK");
+                log.error("Unsupported language: " + localeCode);
+                break;
         }
 
         localePrettyTime = null; // reset date formatter
@@ -485,7 +485,6 @@ public class UserBean implements Serializable
      * @return
      * @throws SQLException
      */
-
     public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
         if(!isLoggedIn())

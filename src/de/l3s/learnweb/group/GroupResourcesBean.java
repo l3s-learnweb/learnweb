@@ -71,7 +71,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private Order order = Order.TITLE;
 
     // Folders tree
-    private TreeNode selectedTargetNode;
     private int selectedResourceTargetGroupId;
     private int selectedResourceTargetFolderId;
 
@@ -105,10 +104,10 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private RightPaneBean rightPaneBean;
 
     @Inject
-    private AddResourceBean addResourceBean;
+    private AddFolderBean addFolderBean;
 
     @Inject
-    private AddFolderBean addFolderBean;
+    private AddResourceBean addResourceBean;
 
     private final int pageSize;
 
@@ -206,68 +205,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     {
         // TODO implement
         order = Order.TYPE;
-    }
-
-    public int getSelectedResourceTargetGroupId()
-    {
-        return selectedResourceTargetGroupId;
-    }
-
-    public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId)
-    {
-        this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
-    }
-
-    public int getSelectedResourceTargetFolderId()
-    {
-        return selectedResourceTargetFolderId;
-    }
-
-    public void setSelectedResourceTargetFolderId(int selectedResourceTargetFolderId)
-    {
-        this.selectedResourceTargetFolderId = selectedResourceTargetFolderId;
-    }
-
-    public TreeNode getSelectedTargetNode()
-    {
-        return selectedTargetNode;
-    }
-
-    public void setSelectedTargetNode(TreeNode selectedTargetNode)
-    {
-        this.selectedTargetNode = selectedTargetNode;
-    }
-
-    public void onTargetNodeSelect(NodeSelectEvent event)
-    {
-        String type = event.getTreeNode().getType();
-
-        // TODO Oleh
-        // TODO Dupe: duplicate exists in my SearchBean.onNodeSelect
-        if(type.equals("group"))
-        {
-            Group group = (Group) event.getTreeNode().getData();
-            if(group != null)
-            {
-                selectedResourceTargetGroupId = group.getId();
-                selectedResourceTargetFolderId = 0;
-            }
-        }
-        else if(type.equals("folder"))
-        {
-            Folder folder = (Folder) event.getTreeNode().getData();
-            if(folder != null)
-            {
-                selectedResourceTargetGroupId = folder.getGroupId();
-                selectedResourceTargetFolderId = folder.getId();
-            }
-        }
-    }
-
-    public void updateTargetForAddResourceBean()
-    {
-        addResourceBean.setTargetGroupId(selectedResourceTargetGroupId);
-        addResourceBean.setTargetFolderId(selectedResourceTargetFolderId);
     }
 
     public AbstractPaginator getPaginator()
@@ -652,11 +589,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         switch(type)
         {
         case "folder":
-            addFolderBean.clearForm();
+            addFolderBean.reset();
             addFolderBean.setTarget(group, selectedFolder);
             break;
         default:
-            addResourceBean.clearForm();
+            addResourceBean.reset();
             addResourceBean.setTarget(group, selectedFolder);
             addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
@@ -679,8 +616,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             break;
         case "glossary2":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.glossary2);
-            addResourceBean.setResourceAsGlossary();
+            addResourceBean.setResourceTypeGlossary();
             break;
         case "survey":
             rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);

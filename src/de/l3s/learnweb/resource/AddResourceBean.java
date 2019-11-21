@@ -1,12 +1,7 @@
 package de.l3s.learnweb.resource;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,132 +14,56 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.lang3.StringUtils;
+import de.l3s.util.UrlHelper;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupResourcesBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.Resource.OnlineStatus;
-import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
-import de.l3s.learnweb.resource.office.FileEditorBean;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
-import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(AddResourceBean.class);
     private static final long serialVersionUID = 1736402639245432708L;
+    private static final Logger log = Logger.getLogger(AddResourceBean.class);
 
-    private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
-
+    private int formStep = 1;
     private Resource resource;
-
     private Group targetGroup;
     private Folder targetFolder;
 
-    private int formStep = 1;
-
     @Inject
-    private FileEditorBean fileEditorBean;
-
-    @Inject
-    private GroupResourcesBean groupResourcesBean;
-
-    @Inject
-    private MyResourcesBean myResourcesBean;
+    private SelectLocationBean selectLocationBean;
 
     // caches
     private transient List<SelectItem> availableGlossaryLanguages;
 
-    public AddResourceBean()
+    public void reset()
     {
         resource = new Resource();
-        resource.setSource(SERVICE.internet);
+        resource.setUser(getUser());
+        resource.setSource(SERVICE.learnweb);
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
-    }
 
-    public void createFile()
-    {
-        try
-        {
-            log.debug("Creating new file..");
-            resource.setSource(SERVICE.learnweb);
-            resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-            resource.setUser(getUser());
-            resource.setDeleted(true);
-            java.io.File newFile = getOfficeFileFromResources();
-            FileInfo info = null;
-            try
-            {
-                FileManager fileManager = getLearnweb().getFileManager();
-                ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-
-                log.debug("Getting the fileInfo from uploaded file...");
-                info = rme.getFileInfo(new FileInputStream(newFile), resource.getFileName());
-
-                log.debug("Saving file...");
-                File file = new File();
-                file.setType(TYPE.FILE_MAIN);
-                file.setName(info.getFileName());
-                file.setMimeType(info.getMimeType());
-                file.setDownloadLogActivated(true);
-                fileManager.save(file, new FileInputStream(newFile));
-                resource.addFile(file);
-                resource.setUrl(file.getUrl());
-                resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
-                resource.setFileName(info.getFileName());
-
-                log.debug("Extracting metadata from uploaded file...");
-                rme.processFileResource(resource, info);
-                resource.setDescription(StringUtils.EMPTY);
-
-                log.debug("Creating thumbnails from uploaded file...");
-                Thread createThumbnailThread = new CreateThumbnailThread(resource);
-                createThumbnailThread.start();
-                createThumbnailThread.join();
-            }
-            catch(Exception e)
-            {
-                log.error("Thumbnail creation failed for " + info);
-            }
-            addResource();
-
-        }
-        catch(Exception e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    private java.io.File getOfficeFileFromResources() throws URISyntaxException
-    {
-        ResourceType resourceType = resource.getType();
-        resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resourceType));
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        URL resourceUrl = classloader.getResource(OFFICE_FILES_FOLDER + FileUtility.getRightSampleName(resourceType));
-        return new java.io.File(resourceUrl.toURI());
-    }
-
-    public void clearForm()
-    {
-        resource = new Resource();
-        resource.setSource(SERVICE.internet);
-        resource.setLocation("Learnweb");
         formStep = 1;
+    }
+
+    public void setResourceTypeGlossary()
+    {
+        GlossaryResource glossaryResource = new GlossaryResource();
+        glossaryResource.setDeleted(true);
+        glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
+
+        this.resource = glossaryResource;
     }
 
     public void handleFileUpload(FileUploadEvent event)
@@ -152,42 +71,37 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             log.debug("Handle File upload");
-
             resource.setSource(SERVICE.desktop);
-            resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
-            resource.setUser(getUser());
 
             UploadedFile uploadedFile = event.getFile();
 
-            FileManager fileManager = getLearnweb().getFileManager();
-            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-
             log.debug("Getting the fileInfo from uploaded file...");
+            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
             FileInfo info = rme.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
 
-            log.debug("Saving file to database...");
-            File file = new File();
-            file.setType(TYPE.FILE_MAIN);
-            file.setName(info.getFileName());
-            file.setMimeType(info.getMimeType());
+            log.debug("Saving the file...");
+            File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
             file.setDownloadLogActivated(true);
+
+            FileManager fileManager = getLearnweb().getFileManager();
             fileManager.save(file, uploadedFile.getInputstream());
+
             resource.addFile(file);
             resource.setUrl(file.getUrl());
             resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
             resource.setFileName(info.getFileName());
 
-            log.debug("Extracting info from uploaded file...");
+            log.debug("Extracting metadata from the file...");
             rme.processFileResource(resource, info);
 
-            log.debug("Creating thumbnails from uploaded file...");
-            Thread createThumbnailThread = new CreateThumbnailThread(resource);
+            log.debug("Creating thumbnails from the file...");
+            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(resource);
             createThumbnailThread.start();
             createThumbnailThread.join(1000);
 
-            nextStep();
+            log.debug("Next step");
+            this.formStep++;
         }
         catch(Exception e)
         {
@@ -195,9 +109,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void validateUrl(FacesContext context, UIComponent comp, Object value) throws ValidatorException
+    public void validateUrl(FacesContext context, UIComponent comp, Object value)
     {
-        if(checkUrl(value.toString().trim()) == null)
+        if(UrlHelper.validateUrl(value.toString()) == null)
         {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
         }
@@ -208,154 +122,102 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             log.debug("Handle Url input");
-
-            resource.setStorageType(Resource.WEB_RESOURCE);
-            resource.setUrl(checkUrl(resource.getUrl()));
-            resource.setUser(getUser());
             resource.setSource(SERVICE.internet);
+            resource.setStorageType(Resource.WEB_RESOURCE);
+            resource.setUrl(UrlHelper.validateUrl(resource.getUrl()));
 
             log.debug("Extracting info from given url...");
-            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-            rme.processWebResource(resource);
+            getLearnweb().getResourceMetadataExtractor().processWebResource(resource);
 
             log.debug("Creating thumbnails from given url...");
-            Thread createThumbnailThread = new CreateThumbnailThread(resource);
+            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(resource);
+            createThumbnailThread.start();
+            createThumbnailThread.join(1000); // wait for a second. If this take longer
+
+            log.debug("Next step");
+            this.formStep++;
+        }
+        catch(Exception e)
+        {
+            addErrorMessage(e);
+        }
+    }
+
+    public void createDocument()
+    {
+        log.debug("Creating new document...");
+        resource.setSource(SERVICE.learnweb);
+        resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
+
+        try (FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType())))
+        {
+            log.debug("Getting the fileInfo from uploaded file...");
+            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
+            FileInfo info = rme.getFileInfo(sampleFile, resource.getFileName());
+
+            log.debug("Saving file...");
+            File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
+            file.setDownloadLogActivated(true);
+
+            FileManager fileManager = getLearnweb().getFileManager();
+            fileManager.save(file, sampleFile);
+
+            resource.addFile(file);
+            resource.setUrl(file.getUrl());
+            resource.setFileUrl(file.getUrl());
+            resource.setFileName(info.getFileName());
+            resource.setFormat(info.getMimeType());
+
+            log.debug("Creating thumbnails from uploaded file...");
+            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(resource);
             createThumbnailThread.start();
             createThumbnailThread.join(1000);
 
-            nextStep();
+            log.debug("Next step");
+            addResource();
         }
-        catch(InterruptedException e)
+        catch(Exception e)
         {
             addErrorMessage(e);
         }
-    }
-
-    public void addSurvey() throws IOException
-    {
-        try
-        {
-            resource.setDeleted(false);
-            resource.setSource(SERVICE.learnweb);
-            resource.setType(Resource.ResourceType.survey);
-            resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + resource.getId());
-
-            Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
-
-            resource.setThumbnail0(iconResource.getThumbnail0());
-            resource.setThumbnail1(iconResource.getThumbnail1());
-            resource.setThumbnail2(iconResource.getThumbnail2());
-            resource.setThumbnail3(iconResource.getThumbnail3());
-            resource.setThumbnail4(iconResource.getThumbnail4());
-
-            // add resource to a group if selected
-            resource.setGroupId(targetGroup.getId());
-            resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
-            getUser().setActiveGroup(targetGroup);
-
-            if(resource.getId() == -1)
-                resource = getUser().addResource(resource);
-
-            else
-            {
-                resource.save();
-            }
-
-            //getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), getSurveyOpenDate(), getSurveyCloseDate());
-            log(Action.adding_resource, targetGroup.getId(), resource.getId());
-            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-
-            groupResourcesBean.updateResourcesFromSolr();
-
-            //resource.setUrl("");
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    public Resource getResource()
-    {
-        return resource;
-    }
-
-    public void setResourceAsGlossary()
-    {
-        GlossaryResource glossaryResource = new GlossaryResource();
-
-        glossaryResource.setDeleted(true);
-        glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
-
-        this.resource = glossaryResource;
     }
 
     public void addResource()
     {
         try
         {
-            if(resource.getType().equals(ResourceType.survey))
+            if (!targetGroup.canAddResources(getUser()))
             {
-                addSurvey();
+                addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
                 return;
             }
 
             log.debug("addResource; res=" + resource);
 
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN) && !resource.getType().equals(ResourceType.glossary2))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Select a file first");
-                return;
-            }
-
-            if(resource.getStorageType() == Resource.WEB_RESOURCE)
-            {
-                if(!resource.getUrl().startsWith("http"))
-                    resource.setUrl("http://" + resource.getUrl());
-            }
-
             resource.setDeleted(false);
-            resource.setUser(getUser());
-            if(resource.isOfficeResource())
-                getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected
             resource.setGroupId(targetGroup.getId());
             resource.setFolderId(targetFolder != null ? targetFolder.getId() : 0);
             getUser().setActiveGroup(targetGroup.getId());
+            resource.save();
 
-            if(resource.getId() == -1) // a new resource which is not stored in the database yet
-                resource = getUser().addResource(resource);
-            else
-                resource.save();
+            log(Action.adding_resource, resource.getGroupId(), resource.getId());
+            //detailed logging of new metadata (author, language, media source, media type
+            if(resource.getAuthor() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Author");
+            if(resource.getLanguage() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Language");
 
             // create temporal thumbnails
             resource.postConstruct();
 
             // create thumbnails for the resource
-            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType().equals(Resource.ResourceType.video)))
+            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType() == Resource.ResourceType.video))
             {
-                new CreateThumbnailThread(resource).start();
-            }
-
-            log(Action.adding_resource, targetGroup.getId(), resource.getId());
-
-            //detailed logging of new metadata (author, language, media source, media type
-            if(resource.getAuthor() != null)
-            {
-                log(Action.adding_resource_metadata, targetGroup.getId(), resource.getId(), "added Author");
-            }
-            if(resource.getLanguage() != null)
-            {
-                log(Action.adding_resource_metadata, targetGroup.getId(), resource.getId(), "added Language");
+                new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-
-            if(resource.getGroupId() != 0)
-                groupResourcesBean.updateResourcesFromSolr();
-
-            myResourcesBean.updateResources();
+            reset();
         }
         catch(Exception e)
         {
@@ -378,14 +240,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         return getLocaleMessage("myResourcesTitle");
     }
 
-    public void nextStep()
+    public Resource getResource()
     {
-        this.formStep++;
-    }
-
-    public void setFormStep(int step)
-    {
-        this.formStep = step;
+        return resource;
     }
 
     public int getFormStep()
@@ -393,136 +250,18 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         return formStep;
     }
 
-    public void changeGroupListener()
-    {
-        log.debug("changeGroupListener");
-    }
-
-    public void preRenderView() throws IOException, DecoderException
-    {
-        if(getUser() == null) // not logged in
-            return;
-    }
-
-    /**
-     * This function checks if a given String is a valid url.
-     * When the url leads to a redirect the function will return the target of the redirect.
-     * Returns null if the url is invalid or not reachable.
-     *
-     * @param urlStr
-     * @return
-     */
-    public static String checkUrl(String urlStr)
-    {
-        if(urlStr == null)
-            return null;
-
-        if(!urlStr.startsWith("http"))
-            urlStr = "http://" + urlStr;
-
-        HttpURLConnection connection;
-        try
-        {
-            urlStr = StringHelper.convertUnicodeURLToAscii(urlStr);
-
-            URL url = new URL(urlStr);
-
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setInstanceFollowRedirects(false);
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
-
-            int responseCode = connection.getResponseCode();
-            if(responseCode / 100 == 2)
-            {
-                return urlStr;
-            }
-            else if(responseCode / 100 == 3)
-            {
-                String location = connection.getHeaderField("Location");
-                if(location.startsWith("/"))
-                {
-                    int index = urlStr.indexOf("/", urlStr.indexOf("//") + 2);
-                    String domain = index > 0 ? urlStr.substring(0, index) : urlStr;
-                    return domain + location;
-                }
-                else
-                    return location;
-            }
-            else
-                return null;
-        }
-        catch(UnknownHostException e)
-        {
-            log.warn("unknown host: " + urlStr, e);
-            return null;
-        }
-        catch(Throwable t)
-        {
-            log.error("invalid url: " + urlStr, t);
-            return null;
-        }
-    }
-
-    public void setTargetGroupId(int targetGroupId)
-    {
-        try
-        {
-            Group group = getLearnweb().getGroupManager().getGroupById(targetGroupId);
-            this.targetGroup = group;
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    public void setTargetFolderId(int targetFolderId)
-    {
-        try
-        {
-            Folder folder = getLearnweb().getGroupManager().getFolder(targetFolderId);
-            this.targetFolder = folder;
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
     public void setTarget(Group targetGroup, Folder targetFolder)
     {
         this.targetGroup = targetGroup;
         this.targetFolder = targetFolder;
+        this.selectLocationBean.setTargetGroup(targetGroup);
+        this.selectLocationBean.setTargetFolder(targetFolder);
     }
 
-    public FileEditorBean getFileEditorBean()
+    public void updateTargetLocation()
     {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
-
-    public GroupResourcesBean getGroupResourcesBean()
-    {
-        return groupResourcesBean;
-    }
-
-    public void setGroupResourcesBean(final GroupResourcesBean groupResourcesBean)
-    {
-        this.groupResourcesBean = groupResourcesBean;
-    }
-
-    public MyResourcesBean getMyResourcesBean()
-    {
-        return myResourcesBean;
-    }
-
-    public void setMyResourcesBean(final MyResourcesBean myResourcesBean)
-    {
-        this.myResourcesBean = myResourcesBean;
+        this.targetGroup = selectLocationBean.getTargetGroup();
+        this.targetFolder = selectLocationBean.getTargetFolder();
     }
 
     public List<SelectItem> getAvailableGlossaryLanguages()
@@ -534,32 +273,13 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         return availableGlossaryLanguages;
     }
 
-    public static class CreateThumbnailThread extends Thread
+    public SelectLocationBean getSelectLocationBean()
     {
-        private Resource resource;
+        return selectLocationBean;
+    }
 
-        public CreateThumbnailThread(Resource resource)
-        {
-            log.debug("Create CreateThumbnailThread for " + resource.toString());
-            this.resource = resource;
-        }
-
-        @Override
-        public void run()
-        {
-            try
-            {
-                ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-                resource.setOnlineStatus(OnlineStatus.PROCESSING);
-                rpm.processResource(resource);
-                resource.setOnlineStatus(OnlineStatus.ONLINE);
-                resource.save();
-            }
-            catch(Exception e)
-            {
-                log.error("Error in CreateThumbnailThread " + e);
-            }
-        }
-
+    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
+    {
+        this.selectLocationBean = selectLocationBean;
     }
 }

@@ -16,14 +16,13 @@ public class URL
     private byte[] url; // the ASCII encoded URL 
 
     /**
-     * 
      * @param url A UTF-8 encoded string
      * 
      * @throws URISyntaxException
      */
     public URL(String url) throws URISyntaxException
     {
-        this.url = StringHelper.convertUnicodeURLToAscii(url).getBytes(StandardCharsets.US_ASCII);
+        this.url = UrlHelper.toAscii(url).getBytes(StandardCharsets.US_ASCII);
     }
 
     /**

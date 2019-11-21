@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.PrimeFaces;
@@ -30,7 +31,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.AddResourceBean.CreateThumbnailThread;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceType;
@@ -242,7 +242,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             newResource = user.addResource(newResource);
 
             log.debug("Creating thumbnails from given url...");
-            Thread createThumbnailThread = new CreateThumbnailThread(newResource);
+            Thread createThumbnailThread = new ResourcePreviewMaker.CreateThumbnailThread(newResource);
             createThumbnailThread.start();
 
             search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());

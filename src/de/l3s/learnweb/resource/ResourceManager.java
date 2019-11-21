@@ -444,7 +444,7 @@ public class ResourceManager
             log.error("Can't save archiveUrls", e);
         }
 
-        resource.setDefaultThumbnailIfNull();
+        resource.postConstruct();
 
         return resource;
     }

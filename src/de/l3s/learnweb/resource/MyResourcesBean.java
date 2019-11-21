@@ -610,11 +610,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         switch(type)
         {
             case "folder":
-                addFolderBean.clearForm();
+                addFolderBean.reset();
                 addFolderBean.setTarget(group, selectedFolder);
                 break;
             default:
-                addResourceBean.clearForm();
+                addResourceBean.reset();
                 addResourceBean.setTarget(group, selectedFolder);
                 addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
                 break;
@@ -637,8 +637,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 break;
             case "glossary2":
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(Resource.ResourceType.glossary2);
-                addResourceBean.setResourceAsGlossary();
+                addResourceBean.setResourceTypeGlossary();
                 break;
             case "survey":
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
@@ -695,7 +694,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 breadcrumb.add(folder);
 
             selectedFolder = folder;
-            addResourceBean.setTargetFolderId(getSelectedFolderId());
+            addResourceBean.setTarget(group, selectedFolder);
 
             updateResources();
         }
@@ -785,12 +784,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 selectedResourceTargetFolderId = folder.getId();
             }
         }
-    }
-
-    public void updateTargetForAddResourceBean()
-    {
-        addResourceBean.setTargetGroupId(selectedResourceTargetGroupId);
-        addResourceBean.setTargetFolderId(selectedResourceTargetFolderId);
     }
 
     public boolean isGridView()

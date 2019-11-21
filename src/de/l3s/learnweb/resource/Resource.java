@@ -173,40 +173,54 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     protected void postConstruct() throws SQLException
     {
         setDefaultThumbnailIfNull();
+
+        // TODO: add creating a URL
+        // resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + resource.getId()); // TODO: why do we need it?
     }
 
     /**
      * If no thumbnails have been assigned this method will create default thumbnails for the small thumbnails
      */
-    public void setDefaultThumbnailIfNull()
+    public void setDefaultThumbnailIfNull() throws SQLException
     {
         if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
+            if (type == ResourceType.survey)
+            {
+                Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095);
+                setThumbnail0(iconResource.getThumbnail0());
+                setThumbnail1(iconResource.getThumbnail1());
+                setThumbnail2(iconResource.getThumbnail2());
+                setThumbnail3(iconResource.getThumbnail3());
+                setThumbnail4(iconResource.getThumbnail4());
+                return;
+            }
+
             String serverUrl = Learnweb.getInstance().getServerUrl();
             Thumbnail dummyImage;
 
             switch(type)
             {
-            case audio:
-            case document:
-            case image:
-            case presentation:
-            case spreadsheet:
-            case text:
-            case video:
-            case website:
-                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
-                break;
-            default:
-                dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
-            }
+                case audio:
+                case document:
+                case image:
+                case presentation:
+                case spreadsheet:
+                case text:
+                case video:
+                case website:
+                    dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
+                    break;
+                default:
+                    dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
+                }
 
-            if(null == thumbnail0)
-                setThumbnail0(dummyImage.resize(150, 120));
-            if(null == thumbnail1)
-                setThumbnail1(dummyImage.resize(150, 150));
-            if(null == thumbnail2)
-                setThumbnail2(dummyImage);
+                if(null == thumbnail0)
+                    setThumbnail0(dummyImage.resize(150, 120));
+                if(null == thumbnail1)
+                    setThumbnail1(dummyImage.resize(150, 150));
+                if(null == thumbnail2)
+                    setThumbnail2(dummyImage);
         }
     }
 
@@ -642,6 +656,9 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     @Override
     public Resource save() throws SQLException
     {
+        if(this.getId() == -1) // a new resource which is not stored in the database yet
+            return this.getUser().addResource(this);
+
         return Learnweb.getInstance().getResourceManager().saveResource(this);
     }
 

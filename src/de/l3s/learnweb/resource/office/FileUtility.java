@@ -1,6 +1,8 @@
 package de.l3s.learnweb.resource.office;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -13,16 +15,18 @@ import de.l3s.learnweb.resource.Resource.ResourceType;
 
 public class FileUtility
 {
+    private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
+
     private static final String TEXT = "text";
     private static final String PRESENTATION = "presentation";
     private static final String SPREADSHEET = "spreadsheet";
 
-    public static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "pdf", "djvu", "fb2", "epub", "xps");
-    public static final List<String> EXT_SPREADSHEET = Arrays.asList("xls", "xlsx", "ods", "csv");
-    public static final List<String> EXT_PRESENTATION = Arrays.asList("pps", "ppsx", "ppt", "pptx", "odp");
-    public static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList("mht", "docm", "dot", "dotm", "dotx", "fodt");
-    public static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList("fods", "xlsm", "xlt", "xltm", "xltx");
-    public static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList("fodp", "pot", "potm", "potx", "pps", "ppsx", "pptm", "ppsm");
+    private static final List<String> EXT_DOCUMENT = Arrays.asList("docx", "doc", "odt", "rtf", "txt", "html", "htm", "mht", "pdf", "djvu", "fb2", "epub", "xps");
+    private static final List<String> EXT_SPREADSHEET = Arrays.asList("xls", "xlsx", "ods", "csv");
+    private static final List<String> EXT_PRESENTATION = Arrays.asList("pps", "ppsx", "ppt", "pptx", "odp");
+    private static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList("mht", "docm", "dot", "dotm", "dotx", "fodt");
+    private static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList("fods", "xlsm", "xlt", "xltm", "xltx");
+    private static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList("fodp", "pot", "potm", "potx", "pps", "ppsx", "pptm", "ppsm");
 
     private static final String SAMPLE_PPTX = "sample.pptx";
     private static final String SAMPLE_XLSX = "sample.xlsx";
@@ -105,26 +109,30 @@ public class FileUtility
         return "unknownFileName";
     }
 
-    public static String getInternalExtension(ResourceType fileType)
+    public static java.io.File getSampleOfficeFile(ResourceType resourceType) throws URISyntaxException
     {
-        if(fileType.equals(ResourceType.document))
-            return ".docx";
-
-        if(fileType.equals(ResourceType.spreadsheet))
-            return ".xlsx";
-
-        if(fileType.equals(ResourceType.presentation))
-            return ".pptx";
-
-        return ".docx";
+        String sampleFileName = FileUtility.getSampleFileName(resourceType);
+        URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(OFFICE_FILES_FOLDER + sampleFileName);
+        return new java.io.File(resourceUrl.toURI());
     }
 
-    public static String getRightSampleName(ResourceType fileType)
+    public static String getInternalExtension(ResourceType fileType)
     {
-        if(fileType != null)
+        switch(fileType)
         {
-            switch(fileType)
-            {
+            case spreadsheet:
+                return ".xlsx";
+            case presentation:
+                return ".pptx";
+            default:
+                return ".docx";
+        }
+    }
+
+    public static String getSampleFileName(ResourceType fileType)
+    {
+        switch(fileType)
+        {
             case document:
                 return SAMPLE_DOCX;
             case spreadsheet:
@@ -132,9 +140,7 @@ public class FileUtility
             case presentation:
                 return SAMPLE_PPTX;
             default:
-                break;
-            }
+                return null;
         }
-        return null;
     }
 }
