@@ -43,33 +43,28 @@ function selectTab(divName) {
   document.getElementById('test123:' + divName + '_button').classList.add('ui-state-active');
 } */
 
-/* function openTagsDiv() {
-  if($('.overlay').width() === 0)
-    {
+function openTagsDiv() {
+  if ($('.overlay').width() === 0) {
     $('.overlay').width('256px');
-/!*      $('.embedded').width($('.embedded').width() - 256);
-      $('.right_bar').css('margin-right','256px');*!/
-    }
+    $('.right_bar').css('margin-right', '256px');
+    PF('tabViewVar').select(0);
+  }
 }
 
 function closeTagsDiv() {
   $('.overlay').width('0px');
-/!*    $('.embedded').width($('.embedded').width() + 256);
-    $('.right_bar').css('margin-right','0px');*!/
-    $('.note').removeClass('ui-state-hover');
-    $('.ui-selected').removeClass('ui-selected');
-} */
+  $('.right_bar').css('margin-right', '0px');
+  $('.note').removeClass('ui-state-hover');
+  $('.ui-selected').removeClass('ui-selected');
+}
+
+function selectTab(id) {
+  PF('tabViewVar').select(id);
+}
 
 $(() => {
-  // To include embedded TED video
-  $('.embed-responsive').contents().each((index, node) => {
-    if (node.nodeType === 8) {
-      // node is a comment
-      $(node).replaceWith(node.nodeValue);
-    }
-  });
-
-  if (!readOnly) {
+  const selectedElements = document.getElementsByClassName('note');
+  if (readOnly) {
     $(document).on('click', '.note', (e) => {
       const $this = $(e.currentTarget);
       if (window.confirm(`Delete this selection (${$this.text()})?`)) {
@@ -77,12 +72,9 @@ $(() => {
         delete tags[$this.attr('id')];
         updateTagList();
         $this.contents().unwrap();
-        return false;
       }
     });
   }
-
-  const selectedElements = document.getElementsByClassName('note');
   for (let i = 0; i < selectedElements.length; i++) {
     const selectedElement = selectedElements[i];
     // Initializing tags list with already existing tags in the transcript
@@ -255,7 +247,7 @@ function initializeJQueryContextMenu() {
         name: 'Edit Annotation',
         callback() {
           selectedNodeId = this.attr('id');
-          $('#text').val(this.data('title'));
+          $('#text').val(this.attr('data-title'));
           isEditAnnotation = true;
           PF('userinput_dialog').show();
           return true;
@@ -519,7 +511,7 @@ function getUserText(buttonClicked) {
       $('#'+noteId).attr({'data-content':usertext}); */
 
   if (usertext !== '') {
-    selectedNode.data('title', usertext);
+    selectedNode.attr({ 'data-title': usertext });
     if (!selectedNode.hasClass('tooltipstered')) {
       selectedNode.tooltipster({
         functionInit() {
@@ -531,8 +523,8 @@ function getUserText(buttonClicked) {
         theme: 'tooltipster-custom-theme',
       });
     } else if (selectedNode.data('content')) {
-      selectedNode.tooltipster('content', `${selectedNode.data('title')}<hr/>${selectedNode.data('content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
-    } else selectedNode.tooltipster('content', selectedNode.data('title'));
+      selectedNode.tooltipster('content', `${selectedNode.attr('data-title')}<hr/>${selectedNode.attr('data-content').replace(new RegExp('&lt;br/&gt;', 'g'), '<br/>')}`);
+    } else selectedNode.tooltipster('content', selectedNode.attr('data-title'));
 
     selectedNode.trigger('mouseenter');
     tags[selectedNodeId] = usertext;
