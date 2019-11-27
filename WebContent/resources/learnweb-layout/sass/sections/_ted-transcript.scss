@@ -42,6 +42,24 @@
   .noselect {
     @include user-select(none);
   }
+
+  .overlay {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    right: 0;
+    top: 3.125rem;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow-x: hidden;
+    transition: 0.3s;
+  }
+
+}
+
+.ui-tabs-panel {
+  border: 0 !important;
 }
 
 // It is attached to context menu which is attached to body element, so we need keep it global
@@ -53,4 +71,65 @@
   margin: -3px auto;
   border: 1px solid $gray-800;
   border-radius: 2px;
+}
+
+
+.tooltipster-custom-theme {
+  border: 1px solid #489a83;
+  background: #ffffff;
+  box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-theme .tooltipster-content {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px 10px;
+  text-align: justify;
+}
+
+.tooltipster-custom-b {
+  border-radius: 10px;
+  background: #c4c4c4;
+  border-color: #a8a8a8;
+  box-shadow: 1px 1px 5px #888888;
+
+}
+
+.tooltipster-custom-d,
+.tooltipster-custom-c {
+  border-radius: 10px;
+  background: #489a83;
+  border-color: #a8a8a8;
+  box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-b .tooltipster-content {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px 10px;
+  text-align:justify;
+}
+.tooltipster-custom-c .tooltipster-content {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px 10px;
+  text-align:justify;
+}
+.tooltipster-custom-d .tooltipster-content {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 8px 10px;
+  text-align:justify;
+}
+
+.tooltipster-default a {
+  color: white;
+  text-decoration: underline;
+}
+.tooltipster-default a:hover {
+  text-decoration: none;
 }
