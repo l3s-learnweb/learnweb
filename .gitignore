@@ -23,6 +23,7 @@
 
 ## Local libs
 .idea/**/libraries/*
+!.idea/**/libraries/testLibs.xml
 
 # Output folder
 target

@@ -28,6 +28,7 @@
       <w>enddate</w>
       <w>epub</w>
       <w>exceptionhandler</w>
+      <w>factcheck</w>
       <w>fakenews</w>
       <w>fancybox</w>
       <w>ffmpeg</w>
@@ -88,11 +89,15 @@
       <w>rishita</w>
       <w>saveable</w>
       <w>screenshot</w>
+      <w>shortn</w>
       <w>simhash</w>
+      <w>slideshare</w>
       <w>smtp</w>
       <w>sparql</w>
+      <w>speechrepository</w>
       <w>srtings</w>
       <w>startdate</w>
+      <w>subfolders</w>
       <w>summeries</w>
       <w>teded</w>
       <w>tedx</w>

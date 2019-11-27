@@ -32,5 +32,6 @@
     <orderEntry type="library" name="@types/jquery" level="application" />
     <orderEntry type="library" name="@types/jqueryui" level="application" />
     <orderEntry type="library" name="@types/jquery.contextmenu" level="application" />
+    <orderEntry type="library" scope="TEST" name="testLibs" level="project" />
   </component>
 </module>
