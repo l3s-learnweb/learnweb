@@ -151,6 +151,10 @@ public class GroupsBean extends ApplicationBean implements Serializable
         {
             newGroup.setLeader(getUser());
 
+            if(newGroup.getCourseId() == 0) // this happens when the user is only member of a single course and the course selector isn't shown
+            {
+                newGroup.setCourseId(getUser().getCourses().get(0).getId());
+            }
             Group group = getLearnweb().getGroupManager().save(newGroup);
             getUser().joinGroup(group);
 

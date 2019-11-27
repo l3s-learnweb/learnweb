@@ -183,7 +183,7 @@ public class Learnweb
      */
     private static String getPropertiesFileName()
     {
-        String propertiesFileName = "lw_local_other";
+        String propertiesFileName;
 
         String workingDirectory = new File(".").getAbsolutePath();
         log.debug("workingDirectory: " + workingDirectory);
@@ -203,7 +203,7 @@ public class Learnweb
             propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
             propertiesFileName = "lw_local_philipp";
-        else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
+        else if((new File("C:\\programmieren\\philipp_uni.lw")).exists())
             propertiesFileName = "lw_local_philipp_uni";
         else if((new File("C:\\Users\\Tetiana").exists()))
             propertiesFileName = "lw_local_tetiana";
@@ -216,7 +216,7 @@ public class Learnweb
         else if((new File("C:\\Users\\PC").exists()))
             propertiesFileName = "lw_local_aleks";
         else
-            developmentMode = false;
+            throw new RuntimeException("Create a configuration file for your environment: " + Misc.getSystemDescription());
 
         return propertiesFileName;
     }
@@ -240,9 +240,6 @@ public class Learnweb
             this.properties = new PropertiesBundle(fallbackProperties);
 
             String propertiesFileName = getPropertiesFileName();
-
-            if(propertiesFileName.equals("lw_local_other"))
-                throw new RuntimeException("Create a configuration file for your environment: " + Misc.getSystemDescription());
 
             log.debug("Load config file: " + propertiesFileName);
 
