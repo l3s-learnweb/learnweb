@@ -3,6 +3,7 @@
 # file name                                     description
 
 activation-1.1.1.jar                            Dependencies missing in Java 11 (for backward compatibility)
+apiguardian-api-1.0.0.jar                       Required by JUnit5 for tests
 batik-all-1.11.jar								required by imagio
 boilerpipe-1.1.0.jar							Biolerpip text extraction used when adding websites
 cdi-api-2.0.jar                                 required for myfaces-bundle-2.3.1
@@ -66,6 +67,12 @@ jsimhash-0.1.jar					            Archive, computing simhash signatures for archi
 json-simple-1.1.1.jar				            Archive, generating json data for timeline and calendar representation
 jsoup-1.7.2.jar						            Resource, remove Html from String
 jsr305-1.3.9.jar					            Dependency of Google API
+junit-jupiter-5.4.2.jar         				JUnit5 for tests
+junit-jupiter-api-5.4.2.jar			    		JUnit5 for tests
+junit-jupiter-engine-5.4.2.jar					JUnit5 for tests
+junit-jupiter-params-5.4.2.jar					JUnit5 for tests
+junit-platform-commons-1.4.2.jar				JUnit5 for tests
+junit-platform-engine-1.4.2.jar					JUnit5 for tests
 log4j-1.2.17.jar					            Logging
 mariadb-java-client-2.3.0.jar		            MariaDB
 myfaces-bundle-2.3.4.jar			            JSF Base
@@ -73,6 +80,7 @@ nekohtml-1.9.18.jar								(Kate) Added boilerpipe grabbing article contents aut
 noggit-0.8.jar			                        Dependency of solr-solrj
 oauth-client-1.5.jar				            Interweb
 oauth-signature-1.5.jar				            Interweb
+opentest4j-1.1.1.jar				            Required by JUnit5 for tests
 org.json-20180813.jar						    TEDx transcript, generating JSON from XML String
 pdf-renderer-1.0.5.1.jar			            ResourcePreviewMaker
 poi-4.1.0.jar                                   Primefaces table exporter, added by Rishita Kalyani

@@ -1,19 +1,18 @@
 package de.l3s.util;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.IDN;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
@@ -27,26 +26,37 @@ public class StringHelper
 {
     private static final Logger log = Logger.getLogger(StringHelper.class);
 
+    private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\n");
+    private static final Pattern NOT_ALPHABETICAL_PATTERN = Pattern.compile("[^<\"\'a-zA-Z]+");
+
+    public static String removeNewLines(String str)
+    {
+        return NEW_LINE_PATTERN.matcher(str).replaceAll(" ");
+    }
+
+    public static String trimNotAlphabetical(final String str)
+    {
+        Matcher matcher = NOT_ALPHABETICAL_PATTERN.matcher(str);
+        if(matcher.lookingAt())
+        {
+            final String result = str.substring(matcher.end());
+            log.info("trimNotAlphabetical: '" + str + "' - '" + result + "'"); // for test, I want to know why we need it
+            return result;
+        }
+
+        return str;
+    }
+
     /**
      * If the string is longer than maxLength it is split at the nearest blank space
-     *
-     * @param str
-     * @param maxLength
-     * @return
      */
     public static String shortnString(String str, int maxLength)
     {
-        if(maxLength < 3)
-        {
-            throw new IllegalArgumentException("maxLength must be greater than 3");
-        }
-
-        if(null == str)
-            return "";
+        if(maxLength < 3) throw new IllegalArgumentException("maxLength must be greater than 3");
+        if(null == str) return "";
 
         if(str.length() > maxLength)
         {
-
             int endIdx = maxLength - 3;
             while(endIdx > 0 && str.charAt(endIdx) != ' ' && str.charAt(endIdx) != '\n')
                 endIdx--;
@@ -133,7 +143,7 @@ public class StringHelper
     }
 
     public static String implodeInt(int[] list, String delimiter)
-    {//Stream.of(list).forEach(action);;
+    {
         StringBuilder out = new StringBuilder();
         for(int item : list)
         {
@@ -172,9 +182,6 @@ public class StringHelper
 
     /**
      * Make first character upper case
-     *
-     * @param input
-     * @return
      */
     public static String ucFirst(String input)
     {
@@ -185,51 +192,27 @@ public class StringHelper
      * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. <br/>
      * This method uses UTF-8. <br/>
      * It's just a convenience method to get rid of the UnsupportedEncodingException.
-     *
-     * @param str
-     * @return
      */
     public static String urlEncode(String str)
     {
-        if(null == str)
-            return "";
-        try
-        {
-            return URLEncoder.encode(str, "UTF-8");
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            // should never happen
-            throw new RuntimeException(e);
-        }
+        if(null == str) return "";
+        return URLEncoder.encode(str, StandardCharsets.UTF_8);
     }
 
     public static String urlDecode(String str)
     {
-        if(null == str)
-            return "";
-        try
-        {
-            return URLDecoder.decode(str, "UTF-8");
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            // should never happen
-            throw new RuntimeException(e);
-        }
+        if(null == str) return "";
+        return URLDecoder.decode(str, StandardCharsets.UTF_8);
     }
 
     /**
      * Returns true if the given string contains only ASCII characters
-     *
-     * @param sequence
-     * @return
      */
     public static boolean isASCII(CharSequence sequence)
     {
         for(int i = sequence.length() - 1; i >= 0; i--)
         {
-            if(!(sequence.charAt(i) <= '\u007f'))
+            if(sequence.charAt(i) > '\u007f')
             {
                 return false;
             }
