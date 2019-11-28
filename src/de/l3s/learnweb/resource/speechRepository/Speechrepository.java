@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -15,7 +16,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.user.User;
 
@@ -53,8 +54,8 @@ public class Speechrepository
             resource.setUrl(rs.getString("url"));
             resource.setMaxImageUrl(rs.getString("image_link"));
             resource.setFileUrl(rs.getString("video_link"));
-            resource.setSource(SERVICE.speechrepository);
-            resource.setType(Resource.ResourceType.video);
+            resource.setSource(ResourceService.speechrepository);
+            resource.setType(ResourceType.video);
             resource.setDuration(rs.getInt("duration"));
             resource.setIdAtService(rs.getString("id"));
 

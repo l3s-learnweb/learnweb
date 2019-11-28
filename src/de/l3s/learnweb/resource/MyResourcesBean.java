@@ -628,11 +628,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 break;
             case "file":
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(Resource.ResourceType.file);
+                addResourceBean.getResource().setType(ResourceType.file);
                 break;
             case "url":
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(Resource.ResourceType.website);
+                addResourceBean.getResource().setType(ResourceType.website);
                 addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
                 break;
             case "glossary2":
@@ -641,10 +641,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 break;
             case "survey":
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-                addResourceBean.getResource().setType(Resource.ResourceType.survey);
+                addResourceBean.getResource().setType(ResourceType.survey);
                 break;
             case "newFile":
-                Resource.ResourceType docType = Resource.ResourceType.parse(getParameter("docType"));
+                ResourceType docType = ResourceType.parse(getParameter("docType"));
                 rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
                 addResourceBean.getResource().setType(docType);
                 break;

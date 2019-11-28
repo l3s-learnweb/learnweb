@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
@@ -555,7 +556,7 @@ public class SolrSearch implements Serializable
                 continue;
             }
 
-            if(skipResourcesWithoutThumbnails && (resource.getType().equals(Resource.ResourceType.image) || resource.getType().equals(Resource.ResourceType.video)) && resource.getThumbnail2() == null)
+            if(skipResourcesWithoutThumbnails && (resource.getType().equals(ResourceType.image) || resource.getType().equals(ResourceType.video)) && resource.getThumbnail2() == null)
             {
                 skippedResources++;
                 continue;

@@ -8,7 +8,8 @@ import java.util.Locale;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.ResourceType;
 
 /**
  * @author Rishita
@@ -24,10 +25,10 @@ public class GlossaryResource extends Resource
 
     public GlossaryResource()
     {
-        this.setSource(SERVICE.learnweb);
+        this.setSource(ResourceService.learnweb);
         this.setLocation("Learnweb");
         this.setStorageType(Resource.LEARNWEB_RESOURCE);
-        this.setType(Resource.ResourceType.glossary2);
+        this.setType(ResourceType.glossary2);
     }
 
     /**

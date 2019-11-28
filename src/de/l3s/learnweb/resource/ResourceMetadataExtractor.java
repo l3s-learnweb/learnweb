@@ -102,8 +102,8 @@ public class ResourceMetadataExtractor
             Matcher youTubeMatcher = compYouTubePattern.matcher(resource.getUrl());
             if(youTubeMatcher.find())
             {
-                resource.setType(Resource.ResourceType.video);
-                resource.setSource(SERVICE.youtube);
+                resource.setType(ResourceType.video);
+                resource.setSource(ResourceService.youtube);
                 resource.setIdAtService(youTubeMatcher.group(1));
                 processYoutubeResource(resource);
                 return;
@@ -113,8 +113,8 @@ public class ResourceMetadataExtractor
             Matcher vimeoMatcher = compVimeoPattern.matcher(resource.getUrl());
             if(vimeoMatcher.find())
             {
-                resource.setType(Resource.ResourceType.video);
-                resource.setSource(SERVICE.vimeo);
+                resource.setType(ResourceType.video);
+                resource.setSource(ResourceService.vimeo);
                 resource.setIdAtService(vimeoMatcher.group(1));
                 processVimeoResource(resource);
                 return;
@@ -124,8 +124,8 @@ public class ResourceMetadataExtractor
             Matcher flickrMatcher = compFlickrPattern.matcher(resource.getUrl());
             if(flickrMatcher.find())
             {
-                resource.setType(Resource.ResourceType.image);
-                resource.setSource(SERVICE.flickr);
+                resource.setType(ResourceType.image);
+                resource.setSource(ResourceService.flickr);
                 resource.setIdAtService(flickrMatcher.group(1));
                 processFlickrResource(resource);
                 return;
@@ -135,8 +135,8 @@ public class ResourceMetadataExtractor
             Matcher flickrShortMatcher = compFlickrShortPattern.matcher(resource.getUrl());
             if(flickrShortMatcher.find())
             {
-                resource.setType(Resource.ResourceType.image);
-                resource.setSource(SERVICE.flickr);
+                resource.setType(ResourceType.image);
+                resource.setSource(ResourceService.flickr);
                 resource.setIdAtService(base58_decode(flickrShortMatcher.group(1)));
                 processFlickrResource(resource);
                 return;
@@ -146,8 +146,8 @@ public class ResourceMetadataExtractor
             Matcher ipernityMatcher = compIpernityPattern.matcher(resource.getUrl());
             if(ipernityMatcher.find())
             {
-                resource.setType(Resource.ResourceType.image);
-                resource.setSource(SERVICE.ipernity);
+                resource.setType(ResourceType.image);
+                resource.setSource(ResourceService.ipernity);
                 resource.setIdAtService(ipernityMatcher.group(1));
                 processIpernityResource(resource);
                 return;
@@ -155,18 +155,18 @@ public class ResourceMetadataExtractor
 
             if(resource.getUrl().startsWith("https://webgate.ec.europa.eu/"))
             {
-                resource.setType(Resource.ResourceType.video);
-                resource.setSource(SERVICE.speechrepository);
+                resource.setType(ResourceType.video);
+                resource.setSource(ResourceService.speechrepository);
                 processSpeechRepositoryResource(resource);
                 return;
             }
 
-            resource.setType(Resource.ResourceType.website);
+            resource.setType(ResourceType.website);
             FileInfo fileInfo = getFileInfo(resource.getUrl());
 
             processFileResource(resource, fileInfo);
 
-            if(resource.getType() == Resource.ResourceType.website)
+            if(resource.getType() == ResourceType.website)
             {
                 try
                 {
@@ -443,7 +443,7 @@ public class ResourceMetadataExtractor
         if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getDescription()))
             resource.setDescription(StringHelper.shortnString(fileInfo.getTextContent(), DESCRIPTION_LIMIT));
         /*
-        if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getTranscript()) && resource.getType() == Resource.ResourceType.website)
+        if(StringUtils.isNotEmpty(fileInfo.getTextContent()) && StringUtils.isEmpty(resource.getTranscript()) && resource.getType() == ResourceType.website)
             resource.setTranscript(fileInfo.getTextContent());
             */
     }

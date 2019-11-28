@@ -17,6 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -36,7 +37,6 @@ import de.l3s.learnweb.resource.AddFolderBean;
 import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceManager.Order;
 import de.l3s.learnweb.resource.RightPaneBean;

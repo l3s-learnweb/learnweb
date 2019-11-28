@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.bean.BeanHelper;
 import de.l3s.util.email.Mail;
 
@@ -46,7 +46,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     public ArchiveWebRegistrationBean()
     {
         // set default search options for anonymous archive it users
-        setPreference("SEARCH_SERVICE_TEXT", SERVICE.archiveit.name());
+        setPreference("SEARCH_SERVICE_TEXT", ResourceService.archiveit.name());
         //setPreference("search_action", MODE.image.name());
     }
 

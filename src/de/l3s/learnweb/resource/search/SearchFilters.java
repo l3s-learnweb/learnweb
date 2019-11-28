@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -14,7 +15,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.StringHelper;
 
 public class SearchFilters implements Serializable
@@ -306,7 +307,7 @@ public class SearchFilters implements Serializable
             switch(this)
             {
             case service:
-                return SERVICE.parse(item).toString();
+                return ResourceService.parse(item).toString();
             case group:
                 return getGroupNameById(item);
             default:
@@ -477,7 +478,7 @@ public class SearchFilters implements Serializable
                         switch(f)
                         {
                         case service:
-                            setFilter(f, SERVICE.parse(fValue));
+                            setFilter(f, ResourceService.parse(fValue));
                             break;
                         case type:
                             setFilter(f, TYPE.valueOf(fValue));
@@ -558,7 +559,7 @@ public class SearchFilters implements Serializable
         {
             for(Count c : availableResources.get(fs))
             {
-                SERVICE src = SERVICE.parse(c.getName());
+                ResourceService src = ResourceService.parse(c.getName());
                 FilterItem fi = new FilterItem(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
                 filters.add(fi);
             }
@@ -623,7 +624,7 @@ public class SearchFilters implements Serializable
                 }
                 break;
             case date:
-                if(!configFilters.containsKey(FILTERS.service) || !configFilters.get(FILTERS.service).equals(SERVICE.bing) || !configFilters.get(FILTERS.service).equals(SERVICE.vimeo))
+                if(!configFilters.containsKey(FILTERS.service) || !configFilters.get(FILTERS.service).equals(ResourceService.bing) || !configFilters.get(FILTERS.service).equals(ResourceService.vimeo))
                 {
                     for(DATE d : DATE.values())
                     {
@@ -715,7 +716,7 @@ public class SearchFilters implements Serializable
     public boolean checkAfterLoadFilters(ResourceDecorator res)
     {
         //String type = res.getResource().getType(); // text Image Video
-        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType().equals(Resource.ResourceType.image))
+        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType().equals(ResourceType.image))
         {
             SIZE configSize = (SIZE) configFilters.get(FILTERS.imageSize);
             int width = res.getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
@@ -726,7 +727,7 @@ public class SearchFilters implements Serializable
             }
         }
 
-        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType().equals(Resource.ResourceType.video))
+        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType().equals(ResourceType.video))
         {
             DURATION configDuration = (DURATION) configFilters.get(FILTERS.videoDuration);
             int duration = res.getResource().getDuration(), minDuration = configDuration.getMinDuration(), maxDuration = configDuration.getMaxDuration();
@@ -754,7 +755,7 @@ public class SearchFilters implements Serializable
     {
         if(configFilters.containsKey(FILTERS.service))
         {
-            return ((SERVICE) configFilters.get(FILTERS.service)).name();
+            return ((ResourceService) configFilters.get(FILTERS.service)).name();
         }
         return null;
     }
@@ -872,7 +873,7 @@ public class SearchFilters implements Serializable
     {
         if(configFilters.containsKey(FILTERS.service))
         {
-            return ((SERVICE) configFilters.get(FILTERS.service)).isLearnwebSource();
+            return ((ResourceService) configFilters.get(FILTERS.service)).isLearnwebSource();
         }
         return !canNotRequestLearnweb;
     }
@@ -881,7 +882,7 @@ public class SearchFilters implements Serializable
     {
         if(configFilters.containsKey(FILTERS.service))
         {
-            return !((SERVICE) configFilters.get(FILTERS.service)).isLearnwebSource();
+            return !((ResourceService) configFilters.get(FILTERS.service)).isLearnwebSource();
         }
         return !canNotRequestInterweb;
     }

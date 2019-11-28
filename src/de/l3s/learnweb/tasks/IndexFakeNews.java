@@ -18,9 +18,9 @@ import org.json.simple.parser.JSONParser;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
 @SuppressWarnings("unused")
@@ -77,7 +77,7 @@ public class IndexFakeNews
 
             Resource resource = new Resource();
             resource.setType(ResourceType.website);
-            resource.setSource(SERVICE.factcheck);
+            resource.setSource(ResourceService.factcheck);
             resource.setLocation("FactCheck");
             resource.setMetadataValue("publisher", "fullfact.org");
             resource.setUserId(7727); // Admin
@@ -133,7 +133,7 @@ public class IndexFakeNews
         {
             Resource resource = new Resource();
             resource.setType(ResourceType.website);
-            resource.setSource(SERVICE.factcheck);
+            resource.setSource(ResourceService.factcheck);
             resource.setLocation("FactCheck");
             resource.setMetadataValue("publisher", "snopes.com");
             resource.setUserId(7727); // Admin

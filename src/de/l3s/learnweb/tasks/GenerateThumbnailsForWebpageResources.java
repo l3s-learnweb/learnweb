@@ -12,7 +12,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
-import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 

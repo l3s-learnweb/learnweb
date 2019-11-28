@@ -47,44 +47,6 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         PROCESSING // e.g. while a document/video is converted
     }
 
-    public enum ResourceType
-    {
-        text,
-        video,
-        image,
-        audio,
-        pdf,
-        website,
-        spreadsheet,
-        presentation,
-        document,
-        file, // applications, archives, etc
-
-        // learnweb types
-        survey,
-        glossary2;
-
-        @Override
-        public String toString()
-        {
-            switch(this)
-            {
-            case text:
-                return "Document";
-            default:
-                return super.toString();
-            }
-        }
-
-        /**
-         * Same as ResourceType.valueOf(), but case insensitive.
-         */
-        public static ResourceType parse(String value) throws IllegalArgumentException
-        {
-            return valueOf(value.toLowerCase());
-        }
-    }
-
     public enum ResourceViewRights
     {
         DEFAULT_RIGHTS, //inherits group rights
@@ -104,7 +66,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private String url;
     private int storageType = WEB_RESOURCE;
     private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
-    private SERVICE source; // The place where the resource was found
+    private ResourceService source; // The place where the resource was found
     private String location = ""; // The location where the resource content (e.g. video) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author = "";
@@ -398,7 +360,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     public boolean isOfficeResource()
     {
-        if(getSource().equals(SERVICE.slideshare))
+        if(getSource().equals(ResourceService.slideshare))
             return false;
 
         return ResourceType.document.equals(type) || ResourceType.spreadsheet.equals(type) || ResourceType.presentation.equals(type);
@@ -953,12 +915,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      *
      * @return
      */
-    public SERVICE getSource()
+    public ResourceService getSource()
     {
         return source;
     }
 
-    public void setSource(SERVICE source)
+    public void setSource(ResourceService source)
     {
         Validate.notNull(source);
         this.source = source;
@@ -975,7 +937,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
         try
         {
-            this.source = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
+            this.source = ResourceService.valueOf(source.toLowerCase().replace("-", ""));
         }
         catch(IllegalArgumentException e)
         {
@@ -1189,13 +1151,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
                 String iframeUrl = null;
 
-                if(getSource().equals(SERVICE.loro) || getSource().equals(SERVICE.yovisto) || getSource().equals(SERVICE.speechrepository) || getSource().equals(SERVICE.desktop))
+                if(getSource().equals(ResourceService.loro) || getSource().equals(ResourceService.yovisto) || getSource().equals(ResourceService.speechrepository) || getSource().equals(ResourceService.desktop))
                     iframeUrl = "video.jsf?resource_id=" + id;
-                else if(getSource().equals(SERVICE.ted))
+                else if(getSource().equals(ResourceService.ted))
                     iframeUrl = getUrl().replace("http://www", "//embed").replace("https://www", "//embed");
-                else if(getSource().equals(SERVICE.youtube) || getSource().equals(SERVICE.teded) || getSource().equals(SERVICE.tedx))
+                else if(getSource().equals(ResourceService.youtube) || getSource().equals(ResourceService.teded) || getSource().equals(ResourceService.tedx))
                     iframeUrl = "https://www.youtube-nocookie.com/embed/" + getIdAtService();
-                else if(getSource().equals(SERVICE.vimeo))
+                else if(getSource().equals(ResourceService.vimeo))
                     iframeUrl = "https://player.vimeo.com/video/" + getIdAtService() + "?dnt=1";
 
                 if(null != iframeUrl)

@@ -23,7 +23,7 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
@@ -849,7 +849,7 @@ public class ResourceManager
      */
     private static String getLocation(Resource resource)
     {
-        SERVICE source = resource.getSource();
+        ResourceService source = resource.getSource();
 
         if(null == source)
         {
@@ -1070,7 +1070,7 @@ public class ResourceManager
         if(resource.getTitle().equals(resource.getDescription())) // delete description when equal to title
             resource.setDescription("");
 
-        if(resource.getSource().equals(SERVICE.slideshare))
+        if(resource.getSource().equals(ResourceService.slideshare))
         {
             resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
             if(null == resource.getEmbeddedRaw())

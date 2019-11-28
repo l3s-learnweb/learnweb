@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;

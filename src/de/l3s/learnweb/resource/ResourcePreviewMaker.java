@@ -92,7 +92,7 @@ public class ResourcePreviewMaker
         try
         {
             // if a web resource is not a simple website then download it
-            if(resource.getStorageType() == Resource.WEB_RESOURCE && !resource.getType().equals(Resource.ResourceType.website) && (resource.getSource().equals(SERVICE.bing) || resource.getSource().equals(SERVICE.internet)))
+            if(resource.getStorageType() == Resource.WEB_RESOURCE && !resource.getType().equals(ResourceType.website) && (resource.getSource().equals(ResourceService.bing) || resource.getSource().equals(ResourceService.internet)))
             {
                 File file = new File();
                 file.setType(TYPE.FILE_MAIN);
@@ -104,7 +104,7 @@ public class ResourcePreviewMaker
                 resource.setFileUrl(file.getUrl());
             }
 
-            if(resource.getType().equals(Resource.ResourceType.website))
+            if(resource.getType().equals(ResourceType.website))
             {
                 processWebsite(resource);
             }
@@ -139,23 +139,23 @@ public class ResourcePreviewMaker
 
     private void processFile(Resource resource, InputStream inputStream) throws IOException, SQLException
     {
-        if(resource.getType().equals(Resource.ResourceType.image))
+        if(resource.getType().equals(ResourceType.image))
         {
             processImage(resource, inputStream);
         }
-        else if(resource.getType().equals(Resource.ResourceType.pdf))
+        else if(resource.getType().equals(ResourceType.pdf))
         {
             processPdf(resource, inputStream);
         }
-        else if(resource.getType().equals(Resource.ResourceType.video))
+        else if(resource.getType().equals(ResourceType.video))
         {
             processVideo(resource);
         }
-        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) && !resource.getSource().equals(SERVICE.slideshare) || resource.getType().equals(Resource.ResourceType.spreadsheet))
+        else if(resource.getType().equals(ResourceType.document) || resource.getType().equals(ResourceType.presentation) && !resource.getSource().equals(ResourceService.slideshare) || resource.getType().equals(ResourceType.spreadsheet))
         {
             processOfficeDocument(resource);
         }
-        else if(resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.audio))
+        else if(resource.getType().equals(ResourceType.text) || resource.getType().equals(ResourceType.audio))
         {
             // TODO add default icons
             // Oleh: I think we don't need to store default icon in database,
@@ -258,7 +258,7 @@ public class ResourcePreviewMaker
         FFmpegProbeResult ffProbeResult = null;
         try
         {
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0))
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(ResourceType.video) && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0))
             {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
@@ -294,7 +294,7 @@ public class ResourcePreviewMaker
             boolean isSupported = resource.getFormat().equals("video/mp4") &&
                     ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
 
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && !isSupported)
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(ResourceType.video) && !isSupported)
             {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
 

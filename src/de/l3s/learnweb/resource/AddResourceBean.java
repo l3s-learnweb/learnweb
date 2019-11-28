@@ -49,7 +49,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         resource = new Resource();
         resource.setUser(getUser());
-        resource.setSource(SERVICE.learnweb);
+        resource.setSource(ResourceService.learnweb);
         resource.setLocation("Learnweb");
         resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
@@ -71,7 +71,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             log.debug("Handle File upload");
-            resource.setSource(SERVICE.desktop);
+            resource.setSource(ResourceService.desktop);
             resource.setDeleted(true);
 
             UploadedFile uploadedFile = event.getFile();
@@ -122,7 +122,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             log.debug("Handle Url input");
-            resource.setSource(SERVICE.internet);
+            resource.setSource(ResourceService.internet);
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(UrlHelper.validateUrl(resource.getUrl()));
 
@@ -146,7 +146,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void createDocument()
     {
         log.debug("Creating new document...");
-        resource.setSource(SERVICE.learnweb);
+        resource.setSource(ResourceService.learnweb);
         resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
 
         try (FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType())))
@@ -211,7 +211,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.postConstruct();
 
             // create thumbnails for the resource
-            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType() == Resource.ResourceType.video))
+            if(!resource.isProcessing() && (resource.getThumbnail0() == null || resource.getThumbnail0().getFileId() == 0 || resource.getType() == ResourceType.video))
             {
                 new ResourcePreviewMaker.CreateThumbnailThread(resource).start();
             }

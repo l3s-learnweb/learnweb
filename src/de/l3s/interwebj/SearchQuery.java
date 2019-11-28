@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -21,7 +22,7 @@ import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 
 public class SearchQuery implements Serializable
 {
@@ -75,7 +76,7 @@ public class SearchQuery implements Serializable
             {
                 Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-                if(!currentResource.getType().equals(Resource.ResourceType.website) && null == currentResource.getThumbnail2()) // no thumbnail set
+                if(!currentResource.getType().equals(ResourceType.website) && null == currentResource.getThumbnail2()) // no thumbnail set
                 {
                     log.error("Found no thumbnail:" + searchResult);
 
@@ -94,7 +95,7 @@ public class SearchQuery implements Serializable
                 decoratedResource.setTitle(searchResult.getTitle());
 
                 // bing description contains snippet with term highlighting
-                if(currentResource.getSource().equals(SERVICE.bing) && decoratedResource.getSnippet() == null)
+                if(currentResource.getSource().equals(ResourceService.bing) && decoratedResource.getSnippet() == null)
                 {
                     // add snippet
                     decoratedResource.setSnippet(currentResource.getDescription());

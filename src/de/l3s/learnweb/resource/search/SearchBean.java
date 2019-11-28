@@ -33,10 +33,10 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.Resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
@@ -73,7 +73,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     private Search images;
     private MODE searchMode;
-    private SERVICE searchService;
+    private ResourceService searchService;
     private String view = "float"; // float, grid or list
 
     private int counter = 0;
@@ -207,7 +207,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(selectedResource.getId() == -1) // resource is not yet stored at the database
             {
                 newResource = selectedResource.getResource();
-                if(newResource.getSource().equals(SERVICE.bing)) //resource which is already saved in database already has wayback captures stored
+                if(newResource.getSource().equals(ResourceService.bing)) //resource which is already saved in database already has wayback captures stored
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
             }
             else
@@ -229,7 +229,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             user.setActiveGroup(selectedResourceTargetGroupId);
 
             // we need to check whether a Bing result is a PDF, Word or other document
-            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals(SERVICE.bing))
+            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals(ResourceService.bing))
             {
                 log.debug("Extracting info from given url...");
                 ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -344,7 +344,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         return availableSources;
     }
 
-    public SERVICE getSearchService()
+    public ResourceService getSearchService()
     {
         return searchService;
     }
@@ -355,16 +355,16 @@ public class SearchBean extends ApplicationBean implements Serializable
         {
             if(service == null)
                 throw new IllegalArgumentException();
-            searchService = SERVICE.valueOf(service);
+            searchService = ResourceService.valueOf(service);
         }
         catch(Exception e)
         {
             if(searchMode == MODE.text)
-                searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
+                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
             else if(searchMode == MODE.image)
-                searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
+                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
             else if(searchMode == MODE.video)
-                searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
+                searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
         }
 
         queryService = searchService.name();

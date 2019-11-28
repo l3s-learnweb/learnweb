@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.resource.File;
-import de.l3s.learnweb.resource.Resource.ResourceType;
 
 public class FileUtility
 {

@@ -404,9 +404,9 @@ public class TedManager
         resource.setTitle(rs.getString("title"));
         resource.setDescription(rs.getString("description"));
         resource.setUrl("https://www.ted.com/talks/" + rs.getString("slug"));
-        resource.setSource(SERVICE.ted);
+        resource.setSource(ResourceService.ted);
         resource.setLocation("TED");
-        resource.setType(Resource.ResourceType.video);
+        resource.setType(ResourceType.video);
         resource.setDuration(rs.getInt("duration"));
         resource.setMaxImageUrl(rs.getString("photo2_url"));
         resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));
@@ -451,7 +451,7 @@ public class TedManager
             {
                 Resource resource = decoratedResource.getResource();
 
-                resource.setSource(SERVICE.teded);
+                resource.setSource(ResourceService.teded);
                 resource.setLocation("teded");
 
                 //Regex for setting the title and author for TEDx videos
@@ -667,7 +667,7 @@ public class TedManager
             {
                 Resource r2 = learnweb.getResourceManager().getResource(tedVideoResourceId);
 
-                r.setSource(SERVICE.ted);
+                r.setSource(ResourceService.ted);
                 r.setMaxImageUrl(r2.getMaxImageUrl());
                 List<File> files = learnweb.getFileManager().getFilesByResource(r.getId());
                 for(File f : files)

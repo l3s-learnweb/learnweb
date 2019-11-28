@@ -22,7 +22,7 @@ import de.l3s.learnweb.resource.File;
 import de.l3s.learnweb.resource.ResourceMetaDataBean;
 import de.l3s.learnweb.resource.ResourceMetadataField;
 import de.l3s.learnweb.resource.ResourceMetadataField.MetadataType;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -53,9 +53,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String welcomeMessage;
     private String welcomePage = "/lw/myhome/welcome.jsf"; // page to show after login
     private String logoutPage; // page to show after logout
-    private SERVICE defaultSearchServiceText = SERVICE.bing;
-    private SERVICE defaultSearchServiceImage = SERVICE.flickr;
-    private SERVICE defaultSearchServiceVideo = SERVICE.youtube;
+    private ResourceService defaultSearchServiceText = ResourceService.bing;
+    private ResourceService defaultSearchServiceImage = ResourceService.flickr;
+    private ResourceService defaultSearchServiceVideo = ResourceService.youtube;
     private String defaultLanguage; // the language which is used after the user logged in
     private String languageVariant; // optional variant that is added to the selected language
     private BitSet options = new BitSet(Option.values().length);
@@ -368,11 +368,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
         return array;
     }
 
-    private static SERVICE getServiceFromString(String name)
+    private static ResourceService getServiceFromString(String name)
     {
         try
         {
-            return SERVICE.valueOf(name);
+            return ResourceService.valueOf(name);
         }
         catch(Exception e)
         {
@@ -396,32 +396,32 @@ public class Organisation implements Serializable, Comparable<Organisation>
         this.defaultSearchServiceVideo = getServiceFromString(defaultSearchServiceVideo);
     }
 
-    public SERVICE getDefaultSearchServiceText()
+    public ResourceService getDefaultSearchServiceText()
     {
         return defaultSearchServiceText;
     }
 
-    public void setDefaultSearchServiceText(SERVICE defaultSearchServiceText)
+    public void setDefaultSearchServiceText(ResourceService defaultSearchServiceText)
     {
         this.defaultSearchServiceText = defaultSearchServiceText;
     }
 
-    public SERVICE getDefaultSearchServiceImage()
+    public ResourceService getDefaultSearchServiceImage()
     {
         return defaultSearchServiceImage;
     }
 
-    public void setDefaultSearchServiceImage(SERVICE defaultSearchServiceImage)
+    public void setDefaultSearchServiceImage(ResourceService defaultSearchServiceImage)
     {
         this.defaultSearchServiceImage = defaultSearchServiceImage;
     }
 
-    public SERVICE getDefaultSearchServiceVideo()
+    public ResourceService getDefaultSearchServiceVideo()
     {
         return defaultSearchServiceVideo;
     }
 
-    public void setDefaultSearchServiceVideo(SERVICE defaultSearchServiceVideo)
+    public void setDefaultSearchServiceVideo(ResourceService defaultSearchServiceVideo)
     {
         this.defaultSearchServiceVideo = defaultSearchServiceVideo;
     }

@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource.ted;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -31,7 +31,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ted.TedManager.SummaryType;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.User;
@@ -112,9 +112,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
         try
         {
-            if(tedResource.getSource().equals(SERVICE.ted))
+            if(tedResource.getSource().equals(ResourceService.ted))
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
-            else if(tedResource.getSource().equals(SERVICE.tedx))
+            else if(tedResource.getSource().equals(ResourceService.tedx))
                 this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
         }
         catch(SQLException e)
@@ -123,7 +123,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             log.error("Error while retrieving TED video id", e);
         }
 
-        if(tedResource.getSource().equals(SERVICE.tedx))
+        if(tedResource.getSource().equals(ResourceService.tedx))
             //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube-nocookie.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' allowfullscreen></iframe>");
             this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
         String transcript = tedResource.getTranscript();
@@ -138,7 +138,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 element.attr("id", Integer.toString(++noteId));
             }
 
-            if(tedResource.getType() != Resource.ResourceType.website)
+            if(tedResource.getType() != ResourceType.website)
             {
                 tedResource.setTranscript(doc.getElementsByTag("body").html());
             }

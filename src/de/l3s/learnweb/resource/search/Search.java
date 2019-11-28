@@ -21,7 +21,7 @@ import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.SERVICE;
+import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
@@ -540,7 +540,7 @@ public class Search implements Serializable
         {
             try
             {
-                SERVICE src = SERVICE.parse(groupName);
+                ResourceService src = ResourceService.parse(groupName);
                 this.groupAlias = src.name();
                 this.groupName = src.toString();
             }
@@ -596,7 +596,7 @@ public class Search implements Serializable
         return searchId;
     }
 
-    public void logQuery(String query, SERVICE searchService, String language, String queryFilters)
+    public void logQuery(String query, ResourceService searchService, String language, String queryFilters)
     {
         searchId = getSearchLogger().logQuery(query, getMode(), searchService, language, queryFilters, this.user);
     }
