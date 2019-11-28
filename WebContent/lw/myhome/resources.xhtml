@@ -230,7 +230,7 @@
 
                 <h:form>
                     <p:tree id="folders_tree" value="#{selectLocationBean.foldersTree}" var="node" animate="true" dynamic="true" selectionMode="single"
-                            selection="#{selectLocationBean.selectedTargetNode}" style="max-height:28rem; overflow:auto;">
+                            selection="#{selectLocationBean.targetNode}" style="max-height:28rem; overflow:auto;">
                         <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
                         <p:treeNode type="group">
