@@ -335,22 +335,17 @@
                                         <label class="rdlabel"><b>Target learner (stats): </b></label>
                                         <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
                                             <h:graphicImage class="circle" value="/resources/resources/img-chloe/green_circle.png" width="2%" alt="very young learners"
-                                                            rendered="#{t.key == 'very young learners (pre-school)'}"/>
+                                                            rendered="#{t.key == 'Pre-school'}"/>
                                             <h:graphicImage class="circle" value="/resources/resources/img-chloe/blue_circle.png" width="2%" alt="young learners"
-                                                            rendered="#{t.key == 'young learners (elementary)'}"/>
-                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/yellow_circle.png" width="2%" alt="teenage learners"
-                                                            rendered="#{t.key == 'teenage learners'}"/>
-                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="teachers"
-                                                            rendered="#{t.key == 'teachers'}"/>
-                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="adult learners"
-                                                            rendered="#{t.key == 'adult learners'}"/>
+                                                            rendered="#{t.key == 'Young learners'}"/>
+                                            <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/yellow_circle.png" width="2%" alt="Teens"
+                                                            rendered="#{t.key == 'Teens'}"/>
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="Teachers"
+                                                            rendered="#{t.key == 'Teachers'}"/>
+                                            <h:graphicImage class="circle" value="/resources/resources/img-chloe/red_circle.png" width="2%" alt="Adult learners"
+                                                            rendered="#{t.key == 'Adult learners'}"/>
 
-                                            <h:outputText value="Pre-school" rendered="#{t.key == 'very young learners (pre-school)'}"/>
-                                            <h:outputText value="Young learners" rendered="#{t.key == 'young learners (elementary)'}"/>
-                                            <h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}"/>
-                                            <h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}"/>
-                                            <h:outputText value="Teachers" rendered="#{t.key == 'teachers'}"/>
-                                            <h:outputText value="[#{t.value}] "/>
+                                            <h:outputText value="#{t.key} [#{t.value}] "/>
                                         </p:repeat>
                                         <br/>
                                     </ui:fragment>
@@ -367,25 +362,20 @@
                                         <label class="rdlabel"><b>Purpose of use (stats): </b></label>
                                         <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/speaking.png" alt=" "
-                                                            width="2%" rendered="#{p.key == 'speaking skills'}"/>
+                                                            width="2%" rendered="#{p.key == 'Speaking'}"/>
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/listening.png" alt=" "
-                                                            width="2%" rendered="#{p.key == 'listening skills'}"/>
+                                                            width="2%" rendered="#{p.key == 'Listening'}"/>
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/writing.png" alt=" "
-                                                            width="2%" rendered="#{p.key == 'writing skills'}"/>
+                                                            width="2%" rendered="#{p.key == 'Writing'}"/>
                                             <h:graphicImage class="bluecircle" value="/resources/resources/img-chloe/reading.png" alt=" "
-                                                            width="2%" rendered="#{p.key == 'reading skills'}"/>
+                                                            width="2%" rendered="#{p.key == 'Reading'}"/>
 
-                                            <h:outputText value="Speaking" rendered="#{p.key == 'speaking skills'}"/>
-                                            <h:outputText value="Listening" rendered="#{p.key == 'listening skills'}"/>
-                                            <h:outputText value="Writing" rendered="#{p.key == 'writing skills'}"/>
-                                            <h:outputText value="Reading" rendered="#{p.key == 'reading skills'}"/>
-                                            <h:outputText value="[#{p.value}] "
-                                                          rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}"/>
+                                            <h:outputText value="#{p.key} [#{p.value}]"/>
                                         </p:repeat>
                                         <br/>
 
                                         <p:repeat value="#{rightPaneBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
-                                            <ui:fragment rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+                                            <ui:fragment rendered="#{p.key != 'Speaking' and p.key != 'Listening' and p.key !='Writing' and p.key !='Reading'}">
                                                 <span class="tag tag-grey">#{p.key}</span>
                                             </ui:fragment>
                                         </p:repeat>
@@ -418,8 +408,8 @@
 								return true;
 							}
 						</script>
-						<p:dialog id="addDetailDlg" header="Add Your Own Categorization" widgetVar="adlg" minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="true">
-                            <h:outputText value="Please, add your own categorization: this will help you and other users find resources easily and efficiently."/>
+						<p:dialog id="addDetailDlg" header="Add Your Own Metadata" widgetVar="adlg" minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="true">
+                            <h:outputText value="Please, add your own metadata: this will help you and other users find resources easily and efficiently."/>
                             <br/>
                             <h:outputText value="Select the most appropriate tags or type them; then, click on the &quot;SAVE&quot; button."/>
                             <br/>
@@ -514,7 +504,7 @@
                             <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}" />
 
                             <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
-                                             actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane_wrapper"
+                                             actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane_wrapper :growl"
                                              oncomplete="update_header();resourceUpdatedHook();" style="margin-right:0;" />
                             <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
                                              actionListener="#{rightPaneBean.cancelEditClickedResource}" update=":right_pane_wrapper"

@@ -77,36 +77,27 @@
                                 </b></label>#{res.extendedMetadata.lCount} <br/>
                             </ui:fragment>
                             <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
-                                <label class="rlabel"><b>Target
-                                    learner (stats): </b></label>
+                                <label class="rlabel"><b>Target learner (stats): </b></label>
                                 <p:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
 
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources/img-chloe/green_circle.png"
-                                                    width="3%" rendered="#{t.key == 'very young learners (pre-school)'}"
+                                                    width="3%" rendered="#{t.key == 'Pre-school'}"
                                                     alt="o"/>
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources/img-chloe/blue_circle.png" width="3%"
-                                                    rendered="#{t.key == 'young learners (elementary)'}" alt="o"/>
+                                                    rendered="#{t.key == 'Young learners'}" alt="o"/>
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/yellow_circle.png"
-                                                    width="3%" rendered="#{t.key == 'teenage learners'}" alt="o"/>
+                                                    width="3%" rendered="#{t.key == 'Teens'}" alt="o"/>
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources/img-chloe/red_circle.png" width="3%"
-                                                    rendered="#{t.key == 'teachers'}" alt="o"/>
+                                                    rendered="#{t.key == 'Teachers'}" alt="o"/>
                                     <h:graphicImage class="circle"
                                                     value="/resources/resources/img-chloe/red_circle.png" width="3%"
-                                                    rendered="#{t.key == 'adult learners'}" alt="o"/>
+                                                    rendered="#{t.key == 'Adult learners'}" alt="o"/>
 
-                                    <h:outputText value="Pre-school"
-                                                  rendered="#{t.key == 'very young learners (pre-school)'}"/>
-                                    <h:outputText value="Young learners"
-                                                  rendered="#{t.key == 'young learners (elementary)'}"/>
-                                    <h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}"/>
-                                    <h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}"/>
-                                    <h:outputText value="Teachers" rendered="#{t.key == 'teachers'}"/>
-                                    <h:outputText value="[#{t.value}] "/>
-
+                                    <h:outputText value="#{t.key} [#{t.value}] "/>
                                 </p:repeat>
                                 <br/>
                             </ui:fragment>
@@ -115,29 +106,24 @@
                                 <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/speaking.png" width="3%"
-                                                    rendered="#{p.key == 'speaking skills'}" alt="speaking"/>
+                                                    rendered="#{p.key == 'Speaking'}" alt="speaking"/>
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/listening.png" width="3%"
-                                                    rendered="#{p.key == 'listening skills'}" alt="listening"/>
+                                                    rendered="#{p.key == 'Listening'}" alt="listening"/>
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/writing.png" width="3%"
-                                                    rendered="#{p.key == 'writing skills'}" alt="writing"/>
+                                                    rendered="#{p.key == 'Writing'}" alt="writing"/>
                                     <h:graphicImage class="bluecircle"
                                                     value="/resources/resources/img-chloe/reading.png" width="3%"
-                                                    rendered="#{p.key == 'reading skills'}" alt="reading"/>
+                                                    rendered="#{p.key == 'Reading'}" alt="reading"/>
 
-                                    <h:outputText value="Speaking" rendered="#{p.key == 'speaking skills'}"/>
-                                    <h:outputText value="Listening" rendered="#{p.key == 'listening skills'}"/>
-                                    <h:outputText value="Writing" rendered="#{p.key == 'writing skills'}"/>
-                                    <h:outputText value="Reading" rendered="#{p.key == 'reading skills'}"/>
-                                    <h:outputText value="[#{p.value}] "
-                                                  rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}"/>
+                                    <h:outputText value="#{p.key} [#{p.value}]"/>
                                 </p:repeat>
                                 <br/>
 
                                 <p:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
                                     <ui:fragment
-                                            rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+                                            rendered="#{p.key != 'Speaking' and p.key != 'Listening' and p.key !='Writing' and p.key !='Reading'}">
                                         <span class="tag tag-grey">#{p.key}</span>
                                     </ui:fragment>
                                 </p:repeat>

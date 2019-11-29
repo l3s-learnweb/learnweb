@@ -236,10 +236,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
             metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("speaking skills");
-            metadata.getOptions().add("listening skills");
-            metadata.getOptions().add("reading skills");
-            metadata.getOptions().add("writing skills");
+            metadata.getOptions().add("Speaking");
+            metadata.getOptions().add("Listening");
+            metadata.getOptions().add("Reading");
+            metadata.getOptions().add("Writing");
             metadata.getOptions().add("class activities");
             metadata.getOptions().add("lesson plans");
             metadata.getOptions().add("cross-curricular resources / CLIL");

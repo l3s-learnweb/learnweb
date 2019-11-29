@@ -59,9 +59,9 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         targets = new ArrayList<>();
         targets.add("Teachers");
         targets.add("Adult learners");
-        targets.add("Teenage learners");
-        targets.add("Young learners (Elementary)");
-        targets.add("Very young learners (Pre-school)");
+        targets.add("Teens");
+        targets.add("Young learners");
+        targets.add("Pre-school");
 
         //purposes values
         try
@@ -77,10 +77,10 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
         /*
 
-        purposes.add("Listening Skills");
-        purposes.add("Reading Skills");
-        purposes.add("Writing Skills");
-        purposes.add("Speaking Skills");
+        purposes.add("Listening");
+        purposes.add("Reading");
+        purposes.add("Writing");
+        purposes.add("Speaking");
         purposes.add("Class Activities");
         purposes.add("Lesson Plans");
         purposes.add("Cross-curricular resources / CLIL");
