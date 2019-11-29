@@ -204,28 +204,16 @@ public class Learnweb
             propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
             propertiesFileName = "lw_local_philipp";
-        else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
+        else if((new File("C:\\programmieren\\philipp_uni.lw")).exists())
             propertiesFileName = "lw_local_philipp_uni";
-        else if((new File("/home/fernando/trevor.txt").exists()))
-            propertiesFileName = "lw_local_trevor_uni";
-        else if((new File("/Users/trevor").exists()))
-            propertiesFileName = "lw_local_trevor";
         else if((new File("C:\\Users\\Tetiana").exists()))
             propertiesFileName = "lw_local_tetiana";
         else if((new File("C:\\Users\\astappiev").exists()))
             propertiesFileName = "lw_local_oleh";
-        else if((new File("/Users/user").exists()))
-            propertiesFileName = "lw_local_luyan";
-        else if((new File("F:\\workspace\\lwresources").exists()))
-            propertiesFileName = "lw_local_mariia";
-        else if((new File("D:\\DevEnv\\Projects\\LearnWeb").exists()))
-            propertiesFileName = "lw_local_kateryna";
-        else if((new File("/home/matt/ama").exists()))
-            propertiesFileName = "ama_local_matviei";
+        else if((new File("/home/astappiev").exists()))
+            propertiesFileName = "lw_local_oleh_uni";
         else if((new File("/home/matt").exists()))
             propertiesFileName = "lw_local_matviei";
-        else if((new File("/home/yegor").exists()))
-            propertiesFileName = "lw_local_yegor";
         else if((new File("C:\\Users\\PC").exists()))
             propertiesFileName = "lw_local_aleks";
         else

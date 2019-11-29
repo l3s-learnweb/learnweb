@@ -4,9 +4,7 @@
     <root id="archive" name="Learnweb_war.war">
       <element id="artifact" artifact-name="Learnweb:war exploded" />
       <element id="directory" name="WEB-INF">
-        <element id="directory" name="lib">
-          <element id="library" level="project" name="tomcatLibs" />
-        </element>
+        <element id="directory" name="lib" />
       </element>
     </root>
   </artifact>

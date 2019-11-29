@@ -2,6 +2,7 @@
   <dictionary name="astappiev">
     <words>
       <w>aggr</w>
+      <w>annotationdisabled</w>
       <w>anonymise</w>
       <w>anonymization</w>
       <w>anonymized</w>
@@ -11,32 +12,43 @@
       <w>banlist</w>
       <w>barack</w>
       <w>byteranges</w>
+      <w>canmoveresources</w>
+      <w>canselectresources</w>
       <w>cellspacing</w>
       <w>chkbox</w>
+      <w>circ</w>
       <w>classpathentry</w>
       <w>clearfix</w>
       <w>cloudflare</w>
       <w>dbpedia</w>
+      <w>definitiondisabled</w>
       <w>djvu</w>
       <w>docservice</w>
       <w>docx</w>
       <w>enddate</w>
       <w>epub</w>
       <w>exceptionhandler</w>
+      <w>factcheck</w>
       <w>fakenews</w>
+      <w>fancybox</w>
       <w>ffmpeg</w>
       <w>ffprobe</w>
       <w>flickr</w>
       <w>frontpage</w>
       <w>gmail</w>
       <w>grayscale</w>
+      <w>gridder</w>
+      <w>griddercontent</w>
       <w>hannover</w>
       <w>hashmap</w>
       <w>iframe</w>
       <w>imap</w>
+      <w>infobar</w>
       <w>interweb</w>
       <w>interwebj</w>
       <w>ipernity</w>
+      <w>itemid</w>
+      <w>itemtype</w>
       <w>jaccard</w>
       <w>javabuilder</w>
       <w>javanature</w>
@@ -46,6 +58,8 @@
       <w>khtml</w>
       <w>konqueror</w>
       <w>learnweb</w>
+      <w>lightbox</w>
+      <w>listitem</w>
       <w>liveweb</w>
       <w>logins</w>
       <w>loro</w>
@@ -75,11 +89,15 @@
       <w>rishita</w>
       <w>saveable</w>
       <w>screenshot</w>
+      <w>shortn</w>
       <w>simhash</w>
+      <w>slideshare</w>
       <w>smtp</w>
       <w>sparql</w>
+      <w>speechrepository</w>
       <w>srtings</w>
       <w>startdate</w>
+      <w>subfolders</w>
       <w>summeries</w>
       <w>teded</w>
       <w>tedx</w>
@@ -91,6 +109,7 @@
       <w>tuckey</w>
       <w>unban</w>
       <w>undeleted</w>
+      <w>unselecting</w>
       <w>urlrewrite</w>
       <w>validationbuilder</w>
       <w>vimeo</w>
@@ -99,6 +118,7 @@
       <w>webpage</w>
       <w>wegmann</w>
       <w>wikidata</w>
+      <w>wikipedia</w>
       <w>xlsx</w>
       <w>yovisto</w>
     </words>

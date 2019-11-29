@@ -1,5 +1,10 @@
 # .idea
 
+## Plugins' garbadge
+.idea/**/sonarlint
+.idea/**/checkstyleidea-libs
+.idea/**/checkstyleidea.tmp
+
 ## User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -18,7 +23,9 @@
 
 ## Local libs
 .idea/**/libraries/*
+!.idea/**/libraries/testLibs.xml
 
 # Output folder
 target
 build
+node_modules
