@@ -20,7 +20,7 @@
                     <div class="d-flex">
                         <div class="mr-auto">#{msg.myGroups}</div>
                         <div class="d-md-block d-flex flex-column">
-                            <p:commandButton value="#{msg.findGroup}" onclick="PF('findGroupDialog').show();" styleClass="alt-btn mr-md-2 mr-0" global="false"/>
+                            <p:linkButton outcome="search_groups" value="#{msg.search_group}" styleClass="alt-btn mr-md-2 mr-0" />
                             <p:commandButton value="#{msg.createGroup}" onclick="PF('createGroupDialog').show();" styleClass="alt-btn mt-2 mt-md-0" global="false"/>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     </h:outputLink>
 
                     <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this"
-                                   update=":other_groups :growl :my_groups">
+                                   update=":growl :my_groups">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
                         <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
                         <h:outputText value="#{msg.leave}"/>
@@ -72,7 +72,7 @@
 
 
         <p:dialog header="#{msg.createGroup}" widgetVar="createGroupDialog"
-                  modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+                  modal="true" resizable="false" styleClass="modal-dialog-select" draggable="false" responsive="true" closeOnEscape="true">
             <h:form id="create_group_form">
                 <div class="form-group">
                     <p:outputLabel for="@next" value="#{msg.title}:"/>
@@ -123,61 +123,6 @@
                                          process="@form" update="@form :my_groups :growl"/>
                     </div>
                 </div>
-            </h:form>
-        </p:dialog>
-
-        <p:dialog header="#{msg.otherGroups}" styleClass="modal-dialog-other-groups" widgetVar="findGroupDialog" modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
-            <h:form id="other_groups">
-                <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-                    <p:dataTable tableStyleClass="table-responsive" lazy="false" var="group"
-                                 value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
-
-                        <p:ajax event="filter"/>
-                        <p:ajax event="sort"/>
-
-                        <p:column headerText="#{msg.title}" sortBy="#{group.title}" filterBy="#{group.longTitle}"
-                                  filterMatchMode="contains">
-                            <h:outputLink value="group/resources.jsf">
-                                <f:param name="group_id" value="#{group.id}"/>
-                                <h:outputText value="#{group.longTitle}"/>
-                            </h:outputLink>
-
-                            <h:outputText value=" (#{msg.new_word})" rendered="${userBean.newGroups.contains(group)}"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg.description}" filterBy="#{group.description}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
-                            <h:outputText value="#{group.description}" escape="false"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg.language}" rendered="false">
-                            <h:outputText value="#{group.language}"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg.course}" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="d-none d-sm-table-cell">
-                            <h:outputText value="#{group.course.title}"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg.members}" sortBy="#{group.memberCount}" styleClass="d-none d-md-table-cell">
-                            <h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}" rendered="#{group.memberCountLimited}"/>
-                            <h:outputText value=" #{group.memberCount}" rendered="#{not group.memberCountLimited}"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg.options}" styleClass="td-text-right">
-                            <h:outputLink value="group/options.jsf" styleClass="icon-link" rendered="#{userBean.moderator}">
-                                <f:param name="group_id" value="#{group.id}"/>
-                                <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
-                                <h:outputText value="#{msg.edit}"/>
-                            </h:outputLink>
-
-                            <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :my_groups"
-                                           process="@this" styleClass="icon-link" title="#{msg.join}" >
-                                <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                                <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
-                                <h:outputText value="#{msg.join_group}"/>
-                            </p:commandLink>
-                        </p:column>
-                    </p:dataTable>
-                </ui:fragment>
             </h:form>
         </p:dialog>
     </ui:define>
