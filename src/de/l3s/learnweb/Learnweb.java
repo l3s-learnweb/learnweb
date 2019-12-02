@@ -36,10 +36,6 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.survey.SurveyManager;
 import de.l3s.learnweb.resource.ted.TedManager;
-import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
-import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataManager;
-import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
-import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.CourseManager;
 import de.l3s.learnweb.user.OrganisationManager;
 import de.l3s.learnweb.user.UserManager;
@@ -103,12 +99,6 @@ public class Learnweb
     private final LogManager logManager;
     private final PeerAssessmentManager peerAssessmentManager;
     private final AnnouncementsManager announcementsManager;
-
-    //added by Chloe
-    private final AudienceManager audienceManager;
-    private final ExtendedMetadataManager extendedMetadataManager;
-    private final LangLevelManager langLevelManager;
-    private final PurposeManager purposeManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -312,12 +302,6 @@ public class Learnweb
         searchHistoryManager = new SearchHistoryManager(this);
         searchSessionEdgeComputator = SearchSessionEdgeComputator.getInstance(this);
 
-        //new managers added by Chloe
-        audienceManager = new AudienceManager(this);
-        extendedMetadataManager = new ExtendedMetadataManager(this);
-        langLevelManager = new LangLevelManager(this);
-        purposeManager = new PurposeManager(this);
-
         //Managers added by Kate
         requestManager = RequestManager.getInstance(this);
         protectionManager = new ProtectionManager(this);
@@ -387,28 +371,6 @@ public class Learnweb
     {
         dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url") + "?log=false", properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
         dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
-    }
-
-    //getters and setters for newly added managers (Chloe)
-
-    public AudienceManager getAudienceManager()
-    {
-        return audienceManager;
-    }
-
-    public ExtendedMetadataManager getExtendedMetadataManager()
-    {
-        return extendedMetadataManager;
-    }
-
-    public LangLevelManager getLangLevelManager()
-    {
-        return langLevelManager;
-    }
-
-    public PurposeManager getPurposeManager()
-    {
-        return purposeManager;
     }
 
     private long lastCheck = 0L;

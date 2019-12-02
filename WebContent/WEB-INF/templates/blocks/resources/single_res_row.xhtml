@@ -18,72 +18,60 @@
         <h6 class="mb-0 text-break">#{res.title}</h6>
 
         <ui:fragment rendered="#{not empty res.language}">
-            <p class="text-muted small mb-0"><b>Language:</b> #{res.language}</p>
+            <p class="text-muted small mb-0"><strong>Language:</strong> #{res.language}</p>
         </ui:fragment>
 
-        <ui:fragment rendered="#{not empty res.extendedMetadata.lCount}">
-            <p class="text-muted small mb-0"><b>Level (stats):</b> #{res.extendedMetadata.lCount}</p>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{not empty res.extendedMetadata.targetCount}">
+        <ui:fragment rendered="#{not empty res.metadataMultiValue['language_level']}">
             <p class="text-muted small mb-0">
-                <b>Target learner (stats):</b>
-                <ui:repeat value="#{res.extendedMetadata.targetCount.entrySet().toArray()}" var="t">
-                    <ui:fragment rendered="#{t.key == 'very young learners (pre-school)'}">
-                        <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
-                        <h:outputText value="Pre-school"/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{t.key == 'young learners (elementary)'}">
-                        <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
-                        <h:outputText value="Young learners"/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{t.key == 'teenage learners'}">
-                        <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
-                        <h:outputText value="Teens"/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{t.key == 'teachers'}">
-                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                        <h:outputText value="Teachers"/>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{t.key == 'adult learners'}">
-                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                        <h:outputText value="Adult learners"/>
-                    </ui:fragment>
-
-                    <h:outputText value="[#{t.value}] "/>
+                <strong>Level (stats): </strong>
+                <ui:repeat value="#{res.metadataMultiValue['language_level']}" var="langLevel">
+                    <h:outputText value="#{langLevel}" styleClass="mr-1"/>
                 </ui:repeat>
             </p>
         </ui:fragment>
 
-        <ui:fragment rendered="#{not empty res.extendedMetadata.purposeCount}">
+        <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_target']}">
             <p class="text-muted small mb-0">
-                <b>Purpose of use (stats):</b>
-                <ui:repeat value="#{res.extendedMetadata.purposeCount.entrySet().toArray()}" var="p">
+                <strong>Target learner (stats):</strong>
+                <ui:repeat value="#{res.metadataMultiValue['yell_target']}" var="target">
+                    <ui:fragment rendered="#{target == 'Pre-school'}">
+                        <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{target == 'Young learners'}">
+                        <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{target == 'Teens'}">
+                        <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{target == 'Teachers' or target == 'Adult learners'}">
+                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
+                    </ui:fragment>
+
+                    <h:outputText value="#{target}"/>
+                </ui:repeat>
+            </p>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_purpose']}">
+            <p class="text-muted small mb-0">
+                <strong>Purpose of use (stats):</strong>
+                <ui:repeat value="#{res.metadataMultiValue['yell_purpose']}" var="purpose">
                     <span class="text-nowrap d-inline-block">
                         <span class="bg-highlight">
-                            <ui:fragment rendered="#{'speaking skills'.equalsIgnoreCase(p.key)}">
+                            <ui:fragment rendered="#{purpose == 'Speaking'}">
                                  <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
-                                 <h:outputText value="Speaking [#{p.value}]"/>
                             </ui:fragment>
-                            <ui:fragment rendered="#{'listening skills'.equalsIgnoreCase(p.key)}">
+                            <ui:fragment rendered="#{purpose == 'Listening'}">
                                  <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
-                                 <h:outputText value="Listening [#{p.value}]"/>
                             </ui:fragment>
-                            <ui:fragment rendered="#{'writing skills'.equalsIgnoreCase(p.key)}">
+                            <ui:fragment rendered="#{purpose == 'Writing'}">
                                  <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-                                 <h:outputText value="Writing [#{p.value}]"/>
                             </ui:fragment>
-                            <ui:fragment rendered="#{'reading skills'.equalsIgnoreCase(p.key)}">
+                            <ui:fragment rendered="#{purpose == 'Reading'}">
                                 <i class="fa fa-fw fa-book" aria-hidden="true"></i>
-                                 <h:outputText value="Reading [#{p.value}]"/>
                             </ui:fragment>
 
-                            <ui:fragment rendered="#{not 'speaking skills'.equalsIgnoreCase(p.key) and
-                                                     not 'listening skills'.equalsIgnoreCase(p.key) and
-                                                     not 'writing skills'.equalsIgnoreCase(p.key) and
-                                                     not 'reading skills'.equalsIgnoreCase(p.key)}">
-                                #{p.key}
-                            </ui:fragment>
+                            <h:outputText value="#{purpose}"/>
                         </span>
                     </span>
                 </ui:repeat>

@@ -23,13 +23,9 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.survey.SurveyResource;
-import de.l3s.learnweb.resource.yellMetadata.AudienceManager;
-import de.l3s.learnweb.resource.yellMetadata.LangLevelManager;
-import de.l3s.learnweb.resource.yellMetadata.PurposeManager;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 import de.l3s.util.Cache;
@@ -1150,107 +1146,6 @@ public class ResourceManager
     public List<Resource> getFolderResourcesByUserId(int groupId, int folderId, int userId, int limit) throws SQLException
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?", null, groupId, folderId, userId, limit);
-    }
-
-    /*
-     * New resource sql queries for extended metadata (Chloe)
-     */
-
-    //queries regarding table: lw_rm_audience and lw_resource_audience
-    public List<Resource> getResourcesByAudienceId(int audienceId) throws SQLException
-    {
-        return getResourcesByAudienceId(audienceId, 1000);
-    }
-
-    public List<Resource> getResourcesByAudienceId(int audienceId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_audience USING ( resource_id ) WHERE audience_id = ? AND deleted = 0 LIMIT ? ", null, audienceId, maxResults);
-    }
-
-    //queries regarding table: lw_rm_langlevel and lw_resource_langlevel
-    public List<Resource> getResourcesByLangLevelId(int langLevelId) throws SQLException
-    {
-        return getResourcesByAudienceId(langLevelId, 1000);
-    }
-
-    public List<Resource> getResourcesByLangLevelId(int langlevelId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_langlevel USING ( resource_id ) WHERE langlevel_id = ? AND deleted = 0 LIMIT ? ", null, langlevelId, maxResults);
-    }
-
-    //queries regarding table: lw_rm_purpose and lw_resource_purpose
-    public List<Resource> getResourcesByPurposeId(int purposeId) throws SQLException
-    {
-        return getResourcesByAudienceId(purposeId, 1000);
-    }
-
-    public List<Resource> getResourcesByPurposeId(int purposeId, int maxResults) throws SQLException
-    {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_purpose USING ( resource_id ) WHERE purpose_id = ? AND deleted = 0 LIMIT ? ", null, purposeId, maxResults);
-    }
-
-    //save new resource_langlevel
-    protected void saveLangLevelResource(Resource resource, String[] langLevels, User user) throws SQLException
-    {
-        LangLevelManager llm = Learnweb.getInstance().getLangLevelManager();
-        for(final String langLevel : langLevels)
-        {
-            //find id of the lang level first
-            int llevelId = llm.getLangLevelIdByLangLevelName(langLevel);
-            if(llevelId > 0)
-            {
-                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_langlevel` (`resource_id`, `user_id`, `langlevel_id`) VALUES (?, ?, ?)");
-                replace.setInt(1, null == resource ? 0 : resource.getId());
-                replace.setInt(2, null == user ? 0 : user.getId());
-                replace.setInt(3, null == langLevels ? 0 : llevelId);
-                replace.executeUpdate();
-                replace.close();
-            }
-        }
-    }
-
-    //save new resource_audience
-    protected void saveTargetResource(Resource resource, String[] targets, User user) throws SQLException
-    {
-        AudienceManager am = Learnweb.getInstance().getAudienceManager();
-        for(final String target : targets)
-        {
-            //find id of the audience first
-            int targetId = am.getAudienceIdByAudienceName(target.toLowerCase());
-            if(targetId > 0)
-            {
-                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_audience` (`resource_id`, `user_id`, `audience_id`) VALUES (?, ?, ?)");
-                replace.setInt(1, null == resource ? 0 : resource.getId());
-                replace.setInt(2, null == user ? 0 : user.getId());
-                replace.setInt(3, null == targets ? 0 : targetId);
-                replace.executeUpdate();
-                replace.close();
-            }
-        }
-    }
-
-    //save new resource_purpose
-    protected void savePurposeResource(Resource resource, String[] purposes, User user) throws SQLException
-    {
-        PurposeManager pm = Learnweb.getInstance().getPurposeManager();
-        for(String purpose : purposes)
-        {
-            //find id of the lang level first
-            int purposeId = pm.getPurposeIdByPurposeName(purpose);
-            if(purposeId <= 0)
-                purposeId = pm.addPurpose(purpose).getId();
-
-            log.debug(purpose + " " + purposeId + " " + resource.getId());
-            if(purposeId > 0)
-            {
-                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_purpose` (`resource_id`, `user_id`, `purpose_id`) VALUES (?, ?, ?)");
-                replace.setInt(1, null == resource ? 0 : resource.getId());
-                replace.setInt(2, null == user ? 0 : user.getId());
-                replace.setInt(3, null == purposes ? 0 : purposeId);
-                replace.executeUpdate();
-                replace.close();
-            }
-        }
     }
 
     /**

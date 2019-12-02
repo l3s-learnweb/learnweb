@@ -6,121 +6,81 @@
                 xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui">
 
-    <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
 
-    <c:if test="#{userBean.user.organisation.id eq 480}">
-        <!-- Input fields for the yell course -->
-        <div class="form-group">
-            <p:outputLabel for="@next" value="#{msg.title}:"/>
-            <p:inputText value="#{res.title}" required="true"/>
-            <p:message for="@previous"/>
-        </div>
-
-        <div class="form-group">
-            <p:outputLabel for="@next" value="#{msg.language}:"/>
-            <p:selectOneRadio value="#{res.language}">
-                <f:selectItems value="#{searchFilterBean.langs}"/>
-            </p:selectOneRadio>
-            <p:message for="@previous"/>
-        </div>
-
-        <div class="form-group">
-            <p:outputLabel for="@next" value="#{msg.author}:"/>
-            <p:inputText value="#{res.author}"/>
-            <p:message for="@previous"/>
-        </div>
-
-        <div class="form-group">
-            <p:outputLabel for="@next" value="#{msg.description}:"/>
-            <p:inputText value="#{res.description}" rows="4"/>
-            <p:message for="@previous"/>
-        </div>
-    </c:if>
-
-    <c:if test="#{userBean.user.organisation.id ne 480}">
-        <c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
-
-            <div class="form-group">
-                <c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
-                    <div class="col-sm-12">
-                        <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-                            <h3><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h3>
-                        </c:if>
-                        <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-                            <h4><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
-                        </c:if>
-                    </div>
+<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
+    <div class="form-group">
+        <c:if test="#{fn:startsWith(field.type, 'FULLWIDTH_')}">
+            <div class="col-sm-12">
+                <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+                    <h4><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
                 </c:if>
-                <c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">
-                    <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
-                        <c:if test="#{field.moderatorOnly and not userBean.moderator}">
-                            <h:outputText value="#{res.metadataWrapper[field.name]}"/>
-                        </c:if>
-
-                        <c:if test="#{not field.moderatorOnly or userBean.moderator}">
-                            <c:if test="#{field.type eq 'INPUT_TEXT'}">
-                                <p:inputText id="input_#{field.name}" required="#{field.required}"
-                                             class="border-box-100" value="#{res.metadataWrapper[field.name]}"
-                                             title="#{field.info}"/>
-                                <p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left"
-                                           rendered="#{not empty field.info}"/>
-                            </c:if>
-
-                            <c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
-                                <p:inputTextarea id="input_area_#{field.name}" required="#{field.required}"
-                                                 value="#{res.metadataWrapper[field.name]}" title="#{field.info}"
-                                                 rows="4" autoResize="false"
-                                                 class="border-box-100"/>
-                                <p:tooltip for="input_area_#{field.name}" showEvent="focus" hideEvent="blur"
-                                           position="left" rendered="#{not empty field.info}"/>
-                            </c:if>
-
-                            <c:if test="#{field.type eq 'AUTOCOMPLETE'}">
-                                <p:autoComplete id="input_complete_#{field.name}" required="#{field.required}"
-                                                value="#{res.metadataWrapper[field.name]}"
-                                                completeMethod="#{field.completeText}" class="border-box-100"/>
-                                <p:tooltip for="input_complete_#{field.name}" showEvent="hover" position="left"
-                                           rendered="#{true}" value="blaaaaaaa #{field.info}"/>
-                            </c:if>
-
-                            <c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-                                <p:selectOneMenu id="input_selectone_#{field.name}"
-                                                 value="#{res.metadataWrapper[field.name]}"
-                                                 editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
-                                                 required="#{field.required}" class="border-box-100"
-                                                 title="#{field.info}">
-                                    <f:selectItems value="#{field.options}" var="option" itemLabel="#{option}"
-                                                   itemValue="#{option}"/>
-                                </p:selectOneMenu>
-                                <p:tooltip for="input_selectone_#{field.name}" position="left"
-                                           rendered="#{not empty field.info}"/>
-                            </c:if>
-
-                            <c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-                                <p:selectCheckboxMenu id="input_selectmultiple_#{field.name}"
-                                                      value="#{res.metadataMultiValue[field.name]}" label=""
-                                                      multiple="true" title="#{field.info}" required="#{field.required}"
-                                                      filter="#{field.optionsList.size() gt 8}"
-                                                      filterMatchMode="startsWith" panelStyle="width:250px">
-                                    <f:selectItems value="#{field.optionsList}" var="selectItemOption" itemLabel="#{selectItemOption.label}"
-                                                   itemValue="#{selectItemOption.value}"/>
-                                </p:selectCheckboxMenu>
-                                <p:tooltip for="input_selectmultiple_#{field.name}" position="left"
-                                           rendered="#{not empty field.info}"/>
-                            </c:if>
-                        </c:if>
-                    <p:message for="@previous"/>
+                <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
+                    <h5><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h5>
                 </c:if>
             </div>
-        </c:forEach>
-    </c:if>
+        </c:if>
 
-	<ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
-        <div class="form-group">
-            <p:outputLabel for="@next" value="#{msg.content}:"/>
-            <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
+        <c:if test="#{not fn:startsWith(field.type, 'FULLWIDTH_')}">
+            <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
+            <c:if test="#{field.moderatorOnly and not userBean.moderator}">
+                <h:outputText value="#{res.metadataWrapper[field.name]}"/>
+            </c:if>
+
+            <c:if test="#{not field.moderatorOnly or userBean.moderator}">
+                <c:if test="#{field.type eq 'INPUT_TEXT'}">
+                    <p:inputText id="input_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                 value="#{res.metadataWrapper[field.name]}"/>
+                    <p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
+                </c:if>
+
+                <c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
+                    <p:inputTextarea id="input_area_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                     value="#{res.metadataWrapper[field.name]}" rows="4" autoResize="false" />
+                    <p:tooltip for="input_area_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
+                </c:if>
+
+                <c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+                    <p:selectOneMenu id="input_selectone_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                     value="#{res.metadataWrapper[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}">
+                        <f:selectItems value="#{field.optionsList}"/>
+                    </p:selectOneMenu>
+                    <p:tooltip for="input_selectone_#{field.name}" position="left" rendered="#{not empty field.info}"/>
+                </c:if>
+
+                <c:if test="#{field.type eq 'MULTIPLE_MENU'}">
+                    <p:selectCheckboxMenu id="input_selectmultiple_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                          value="#{res.metadataMultiValue[field.name]}" multiple="true"
+                                          filter="#{field.options.size() gt 8}" filterMatchMode="startsWith">
+                        <f:selectItems value="#{field.optionsList}"/>
+                    </p:selectCheckboxMenu>
+                    <p:tooltip for="input_selectmultiple_#{field.name}" position="left" rendered="#{not empty field.info}"/>
+                </c:if>
+
+                <c:if test="#{field.type eq 'AUTOCOMPLETE'}">
+                    <p:autoComplete id="input_complete_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                    value="#{res.metadataWrapper[field.name]}" completeMethod="#{field.completeText}"/>
+                    <p:tooltip for="input_complete_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+                </c:if>
+
+                <c:if test="#{field.type eq 'AUTOCOMPLETE_MULTIPLE'}">
+                    <p:autoComplete id="input_complete_multi_#{field.name}" title="#{field.info}" required="#{field.required}"
+                                    dropdown="true" multiple="true" dynamic="true" global="false" cache="true"
+                                    value="#{res.metadataMultiValueList[field.name]}" completeMethod="#{field.completeText}"/>
+                    <p:tooltip for="input_complete_multi_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+                </c:if>
+            </c:if>
             <p:message for="@previous"/>
-        </div>
-	</ui:fragment>
+        </c:if>
+    </div>
+</c:forEach>
+
+<ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
+    <div class="form-group">
+        <p:outputLabel for="@next" value="#{msg.content}:"/>
+        <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
+        <p:message for="@previous"/>
+    </div>
+</ui:fragment>
 
 </ui:composition>

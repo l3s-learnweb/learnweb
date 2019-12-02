@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.beans.Field;
 
 import de.l3s.learnweb.resource.Comment;
@@ -75,8 +76,8 @@ public class SolrResourceBean
     private Date timestamp;
 
     // dynamic fields
-    @Field("*_s")
-    public Map<String, String> dynamicFieldsStrings;
+    @Field("*_ss")
+    public Map<String, String[]> dynamicFieldsStrings;
 
     public SolrResourceBean() // empty constructor necessary for SolrSearch
     {
@@ -126,7 +127,9 @@ public class SolrResourceBean
         dynamicFieldsStrings = new HashMap<>(resource.getMetadata().size());
         for(Entry<String, String> entry : resource.getMetadata().entrySet())
         {
-            dynamicFieldsStrings.put(entry.getKey() + "_s", entry.getValue());
+            String[] value = new String[] {entry.getValue()};
+            if (entry.getValue().indexOf(Resource.METADATA_SEPARATOR) != -1) value = StringUtils.split(entry.getValue(), Resource.METADATA_SEPARATOR);
+            dynamicFieldsStrings.put(entry.getKey() + "_ss", value);
         }
     }
 

@@ -1,5 +1,6 @@
 package de.l3s.learnweb.user;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,12 +9,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
+import javax.faces.model.SelectItem;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;
@@ -150,42 +154,15 @@ public class Organisation implements Serializable, Comparable<Organisation>
         // define optional resource fields for some courses
         if(id == 480) // YELL
         {
-            metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
-            metadata.setRequired(true);
-            metadataFields.add(metadata);
-
-            metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
-            {
-                private static final long serialVersionUID = -2914974737900412242L;
-
-                @Override
-                public List<String> completeText(String query)
-                {
-                    return ResourceMetaDataBean.completeAuthor(query);
-                }
-            };
-            metadataFields.add(metadata);
-            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
-        }
-        /*
-        else if(id == 893 ) // Admin
-        {
             metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-            metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
-            metadata.setRequired(true);
-            metadataFields.add(metadata);
+            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
 
-            metadata = new ResourceMetadataField("category", "category", MetadataType.INPUT_TEXT);
-            metadata.setRequired(false);
-            metadataFields.add(metadata);
+            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
 
             metadataFields.add(new ResourceMetadataField("noname", "Attributes", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
-
-            metadata = new ResourceMetadataField("Source", "Source", MetadataType.INPUT_TEXT);
-            metadataFields.add(metadata);
 
             metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
             {
@@ -195,8 +172,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
                 public List<String> completeText(String query)
                 {
                     return ResourceMetaDataBean.completeAuthor(query);
-                    /
-                    try
+                    /*try
                     {
                         return Learnweb.getInstance().getSolrClient().getAutoCompletion("author", query);
                     }
@@ -204,20 +180,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
                     {
                         log.error("Couldn't get auto completion for query=" + query, e);
                     }
-                    return null;
-                    * /
+                    return null;*/
                 }
             };
-            metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc");
-            metadataFields.add(metadata);
-
-            metadata = new ResourceMetadataField("yell_media_type", "Media Type", MetadataType.MULTIPLE_MENU);
-            metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("Text");
-            metadata.getOptions().add("Video");
-            metadata.getOptions().add("Image");
-            metadata.getOptions().add("Game");
-            metadata.getOptions().add("App");
+            metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc.");
             metadataFields.add(metadata);
 
             metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU)
@@ -233,58 +199,58 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.setInfo("Select the language of the resource content");
             metadataFields.add(metadata);
 
-            metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
-            metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
-
-            metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.MULTIPLE_MENU);
-            metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("speaking skills");
-            metadata.getOptions().add("listening skills");
-            metadata.getOptions().add("reading skills");
-            metadata.getOptions().add("writing skills");
-            metadata.getOptions().add("class activities");
-            metadata.getOptions().add("lesson plans");
-            metadata.getOptions().add("cross-curricular resources / CLIL");
-            metadata.getOptions().add("story telling");
-            metadata.getOptions().add("plural-lingualism");
-            metadata.getOptions().add("special learning needs");
-            metadata.getOptions().add("assessment");
-            metadata.getOptions().add("teacher education resources");
-            metadata.getOptions().add("other");
-            metadataFields.add(metadata);
-
             metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
-            metadata.getOptions().add("C2");
+            metadata.getOptions().add("C2"); // TODO: retrieve from a database
             metadata.getOptions().add("C1");
             metadata.getOptions().add("B2");
             metadata.getOptions().add("B1");
             metadata.getOptions().add("A2");
             metadata.getOptions().add("A1");
-            metadata.setInfo("");
             metadataFields.add(metadata);
 
-            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
+            metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
+            metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
 
-        }*/
+            metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.AUTOCOMPLETE_MULTIPLE);
+            metadata.setInfo("Select all that apply");
+            metadata.getOptions().add("Speaking"); // TODO: retrieve from a database
+            metadata.getOptions().add("Listening");
+            metadata.getOptions().add("Reading");
+            metadata.getOptions().add("Writing");
+            metadata.getOptions().add("Class activities");
+            metadata.getOptions().add("Cross-curricular resources / CLIL");
+            metadata.getOptions().add("Storytelling");
+            metadata.getOptions().add("Plurilingualism");
+            metadata.getOptions().add("Special learning needs");
+            metadata.getOptions().add("Learning apps");
+            metadata.getOptions().add("Assessment");
+            metadata.getOptions().add("Teacher education resources");
+            metadata.getOptions().add("Lesson plans");
+            metadata.getOptions().add("Multiliteracy");
+            metadata.getOptions().add("Bibliographical resources");
+            metadataFields.add(metadata);
+
+            metadata = new ResourceMetadataField("yell_target", "Target Learner", MetadataType.MULTIPLE_MENU);
+            metadata.setInfo("Select all that apply");
+            metadata.getOptions().add("Teachers"); // TODO: retrieve from a database
+            metadata.getOptions().add("Adult learners");
+            metadata.getOptions().add("Teens");
+            metadata.getOptions().add("Young learners");
+            metadata.getOptions().add("Pre-school");
+            metadataFields.add(metadata);
+        }
         else if(id == 848) // Demo (archive course)
         {
-            metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
-            metadata.setRequired(true);
-            metadataFields.add(metadata);
-
+            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new ResourceMetadataField("collector", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new ResourceMetadataField("publisher", MetadataType.INPUT_TEXT, true));
-
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
         }
         else
         {
-            metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
-            metadata.setRequired(true);
-            metadataFields.add(metadata);
-
+            metadataFields.add(new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT, true));
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
         }
     }

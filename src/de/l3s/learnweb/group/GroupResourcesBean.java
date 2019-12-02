@@ -46,8 +46,6 @@ import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
-import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearch;
-import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -79,14 +77,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private SearchFilters searchFilters;
     private AbstractPaginator paginator;
 
-    //extended metadata search/filters (Chloe)
-    private ExtendedMetadataSearchFilters emFilters;
-    private String[] selectedAuthors;
-    private String[] selectedTargets;
-    private String[] selectedPurposes;
-    private String[] selectedLanguages;
-    private String[] selectedLevels;
-
     private int searchLogId = -1;
 
     //extended metadata search/filters - authors and media sources from resources belonging to selected group only
@@ -94,9 +84,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     //Grid or List view of group resources
     private boolean gridView = true;
-
-    //for extended Metadata filter search
-    private ExtendedMetadataSearch extendedMetadataSearch;
 
     private transient SearchLogManager searchLogger;
 
@@ -1050,69 +1037,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.gridView = gridView;
     }
 
-    //metadata filter search variables and methods to be called from resources_yell.xhtml
-    //setter and getter for extended metadata search variables
-
-    public ExtendedMetadataSearchFilters getEmFilters()
-    {
-        return emFilters;
-    }
-
-    public void setEmFilters(ExtendedMetadataSearchFilters emFilters)
-    {
-        this.emFilters = emFilters;
-    }
-
-    public String[] getSelectedAuthors()
-    {
-        return selectedAuthors;
-    }
-
-    public void setSelectedAuthors(String[] selectedAuthors)
-    {
-        this.selectedAuthors = selectedAuthors;
-    }
-
-    public String[] getSelectedTargets()
-    {
-        return selectedTargets;
-    }
-
-    public void setSelectedTargets(String[] selectedTargets)
-    {
-        this.selectedTargets = selectedTargets;
-    }
-
-    public String[] getSelectedPurposes()
-    {
-        return selectedPurposes;
-    }
-
-    public void setSelectedPurposes(String[] selectedPurposes)
-    {
-        this.selectedPurposes = selectedPurposes;
-    }
-
-    public String[] getSelectedLanguages()
-    {
-        return selectedLanguages;
-    }
-
-    public void setSelectedLanguages(String[] selectedLanguages)
-    {
-        this.selectedLanguages = selectedLanguages;
-    }
-
-    public String[] getSelectedLevels()
-    {
-        return selectedLevels;
-    }
-
-    public void setSelectedLevels(String[] selectedLevels)
-    {
-        this.selectedLevels = selectedLevels;
-    }
-
     /**
      * Method is only used by the YELL search interface
      * 
@@ -1169,27 +1093,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     {
         this.authors = authors;
 
-    }
-
-    //extended metadata filtering methods and returns filter results (paginator)
-    public void onMetadataFilterClick()
-    {
-
-        emFilters = new ExtendedMetadataSearchFilters();
-
-        emFilters.setFilterAuthors(selectedAuthors);
-        emFilters.setFilterLangs(selectedLanguages);
-        emFilters.setFilterLevels(selectedLevels);
-        emFilters.setFilterPurposes(selectedPurposes);
-        emFilters.setFilterTargets(selectedTargets);
-
-        int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
-
-        extendedMetadataSearch = new ExtendedMetadataSearch(getUser());
-        extendedMetadataSearch.setResultsPerPage(8);
-        //emSearchBean.setSort("timestamp DESC");
-
-        paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
 
     public void logQuery(String query, String searchFilters)

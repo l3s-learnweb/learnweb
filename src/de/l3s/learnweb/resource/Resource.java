@@ -30,7 +30,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
-import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadata;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -38,6 +37,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 {
     private static final long serialVersionUID = -8486919346993051937L;
     private final static Logger log = Logger.getLogger(Resource.class);
+
+    public static final char METADATA_SEPARATOR = ';';
 
     public enum OnlineStatus
     {
@@ -118,9 +119,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     private transient String prettyPath = null;
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
-
-    //extended metadata (Chloe)
-    private transient ExtendedMetadata extendedMetadata = null;
+    private transient MetadataMultiValueMapListWrapper metadataMultiValueList;
 
     /**
      * Do nothing constructor
@@ -1568,6 +1567,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         return metadataMultiValue;
     }
 
+    public Map<String, List<String>> getMetadataMultiValueList()
+    {
+        if(null == metadataMultiValueList)
+            metadataMultiValueList = new MetadataMultiValueMapListWrapper(getMetadataWrapper());
+        return metadataMultiValueList;
+    }
+
     public void setMetadata(Object metadataObj)
     {
         if(metadataObj instanceof HashMap<?, ?>)
@@ -1585,6 +1591,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         //clear wrapper
         metadataWrapper = null;
         metadataMultiValue = null;
+        metadataMultiValueList = null;
     }
 
     /**
@@ -1717,12 +1724,10 @@ public class Resource extends AbstractResource implements Serializable // Abstra
      * A map wrapper to support multi valued input fields
      *
      * @author Kemkes
-     *
      */
     private class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable
     {
         private static final long serialVersionUID = 1514209886446380743L;
-        private static final String SPLITTER = ",\t";
         private Map<String, String> wrappedMap;
 
         public MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
@@ -1733,16 +1738,13 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         @Override
         public String[] get(Object key)
         {
-            String value = wrappedMap.get(key);
-            String[] result = (value == null || value.length() == 0) ? null : value.split(SPLITTER);
-            return result;
+            return StringUtils.split(wrappedMap.get(key), METADATA_SEPARATOR);
         }
 
         @Override
         public String[] put(String key, String[] value)
         {
-            wrappedMap.put(key, StringUtils.join(value, SPLITTER));
-
+            wrappedMap.put(key, StringUtils.join(StringHelper.remove(value, METADATA_SEPARATOR), METADATA_SEPARATOR));
             return null;
         }
 
@@ -1807,45 +1809,95 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         }
     }
 
-    //extended metadata setter and getter (chloe)
-    public ExtendedMetadata getExtendedMetadata() throws SQLException
+    /**
+     * A map wrapper to support multi valued input fields
+     *
+     * @author Kemkes
+     */
+    private class MetadataMultiValueMapListWrapper implements Map<String, List<String>>, Serializable
     {
-        if(extendedMetadata == null)
+        private static final long serialVersionUID = 1514209886446380743L;
+        private Map<String, String> wrappedMap;
+
+        public MetadataMultiValueMapListWrapper(Map<String, String> wrappedMap)
         {
-            extendedMetadata = Learnweb.getInstance().getExtendedMetadataManager().getMetadataByResourceId(id);
+            this.wrappedMap = wrappedMap;
         }
-        return extendedMetadata;
 
-    }
+        @Override
+        public List<String> get(Object key)
+        {
+            String value = wrappedMap.get(key);
+            if (StringUtils.isEmpty(value)) return null;
+            return Arrays.asList(StringUtils.split(wrappedMap.get(key), METADATA_SEPARATOR));
+        }
 
-    public void setExtendedMetadata(ExtendedMetadata extendedMetadata)
-    {
-        this.extendedMetadata = extendedMetadata;
-    }
+        @Override
+        public List<String> put(String key, List<String> value)
+        {
+            wrappedMap.put(key, StringUtils.join(StringHelper.remove(value, METADATA_SEPARATOR), METADATA_SEPARATOR));
+            return null;
+        }
 
-    //new methods to add new metadata to given resource
-    public void addNewLevels(String[] selectedLevels, User user) throws SQLException
-    {
-        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        rsm.saveLangLevelResource(this, selectedLevels, user);
-        extendedMetadata = null; // invalidate cache
-        selectedLevels = null; //invalidate cache
-    }
+        @Override
+        public void clear()
+        {
+            wrappedMap.clear();
+        }
 
-    public void addNewTargets(String[] selectedTargets, User user) throws SQLException
-    {
-        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        rsm.saveTargetResource(this, selectedTargets, user);
-        extendedMetadata = null; // invalidate cache
-        selectedTargets = null; //invalidate cache
-    }
+        @Override
+        public boolean containsKey(Object key)
+        {
+            return wrappedMap.containsKey(key);
+        }
 
-    public void addNewPurposes(String[] selectedPurposes, User user) throws SQLException
-    {
-        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
-        rsm.savePurposeResource(this, selectedPurposes, user);
-        extendedMetadata = null; // invalidate cache
-        selectedPurposes = null; //invalidate cache
+        @Override
+        public boolean containsValue(Object value)
+        {
+            return false;
+        }
+
+        @Override
+        public Set<java.util.Map.Entry<String, List<String>>> entrySet()
+        {
+            return null;
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            return wrappedMap.isEmpty();
+        }
+
+        @Override
+        public Set<String> keySet()
+        {
+            return wrappedMap.keySet();
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends List<String>> m)
+        {
+        }
+
+        @Override
+        public List<String> remove(Object key)
+        {
+            wrappedMap.remove(key);
+            return null;
+        }
+
+        @Override
+        public int size()
+        {
+            return wrappedMap.size();
+        }
+
+        @Override
+        public Collection<List<String>> values()
+        {
+            return null;
+        }
     }
 
     public void cloneComments(List<Comment> comments) throws SQLException

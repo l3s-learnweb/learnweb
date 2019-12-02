@@ -8,7 +8,6 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
-import de.l3s.learnweb.resource.yellMetadata.ExtendedMetadata;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -245,11 +244,6 @@ public class ResourceDecorator implements Serializable
     public Boolean isEditLocked()
     {
         return resource.isEditLocked();
-    }
-
-    public ExtendedMetadata getExtendedMetadata() throws SQLException
-    {
-        return resource.getExtendedMetadata();
     }
 
     @Override

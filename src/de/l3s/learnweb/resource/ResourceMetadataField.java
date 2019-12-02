@@ -1,9 +1,12 @@
 package de.l3s.learnweb.resource;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.faces.model.SelectItem;
 
@@ -11,16 +14,20 @@ public class ResourceMetadataField implements Serializable
 {
     private static final long serialVersionUID = -7698089608547415349L;
 
+    /**
+     * Represents primefaces input types
+     */
     public enum MetadataType
-    { // represents primefaces input types
+    {
+        FULLWIDTH_HEADER,
+        FULLWIDTH_DESCRIPTION,
         INPUT_TEXT,
         INPUT_TEXTAREA,
-        AUTOCOMPLETE,
         ONE_MENU,
         ONE_MENU_EDITABLE,
         MULTIPLE_MENU,
-        FULLWIDTH_HEADER,
-        FULLWIDTH_DESCRIPTION
+        AUTOCOMPLETE,
+        AUTOCOMPLETE_MULTIPLE,
     }
 
     private String name; // the name of this field, will be used as SOLR column name
@@ -32,20 +39,22 @@ public class ResourceMetadataField implements Serializable
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
 
-    public ResourceMetadataField(String name, String label, MetadataType type)
+    public ResourceMetadataField(final String name, final String label, final MetadataType type)
     {
-        super();
         this.name = name;
         this.label = label;
         this.type = type;
     }
 
-    public ResourceMetadataField(String name, MetadataType type, boolean moderatorOnly)
+    public ResourceMetadataField(final String name, final String label, final MetadataType type, final boolean required)
     {
-        super();
-        this.name = name;
-        this.label = name;
-        this.type = type;
+        this(name, label, type);
+        this.required = required;
+    }
+
+    public ResourceMetadataField(final String name, final MetadataType type, final boolean moderatorOnly)
+    {
+        this(name, name, type);
         this.moderatorOnly = moderatorOnly;
     }
 
@@ -79,18 +88,15 @@ public class ResourceMetadataField implements Serializable
         if(null == optionsList)
         {
             optionsList = new ArrayList<>(options.size());
-
-            for(String option : options)
-            {
-                optionsList.add(new SelectItem(option, option));
-            }
+            options.forEach(option -> optionsList.add(new SelectItem(option, option)));
         }
         return optionsList;
     }
 
     public List<String> completeText(String query)
     {
-        return null;
+        if(StringUtils.isEmpty(query)) return getOptions();
+        return getOptions().stream().filter(option -> StringUtils.containsIgnoreCase(option, query)).collect(Collectors.toList());
     }
 
     public void setOptions(List<String> options)

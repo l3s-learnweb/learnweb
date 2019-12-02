@@ -122,133 +122,59 @@
                     <h:outputText value="#{msg.please_wait}"/>
                 </p:blockUI>
 
-                <c:if test="${userBean.user.organisation.id ne 480}">
-                    <!--suppress XmlDuplicatedId -->
-                    <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
-                        <ul class="res-filters">
-                            <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
-                                <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
-                                    <span class="filter-title">
-                                        <span class="text-truncate">#{filter.name}</span>
-                                        <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
-                                    </span>
-                                    <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
-                                        <li class="#{!filter.active ? 'active' : null}">
-                                            <p:commandLink value="#{filter.anyText}" action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
-                                                           update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
+                <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
+                    <ul class="res-filters">
+                        <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
+                            <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
+                                <span class="filter-title">
+                                    <span class="text-truncate">#{filter.name}</span>
+                                    <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                                </span>
+                                <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
+                                    <li class="#{!filter.active ? 'active' : null}">
+                                        <p:commandLink value="#{filter.anyText}" action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
+                                                       update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
+                                    </li>
+                                    <p:repeat value="#{filter.items}" var="item">
+                                        <li class="#{item.active ? 'active' : null}">
+                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.url)}"
+                                                           update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
+                                                <span class="text-truncate">#{item.name}</span>
+                                                <h:outputText rendered="#{item.counter != null}" value=" (#{item.counter})"/>
+                                            </p:commandLink>
                                         </li>
-                                        <p:repeat value="#{filter.items}" var="item">
-                                            <li class="#{item.active ? 'active' : null}">
-                                                <p:commandLink action="#{groupResourcesBean.changeFilters(item.url)}"
-                                                               update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
-                                                    <span class="text-truncate">#{item.name}</span>
-                                                    <h:outputText rendered="#{item.counter != null}" value=" (#{item.counter})"/>
-                                                </p:commandLink>
-                                            </li>
-                                        </p:repeat>
-                                        <li class="expand-list collapse">
-                                            <a href="#">#{msg.filter_carousel_all}</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </p:repeat>
-
-                            <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
-                                <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
-                                               onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
-                                    <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
-                                </p:commandLink>
-
-                                <div id="search_filter_form" class="res-search-form">
-                                    <p:inputText value="#{groupResourcesBean.query}"/>
-
-                                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
-                                                     styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
-                                                     oncomplete="onResourcesUpdated();"/>
-                                </div>
+                                    </p:repeat>
+                                    <li class="expand-list collapse">
+                                        <a href="#">#{msg.filter_carousel_all}</a>
+                                    </li>
+                                </ul>
                             </li>
+                        </p:repeat>
 
-                            <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
-                                <li class="clear-filters">
-                                    <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
-                                                   action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
-                                                   oncomplete="onResourcesUpdated();"/>
-                                </li>
-                            </h:panelGroup>
-                        </ul>
-                    </h:form>
-                </c:if>
+                        <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
+                            <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
+                                           onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
+                                <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
+                            </p:commandLink>
 
-                <c:if test="${userBean.user.organisation.id eq 480}">
-                    <!--suppress XmlDuplicatedId -->
-                    <h:panelGroup id="resourcesFilters" layout="block" rendered="#{!groupResourcesBean.paginator.isEmpty()}">
-                        <!-- from here begins the new metadata visualization -->
-                        <h:form id="header_query_form" prependId="false">
-                            <h:inputText style="width: 400px; padding: 3px 0;" value="#{groupResourcesBean.query}" id="input_query_form"
-                                         onkeyup="if (event.keyCode === 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
+                            <div id="search_filter_form" class="res-search-form">
+                                <p:inputText value="#{groupResourcesBean.query}"/>
 
                                 <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
-                                                 oncomplete="onResourcesUpdated();" update=":resourcesWrapper"
-                                             value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
-                        </h:form>
-                        <br/>
+                                                 styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
+                                                 oncomplete="onResourcesUpdated();"/>
+                            </div>
+                        </li>
 
-                        <h:form id="accordion_form" style="width:530px;">
-                            <p:accordionPanel activeIndex="-2">
-                                <p:tab title="Filters - refine your search or narrow down your search results!">
-                                    <p:panelGrid columns="3" cellpadding="20" layout="grid">
-
-                                        <h:panelGroup>
-                                            <h:outputLabel for="alist" value="Author:  "/>
-                                            <p:selectCheckboxMenu id="alist" value="#{groupResourcesBean.selectedAuthors}" label="Authors"
-                                                                  multiple="true" filter="true" filterMatchMode="startsWith">
-                                                <f:selectItems value="#{groupResourcesBean.authors}"/>
-                                            </p:selectCheckboxMenu>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <h:outputLabel for="llist" value="Language:"/>
-                                            <p:selectCheckboxMenu id="llist" value="#{groupResourcesBean.selectedLanguages}" label="Languages"
-                                                                  multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                                <f:selectItems value="#{searchFilterBean.langs}"/>
-                                            </p:selectCheckboxMenu>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <h:outputLabel for="levlist" value="Language Level:"/>
-                                            <p:selectCheckboxMenu id="levlist" value="#{groupResourcesBean.selectedLevels}" label="Levels"
-                                                                  multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                                <f:selectItems value="#{searchFilterBean.levels}"/>
-                                            </p:selectCheckboxMenu>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <h:outputLabel for="aglist" value="Target Learner:"/>
-                                            <p:selectCheckboxMenu id="aglist" value="#{groupResourcesBean.selectedTargets}" label="Target Learners"
-                                                                  multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                                <f:selectItems value="#{searchFilterBean.targets}"/>
-                                            </p:selectCheckboxMenu>
-                                        </h:panelGroup>
-
-                                        <h:panelGroup>
-                                            <h:outputLabel for="aclist" value="Purpose of Use:"/>
-                                            <p:selectCheckboxMenu id="aclist" value="#{groupResourcesBean.selectedPurposes}" label="Purposes of Use"
-                                                                  multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
-                                                <f:selectItems value="#{searchFilterBean.purposes}"/>
-                                            </p:selectCheckboxMenu>
-                                        </h:panelGroup>
-
-                                        <p:commandButton value="Filter" process="@form" update=":resourcesWrapper"
-                                                         actionListener="#{groupResourcesBean.onMetadataFilterClick}" oncomplete="onResourcesUpdated();"/>
-                                    </p:panelGrid>
-                                </p:tab>
-                            </p:accordionPanel>
-                        </h:form>
-                        <hr/>
-
-                        <b><h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
-                    </h:panelGroup>
-                </c:if>
+                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
+                            <li class="clear-filters">
+                                <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
+                                               action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
+                                               oncomplete="onResourcesUpdated();"/>
+                            </li>
+                        </h:panelGroup>
+                    </ul>
+                </h:form>
 
                 <h:panelGroup id="breadcrumbs" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
                     <ul class="res-breadcrumbs">

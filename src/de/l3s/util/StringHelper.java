@@ -66,6 +66,24 @@ public class StringHelper
         return str;
     }
 
+    public static String[] remove(final String[] values, final char remove)
+    {
+        for (int i = 0; i < values.length; ++i)
+        {
+            values[i] = StringUtils.remove(values[i], remove);
+        }
+        return values;
+    }
+
+    public static List<String> remove(final List<String> values, final char remove)
+    {
+        for (int i = 0, l = values.size(); i < l; ++i)
+        {
+            values.set(i, StringUtils.remove(values.get(i), remove));
+        }
+        return values;
+    }
+
     /**
      * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed
      *

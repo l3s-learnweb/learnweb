@@ -29,10 +29,6 @@
     <h:form prependId="false" styleClass="resource-details">
         <p:tabView dynamic="true" cache="true" prependId="false">
             <p:tab title="#{msg.details_right_pane}">
-                <c:if test="${userBean.user.organisation.id eq 480}">
-                    <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_meta.xhtml"/>
-                </c:if>
-
                 <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_details.xhtml"/>
             </p:tab>
 
