@@ -203,7 +203,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.save();
 
             log(Action.adding_resource, resource.getGroupId(), resource.getId());
-            //detailed logging of new metadata (author, language, media source, media type
+            //detailed logging of new metadata (author, language)
             if(resource.getAuthor() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Author");
             if(resource.getLanguage() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Language");
 

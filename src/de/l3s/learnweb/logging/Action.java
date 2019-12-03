@@ -60,8 +60,8 @@ public enum Action
     extended_metadata_open_dialog(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource_id
     //log entries for extended metadata (yell group only)
     adding_yourown_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource id, param = type of metadata added
-    adding_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource id, param = type of metadata added (options: author, language, media source, media type)
-    edit_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type)
+    adding_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource id, param = type of metadata added (options: author, language)
+    edit_resource_metadata(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), //target_id = resource id, param = type of metadata edited (options: author, language)
     group_metadata_search(ActionTargetId.NONE, ActionCategory.SEARCH), // param = filter:value only if it is not null
     group_category_search(ActionTargetId.NONE, ActionCategory.SEARCH), // param = clicked category
     group_changing_hypothesis_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = old value
