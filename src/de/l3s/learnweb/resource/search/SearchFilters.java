@@ -873,7 +873,7 @@ public class SearchFilters implements Serializable
     {
         if(configFilters.containsKey(FILTERS.service))
         {
-            return ((ResourceService) configFilters.get(FILTERS.service)).isLearnwebSource();
+            return !((ResourceService) configFilters.get(FILTERS.service)).isInterweb();
         }
         return !canNotRequestLearnweb;
     }
@@ -882,7 +882,7 @@ public class SearchFilters implements Serializable
     {
         if(configFilters.containsKey(FILTERS.service))
         {
-            return !((ResourceService) configFilters.get(FILTERS.service)).isLearnwebSource();
+            return ((ResourceService) configFilters.get(FILTERS.service)).isInterweb();
         }
         return !canNotRequestInterweb;
     }

@@ -1,5 +1,7 @@
 package de.l3s.learnweb.resource;
 
+import java.util.regex.Pattern;
+
 public enum ResourceService // when adding more services remember to update the service column of learnweb_large.sl_query
 {
     bing("Bing"), // Does not support filtering by date
@@ -28,25 +30,26 @@ public enum ResourceService // when adding more services remember to update the 
     }
 
     /**
-     * Same as SERVICE.valueOf(), but removes spaces, dashes and case insensitive.
+     * Same as valueOf(), but removes spaces and dashes, also case insensitive.
      */
-    public static ResourceService parse(String value) throws IllegalArgumentException {
-        return valueOf(value.toLowerCase().replaceAll("[ -]", ""));
+    public static ResourceService parse(String value)
+    {
+        return valueOf(Pattern.compile("[ -]").matcher(value.toLowerCase()).replaceAll(""));
     }
 
-    public boolean isLearnwebSource()
+    public boolean isInterweb()
     {
         switch(this)
         {
-        case bing:
-        case flickr:
-        case youtube:
-        case vimeo:
-        case ipernity:
-        case slideshare:
-            return false;
-        default:
-            return true;
+            case bing:
+            case flickr:
+            case youtube:
+            case vimeo:
+            case ipernity:
+            case slideshare:
+                return true;
+            default:
+                return false;
         }
     }
 
