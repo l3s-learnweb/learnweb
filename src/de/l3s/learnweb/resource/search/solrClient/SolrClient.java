@@ -65,11 +65,11 @@ public class SolrClient
      */
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
-        SolrResourceBean solrResource = new SolrResourceBean(resource);
+        ResourceDocument resourceDocument = new ResourceDocument(resource);
 
         log.debug("index resource: " + resource.getId());
 
-        server.addBean(solrResource);
+        server.addBean(resourceDocument);
         server.commit();
     }
 
@@ -253,7 +253,7 @@ public class SolrClient
         ResourceManager resourceManager = learnweb.getResourceManager();
         resourceManager.setReindexMode(true);
 
-        Collection<SolrResourceBean> solrResourceBeans = new ArrayList<>(batchSize);
+        Collection<ResourceDocument> resourceDocuments = new ArrayList<>(batchSize);
         //long sendResources = 0;
 
         for(int i = 0;; i++)
@@ -269,15 +269,15 @@ public class SolrClient
 
             log.debug("Process page: " + i);
 
-            solrResourceBeans.clear();
+            resourceDocuments.clear();
 
             for(Resource resource : resources)
             {
-                solrResourceBeans.add(new SolrResourceBean(resource));
+                resourceDocuments.add(new ResourceDocument(resource));
                 //sendResources++;
             }
 
-            UpdateResponse response = server.addBeans(solrResourceBeans);
+            UpdateResponse response = server.addBeans(resourceDocuments);
             if(response.getStatus() != 0)
                 throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response.toString());
 

@@ -15,7 +15,7 @@ import de.l3s.learnweb.resource.Comment;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Tag;
 
-public class SolrResourceBean
+public class ResourceDocument
 {
     @Field
     private String id;
@@ -51,6 +51,7 @@ public class SolrResourceBean
     @Field("thumbnailHeight")
     private int thumbnailHeight;
     */
+
     @Field("author")
     private String author;
 
@@ -79,12 +80,12 @@ public class SolrResourceBean
     @Field("*_ss")
     public Map<String, String[]> dynamicFieldsStrings;
 
-    public SolrResourceBean() // empty constructor necessary for SolrSearch
+    public ResourceDocument() // empty constructor necessary for SolrSearch
     {
 
     }
 
-    public SolrResourceBean(Resource resource) throws SQLException
+    public ResourceDocument(Resource resource) throws SQLException
     {
         this.id = "r_" + resource.getId();
         this.title = resource.getTitle();
@@ -322,5 +323,15 @@ public class SolrResourceBean
     public void setTimestamp(Date timestamp)
     {
         this.timestamp = timestamp;
+    }
+
+    public Map<String, String[]> getDynamicFieldsStrings()
+    {
+        return dynamicFieldsStrings;
+    }
+
+    public void setDynamicFieldsStrings(final Map<String, String[]> dynamicFieldsStrings)
+    {
+        this.dynamicFieldsStrings = dynamicFieldsStrings;
     }
 }

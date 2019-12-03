@@ -504,14 +504,14 @@ public class SolrSearch implements Serializable
         }
 
         // SolrDocumentList docs = response.getResults(); // to get the score
-        List<SolrResourceBean> solrResources = response.getBeans(SolrResourceBean.class);
+        List<ResourceDocument> solrResources = response.getBeans(ResourceDocument.class);
         Map<String, Map<String, List<String>>> highlight = response.getHighlighting();
 
         List<String> snippets = new LinkedList<>();
 
         int skippedResources = 0;
 
-        for(SolrResourceBean solrResource : solrResources)
+        for(ResourceDocument solrResource : solrResources)
         {
             //print solr scores for each returned result from solr
             //log.debug(docs.get(i).getFieldValue("score"));
