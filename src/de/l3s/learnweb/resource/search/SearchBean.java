@@ -270,6 +270,15 @@ public class SearchBean extends ApplicationBean implements Serializable
         PrimeFaces.current().ajax().addCallbackParam("embeddedCode", resource.getEmbedded());
     }
 
+    public void selectResourceCommand()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int rank = Integer.parseInt(params.get("resourceRank"));
+
+        ResourceDecorator resource = search.getResourceByRank(rank);
+        setSelectedResource(resource);
+    }
+
     // -------------------------------------------------------------------------
     /**
      * This method logs a resource click event.

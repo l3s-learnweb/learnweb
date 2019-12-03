@@ -35,6 +35,8 @@
         <p:remoteCommand name="logResourceOpenedCommand" actionListener="${searchBean.logResourceOpened()}" immediate="true" global="false" async="true"/>
         <p:remoteCommand name="getResourceDetailsCommand" actionListener="${searchBean.getResourceDetailsCommand}" immediate="true" global="false"
                          update=":search_item_meta" oncomplete="updateSlideDetails(xhr, status, args);"/>
+        <p:remoteCommand name="saveResourceCommand" actionListener="${searchBean.selectResourceCommand}" immediate="true" global="false"
+                         update=":resource_form" onstart="$.fancybox.close();" oncomplete="PF('resource_dialog').show();"/>
     </h:form>
 
     <h:panelGroup id="search_header_panel" layout="block" rendered="#{searchBean.searchFilters == null}" styleClass="bg-gray200">
