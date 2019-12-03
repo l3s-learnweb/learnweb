@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -45,7 +46,6 @@ import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
-import de.l3s.learnweb.resource.search.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -283,7 +283,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException
+    private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException
     {
         SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
         solrSearch.setFilterGroups(groupId);
@@ -313,7 +313,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         if(searchFilters.getTagsFilter() != null)
             solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
-        SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
+        SolrPaginator sp = new SolrPaginator(solrSearch);
         searchFilters.cleanAll();
         searchFilters.putResourceCounter(sp.getFacetFields());
         searchFilters.putResourceCounter(sp.getFacetQueries());
