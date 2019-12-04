@@ -173,8 +173,8 @@ public class Search implements Serializable
 
         if(this.configGroupResultsByField != null)
         {
-            this.solrSearch.setGroupField(this.configGroupResultsByField);
-            this.solrSearch.setResultsPerGroup(this.configResultsPerGroup);
+            this.solrSearch.setGroupResultsByField(this.configGroupResultsByField);
+            this.solrSearch.setGroupResultsLimit(this.configResultsPerGroup);
         }
 
         if(searchFilters.getDateFromFilterAsString() != null)
@@ -203,13 +203,13 @@ public class Search implements Serializable
 
         if(page == 1)
         {
-            searchFilters.putResourceCounter(solrSearch.getFacetFields());
+            searchFilters.putResourceCounter(solrSearch.getQueryResponse().getFacetFields());
             if(!searchFilters.isInterwebSearchEnabled())
             {
-                searchFilters.putResourceCounter(solrSearch.getFacetQueries());
+                searchFilters.putResourceCounter(solrSearch.getQueryResponse().getFacetQuery());
             }
 
-            searchFilters.setTotalResultsLearnweb(solrSearch.getTotalResultCount());
+            searchFilters.setTotalResultsLearnweb(solrSearch.getQueryResponse().getResults().getNumFound());
         }
 
         if(learnwebResources.size() == 0)

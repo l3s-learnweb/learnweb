@@ -21,6 +21,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -292,7 +293,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         solrSearch.setSkipResourcesWithoutThumbnails(false);
         solrSearch.setFacetFields(searchFilters.getFacetFields());
         solrSearch.setFacetQueries(searchFilters.getFacetQueries());
-        solrSearch.setSort("timestamp DESC");
+        solrSearch.setOrder("timestamp", SolrQuery.ORDER.desc);
 
         if(searchFilters.getServiceFilter() != null)
             solrSearch.setFilterLocation(searchFilters.getServiceFilter());

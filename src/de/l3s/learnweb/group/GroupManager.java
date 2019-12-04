@@ -550,7 +550,7 @@ public class GroupManager
         try
         {
             solrSearch.getResourcesByPage(1);
-            numberOfRows = (int) solrSearch.getTotalResultCount();
+            numberOfRows = (int) solrSearch.getQueryResponse().getResults().getNumFound();
         }
         catch(IOException | SolrServerException e)
         {

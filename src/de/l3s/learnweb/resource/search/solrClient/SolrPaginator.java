@@ -32,9 +32,9 @@ public class SolrPaginator extends AbstractPaginator
         if(getCurrentPageCache() != null) return getCurrentPageCache();
 
         List<ResourceDecorator> results = search.getResourcesByPage(getPageIndex() + 1);
-        setTotalResults((int) search.getTotalResultCount());
-        facetFieldsResults = search.getFacetFields();
-        facetQueriesResults = search.getFacetQueries();
+        setTotalResults((int) search.getQueryResponse().getResults().getNumFound());
+        facetFieldsResults = search.getQueryResponse().getFacetFields();
+        facetQueriesResults = search.getQueryResponse().getFacetQuery();
 
         setCurrentPageCache(results);
         return results;
