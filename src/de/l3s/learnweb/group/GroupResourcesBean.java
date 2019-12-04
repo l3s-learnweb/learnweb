@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -44,7 +45,6 @@ import de.l3s.learnweb.resource.ResourceManager.Order;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
-import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
@@ -104,7 +104,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
 
         searchFilters = new SearchFilters();
-        searchFilters.setMode(MODE.group);
+        searchFilters.setMode(SearchMode.group);
 
         //updateResourcesFromSolr(); //not necessary on most pages
     }

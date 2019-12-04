@@ -23,7 +23,6 @@ import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
-import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
@@ -37,7 +36,7 @@ public class Search implements Serializable
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private String query;
-    private MODE configMode;
+    private SearchMode configMode;
     private Integer configResultsPerService = 8;
     private String configGroupResultsByField = null;
     private Integer configResultsPerGroup = 2;
@@ -160,7 +159,7 @@ public class Search implements Serializable
                 this.solrSearch.setFacetQueries(searchFilters.getFacetQueries());
         }
 
-        this.solrSearch.setFilterType(configMode == MODE.text ? "web" : configMode.name());
+        this.solrSearch.setFilterType(configMode == SearchMode.text ? "web" : configMode.name());
         if(searchFilters.getServiceFilter() != null)
         {
             this.solrSearch.setFilterLocation(searchFilters.getServiceFilter());
@@ -281,15 +280,15 @@ public class Search implements Serializable
         }
         else
         {
-            if(configMode == MODE.text)
+            if(configMode == SearchMode.text)
             {
                 params.put("services", "Bing");
             }
-            else if(configMode == MODE.image)
+            else if(configMode == SearchMode.image)
             {
                 params.put("services", "Flickr,Bing,Ipernity");
             }
-            else if(configMode == MODE.video)
+            else if(configMode == SearchMode.video)
             {
                 params.put("services", "YouTube,Vimeo");
             }
@@ -351,7 +350,7 @@ public class Search implements Serializable
             rankIndex.put(temporaryId, decoratedResource);
             temporaryId++;
 
-            if(configMode == MODE.text)
+            if(configMode == SearchMode.text)
                 Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
             newResources.add(decoratedResource);
         }
@@ -370,13 +369,13 @@ public class Search implements Serializable
         return query;
     }
 
-    public void setMode(MODE searchMode)
+    public void setMode(SearchMode searchMode)
     {
         this.configMode = searchMode;
         searchFilters.setMode(searchMode);
     }
 
-    public MODE getMode()
+    public SearchMode getMode()
     {
         return configMode;
     }

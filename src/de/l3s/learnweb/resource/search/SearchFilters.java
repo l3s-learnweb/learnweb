@@ -26,7 +26,7 @@ public class SearchFilters implements Serializable
     private Long totalResultsLearnweb = null;
     private Long totalResultsInterweb = null;
     private String stringFilters = null;
-    private MODE configMode = MODE.text;
+    private SearchMode configMode = SearchMode.text;
     private FILTERS lastFilter = null;
     private int prevFilters = 0;
     private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
@@ -34,14 +34,6 @@ public class SearchFilters implements Serializable
     private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
-
-    public enum MODE
-    {
-        text,
-        image,
-        video,
-        group
-    }
 
     public enum TYPE
     {
@@ -256,20 +248,20 @@ public class SearchFilters implements Serializable
         videoDuration,
         language;
 
-        public static FILTERS[] getFilterByMode(MODE m)
+        public static FILTERS[] getFilterByMode(SearchMode m)
         {
             switch(m)
             {
             case text:
-                return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
+                return new FILTERS[] { service, date, group, collector, author, coverage, publisher, tags };
             case image:
-                return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.imageSize };
+                return new FILTERS[] { service, date, group, author, tags, imageSize };
             case video:
-                return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.videoDuration };
+                return new FILTERS[] { service, date, group, author, tags, videoDuration };
             case group:
-                return new FILTERS[] { FILTERS.service, FILTERS.type, FILTERS.date, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
+                return new FILTERS[] { service, type, date, collector, author, coverage, publisher, tags };
             default:
-                return FILTERS.values();
+                return values();
             }
         }
 
@@ -840,7 +832,7 @@ public class SearchFilters implements Serializable
         return (String) configFilters.get(FILTERS.tags);
     }
 
-    public void setMode(MODE m)
+    public void setMode(SearchMode m)
     {
         if(m != configMode)
         {
@@ -849,7 +841,7 @@ public class SearchFilters implements Serializable
         }
     }
 
-    public MODE getMode()
+    public SearchMode getMode()
     {
         return configMode;
     }

@@ -41,7 +41,6 @@ import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.SearchFilters.FilterItem;
-import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
 
@@ -72,7 +71,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int selectedResourceTargetFolderId = 0;
 
     private Search images;
-    private MODE searchMode;
+    private SearchMode searchMode;
     private ResourceService searchService;
     private String view = "float"; // float, grid or list
 
@@ -125,21 +124,21 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     private String onSearchVideo()
     {
-        searchMode = MODE.video;
+        searchMode = SearchMode.video;
         setView("grid");
         return onSearch();
     }
 
     private String onSearchImage()
     {
-        searchMode = MODE.image;
+        searchMode = SearchMode.image;
         setView("float");
         return onSearch();
     }
 
     private String onSearchText()
     {
-        searchMode = MODE.text;
+        searchMode = SearchMode.text;
         setView("list");
         return onSearch();
     }
@@ -368,11 +367,11 @@ public class SearchBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            if(searchMode == MODE.text)
+            if(searchMode == SearchMode.text)
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
-            else if(searchMode == MODE.image)
+            else if(searchMode == SearchMode.image)
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
-            else if(searchMode == MODE.video)
+            else if(searchMode == SearchMode.video)
                 searchService = ResourceService.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
         }
 

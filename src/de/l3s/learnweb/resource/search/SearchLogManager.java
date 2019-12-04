@@ -22,7 +22,6 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.Thumbnail;
-import de.l3s.learnweb.resource.search.SearchFilters.MODE;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
 
@@ -77,7 +76,7 @@ public class SearchLogManager
         }
     }
 
-    public int logQuery(String query, MODE searchMode, ResourceService searchService, String language, String searchFilters, User user)
+    public int logQuery(String query, SearchMode searchMode, ResourceService searchService, String language, String searchFilters, User user)
     {
         int userId = user == null ? 0 : user.getId();
 
@@ -125,7 +124,7 @@ public class SearchLogManager
         {
             insert.setInt(1, group.getId());
             insert.setString(2, query);
-            insert.setString(3, MODE.group.name());
+            insert.setString(3, SearchMode.group.name());
             insert.setString(4, ResourceService.learnweb.name());
             insert.setString(5, language);
             insert.setString(6, searchFilters);
