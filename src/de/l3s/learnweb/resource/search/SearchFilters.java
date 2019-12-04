@@ -215,9 +215,9 @@ public class SearchFilters implements Serializable
             switch(this)
             {
             case s:
-                return 300;
+                return 240; // 4 min
             case m:
-                return 1200;
+                return 1200; // 20 min
             case l:
                 return 0;
             default:
@@ -232,7 +232,7 @@ public class SearchFilters implements Serializable
             case s:
                 return 0;
             case m:
-                return 300;
+                return 240;
             case l:
                 return 1200;
             default:
