@@ -3,19 +3,24 @@ package messages;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class ValidateMessages
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ValidateMessagesTest
 {
     private static final List<String> LOCALES = Arrays.asList("de", "de_DE_AMA", "de_DE_Archive", "en", "en_UK_Archive", "it", "pt", "es", "uk");
+    private static final String MESSAGES_PATH = "de/l3s/learnweb/lang/messages";
 
-    public static void main(String[] args)
+    @Test
+    void validateAllMessages()
     {
         for (String locale : LOCALES)
         {
-            System.out.println("Reading messages for: " + locale);
-            ResourceBundle bundle = ResourceBundle.getBundle("de/l3s/learnweb/lang/messages", Locale.forLanguageTag(locale));
+            ResourceBundle bundle = ResourceBundle.getBundle(MESSAGES_PATH, Locale.forLanguageTag(locale));
 
             Map<String, String> messages = getMessagesFromBundle(bundle);
-            validateMessages(messages);
+            validateMessages(locale, messages);
         }
     }
 
@@ -26,7 +31,7 @@ public class ValidateMessages
         return messages;
     }
 
-    private static void validateMessages(final Map<String, String> messages)
+    private static void validateMessages(final String locale, final Map<String, String> messages)
     {
         for (Map.Entry<String, String> message : messages.entrySet())
         {
@@ -36,7 +41,7 @@ public class ValidateMessages
             }
             catch(Exception e)
             {
-                System.out.println(message.getKey() + " - the key is not valid!");
+                fail("The key '" + message.getKey() + "' of '" + locale + "' is not valid!", e);
             }
         }
     }

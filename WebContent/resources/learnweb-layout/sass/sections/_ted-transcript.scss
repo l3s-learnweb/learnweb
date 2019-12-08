@@ -55,7 +55,6 @@
     overflow-x: hidden;
     transition: 0.3s;
   }
-
 }
 
 .ui-tabs-panel {
@@ -76,24 +75,15 @@
 
 .tooltipster-custom-theme {
   border: 1px solid #489a83;
-  background: #ffffff;
-  box-shadow: 1px 1px 5px #888888;
-}
-
-.tooltipster-custom-theme .tooltipster-content {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 16px;
-  padding: 8px 10px;
-  text-align: justify;
+  background: #fff;
+  box-shadow: 1px 1px 5px #888;
 }
 
 .tooltipster-custom-b {
   border-radius: 10px;
   background: #c4c4c4;
   border-color: #a8a8a8;
-  box-shadow: 1px 1px 5px #888888;
-
+  box-shadow: 1px 1px 5px #888;
 }
 
 .tooltipster-custom-d,
@@ -101,35 +91,25 @@
   border-radius: 10px;
   background: #489a83;
   border-color: #a8a8a8;
-  box-shadow: 1px 1px 5px #888888;
+  box-shadow: 1px 1px 5px #888;
 }
 
-.tooltipster-custom-b .tooltipster-content {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 16px;
-  padding: 8px 10px;
-  text-align:justify;
-}
-.tooltipster-custom-c .tooltipster-content {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 16px;
-  padding: 8px 10px;
-  text-align:justify;
-}
+.tooltipster-custom-theme .tooltipster-content,
+.tooltipster-custom-b .tooltipster-content,
+.tooltipster-custom-c .tooltipster-content,
 .tooltipster-custom-d .tooltipster-content {
   font-family: Arial, sans-serif;
   font-size: 12px;
   line-height: 16px;
   padding: 8px 10px;
-  text-align:justify;
+  text-align: justify;
 }
 
 .tooltipster-default a {
-  color: white;
+  color: #fff;
   text-decoration: underline;
-}
-.tooltipster-default a:hover {
-  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
