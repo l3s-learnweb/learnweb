@@ -305,6 +305,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   $('.res-item[data-itemtype="folder"]', $resContainer).droppable({
     tolerance: 'pointer',
     scope: 'resources',
+    greedy: true,
     drop() {
       const destFolderId = this.dataset.itemid;
       doAction('move', null, destFolderId);
@@ -316,6 +317,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
     $('li', $resBreadcrumbs).droppable({
       tolerance: 'pointer',
       scope: 'resources',
+      greedy: true,
       drop() {
         const destFolderId = this.dataset.folderid;
         doAction('move', null, destFolderId);
@@ -352,6 +354,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
     }).droppable({
       tolerance: 'pointer',
       scope: 'resources',
+      greedy: true,
       drop() {
         const destFolderId = this.dataset.datakey;
         doAction('move', null, destFolderId);
