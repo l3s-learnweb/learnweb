@@ -560,29 +560,28 @@ public class GroupManager
         return numberOfRows;
     }
 
-    public Folder moveFolder(Folder original, int newParentFolderId, int newGroupId) throws SQLException
+    public void moveFolder(Folder folder, int newParentFolderId, int newGroupId) throws SQLException
     {
-        if(original.getId() == newParentFolderId)
+        // TODO: throw an error instead of silent ignore
+        if(folder.getId() == newParentFolderId) return; // if move to itself
+        if(folder.getGroupId() == newGroupId && folder.isParentOf(newParentFolderId)) return; // if move to own sub folder
+
+        int parentFolderId = folder.getParentFolderId();
+        List<Folder> subFolders = folder.getSubFolders();
+
+        folder.setGroupId(newGroupId);
+        folder.setParentFolderId(newParentFolderId);
+        folder.save();
+
+        for(Folder subFolder : subFolders)
         {
-            return original;
+            moveFolder(subFolder, folder.getId(), newGroupId);
         }
 
-        int parentFolderId = original.getParentFolderId();
-        List<Folder> subFolders = original.getSubFolders();
-
-        original.setGroupId(newGroupId);
-        original.setParentFolderId(newParentFolderId);
-        original.save();
-
-        for(Folder subfolder : subFolders)
+        for(Resource resource : folder.getResources())
         {
-            this.moveFolder(subfolder, original.getId(), newGroupId);
-        }
-
-        for(Resource res : original.getResources())
-        {
-            res.setGroupId(newGroupId);
-            res.save();
+            resource.setGroupId(newGroupId);
+            resource.save();
         }
 
         if(newParentFolderId > 0)
@@ -594,21 +593,16 @@ public class GroupManager
         {
             getFolder(parentFolderId).clearCaches();
         }
-
-        return original;
     }
 
-    public Resource moveResource(Resource original, int newGroupId, int newFolderId) throws SQLException
+    public void moveResource(Resource resource, int newGroupId, int newFolderId) throws SQLException
     {
-        if(original.getGroupId() == newGroupId && original.getFolderId() == newFolderId)
-        {
-            return original;
-        }
+        // TODO: throw an error instead of silent ignore
+        if(resource.getGroupId() == newGroupId && resource.getFolderId() == newFolderId) return; // if move to the same folder
 
-        original.setGroupId(newGroupId);
-        original.setFolderId(newFolderId);
-        original.save();
-        return original;
+        resource.setGroupId(newGroupId);
+        resource.setFolderId(newFolderId);
+        resource.save();
     }
 
     public Folder saveFolder(Folder folder) throws SQLException
