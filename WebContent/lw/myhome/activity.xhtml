@@ -18,7 +18,7 @@
         <h:form>
             <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
             <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
-            <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
+            <p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
         </h:form>
 
         <h:panelGroup id="resourcesView" layout="block">

@@ -1,7 +1,7 @@
 package de.l3s.util;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * A simple interface that forces to implement a getId() method
@@ -11,18 +11,14 @@ import java.util.List;
  */
 public interface HasId
 {
-
-    public int getId();
+    int getId();
 
     /**
      * Returns a list of all ids of the given list of objects
-     *
-     * @param list
-     * @return
      */
-    public static List<Integer> collectIds(List<? extends HasId> list)
+    static ArrayList<Integer> collectIds(Collection<? extends HasId> list)
     {
-        List<Integer> ids = new ArrayList<>(list.size());
+        ArrayList<Integer> ids = new ArrayList<>(list.size());
 
         for(HasId obj : list)
         {
@@ -31,8 +27,14 @@ public interface HasId
         return ids;
     }
 
-    public static String implodeIds(List<? extends HasId> list)
+    static String implodeIds(Collection<? extends HasId> list)
     {
         return StringHelper.implodeInt(collectIds(list), ",");
+    }
+
+    static int getIdOrDefault(HasId object, Integer def)
+    {
+        if (object == null || object.getId() <= 0) return def;
+        return object.getId();
     }
 }

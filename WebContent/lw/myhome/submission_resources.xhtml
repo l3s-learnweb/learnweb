@@ -34,7 +34,7 @@
 <ui:define name="center_layout">
 
     <h:form styleClass="d-none">
-        <p:remoteCommand name="selectGroupItemCommand" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
+        <p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
         <p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submissionBean.actionUpdateSelectedItems}"
                          update=":submittedResourcesGrid" global="false" oncomplete="onResourcesUpdated()"/>

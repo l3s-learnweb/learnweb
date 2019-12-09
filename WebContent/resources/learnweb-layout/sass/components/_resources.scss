@@ -544,10 +544,6 @@ ul.res-filters {
 }
 
 .resources-panel {
-  > div {
-    background-color: $contentBgColor;
-  }
-
   @include media-breakpoint-up(md) {
     .col-folders {
       flex: 0 0 auto;
@@ -566,6 +562,7 @@ ul.res-filters {
 
   .ui-panel .ui-panel-content {
     border-top: 0;
+    background-color: $contentBgColor;
   }
 
   .ui-toolbar {

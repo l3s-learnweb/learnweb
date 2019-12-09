@@ -15,7 +15,7 @@
 <ui:define name="metadata">
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}"/>
-        <f:viewParam name="folder_id" value="#{groupResourcesBean.selectedFolderId}"/>
+        <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}"/>
         <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
         <f:viewAction action="#{groupResourcesBean.onLoad}"/>
         <f:viewAction action="#{rightPaneBean.onLoad}"/>
@@ -23,45 +23,50 @@
 </ui:define>
 
 <ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{groupResourcesBean.group.title}" url="group/overview.jsf?group_id=#{groupResourcesBean.groupId}"/>
+    <p:menuitem value="#{groupResourcesBean.group.title}" url="group/overview.jsf?group_id=#{groupResourcesBean.group.id}"/>
     <p:menuitem value="#{msg.resources}" url=""/>
 </ui:define>
 
 <ui:define name="group_layout">
     <h:form>
-        <p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
+        <p:remoteCommand name="commandSelectResource" actionListener="#{groupResourcesBean.commandSelectResource}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-        <p:remoteCommand name="editGroupItemCommand" actionListener="#{groupResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
+        <p:remoteCommand name="commandEditResource" actionListener="#{groupResourcesBean.commandEditResource}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-        <p:remoteCommand name="createGroupItemCommand" actionListener="#{groupResourcesBean.actionCreateGroupItem}" update=":right_pane :growl"
+        <p:remoteCommand name="commandCreateResource" actionListener="#{groupResourcesBean.commandCreateResource}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
         <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane :growl"
                          global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
 
-        <p:remoteCommand name="openFolderCommand" actionListener="#{groupResourcesBean.actionOpenFolder}" update=":resourcesWrapper :growl"
+        <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree :growl"
                          global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-        <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
+        <p:remoteCommand name="resourceAddedHook" actionListener="#{groupResourcesBean.resetResources}" update=":resourcesWrapper :group_folders_tree"
                          global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
         <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
                          global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
-        <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupResourcesBean.actionUpdateGroupItems}"
-                         update=":resourcesWrapper :right_pane :growl" global="false"
+        <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{groupResourcesBean.commandBatchUpdateResources}"
+                         update=":resourcesWrapper :group_folders_tree :right_pane :growl" global="false"
                          onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
                          oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
     </h:form>
 
-    <div class="row no-gutters resources-panel mb-n3">
+    <p:blockUI block="resourcesPanel" widgetVar="resourcesOverlay">
+        <h:outputText value="#{msg.please_wait}"/>
+    </p:blockUI>
+
+    <h:panelGroup id="resourcesPanel" styleClass="row no-gutters resources-panel mb-n3" layout="block">
         <div class="col-12 col-folders ui-panel ui-widget d-flex flex-column">
             <div class="ui-panel-titlebar ui-widget-header">
-                <span class="ui-panel-title">Folders</span>
+                <span class="ui-panel-title">#{msg.folders}</span>
             </div>
 
             <div class="ui-panel-content ui-widget-content flex-grow-1">
                 <h:form id="group_folders_tree">
-                    <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" selection="#{groupResourcesBean.selectedNode}"
-                            datakey="#{node.id}" animate="true" selectionMode="single" styleClass="ui-tree-responsive ui-tree-no-root-icons"
-                            rendered="#{not empty groupResourcesBean.group.subFolders}" onNodeClick="openFolder(node.data('datakey'));">
+                    <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" datakey="#{node.id}"
+                            selectionMode="single" selection="#{groupResourcesBean.selectedTreeNode}" onNodeClick="openFolder(node.data('datakey'));"
+                            styleClass="ui-tree-responsive ui-tree-no-root-icons" animate="true"
+                            rendered="#{not empty groupResourcesBean.group.subFolders}">
 
                         <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
                             <h:outputText value="#{node.name}"/>
@@ -118,10 +123,6 @@
             </h:form>
 
             <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column">
-                <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
-                    <h:outputText value="#{msg.please_wait}"/>
-                </p:blockUI>
-
                 <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
                     <ul class="res-filters">
                         <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
@@ -166,7 +167,7 @@
                             </div>
                         </li>
 
-                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters != null or groupResourcesBean.query != null}">
+                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersString != null or groupResourcesBean.query != null}">
                             <li class="clear-filters">
                                 <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
                                                action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
@@ -198,7 +199,7 @@
                 </ui:decorate>
             </h:panelGroup>
         </div>
-    </div>
+    </h:panelGroup>
 
     <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
               modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
@@ -256,11 +257,11 @@
     <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" appendTo="@(body)" rendered="#{true or learnwebBean.learnweb.service == 'AMA'}"
               modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
         <h:outputFormat value="#{msg.export_resources_warning}">
-            <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.groupId)} "/>
-            <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.groupId)}"/>
+            <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.group.id)} "/>
+            <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.group.id)}"/>
         </h:outputFormat>
 
-        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.groupId)}" tableStyleClass="table-responsive" scrollable="true"
+        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.group.id)}" tableStyleClass="table-responsive" scrollable="true"
                      scrollHeight="150">
             <p:column headerText="#{msg.external_resources}">
                 <h:outputText value="#{entry}"/>
@@ -268,7 +269,7 @@
 
         </p:dataTable>
         <!-- This needs to be rewritten. The group id should ne be passed this way !!!! -->
-        <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.groupId}"/>
+        <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.group.id}"/>
         <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"/>
     </p:dialog>
 	</ui:remove>
