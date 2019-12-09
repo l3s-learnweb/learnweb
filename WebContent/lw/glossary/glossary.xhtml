@@ -300,6 +300,7 @@
                                 </p:commandButton>
                             </div>
                             <div>
+                                <p:defaultCommand target="save"/>
                                 <p:commandButton value="#{msg.cancel}" action="#{glossaryBean.onCancel()}" update="@form :glossary_add"
                                                  process="@this" resetValues="true" oncomplete="groupRow()" styleClass="secondary-btn">
                                 </p:commandButton>

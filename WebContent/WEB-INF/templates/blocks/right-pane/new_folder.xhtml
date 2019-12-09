@@ -44,11 +44,12 @@
             <h:outputText value="* #{msg.mandatory_field}"/>
         </div>
         <div class="col text-right">
+            <p:defaultCommand target="addFolderButton"/>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
-            <p:commandButton value="#{msg.create_folder}" update=":folderGrid :growl :right_pane"
-                             action="#{addFolderBean.addFolder}" ajax="true" oncomplete="onResourcesUpdated();">
+            <p:commandButton id="addFolderButton" value="#{msg.create_folder}" update=":growl :right_pane"
+                             action="#{addFolderBean.addFolder}" ajax="true" oncomplete="resourceAddedHook();">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
         </div>
