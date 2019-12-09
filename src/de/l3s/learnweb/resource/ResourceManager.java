@@ -428,7 +428,7 @@ public class ResourceManager
     public Resource addResource(Resource resource, User user) throws SQLException
     {
         resource.setUser(user);
-        resource.save();
+        resource = Learnweb.getInstance().getResourceManager().saveResource(resource);
 
         try
         {
