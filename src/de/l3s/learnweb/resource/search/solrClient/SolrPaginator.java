@@ -1,5 +1,6 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -15,6 +16,7 @@ public class SolrPaginator extends AbstractPaginator
     private static final long serialVersionUID = 3823389610985272265L;
 
     private final SolrSearch search;
+    private int searchLogId = -1;
 
     private List<FacetField> facetFieldsResults;
     private Map<String, Integer> facetQueriesResults;
@@ -24,6 +26,17 @@ public class SolrPaginator extends AbstractPaginator
         super(search.getResultsPerPage());
 
         this.search = search;
+
+        if (search.getFilterGroupIds().size() == 1 && search.getQuery() != null && !"*".equals(search.getQuery()))
+        {
+            this.searchLogId = Learnweb.getInstance().getSearchLogManager().logGroupQuery(
+                search.getFilterGroupIds().get(0),
+                search.getQuery(),
+                null,
+                search.getFilterLanguage(),
+                search.getUserId()
+            );
+        }
     }
 
     @Override
@@ -37,6 +50,7 @@ public class SolrPaginator extends AbstractPaginator
         facetQueriesResults = search.getQueryResponse().getFacetQuery();
 
         setCurrentPageCache(results);
+        if(searchLogId > 0) Learnweb.getInstance().getSearchLogManager().logResources(searchLogId, results, getPageIndex() + 1);
         return results;
     }
 
