@@ -44,10 +44,10 @@ public class ResourceDocument
     @Field("format")
     private String format;
 
+    /*
     @Field("duration")
     private int duration;
 
-    /*
     @Field("thumbnailWidth")
     private int thumbnailWidth;
 
@@ -99,7 +99,7 @@ public class ResourceDocument
         this.source = resource.getSource().toString().toLowerCase();
         this.type = resource.getType().name();
         this.format = resource.getFormat().toLowerCase();
-        this.duration = resource.getDuration();
+        // this.duration = resource.getDuration();
         this.author = resource.getAuthor();
         this.location = resource.getLocation().toLowerCase().replace("-", "");
         this.groupId = resource.getGroupId();
@@ -228,6 +228,7 @@ public class ResourceDocument
         this.format = format;
     }
 
+    /*
     public int getDuration()
     {
         return duration;
@@ -238,7 +239,6 @@ public class ResourceDocument
         this.duration = duration;
     }
 
-    /*
     public int getThumbnailWidth()
     {
         return thumbnailWidth;
