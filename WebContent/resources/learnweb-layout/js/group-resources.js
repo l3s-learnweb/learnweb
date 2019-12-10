@@ -1,4 +1,4 @@
-/* global selectGroupItemCommand, editGroupItemCommand, updateGroupItemsCommand, createGroupItemCommand, openFolderCommand, updateSelectedItemsCommand */
+/* global commandSelectResource, commandEditResource, commandBatchUpdateResources, commandCreateResource, commandOpenFolder, updateSelectedItemsCommand */
 
 
 class SelectResource {
@@ -305,6 +305,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   $('.res-item[data-itemtype="folder"]', $resContainer).droppable({
     tolerance: 'pointer',
     scope: 'resources',
+    greedy: true,
     drop() {
       const destFolderId = this.dataset.itemid;
       doAction('move', null, destFolderId);
@@ -316,6 +317,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
     $('li', $resBreadcrumbs).droppable({
       tolerance: 'pointer',
       scope: 'resources',
+      greedy: true,
       drop() {
         const destFolderId = this.dataset.folderid;
         doAction('move', null, destFolderId);
@@ -352,6 +354,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
     }).droppable({
       tolerance: 'pointer',
       scope: 'resources',
+      greedy: true,
       drop() {
         const destFolderId = this.dataset.datakey;
         doAction('move', null, destFolderId);
@@ -363,7 +366,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
 function openResource(resourceId) {
   PF('learnweb').updateSearchParams({ resource_id: resourceId });
 
-  selectGroupItemCommand([
+  commandSelectResource([
     { name: 'itemType', value: 'resource' },
     { name: 'itemId', value: resourceId },
   ]);
@@ -372,38 +375,38 @@ function openResource(resourceId) {
 function openFolder(folderId) {
   PF('learnweb').updateSearchParams({ folder_id: folderId, resource_id: null });
 
-  openFolderCommand([
-    { name: 'itemId', value: folderId },
+  commandOpenFolder([
+    { name: 'folderId', value: folderId },
   ]);
 }
 
 function openGroup(groupId) {
   PF('learnweb').updateSearchParams({ group_id: groupId }, true);
 
-  openFolderCommand([
-    { name: 'itemId', value: groupId },
+  commandOpenFolder([
+    { name: 'groupId', value: groupId },
   ]);
 }
 
 function doAction(action, extraAttr1, extraAttr2) {
   switch (action) {
     case 'new-file':
-      createGroupItemCommand([{ name: 'type', value: 'newFile' }, { name: 'docType', value: extraAttr1 }]);
+      commandCreateResource([{ name: 'type', value: 'newFile' }, { name: 'docType', value: extraAttr1 }]);
       break;
     case 'create-folder':
-      createGroupItemCommand([{ name: 'type', value: 'folder' }]);
+      commandCreateResource([{ name: 'type', value: 'folder' }]);
       break;
     case 'upload-file':
-      createGroupItemCommand([{ name: 'type', value: 'file' }]);
+      commandCreateResource([{ name: 'type', value: 'file' }]);
       break;
     case 'add-website':
-      createGroupItemCommand([{ name: 'type', value: 'url' }]);
+      commandCreateResource([{ name: 'type', value: 'url' }]);
       break;
     case 'add-glossary2':
-      createGroupItemCommand([{ name: 'type', value: 'glossary2' }]);
+      commandCreateResource([{ name: 'type', value: 'glossary2' }]);
       break;
     case 'add-survey':
-      createGroupItemCommand([{ name: 'type', value: 'survey' }]);
+      commandCreateResource([{ name: 'type', value: 'survey' }]);
       break;
     case 'open-folder': {
       const last = selected.getItem(selected.size() - 1);
@@ -423,7 +426,7 @@ function doAction(action, extraAttr1, extraAttr2) {
           const tagName = $tagInput.value.trim();
           $tagInput.value = '';
 
-          updateGroupItemsCommand([
+          commandBatchUpdateResources([
             { name: 'action', value: 'add-tag' },
             { name: 'tag', value: tagName },
             { name: 'items', value: JSON.stringify(selected) },
@@ -436,7 +439,7 @@ function doAction(action, extraAttr1, extraAttr2) {
     case 'copy':
       if (selected.size() > 0) {
         createConfirmDialog('selectDestination', () => {
-          updateGroupItemsCommand([
+          commandBatchUpdateResources([
             { name: 'action', value: 'copy' },
             { name: 'items', value: JSON.stringify(selected) },
           ]);
@@ -447,14 +450,14 @@ function doAction(action, extraAttr1, extraAttr2) {
       break;
     case 'move':
       if (extraAttr1 || extraAttr2) {
-        updateGroupItemsCommand([
+        commandBatchUpdateResources([
           { name: 'action', value: 'move' },
           { name: 'destination', value: JSON.stringify({ groupId: extraAttr1, folderId: extraAttr2 }) },
           { name: 'items', value: JSON.stringify(selected) },
         ]);
       } else if (selected.size() > 0) {
         createConfirmDialog('selectDestination', () => {
-          updateGroupItemsCommand([
+          commandBatchUpdateResources([
             { name: 'action', value: 'move' },
             { name: 'items', value: JSON.stringify(selected) },
           ]);
@@ -466,7 +469,7 @@ function doAction(action, extraAttr1, extraAttr2) {
     case 'edit':
       if (selected.size() === 1) {
         const item = selected.getItem(0);
-        editGroupItemCommand([
+        commandEditResource([
           { name: 'itemType', value: item.type },
           { name: 'itemId', value: item.id },
         ]);
@@ -477,7 +480,7 @@ function doAction(action, extraAttr1, extraAttr2) {
     case 'delete':
       if (selected.size() > 0) {
         createConfirmDialog('deleteConfirm', () => {
-          updateGroupItemsCommand([
+          commandBatchUpdateResources([
             { name: 'action', value: 'delete' },
             { name: 'items', value: JSON.stringify(selected) },
           ]);

@@ -33,10 +33,11 @@
             </p:commandButton>
         </div>
         <div>
+            <p:defaultCommand target="saveResourceButton"/>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" actionListener="#{rightPaneBean.cancelEditClickedResource}"
                              update=":right_pane" global="false" immediate="true"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
-            <p:commandButton value="#{msg.save}" actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane :growl" global="false"
+            <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane :growl" global="false"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();resourceUpdatedHook();"/>
         </div>
     </div>

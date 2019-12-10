@@ -229,10 +229,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public Resource addResource(Resource resource) throws SQLException
     {
-        Learnweb learnweb = Learnweb.getInstance();
-        resource = learnweb.getResourceManager().addResource(resource, this);
-
-        return resource;
+        return Learnweb.getInstance().getResourceManager().addResource(resource, this);
     }
 
     public void deleteResource(Resource resource) throws SQLException

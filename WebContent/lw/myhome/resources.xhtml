@@ -37,21 +37,21 @@
     <ui:define name="center_layout">
         <p:outputPanel styleClass="m-0 panel-content bg-white">
             <h:form>
-                <p:remoteCommand name="selectGroupItemCommand" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
+                <p:remoteCommand name="commandSelectResource" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="editGroupItemCommand" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
+                <p:remoteCommand name="commandEditResource" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="createGroupItemCommand" actionListener="#{myResourcesBean.actionCreateItem}" update=":right_pane :growl"
+                <p:remoteCommand name="commandCreateResource" actionListener="#{myResourcesBean.actionCreateItem}" update=":right_pane :growl"
                                  global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
-                <p:remoteCommand name="openFolderCommand" actionListener="#{myResourcesBean.actionOpenFolder}" update=":resourcesWrapper :growl"
+                <p:remoteCommand name="commandOpenFolder" actionListener="#{myResourcesBean.actionOpenFolder}" update=":resourcesWrapper :growl"
                                  global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
                 <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
                                  global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
                 <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
                                  global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
-                <p:remoteCommand name="updateGroupItemsCommand" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
+                <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
                                  update=":resourcesView :right_pane :growl"
                                  onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();"/>
             </h:form>

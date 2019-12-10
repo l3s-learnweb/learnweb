@@ -45,6 +45,8 @@ public abstract class AbstractResource implements HasId
 
     public abstract boolean canViewResource(User user) throws SQLException;
 
+    public abstract void moveTo(int newGroupId, int newFolderId) throws SQLException;
+
     public boolean canEditResource(User user) throws SQLException
     {
         if(user == null) return false; // not logged in

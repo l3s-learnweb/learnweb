@@ -1391,9 +1391,10 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         this.readOnlyTranscript = readOnlyTranscript;
     }
 
-    public Resource moveTo(int newGroupId, int newFolderId) throws SQLException
+    @Override
+    public void moveTo(int newGroupId, int newFolderId) throws SQLException
     {
-        return Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
+        Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
     }
 
     @Override

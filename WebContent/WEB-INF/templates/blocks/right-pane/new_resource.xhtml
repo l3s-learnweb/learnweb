@@ -5,6 +5,9 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
+    <p:defaultCommand target="nextButton" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}"/>
+    <p:defaultCommand target="addResourceButton" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey'}"/>
+
     <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":right_pane :growl"
                      global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
@@ -121,13 +124,13 @@
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 
-            <p:commandButton id="next_button" value="#{msg.next}" action="#{addResourceBean.handleUrlInput}" update=":growl :add_resource_upload_form"
+            <p:commandButton id="nextButton" value="#{msg.next}" action="#{addResourceBean.handleUrlInput}" update=":growl :add_resource_upload_form"
                              onstart="PF('rightPaneOverlay').show()" oncomplete="PF('rightPaneOverlay').hide()" global="false"
                              rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}">
             </p:commandButton>
 
-            <p:commandButton value="#{msg.addResource}" ajax="true" action="#{addResourceBean.addResource}" update=":growl :right_pane"
-                             oncomplete="resourceAddedHook();" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2'or addResourceBean.resource.type eq 'survey'}">
+            <p:commandButton id="addResourceButton" value="#{msg.addResource}" ajax="true" action="#{addResourceBean.addResource}" update=":growl :right_pane"
+                             oncomplete="resourceAddedHook();" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey'}">
                 <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>

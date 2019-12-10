@@ -113,6 +113,26 @@ public class SolrSearch implements Serializable
         else return query;
     }
 
+    protected int getUserId()
+    {
+        return userId;
+    }
+
+    protected String getQuery()
+    {
+        return query;
+    }
+
+    protected List<Integer> getFilterGroupIds()
+    {
+        return filterGroupIds;
+    }
+
+    protected String getFilterLanguage()
+    {
+        return filterLanguage;
+    }
+
     public void setFilterLanguage(String filterLanguage)
     {
         this.filterLanguage = filterLanguage;

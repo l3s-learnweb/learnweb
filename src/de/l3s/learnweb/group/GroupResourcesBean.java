@@ -2,7 +2,6 @@ package de.l3s.learnweb.group;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,44 +11,29 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.*;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
+import de.l3s.util.HasId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.AbstractPaginator;
-import de.l3s.learnweb.resource.AbstractResource;
-import de.l3s.learnweb.resource.AddFolderBean;
-import de.l3s.learnweb.resource.AddResourceBean;
-import de.l3s.learnweb.resource.Folder;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDecorator;
-import de.l3s.learnweb.resource.ResourceManager.Order;
-import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchFilters.Filter;
-import de.l3s.learnweb.resource.search.SearchLogManager;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
-import de.l3s.util.StringHelper;
-import de.l3s.util.bean.BeanHelper;
 
 @Named
 @ViewScoped
@@ -60,33 +44,23 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     // Group base attributes
-    private int groupId; // Current group id
-    private Group group; // Current group
+    private Group group; // current group
+    private Folder currentFolder;
 
-    private Folder selectedFolder; // Current opened folder
-    private TreeNode selectedNode; // Current folder in left panel
-    private List<Folder> breadcrumbs;
-
-    private Order order = Order.TITLE;
-
-    // Folders tree
-    private int selectedResourceTargetGroupId;
-    private int selectedResourceTargetFolderId;
+    // Grid or List view of group resources
+    private boolean gridView = true; // TODO: should be changed to enum
+    private final int pageSize;
 
     // In group search/filters
     private String query;
     private SearchFilters searchFilters;
-    private AbstractPaginator paginator;
 
-    private int searchLogId = -1;
-
-    //extended metadata search/filters - authors and media sources from resources belonging to selected group only
-    private List<String> authors;
-
-    //Grid or List view of group resources
-    private boolean gridView = true;
-
-    private transient SearchLogManager searchLogger;
+    // resources
+    private transient AbstractPaginator paginator;
+    private transient List<Folder> folders;
+    private transient List<Folder> breadcrumbs;
+    private transient TreeNode foldersTree;
+    private transient TreeNode selectedTreeNode; // Selected node in the left Folder's panel
 
     @Inject
     private RightPaneBean rightPaneBean;
@@ -97,7 +71,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     @Inject
     private AddResourceBean addResourceBean;
 
-    private final int pageSize;
+    @Inject
+    private SelectLocationBean selectLocationBean;
 
     public GroupResourcesBean()
     {
@@ -105,74 +80,64 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         searchFilters = new SearchFilters();
         searchFilters.setMode(SearchMode.group);
+    }
 
-        //updateResourcesFromSolr(); //not necessary on most pages
+    public void resetResources()
+    {
+        paginator = null;
+        folders = null;
+        breadcrumbs = null;
+        foldersTree = null;
+    }
+
+    public void setGroupId(int groupId)
+    {
+        try
+        {
+            group = getLearnweb().getGroupManager().getGroupById(groupId);
+        }
+        catch(SQLException e)
+        {
+            addInvalidParameterMessage("group_id");
+        }
+    }
+
+    public int getGroupId()
+    {
+        return HasId.getIdOrDefault(group, 0);
+    }
+
+    public void setFolderId(int folderId)
+    {
+        try
+        {
+            if(folderId > 0) currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
+        }
+        catch(SQLException e)
+        {
+            addInvalidParameterMessage("folder_id");
+        }
+    }
+
+    public int getFolderId()
+    {
+        return HasId.getIdOrDefault(currentFolder, 0);
     }
 
     public void onLoad() throws SQLException
     {
         User user = getUser();
-        if(null == user) // not logged in
-            return;
+        if(null == user) throw new IllegalAccessError("Access denied. User required.");
 
         if(user.getOrganisation().getId() == 480)
         {
             gridView = false;
         }
 
-        group = getLearnweb().getGroupManager().getGroupById(groupId);
-
-        if(null == group)
-            addInvalidParameterMessage("group_id");
-
         if(null != group)
         {
             user.setActiveGroup(group);
             group.setLastVisit(user);
-
-            if(null == selectedFolder)
-            {
-                Integer id = getParameterInt("folder_id");
-
-                if(null == id)
-                {
-                    selectedFolder = new Folder(0, groupId, group.getTitle());
-                }
-                else
-                {
-                    selectedFolder = getLearnweb().getGroupManager().getFolder(id);
-                    buildBreadcrumbsForFolder(selectedFolder);
-                }
-            }
-        }
-    }
-
-    public Group getGroup()
-    {
-        return group;
-    }
-
-    public int getGroupId()
-    {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId)
-    {
-        this.groupId = groupId;
-    }
-
-    public int getSelectedFolderId()
-    {
-        return selectedFolder == null || selectedFolder.getId() <= 0 ? 0 : selectedFolder.getId();
-    }
-
-    public void setSelectedFolderId(int folderId) throws SQLException
-    {
-        if(folderId > 0)
-        {
-            selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
-            buildBreadcrumbsForFolder(selectedFolder);
         }
     }
 
@@ -189,16 +154,19 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         return group.isMember(user);
     }
 
-    public void onSortingChanged(ValueChangeEvent e)
-    {
-        // TODO implement
-        order = Order.TYPE;
-    }
-
     public AbstractPaginator getPaginator()
     {
         if(null == paginator)
-            updateResourcesFromSolr();
+        {
+            try
+            {
+                paginator = getResourcesFromSolr(group.getId(), HasId.getIdOrDefault(currentFolder, 0), query, getUser());
+            }
+            catch(SQLException | IOException | SolrServerException e)
+            {
+                addErrorMessage(e);
+            }
+        }
 
         return paginator;
     }
@@ -206,7 +174,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public String changeFilters(String queryFilters)
     {
         searchFilters.setFiltersFromString(queryFilters);
-        updateResourcesFromSolr();
+        resetResources();
         return queryFilters;
     }
 
@@ -216,32 +184,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         changeFilters(null);
     }
 
-    public void onQueryFiltersChange() throws SQLException
+    public void onQueryChange()
     {
-        updateResourcesFromSolr();
-    }
-
-    public String getQuery()
-    {
-        return query;
-    }
-
-    public void setQuery(String query)
-    {
-        if(StringUtils.isEmpty(query))
-        {
-            this.query = null;
-        }
-        else if(this.query == null || !this.query.equalsIgnoreCase(query))
-        {
-            this.query = query;
-            log(Action.group_resource_search, groupId, 0, query);
-        }
-    }
-
-    public void onQueryChange() throws SQLException
-    {
-        updateResourcesFromSolr();
+        resetResources();
     }
 
     public List<Filter> getAvailableFilters()
@@ -251,37 +196,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             return null;
 
         return searchFilters.getAvailableFilters();
-    }
-
-    public String getSearchFilters()
-    {
-        return searchFilters != null ? searchFilters.getFiltersString() : null;
-    }
-
-    public void updateResourcesFromSolr()
-    {
-        if(this.searchFilters == null)
-        {
-            return;
-        }
-
-        int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
-        try
-        {
-            paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
-            // TODO: remove it
-            // PrimeFaces.current().ajax().update(":filters");
-
-            if(!StringHelper.empty(query))
-            {
-                logQuery(query, ""); //  searchFilters.toString()
-                logResources(paginator.getCurrentPage(), paginator.getPageIndex());
-            }
-        }
-        catch(SQLException | IOException | SolrServerException e)
-        {
-            addErrorMessage(e);
-        }
     }
 
     private SolrPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException
@@ -323,89 +237,435 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public List<Folder> getSubFolders() throws SQLException
     {
-        return getLearnweb().getGroupManager().getFolders(groupId, getSelectedFolderId());
-    }
-
-    public String getCurrentPath() throws SQLException
-    {
-        if(this.group != null)
+        if (folders == null)
         {
-            return this.selectedFolder == null ? this.group.getTitle() : selectedFolder.getPrettyPath();
+            folders = getLearnweb().getGroupManager().getFolders(group.getId(), HasId.getIdOrDefault(currentFolder, 0));
         }
-
-        return null;
+        return folders;
     }
 
     public TreeNode getFoldersTree(Group group) throws SQLException
     {
-        return getLearnweb().getGroupManager().getFoldersTree(group, getSelectedFolderId());
-    }
-
-    public Folder getSelectedFolder()
-    {
-        return selectedFolder;
-    }
-
-    public void setSelectedFolder(Folder folder)
-    {
-        selectedFolder = folder;
-        updateResourcesFromSolr();
-        buildBreadcrumbsForFolder(folder);
-
-        rightPaneBean.resetPane();
-    }
-
-    public TreeNode getSelectedNode()
-    {
-        return selectedNode;
-    }
-
-    public void setSelectedNode(TreeNode selectedNode)
-    {
-        this.selectedNode = selectedNode;
-    }
-
-    public void onGroupMenuNodeSelect(NodeSelectEvent event)
-    {
-        if(selectedNode != null)
+        if (foldersTree == null)
         {
-            Folder selectedFolder = (Folder) selectedNode.getData();
-            setSelectedFolder(selectedFolder);
+            foldersTree = getLearnweb().getGroupManager().getFoldersTree(group, HasId.getIdOrDefault(currentFolder, 0));
         }
-        else
+        return foldersTree;
+    }
+
+    public List<Folder> getBreadcrumbs()
+    {
+        if (breadcrumbs == null && currentFolder != null)
         {
-            log.error("selectedNode is null on onNodeSelect called.", new Exception());
+            breadcrumbs = new ArrayList<>();
+            try
+            {
+                Folder folder = currentFolder;
+                while (folder != null && folder.getId() > 0)
+                {
+                    breadcrumbs.add(0, folder);
+                    folder = folder.getParentFolder();
+                }
+            }
+            catch(SQLException e)
+            {
+                log.warn("Can't build breadcrumbs", e);
+            }
+        }
+
+        return breadcrumbs;
+    }
+
+    public void commandOpenFolder()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            int folderId = Integer.parseInt(params.get("folderId"));
+            if (folderId == 0)
+            {
+                this.currentFolder = null;
+            }
+            else
+            {
+                Folder targetFolder = getLearnweb().getGroupManager().getFolder(folderId);
+                if(targetFolder == null) throw new IllegalArgumentException("Target folder does not exists.");
+
+                this.currentFolder = targetFolder;
+            }
+
+            resetResources();
+            rightPaneBean.resetPane();
+        }
+        catch(IllegalArgumentException | SQLException e)
+        {
+            addErrorMessage(e);
         }
     }
 
-    public void setGroup(Group group)
+    public void commandSelectResource()
     {
-        this.group = group;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            String itemType = params.get("itemType");
+            int itemId = Integer.parseInt(params.get("itemId"));
+
+            if("folder".equals(itemType))
+            {
+                Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
+                if(folder != null) rightPaneBean.setViewResource(folder);
+                else throw new IllegalArgumentException("Target folder does not exists!");
+            }
+            else if("resource".equals(itemType))
+            {
+                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                if(resource != null) rightPaneBean.setViewResource(resource);
+                else throw new IllegalArgumentException("Target resource does not exists!");
+            }
+            else throw new IllegalArgumentException("Unsupported element type!");
+        }
+        catch(IllegalArgumentException | SQLException e)
+        {
+            addErrorMessage(e);
+        }
     }
 
-    public static long getSerialVersionUID()
+    public void commandEditResource()
     {
-        return serialVersionUID;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            String itemType = params.get("itemType");
+            int itemId = Integer.parseInt(params.get("itemId"));
+
+            AbstractResource resource = getLearnweb().getGroupManager().getAbstractResource(itemType, itemId);
+            if(resource != null && resource.canEditResource(getUser())) rightPaneBean.setEditResource(resource);
+            else addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it.");
+        }
+        catch(IllegalArgumentException | SQLException e)
+        {
+            addErrorMessage(e);
+        }
     }
 
-    public static Logger getLog()
+    public void commandCreateResource()
     {
-        return log;
+        String type = getParameter("type");
+
+        // Set target group and folder in beans
+        addResourceBean.reset();
+        addResourceBean.setTarget(group, currentFolder);
+
+        // Set target view and defaults
+        switch(type)
+        {
+            case "folder":
+                addFolderBean.reset();
+                addFolderBean.setTarget(group, currentFolder);
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+                break;
+            case "file":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(ResourceType.file);
+                break;
+            case "url":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(ResourceType.website);
+                addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
+                break;
+            case "glossary2":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.setResourceTypeGlossary();
+                break;
+            case "survey":
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                addResourceBean.getResource().setType(ResourceType.survey);
+                break;
+            case "newFile":
+                ResourceType docType = ResourceType.parse(getParameter("docType"));
+                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+                addResourceBean.getResource().setType(docType);
+                break;
+            default:
+                log.error("Unsupported item type: " + type);
+                break;
+        }
     }
 
-    public DateFormat getSolrDateFormat()
+    public void commandBatchUpdateResources()
     {
-        return SOLR_DATE_FORMAT;
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            String action = params.get("action");
+            ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"));
+
+            switch(action)
+            {
+                case "copy":
+                    this.copyResources(items);
+                    break;
+                case "move":
+                    if(params.containsKey("destination"))
+                    {
+                        JSONObject dest = new JSONObject(params.get("destination"));
+                        int targetGroupId = dest.isNull("groupId") ? group.getId() : dest.getInt("groupId");
+                        int targetFolderId = dest.isNull("folderId") ? 0 : dest.getInt("folderId");
+                        this.moveResources(items, targetGroupId, targetFolderId);
+                        break;
+                    }
+
+                    this.moveResources(items, null, null);
+                    break;
+                case "delete":
+                    this.deleteResources(items);
+                    break;
+                case "add-tag":
+                    String tag = params.get("tag");
+                    this.tagResources(items, tag);
+                    break;
+                default:
+                    log.error("Unsupported action: " + action);
+                    break;
+            }
+
+            if(items.getFailed() > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.getFailed());
+        }
+        catch(IllegalArgumentException | IllegalAccessError e)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, e.getMessage());
+        }
+        catch(JSONException | SQLException e)
+        {
+            addErrorMessage(e);
+        }
     }
 
-    public Order getOrder()
+    private void copyResources(ResourceUpdateBatch items) throws SQLException
     {
-        return order;
+        Group targetGroup = selectLocationBean.getTargetGroup();
+        if(targetGroup == null) throw new IllegalArgumentException("group_resources.target_not_exists");
+        if(!group.canViewResources(getUser())) throw new IllegalAccessError("group_resources.cant_be_copied");
+        if(!targetGroup.canAddResources(getUser())) throw new IllegalAccessError("group_resources.target_permissions");
+
+        for(Resource resource : items.getResources())
+        {
+            Resource newResource = resource.clone();
+            newResource.setGroupId(HasId.getIdOrDefault(selectLocationBean.getTargetGroup(), 0));
+            newResource.setFolderId(HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0));
+            resource = getUser().addResource(newResource);
+            log(Action.adding_resource, targetGroup.getId(), resource.getId());
+        }
+
+        if (!items.getFolders().isEmpty())
+        {
+            // TODO: implement copy folder
+            addGrowl(FacesMessage.SEVERITY_WARN, "Copying folders is not implemented yet.");
+        }
+
+        if(items.getTotal() > 0) addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotal());
     }
 
-    public void setOrder(Order order)
+    private void moveResources(ResourceUpdateBatch items, Integer targetGroupId, Integer targetFolderId) throws SQLException
     {
-        this.order = order;
+        int skipped = 0;
+        if(targetGroupId == null)
+        {
+            if (selectLocationBean.getTargetGroup() != null)
+            {
+                targetGroupId = selectLocationBean.getTargetGroup().getId();
+                targetFolderId = selectLocationBean.getTargetFolder().getId();
+            }
+            else throw new IllegalArgumentException("group_resources.target_not_exists");
+        }
+
+        if(targetGroupId != 0)
+        {
+            Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+            if(!targetGroup.canAddResources(getUser())) throw new IllegalAccessError("group_resources.target_permissions");
+        }
+
+        for(Folder folder : items.getFolders())
+        {
+            if(isDeleteRestricted(folder))
+            {
+                skipped++;
+                continue;
+            }
+
+            folder.moveTo(targetGroupId, targetFolderId);
+
+            log(Action.move_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+        }
+
+        for(Resource resource : items.getResources())
+        {
+            if(isDeleteRestricted(resource))
+            {
+                skipped++;
+                continue;
+            }
+
+            resource.moveTo(targetGroupId, targetFolderId);
+
+            log(Action.move_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+        }
+
+        if(skipped > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+        if(items.getTotal() - skipped > 0)
+        {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.getTotal() - skipped);
+            resetResources();
+        }
+    }
+
+    private void deleteResources(ResourceUpdateBatch items) throws SQLException
+    {
+        int skipped = 0;
+
+        for(Folder folder : items.getFolders())
+        {
+            if(isDeleteRestricted(folder))
+            {
+                skipped++;
+                continue;
+            }
+
+            folder.delete();
+            log(Action.deleting_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
+
+            if(rightPaneBean.isTheResourceClicked(folder)) rightPaneBean.resetPane();
+            if(folder.equals(currentFolder)) currentFolder = null;
+        }
+
+        for(Resource resource : items.getResources())
+        {
+            if(isDeleteRestricted(resource))
+            {
+                skipped++;
+                continue;
+            }
+
+            resource.delete();
+            log(Action.deleting_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+
+            if(rightPaneBean.isTheResourceClicked(resource)) rightPaneBean.resetPane();
+        }
+
+        if(items.getTotal() - skipped > 0)
+        {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", items.getTotal() - skipped);
+            resetResources();
+        }
+
+        if(skipped > 0)
+        {
+            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+        }
+    }
+
+    private void tagResources(ResourceUpdateBatch items, String tag) throws SQLException
+    {
+        int skipped = 0;
+        for(Resource resource : items.getResources())
+        {
+            if(!resource.canAnnotateResource(getUser()))
+            {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.denied_annotate", resource.getTitle());
+                skipped++;
+                continue;
+            }
+
+            resource.addTag(tag, getUser());
+            log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
+        }
+
+        if(!items.getResources().isEmpty())
+        {
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.annotated_successfully", items.getResources().size());
+        }
+
+        if(skipped > 0)
+        {
+            addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
+        }
+    }
+
+    private boolean isDeleteRestricted(AbstractResource resource) throws SQLException
+    {
+        if(!resource.isEditPossible())
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.denied_locked", resource.getTitle());
+            return true;
+        }
+
+        if(!resource.canDeleteResource(getUser()))
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "group_resources.denied_delete", resource.getTitle());
+            return true;
+        }
+
+        return false;
+    }
+
+    /* ------------------------ Properties getters/setters ------------------------ */
+
+    public Group getGroup()
+    {
+        return group;
+    }
+
+    public Folder getCurrentFolder()
+    {
+        return currentFolder;
+    }
+
+    public TreeNode getSelectedTreeNode()
+    {
+        return selectedTreeNode;
+    }
+
+    public void setSelectedTreeNode(TreeNode selectedTreeNode)
+    {
+        this.selectedTreeNode = selectedTreeNode;
+    }
+
+    public boolean isGridView()
+    {
+        return gridView;
+    }
+
+    public void setGridView(boolean gridView)
+    {
+        this.gridView = gridView;
+    }
+
+    public String getQuery()
+    {
+        return query;
+    }
+
+    public void setQuery(String query)
+    {
+        if(StringUtils.isBlank(query))
+        {
+            this.query = null;
+        }
+        else if(!query.equalsIgnoreCase(this.query))
+        {
+            this.query = query;
+            log(Action.group_resource_search, group.getId(), 0, query);
+        }
+    }
+
+    public SearchFilters getSearchFilters()
+    {
+        return searchFilters;
     }
 
     public void setSearchFilters(SearchFilters searchFilters)
@@ -413,53 +673,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.searchFilters = searchFilters;
     }
 
-    public void setPaginator(AbstractPaginator paginator)
-    {
-        this.paginator = paginator;
-    }
-
-    public List<Folder> getBreadcrumbs()
-    {
-        return breadcrumbs;
-    }
-
-    public void setBreadcrumbs(List<Folder> breadcrumbs)
-    {
-        this.breadcrumbs = breadcrumbs;
-    }
-
-    private void buildBreadcrumbsForFolder(Folder folder)
-    {
-        breadcrumbs = new ArrayList<>();
-
-        try
-        {
-            addFolderToBreadcrumbs(folder);
-        }
-        catch(SQLException e)
-        {
-            log.warn("Can not get parent folder.");
-        }
-    }
-
-    private void addFolderToBreadcrumbs(Folder folder) throws SQLException
-    {
-        if(folder != null && folder.getId() != 0)
-        {
-            breadcrumbs.add(0, folder);
-            addFolderToBreadcrumbs(folder.getParentFolder());
-        }
-    }
-
-    public RightPaneBean getRightPaneBean()
-    {
-        return rightPaneBean;
-    }
-
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
-    {
-        this.rightPaneBean = rightPaneBean;
-    }
+    /* ------------------------ Beans getters/setters ------------------------ */
 
     public AddResourceBean getAddResourceBean()
     {
@@ -481,642 +695,23 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.addFolderBean = addFolderBean;
     }
 
-    public void actionOpenFolder()
+    public RightPaneBean getRightPaneBean()
     {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
-        try
-        {
-            int folderId = StringHelper.parseInt(params.get("itemId"));
-            if(folderId > 0)
-            {
-                Folder folder = getLearnweb().getGroupManager().getFolder(folderId);
-                if(folder != null)
-                    this.setSelectedFolder(folder);
-                else
-                    throw new NullPointerException("Target folder does not exists");
-            }
-            else
-            {
-                this.setSelectedFolder(null);
-            }
-        }
-        catch(NullPointerException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
+        return rightPaneBean;
     }
 
-    public void actionSelectGroupItem()
+    public void setRightPaneBean(RightPaneBean rightPaneBean)
     {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
-        try
-        {
-            String itemType = params.get("itemType");
-            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
-
-            if(itemType != null && itemType.equals("folder") && itemId > 0)
-            {
-                Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                if(folder != null)
-                    rightPaneBean.setViewResource(folder);
-                else
-                    throw new NullPointerException("Target folder does not exists");
-            }
-            else if(itemType != null && itemType.equals("resource") && itemId > 0)
-            {
-                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null)
-                {
-                    rightPaneBean.setViewResource(resource);
-                }
-                else
-                    throw new NullPointerException("Target resource does not exists");
-            }
-            else
-            {
-                throw new NullPointerException("Unsupported element type");
-            }
-        }
-        catch(NullPointerException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
+        this.rightPaneBean = rightPaneBean;
     }
 
-    public void actionEditGroupItem()
+    public SelectLocationBean getSelectLocationBean()
     {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        try
-        {
-            String itemType = params.get("itemType");
-            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
-
-            AbstractResource resource = getLearnweb().getGroupManager().getAbstractResource(itemType, itemId);
-            if(resource != null && resource.canEditResource(getUser()))
-            {
-                rightPaneBean.setEditResource(resource);
-            }
-            else
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it");
-            }
-        }
-        catch(NullPointerException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
+        return selectLocationBean;
     }
 
-    public void actionCreateGroupItem() throws IllegalAccessException, InvocationTargetException, IOException
+    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
     {
-        String type = getParameter("type");
-
-        // Set target group and folder in beans
-        switch(type)
-        {
-        case "folder":
-            addFolderBean.reset();
-            addFolderBean.setTarget(group, selectedFolder);
-            break;
-        default:
-            addResourceBean.reset();
-            addResourceBean.setTarget(group, selectedFolder);
-            addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-            break;
-        }
-
-        // Set target view and defaults
-        switch(type)
-        {
-        case "folder":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
-            break;
-        case "file":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.file);
-            break;
-        case "url":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.website);
-            addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
-            break;
-        case "glossary2":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.setResourceTypeGlossary();
-            break;
-        case "survey":
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
-            addResourceBean.getResource().setType(ResourceType.survey);
-            break;
-        case "newFile":
-            ResourceType docType = ResourceType.parse(getParameter("docType"));
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
-            addResourceBean.getResource().setType(docType);
-            break;
-        default:
-            log.warn("Unsupported item type: " + type);
-            break;
-        }
-    }
-
-    public void actionUpdateGroupItems()
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String action = params.get("action");
-
-        try
-        {
-            JSONArray items = new JSONArray(params.get("items"));
-
-            switch(action)
-            {
-            case "copy":
-                this.actionCopyGroupItems(items);
-                break;
-            case "move":
-                JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
-                this.moveGroupItems(items, dest);
-                break;
-            case "delete":
-                this.deleteGroupItems(items);
-                break;
-            case "add-tag":
-                String tag = params.get("tag");
-                this.addTagToGroupItems(items, tag);
-                break;
-            default:
-                log.error("Unsupported action: " + action);
-                break;
-            }
-        }
-        catch(JSONException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    private void actionCopyGroupItems(JSONArray objects)
-    {
-        try
-        {
-            int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
-
-            if(!getGroup().canViewResources(getUser()))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource.");
-                return;
-            }
-
-            if(targetGroupId != 0)
-            {
-                Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-                if(targetGroup == null)
-                {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target group is wrong and not exists.");
-                    return;
-                }
-
-                if(!targetGroup.canAddResources(getUser()))
-                {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
-                    return;
-                }
-            }
-
-            // TODO Oleh
-            // TODO Dupe: duplicate exists in my MyResourceBean.actionCopyGroupItems
-            for(int i = 0, len = objects.length(); i < len; ++i)
-            {
-                JSONObject item = objects.getJSONObject(i);
-                String itemType = item.getString("itemType");
-                int itemId = item.getInt("itemId");
-                if(itemType != null && itemType.equals("resource") && itemId > 0)
-                {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if(resource != null)
-                    {
-                        Resource newResource = resource.clone();
-                        newResource.setGroupId(targetGroupId);
-                        newResource.setFolderId(targetFolderId);
-                        resource = getUser().addResource(newResource);
-
-                        numResources++;
-                        log(Action.adding_resource, targetGroupId, resource.getId());
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Target resource does not exists on actionCopyGroupItems");
-                    }
-                }
-                else
-                {
-                    numSkipped++;
-                    log.warn("Unsupported itemType");
-                }
-            }
-
-            if(numFolders + numResources > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
-            }
-
-            if(numSkipped > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
-            }
-        }
-        catch(NullPointerException | JSONException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    private void moveGroupItems(JSONArray objects, JSONObject dest)
-    {
-        try
-        {
-            int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
-
-            if(dest != null)
-            {
-                try
-                {
-                    targetGroupId = Integer.parseInt(dest.getString("groupId"));
-                }
-                catch(JSONException | NumberFormatException e)
-                {
-                    targetGroupId = groupId;
-                }
-
-                try
-                {
-                    targetFolderId = Integer.parseInt(dest.getString("folderId"));
-                }
-                catch(JSONException | NumberFormatException e)
-                {
-                    targetFolderId = 0;
-                }
-            }
-
-            if(targetGroupId != 0)
-            {
-                Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-                if(!targetGroup.canAddResources(getUser()))
-                {
-                    addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
-                    return;
-                }
-            }
-
-            for(int i = 0, len = objects.length(); i < len; ++i)
-            {
-                JSONObject item = objects.getJSONObject(i);
-                String itemType = item.getString("itemType");
-                int itemId = item.getInt("itemId");
-                if(itemType != null && itemType.equals("folder") && itemId > 0)
-                {
-                    Folder sourceFolder = getLearnweb().getGroupManager().getFolder(itemId);
-                    if(sourceFolder != null)
-                    {
-                        if(!sourceFolder.canDeleteResource(getUser()))
-                        {
-                            numSkipped++;
-                            log.warn("The user don't have permissions to delete folder which it want to move.");
-                            continue;
-                        }
-
-                        if(!sourceFolder.isEditPossible())
-                        {
-                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceFolder.getLockUsername());
-                            return;
-                        }
-
-                        log(Action.move_folder, sourceFolder.getGroupId(), itemId, sourceFolder.getTitle());
-                        sourceFolder.moveTo(targetGroupId, targetFolderId);
-                        numFolders++;
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Source folder does not exists on actionMoveGroupItems");
-                    }
-                }
-                else if(itemType != null && itemType.equals("resource") && itemId > 0)
-                {
-                    Resource sourceResource = getLearnweb().getResourceManager().getResource(itemId);
-                    if(sourceResource != null)
-                    {
-                        if(!sourceResource.canDeleteResource(getUser()))
-                        {
-                            numSkipped++;
-                            log.warn("The user don't have permissions to delete resource which it want to move.");
-                            continue;
-                        }
-
-                        if(!sourceResource.isEditPossible())
-                        {
-                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", sourceResource.getLockUsername());
-                            return;
-                        }
-
-                        log(Action.move_resource, sourceResource.getGroupId(), itemId, sourceResource.getTitle());
-                        sourceResource.moveTo(targetGroupId, targetFolderId);
-                        numResources++;
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Target folder does not exists on actionMoveGroupItems");
-                    }
-                }
-                else
-                {
-                    numSkipped++;
-                    log.warn("Unsupported itemType");
-                }
-            }
-
-            if(numFolders + numResources > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
-                if(numResources > 0)
-                    this.updateResourcesFromSolr();
-            }
-
-            if(numSkipped > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
-            }
-        }
-        catch(NullPointerException | JSONException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    private void deleteGroupItems(JSONArray objects)
-    {
-        try
-        {
-            int numFolders = 0, numResources = 0, numSkipped = 0;
-
-            for(int i = 0, len = objects.length(); i < len; ++i)
-            {
-                JSONObject item = objects.getJSONObject(i);
-
-                String itemType = item.getString("itemType");
-                int itemId = item.getInt("itemId");
-
-                if(itemType != null && itemType.equals("folder") && itemId > 0)
-                {
-                    Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                    if(folder != null)
-                    {
-                        if(!folder.canDeleteResource(getUser()))
-                        {
-                            numSkipped++;
-                            log.warn("The user don't have permissions to delete folder in target group.");
-                            continue;
-                        }
-
-                        if(!folder.isEditPossible())
-                        {
-                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", folder.getLockUsername());
-                            return;
-                        }
-
-                        int folderGroupId = folder.getGroupId();
-                        String folderName = folder.getTitle();
-                        if(rightPaneBean.isTheResourceClicked(folder))
-                            rightPaneBean.resetPane();
-
-                        if(selectedFolder != null && selectedFolder.equals(folder))
-                            selectedFolder = null;
-
-                        folder.delete();
-                        numFolders++;
-
-                        log(Action.deleting_folder, folderGroupId, itemId, folderName);
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Target folder does not exists on actionDeleteGroupItems");
-                    }
-                }
-                else if(itemType != null && itemType.equals("resource") && itemId > 0)
-                {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if(resource != null)
-                    {
-                        if(!resource.canDeleteResource(getUser()))
-                        {
-                            numSkipped++;
-                            log.warn("The use don't have permissions to delete resource in target group.");
-                            continue;
-                        }
-
-                        if(!resource.isEditPossible())
-                        {
-                            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
-                            return;
-                        }
-
-                        int resourceGroupId = resource.getGroupId();
-                        String resourceTitle = resource.getTitle();
-                        if(rightPaneBean.isTheResourceClicked(resource))
-                            rightPaneBean.resetPane();
-
-                        resource.delete();
-                        numResources++;
-
-                        log(Action.deleting_resource, resourceGroupId, itemId, resourceTitle);
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Target resource does not exists on actionDeleteGroupItems");
-                    }
-                }
-                else
-                {
-                    numSkipped++;
-                    log.warn("Unsupported itemType");
-                }
-            }
-
-            if(numFolders + numResources > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
-                if(numResources > 0)
-                {
-                    this.updateResourcesFromSolr();
-                    rightPaneBean.resetPane();
-                }
-            }
-
-            if(numSkipped > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
-            }
-        }
-        catch(NullPointerException | JSONException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    private void addTagToGroupItems(JSONArray objects, String tag)
-    {
-        try
-        {
-            int numResources = 0, numSkipped = 0;
-            if(!getGroup().canAnnotateResources(getUser()))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this resource");
-                return;
-            }
-
-            // TODO Oleh
-            // TODO Dupe: duplicate exists in my MyResourceBean.addTagToGroupItems
-            for(int i = 0, len = objects.length(); i < len; ++i)
-            {
-                JSONObject item = objects.getJSONObject(i);
-
-                String itemType = item.getString("itemType");
-                int itemId = item.getInt("itemId");
-
-                if(itemType != null && itemType.equals("resource") && itemId > 0)
-                {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if(resource != null)
-                    {
-                        resource.addTag(tag, getUser());
-                        numResources++;
-                        log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
-                    }
-                    else
-                    {
-                        numSkipped++;
-                        log.warn("Target resource does not exists on actionAddTagToGroupItems");
-                    }
-                }
-                else
-                {
-                    numSkipped++;
-                    log.warn("Unsupported itemType");
-                }
-            }
-
-            if(numResources > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
-            }
-
-            if(numSkipped > 0)
-            {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
-            }
-        }
-        catch(NullPointerException | JSONException | SQLException e)
-        {
-            addErrorMessage(e);
-        }
-    }
-
-    //allow switching between grid and list view of group resources - chloe
-    public boolean isGridView()
-    {
-        return gridView;
-    }
-
-    public void setGridView(boolean gridView)
-    {
-        this.gridView = gridView;
-    }
-
-    /**
-     * Method is only used by the YELL search interface
-     * 
-     * @return
-     */
-    public List<String> getAuthors()
-    {
-
-        //get the list of unique authors from database
-        try
-        {
-            if(null == this.group)
-            {
-                // Philipp: This error occurs very often. I don't understand why.
-                // TODO remove this method and replace it with SOLR facets
-                log.warn("group must not be null; " + BeanHelper.getRequestSummary());
-                return null;
-            }
-
-            authors = new ArrayList<>();
-            List<Resource> resources = this.group.getResources();
-
-            for(Resource resource : resources)
-            {
-                String exist = "false";
-
-                if((resource.getAuthor() != null) && (resource.getAuthor().length() != 0))
-                {
-
-                    for(String author : authors)
-                    {
-                        if(author.equalsIgnoreCase(resource.getAuthor().trim()))
-                        {
-                            exist = "true";
-                        }
-                    }
-
-                    if(exist.equals("false"))
-                    {
-                        authors.add(resource.getAuthor().trim());
-                    }
-                }
-            }
-        }
-        catch(SQLException e)
-        {
-            addErrorMessage(e);
-        }
-
-        return authors;
-    }
-
-    public void setAuthors(List<String> authors)
-    {
-        this.authors = authors;
-
-    }
-
-    public void logQuery(String query, String searchFilters)
-    {
-        searchLogId = getSearchLogger().logGroupQuery(group, query, searchFilters, UtilBean.getUserBean().getLocaleCode(), getUser());
-    }
-
-    private void logResources(List<ResourceDecorator> resources, int pageId)
-    {
-        /*if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
-            getSearchLogger().logResources(searchId, resources);*/
-
-        //call the method to fetch the html of the logged resources
-        //only if search_mode='text' and userId is admin/specificUser
-        if(searchLogId > 0)
-            getSearchLogger().logResources(searchLogId, resources, pageId);
-    }
-
-    private SearchLogManager getSearchLogger() // TODO remove just use getLearnweb().getSearchLogManager() which is already cached
-    {
-        if(searchLogger == null)
-            searchLogger = Learnweb.getInstance().getSearchLogManager();
-
-        return searchLogger;
+        this.selectLocationBean = selectLocationBean;
     }
 }

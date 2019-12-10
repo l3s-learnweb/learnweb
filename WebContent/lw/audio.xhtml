@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  lang="#{userBean.localeCode}">
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -13,26 +13,23 @@
 
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>Video</title>
+		<title>#{msg.audio}</title>
 
-		<h:outputStylesheet name="vendor/video-js-v7.6.5/video-js.min.css"/>
-		<h:outputScript name="vendor/video-js-v7.6.5/video.min.js"/>
+		<h:outputStylesheet name="vendor/video-js-v7.6.6/video-js.min.css"/>
+		<h:outputScript name="vendor/video-js-v7.6.6/video.core.novtt.min.js" target="body"/>
 
 		<base href="#{request.contextPath}/lw/"/>
 
 		<style type="text/css">
-		html, body { height:100%; margin:0; padding:0; }
+			html, body { height: 100%; margin: 0; padding: 0; }
 		</style>
 	</h:head>
 
 	<h:body>
-		<audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}' height="100%" width="100%"
-			   poster="#{resourceBean.resource.thumbnail2.url}">
+		<audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" controls="controls" preload="none" data-setup="{}"
+			   poster="#{resourceBean.resource.thumbnail3.url}" title="#{resourceBean.resource.title}">
 			<source src="#{resourceBean.resource.fileUrl}" type="#{resourceBean.resource.format}"/>
-			<p class="vjs-no-js">
-				To listen this audio please enable JavaScript, and consider upgrading to a web browser that
-				<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 audio</a>
-			</p>
+			<p class="vjs-no-js">To listen this audio please enable JavaScript, and consider upgrading to a web browser that supports HTML5 audio</p>
 		</audio>
-	</h:body> 
+	</h:body>
 </html>

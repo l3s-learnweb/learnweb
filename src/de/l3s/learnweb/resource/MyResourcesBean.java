@@ -202,7 +202,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
         try
         {
-            int folderId = StringHelper.parseInt(params.get("itemId"));
+            int folderId = StringHelper.parseInt(params.get("folderId"));
             if(!isRootFolder() && folderId > 0)
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(folderId);
@@ -315,12 +315,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
             if(numResources > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
+                addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.annotated_successfully", numResources);
             }
 
             if(numSkipped > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", numSkipped);
             }
         }
         catch(NullPointerException | JSONException | SQLException e)
@@ -408,12 +408,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
             if(numFolders + numResources > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
+                addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", numFolders + numResources);
             }
 
             if(numSkipped > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", numSkipped);
             }
         }
         catch(NullPointerException | JSONException | SQLException e)
@@ -529,12 +529,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
             if(numFolders + numResources > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
+                addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", numFolders + numResources);
             }
 
             if(numSkipped > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", numSkipped);
             }
         }
         catch(NullPointerException | JSONException | SQLException e)
@@ -586,14 +586,14 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
             if(numResources > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numResources);
+                addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", numResources);
                 updateResources();
                 rightPaneBean.resetPane();
             }
 
             if(numSkipped > 0)
             {
-                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+                addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", numSkipped);
             }
         }
         catch(NullPointerException | JSONException | SQLException e)

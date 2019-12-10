@@ -111,10 +111,8 @@ public class SearchLogManager
         return -1;
     }
 
-    public int logGroupQuery(final Group group, final String query, String searchFilters, final String language, final User user)
+    public int logGroupQuery(final int groupId, final String query, String searchFilters, final String language, final int userId)
     {
-        int userId = user == null ? 0 : user.getId();
-
         if(searchFilters == null)
             searchFilters = "";
         else if(searchFilters.length() > 1000)
@@ -122,11 +120,11 @@ public class SearchLogManager
 
         try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS_FOR_GROUP + ") VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS))
         {
-            insert.setInt(1, group.getId());
+            insert.setInt(1, groupId);
             insert.setString(2, query);
             insert.setString(3, SearchMode.group.name());
             insert.setString(4, ResourceService.learnweb.name());
-            insert.setString(5, language);
+            insert.setString(5, language == null ? "" : language);
             insert.setString(6, searchFilters);
             insert.setInt(7, userId);
             insert.executeUpdate();
@@ -142,7 +140,7 @@ public class SearchLogManager
         }
         catch(Exception e)
         {
-            log.error("Could not log query=" + query + "; filters=" + searchFilters + "; group title=" + group.getTitle() + "; user=" + user + ";", e);
+            log.error("Could not log query=" + query + "; filters=" + searchFilters + "; group=" + groupId + "; user=" + userId + ";", e);
         }
         return -1;
     }

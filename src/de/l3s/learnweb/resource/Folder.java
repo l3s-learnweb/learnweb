@@ -123,6 +123,28 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
     }
 
+    public boolean isChildOf(int folderId) throws SQLException
+    {
+        if (folderId == 0) return true;
+
+        Folder parentFolder = this.getParentFolder();
+        while(parentFolder != null)
+        {
+            if (parentFolder.getId() == folderId) return true;
+            parentFolder = parentFolder.getParentFolder();
+        }
+
+        return false;
+    }
+
+    public boolean isParentOf(int folderId) throws SQLException
+    {
+        if (folderId == 0) return false;
+
+        Folder parentFolder = Learnweb.getInstance().getGroupManager().getFolder(folderId);
+        return parentFolder.isChildOf(getId());
+    }
+
     @Override
     public String getTitle()
     {
@@ -269,9 +291,10 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         return Learnweb.getInstance().getGroupManager().saveFolder(this);
     }
 
-    public Folder moveTo(int newGroupId, int newParentFolderId) throws SQLException
+    @Override
+    public void moveTo(int newGroupId, int newParentFolderId) throws SQLException
     {
-        return Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
+        Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
     }
 
     @Override

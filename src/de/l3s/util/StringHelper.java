@@ -148,6 +148,12 @@ public class StringHelper
         return out.toString();
     }
 
+    /**
+     * TODO: should be replaced by StringUtils.join
+     * @param list
+     * @param delimiter
+     * @return
+     */
     public static String implodeInt(Collection<Integer> list, String delimiter)
     {
         StringBuilder out = new StringBuilder();

@@ -31,12 +31,13 @@
             <h:outputText value="* #{msg.mandatory_field}"/>
         </div>
         <div class="col text-right">
+            <p:defaultCommand target="createFileButton"/>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true"
                              actionListener="#{addResourceBean.reset}">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 
-            <p:commandButton id="create_file_button" value="#{msg.create}" global="false"
+            <p:commandButton id="createFileButton" value="#{msg.create}" global="false"
                              update=":growl :right_pane" actionListener="#{addResourceBean.createDocument}" onstart="PF('rightPaneOverlay').show()"
                              oncomplete="PF('rightPaneOverlay').hide();resourceAddedHook();load_lightbox_editor();">
                 <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
