@@ -36,7 +36,7 @@
         </ui:fragment>
 
         <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
-            <div class="preview-wrapper">
+            <div class="preview-wrapper d-flex">
                 <h:outputText value='#{res.embedded}' escape="false"/>
             </div>
         </ui:fragment>
