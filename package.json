@@ -15,20 +15,20 @@
   "scripts": {
     "scss:watch": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed --watch",
     "scss:build": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed",
-    "scss:lint": "stylelint WebContent/resources/learnweb-layout/sass/**/*.scss !WebContent/resources/learnweb-layout/sass/vendor/**",
+    "scss:lint": "stylelint WebContent/resources/learnweb-layout/sass",
     "js:lint": "eslint WebContent/resources/learnweb-layout/js/**"
   },
   "devDependencies": {
-    "browserslist": "^4.7.0",
-    "eslint": "^6.5.0",
+    "browserslist": "^4.8.2",
+    "eslint": "^6.7.2",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-compat": "^3.3.0",
     "eslint-formatter-gitlab": "^1.1.0",
-    "sass": "^1.22.12",
-    "stylelint": "^11.0.0",
-    "stylelint-config-sass-guidelines": "^6.1.0",
-    "stylelint-no-unsupported-browser-features": "^3.0.2"
+    "sass": "^1.23.7",
+    "stylelint": "^12.0.0",
+    "stylelint-config-sass-guidelines": "^6.2.0",
+    "stylelint-no-unsupported-browser-features": "^4.0.0"
   },
   "eslintConfig": {
     "extends": [
@@ -111,6 +111,10 @@
       "selector-pseudo-element-blacklist": [
         "selection"
       ]
-    }
+    },
+    "ignoreFiles": [
+      "**/node_modules/**",
+      "**/vendor/**"
+    ]
   }
 }
