@@ -2,24 +2,27 @@ package de.l3s.learnweb.dashboard.glossary;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.bar.BarChartDataSet;
 import org.primefaces.model.charts.bar.BarChartModel;
+import org.primefaces.model.charts.line.LineChartDataSet;
+import org.primefaces.model.charts.line.LineChartModel;
+import org.primefaces.model.charts.pie.PieChartDataSet;
+import org.primefaces.model.charts.pie.PieChartModel;
 
 import de.l3s.learnweb.beans.ColorUtils;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.logging.ActionCategory;
 import de.l3s.util.MapHelper;
-import org.primefaces.model.charts.bar.BarChartOptions;
-import org.primefaces.model.charts.line.LineChartDataSet;
-import org.primefaces.model.charts.line.LineChartModel;
-import org.primefaces.model.charts.optionconfig.tooltip.Tooltip;
-import org.primefaces.model.charts.pie.PieChartDataSet;
-import org.primefaces.model.charts.pie.PieChartModel;
 
 class GlossaryDashboardChartsFactory
 {
@@ -97,7 +100,8 @@ class GlossaryDashboardChartsFactory
         }
         else
         {
-            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet()) {
+            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
+            {
 
                 labels.add(source.getKey());
                 values.add(source.getValue());
@@ -119,7 +123,7 @@ class GlossaryDashboardChartsFactory
         ChartData data = new ChartData();
         LineChartDataSet dataSet = new LineChartDataSet();
 
-        List<Number> values = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
         dataSet.setData(values);

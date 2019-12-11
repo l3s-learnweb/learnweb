@@ -29,7 +29,7 @@ public class ActivityDashboardChartsFactory
         {
             LineChartDataSet dataSet = new LineChartDataSet();
 
-            List<Number> values = new ArrayList<>();
+            List<Object> values = new ArrayList<>();
             List<String> labels = new ArrayList<>();
 
             dataSet.setData(values);
@@ -51,8 +51,8 @@ public class ActivityDashboardChartsFactory
                 values.add(activityData.getActionsPerDay().getOrDefault(dateKey, 0));
             }
 
-                chartData.addChartDataSet(dataSet);
-                chartData.setLabels(labels);
+            chartData.addChartDataSet(dataSet);
+            chartData.setLabels(labels);
         }
 
         model.setData(chartData);

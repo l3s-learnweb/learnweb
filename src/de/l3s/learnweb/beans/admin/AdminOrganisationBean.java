@@ -17,7 +17,7 @@ import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.LanguageBundle;
 import de.l3s.learnweb.Learnweb;
@@ -69,14 +69,14 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
         try
         {
-            FileInfo fileInfo = fileInspector.inspect(uploadedFile.getInputstream(), uploadedFile.getFileName());
+            FileInfo fileInfo = fileInspector.inspect(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
             File file = new File();
             file.setType(TYPE.SYSTEM_FILE);
             file.setName(fileInfo.getFileName());
             file.setMimeType(fileInfo.getMimeType());
 
-            file = getLearnweb().getFileManager().save(file, uploadedFile.getInputstream());
+            file = getLearnweb().getFileManager().save(file, uploadedFile.getInputStream());
 
             if(organisation.getBannerImageFileId() > 0) // delete old image first
             {

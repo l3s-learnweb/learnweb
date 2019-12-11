@@ -82,6 +82,7 @@ oauth-client-1.5.jar				            Interweb
 oauth-signature-1.5.jar				            Interweb
 opentest4j-1.1.1.jar				            Required by JUnit5 for tests
 org.json-20180813.jar						    TEDx transcript, generating JSON from XML String
+owasp-java-html-sanitizer-20191001.1.jar		Required by p:texteditor
 pdf-renderer-1.0.5.1.jar			            ResourcePreviewMaker
 poi-4.1.0.jar                                   Primefaces table exporter, added by Rishita Kalyani
 prettytime-4.0.0.Final.jar			            Date formatting

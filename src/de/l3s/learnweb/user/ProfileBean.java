@@ -159,7 +159,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getUser().setImage(event.getFile().getInputstream());
+            getUser().setImage(event.getFile().getInputStream());
             getUser().save();
         }
         catch(IllegalArgumentException e) // image is smaller than 100px

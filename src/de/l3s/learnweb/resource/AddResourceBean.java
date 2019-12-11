@@ -14,10 +14,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.util.UrlHelper;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -26,6 +25,7 @@ import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.glossary.GlossaryResource;
 import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
+import de.l3s.util.UrlHelper;
 
 @Named
 @ViewScoped
@@ -78,14 +78,14 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             log.debug("Getting the fileInfo from uploaded file...");
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
-            FileInfo info = rme.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
+            FileInfo info = rme.getFileInfo(uploadedFile.getInputStream(), uploadedFile.getFileName());
 
             log.debug("Saving the file...");
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
             file.setDownloadLogActivated(true);
 
             FileManager fileManager = getLearnweb().getFileManager();
-            fileManager.save(file, uploadedFile.getInputstream());
+            fileManager.save(file, uploadedFile.getInputStream());
 
             resource.addFile(file);
             resource.setUrl(file.getUrl());
@@ -149,7 +149,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource.setSource(ResourceService.learnweb);
         resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
 
-        try (FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType())))
+        try(FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType())))
         {
             log.debug("Getting the fileInfo from uploaded file...");
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -186,7 +186,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if (!targetGroup.canAddResources(getUser()))
+            if(!targetGroup.canAddResources(getUser()))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "group.you_cant_add_resource", targetGroup.getTitle());
                 return;
@@ -204,8 +204,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             log(Action.adding_resource, resource.getGroupId(), resource.getId());
             //detailed logging of new metadata (author, language)
-            if(resource.getAuthor() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Author");
-            if(resource.getLanguage() != null) log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Language");
+            if(resource.getAuthor() != null)
+                log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Author");
+            if(resource.getLanguage() != null)
+                log(Action.adding_resource_metadata, resource.getGroupId(), resource.getId(), "added Language");
 
             // create temporal thumbnails
             resource.postConstruct();

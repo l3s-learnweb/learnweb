@@ -13,7 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Row;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 public class GlossaryXLSParser
 {
@@ -45,7 +45,7 @@ public class GlossaryXLSParser
 
     public GlossaryParserResponse parseGlossaryEntries() throws IOException
     {
-        POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputstream());
+        POIFSFileSystem fs = new POIFSFileSystem(uploadedFile.getInputStream());
         try(HSSFWorkbook wb = new HSSFWorkbook(fs))
         {
             HSSFSheet sheet = wb.getSheetAt(0);
