@@ -48,7 +48,8 @@ public class User implements Comparable<User>, Serializable, HasId
     public enum PasswordHashing
     {
         MD5,
-        PBKDF2
+        PBKDF2,
+        EMPTY
     }
 
     public static final int GENDER_MALE = 1;
