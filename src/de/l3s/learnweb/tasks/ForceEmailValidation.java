@@ -12,7 +12,7 @@ import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
 
 /**
- * Find webpage resources that have no thumbnail and create it
+ * Resent the email authentication link for selected users
  *
  * @author Kemkes
  *
@@ -30,16 +30,13 @@ public class ForceEmailValidation
      */
     public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
         UserManager um = learnweb.getUserManager();
 
-        /*
-        String query = "SELECT distinct s.user_id  FROM `lw_user_course` s " +
-                "left join lw_user_course t on s.user_id = t.user_id and t.`course_id` = 1250 " +
-                "WHERE s.`course_id` IN (1338,1348,1349) and t.user_id is null";
-        */
+        if(!Learnweb.getInstance().getServerUrl().equals("https://learnweb.l3s.uni-hannover.de"))
+            throw new RuntimeException("make sure the server url is correct since it is used in the validation mail");
 
-        String query = "SELECT user_id FROM `lw_user` WHERE `email` LIKE '%uni.au.dk' AND `organisation_id` !=478 AND `phone` LIKE '2%'";
+        String query = "SELECT * FROM `lw_user` WHERE `is_email_confirmed` = 0 and organisation_id != 478 and email != '' ORDER BY `lw_user`.`registration_date` DESC ";
 
         log.debug("start");
 
@@ -56,9 +53,7 @@ public class ForceEmailValidation
             user.setEmail(mailBackup);
             */
 
-            user.setEmail(user.getStudentId() + "@post.au.dk");
             log.debug(user.getEmail());
-            user.save();
             user.sendEmailConfirmation();
         }
 
@@ -66,5 +61,4 @@ public class ForceEmailValidation
 
         learnweb.onDestroy();
     }
-
 }

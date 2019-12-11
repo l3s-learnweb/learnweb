@@ -133,7 +133,7 @@ public class Learnweb
     /**
      * This method should be used to create a Learnweb instance
      *
-     * @param serverUrl http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
+     * @param serverUrl https://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException
