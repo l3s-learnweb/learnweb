@@ -28,6 +28,15 @@
         </resource-bundle>
 
         <el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
+        
+		<system-event-listener>
+			<system-event-listener-class>
+				de.l3s.learnweb.beans.ApplicationRemoveResourcesListener
+			</system-event-listener-class>
+			<system-event-class>
+				javax.faces.event.PreRenderViewEvent
+			</system-event-class>
+	    </system-event-listener>	
     </application>
 
     <!--de.l3s.learnweb.lang.messages-->
