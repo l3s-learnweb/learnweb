@@ -371,26 +371,6 @@ public class UserBean implements Serializable
     // -------------------- Frontend ---------------------------
 
     /**
-     * Function to format Date variables in the UI depending on the users locale
-     *
-     * @param date
-     * @return
-     */
-    public String formatDate(Date date)
-    {
-        if(date != null)
-        {
-            long timeDifference = (new Date().getTime() - date.getTime());
-            if(timeDifference > 300000)
-                return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
-            else
-                return UtilBean.getLocaleMessage("a_few_minutes_ago");
-        }
-        else
-            return "";
-    }
-
-    /**
      * Returns the css code for the banner image of the active organization or an empty string if no image is defined
      *
      * @return

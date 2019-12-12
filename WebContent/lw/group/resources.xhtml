@@ -167,7 +167,7 @@
                             </div>
                         </li>
 
-                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersString != null or groupResourcesBean.query != null}">
+                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersEnabled or groupResourcesBean.query != null}">
                             <li class="clear-filters">
                                 <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
                                                action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"

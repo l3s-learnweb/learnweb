@@ -543,24 +543,6 @@ public class SearchFilters implements Serializable
         return stringFilters;
     }
 
-    public List<FilterOption> getAvailableSources(Object current)
-    {
-        List<FilterOption> filters = new ArrayList<>();
-
-        FILTERS fs = FILTERS.service;
-        if(availableResources.containsKey(fs))
-        {
-            for(Count c : availableResources.get(fs))
-            {
-                ResourceService src = ResourceService.parse(c.getName());
-                FilterOption fi = new FilterOption(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
-                filters.add(fi);
-            }
-        }
-
-        return filters;
-    }
-
     public List<Filter> getAvailableFilters()
     {
         FILTERS[] empty = {};
@@ -859,7 +841,7 @@ public class SearchFilters implements Serializable
 
     public boolean isFiltersEnabled()
     {
-        return configFilters.size() > 0;
+        return !configFilters.isEmpty();
     }
 
     public boolean isLearnwebSearchEnabled()

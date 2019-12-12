@@ -15,7 +15,7 @@
         <f:viewParam name="action" value="#{searchBean.queryMode}"/>
         <f:viewParam name="service" value="#{searchBean.queryService}"/>
         <f:viewParam name="filter" value="#{searchBean.queryFilters}"/>
-        <f:viewAction action="#{searchBean.preRenderView}"/>
+        <f:viewAction action="#{searchBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 
@@ -39,7 +39,7 @@
                          update=":resource_form" onstart="$.fancybox.close();" oncomplete="PF('resource_dialog').show();"/>
     </h:form>
 
-    <h:panelGroup id="search_header_panel" layout="block" rendered="#{searchBean.searchFilters == null}" styleClass="bg-gray200">
+    <h:panelGroup id="search_header_panel" layout="block" rendered="#{not searchBean.searchFilters.filtersEnabled}" styleClass="bg-gray200">
         <ul class="res-filters">
             <li class="filter #{searchBean.searchMode =='text' ? 'active':''}">
                 <h:link outcome="search">
@@ -148,7 +148,7 @@
                     </ul>
                 </li>
             </p:repeat>
-            <li class="filter #{(searchBean.searchFilters != null) ? 'active':'disabled'}">
+            <li class="filter #{searchBean.searchFilters.filtersEnabled ? 'active':'disabled'}">
                 <h:link value="#{msg.clear_filters}" outcome="search"
                         styleClass="d-inline-block p-2 text-body">
                     <f:param name="action" value="#{searchBean.searchMode}"/>
