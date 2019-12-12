@@ -566,7 +566,7 @@ public class SearchFilters implements Serializable
                 {
                     for(Count c : availableResources.get(fs))
                     {
-                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName().toLowerCase()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
+                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), changeFilterInUrl(fs, c.getName().toLowerCase()), c.getCount(), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
                         nf.addOption(fi);
                     }
                 }
@@ -593,7 +593,7 @@ public class SearchFilters implements Serializable
                                 continue;
                             }
                         }
-                        FilterOption fi = new FilterOption(t.toString(), counter, changeFilterInUrl(fs, t.name()), containsFilter && configFilters.get(fs).equals(t));
+                        FilterOption fi = new FilterOption(t.toString(), changeFilterInUrl(fs, t.name()), counter, containsFilter && configFilters.get(fs).equals(t));
                         nf.addOption(fi);
                     }
                 }
@@ -621,7 +621,7 @@ public class SearchFilters implements Serializable
                                 continue;
                             }
                         }
-                        FilterOption fi = new FilterOption(d.toString(), counter, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                        FilterOption fi = new FilterOption(d.toString(), changeFilterInUrl(fs, d.name()), counter, containsFilter && configFilters.get(fs).equals(d));
                         nf.addOption(fi);
                     }
                 }
@@ -638,7 +638,7 @@ public class SearchFilters implements Serializable
                     {
                         if(c.getName().isEmpty() || c.getName().equals("\n") || c.getName().equals("0"))
                             continue;
-                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), c.getCount(), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
+                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), changeFilterInUrl(fs, c.getName()), c.getCount(), containsFilter && configFilters.get(fs).equals(c.getName()));
                         nf.addOption(fi);
                     }
                 }
@@ -646,14 +646,14 @@ public class SearchFilters implements Serializable
             case videoDuration:
                 for(DURATION d : DURATION.values())
                 {
-                    FilterOption fi = new FilterOption(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                    FilterOption fi = new FilterOption(d.toString(),  changeFilterInUrl(fs, d.name()), null, containsFilter && configFilters.get(fs).equals(d));
                     nf.addOption(fi);
                 }
                 break;
             case imageSize:
                 for(SIZE d : SIZE.values())
                 {
-                    FilterOption fi = new FilterOption(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                    FilterOption fi = new FilterOption(d.toString(), changeFilterInUrl(fs, d.name()), null, containsFilter && configFilters.get(fs).equals(d));
                     nf.addOption(fi);
                 }
                 break;

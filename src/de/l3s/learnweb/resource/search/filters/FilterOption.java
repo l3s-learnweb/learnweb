@@ -12,21 +12,17 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
     private Long totalResults;
     private boolean active;
 
-    @Deprecated
-    public FilterOption(String title, Long totalResults, String value, boolean active)
+    public FilterOption(final String title, final String value)
     {
         this.title = title;
         this.value = value;
-        this.totalResults = totalResults;
-        this.active = active;
     }
 
-    public FilterOption(String title, String value, Long totalResults, boolean active)
+    public FilterOption(final String title, final String value, final Long totalResults, final boolean active)
     {
-        this.title = title;
-        this.value = value;
-        this.totalResults = totalResults;
-        this.active = active;
+        this(title, value);
+        setTotalResults(totalResults);
+        setActive(active);
     }
 
     public String getTitle()
@@ -46,7 +42,8 @@ public class FilterOption implements Serializable, Comparable<FilterOption>
 
     public void setTotalResults(final Long totalResults)
     {
-        this.totalResults = totalResults;
+        if (totalResults == null || totalResults <= 0) this.totalResults = null;
+        else this.totalResults = totalResults;
     }
 
     public boolean isActive()

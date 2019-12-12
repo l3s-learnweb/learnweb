@@ -14,7 +14,7 @@ public class Filter implements Serializable
     private boolean active;
     private List<FilterOption> options;
 
-    public Filter(String title, String anyTitle, String anyValue, boolean active)
+    public Filter(final String title, final String anyTitle, final String anyValue, final boolean active)
     {
         this.title = title;
         this.anyTitle = anyTitle;
