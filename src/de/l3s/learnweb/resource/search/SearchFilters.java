@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.filters.FilterOption;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -13,7 +15,6 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.util.StringHelper;
@@ -542,9 +543,9 @@ public class SearchFilters implements Serializable
         return stringFilters;
     }
 
-    public List<FilterItem> getAvailableSources(Object current)
+    public List<FilterOption> getAvailableSources(Object current)
     {
-        List<FilterItem> filters = new ArrayList<>();
+        List<FilterOption> filters = new ArrayList<>();
 
         FILTERS fs = FILTERS.service;
         if(availableResources.containsKey(fs))
@@ -552,7 +553,7 @@ public class SearchFilters implements Serializable
             for(Count c : availableResources.get(fs))
             {
                 ResourceService src = ResourceService.parse(c.getName());
-                FilterItem fi = new FilterItem(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
+                FilterOption fi = new FilterOption(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
                 filters.add(fi);
             }
         }
@@ -583,8 +584,8 @@ public class SearchFilters implements Serializable
                 {
                     for(Count c : availableResources.get(fs))
                     {
-                        FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName().toLowerCase()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
-                        nf.addFilterItem(fi);
+                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName().toLowerCase()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
+                        nf.addOption(fi);
                     }
                 }
                 break;
@@ -610,8 +611,8 @@ public class SearchFilters implements Serializable
                                 continue;
                             }
                         }
-                        FilterItem fi = new FilterItem(t.toString(), counter, changeFilterInUrl(fs, t.name()), containsFilter && configFilters.get(fs).equals(t));
-                        nf.addFilterItem(fi);
+                        FilterOption fi = new FilterOption(t.toString(), counter, changeFilterInUrl(fs, t.name()), containsFilter && configFilters.get(fs).equals(t));
+                        nf.addOption(fi);
                     }
                 }
                 break;
@@ -638,8 +639,8 @@ public class SearchFilters implements Serializable
                                 continue;
                             }
                         }
-                        FilterItem fi = new FilterItem(d.toString(), counter, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
-                        nf.addFilterItem(fi);
+                        FilterOption fi = new FilterOption(d.toString(), counter, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                        nf.addOption(fi);
                     }
                 }
                 break;
@@ -655,23 +656,23 @@ public class SearchFilters implements Serializable
                     {
                         if(c.getName().isEmpty() || c.getName().equals("\n") || c.getName().equals("0"))
                             continue;
-                        FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount(), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
-                        nf.addFilterItem(fi);
+                        FilterOption fi = new FilterOption(fs.getItemName(c.getName()), c.getCount(), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
+                        nf.addOption(fi);
                     }
                 }
                 break;
             case videoDuration:
                 for(DURATION d : DURATION.values())
                 {
-                    FilterItem fi = new FilterItem(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
-                    nf.addFilterItem(fi);
+                    FilterOption fi = new FilterOption(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                    nf.addOption(fi);
                 }
                 break;
             case imageSize:
                 for(SIZE d : SIZE.values())
                 {
-                    FilterItem fi = new FilterItem(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
-                    nf.addFilterItem(fi);
+                    FilterOption fi = new FilterOption(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+                    nf.addOption(fi);
                 }
                 break;
             case language:
@@ -928,131 +929,5 @@ public class SearchFilters implements Serializable
     public void setTotalResultsInterweb(Long totalResultsInterweb)
     {
         this.totalResultsInterweb = totalResultsInterweb;
-    }
-
-    public static class Filter implements Serializable
-    {
-        private static final long serialVersionUID = -6934984226460716244L;
-
-        private String name;
-        private String anyText;
-        private String anyUrl;
-        private boolean active;
-        private List<FilterItem> filterItems;
-
-        public Filter(String name, String anyText, String anyUrl, boolean active)
-        {
-            this.name = name;
-            this.anyText = anyText;
-            this.anyUrl = anyUrl;
-            this.active = active;
-            this.filterItems = new ArrayList<>();
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public void setName(String name)
-        {
-            this.name = name;
-        }
-
-        public String getAnyText()
-        {
-            return anyText;
-        }
-
-        public String getAnyUrl()
-        {
-            return anyUrl;
-        }
-
-        public void addFilterItem(FilterItem i)
-        {
-            filterItems.add(i);
-        }
-
-        public boolean isDisabled()
-        {
-            return filterItems.size() == 0;
-        }
-
-        public List<FilterItem> getItems()
-        {
-            return filterItems;
-        }
-
-        public void setItems(List<FilterItem> items)
-        {
-            this.filterItems = items;
-        }
-
-        public boolean isActive()
-        {
-            return active;
-        }
-
-        public void setActive(boolean active)
-        {
-            this.active = active;
-        }
-    }
-
-    public static class FilterItem implements Serializable, Comparable<FilterItem>
-    {
-        private static final long serialVersionUID = -4990304497787530456L;
-
-        private String name;
-        private Long counter;
-        private String filterUrl;
-        private boolean active;
-
-        public FilterItem(String name, Long counter, String filterUrl, boolean active)
-        {
-            this.name = name;
-            this.counter = counter;
-            this.filterUrl = filterUrl;
-            this.active = active;
-        }
-
-        @Override
-        public int compareTo(FilterItem another)
-        {
-            if(this.getCounter() > another.getCounter())
-            {
-                return -1;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public Long getCounter()
-        {
-            return counter;
-        }
-
-        public String getUrl()
-        {
-            return filterUrl;
-        }
-
-        public boolean isActive()
-        {
-            return active;
-        }
-
-        public void setActive(boolean active)
-        {
-            this.active = active;
-        }
     }
 }

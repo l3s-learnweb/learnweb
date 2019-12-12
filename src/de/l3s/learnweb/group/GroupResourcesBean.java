@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import de.l3s.learnweb.resource.*;
+import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.SearchMode;
 import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import de.l3s.util.HasId;
@@ -31,7 +32,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.search.SearchFilters;
-import de.l3s.learnweb.resource.search.SearchFilters.Filter;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
 

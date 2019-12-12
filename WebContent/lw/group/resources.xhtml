@@ -128,20 +128,20 @@
                         <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
                             <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
                                 <span class="filter-title">
-                                    <span class="text-truncate">#{filter.name}</span>
+                                    <span class="text-truncate">#{filter.title}</span>
                                     <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
                                 </span>
                                 <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                                     <li class="#{!filter.active ? 'active' : null}">
-                                        <p:commandLink value="#{filter.anyText}" action="#{groupResourcesBean.changeFilters(filter.anyUrl)}"
+                                        <p:commandLink value="#{filter.anyTitle}" action="#{groupResourcesBean.changeFilters(filter.anyValue)}"
                                                        update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
                                     </li>
-                                    <p:repeat value="#{filter.items}" var="item">
+                                    <p:repeat value="#{filter.options}" var="item">
                                         <li class="#{item.active ? 'active' : null}">
-                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.url)}"
+                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.value)}"
                                                            update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
-                                                <span class="text-truncate">#{item.name}</span>
-                                                <h:outputText rendered="#{item.counter != null}" value=" (#{item.counter})"/>
+                                                <span class="text-truncate">#{item.title}</span>
+                                                <h:outputText rendered="#{item.totalResults != null}" value=" (#{item.totalResults})"/>
                                             </p:commandLink>
                                         </li>
                                     </p:repeat>

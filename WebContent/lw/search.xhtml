@@ -122,21 +122,21 @@
             <p:repeat value="#{searchBean.availableFilters}" var="filter">
                 <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
                                     <span class="filter-title">
-                                        <span class="text-truncate">#{filter.name}</span>
+                                        <span class="text-truncate">#{filter.title}</span>
                                         <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
                                     </span>
                     <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
-                        <p:repeat value="#{filter.items}" var="item">
+                        <p:repeat value="#{filter.options}" var="item">
                             <li class="#{item.active ? 'active' : null}">
                                 <h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
-                                    <h:outputText value="#{item.name}"/>
+                                    <h:outputText value="#{item.title}"/>
 
-                                    <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-                                        <f:param value="#{item.counter}"/>
+                                    <h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.totalResults != null}">
+                                        <f:param value="#{item.totalResults}"/>
                                     </h:outputFormat>
 
                                     <f:param name="action" value="#{searchBean.searchMode}"/>
-                                    <f:param name="filter" value="#{item.url}"/>
+                                    <f:param name="filter" value="#{item.value}"/>
                                     <f:param name="service" value="#{searchBean.queryService}"/>
                                     <f:param name="query" value="#{searchBean.query}"/>
                                 </h:outputLink>

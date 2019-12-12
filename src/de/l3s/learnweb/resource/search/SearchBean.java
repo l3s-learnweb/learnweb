@@ -20,6 +20,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.filters.FilterOption;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.PrimeFaces;
@@ -39,8 +41,6 @@ import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
-import de.l3s.learnweb.resource.search.SearchFilters.Filter;
-import de.l3s.learnweb.resource.search.SearchFilters.FilterItem;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
 
@@ -80,7 +80,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private final static int minResourcesPerGroup = 2;
 
     private List<GroupedResources> resourcesGroupedBySource = null;
-    private List<FilterItem> availableSources = null;
+    private List<FilterOption> availableSources = null;
 
     public SearchBean()
     {
@@ -342,7 +342,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         return searchFilters.getAvailableFilters(except);
     }
 
-    public List<FilterItem> getAvailableSources()
+    public List<FilterOption> getAvailableSources()
     {
         if(availableSources == null || availableSources.size() == 0)
         {
