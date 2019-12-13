@@ -22,7 +22,7 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         LearnwebMenu menu = (LearnwebMenu) abstractMenu;
         String clientId = menu.getClientId(context);
         WidgetBuilder wb = getWidgetBuilder(context);
-        wb.init("LearnwebMenu", menu.resolveWidgetVar(), clientId);
+        wb.init("LearnwebMenu", menu.resolveWidgetVar(context), clientId);
         wb.finish();
     }
 
@@ -160,11 +160,9 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
     private void setAnchorAttributes(FacesContext context, ActiveSubMenu activeSubMenu) throws IOException
     {
         ResponseWriter writer = context.getResponseWriter();
-        setConfirmationScript(context, activeSubMenu);
-        String onclick = activeSubMenu.getOnclick();
 
         //GET
-        if(activeSubMenu.getUrl() != null || activeSubMenu.getOutcome() != null)
+        if(activeSubMenu.getHref() != null || activeSubMenu.getOutcome() != null)
         {
             String targetURL = getTargetURL(context, activeSubMenu);
             writer.writeAttribute("href", targetURL, null);
@@ -179,19 +177,6 @@ public class LearnwebMenuRenderer extends BaseMenuRenderer
         {
             writer.writeAttribute("href", "#", null);
             writer.writeAttribute("onclick", "return false;", null);
-        }
-
-        if(onclick != null)
-        {
-            if(activeSubMenu.requiresConfirmation())
-            {
-                writer.writeAttribute("data-pfconfirmcommand", onclick, null);
-                writer.writeAttribute("onclick", activeSubMenu.getConfirmationScript(), "onclick");
-            }
-            else
-            {
-                writer.writeAttribute("onclick", onclick, null);
-            }
         }
     }
 

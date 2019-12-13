@@ -514,67 +514,70 @@ public class UserBean implements Serializable
             BaseMenuModel model = new BaseMenuModel();
 
             // TODO move localization to template do not call UtilBean.getLocaleMessage here
-            // TODO use builder DefaultMenuItem.builder().title("title").build();
 
             // My resources
-            ActiveSubMenu myResources = new ActiveSubMenu(UtilBean.getLocaleMessage("myResourcesTitle"), null, su + "/lw/myhome/resources.jsf");
-            myResources.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("myPrivateResources"), "fa fa-fw fa-folder", su + "/lw/myhome/resources.jsf"));
-            myResources.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("myCommentsTitle"), "fa fa-fw fa-comments", su + "/lw/myhome/comments.jsf"));
-            myResources.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("myTagsTitle"), "fa fa-fw fa-tags", su + "/lw/myhome/tags.jsf"));
-            myResources.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("Submission.my_submissions"), "fa fa-fw fa-credit-card-alt", su + "/lw/myhome/submission_overview.jsf"));
+            ActiveSubMenu myResources = ActiveSubMenu.builder()
+                    .label(UtilBean.getLocaleMessage("myResourcesTitle"))
+                    .url(su + "/lw/myhome/resources.jsf")
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myPrivateResources")).icon("fa fa-fw fa-folder").url(su + "/lw/myhome/resources.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myCommentsTitle")).icon("fa fa-fw fa-comments").url(su + "/lw/myhome/comments.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("myTagsTitle")).icon("fa fa-fw fa-tags").url(su + "/lw/myhome/tags.jsf").build())
+                    .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Submission.my_submissions")).icon("fa fa-fw fa-credit-card-alt").url(su + "/lw/myhome/submission_overview.jsf").build())
+                    .build();
             model.getElements().add(myResources);
 
             // My groups
-            ActiveSubMenu myGroups = new ActiveSubMenu(UtilBean.getLocaleMessage("myGroups"), null, su + "/lw/myhome/groups.jsf");
+            ActiveSubMenu.Builder groupsBuilder = ActiveSubMenu.builder().label(UtilBean.getLocaleMessage("myGroups")).url(su + "/lw/myhome/groups.jsf");
             for(Group group : getUser().getGroups())
             {
-                ActiveSubMenu theGroup = new ActiveSubMenu(group.getTitle(), null, su + "/lw/group/overview.jsf?group_id=" + group.getId());
-                theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("overview"), "fa fa-fw fa-list-ul", su + "/lw/group/overview.jsf?group_id=" + group.getId()));
-                theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("resources"), "fa fa-fw fa-folder-open", su + "/lw/group/resources.jsf?group_id=" + group.getId()));
-                // theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("members"), "fa fa-fw fa-users", su + "/lw/group/members.jsf?group_id=" + group.getId()));
+                ActiveSubMenu.Builder groupBuilder = ActiveSubMenu.builder().label(group.getTitle()).url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).styleClass("ui-menuitem-group");
+                groupBuilder.addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("overview")).icon("fa fa-fw fa-list-ul").url(su + "/lw/group/overview.jsf?group_id=" + group.getId()).build());
+                groupBuilder.addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("resources")).icon("fa fa-fw fa-folder-open").url(su + "/lw/group/resources.jsf?group_id=" + group.getId()).build());
                 if(!group.getLinks().isEmpty() || !group.getDocumentLinks().isEmpty())
                 {
-                    theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("links"), "fa fa-fw fa-link", su + "/lw/group/links.jsf?group_id=" + group.getId()));
+                    groupBuilder.addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("links")).icon("fa fa-fw fa-link").url(su + "/lw/group/links.jsf?group_id=" + group.getId()).build());
                 }
-                theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("forum"), "fa fa-fw fa-comments-o", su + "/lw/group/forum.jsf?group_id=" + group.getId()));
+                groupBuilder.addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("forum")).icon("fa fa-fw fa-comments-o").url(su + "/lw/group/forum.jsf?group_id=" + group.getId()).build());
                 if(group.getCourse().isModerator(getUser()) || group.isLeader(getUser()))
                 {
-                    theGroup.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("options"), "fa fa-fw fa-sliders", su + "/lw/group/options.jsf?group_id=" + group.getId()));
+                    groupBuilder.addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("options")).icon("fa fa-fw fa-sliders").url(su + "/lw/group/options.jsf?group_id=" + group.getId()).build());
                 }
-                theGroup.setStyleClass("ui-menuitem-group");
-                myGroups.getElements().add(theGroup);
+                groupsBuilder.addElement(groupBuilder.build());
             }
-            model.getElements().add(myGroups);
+            model.getElements().add(groupsBuilder.build());
 
             // Moderator (menu hidden for user EUMADE4ALL; can be removed in 2020)
             if(getUser().isModerator() && getUser().getId() != 12476)
             {
-                DefaultSubMenu moderatorSubmenu = new DefaultSubMenu(UtilBean.getLocaleMessage("moderator"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("send_notification"), "fa fa-fw fa-envelope-open", su + "/lw/admin/notification.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("users"), "fa fa-fw fa-users", su + "/lw/admin/users.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("courses"), "fa fa-fw fa-graduation-cap", su + "/lw/admin/courses.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("organisation"), "fa fa-fw fa-sitemap", su + "/lw/admin/organisation.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("text_analysis"), "fa fa-fw fa-area-chart", su + "/lw/admin/text_analysis.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("statistics"), "fa fa-fw fa-line-chart", su + "/lw/admin/statistics.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("detailed_transcript_log"), "fa fa-fw fa-language", su + "/lw/admin/detailed_transcript_log.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("simple_transcript_log"), "fa fa-fw fa-language", su + "/lw/admin/simple_transcript_log.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("transcript_summaries"), "fa fa-fw fa-language", su + "/lw//admin/transcript_summary.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("glossary_dashboard"), "fa fa-fw fa-bar-chart", su + "/lw/dashboard/glossary.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("Activity.dashboard"), "fa fa-fw fa-line-chart", su + "/lw/dashboard/activity.jsf"));
-                moderatorSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("Tracker.dashboard"), "fa fa-fw fa-database", su + "/lw/dashboard/tracker.jsf"));
+                DefaultSubMenu moderatorSubmenu = DefaultSubMenu.builder()
+                        .label(UtilBean.getLocaleMessage("moderator"))
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("send_notification")).icon("fa fa-fw fa-envelope-open").url(su + "/lw/admin/notification.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("users")).icon("fa fa-fw fa-users").url(su + "/lw/admin/users.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("courses")).icon("fa fa-fw fa-graduation-cap").url(su + "/lw/admin/courses.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("organisation")).icon("fa fa-fw fa-sitemap").url(su + "/lw/admin/organisation.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("text_analysis")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/text_analysis.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("statistics")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/statistics.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("detailed_transcript_log")).icon("fa fa-fw fa-language").url(su + "/lw/admin/detailed_transcript_log.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("simple_transcript_log")).icon("fa fa-fw fa-language").url(su + "/lw/admin/simple_transcript_log.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("transcript_summaries")).icon("fa fa-fw fa-language").url(su + "/lw//admin/transcript_summary.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("glossary_dashboard")).icon("fa fa-fw fa-bar-chart").url(su + "/lw/dashboard/glossary.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Activity.dashboard")).icon("fa fa-fw fa-line-chart").url(su + "/lw/dashboard/activity.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("Tracker.dashboard")).icon("fa fa-fw fa-database").url(su + "/lw/dashboard/tracker.jsf").build())
+                        .build();
                 model.getElements().add(moderatorSubmenu);
             }
 
             // Admin (menu hidden for user EUMADE4ALL; can be removed in 2020)
             if(getUser().isAdmin() && getUser().getId() != 12476)
             {
-                DefaultSubMenu adminSubmenu = new DefaultSubMenu(UtilBean.getLocaleMessage("admin"));
-                adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("organisations"), "fa fa-fw fa-sitemap", su + "/lw/admin/organisations.jsf"));
-                adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("banlist"), "fa fa-fw fa-area-chart", su + "/lw/admin/banlist.jsf"));
-                adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("ip_requests"), "fa fa-fw fa-line-chart", su + "/lw/admin/requests.jsf"));
-                adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("system_tools"), "fa fa-fw fa-language", su + "/lw/admin/systemtools.jsf"));
-                /*adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("admin_messages_Title"), "fa fa-fw fa-language", su + "/lw/admin/adminmsg.jsf"));*/
-                adminSubmenu.getElements().add(new DefaultMenuItem(UtilBean.getLocaleMessage("announcements"), "fa fa-fw fa-language", su + "/lw/admin/announcements.jsf"));
+                DefaultSubMenu adminSubmenu = DefaultSubMenu.builder()
+                        .label(UtilBean.getLocaleMessage("admin"))
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("organisations")).icon("fa fa-fw fa-sitemap").url(su + "/lw/admin/organisations.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("banlist")).icon("fa fa-fw fa-area-chart").url(su + "/lw/admin/banlist.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("ip_requests")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/requests.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("system_tools")).icon("fa fa-fw fa-language").url(su + "/lw/admin/systemtools.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("announcements")).icon("fa fa-fw fa-language").url(su + "/lw/admin/announcements.jsf").build())
+                        .build();
                 model.getElements().add(adminSubmenu);
             }
 

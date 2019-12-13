@@ -2,7 +2,6 @@ package de.l3s.learnweb.component;
 
 import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;
-import org.primefaces.util.ComponentUtils;
 
 import javax.faces.component.FacesComponent;
 
@@ -83,11 +82,5 @@ public class LearnwebMenu extends AbstractMenu implements Widget
     public void setStyleClass(String styleClass)
     {
         getStateHelper().put(LearnwebMenu.PropertyKeys.styleClass, styleClass);
-    }
-
-    @Override
-    public String resolveWidgetVar()
-    {
-        return ComponentUtils.resolveWidgetVar(getFacesContext(), this);
     }
 }
