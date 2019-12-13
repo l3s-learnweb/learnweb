@@ -33,9 +33,8 @@ import de.l3s.learnweb.Learnweb;
  * Parses the mailbox every sometime and detects whether or not bounces are present. Bounced emails are
  *
  * @author Kate
- *
  */
-public class BounceManager extends Observable
+public class BounceManager
 {
     private final static Logger log = Logger.getLogger(BounceManager.class);
     private final Learnweb learnweb;
@@ -51,12 +50,10 @@ public class BounceManager extends Observable
     private static Pattern originalRecipientPattern = Pattern.compile("(?<=Original-Recipient:)(\\s.+;)(.+)\\s");
 
     private Date lastBounceCheck = null;
-    private List<Observer> observers;
 
     public BounceManager(Learnweb lw)
     {
         learnweb = lw;
-        observers = new ArrayList<>();
     }
 
     public void parseInbox() throws MessagingException, IOException
@@ -423,28 +420,6 @@ public class BounceManager extends Observable
         }
 
         store.close();
-    }
-
-    //Observable/observer methods
-    @Override
-    public void addObserver(Observer o)
-    {
-        observers.add(o);
-    }
-
-    @Override
-    public void deleteObserver(Observer o)
-    {
-        observers.remove(o);
-    }
-
-    @Override
-    public void notifyObservers(Object arg)
-    {
-        for(Observer o : observers)
-        {
-            o.update(this, arg);
-        }
     }
 
     /**
