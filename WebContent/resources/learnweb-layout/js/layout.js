@@ -285,16 +285,6 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
   this.resetPosition();
 })(PrimeFaces.widget.Dialog.prototype.show));
 
-/**
- * Reproducible in PrimeFaces 7.0
- * https://github.com/primefaces/primefaces/issues/5035 (the issue was resolved and should be released in PF 7.1)
- * Fix for PrimeFaces issue when the offset was set wrong due to scrollbar which appearing after element is visible but still not aligned.
- */
-PrimeFaces.widget.Menu.prototype.show = function () {
-  this.align();
-  this.jq.css({ 'z-index': ++PrimeFaces.zindex }).show();
-};
-
 // noinspection JSUnusedGlobalSymbols
 /**
  * This is used for adaptive PrimeFaces Carousel.
