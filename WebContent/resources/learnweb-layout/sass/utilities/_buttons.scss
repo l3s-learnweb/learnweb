@@ -18,11 +18,50 @@ body {
 
   .fileupload-minimal {
     .ui-fileupload-buttonbar {
+      padding: 0;
       background: inherit;
     }
 
     .ui-fileupload-content {
-      display: none;
+      border: none;
+      padding: 0;
+
+      .ui-fileupload-files {
+        margin: 0;
+      }
+
+      .ui-fileupload-row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+
+        > div {
+          padding: 0.125rem 0.25rem;
+        }
+      }
+
+      .ui-fileupload-filename,
+      .ui-fileupload-preview {
+        width: 100%;
+      }
+
+      .ui-fileupload-progress {
+        flex-grow: 1;
+      }
+
+      .ui-progressbar {
+        width: 100%;
+        top: 0;
+        height: 1.8rem;
+        border: 0;
+        border-radius: 0.2rem;
+        overflow: hidden;
+
+        .ui-progressbar-value {
+          border-radius: 0;
+        }
+      }
     }
   }
 }

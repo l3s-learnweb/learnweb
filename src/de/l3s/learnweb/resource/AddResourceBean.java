@@ -101,7 +101,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             createThumbnailThread.join(1000);
 
             log.debug("Next step");
-            this.formStep++;
+            formStep++;
         }
         catch(Exception e)
         {

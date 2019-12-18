@@ -40,8 +40,8 @@
         <h:outputText value="#{msg.file}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
             <h:outputText value="#{addResourceBean.resource.url}" rendered="#{addResourceBean.formStep != 1}"/>
-            <p:fileUpload listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal ml-n3" mode="advanced" auto="true" sizeLimit="10000000000"
-                          fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_upload_form" required="true" onstart="PF('rightPaneOverlay').show()" oncomplete="PF('rightPaneOverlay').hide()"
+            <p:fileUpload listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
+                          sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_upload_form" required="true"
                           rendered="#{addResourceBean.formStep == 1}"/>
         </div>
     </h:panelGroup>
