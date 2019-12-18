@@ -131,6 +131,12 @@ public class SuggestionLogger
                 Client client = Client.create();
                 WebResource webResource = client.resource(suggesterUrl);
                 ClientResponse response = webResource.get(ClientResponse.class);
+                if (response.getStatus() == 400)
+                {
+                    log.warn("Google Suggestions says 'bad request' for query " + query);
+                    return "";
+                }
+
                 String xml = response.getEntity(String.class);
 
                 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

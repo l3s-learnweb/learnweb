@@ -73,6 +73,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public SearchBean()
     {
+        // this method is called from every page because of search field in layout
         log.debug("SearchBean()");
 
         interweb = getLearnweb().getInterweb();

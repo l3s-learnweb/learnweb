@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,6 +125,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(List<Course> list, Date newerThan) throws SQLException
     {
+        if (list.isEmpty()) return Collections.emptyList();
         String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
         return getGroups(query, (int) (newerThan.getTime() / 1000));
     }
