@@ -162,7 +162,7 @@
                                 <br/>
                             </h:panelGroup>
                             <div class="p-col-12">
-                                <p:fileUpload mode="advanced" skinSimple="true" fileUploadListener="#{glossaryBean.onImportXls}"
+                                <p:fileUpload mode="advanced" skinSimple="true" listener="#{glossaryBean.onImportXls}"
                                               allowTypes="/(\.|\/)(xls|xlsx)$/" multiple="false" auto="true" update=":glossary_dialog :glossary_table_form"
                                               oncomplete="PF('excel_import_dialog').hide(); PF('glossaryDlg').show(); groupRow();"/>
                             </div>

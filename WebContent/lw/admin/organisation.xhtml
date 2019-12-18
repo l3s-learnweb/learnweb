@@ -51,7 +51,7 @@
 
                             <div class="form-group">
                                 <p:outputLabel for="@next" value="#{msg.banner_image}:"/>
-                                <p:fileUpload fileUploadListener="#{adminOrganisationBean.handleFileUpload}" styleClass="fileupload-minimal" mode="simple" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                                <p:fileUpload listener="#{adminOrganisationBean.handleFileUpload}" styleClass="fileupload-minimal" mode="simple" skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                                 <p:message for="@previous"/>
                             </div>
 
