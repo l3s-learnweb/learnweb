@@ -139,13 +139,10 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public List<Course> getCourses() throws SQLException
     {
-        if(courses != null) return courses;
-
-        courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
-
-        if(courses.size() > 1)
+        if(courses == null)
         {
-            Collections.sort(courses);
+            courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
+            if (!courses.isEmpty()) Collections.sort(courses);
         }
 
         return courses;
@@ -268,8 +265,6 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * getUsername() may return "Anonymous" for some organizations.
      * This method will always return the real username
-     *
-     * @return
      */
     public String getRealUsername()
     {
@@ -590,15 +585,7 @@ public class User implements Comparable<User>, Serializable, HasId
         if(imageUrl == null)
         {
             File imageFile = getImageFile();
-
-            if(null == imageFile)
-            {
-                imageUrl = Learnweb.getInstance().getServerUrl() + "/resources/images/no-profile-picture.jpg";
-
-                imageUrl = getDefaultImage();
-            }
-            else
-                imageUrl = imageFile.getUrl();
+            imageUrl = imageFile != null ? imageFile.getUrl() : getDefaultImage();
         }
 
         return imageUrl;
@@ -620,21 +607,21 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * get default avatar for user
      */
-    public String getDefaultImage()
+    private String getDefaultImage()
     {
         String name = StringUtils.isNotBlank(fullName) ? fullName : username;
         String initials = "";
 
         if(StringUtils.isNumeric(name)) // happens when users use their student id as name
+        {
             initials = name.substring(name.length() - 2);
+        }
         else if(name.contains(" ") || name.contains(".")) // name consists of multiple terms separated by whitespaces or dots
         {
             for(String part : name.split("[\\s\\.]+"))
             {
-                if(part.length() == 0)
-                    continue;
-                int index = StringUtils.isNumeric(part) ? part.length() - 1 : 0; // if is number use last digit as initial
-
+                if(part.length() == 0) continue;
+                int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
                 initials += part.charAt(index);
             }
         }
@@ -672,7 +659,7 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     private String getDefaultColor()
     {
-        return ColorUtils.getColor(getId() > 0 ? getId() : (int) (System.currentTimeMillis() / 1000L)).substring(1);
+        return ColorUtils.getColor(HasId.getIdOrDefault(this, (int) (System.currentTimeMillis() / 1000))).substring(1);
     }
 
     /**

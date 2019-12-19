@@ -84,7 +84,6 @@ public enum Action
     private final ActionCategory category;
 
     /**
-     *
      * @param targetId the meaning of the target_id column of log entries of this type
      * @param category only relevant for the grouping of log entries in the admin dashboard
      */
@@ -105,6 +104,7 @@ public enum Action
     }
 
     private static final ArrayList<Set<Action>> ACTIONS_BY_CATEGORY = new ArrayList<>(ActionCategory.values().length);
+
     static
     {
         // init one hashset per category
