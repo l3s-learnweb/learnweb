@@ -49,7 +49,7 @@
     <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addResourceBean.resource.thumbnail3 != null}">
         <h:outputText value="#{msg.preview}:" styleClass="col-sm-4 col-form-label"/>
         <div class="col-sm-8 align-self-center">
-            <h:outputText id="preview" escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
+            <h:outputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
         </div>
     </h:panelGroup>
 
@@ -58,7 +58,7 @@
             <h:outputText value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
             <div class="col-sm-8 align-self-center">
                 <h:outputText value="#{addResourceBean.resource.title}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText id="title_input" value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
+                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
                              rendered="#{addResourceBean.formStep == 1}"/>
             </div>
         </div>
@@ -80,7 +80,7 @@
             <h:outputText value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
             <div class="col-sm-8 align-self-center">
                 <h:outputText value="#{addResourceBean.resource.title}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText id="survey_title" value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
+                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
                              rendered="#{addResourceBean.formStep == 1}"/>
             </div>
         </div>
@@ -89,7 +89,7 @@
             <h:outputText value="#{msg.description}:" styleClass="col-sm-4 col-form-label"/>
             <div class="col-sm-8 align-self-center">
                 <h:outputText value="#{addResourceBean.resource.description}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText id="survey_desc" value="#{addResourceBean.resource.description}"
+                <p:inputText value="#{addResourceBean.resource.description}"
                              rendered="#{addResourceBean.formStep == 1}"/>
             </div>
         </div>
@@ -98,7 +98,7 @@
             <h:outputText value="Survey Open Date:" styleClass="col-sm-4 col-form-label"/>
             <div class="col-sm-8 align-self-center">
                 <h:outputText value="#{addResourceBean.surveyOpenDate}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:calendar id="open" value="#{addResourceBean.surveyOpenDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
+                <p:calendar value="#{addResourceBean.surveyOpenDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
             </div>
         </div>
 
@@ -106,7 +106,7 @@
             <h:outputText value="Survey Close Date:" styleClass="col-sm-4 col-form-label"/>
             <div class="col-sm-8 align-self-center">
                 <h:outputText value="#{addResourceBean.surveyCloseDate}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:calendar id="close" value="#{addResourceBean.surveyCloseDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
+                <p:calendar value="#{addResourceBean.surveyCloseDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
             </div>
         </div>
     </ui:fragment>

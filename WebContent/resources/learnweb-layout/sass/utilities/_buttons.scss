@@ -28,26 +28,29 @@ body {
 
       .ui-fileupload-files {
         margin: 0;
+        width: 100%;
       }
 
       .ui-fileupload-row {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
         align-items: center;
+        font-size: 0.75rem;
 
         > div {
-          padding: 0.125rem 0.25rem;
+          padding: 0.25rem 0.5rem 0.25rem 0;
         }
       }
 
       .ui-fileupload-filename,
       .ui-fileupload-preview {
-        width: 100%;
+        display: flex;
       }
 
+      .ui-fileupload-filename,
       .ui-fileupload-progress {
         flex-grow: 1;
+        min-width: 2rem;
       }
 
       .ui-progressbar {

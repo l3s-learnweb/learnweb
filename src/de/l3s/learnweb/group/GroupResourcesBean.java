@@ -127,7 +127,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     public void onLoad() throws SQLException
     {
         User user = getUser();
-        if(null == user) throw new IllegalAccessError("Access denied. User required.");
+        if(null == user) return;
 
         if(user.getOrganisation().getId() == 480)
         {
