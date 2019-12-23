@@ -23,3 +23,7 @@
   padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
   margin-bottom: 0; // Override the `<label>/<legend>` default
 }
+
+.ui-message:empty {
+  display: none;
+}

@@ -16,7 +16,7 @@
 
             <p:outputPanel id="usersSelectorPanel" styleClass="my-2">
                 <p:selectCheckboxMenu id="selectedUsersIds" value="#{cbean.selectedUsersIds}" var="user" label="#{msg.users}"
-                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 1}" styleClass="no-borders">
+                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 1}">
                     <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
                     <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 
@@ -24,7 +24,7 @@
                 </p:selectCheckboxMenu>
 
                 <p:selectCheckboxMenu id="selectedGroupsIds" value="#{cbean.selectedGroupsIds}" var="group" label="#{msg.groupsTitle}"
-                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 2}" styleClass="no-borders">
+                                      filter="true" filterMatchMode="startsWith" rendered="#{cbean.selectedType == 2}">
                     <p:ajax event="change" update="usersCountPanel submitBtnPanel message"/>
                     <p:ajax event="toggleSelect" update="usersCountPanel submitBtnPanel message"/>
 

@@ -200,7 +200,7 @@ $progressbarTextColor:$white;
 $progressbarBgColor:$gray-500;
 
 /*Data*/
-$datatableCellPadding: 0.25rem 0.5rem 0.3rem;
+$datatableCellPadding: $table-cell-padding;
 $paginatorBgColor:$white;
 $panelHeaderTextColor:$gray-500;
 $paginatorTextColor:$gray-500;

@@ -35,9 +35,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                       <p:dataTable tableStyleClass="optimized-table" value="#{trackerDashboardBean.usersProxySourcesList}"
-                                    var="pll" styleClass="table-responsive my-2"
-                                    emptyMessage="#{msg.no_data}">
+                       <p:dataTable value="#{trackerDashboardBean.usersProxySourcesList}"
+                                    var="pll" styleClass="my-2" emptyMessage="#{msg.no_data}">
                             <f:facet name="header">
                                 #{msg['Glossary.proxy_sources_list']}
                             </f:facet>
@@ -57,9 +56,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                        <p:dataTable tableStyleClass="optimized-table" value="#{trackerDashboardBean.trackerStatistics}"
-                                     var="ts" styleClass="table-responsive my-2"
-                                     emptyMessage="#{msg.no_data}">
+                        <p:dataTable value="#{trackerDashboardBean.trackerStatistics}"
+                                     var="ts" styleClass="my-2" emptyMessage="#{msg.no_data}">
                             <f:facet name="header">
                                 #{msg.data}
                             </f:facet>

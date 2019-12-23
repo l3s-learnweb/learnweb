@@ -2,18 +2,6 @@ td.td-text-right {
   @extend .text-right;
 }
 
-.table-responsive {
-  table-layout: auto !important;
-}
-
-.no-borders {
-  tr,
-  td {
-    background: none !important;
-    border: 0 !important;
-  }
-}
-
 /* set background color for even/odd table cells. Used by the Glossary */
 .ui-datatable {
   .ui-datatable-data {

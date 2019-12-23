@@ -110,7 +110,7 @@
                 </div>
                 <div class="col-md-8 mb-3">
                     <h:form>
-                        <p:dataTable var="glossary" styleClass="table-responsive" value="#{glossaryDashboardBean.glossaryResources}">
+                        <p:dataTable var="glossary" value="#{glossaryDashboardBean.glossaryResources}">
                             <f:facet name="header">
                                 <div class="d-flex">
                                     <div class="mr-auto">#{msg['Glossary.location']}</div>
@@ -157,7 +157,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                        <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
+                        <p:dataTable value="#{glossaryDashboardBean.glossaryFieldsSummeryPerUser}"
                                      var="gfs" styleClass="table-responsive mb-3"
                                      emptyMessage="#{msg.no_data}">
 
@@ -264,8 +264,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h:form>
-                        <p:dataTable tableStyleClass="optimized-table" value="#{glossaryDashboardBean.descFieldsStatistic}"
-                                     var="gds"
+                        <p:dataTable value="#{glossaryDashboardBean.descFieldsStatistic}" var="gds"
                                      emptyMessage="#{msg.no_data}"
                                      paginator="true" rows="25"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
