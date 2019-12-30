@@ -59,12 +59,13 @@
                         <h:outputText value="#{msg.edit}"/>
                     </h:outputLink>
 
-                    <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this"
-                                   update=":growl :my_groups">
+                    <p:commandLink action="#{groupsBean.leaveGroup}" styleClass="icon-link" process="@this" update=":growl :my_groups">
                         <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
-                        <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
-                        <h:outputText value="#{msg.leave}"/>
+                        <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                         <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', group.title)}"/>
+
+                        <i class="fa fa-fw fa-sign-out text-danger" aria-hidden="true"></i>
+                        <h:outputText value="#{msg.leave_group}"/>
                     </p:commandLink>
                 </p:column>
             </p:dataTable>

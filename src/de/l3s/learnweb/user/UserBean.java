@@ -63,7 +63,6 @@ public class UserBean implements Serializable
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
     private BaseMenuModel sidebarMenuModel;
-    private long sidebarMenuModelCacheTime = 0L;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -507,7 +506,7 @@ public class UserBean implements Serializable
         if(!isLoggedIn())
             return null;
 
-        if(null == sidebarMenuModel || sidebarMenuModelCacheTime + 10000L < System.currentTimeMillis())
+        if(null == sidebarMenuModel)
         {
             long start = System.currentTimeMillis();
             final String su = Learnweb.getInstance().getServerUrl();
@@ -582,12 +581,16 @@ public class UserBean implements Serializable
             }
 
             sidebarMenuModel = model;
-            sidebarMenuModelCacheTime = System.currentTimeMillis();
             long elapsedMs = System.currentTimeMillis() - start;
             log.info("Total time to build menu: " + elapsedMs + "ms.");
         }
 
         return sidebarMenuModel;
+    }
+
+    public void setSidebarMenuModel(final BaseMenuModel sidebarMenuModel)
+    {
+        this.sidebarMenuModel = sidebarMenuModel;
     }
 
     /**

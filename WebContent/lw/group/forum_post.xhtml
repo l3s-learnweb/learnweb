@@ -30,13 +30,8 @@
             </f:facet>
             <f:facet name="actions">
                 <p:commandButton value="#{msg['ForumIndex.post_reply']}" process="@this" update=":reply_post_dialog"
-                                 rendered="#{forumPostBean.group.isMember(userBean.user)}" actionListener="#{forumPostBean.newPost}" global="false"
-                                 styleClass="alt-btn ml-2" oncomplete="PF('reply_post_dialog').show();">
-                </p:commandButton>
-
-                <p:commandButton rendered="${not forumPostBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                                 update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-                    <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumPostBean.group}"/>
+                                 actionListener="#{forumPostBean.newPost}" global="false" styleClass="alt-btn ml-2"
+                                 oncomplete="PF('reply_post_dialog').show();" rendered="#{forumPostBean.group.isMember(userBean.user)}">
                 </p:commandButton>
             </f:facet>
 

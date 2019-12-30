@@ -113,11 +113,6 @@
                             <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"/>
                             <p:menuitem value="#{msg['Glossary.glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
                         </p:menuButton>
-
-                        <p:commandButton rendered="${not groupResourcesBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn ml-2" process="@this" value="#{msg.join_group}">
-                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupResourcesBean.group}"/>
-                        </p:commandButton>
                     </f:facet>
                 </p:toolbar>
             </h:form>

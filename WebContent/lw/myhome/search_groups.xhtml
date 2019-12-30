@@ -60,9 +60,10 @@
                             <h:outputText value="#{msg.edit}"/>
                         </h:outputLink>
 
-                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl"
-                                       process="@this" styleClass="icon-link" title="#{msg.join}" >
+                        <p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl" process="@this" styleClass="icon-link" title="#{msg.join}" >
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}"/>
+                            <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
+
                             <i class="fa fa-fw fa-sign-in text-success" aria-hidden="true"></i>
                             <h:outputText value="#{msg.join_group}"/>
                         </p:commandLink>

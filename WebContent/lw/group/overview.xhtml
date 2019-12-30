@@ -33,14 +33,16 @@
             <p:panel header="Group details" styleClass="text-break">
                 <f:facet name="actions">
                     <h:form>
-                        <p:commandButton rendered="${not groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-                                         update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
+                        <p:commandButton action="#{groupsBean.joinGroup}" styleClass="alt-btn" value="#{msg.join_group}" immediate="true" update=":growl"
+                                         oncomplete="window.location.replace(window.location.href);" rendered="${not groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+                            <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                         </p:commandButton>
 
-                        <p:commandButton rendered="${groupOverviewBean.group.isMember(userBean.user)}" action="#{groupsBean.leaveGroup}"
-                                         update=":growl @form" partialSubmit="true" styleClass="secondary-btn" process="@this" value="#{msg.leave}">
+                        <p:commandButton action="#{groupsBean.leaveGroup}" styleClass="secondary-btn" value="#{msg.leave_group}" immediate="true" update=":growl"
+                                         oncomplete="window.location.replace(window.location.href);" rendered="${groupOverviewBean.group.isMember(userBean.user)}">
                             <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOverviewBean.group}"/>
+                            <f:setPropertyActionListener target="#{userBean.sidebarMenuModel}" value="#{null}"/>
                             <p:confirm message="#{utilBean.getLocaleMessage('leave_group_question', groupOverviewBean.group.title)}"/>
                         </p:commandButton>
                     </h:form>

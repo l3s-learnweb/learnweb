@@ -36,11 +36,6 @@
 						<div>
 							<p:commandButton value="#{msg['ForumIndex.new_topic']}" onclick="PF('newTopicDialog').show();" global="false"
 											 styleClass="alt-btn ml-2" rendered="${forumTopicsBean.group.isMember(userBean.user)}"/>
-
-							<p:commandButton rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}"
-											 update=":growl @form" partialSubmit="true" styleClass="alt-btn" process="@this" value="#{msg.join_group}">
-								<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{forumTopicsBean.group}"/>
-							</p:commandButton>
 						</div>
 					</div>
 				</f:facet>
