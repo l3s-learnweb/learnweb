@@ -238,7 +238,7 @@
 	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.tags or rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.tags}:</dt>
 		<dd class="col-sm-9">
-			<h:form id="tag_form">
+			<h:panelGroup layout="block" id="tags_list">
 				<ul class="list-inline list-unstyled mb-1">
 					<ui:repeat var="tag" value="#{rightPaneBean.clickedResource.tags}">
 						<li class="list-inline-item mr-0 mb-1">
@@ -246,14 +246,16 @@
 								<f:param name="action" value="image"/>
 								<f:param name="query" value="#{tag.name}"/>
 							</p:linkButton>
-							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" update=":right_pane :growl" process="@this" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
+											 global="false" update=":right_pane :growl" process="@this"
+											 onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"
 											 rendered="#{rightPaneBean.clickedResource.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 							</p:commandButton>
 						</li>
 					</ui:repeat>
 				</ul>
-			</h:form>
+			</h:panelGroup>
 
 			<h:form id="tag_input_form" rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-0">
@@ -262,7 +264,8 @@
 				</div>
 
 				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}"
-								 update=":tag_form :growl tag_name" partialSubmit="true" process="@form">
+								 update=":tags_list :growl tag_name" partialSubmit="true" process="@form"
+								 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
 			</h:form>
@@ -279,12 +282,13 @@
 						<p:message for="@previous"/>
 					</div>
 
-					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":comments_list_form @form :growl">
+					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment}" update=":comments_list @form :growl" process="@form"
+									 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();">
 						<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 					</p:commandButton>
 				</ui:fragment>
 			</h:form>
-			<h:form id="comments_list_form">
+			<h:panelGroup layout="block" id="comments_list">
 				<ui:repeat var="comment" varStatus="status" value="#{rightPaneBean.clickedResource.comments}" rendered="#{not empty rightPaneBean.clickedResource.comments}">
 					<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
 						<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
@@ -296,20 +300,21 @@
 							</p>
 							<div class="mb-1">#{comment.text}</div>
 							<div class="small">
-								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" rendered="#{resourceDetailBean.canEditComment(comment)}"
-											   onsuccess="PF('commentEditDialog').show();" ajax="true" update=":comment_edit_form">
+								<p:commandLink value="#{msg.edit}" styleClass="text-success mr-2" ajax="true" update=":comment_edit_form"
+											   process="@this" onsuccess="PF('commentEditDialog').show();"
+											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
-								<p:commandLink value="#{msg.delete}" styleClass="text-danger" rendered="#{resourceDetailBean.canEditComment(comment)}"
-											   action="#{resourceDetailBean.onDeleteComment}" onstart="return confirm('#{msg.delete_message_comments}');"
-											   ajax="true" update=":right_pane :growl">
+								<p:commandLink value="#{msg.delete}" styleClass="text-danger" action="#{resourceDetailBean.onDeleteComment}"
+											   ajax="true" update=":right_pane :growl" process="@this" onstart="return confirm('#{msg.delete_message_comments}');"
+											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
 							</div>
 						</div>
 					</div>
 				</ui:repeat>
-			</h:form>
+			</h:panelGroup>
 		</dd>
 	</ui:fragment>
 </dl>
@@ -321,7 +326,7 @@
 			<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"/>
 		</div>
 
-		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list_form :growl" title="#{msg.save}"
+		<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":comments_list :growl" title="#{msg.save}" process="@form"
 			value="#{msg.save}" onsuccess="PF('commentEditDialog').hide();"/>
 	</h:form>
 </p:dialog>
