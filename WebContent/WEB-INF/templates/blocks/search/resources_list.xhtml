@@ -17,7 +17,7 @@
             <h:form styleClass="item-controls d-flex flex-column mr-1 mt-1 text-center">
                 <ui:fragment>
                     <p:commandLink actionListener="#{searchBean.setSelectedResource(res)}"
-                                   update=":resource_form" process="@this" oncomplete="PF('resource_dialog').show();"
+                                   update=":copy_resource_dialog" process="@this" oncomplete="PF('copyResourceDialog').show();"
                                    styleClass="fa fa-fw fa-files-o text-decoration-none text-secondary"/>
                     <p:tooltip for="@previous" value="#{msg.addToMyResources}" position="right"  hideEffect="clip"/>
                 </ui:fragment>

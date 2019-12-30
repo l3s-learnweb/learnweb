@@ -51,6 +51,9 @@ body {
     .ui-message {
         margin: 0.25rem 0;
         font-size: $font-size-sm;
+        &:empty {
+            display: none;
+        }
         &.ui-message-icon-only {
             min-height: 19px;
         }

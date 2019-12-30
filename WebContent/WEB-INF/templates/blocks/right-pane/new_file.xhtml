@@ -8,32 +8,26 @@
     <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":right_pane :growl"
                      global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
-    <div class="form-group row">
-        <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center">
-            <p:commandButton update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
-                             oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
-        </div>
-    </div>
+    <div class="fg-grid mb-3">
+        <p:outputLabel for="@next" value="#{msg.location}:"/>
+        <p:commandLink update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
+                       oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
 
-    <div class="form-group row">
-        <p:outputLabel for="@next" value="#{msg.file_name}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8">
-            <p:inputText id="file_name_input" value="#{addResourceBean.resource.fileName}" required="true"/>
-        </div>
-        <div class="col-sm-12">
+        <p:outputLabel for="@next" value="#{msg.file_name}:"/>
+        <div class="fg-col">
+            <p:inputText value="#{addResourceBean.resource.fileName}" required="true"/>
             <p:message for="@previous"/>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
+    <div class="d-flex">
+        <p:defaultCommand target="createFileButton"/>
+
+        <div class="mr-auto">
             <h:outputText value="* #{msg.mandatory_field}"/>
         </div>
-        <div class="col text-right">
-            <p:defaultCommand target="createFileButton"/>
-            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true"
-                             actionListener="#{addResourceBean.reset}">
+        <div>
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true" actionListener="#{addResourceBean.reset}">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 

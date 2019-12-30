@@ -4,123 +4,118 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-<h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
-    <p:defaultCommand target="nextButton" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}"/>
-    <p:defaultCommand target="addResourceButton" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey'}"/>
-
+<h:form id="add_resource_upload_form">
     <p:remoteCommand name="updateLocationCommand" actionListener="#{addResourceBean.updateTargetLocation}" update=":right_pane :growl"
                      global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
-    <div class="form-group row">
-        <h:outputText value="#{msg.type}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center text-capitalize">
-            <h:outputText value="#{addResourceBean.resource.type}"/>
-        </div>
-    </div>
+    <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep == 1}">
+        <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
+        <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
 
-    <div class="form-group row">
-        <h:outputText value="#{msg.location}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center">
-            <h:outputText value="#{addResourceBean.currentPath}" rendered="#{addResourceBean.formStep != 1}"/>
-            <p:commandButton update=":selectDestinationDialog" value="#{addResourceBean.currentPath}" rendered="#{addResourceBean.formStep == 1}"
-                             oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
-        </div>
-    </div>
+        <p:outputLabel for="@next" value="#{msg.location}:"/>
+        <p:commandLink update=":selectDestinationDialog" value="#{addResourceBean.currentPath}"
+                       oncomplete="createConfirmDialog('selectDestination', updateLocationCommand);return false;"/>
 
-    <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addResourceBean.resource.type eq 'website'}">
-        <h:outputText value="#{msg.url}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center">
-            <h:outputText value="#{addResourceBean.resource.url}" rendered="#{addResourceBean.formStep != 1}"/>
-            <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}"
-                         validator="#{addResourceBean.validateUrl}" rendered="#{addResourceBean.formStep == 1}"/>
-        </div>
-    </h:panelGroup>
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
+            <p:outputLabel for="@next" value="#{msg.url}:"/>
+            <p:inputText value="#{addResourceBean.resource.url}" required="true" requiredmessage="#{msg.mandatory_field}" validator="#{addResourceBean.validateUrl}"/>
+        </ui:fragment>
 
-    <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addResourceBean.resource.type eq 'file'}">
-        <h:outputText value="#{msg.file}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center">
-            <h:outputText value="#{addResourceBean.resource.url}" rendered="#{addResourceBean.formStep != 1}"/>
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
+            <p:outputLabel for="@next" value="#{msg.file}:"/>
             <p:fileUpload listener="#{addResourceBean.handleFileUpload}" styleClass="fileupload-minimal" mode="advanced" auto="true"
-                          sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_upload_form" required="true"
-                          rendered="#{addResourceBean.formStep == 1}"/>
-        </div>
+                          sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_upload_form" required="true"/>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
+            <p:outputLabel for="@next" value="#{msg.preview}:"/>
+            <p:inputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
+            <p:outputLabel for="@next" value="#{msg.title}:"/>
+            <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
+
+            <p:outputLabel for="@next" value="Allowed languages:"/>
+            <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
+                                  label="#{msg.language}" multiple="true" converter="#{localeConverter}">
+                <f:selectItems value="#{addResourceBean.availableGlossaryLanguages}"></f:selectItems>
+            </p:selectCheckboxMenu>
+        </ui:fragment>
+
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
+            <p:outputLabel for="@next" value="#{msg.title}:"/>
+            <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"/>
+
+            <p:outputLabel for="@next" value="#{msg.description}:"/>
+            <p:inputText value="#{addResourceBean.resource.description}"/>
+
+            <p:outputLabel for="@next" value="Survey Open Date:"/>
+            <p:calendar value="#{addResourceBean.surveyOpenDate}" showOn="button"/>
+
+            <p:outputLabel for="@next" value="Survey Close Date:"/>
+            <p:calendar value="#{addResourceBean.surveyCloseDate}" showOn="button"/>
+        </ui:fragment>
     </h:panelGroup>
 
-    <h:panelGroup styleClass="form-group row" layout="block" rendered="#{addResourceBean.resource.thumbnail3 != null}">
-        <h:outputText value="#{msg.preview}:" styleClass="col-sm-4 col-form-label"/>
-        <div class="col-sm-8 align-self-center">
-            <h:outputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
-        </div>
-    </h:panelGroup>
+    <h:panelGroup layout="block" styleClass="fg-grid mb-3" rendered="#{addResourceBean.formStep != 1}">
+        <h:outputText value="#{msg.type}:" styleClass="ui-outputlabel"/>
+        <h:outputText value="#{addResourceBean.resource.type}" styleClass="fg-col text-capitalize"/>
 
-    <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
-        <div class="form-group row">
-            <h:outputText value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.resource.title}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
-                             rendered="#{addResourceBean.formStep == 1}"/>
-            </div>
-        </div>
+        <p:outputLabel for="@next" value="#{msg.location}:"/>
+        <p:inputText value="#{addResourceBean.currentPath}" readonly="true"/>
 
-        <div class="form-group row">
-            <h:outputText value="Allowed languages:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.resource.allowedLanguages}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:selectCheckboxMenu value="#{addResourceBean.resource.allowedLanguages}" required="true" requiredMessage="#{msg.mandatory_field}"
-                                      label="#{msg.language}" multiple="true" converter="#{localeConverter}" rendered="#{addResourceBean.formStep == 1}">
-                    <f:selectItems value="#{addResourceBean.availableGlossaryLanguages}"></f:selectItems>
-                </p:selectCheckboxMenu>
-            </div>
-        </div>
-    </ui:fragment>
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'website'}">
+            <p:outputLabel for="@next" value="#{msg.url}:"/>
+            <p:inputText value="#{addResourceBean.resource.url}" readonly="true"/>
+        </ui:fragment>
 
-    <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
-        <div class="form-group row">
-            <h:outputText value="#{msg.title}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.resource.title}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText value="#{addResourceBean.resource.title}" required="true" requiredmessage="#{msg.mandatory_field}"
-                             rendered="#{addResourceBean.formStep == 1}"/>
-            </div>
-        </div>
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'file'}">
+            <p:outputLabel for="@next" value="#{msg.file}:"/>
+            <p:inputText value="#{addResourceBean.resource.url}" readonly="true"/>
+        </ui:fragment>
 
-        <div class="form-group row">
-            <h:outputText value="#{msg.description}:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.resource.description}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:inputText value="#{addResourceBean.resource.description}"
-                             rendered="#{addResourceBean.formStep == 1}"/>
-            </div>
-        </div>
+        <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
+            <p:outputLabel for="@next" value="#{msg.preview}:"/>
+            <p:inputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
+        </ui:fragment>
 
-        <div class="form-group row">
-            <h:outputText value="Survey Open Date:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.surveyOpenDate}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:calendar value="#{addResourceBean.surveyOpenDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
-            </div>
-        </div>
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
+            <p:outputLabel for="@next" value="#{msg.title}:"/>
+            <p:inputText value="#{addResourceBean.resource.title}" readonly="true"/>
 
-        <div class="form-group row">
-            <h:outputText value="Survey Close Date:" styleClass="col-sm-4 col-form-label"/>
-            <div class="col-sm-8 align-self-center">
-                <h:outputText value="#{addResourceBean.surveyCloseDate}" rendered="#{addResourceBean.formStep != 1}"/>
-                <p:calendar value="#{addResourceBean.surveyCloseDate}" showOn="button" rendered="#{addResourceBean.formStep == 1}"/>
-            </div>
-        </div>
-    </ui:fragment>
+            <p:outputLabel for="@next" value="Allowed languages:"/>
+            <p:inputText value="#{addResourceBean.resource.allowedLanguages}" readonly="true"/>
+        </ui:fragment>
 
-    <ui:fragment rendered="#{addResourceBean.formStep != 1}">
+        <ui:fragment rendered="#{addResourceBean.resource.type eq 'survey'}">
+            <p:outputLabel for="@next" value="#{msg.title}:"/>
+            <p:inputText value="#{addResourceBean.resource.title}" readonly="true"/>
+
+            <p:outputLabel for="@next" value="#{msg.description}:"/>
+            <p:inputText value="#{addResourceBean.resource.description}" readonly="true"/>
+
+            <p:outputLabel for="@next" value="Survey Open Date:"/>
+            <p:inputText value="#{addResourceBean.surveyOpenDate}" readonly="true"/>
+
+            <p:outputLabel for="@next" value="Survey Close Date:"/>
+            <p:inputText value="#{addResourceBean.surveyCloseDate}" readonly="true"/>
+        </ui:fragment>
+
         <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
             <ui:param name="res" value="#{addResourceBean.resource}"/>
         </ui:decorate>
-    </ui:fragment>
+    </h:panelGroup>
 
-    <div class="row">
-        <div class="col text-right">
-            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" immediate="true" ajax="true"
-                             actionListener="#{addResourceBean.reset}" update=":right_pane">
+    <div class="d-flex">
+        <p:defaultCommand target="nextButton" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'website'}"/>
+        <p:defaultCommand target="addResourceButton" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey'}"/>
+
+        <div class="mr-auto">
+            <h:outputText value="* #{msg.mandatory_field}"/>
+        </div>
+        <div>
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true" actionListener="#{addResourceBean.reset}">
                 <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
             </p:commandButton>
 

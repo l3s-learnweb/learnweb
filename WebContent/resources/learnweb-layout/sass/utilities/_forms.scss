@@ -1,3 +1,4 @@
+// TODO: to be replaced with .fg-grid at some point
 .form-group {
   margin-bottom: $form-group-margin-bottom;
 
@@ -18,12 +19,37 @@
   }
 }
 
-.col-form-label {
-  padding-top: calc(#{$input-padding-y} + #{$input-border-width});
-  padding-bottom: calc(#{$input-padding-y} + #{$input-border-width});
-  margin-bottom: 0; // Override the `<label>/<legend>` default
-}
+// In case we need backward compatibility for browsers without CSS Grid https://codepen.io/SitePoint/pen/bxVaKK
+.fg-grid {
+  display: grid;
+  grid-gap: $form-group-margin-bottom;
 
-.ui-message:empty {
-  display: none;
+  > * {
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  > .ui-outputlabel {
+    margin-bottom: -$form-group-margin-bottom;
+  }
+
+  .fg-col,
+  .fg-row {
+    > * {
+      min-width: 100%;
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: minmax(3rem, max-content) auto;
+
+    > .ui-outputlabel {
+      max-width: 13rem;
+      margin-bottom: 0;
+    }
+
+    .fg-row {
+      grid-column: 1/span 2;
+    }
+  }
 }

@@ -7,24 +7,21 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
-
 <c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
-    <div class="form-group">
-        <c:if test="#{fn:startsWith(field.type, 'FULLWIDTH_')}">
-            <div class="col-sm-12">
-                <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-                    <h4><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
-                </c:if>
-                <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-                    <h5><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h5>
-                </c:if>
-            </div>
+    <c:if test="#{fn:startsWith(field.type, 'FULLWIDTH_')}">
+        <c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+            <h4 class="fg-row"><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h4>
         </c:if>
+        <c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
+            <h5 class="fg-row"><h:outputText value="#{utilBean.getLocaleMessage(field.label, null)}"/></h5>
+        </c:if>
+    </c:if>
 
-        <c:if test="#{not fn:startsWith(field.type, 'FULLWIDTH_')}">
-            <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
+    <c:if test="#{not fn:startsWith(field.type, 'FULLWIDTH_')}">
+        <p:outputLabel for="@next" value="#{utilBean.getLocaleMessage(field.name, null)}:"/>
+        <div class="fg-col">
             <c:if test="#{field.moderatorOnly and not userBean.moderator}">
-                <h:outputText value="#{res.metadataWrapper[field.name]}"/>
+                <p:inputText value="#{res.metadataWrapper[field.name]}" readonly="true"/>
             </c:if>
 
             <c:if test="#{not field.moderatorOnly or userBean.moderator}">
@@ -36,7 +33,7 @@
 
                 <c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
                     <p:inputTextarea id="input_area_#{field.name}" title="#{field.info}" required="#{field.required}"
-                                     value="#{res.metadataWrapper[field.name]}" rows="4" autoResize="false" />
+                                     value="#{res.metadataWrapper[field.name]}" rows="4" autoResize="false"/>
                     <p:tooltip for="input_area_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
                 </c:if>
 
@@ -60,24 +57,24 @@
                 <c:if test="#{field.type eq 'AUTOCOMPLETE'}">
                     <p:autoComplete id="input_complete_#{field.name}" title="#{field.info}" required="#{field.required}"
                                     value="#{res.metadataWrapper[field.name]}" completeMethod="#{field.completeText}"/>
-                    <p:tooltip for="input_complete_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+                    <p:tooltip for="input_complete_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
                 </c:if>
 
                 <c:if test="#{field.type eq 'AUTOCOMPLETE_MULTIPLE'}">
                     <p:autoComplete id="input_complete_multi_#{field.name}" title="#{field.info}" required="#{field.required}"
                                     dropdown="true" multiple="true" dynamic="true" global="false" cache="true"
                                     value="#{res.metadataMultiValueList[field.name]}" completeMethod="#{field.completeText}"/>
-                    <p:tooltip for="input_complete_multi_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+                    <p:tooltip for="input_complete_multi_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}"/>
                 </c:if>
             </c:if>
             <p:message for="@previous"/>
-        </c:if>
-    </div>
+        </div>
+    </c:if>
 </c:forEach>
 
 <ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
-    <div class="form-group">
-        <p:outputLabel for="@next" value="#{msg.content}:"/>
+    <p:outputLabel for="@next" value="#{msg.content}:"/>
+    <div class="fg-col">
         <p:inputTextarea value="#{res.transcript}" rows="6" autoResize="false"/>
         <p:message for="@previous"/>
     </div>

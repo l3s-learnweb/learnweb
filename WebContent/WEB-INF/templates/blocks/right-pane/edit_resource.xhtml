@@ -19,9 +19,11 @@
         </ui:decorate>
     </ui:fragment>
 
-    <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
-        <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
-    </ui:decorate>
+    <div class="fg-grid mb-3">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
+            <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
+        </ui:decorate>
+    </div>
 
     <div class="d-flex">
         <div class="mr-auto">
