@@ -26,7 +26,8 @@
 
 // Styles from 3rd-part developers
 // WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
-@import 'vendor/bootstrap'; // Bootstrap grid and utils (No other components!)
+@import 'vendor/font-awesome-4.7.0/font-awesome'; // Icons
+@import 'vendor/bootstrap-4.4.1/bootstrap'; // Bootstrap grid and utils (No other components!)
 @import 'vendor/autocomplete';
 @import 'vendor/contextmenu';
 @import 'vendor/justified-gallery';
