@@ -272,6 +272,13 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   $('.res-item', $resContainer).draggable({
     addClasses: false,
     helper: 'clone',
+    scope: 'resources',
+    appendTo: 'body',
+    revert: 'invalid',
+    cursorAt: { top: 0, left: 0 },
+    scroll: false,
+    zIndex: ++PrimeFaces.zindex,
+    delay: 100,
     start(e, ui) {
       if (!this.classList.contains('ui-selected')) {
         selected.selectOnly(this);
@@ -294,12 +301,6 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
         item.element.classList.remove('ui-draggable-dragging');
       });
     },
-    scope: 'resources',
-    appendTo: 'body',
-    revert: 'invalid',
-    cursorAt: { top: 0, left: 0 },
-    scroll: false,
-    zIndex: ++PrimeFaces.zindex,
   });
 
   $('.res-item[data-itemtype="folder"]', $resContainer).droppable({
@@ -313,7 +314,7 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   });
 
   const $resBreadcrumbs = $(document.getElementById(resBreadcrumbsId));
-  if ($resBreadcrumbs) {
+  if ($resBreadcrumbs.length) {
     $('li', $resBreadcrumbs).droppable({
       tolerance: 'pointer',
       scope: 'resources',
@@ -326,10 +327,17 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   }
 
   const $foldersTree = $(document.getElementById(foldersTreeId));
-  if ($foldersTree) {
+  if ($foldersTree.length) {
     $('.ui-treenode', $foldersTree).draggable({
       addClasses: false,
       helper: 'clone',
+      scope: 'resources',
+      appendTo: 'body',
+      revert: 'invalid',
+      cursorAt: { top: 0, left: 0 },
+      scroll: false,
+      zIndex: ++PrimeFaces.zindex,
+      delay: 100,
       start(e, ui) {
         selected.selectOnly(this);
 
@@ -345,12 +353,6 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
           item.element.classList.remove('ui-draggable-dragging');
         });
       },
-      scope: 'resources',
-      appendTo: 'body',
-      revert: 'invalid',
-      cursorAt: { top: 0, left: 0 },
-      scroll: false,
-      zIndex: ++PrimeFaces.zindex,
     }).droppable({
       tolerance: 'pointer',
       scope: 'resources',

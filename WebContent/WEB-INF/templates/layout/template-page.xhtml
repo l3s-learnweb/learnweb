@@ -7,23 +7,16 @@
       lang="#{userBean.localeCode}">
 
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
-    <!--@elvariable id="disableGrowl" type="java.lang.Boolean"-->
+    <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
         <ui:insert name="metadata"/>
 
         <h:head>
-            <f:facet name="first">
-                <ui:include src="parts/head.xhtml">
-                    <ui:param name="pageTitle" value="#{pageTitle}"/>
-                </ui:include>
-            </f:facet>
+            <ui:include src="parts/head.xhtml"/>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
 
             <h:outputStylesheet name="learnweb-layout/css/styles.css"/>
-
-            <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-
-            <ui:insert name="head"/>
         </h:head>
 
         <h:body styleClass="layout-body template-page">
@@ -59,7 +52,7 @@
                 </div>
             </div>
 
-            <p:growl id="growl" rendered="#{not disableGrowl}" escape="false"/>
+            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false"/>
         </h:body>
     </f:view>
 </html>

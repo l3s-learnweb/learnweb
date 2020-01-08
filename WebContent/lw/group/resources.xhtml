@@ -2,12 +2,10 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:p="http://primefaces.org/ui">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="disableGrowl" value="false"/>
+<ui:param name="hideGrowl" value="false"/>
 <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
 <ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
 <ui:param name="group" value="#{groupResourcesBean.group}"/>
@@ -269,7 +267,7 @@
     </p:dialog>
 	</ui:remove>
 
-    <script type="application/javascript">
+    <h:outputScript>
         /**
          * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
          */
@@ -285,6 +283,6 @@
             createContextMenu();
             onResourcesUpdated();
         });
-    </script>
+    </h:outputScript>
 </ui:define>
 </ui:composition>

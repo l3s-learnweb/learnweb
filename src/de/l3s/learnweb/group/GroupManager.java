@@ -798,18 +798,19 @@ public class GroupManager
             if(folder.getId() == selectedFolderId)
             {
                 folderNode.setSelected(true);
-                expand(folderNode);
+                folderNode.setExpanded(true);
+                expandParent(folderNode);
             }
             getChildNodesRecursively(groupId, folder.getId(), folderNode, selectedFolderId);
         }
     }
 
-    protected void expand(TreeNode treeNode)
+    private void expandParent(TreeNode treeNode)
     {
         if(treeNode.getParent() != null)
         {
             treeNode.getParent().setExpanded(true);
-            expand(treeNode.getParent());
+            expandParent(treeNode.getParent());
         }
     }
 

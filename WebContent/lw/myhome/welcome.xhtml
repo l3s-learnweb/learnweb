@@ -12,6 +12,9 @@
 </ui:define>
 
 <ui:define name="center_layout">
+    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+
     <p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
         <ui:fragment rendered="#{userBean.user.organisationId == 848}">
             <ui:include src="/aw/guide.xhtml"/>

@@ -289,7 +289,7 @@ ul.res-filters {
 }
 
 .res-container {
-  margin: $grid-gutter-width / 2;
+  padding: $grid-gutter-width / 2;
 }
 
 .res-grid {
@@ -465,6 +465,7 @@ ul.res-filters {
     }
   }
 
+  .ui-draggable-helper &, // When dragging an element which was not selected before
   .ui-selecting &, // when the lasso includes this element
   .ui-selected & { // after a successful selection
     color: $themeElementTextColor;
@@ -531,16 +532,21 @@ ul.res-filters {
     }
   }
 
-  .ui-draggable-helper & {
+  .ui-draggable-helper & { // The floating element
     background-color: $themePrimaryColor;
     color: $white;
     box-shadow: $box-shadow;
     opacity: 1;
 
+    .res-selector,
     .res-bl-preview {
       display: none;
     }
   }
+}
+
+.ui-draggable-helper {
+  pointer-events: none;
 }
 
 .resources-panel {

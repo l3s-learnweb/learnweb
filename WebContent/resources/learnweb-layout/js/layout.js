@@ -274,6 +274,9 @@ $(() => {
   // We created a PrimeFaces widget without an active element, so we need manually tell PrimeFaces to run it
   // After that, we can access any method of it by using `PF('learnweb')`, like `PF('learnweb').showRightPane();`
   PrimeFaces.cw('LearnwebTheme', 'learnweb', { id: 'learnweb' });
+
+  // This code is executed after all "on-page-ready" listeners
+  $(() => $('.ui-loading').removeClass('ui-loading'));
 });
 
 /**

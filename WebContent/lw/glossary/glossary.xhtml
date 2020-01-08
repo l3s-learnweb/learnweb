@@ -23,7 +23,7 @@
     <ui:define name="center_layout">
         <!-- responsive voice API-->
         <script src="https://code.responsivevoice.org/responsivevoice.js?key=RsSTV7jB"></script>
-        <h:outputScript library="learnweb-layout" name="js/glossary.js"/>
+        <h:outputScript library="learnweb-layout" name="js/glossary.js" target="body"/>
 
         <ui:fragment rendered="#{glossaryBean.glossaryResource ne null and not glossaryBean.glossaryResource.deleted}">
 

@@ -28,6 +28,8 @@
 
     <h:form prependId="false" styleClass="resource-details">
         <p:tabView dynamic="true" cache="true" prependId="false">
+            <p:ajax event="tabChange" global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
+
             <p:tab title="#{msg.details_right_pane}">
                 <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_details.xhtml"/>
             </p:tab>

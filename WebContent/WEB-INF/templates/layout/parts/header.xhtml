@@ -9,7 +9,7 @@
             <div class="d-flex">
                 <ui:fragment rendered="#{userBean.loggedIn}">
                     <a href="#{userBean.bannerLink}" id="menu-button" class="header-element menu-button">
-                        <i class="fa fa-bars mx-auto"></i>
+                        <i class="fa fa-bars mx-auto" aria-hidden="true"></i>
                     </a>
                 </ui:fragment>
                 <a href="#{userBean.bannerLink}" class="header-element header-logo no-hover-bg">
@@ -21,6 +21,8 @@
                 <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
                     <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100">
                         <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
+
+                        <label for="searchfield" class="d-none">#{msg.searchLabel}</label>
                         <input id="searchfield" type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
 
                         <button id="searchbutton" title="#{msg.searchLabel}">
@@ -32,7 +34,7 @@
 
             <h:form styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
-                    <i class="fa fa-bell #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}"></i>
+                    <i class="fa fa-bell #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
                 </h:outputLink>
 
 				<ui:include src="language_switch.xhtml"/>
@@ -46,9 +48,7 @@
                         <p:menuitem url="#{request.contextPath}/lw/user/detail.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-user" value="#{msg.profile}"/>
                         <p:menuitem url="#{request.contextPath}/lw/myhome/profile.jsf" icon="fa fa-fw fa-cog" value="#{msg.settings}"/>
                         <p:menuitem url="#{request.contextPath}/lw/dashboard/index.jsf" icon="fa fa-fw fa-table" value="#{msg.myDashboardTitle}"/>
-                        
-                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}" rendered="false"/>
-                        
+                        <p:menuitem url="#{request.contextPath}/lw/searchHistory/entityRelationship.jsf?user_id=#{userBean.user.id}" icon="fa fa-fw fa-history" value="#{msg.search_history}"/>
                         <p:menuitem action="#{loginBean.logout}" icon="fa fa-fw fa-sign-out" value="#{msg.logout}"/>
                     </p:menu>
                 </ui:fragment>

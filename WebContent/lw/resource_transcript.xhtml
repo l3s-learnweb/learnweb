@@ -14,21 +14,18 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{tedTranscriptBean.tedResource.title}"/>
 	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
-	<ui:param name="helpTextStyle" value="tedtranscript_help"/>
 
 	<ui:define name="center_layout">
 		<h:form styleClass="d-none">
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl"/>
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options"/>
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none"/>
+			<p:remoteCommand name="saveTedResource" actionListener="${tedTranscriptBean.processActionSaveResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl"/>
+			<p:remoteCommand name="submitTedResource" actionListener="${tedTranscriptBean.processActionSubmitResource()}" partialSubmit="true" immediate="true" process="@this" update=":growl :transcript :transcript_options"/>
+			<p:remoteCommand name="saveTranscriptLog" actionListener="${tedTranscriptBean.processActionSaveLog()}" partialSubmit="true" immediate="true" process="@this" update="@none"/>
 		</h:form>
 
-		<h:outputScript name="vendor/contextMenu-v2.8.0/jquery.contextMenu.min.js"/>
-
-		<h:outputStylesheet name="vendor/spectrum-v1.8.0/spectrum.css"/>
-		<h:outputScript name="vendor/spectrum-v1.8.0/spectrum.js"/>
-
-		<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="head"/>
+		<h:outputStylesheet library="vendor" name="spectrum-v1.8.0/spectrum.css"/>
+		<h:outputScript library="vendor" name="spectrum-v1.8.0/spectrum.js" target="body"/>
+		<h:outputScript library="vendor" name="contextMenu-v2.9.0/jquery.contextMenu.min.js" target="body"/>
+		<h:outputScript library="learnweb-layout" name="js/ted-transcript.js" target="body"/>
 
 		<script type="text/javascript">
   			var noteId = #{tedTranscriptBean.noteId};

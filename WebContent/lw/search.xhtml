@@ -19,16 +19,12 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="head">
-    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-
-    <h:outputScript name="vendor/justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js"/>
-
-    <h:outputScript library="learnweb-layout" name="js/search.js"/>
-</ui:define>
-
 <ui:define name="center_layout">
+    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+    <h:outputScript library="vendor" name="justifiedGallery-v3.7.0/jquery.justifiedGallery.min.js" target="body"/>
+    <h:outputScript library="learnweb-layout" name="js/search.js" target="body"/>
+
     <h:form class="d-none">
         <p:remoteCommand name="ajaxLoadNextPage" actionListener="${searchBean.loadNextPage()}" update=":searchResultsNext" immediate="true" global="false"
                          onstart="console.log('loadingNextPage')" oncomplete="displayNextPage(xhr, status, args);"/>

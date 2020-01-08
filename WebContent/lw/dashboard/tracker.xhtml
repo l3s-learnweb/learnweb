@@ -6,7 +6,6 @@
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="#{msg['Tracker.dashboard']}"/>
-<ui:param name="center_pane_styles" value="border: none;background-color: transparent;"/>
 
 <ui:define name="metadata">
     <f:metadata>
@@ -22,8 +21,6 @@
 </ui:define>
 
 <ui:define name="center_layout">
-    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head"/>
-
     <p:panel header="#{msg.choose_options}" styleClass="mb-2">
         <ui:decorate template="/WEB-INF/templates/blocks/setSelectedUsers.xhtml">
             <ui:param name="cbean" value="#{trackerDashboardBean}"/>

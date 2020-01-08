@@ -1,21 +1,17 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <!--@elvariable id="group" type="de.l3s.learnweb.group.Group"-->
 
-    <ui:define name="head">
-        <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-        <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-        <h:outputScript name="vendor/contextMenu-v2.8.0/jquery.contextMenu.min.js"/>
-
-        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
-        <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
-    </ui:define>
-
     <ui:define name="center_layout">
+        <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+        <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+        <h:outputScript library="vendor" name="contextMenu-v2.9.0/jquery.contextMenu.min.js" target="body"/>
+        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
+        <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
+
         <ui:fragment rendered="#{group ne null}">
             <ui:fragment rendered="${not group.canViewResources(userBean.user)}">
                 <h3 class="error">

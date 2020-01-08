@@ -4,7 +4,23 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:p="http://primefaces.org/ui">
 
-    <h:outputScript library="learnweb-layout" target="head" name="js/selectionTree.js"/>
+    <h:outputScript>
+        $(() => {
+            $('.checker').each((i, el) => {
+                $(el).on('click', (e) => {
+                    $(e.currentTarget).parent().find('input:checkbox').attr('checked', e.currentTarget.checked);
+                });
+            });
+
+            $('.klapper_zu').each((i, el) => {
+                $(el).on('click', (e) => {
+                    $(e.currentTarget).toggleClass('klapper_auf');
+                    $(e.currentTarget).parent().find('ul').first()
+                            .slideToggle();
+                });
+            });
+        });
+    </h:outputScript>
 
    	<style type="text/css">
         .klapper_zu {

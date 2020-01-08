@@ -23,15 +23,11 @@
     <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
 </ui:define>
 
-<ui:define name="head">
-    <h:outputStylesheet name="vendor/fancybox-v3.5.7/jquery.fancybox.min.css"/>
-    <h:outputScript name="vendor/fancybox-v3.5.7/jquery.fancybox.min.js"/>
-
-    <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="head"/>
-    <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="head"/>
-</ui:define>
-
 <ui:define name="center_layout">
+    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+    <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
+    <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
 
     <h:form styleClass="d-none">
         <p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"

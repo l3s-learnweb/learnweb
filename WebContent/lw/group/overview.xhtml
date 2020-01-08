@@ -21,7 +21,7 @@
 </ui:define>
 
 <ui:define name="group_layout">
-    <h:outputScript library="learnweb-layout" name="js/og-grid.js"/>
+    <h:outputScript library="learnweb-layout" name="js/og-grid.js" target="body"/>
 
     <h:form>
         <p:remoteCommand name="resourceAddedHook" update=":summary_overview_form :group_activity"/>
