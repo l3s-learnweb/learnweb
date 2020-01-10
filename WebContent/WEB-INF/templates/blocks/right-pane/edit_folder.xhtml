@@ -47,12 +47,13 @@
             </tr>
             <tr>
                 <td colspan="2" class="align-right">
+                    <p:defaultCommand target="saveFolderBtn"/>
                     <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
 
                     <p:commandButton styleClass="mr-2"
                                      actionListener="#{rightPaneBean.cancelEditClickedResource}"
                                      value="#{msg.cancel}" update=":right_pane" immediate="true"/>
-                    <p:commandButton styleClass="mr-2" oncomplete="onResourcesUpdated();"
+                    <p:commandButton id="saveFolderBtn" styleClass="mr-2" oncomplete="onResourcesUpdated();"
                                      value="#{msg.save}" update=":folderGrid :right_pane :growl"
                                      actionListener="#{rightPaneBean.editClickedResource}"/>
                 </td>

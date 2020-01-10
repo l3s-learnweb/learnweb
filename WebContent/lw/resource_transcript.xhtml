@@ -92,15 +92,6 @@
 			</div>
 		</div>
 
-		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
-			<h:form id="userinput_form" prependId="false">
-				<h:outputLabel value="#{msg.justify_selection}:" for="text"/>
-				<p:inputText id="text" style="width:97%;"/>
-				<p:commandButton id="userinput_ok" value="Ok" onclick="getUserText('ok');return false;"></p:commandButton>
-				<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel');return false;"></p:commandButton>
-			</h:form>
-		</p:dialog>
-
 	</ui:define>
 
 </ui:composition>

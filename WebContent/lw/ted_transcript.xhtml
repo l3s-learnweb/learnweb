@@ -134,8 +134,9 @@
 				<p:outputLabel for="@next" value="#{msg.justify_selection}:"/>
 				<p:inputText id="text" />
 				<div class="mt-2 d-flex justify-content-between">
-					<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;" global="false"></p:commandButton>
+					<p:defaultCommand target="userinput_ok"/>
 					<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel'); return false;" global="false"></p:commandButton>
+					<p:commandButton id="userinput_ok" value="#{msg['ted_transcript.Ok']}" onclick="getUserText('ok'); return false;" global="false"></p:commandButton>
 				</div>
 			</h:form>
 		</p:dialog>

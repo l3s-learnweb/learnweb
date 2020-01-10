@@ -26,6 +26,7 @@
     </div>
 
     <div class="d-flex">
+        <p:defaultCommand target="saveResourceButton"/>
         <div class="mr-auto">
             <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                              update=":right_pane" global="false" immediate="true" rendered="#{userBean.admin}"
@@ -35,7 +36,6 @@
             </p:commandButton>
         </div>
         <div>
-            <p:defaultCommand target="saveResourceButton"/>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" actionListener="#{rightPaneBean.cancelEditClickedResource}"
                              update=":right_pane" global="false" immediate="true"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>

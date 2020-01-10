@@ -103,13 +103,14 @@
 					</div>
 
 					<div class="d-flex mt-3">
+						<p:defaultCommand target="saveBtn"/>
 						<div class="mr-auto">
 							<p:commandButton value="#{msg.delete}" update=":submissions" process="@this" actionListener="#{submissionBean.deleteSubmission()}"
 											 onclick="return confirmSubmissionDelete('#{submissionBean.selectedSubmission.title}');"
 											 oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
 						<div>
-							<p:commandButton value="#{msg.save}" id="edit-dialog-submit-button" update=":submissions @form" actionListener="#{submissionBean.updateSubmissionDetails()}"
+							<p:commandButton value="#{msg.save}" id="saveBtn" update=":submissions @form" actionListener="#{submissionBean.updateSubmissionDetails()}"
 											  oncomplete="addSubmissionHeaderClickHandler();"/>
 						</div>
 					</div>
