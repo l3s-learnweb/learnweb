@@ -1,10 +1,14 @@
 package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import de.l3s.learnweb.Learnweb;
 import de.l3s.util.HasId;
 
 /**
@@ -19,11 +23,15 @@ public class Survey implements Serializable, HasId
     private static final long serialVersionUID = -7478683722354893077L;
 
     private int id = -1;
+    @NotBlank
+    @Size(min = 5, max = 100)
     private String title;
+
+    @Size(min = 0, max = 1000)
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
+    private int userId; // user who created this survey
 
-    //private LinkedHashMap<Integer, SurveyQuestion> questions = new LinkedHashMap<>(); // maps questions ids to questions
     private List<SurveyQuestion> questions = new ArrayList<>();
 
     @Override
@@ -67,23 +75,34 @@ public class Survey implements Serializable, HasId
         this.organizationId = organizationId;
     }
 
-    public Collection<SurveyQuestion> getQuestions()
+    public List<SurveyQuestion> getQuestions()
     {
         return questions;
-        //return questions.values();
     }
 
     public void addQuestion(SurveyQuestion question)
     {
-        //questions.put(question.getId(), question);
-
         questions.add(question);
     }
 
     public SurveyQuestion getQuestion(int questionId)
     {
         return questions.stream().filter(q -> q.getId() == questionId).findFirst().get();
-
-        //return questions.get(questionId);
     }
+
+    public void save() throws SQLException
+    {
+        Learnweb.getInstance().getSurveyManager().save(this, true);
+    }
+
+    public int getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
+    }
+
 }

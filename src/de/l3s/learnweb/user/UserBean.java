@@ -576,6 +576,7 @@ public class UserBean implements Serializable
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("ip_requests")).icon("fa fa-fw fa-line-chart").url(su + "/lw/admin/requests.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("system_tools")).icon("fa fa-fw fa-language").url(su + "/lw/admin/systemtools.jsf").build())
                         .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("announcements")).icon("fa fa-fw fa-language").url(su + "/lw/admin/announcements.jsf").build())
+                        .addElement(DefaultMenuItem.builder().value(UtilBean.getLocaleMessage("surveys")).icon("fa fa-question-circle").url(su + "/lw/survey/templates.jsf").build())
                         .build();
                 model.getElements().add(adminSubmenu);
             }

@@ -118,11 +118,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             pronounciationVoices.put(Locale.GERMAN, "Deutsch Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("nl").build(), "Dutch Male");
             pronounciationVoices.put(Locale.ENGLISH, "UK English Male");
+            pronounciationVoices.put(Locale.UK, "UK English Male");
             pronounciationVoices.put(Locale.US, "US English Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("en").setRegion("AU").build(), "Australian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("et").build(), "Estonian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("fi").build(), "Finnish Female");
             pronounciationVoices.put(Locale.FRENCH, "French Female");
+            pronounciationVoices.put(Locale.FRANCE, "French Female");
             pronounciationVoices.put(Locale.CANADA_FRENCH, "French Canadian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("el").build(), "Greek Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("hi").setRegion("IN").build(), "Hindi Male");
@@ -136,6 +138,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             pronounciationVoices.put(new Locale.Builder().setLanguage("mk").build(), "Macedonian Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("no").build(), "Norwegian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("pl").build(), "Polish Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("pt").build(), "Portuguese Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("PT").build(), "Portuguese Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("pt").setRegion("BR").build(), "Brazilian Portuguese Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("ro").build(), "Romanian Female");
@@ -143,12 +146,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             pronounciationVoices.put(new Locale.Builder().setLanguage("sr").build(), "Serbian Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("sk").build(), "Slovak Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("es").build(), "Spanish Female");
+            pronounciationVoices.put(new Locale.Builder().setLanguage("es").setRegion("ES").build(), "Spanish Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("es").setRegion("MX").build(), "Spanish Latin American Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("sv").build(), "Swedish Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("th").build(), "Thai Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("tr").build(), "Turkish Male");
             pronounciationVoices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
+
 
             // convert tree like glossary structure to flat table
             repaintTable();

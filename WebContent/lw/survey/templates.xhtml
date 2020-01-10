@@ -1,0 +1,111 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg['surveys']}"/>
+
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg['survey.survey_overview']}" url="admin/surveyOverview.jsf#"/>
+	</ui:define>
+
+	<ui:define name="center_layout">
+		<h:form id="form"> 
+			<p:dataTable var="survey" styleClass="mb-3" tableStyleClass="table-responsive" value="#{surveyTemplatesBean.surveys}" emptyMessage="#{msg['no_survey_found']}">
+				<f:facet name="header">
+					<div class="d-flex">
+						<div class="mr-auto">#{msg['surveys']}</div>
+						<div class="d-md-block d-flex flex-column">
+							<p:commandButton value="#{msg['survey.create_new_survey']}" onclick="PF('createSurvey').show(); return false;" styleClass="alt-btn mt-2 mt-md-0" global="false"/>
+						</div>
+					</div>
+				</f:facet>
+
+				<p:column headerText="#{msg['title']}" styleClass="d-none d-sm-table-cell">
+					<h:outputText value="#{survey.title}"/>
+				</p:column>
+
+                <p:column headerText="#{msg['survey.creator_id']}" styleClass="d-none d-sm-table-cell">
+                    <h:outputText value="#{survey.userId}"/>
+                </p:column>
+
+				<p:column headerText="#{msg['description']}" styleClass="d-none d-md-table-cell">
+					<h:outputText value="#{survey.description}"/>
+				</p:column>
+
+				<p:column headerText="#{msg['options']}" styleClass="td-text-right">
+					<p:commandLink styleClass="icon-link" onsuccess="PF('copySurvey').show(); return false;" action="#{surveyTemplatesBean.setCopySurvey(survey)}" update="copySurvey" process="@this">
+						<i class="fa fa-files-o text-warning" aria-hidden="true"></i>
+						<h:outputText value="#{msg['copy']}"/>
+					</p:commandLink>
+					<h:outputLink value="survey/template.jsf" styleClass="icon-link">
+						<f:param name="survey_id" value="#{survey.id}"/>
+						<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
+						<h:outputText value="#{msg['edit']}"/>
+					</h:outputLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog header="#{msg['survey.create_new_survey']}" styleClass="overflow-hidden" widgetVar="createSurvey" modal="true">
+			<h:form id="createSurvey">
+                <div class="d-flex flex-column mb-3">
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
+						<p:inputText value="#{surveyTemplatesBean.survey.title}" />
+						<p:message for="@previous"/> 
+					</div>
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="font-weight-bold"/>
+						<p:textEditor value="#{surveyTemplatesBean.survey.description}" height="100">
+							<f:facet name="toolbar">
+								<span class="ql-formats">
+									<button class="ql-bold"></button>
+									<button class="ql-italic"></button>
+									<button class="ql-underline"></button>
+								</span>
+								<span class="ql-formats">
+									<button class="ql-header" value="1"/>
+									<button class="ql-header" value="2"/>
+								</span>
+							</f:facet>
+						</p:textEditor>
+						<p:message for="@previous"/>
+					</div>
+                </div>
+				<p:commandButton value="#{msg['save']}" action="#{surveyTemplatesBean.onCreateSurvey}" styleClass="float-right" update="@form" process="@form"/>
+			</h:form>
+		</p:dialog>
+		<p:dialog header="#{msg['survey.copy_survey']}" styleClass="overflow-hidden" widgetVar="copySurvey" modal="true">
+			<h:form id="copySurvey">
+				<div class="d-flex flex-column mb-3">
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg['title']}:" styleClass="font-weight-bold"/>
+						<p:inputText value="#{surveyTemplatesBean.surveyCopy.title}"/>
+						<p:message for="@previous"/>
+					</div>
+					<div class="form-group">
+						<p:outputLabel for="@next" value="#{msg['description']}:" styleClass="font-weight-bold"/>
+						<p:textEditor value="#{surveyTemplatesBean.surveyCopy.description}" height="100">
+							<f:facet name="toolbar">
+								<span class="ql-formats">
+									<button class="ql-bold"></button>
+									<button class="ql-italic"></button>
+									<button class="ql-underline"></button>
+								</span>
+								<span class="ql-formats">
+									<button class="ql-header" value="1"/>
+									<button class="ql-header" value="2"/>
+								</span>
+							</f:facet>
+						</p:textEditor>
+						<p:message for="@previous"/>
+					</div>
+				</div>
+				<p:commandButton value="#{msg['save']}" action="#{surveyTemplatesBean.onCopySurvey}" styleClass="float-right" update="@form" process="@form"/>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

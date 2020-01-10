@@ -108,11 +108,20 @@ public class ApplicationBean
      */
     protected User getUser()
     {
+        // This value should not be cached. The value would not be updated if the user logs out.
+        return getUserBean().getUser();
+    }
+
+    protected boolean isLoggedIn()
+    {
+        return getUserBean().isLoggedIn();
+    }
+
+    protected UserBean getUserBean()
+    {
         if(null == userBean)
             userBean = UtilBean.getUserBean();
-
-        // This value should not be cached. The value would not be updated if the user logs out.
-        return userBean.getUser();
+        return userBean;
     }
 
     protected Learnweb getLearnweb()
@@ -197,7 +206,7 @@ public class ApplicationBean
      */
     public String getPreference(String key)
     {
-        return UtilBean.getUserBean().getPreference(key);
+        return getUserBean().getPreference(key);
     }
 
     /**

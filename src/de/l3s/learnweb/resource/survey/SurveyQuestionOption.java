@@ -7,21 +7,33 @@ import java.io.Serializable;
  * A predefined answer that a user can select for a SurveyQuestion.
  *
  */
-public class SurveyQuestionAnswer implements Serializable
+public class SurveyQuestionOption implements Serializable
 {
     private static final long serialVersionUID = -6330747546265218917L;
 
     private String value;
+    private boolean deleted;
+    private int id;
 
-    public SurveyQuestionAnswer()
+    public SurveyQuestionOption()
     {
-
+        this("");
     }
 
-    public SurveyQuestionAnswer(String value)
+    public SurveyQuestionOption(String value)
     {
         super();
         this.value = value;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(final int id)
+    {
+        this.id = id;
     }
 
     public String getValue()
@@ -38,5 +50,15 @@ public class SurveyQuestionAnswer implements Serializable
     public String toString()
     {
         return value;
+    }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted)
+    {
+        this.deleted = deleted;
     }
 }

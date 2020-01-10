@@ -7,9 +7,8 @@ import java.sql.SQLException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
 import javax.faces.context.ExternalContext;
-import javax.servlet.ServletContext;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
@@ -29,9 +28,7 @@ public class LearnwebBean implements Serializable
 
     public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
     {
-        ServletContext servletContext = (ServletContext) UtilBean.getExternalContext().getContext();
-
-        contextPath = servletContext.getContextPath();
+        contextPath = UtilBean.getContextPath();
 
         log.debug("init LearnwebBean: context='" + contextPath + "'");
 

@@ -13,6 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 
@@ -43,13 +44,19 @@ public class UtilBean implements Serializable
         return (UserBean) getManagedBean("userBean");
     }
 
+    public static String getContextPath()
+    {
+        ServletContext servletContext = (ServletContext) getExternalContext().getContext();
+
+        return servletContext.getContextPath();
+    }
+
     public static void redirect(String redirectPath)
     {
         ExternalContext externalContext = getExternalContext();
-
         try
         {
-            externalContext.redirect(redirectPath);
+            externalContext.redirect(getContextPath() + redirectPath);
         }
         catch(IOException e)
         {
