@@ -8,6 +8,7 @@ import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterOption;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -841,7 +842,7 @@ public class SearchFilters implements Serializable
 
     public boolean isFiltersEnabled()
     {
-        return !configFilters.isEmpty();
+        return StringUtils.isNotBlank(stringFilters);
     }
 
     public boolean isLearnwebSearchEnabled()
