@@ -4,16 +4,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
-    <display-name>Learnweb 3.0.0-beta1</display-name>
+    <display-name>Learnweb 3.0.0-rc1</display-name>
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
+        <param-value>Production</param-value>
         <!-- Development Production -->
     </context-param>
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
-        <param-value>true</param-value>
+        <param-value>false</param-value>
     </context-param>
 
     <!-- PrimeFaces-->
@@ -101,11 +101,19 @@
 	    <param-value>true</param-value>
 	</context-param>
     <context-param>
-        <param-name>com.sun.faces.numberOfViewsInSession</param-name>
+        <param-name>org.apache.myfaces.RESOURCE_MAX_TIME_EXPIRES</param-name>
+        <param-value>1209600000</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.commons.GZIP_RESOURCES_ENABLED</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
         <param-value>300</param-value>
     </context-param>
     <context-param>
-        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
+        <param-name>org.apache.myfaces.NUMBER_OF_SEQUENTIAL_VIEWS_IN_SESSION</param-name>
         <param-value>300</param-value>
     </context-param>
     <context-param>
@@ -124,8 +132,7 @@
     <context-param>
         <description>
             If true, rendered HTML code will be formatted, so that it is 'human-readable'
-            i.e. additional line separators and whitespace will be written, that do not
-            influence the HTML code.
+            i.e. additional line separators and whitespace will be written, that do not influence the HTML code.
             Default is 'true'
         </description>
         <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
