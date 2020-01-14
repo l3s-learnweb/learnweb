@@ -44,7 +44,7 @@
         <h:body styleClass="layout-body ui-loading">
             <div class="layout-overlay ui-widget-overlay"></div>
 
-            <div class="layout-wrapper #{userBean.loggedIn ? null : 'layout-wrapper-sidebar-inactive'}">
+            <div class="layout-wrapper #{userBean.loggedIn and not userBean.getPreference('HIDE_SIDEBAR') ? null : 'layout-wrapper-sidebar-inactive'}">
                 <ui:include src="parts/header.xhtml"/>
 
                 <ui:fragment rendered="#{userBean.loggedIn}">

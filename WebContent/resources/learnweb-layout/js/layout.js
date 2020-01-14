@@ -80,11 +80,17 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     this.menuButton.off('click').on('click', (e) => {
       if (this.isDesktop()) {
-        this.wrapper.toggleClass('layout-wrapper-sidebar-inactive');
         this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
+        if (this.wrapper.hasClass('layout-wrapper-sidebar-inactive')) {
+          this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
+          setPreference('HIDE_SIDEBAR', false);
+        } else {
+          this.wrapper.addClass('layout-wrapper-sidebar-inactive');
+          setPreference('HIDE_SIDEBAR', true);
+        }
       } else {
-        this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
         this.wrapper.removeClass('layout-wrapper-sidebar-inactive');
+        this.wrapper.toggleClass('layout-wrapper-sidebar-mobile-active');
       }
 
       e.preventDefault();
