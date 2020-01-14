@@ -3,10 +3,12 @@ package messages;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 public class MessageFormatTest
 {
     @Test
