@@ -181,6 +181,16 @@ function createContextMenu() {
       };
     },
   });
+
+  if (PF('learnweb').isTouchDevice()) {
+    // only on mobile
+    $(document).on('click', '.res-item .res-bl-menu', (e) => {
+      const resItem = $(e.currentTarget).parents('.res-item');
+      resItem.contextMenu({ x: e.pageX, y: e.pageY });
+
+      return false;
+    });
+  }
 }
 
 function createSelectable(resContainerId) {
@@ -188,7 +198,7 @@ function createSelectable(resContainerId) {
   // check if container is selectable
   if (!$resContainer || !$resContainer.data('canselectresources')) return;
 
-  $resContainer.on('click', '.res-item .res-selector', function (e) { // select using keyboard hot keys
+  $(document).on('click', '.res-item .res-selector', function (e) { // select using keyboard hot keys
     const resItem = this.closest('.res-item');
     const itemType = resItem.dataset.itemtype;
     const itemId = resItem.dataset.itemid;
@@ -204,7 +214,7 @@ function createSelectable(resContainerId) {
     e.stopPropagation();
   });
 
-  $resContainer.on('click', '.res-item', function (e) { // select using keyboard hot keys
+  $(document).on('click', '.res-item', function (e) { // select using keyboard hot keys
     if (e.shiftKey && selected.size() > 0) { // select all between
       const prevSelected = selected.getItem(selected.size() - 1);
       selected.select(this);
@@ -238,7 +248,14 @@ function createSelectable(resContainerId) {
 
     return false;
   });
+}
 
+function createSelectableArea(resContainerId) {
+  const $resContainer = $(document.getElementById(resContainerId));
+  // check if container is selectable
+  if (!$resContainer || !$resContainer.data('canselectresources')) return;
+
+  if (PF('learnweb').isTouchDevice()) return; // disable on mobile device
   $resContainer.selectable({
     filter: '.res-item',
     cancel: 'input,textarea,button,select,option,.cancel,.res-item',
@@ -464,6 +481,17 @@ function doAction(action, extraAttr1, extraAttr2) {
             { name: 'items', value: JSON.stringify(selected) },
           ]);
         });
+      } else {
+        console.error('No resources selected.');
+      }
+      break;
+    case 'details':
+      if (selected.size() === 1) {
+        const item = selected.getItem(0);
+        commandSelectResource([
+          { name: 'itemType', value: item.type },
+          { name: 'itemId', value: item.id },
+        ]);
       } else {
         console.error('No resources selected.');
       }

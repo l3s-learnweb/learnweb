@@ -304,6 +304,10 @@ ul.res-filters {
   .res-item {
     margin: $grid-gutter-width / 2;
   }
+
+  @include media-breakpoint-down(xs) {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  }
 }
 
 .res-block {
@@ -405,11 +409,26 @@ ul.res-filters {
       background: $gray-300;
     }
 
+    .res-bl-menu {
+      display: none;
+      background: transparent;
+
+      .res-contextmenu & {
+        @media (pointer: coarse) {
+          display: flex;
+        }
+      }
+    }
+
     .res-bl-desc {
       flex: 1 1 auto;
       align-self: center;
       padding: 0 0.5rem;
       overflow: hidden;
+
+      @media (pointer: coarse) {
+        padding-right: 0;
+      }
 
       .res-bl-title,
       .res-bl-author {
@@ -460,7 +479,8 @@ ul.res-filters {
       color: $themePrimaryColor;
     }
 
-    .res-bl-author {
+    .res-bl-author,
+    .res-bl-menu {
       color: $themeElementTextColor !important;
     }
   }
@@ -493,6 +513,7 @@ ul.res-filters {
       color: $themePrimaryDarkerAlt;
     }
 
+    .res-bl-menu,
     .res-bl-author {
       color: $themeElementTextColor !important;
     }

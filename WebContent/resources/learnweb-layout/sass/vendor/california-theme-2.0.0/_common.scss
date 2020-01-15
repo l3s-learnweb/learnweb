@@ -50,7 +50,7 @@ body {
         background-color: rgba($gray-700, 0.75);
     }
     .ui-blockui {
-        background-color: rgba(73,80,87,.75);
+        background-color: $white;
         background-image: url("\#{resource['images:blockui-spinner.svg']}");
         background-size: 6rem;
         background-repeat: no-repeat;
@@ -62,7 +62,6 @@ body {
         }
     }
     .ui-blockui-content {
-        color: $white;
         top: 7rem !important;
     }
     .ui-icon {

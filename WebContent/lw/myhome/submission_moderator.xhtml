@@ -133,11 +133,12 @@
              * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
              */
             function onResourcesUpdated() {
-                createSelectable('user_submissions');
+                createSelectableArea('user_submissions');
             }
 
             $(function () {
                 $(document).on('dblclick', '.res-item', openItems);
+                createSelectable('resourcesView');
                 onResourcesUpdated();
             });
         </script>

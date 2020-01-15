@@ -126,9 +126,11 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
   },
 
   showRightPane() {
-    this.body.addClass('right-pane-open');
-    this.isRightPaneOpen = true;
-    this.resize();
+    setTimeout(() => {
+      this.body.addClass('right-pane-open');
+      this.isRightPaneOpen = true;
+      this.resize();
+    }, 200); // this is required because on double click the overlay closes immediately
   },
 
   hideRightPane() {
@@ -255,13 +257,6 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
     }
   },
 });
-
-/**
- * TODO: Find better way to call it
- */
-function updateCarousel2() {
-  PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });
-}
 
 /*
  * Store preferences in user account settings

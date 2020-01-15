@@ -58,7 +58,7 @@
     overflow-y: hidden;
 
     .layout-overlay {
-      display: block;
+      display: block !important;
     }
 
     .layout-right-pane {

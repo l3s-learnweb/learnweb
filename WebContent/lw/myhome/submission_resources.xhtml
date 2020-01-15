@@ -175,7 +175,7 @@
 
       function onResourcesUpdated() {
         updateMaxResources();
-        // createSelectable('submittedResourcesGrid'); Why do we need the ability to select these resources?
+        // createSelectableArea('submittedResourcesGrid'); Why do we need the ability to select these resources?
       }
 
       $(function () {
@@ -193,7 +193,7 @@
 
         $(document).on('dblclick', '.res-item', openItems);
         onResourcesUpdated();
-        createSelectable('submitResourcesGrid');
+        // createSelectable('submitResourcesGrid');
       });
     </script>
 </ui:define>

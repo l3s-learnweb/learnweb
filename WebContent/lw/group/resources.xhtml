@@ -7,7 +7,7 @@
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="hideGrowl" value="false"/>
 <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
-<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}"/>
+<ui:param name="pageTitle" value="#{groupResourcesBean.group.title} - #{msg.resources}"/>
 <ui:param name="group" value="#{groupResourcesBean.group}"/>
 
 <ui:define name="metadata">
@@ -49,12 +49,12 @@
                          oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
     </h:form>
 
-    <p:blockUI block="resourcesPanel" widgetVar="resourcesOverlay">
+    <p:blockUI block="resourceOverlay" widgetVar="resourcesOverlay">
         <h:outputText value="#{msg.please_wait}"/>
     </p:blockUI>
 
-    <h:panelGroup id="resourcesPanel" styleClass="row no-gutters resources-panel mb-n3" layout="block">
-        <div class="col-12 col-folders ui-panel ui-widget d-flex flex-column">
+    <h:panelGroup styleClass="row no-gutters resources-panel mb-n3" layout="block">
+        <div class="col-12 col-folders ui-panel ui-widget flex-column d-none d-md-flex">
             <div class="ui-panel-titlebar ui-widget-header">
                 <span class="ui-panel-title">#{msg.folders}</span>
             </div>
@@ -115,81 +115,84 @@
                 </p:toolbar>
             </h:form>
 
-            <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column">
-                <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
-                    <ul class="res-filters">
-                        <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
-                            <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
-                                <span class="filter-title">
-                                    <span class="text-truncate">#{filter.title}</span>
-                                    <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
-                                </span>
-                                <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
-                                    <li class="#{!filter.active ? 'active' : null}">
-                                        <p:commandLink value="#{filter.anyTitle}" action="#{groupResourcesBean.changeFilters(filter.anyValue)}"
-                                                       update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
-                                    </li>
-                                    <p:repeat value="#{filter.options}" var="item">
-                                        <li class="#{item.active ? 'active' : null}">
-                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.value)}"
-                                                           update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
-                                                <span class="text-truncate">#{item.title}</span>
-                                                <h:outputText rendered="#{item.totalResults != null}" value=" (#{item.totalResults})"/>
-                                            </p:commandLink>
+            <h:panelGroup id="resourceOverlay" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column ui-loading-spin">
+                <h:panelGroup id="resourcesWrapper" layout="block">
+                    <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || !groupResourcesBean.paginator.isEmpty()}">
+                        <ul class="res-filters">
+                            <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
+                                <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
+                                    <span class="filter-title">
+                                        <span class="text-truncate">#{filter.title}</span>
+                                        <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                    <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
+                                        <li class="#{!filter.active ? 'active' : null}">
+                                            <p:commandLink value="#{filter.anyTitle}" action="#{groupResourcesBean.changeFilters(filter.anyValue)}"
+                                                           update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
                                         </li>
-                                    </p:repeat>
-                                    <li class="expand-list collapse">
-                                        <a href="#">#{msg.filter_carousel_all}</a>
-                                    </li>
-                                </ul>
+                                        <p:repeat value="#{filter.options}" var="item">
+                                            <li class="#{item.active ? 'active' : null}">
+                                                <p:commandLink action="#{groupResourcesBean.changeFilters(item.value)}"
+                                                               update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
+                                                    <span class="text-truncate">#{item.title}</span>
+                                                    <h:outputText rendered="#{item.totalResults != null}" value=" (#{item.totalResults})"/>
+                                                </p:commandLink>
+                                            </li>
+                                        </p:repeat>
+                                        <li class="expand-list collapse">
+                                            <a href="#">#{msg.filter_carousel_all}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </p:repeat>
+
+                            <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
+                                <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
+                                               onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
+                                    <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
+                                </p:commandLink>
+
+                                <div id="search_filter_form" class="res-search-form">
+                                    <p:inputText value="#{groupResourcesBean.query}"/>
+
+                                    <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
+                                                     styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
+                                                     oncomplete="onResourcesUpdated();"/>
+                                </div>
                             </li>
-                        </p:repeat>
 
-                        <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
-                            <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
-                                           onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
-                                <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
-                            </p:commandLink>
+                            <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersEnabled or groupResourcesBean.query != null}">
+                                <li class="clear-filters">
+                                    <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
+                                                   action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
+                                                   oncomplete="onResourcesUpdated();"/>
+                                </li>
+                            </h:panelGroup>
+                        </ul>
+                        <script>PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });</script>
+                    </h:form>
 
-                            <div id="search_filter_form" class="res-search-form">
-                                <p:inputText value="#{groupResourcesBean.query}"/>
-
-                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
-                                                 styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
-                                                 oncomplete="onResourcesUpdated();"/>
-                            </div>
-                        </li>
-
-                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersEnabled or groupResourcesBean.query != null}">
-                            <li class="clear-filters">
-                                <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
-                                               action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
-                                               oncomplete="onResourcesUpdated();"/>
+                    <h:panelGroup id="breadcrumbs" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
+                        <ul class="res-breadcrumbs">
+                            <li data-folderId="0">
+                                <h:outputLink value="#" onclick="openFolder(0);return false;">#{groupResourcesBean.group.title}</h:outputLink>
                             </li>
-                        </h:panelGroup>
-                    </ul>
-                </h:form>
+                            <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}">
+                                <li data-folderId="#{folder.id}">
+                                    <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.name}</h:outputLink>
+                                </li>
+                            </p:repeat>
+                        </ul>
+                    </h:panelGroup>
 
-                <h:panelGroup id="breadcrumbs" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
-                    <ul class="res-breadcrumbs">
-                        <li data-folderId="0">
-                            <h:outputLink value="#" onclick="openFolder(0);return false;">#{groupResourcesBean.group.title}</h:outputLink>
-                        </li>
-                        <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}">
-                            <li data-folderId="#{folder.id}">
-                                <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.name}</h:outputLink>
-                            </li>
-                        </p:repeat>
-                    </ul>
+                    <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_view.xhtml">
+                        <ui:param name="paginator" value="#{groupResourcesBean.paginator}"/>
+                        <ui:param name="gridView" value="#{groupResourcesBean.gridView}"/>
+                        <ui:param name="canAddResources" value="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
+                        <ui:param name="canMoveResources" value="#{groupResourcesBean.group.canMoveResources(userBean.user)}"/>
+                        <ui:param name="query" value="#{groupResourcesBean.query}"/>
+                    </ui:decorate>
                 </h:panelGroup>
-
-                <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_view.xhtml">
-                    <ui:param name="paginator" value="#{groupResourcesBean.paginator}"/>
-                    <ui:param name="gridView" value="#{groupResourcesBean.gridView}"/>
-                    <ui:param name="canAddResources" value="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
-                    <ui:param name="canMoveResources" value="#{groupResourcesBean.group.canMoveResources(userBean.user)}"/>
-                    <ui:param name="query" value="#{groupResourcesBean.query}"/>
-                </ui:decorate>
             </h:panelGroup>
         </div>
     </h:panelGroup>
@@ -272,8 +275,7 @@
          * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
          */
         function onResourcesUpdated() {
-            updateCarousel2();
-            createSelectable('resourcesView');
+            createSelectableArea('resourcesView');
             createDragAndDrop('resourcesView', 'breadcrumbs', 'group_folders_tree');
         }
 
@@ -281,6 +283,7 @@
             $(document).on('dblclick', '.res-item', openItems);
 
             createContextMenu();
+            createSelectable('resourcesView');
             onResourcesUpdated();
         });
     </h:outputScript>
