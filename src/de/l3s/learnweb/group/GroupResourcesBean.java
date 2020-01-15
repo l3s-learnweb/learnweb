@@ -229,7 +229,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
         SolrPaginator sp = new SolrPaginator(solrSearch);
-        searchFilters.cleanAll();
+        // searchFilters.cleanAll();
         searchFilters.putResourceCounter(sp.getFacetFields());
         searchFilters.putResourceCounter(sp.getFacetQueries());
         return sp;
