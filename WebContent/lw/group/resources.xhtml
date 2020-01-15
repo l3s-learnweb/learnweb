@@ -128,12 +128,14 @@
                                     <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
                                         <li class="#{!filter.active ? 'active' : null}">
                                             <p:commandLink value="#{filter.anyTitle}" action="#{groupResourcesBean.changeFilters(filter.anyValue)}"
-                                                           update=":resourcesWrapper" oncomplete="onResourcesUpdated();"/>
+                                                           update=":resourcesWrapper" global="false" onstart="PF('resourcesOverlay').show();"
+                                                           oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
                                         </li>
                                         <p:repeat value="#{filter.options}" var="item">
                                             <li class="#{item.active ? 'active' : null}">
                                                 <p:commandLink action="#{groupResourcesBean.changeFilters(item.value)}"
-                                                               update=":resourcesWrapper" oncomplete="onResourcesUpdated();">
+                                                               update=":resourcesWrapper" global="false" onstart="PF('resourcesOverlay').show();"
+                                                               oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();">
                                                     <span class="text-truncate">#{item.title}</span>
                                                     <h:outputText rendered="#{item.totalResults != null}" value=" (#{item.totalResults})"/>
                                                 </p:commandLink>
