@@ -30,7 +30,7 @@ public final class ConvertChloesResources
 
     private ConvertChloesResources() throws SQLException, ClassNotFoundException
     {
-        learnweb = Learnweb.createInstance(null);
+        learnweb = Learnweb.createInstance();
 
         resourceManager = learnweb.getResourceManager();
         resourceManager.setReindexMode(true);

@@ -65,23 +65,23 @@ public class WaybackUrlManager
 {
     private final static Logger log = Logger.getLogger(WaybackUrlManager.class);
     private static WaybackUrlManager instance;
-    private final Learnweb application;
+    private final Learnweb learnweb;
     private LoadingCache<URL, UrlRecord> cache;
     private CDXClient cdxClient;
 
     // there should exist only one instance of this class because of the cache
-    public static WaybackUrlManager getInstance(Learnweb application)
+    public static WaybackUrlManager getInstance(Learnweb learnweb)
     {
         if(instance == null)
         {
-            instance = new WaybackUrlManager(application);
+            instance = new WaybackUrlManager(learnweb);
         }
         return instance;
     }
 
     private WaybackUrlManager(Learnweb learnweb)
     {
-        this.application = learnweb;
+        this.learnweb = learnweb;
 
         cdxClient = new CDXClient();
 
@@ -104,7 +104,7 @@ public class WaybackUrlManager
 
     private Connection getConnection() throws SQLException
     {
-        return application.getConnection();
+        return learnweb.getConnection();
     }
 
     /**
@@ -925,7 +925,7 @@ public class WaybackUrlManager
         Date MIN_ACCEPTABLE_CRAWL_TIME = minCrawlTime.getTime();
 
         log.debug("start");
-        WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
+        WaybackUrlManager manager = Learnweb.createInstance().getWaybackUrlManager();
         UrlRecord record = manager.getUrlRecord("http://www.google.com/");
         log.debug(record);
         manager.updateRecord(record, null, MIN_ACCEPTABLE_CRAWL_TIME);
@@ -933,7 +933,7 @@ public class WaybackUrlManager
         // check statusCodeDate in the output
         */
 
-        WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
+        WaybackUrlManager manager = Learnweb.createInstance().getWaybackUrlManager();
         String url = "http://www.cs.virginia.edu/~hw5x/Course/IR2017/_site/docs/Inverted Index.pptx";
         UrlRecord record = manager.getHtmlContent(url);
         log.debug(record.getStatusCode());

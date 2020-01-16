@@ -19,20 +19,16 @@ public class JobScheduler
 
     private Learnweb learnweb;
 
+    /**
+     * Description about Scheduling patterns
+     *  http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
+     */
     protected JobScheduler(Learnweb learnweb)
     {
         this.learnweb = learnweb;
         this.scheduler = new Scheduler();
 
-        //description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02
-
-        if(learnweb.getService().equals(Learnweb.SERVICE.LEARNWEB))
-        {
-            //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
-            scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());
-            //Runs the speech repository crawler at 22:00 once a week to check for new/update of videos
-            scheduler.schedule("0 22 * * 1", new SpeechRepositoryCrawlerSimple());
-        }
+        if (Learnweb.isInDevelopmentMode()) return;
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());
@@ -40,13 +36,20 @@ public class JobScheduler
         //Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
 
-        if(!Learnweb.isInDevelopmentMode() && !learnweb.getService().equals(Learnweb.SERVICE.AMA)) // don't run the fetcher for ama since it has no mail address set up
+        if(learnweb.getService() == Learnweb.SERVICE.LEARNWEB && learnweb.getContextPath().isEmpty())
+        {
+            //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
+            scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());
+            //Runs the speech repository crawler at 22:00 once a week to check for new/update of videos
+            scheduler.schedule("0 22 * * 1", new SpeechRepositoryCrawlerSimple());
+        }
+
+        if(learnweb.getService() != Learnweb.SERVICE.AMA) // don't run the fetcher for ama since it has no mail address set up
         {
             //Checks bounced mail every day at 3:00AM
             scheduler.schedule("0 3 * * *", new BounceFetcher());
 
             scheduler.schedule("0 2 * * *", new MailTest());
-
         }
     }
 

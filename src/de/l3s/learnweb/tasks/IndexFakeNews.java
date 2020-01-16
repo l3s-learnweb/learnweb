@@ -45,7 +45,7 @@ public class IndexFakeNews
     {
         try
         {
-            learnweb = Learnweb.createInstance(null);
+            learnweb = Learnweb.createInstance();
             resourceManager = learnweb.getResourceManager();
 
             //indexFullfactFile("d:\\full_fact.csv");

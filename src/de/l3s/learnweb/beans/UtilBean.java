@@ -44,19 +44,13 @@ public class UtilBean implements Serializable
         return (UserBean) getManagedBean("userBean");
     }
 
-    public static String getContextPath()
-    {
-        ServletContext servletContext = (ServletContext) getExternalContext().getContext();
-
-        return servletContext.getContextPath();
-    }
-
     public static void redirect(String redirectPath)
     {
         ExternalContext externalContext = getExternalContext();
         try
         {
-            externalContext.redirect(getContextPath() + redirectPath);
+            ServletContext servletContext = (ServletContext) externalContext.getContext();
+            externalContext.redirect(servletContext.getContextPath() + redirectPath);
         }
         catch(IOException e)
         {

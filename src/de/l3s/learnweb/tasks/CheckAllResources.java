@@ -20,7 +20,7 @@ public class CheckAllResources
 
     public static void main(String[] args) throws Exception
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
 
         final int batchSize = 5000;
         ResourceManager resourceManager = learnweb.getResourceManager();

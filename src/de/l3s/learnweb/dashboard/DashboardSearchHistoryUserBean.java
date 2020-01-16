@@ -56,7 +56,7 @@ public class DashboardSearchHistoryUserBean extends ApplicationDebuggingBean imp
     {
         DashboardSearchHistoryUserBean dashboard = new DashboardSearchHistoryUserBean();
         dashboard.paramUserId = 11618;
-        dashboard.user = Learnweb.createInstance(null).getUserManager().getUser(11618);
+        dashboard.user = Learnweb.createInstance().getUserManager().getUser(11618);
         dashboard.onLoad();
     }
 

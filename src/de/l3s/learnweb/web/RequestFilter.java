@@ -106,7 +106,7 @@ public class RequestFilter implements Filter
 
         try
         {
-            Learnweb learnweb = Learnweb.createInstance(context);
+            Learnweb learnweb = Learnweb.createInstance(null, context);
             requestManager = learnweb.getRequestManager();
             protectionManager = learnweb.getProtectionManager();
         }

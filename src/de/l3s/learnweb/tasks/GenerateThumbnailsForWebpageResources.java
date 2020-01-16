@@ -37,7 +37,7 @@ public class GenerateThumbnailsForWebpageResources
     {
         System.exit(0);
 
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
         ResourceManager rm = learnweb.getResourceManager();
         ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
 

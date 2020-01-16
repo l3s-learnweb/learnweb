@@ -691,7 +691,7 @@ public class TedManager
 
     public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
     {
-        Learnweb lw = Learnweb.createInstance(null);
+        Learnweb lw = Learnweb.createInstance();
         TedManager tm = lw.getTedManager();
         tm.removeDuplicateTEDResources(215353);
         lw.onDestroy();

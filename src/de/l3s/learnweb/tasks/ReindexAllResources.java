@@ -15,7 +15,7 @@ public class ReindexAllResources
 
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
         SolrClient solr = learnweb.getSolrClient();
 
         /* Reindex resources of single user */

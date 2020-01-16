@@ -13,7 +13,7 @@ public class ChangeSettingsOfAllCourses
 
     public static void main(String[] args) throws Exception
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
 
         for(Course course : learnweb.getCourseManager().getCoursesAll())
         {

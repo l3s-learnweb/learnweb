@@ -173,7 +173,7 @@ public class PeerAssessmentManager
     public static void main(String[] args) throws Exception
     {
 
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
         PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
 
         //pam.taskSetupPeerAssessmentAarhusLateSubmission();

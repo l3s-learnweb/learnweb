@@ -31,7 +31,7 @@ public class RemoveDescriptionsFromSubmittedResources
     {
         System.exit(0);
 
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
         UserManager um = learnweb.getUserManager();
 
         User submitAdmin = um.getUser(11212);

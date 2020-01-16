@@ -23,16 +23,12 @@ public class LearnwebBean implements Serializable
     private static final Logger log = Logger.getLogger(LearnwebBean.class);
 
     private transient Learnweb learnweb;
-    private final String contextPath;
     private boolean maintenanceMode = false;
 
-    public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
+    public LearnwebBean()
     {
-        contextPath = UtilBean.getContextPath();
-
-        log.debug("init LearnwebBean: context='" + contextPath + "'");
-
-        learnweb = Learnweb.createInstance(getServerUrl());
+        log.debug("init LearnwebBean");
+        learnweb = Learnweb.getInstance();
     }
 
     @PostConstruct
@@ -40,37 +36,6 @@ public class LearnwebBean implements Serializable
     {
         // initialize stuff which is not required by console tasks
         learnweb.initLearnwebServer();
-    }
-
-    /**
-     *
-     * @return Returns the context path
-     */
-    public String getContextPath()
-    {
-        return contextPath;
-    }
-
-    /**
-     *
-     * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
-     */
-    private static String getServerUrl()
-    {
-        try
-        {
-            ExternalContext ext = UtilBean.getExternalContext();
-
-            if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
-            else
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
-        }
-        catch(Exception e)
-        {
-            log.warn("Can't get server url. This is only expected in console mode");
-            return "http://learnweb.l3s.uni-hannover.de";
-        }
     }
 
     public Learnweb getLearnweb()
@@ -105,7 +70,7 @@ public class LearnwebBean implements Serializable
             if(null != url)
                 return url;
         }
-        return getContextPath() + "/resources/images/no-profile-picture.jpg";
+        return learnweb.getContextPath() + "/resources/images/no-profile-picture.jpg";
     }
 
     public boolean isMaintenanceMode()

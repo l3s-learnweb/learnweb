@@ -7,13 +7,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.forum.ForumManager;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.group.LinkManager;
@@ -58,6 +58,7 @@ public class Learnweb
 
     private PropertiesBundle properties;
     private String serverUrl;
+    private String contextPath = "";
 
     // list of Learnweb installations
     public enum SERVICE
@@ -118,9 +119,9 @@ public class Learnweb
 
             try
             {
-                ServletContext servletContext = (ServletContext) UtilBean.getExternalContext().getContext();
+                ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 
-                return createInstance(servletContext.getContextPath());
+                return createInstance(null, servletContext.getContextPath());
             }
             catch(Exception e)
             {
@@ -128,6 +129,11 @@ public class Learnweb
             }
         }
         return learnweb;
+    }
+
+    public static Learnweb createInstance() throws ClassNotFoundException, SQLException
+    {
+        return createInstance(null, "");
     }
 
     /**
@@ -138,7 +144,7 @@ public class Learnweb
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
+    public static Learnweb createInstance(String serverUrl, String contextPath) throws ClassNotFoundException, SQLException
     {
         try
         {
@@ -151,7 +157,7 @@ public class Learnweb
                     return null; // to avoid infinite loop
                 }
 
-                learnweb = new Learnweb(serverUrl);
+                learnweb = new Learnweb(serverUrl, contextPath);
             }
             else
                 learnweb.setServerUrl(serverUrl);
@@ -213,12 +219,12 @@ public class Learnweb
 
     /**
      *
-     * @param guessedServerUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @param serverUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      *
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private Learnweb(String guessedServerUrl) throws ClassNotFoundException, SQLException
+    private Learnweb(String serverUrl, String contextPath) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
 
@@ -248,12 +254,12 @@ public class Learnweb
             setServerUrl("http://learnweb.l3s.uni-hannover.de");
             log.error("You haven't provided an absolute base server url; Will use by default: " + this.serverUrl);
         }
-        else if(propertiesServerUrl.startsWith("http") && guessedServerUrl != null && guessedServerUrl.startsWith("/"))
-            setServerUrl(propertiesServerUrl + guessedServerUrl);
+        else if(propertiesServerUrl.startsWith("http") && contextPath != null && contextPath.startsWith("/"))
+            setServerUrl(propertiesServerUrl + contextPath);
         else if(propertiesServerUrl.startsWith("http"))
             setServerUrl(propertiesServerUrl);
-        else if(propertiesServerUrl.equalsIgnoreCase("auto") && StringUtils.isNotEmpty(guessedServerUrl))
-            setServerUrl(guessedServerUrl);
+        else if("auto".equalsIgnoreCase(propertiesServerUrl) && StringUtils.isNotEmpty(serverUrl))
+            setServerUrl(serverUrl);
         else
         {
             setServerUrl("https://learnweb.l3s.uni-hannover.de");
@@ -458,6 +464,11 @@ public class Learnweb
     public String getServerUrl()
     {
         return serverUrl;
+    }
+
+    public String getContextPath()
+    {
+        return contextPath;
     }
 
     public void setServerUrl(String serverUrl)

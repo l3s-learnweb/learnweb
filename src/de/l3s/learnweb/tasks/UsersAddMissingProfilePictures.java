@@ -31,7 +31,7 @@ public class UsersAddMissingProfilePictures
     public UsersAddMissingProfilePictures() throws Exception
     {
 
-        learnweb = Learnweb.createInstance(null);
+        learnweb = Learnweb.createInstance();
         um = learnweb.getUserManager();
 
         deleteMissingAvatars();

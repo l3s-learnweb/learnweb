@@ -30,7 +30,7 @@ public class ForceEmailValidation
      */
     public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
     {
-        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
+        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de", "");
         UserManager um = learnweb.getUserManager();
 
         if(!Learnweb.getInstance().getServerUrl().equals("https://learnweb.l3s.uni-hannover.de"))

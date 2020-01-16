@@ -88,7 +88,7 @@ public class TagthewebClient
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException
     {
-        Learnweb learnweb = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de");
+        Learnweb learnweb = Learnweb.createInstance();
         ResourceManager rm = new ResourceManager(learnweb);
 
         List<Resource> resources = learnweb.getResourceManager().getResourcesByCourseId(505);

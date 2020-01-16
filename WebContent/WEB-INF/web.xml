@@ -8,12 +8,12 @@
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Production</param-value>
+        <param-value>Development</param-value>
         <!-- Development Production -->
     </context-param>
     <context-param>
         <param-name>facelets.DEVELOPMENT</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
 
     <!-- PrimeFaces-->

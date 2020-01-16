@@ -31,7 +31,7 @@ public class Speechrepository
 
     private void importVideos() throws Exception
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        Learnweb learnweb = Learnweb.createInstance();
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
         Group group = learnweb.getGroupManager().getGroupById(1401);
         User admin = learnweb.getUserManager().getUser(7727);

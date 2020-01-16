@@ -27,7 +27,7 @@ public class OrganisationSetOption
     {
         try
         {
-            learnweb = Learnweb.createInstance(null);
+            learnweb = Learnweb.createInstance();
             OrganisationManager organisationManager = learnweb.getOrganisationManager();
             for(Organisation org : organisationManager.getOrganisationsAll())
             {

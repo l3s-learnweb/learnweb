@@ -67,7 +67,7 @@ public class DownloadServlet extends HttpServlet
 
         try
         {
-            this.learnweb = Learnweb.createInstance(context);
+            this.learnweb = Learnweb.createInstance(null, context);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
             this.fileManager = learnweb.getFileManager();
 
