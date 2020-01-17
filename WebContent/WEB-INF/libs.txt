@@ -6,15 +6,15 @@ activation-1.1.1.jar                            Dependencies missing in Java 11 
 apiguardian-api-1.0.0.jar                       Required by JUnit5 for tests
 batik-all-1.11.jar								required by imagio
 boilerpipe-1.1.0.jar							Biolerpip text extraction used when adding websites
-cdi-api-2.0.jar                                 required for myfaces-bundle-2.3.1
+cdi-api-2.0.SP1.jar                             required for myfaces-bundle-2.3.1
 classmate-1.3.4.jar					            required by Hibernate validator, added by Philipp
 common-image-3.4.2.jar							required by imagio (this isn't apache commons)
 common-io-3.4.2.jar								required by imagio (this isn't apache commons)
 common-lang-3.4.2.jar							required by imagio (this isn't apache commons)
-commons-beanutils-1.9.3.jar			            JSF Base (MyFaces)
+commons-beanutils-1.9.4.jar			            JSF Base (MyFaces)
 commons-codec-1.3.jar				            JSF Base, Dependency of Google API
 commons-collections-3.2.2.jar		            JSF Base (MyFaces)
-commons-collections4-4.1.jar		            Used by ActivityDashboardBean
+commons-collections4-4.4.jar		            Used by ActivityDashboardBean
 commons-csv-1.5.jar
 commons-digester-1.8.jar			            JSF Base (MyFaces)
 commons-fileupload-1.3.jar			            primefaces file upload
@@ -75,7 +75,7 @@ junit-platform-commons-1.4.2.jar				JUnit5 for tests
 junit-platform-engine-1.4.2.jar					JUnit5 for tests
 log4j-1.2.17.jar					            Logging
 mariadb-java-client-2.3.0.jar		            MariaDB
-myfaces-bundle-2.3.4.jar			            JSF Base
+myfaces-bundle-2.3.6.jar			            JSF Base
 nekohtml-1.9.18.jar								(Kate) Added boilerpipe grabbing article contents automatically
 noggit-0.8.jar			                        Dependency of solr-solrj
 oauth-client-1.5.jar				            Interweb
