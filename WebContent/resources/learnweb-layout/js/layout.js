@@ -182,6 +182,18 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
   },
 
   bindEvents() {
+    // Used for expanding resource filters on devices without hover
+    $(document).on('click', '.res-filters .filter', (e) => {
+      const $target = $(e.currentTarget);
+      $target.toggleClass('ui-state-expand');
+
+      if ($target.hasClass('ui-state-expand')) {
+        $(document).one('click', () => {
+          $target.removeClass('ui-state-expand');
+        });
+      }
+    });
+
     this.menuitemLinks.on('click', (e) => {
       const $currentLink = $(e.currentTarget);
 

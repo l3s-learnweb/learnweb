@@ -152,6 +152,7 @@ ul.res-filters {
       background-color: $gray-400;
     }
 
+    &.ui-state-expand .filter-sub-bar,
     &:hover .filter-sub-bar {
       display: block;
     }
