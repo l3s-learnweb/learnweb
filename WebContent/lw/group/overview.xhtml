@@ -30,7 +30,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <p:panel header="Group details" styleClass="text-break">
+            <p:panel header="#{msg.group_details}" styleClass="text-break">
                 <f:facet name="actions">
                     <h:form>
                         <p:commandButton action="#{groupsBean.joinGroup}" styleClass="alt-btn" value="#{msg.join_group}" immediate="true" update=":growl"
@@ -112,7 +112,7 @@
                 <ui:param name="summaryTitle" value="#{groupOverviewBean.summaryTitle}"/>
             </ui:decorate>
 
-            <p:panel header="All activities" id="resourcesView">
+            <p:panel header="#{msg.all_activities}" id="resourcesView">
                 <h:form id="group_activity">
                     <ui:repeat value="#{groupOverviewBean.logMessages}" var="logEntry" varStatus="status">
                         <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">

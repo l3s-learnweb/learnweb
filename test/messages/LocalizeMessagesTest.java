@@ -117,7 +117,7 @@ public class LocalizeMessagesTest
         {
             try
             {
-                FileWriter out = new FileWriter(locale + ".csv");
+                FileWriter out = new FileWriter("missing_keys_" + locale + ".csv");
                 printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS));
             }
             catch(IOException e)
