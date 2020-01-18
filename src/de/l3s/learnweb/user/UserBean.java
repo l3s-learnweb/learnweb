@@ -218,6 +218,7 @@ public class UserBean implements Serializable
 
     public String setLocaleCode(String localeCode)
     {
+        setSidebarMenuModel(null);
         String languageVariant = getActiveOrganisation().getLanguageVariant();
         //log.debug("set locale " + localeCode);
 
