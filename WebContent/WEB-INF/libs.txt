@@ -15,7 +15,7 @@ commons-beanutils-1.9.4.jar			            JSF Base (MyFaces)
 commons-codec-1.3.jar				            JSF Base, Dependency of Google API
 commons-collections-3.2.2.jar		            JSF Base (MyFaces)
 commons-collections4-4.4.jar		            Used by ActivityDashboardBean
-commons-csv-1.5.jar
+commons-csv-1.7.jar
 commons-digester-1.8.jar			            JSF Base (MyFaces)
 commons-fileupload-1.3.jar			            primefaces file upload
 commons-io-2.6.jar					            required by FileManager, Primefaces file upload, Dependency of solr-solrj
@@ -43,7 +43,7 @@ http2-http-client-transport-9.4.19.v20190610.jar Dependency of solr-solrj
 httpclient-4.5.9.jar				            Dependency of solr-solrj, Google API, crawler4j
 httpcore-4.4.11.jar					            Dependency of solr-solrj, Google API, crawler4j
 httpmime-4.5.9.jar					            Dependency of solr-solrj
-imageio-*.jar									Image processing, Thumbnails 
+imageio-*.jar									Image processing, Thumbnails
 itext-2.1.7.jar						            Dependency for PDF exporter
 jackson-core-2.1.3.jar				            Dependency of Google API
 javax.mail.jar									Mail

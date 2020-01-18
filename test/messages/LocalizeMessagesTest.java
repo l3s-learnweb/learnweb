@@ -1,8 +1,11 @@
 package messages;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -15,11 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LocalizeMessagesTest
 {
     private static final String MESSAGES_PATH = "de/l3s/learnweb/lang/messages";
+    private static final String[] HEADERS = { "key", "english", "translation", "description"};
+    private static final boolean CREATE_CSV_FILE = false;
+    private static CSVPrinter printer;
 
     @Test
     void testLocalesToHaveAllBaseKeys() throws IOException
     {
         Properties baseMessages = getMessagesForLocale(null);
+        Properties xyMessages = getMessagesForLocale("xy");
 
         assertAll(Stream.of("de", "es", "it", "pt", "uk").map(locale -> () ->
         {
@@ -31,9 +38,11 @@ public class LocalizeMessagesTest
                 if (!localeMessages.containsKey(key))
                 {
                     missingMessages.add(key.toString());
+                    writeCSV(locale, key, baseMessages.get(key), localeMessages.get(key), xyMessages.get(key));
                 }
             });
 
+            closeCSV();
             if (!missingMessages.isEmpty())
                 fail("Locale '" + locale + "' missing " + missingMessages.size() + " keys: " + missingMessages.toString());
         }));
@@ -68,6 +77,56 @@ public class LocalizeMessagesTest
         Properties baseMessages = getMessagesForLocale("en");
 
         assertTrue(baseMessages.isEmpty(), "The 'en' locale should not contains any keys. Add all English translations to default.");
+    }
+
+    private static void writeCSV(String locale, Object key, Object en, Object loc, Object xy)
+    {
+        if (CREATE_CSV_FILE)
+        {
+            try
+            {
+                if ("TODO".equals(xy)) xy = null;
+                getCSVPrinter(locale).printRecord(key, en, loc, xy);
+            }
+            catch(IOException e)
+            {
+                fail("Can't write to CSVPrinter", e);
+            }
+        }
+    }
+
+    private static void closeCSV()
+    {
+        if (CREATE_CSV_FILE && printer != null)
+        {
+            try
+            {
+                printer.close();
+                printer = null;
+            }
+            catch(IOException e)
+            {
+                fail("Can't close CSVPrinter", e);
+            }
+        }
+    }
+
+    private static CSVPrinter getCSVPrinter(String locale)
+    {
+        if (printer == null)
+        {
+            try
+            {
+                FileWriter out = new FileWriter(locale + ".csv");
+                printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS));
+            }
+            catch(IOException e)
+            {
+                fail("Can't create CSVPrinter", e);
+            }
+        }
+
+        return printer;
     }
 
     private static Properties getMessagesForLocale(String locale) throws IOException
