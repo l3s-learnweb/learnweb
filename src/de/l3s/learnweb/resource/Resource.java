@@ -146,7 +146,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
-            if (type == ResourceType.survey)
+            if(type == ResourceType.survey)
             {
                 Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(204095);
                 setThumbnail0(iconResource.getThumbnail0());
@@ -162,26 +162,26 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
             switch(type)
             {
-                case audio:
-                case document:
-                case image:
-                case presentation:
-                case spreadsheet:
-                case text:
-                case video:
-                case website:
-                    dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
-                    break;
-                default:
-                    dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
-                }
+            case audio:
+            case document:
+            case image:
+            case presentation:
+            case spreadsheet:
+            case text:
+            case video:
+            case website:
+                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/" + type.name() + "-file.png", 128, 128);
+                break;
+            default:
+                dummyImage = new Thumbnail(serverUrl + "/resources/default-thumbnails/grain.png", 200, 200);
+            }
 
-                if(null == thumbnail0)
-                    setThumbnail0(dummyImage.resize(150, 120));
-                if(null == thumbnail1)
-                    setThumbnail1(dummyImage.resize(150, 150));
-                if(null == thumbnail2)
-                    setThumbnail2(dummyImage);
+            if(null == thumbnail0)
+                setThumbnail0(dummyImage.resize(150, 120));
+            if(null == thumbnail1)
+                setThumbnail1(dummyImage.resize(150, 150));
+            if(null == thumbnail2)
+                setThumbnail2(dummyImage);
         }
     }
 
@@ -577,7 +577,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
     }
@@ -1279,7 +1279,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(ArchiveUrl a : archiveUrls)
         {
             String year = df.format(a.getTimestamp());
-            if(!versions.containsKey(year)) versions.put(year, new ArrayList<>());
+            if(!versions.containsKey(year))
+                versions.put(year, new ArrayList<>());
             versions.get(year).add(a);
         }
         return versions;
@@ -1829,7 +1830,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         public List<String> get(Object key)
         {
             String value = wrappedMap.get(key);
-            if (StringUtils.isEmpty(value)) return null;
+            if(StringUtils.isEmpty(value))
+                return null;
             return Arrays.asList(StringUtils.split(wrappedMap.get(key), METADATA_SEPARATOR));
         }
 
