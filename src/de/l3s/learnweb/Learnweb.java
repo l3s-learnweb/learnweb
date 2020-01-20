@@ -58,7 +58,6 @@ public class Learnweb
 
     private PropertiesBundle properties;
     private String serverUrl;
-    private String contextPath = "";
 
     // list of Learnweb installations
     public enum SERVICE
@@ -115,25 +114,15 @@ public class Learnweb
     {
         if(null == learnweb)
         {
-            //log.warn("Learnweb is not initialized correctly. You should call createInstance() first", new Exception());
-
-            try
-            {
-                ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-
-                return createInstance(null, servletContext.getContextPath());
-            }
-            catch(Exception e)
-            {
-                throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)", e);
-            }
+            log.warn("Learnweb is not initialized correctly. You should call createInstance() first", new Exception());
+            // throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
         }
         return learnweb;
     }
 
     public static Learnweb createInstance() throws ClassNotFoundException, SQLException
     {
-        return createInstance(null, "");
+        return createInstance(null);
     }
 
     /**
@@ -144,7 +133,7 @@ public class Learnweb
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static Learnweb createInstance(String serverUrl, String contextPath) throws ClassNotFoundException, SQLException
+    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
     {
         try
         {
@@ -157,7 +146,7 @@ public class Learnweb
                     return null; // to avoid infinite loop
                 }
 
-                learnweb = new Learnweb(serverUrl, contextPath);
+                learnweb = new Learnweb(serverUrl);
             }
             else
                 learnweb.setServerUrl(serverUrl);
@@ -224,7 +213,7 @@ public class Learnweb
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private Learnweb(String serverUrl, String contextPath) throws ClassNotFoundException, SQLException
+    private Learnweb(String serverUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
 
@@ -249,17 +238,14 @@ public class Learnweb
         // load server URL from config file or guess it
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
-        if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
+        if("auto".equalsIgnoreCase(propertiesServerUrl) && StringUtils.isNotEmpty(serverUrl))
         {
-            setServerUrl("http://learnweb.l3s.uni-hannover.de");
-            log.error("You haven't provided an absolute base server url; Will use by default: " + this.serverUrl);
-        }
-        else if(propertiesServerUrl.startsWith("http") && contextPath != null && contextPath.startsWith("/"))
-            setServerUrl(propertiesServerUrl + contextPath);
-        else if(propertiesServerUrl.startsWith("http"))
-            setServerUrl(propertiesServerUrl);
-        else if("auto".equalsIgnoreCase(propertiesServerUrl) && StringUtils.isNotEmpty(serverUrl))
             setServerUrl(serverUrl);
+        }
+        else if(null != propertiesServerUrl && propertiesServerUrl.startsWith("http"))
+        {
+            setServerUrl(propertiesServerUrl);
+        }
         else
         {
             setServerUrl("https://learnweb.l3s.uni-hannover.de");
@@ -464,11 +450,6 @@ public class Learnweb
     public String getServerUrl()
     {
         return serverUrl;
-    }
-
-    public String getContextPath()
-    {
-        return contextPath;
     }
 
     public void setServerUrl(String serverUrl)

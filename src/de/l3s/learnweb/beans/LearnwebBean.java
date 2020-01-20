@@ -1,13 +1,11 @@
 package de.l3s.learnweb.beans;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.context.ExternalContext;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
@@ -25,10 +23,9 @@ public class LearnwebBean implements Serializable
     private transient Learnweb learnweb;
     private boolean maintenanceMode = false;
 
-    public LearnwebBean()
+    public LearnwebBean() throws ClassNotFoundException, SQLException
     {
-        log.debug("init LearnwebBean");
-        learnweb = Learnweb.getInstance();
+        learnweb = Learnweb.createInstance(UtilBean.getServerUrl());
     }
 
     @PostConstruct
@@ -55,7 +52,7 @@ public class LearnwebBean implements Serializable
     }
 
     /**
-     * returns the path to the users profile image or a default image if no available
+     * Returns the path to the users profile image or a default image if no available
      *
      * @param user
      * @return
@@ -70,7 +67,7 @@ public class LearnwebBean implements Serializable
             if(null != url)
                 return url;
         }
-        return learnweb.getContextPath() + "/resources/images/no-profile-picture.jpg";
+        return learnweb.getServerUrl() + "/resources/images/no-profile-picture.jpg";
     }
 
     public boolean isMaintenanceMode()

@@ -44,13 +44,39 @@ public class UtilBean implements Serializable
         return (UserBean) getManagedBean("userBean");
     }
 
+    public static String getContextPath()
+    {
+        ServletContext servletContext = (ServletContext) getExternalContext().getContext();
+        return servletContext.getContextPath();
+    }
+
+    /**
+     * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
+     */
+    public static String getServerUrl()
+    {
+        try
+        {
+            ExternalContext ext = getExternalContext();
+
+            if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
+                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
+            else
+                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
+        }
+        catch(Exception e)
+        {
+            log.warn("Can't get server url. This is only expected in console mode");
+            return "http://learnweb.l3s.uni-hannover.de";
+        }
+    }
+
     public static void redirect(String redirectPath)
     {
         ExternalContext externalContext = getExternalContext();
         try
         {
-            ServletContext servletContext = (ServletContext) externalContext.getContext();
-            externalContext.redirect(servletContext.getContextPath() + redirectPath);
+            externalContext.redirect(getContextPath() + redirectPath);
         }
         catch(IOException e)
         {
@@ -64,7 +90,7 @@ public class UtilBean implements Serializable
         Locale locale;
         try
         {
-            locale = UtilBean.getUserBean().getLocale();
+            locale = getUserBean().getLocale();
         }
         catch(Exception e)
         {

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -23,7 +22,6 @@ import de.l3s.util.bean.BeanHelper;
  * Logs incoming requests by IPs. Records IP, time and URL, then at the end of the day stores it into a log file.
  *
  * @author Kate
- *
  */
 public class RequestFilter implements Filter
 {
@@ -32,9 +30,32 @@ public class RequestFilter implements Filter
     private RequestManager requestManager;
     private ProtectionManager protectionManager;
 
+    public void init(HttpServletRequest request)
+    {
+        String serverUrl;
+        if(request.getServerPort() == 80 || request.getServerPort() == 443)
+            serverUrl = request.getScheme() + "://" + request.getServerName() + request.getContextPath();
+        else
+            serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+
+        try
+        {
+            Learnweb learnweb = Learnweb.createInstance(serverUrl);
+            requestManager = learnweb.getRequestManager();
+            protectionManager = learnweb.getProtectionManager();
+        }
+        catch(Exception e)
+        {
+            log.fatal("request filter not initialized ", e);
+        }
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
+        if (requestManager == null)
+            init((HttpServletRequest) request);
+
         request.setCharacterEncoding("UTF-8");
         if(requestManager != null && protectionManager != null)
         {
@@ -68,7 +89,6 @@ public class RequestFilter implements Filter
                 {
                     return; // stop processig if error page is displayed
                 }
-
             }
             catch(Throwable e)
             {
@@ -93,27 +113,4 @@ public class RequestFilter implements Filter
 
         return false;
     }
-
-    @Override
-    public void destroy()
-    {
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException
-    {
-        String context = filterConfig.getServletContext().getContextPath();
-
-        try
-        {
-            Learnweb learnweb = Learnweb.createInstance(null, context);
-            requestManager = learnweb.getRequestManager();
-            protectionManager = learnweb.getProtectionManager();
-        }
-        catch(Exception e)
-        {
-            log.fatal("request filter not initialized ", e);
-        }
-    }
-
 }

@@ -36,7 +36,9 @@ public class JobScheduler
         //Cleans up requests once an hour
         scheduler.schedule("0 * * * *", new RequestsTaskHandler());
 
-        if(learnweb.getService() == Learnweb.SERVICE.LEARNWEB && learnweb.getContextPath().isEmpty())
+        // checks if url ends with .de, .com or .de/, if it ends with something like .de/1 than it is not the root instance
+        boolean isRootInstance = learnweb.getServerUrl().length() < learnweb.getServerUrl().lastIndexOf(".") + 3;
+        if(learnweb.getService() == Learnweb.SERVICE.LEARNWEB && isRootInstance)
         {
             //Runs the TED crawler at 23:00 once a week to check for new/update TED videos
             scheduler.schedule("0 23 * 1 *", new TedCrawlerSimple());

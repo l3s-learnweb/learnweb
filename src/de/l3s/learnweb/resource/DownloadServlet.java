@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import javax.mail.Message;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Level;
@@ -29,7 +26,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.bean.BeanHelper;
-import de.l3s.util.email.Mail;
 
 /**
  * Servlet Class
@@ -57,17 +53,17 @@ public class DownloadServlet extends HttpServlet
     {
     }
 
-    @Override
-    public void init(ServletConfig config) throws ServletException
+    public void init(HttpServletRequest request)
     {
-        super.init(config);
-
-        String context = getServletContext().getContextPath();
-        log.debug("Init DownloadServlet; context = '" + context + "'");
+        String serverUrl;
+        if(request.getServerPort() == 80 || request.getServerPort() == 443)
+            serverUrl = request.getScheme() + "://" + request.getServerName() + request.getContextPath();
+        else
+            serverUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
 
         try
         {
-            this.learnweb = Learnweb.createInstance(null, context);
+            this.learnweb = Learnweb.createInstance(serverUrl);
             this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
             this.fileManager = learnweb.getFileManager();
 
@@ -84,31 +80,6 @@ public class DownloadServlet extends HttpServlet
         catch(Exception e)
         {
             log.fatal("fatal error: ", e);
-        }
-
-        testMail();
-    }
-
-    /**
-     * Recently it wasn't possible to send mails.
-     * This simple method sends a test mail during startup.
-     */
-    private void testMail()
-    {
-        try
-        {
-            if(!Learnweb.isInDevelopmentMode())
-            {
-                Mail message = new Mail();
-                message.setSubject("Learnweb Started");
-                message.setRecipient(Message.RecipientType.TO, "kemkes@kbs.uni-hannover.de");
-                message.setText(learnweb.getServerUrl());
-                message.sendMail();
-            }
-        }
-        catch(Exception e)
-        {
-            log.error("Can't send test mail", e);
         }
     }
 
@@ -146,6 +117,9 @@ public class DownloadServlet extends HttpServlet
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException
     {
+        if(null == learnweb)
+            init(request);
+
         // extract the file id from the request string
         String requestString = request.getRequestURI();
 
