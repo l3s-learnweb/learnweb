@@ -153,7 +153,7 @@
 								<div class="mb-2"></div>
 								<ui:repeat var="snippet" value="#{searchHistoryBean.getSearchResults()}">
 									<h:panelGroup layout="block" class="snippet" pt:data-searchId="#{snippet.searchId}" pt:data-rank="#{snippet.rank}">
-										<span><a href="#{snippet.url}"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
+										<span><a href="#{snippet.url}" target="_blank"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
 										<span class="reference_url">#{snippet.url}</span><br/>
 										<span>#{snippet.description}</span><br/>
 										<span class="snippet_query">query: #{searchHistoryBean.getQuery(snippet.searchId)}</span>
