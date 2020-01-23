@@ -1,5 +1,6 @@
 package de.l3s.learnweb.group;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,8 +9,10 @@ import java.util.Map;
 import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.Resource;
 
-public class SummaryOverview
+public class SummaryOverview implements Serializable
 {
+    private static final long serialVersionUID = 2180957883352434028L;
+
     private final List<LogEntry> addedResources = new LinkedList<>();
     private final List<LogEntry> deletedResources = new LinkedList<>();
     private final List<LogEntry> forumsInfo = new LinkedList<>();

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Message;
