@@ -61,5 +61,8 @@
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
       </indentOptions>
     </codeStyleSettings>
+    <codeStyleSettings language="XML">
+      <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
+    </codeStyleSettings>
   </code_scheme>
 </component>

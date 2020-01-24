@@ -4,12 +4,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
 
-    <display-name>Learnweb 3</display-name>
+    <display-name>Learnweb Web App</display-name>
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
-        <!--<param-value>Production</param-value>-->
+        <param-value>${jsfProjectStage}</param-value>
     </context-param>
 
     <!-- PrimeFaces-->
