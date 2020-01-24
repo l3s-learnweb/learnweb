@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.l3s</groupId>
+    <artifactId>learnweb</artifactId>
+    <version>3.0.0-beta1</version>
+    <packaging>war</packaging>
+
+    <name>Learnweb</name>
+    <description>Learnweb is a collaborative search and sharing system which brings together different online services under one umbrella.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
+    </properties>
+
+    <dependencies>
+        <!-- ################ Java EE & JSF (Faces) ################ -->
+        <!-- Java EE CDI -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>8.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Java EE CDI -->
+        <dependency>
+            <groupId>javax.faces</groupId>
+            <artifactId>javax.faces-api</artifactId>
+            <version>2.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Java EE CDI -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <version>2.0.SP1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- JSF Base -->
+        <dependency>
+            <groupId>org.apache.myfaces.core</groupId>
+            <artifactId>myfaces-bundle</artifactId>
+            <version>2.3.6</version>
+        </dependency>
+        <!-- TODO: Optional dependency of MyFaces, works without (uncomment in case of issues) -->
+        <!--<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>-->
+        <!-- TODO: Optional dependency of MyFaces, works without (uncomment in case of issues) -->
+        <!--<dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+        </dependency>-->
+        <!-- TODO: Optional dependency of MyFaces, works without (uncomment in case of issues) -->
+        <!--<dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-validation_1.0_spec</artifactId>
+            <version>1.1</version>
+        </dependency>-->
+        <!-- Required for mails -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <!-- Required by Tomcat to work with Java EE CDI API -->
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-shaded</artifactId>
+            <version>3.1.3.Final</version>
+        </dependency>
+
+        <!-- ################ Primefaces ################ -->
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>8.0.RC2</version>
+        </dependency>
+
+        <!-- ################ Apache commons ################ -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <!-- Required by primefaces (for FileUpload) -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <!-- Required by primefaces (for FileUpload, FileManager) -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <!-- Required by myfaces-impl -->
+        <dependency>
+            <groupId>commons-digester</groupId>
+            <artifactId>commons-digester</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <!-- Required by myfaces-impl -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <!-- ################ ImageIO (Image processing, Thumbnails) ################ -->
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-metadata</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-jpeg</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-psd</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-tiff</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-pnm</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-hdr</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-pcx</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-pict</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-sgi</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-tga</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-icns</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-thumbsdb</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-clippath</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-iff</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-bmp</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twelvemonkeys.servlet</groupId>
+            <artifactId>servlet</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+
+        <!-- ################ Dependencies missing in Java 11 (for backward compatibility) ################ -->
+        <!-- XML library, used in Interweb client-->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0.1</version>
+        </dependency>
+        <!-- XML library, used in Interweb client-->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <!-- XML library, used in Interweb client-->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+        <!-- ################ Other ################ -->
+        <!-- MySQL client -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.5.3</version>
+        </dependency>
+        <!-- Converts Java Objects into JSON and back -->
+        <!-- TODO: should be replaced by org.json -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+        <!-- needed for redirects -->
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.4</version>
+        </dependency>
+        <!-- Resources, parsing html, remove Html from String -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.12.1</version>
+        </dependency>
+        <!-- Required of primefaces (for CspPhaseListener, EscapeUtils) -->
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <!-- Converts Java Objects into JSON and back -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20190722</version>
+        </dependency>
+        <!-- Solr client -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+        <!-- Converting video files, a wrapper for ffmpeg -->
+        <dependency>
+            <groupId>net.bramp.ffmpeg</groupId>
+            <artifactId>ffmpeg</artifactId>
+            <version>0.6.2</version>
+        </dependency>
+        <!-- Used in GoogleDriveManager to create links to documents, presentations, etc.  -->
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.30.4</version>
+        </dependency>
+        <!-- Used in GoogleDriveManager to create links to documents, presentations, etc.  -->
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-drive</artifactId>
+            <version>v2-rev362-1.25.0</version>
+        </dependency>
+        <!-- Used in ExportManager, what it does?  -->
+        <dependency>
+            <groupId>com.googlecode.plist</groupId>
+            <artifactId>dd-plist</artifactId>
+            <version>1.23</version>
+        </dependency>
+        <!-- Used in ExportManager, generates HTML  -->
+        <dependency>
+            <groupId>com.hp.gagawa</groupId>
+            <artifactId>gagawa</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <!-- Used in ResourceExport to determine user's platform -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
+        </dependency>
+        <!-- Date formatting, e.g. 10 minutes ago -->
+        <dependency>
+            <groupId>org.ocpsoft.prettytime</groupId>
+            <artifactId>prettytime</artifactId>
+            <version>4.0.2.Final</version>
+        </dependency>
+        <!-- Required by primefaces (for PDFExported) -->
+        <dependency>
+            <groupId>com.lowagie</groupId>
+            <artifactId>itext</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+        <!-- Required by primefaces (for p:texteditor) -->
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>20181114.1</version>
+        </dependency>
+        <!-- Interweb connection manager -->
+        <dependency>
+            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+            <artifactId>oauth-signature</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        <!-- Interweb connection manager -->
+        <dependency>
+            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
+            <artifactId>oauth-client</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        <!-- Connection manager ??? -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>1.14</version>
+        </dependency>
+        <!-- Interweb (TODO: not needed?) -->
+        <!--<dependency>-->
+        <!--    <groupId>com.sun.jersey.contribs</groupId>-->
+        <!--    <artifactId>jersey-multipart</artifactId>-->
+        <!--    <version>1.19.4</version>-->
+        <!--</dependency>-->
+        <!-- ResourcePreviewMaker -->
+        <dependency>
+            <groupId>com.github.rjolly</groupId>
+            <artifactId>pdf-renderer</artifactId>
+            <version>140</version>
+        </dependency>
+        <!-- Cronjob manager -->
+        <dependency>
+            <groupId>it.sauronsoftware.cron4j</groupId>
+            <artifactId>cron4j</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+        <!-- Required by Primefaces (for table exporter) -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <!-- Where is it used? -->
+        <!--<dependency>-->
+        <!--    <groupId>de.intarsys.opensource</groupId>-->
+        <!--    <artifactId>jbig2</artifactId>-->
+        <!--    <version>5.5.1</version>-->
+        <!--</dependency>-->
+        <!-- Bean Validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.18.Final</version>
+        </dependency>
+
+        <!-- ################ Local dependencies (TODO: get rid of them!) ################ -->
+        <!-- Boilerpipe text extraction used when adding websites (ResourceMetadataExtractor) -->
+        <dependency>
+            <groupId>de.l3s</groupId>
+            <artifactId>boilerpipe</artifactId>
+            <version>1.1.0</version>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/boilerpipe-1.1.0.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <!-- Added by Trevor, TEDWordnet, used in TedTranscriptBean -->
+        <dependency>
+            <groupId>rita</groupId>
+            <artifactId>wordnet</artifactId>
+            <version>1.0</version>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/ritaWN.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <!-- most probably used for Wordnet on the TED transcript page -->
+        <dependency>
+            <groupId>com.nexagis.jawbone</groupId>
+            <artifactId>supportWN</artifactId>
+            <version>1.0</version>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/supportWN.jar</systemPath>
+            <scope>system</scope>
+        </dependency>
+        <!-- Archive, computing simhash signatures for archived versions. Not used? -->
+        <!--<dependency>
+            <groupId>com.github.tomtung</groupId>
+            <artifactId>jsimhash</artifactId>
+            <version>0.1</version>
+            <systemPath>${basedir}/WebContent/WEB-INF/lib/jsimhash-0.1.jar</systemPath>
+            <scope>system</scope>
+        </dependency>-->
+        <!-- Dependency of rita.wordnet -->
+        <dependency>
+            <groupId>org.processing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.5</version>
+        </dependency>
+        <!-- Dependency of boilerpipe -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+        <!-- (Kate) Added boilerpipe grabbing article contents automatically -->
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.22</version>
+        </dependency>
+
+        <!-- ################ Tests ################ -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>https://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
+    <build>
+        <finalName>v3##${project.version}</finalName>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>Resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.3</version>
+                <configuration>
+                    <!--<packagingExcludes>resources/learnweb-layout/sass/</packagingExcludes>-->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>xhtml</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>css</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>js</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                    <webResources>
+                        <resource>
+                            <directory>WebContent</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <jsfProjectStage>Development</jsfProjectStage>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <jsfProjectStage>Production</jsfProjectStage>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
