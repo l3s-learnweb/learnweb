@@ -14,10 +14,9 @@ import java.util.concurrent.TimeUnit;
 import de.l3s.learnweb.resource.ResourceType;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -74,14 +73,13 @@ public class TedCrawlerSimple implements Runnable
     {
         try
         {
-            JSONParser jsonParser = new JSONParser();
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, language);
 
             InputStream inputStream = new URL("https://www.ted.com/talks/" + tedId + "/transcript.json?language=" + language).openStream();
             String transcriptJSONStr = IOUtils.toString(inputStream, "UTF-8");
-            JSONObject transcriptJSONObj = (JSONObject) jsonParser.parse(transcriptJSONStr);
+            JSONObject transcriptJSONObj = new JSONObject(transcriptJSONStr);
             JSONArray paragraphs = (JSONArray) transcriptJSONObj.get("paragraphs");
 
             for(Object paragraph1 : paragraphs)
@@ -92,7 +90,7 @@ public class TedCrawlerSimple implements Runnable
                 JSONObject firstCue = (JSONObject) cues.get(0);
                 long startTime = (long) firstCue.get("time");
                 String paragraphText = (String) firstCue.get("text");
-                for(int j = 1; j < cues.size(); j++)
+                for(int j = 1; j < cues.length(); j++)
                 {
                     JSONObject cue = (JSONObject) cues.get(j);
                     paragraphText += " " + cue.get("text");
@@ -110,7 +108,7 @@ public class TedCrawlerSimple implements Runnable
         {
             log.warn("Error while fetching transcript (" + language + ") for ted talk: " + resourceId, e);
         }
-        catch(ParseException e)
+        catch(JSONException e)
         {
             log.error("Error while parsing transcript json for ted talk: " + resourceId + " and language: " + language, e);
         }
@@ -456,8 +454,9 @@ public class TedCrawlerSimple implements Runnable
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException
     {
+        Learnweb.createInstance();
         TedCrawlerSimple tedCrawler = new TedCrawlerSimple();
-        tedCrawler.start();
+        tedCrawler.run();
         System.exit(0);
     }
 }

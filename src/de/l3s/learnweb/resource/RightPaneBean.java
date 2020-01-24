@@ -15,8 +15,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -299,9 +299,9 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             for(TimelineData timelineData : timelineMonthlyData)
             {
                 JSONArray innerArray = new JSONArray();
-                innerArray.add(timelineData.getTimestamp().getTime());
-                innerArray.add(timelineData.getNumberOfVersions());
-                highChartsData.add(innerArray);
+                innerArray.put(timelineData.getTimestamp().getTime());
+                innerArray.put(timelineData.getNumberOfVersions());
+                highChartsData.put(innerArray);
             }
         }
         catch(SQLException e)
@@ -309,7 +309,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             log.error("Error while fetching the archive data aggregated by month for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
-        return highChartsData.toJSONString();
+        return highChartsData.toString();
     }
 
     /**
@@ -336,7 +336,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
                     JSONObject archiveVersion = new JSONObject();
                     archiveVersion.put("url", archiveUrl.getArchiveUrl());
                     archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, UtilBean.getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
-                    archiveVersions.add(archiveVersion);
+                    archiveVersions.put(archiveVersion);
                 }
                 archiveDay.put("dayEvents", archiveVersions);
                 archiveDates.put(dateFormat.format(timelineData.getTimestamp()), archiveDay);
@@ -347,7 +347,7 @@ public class RightPaneBean extends ApplicationBean implements Serializable
             log.error("Error while fetching the archive data aggregated by day for a resource", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
-        return archiveDates.toJSONString();
+        return archiveDates.toString();
     }
 
     /**
@@ -373,10 +373,10 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         for(String month : symbols.getMonths())
         {
             if(!month.equals(""))
-                monthNames.add(month);
+                monthNames.put(month);
         }
 
-        return monthNames.toJSONString();
+        return monthNames.toString();
     }
 
     /**
@@ -391,10 +391,10 @@ public class RightPaneBean extends ApplicationBean implements Serializable
         for(String month : symbols.getShortMonths())
         {
             if(!month.equals(""))
-                monthNames.add(month);
+                monthNames.put(month);
         }
 
-        return monthNames.toJSONString();
+        return monthNames.toString();
     }
 
     public void onOpenExtendedMetadataDialog()

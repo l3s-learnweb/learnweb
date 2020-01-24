@@ -13,8 +13,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
@@ -127,8 +126,6 @@ public class IndexFakeNews
 
     private void indexSnopesFile(File file)
     {
-        JSONParser parser = new JSONParser();
-
         try
         {
             Resource resource = new Resource();
@@ -139,7 +136,7 @@ public class IndexFakeNews
             resource.setUserId(7727); // Admin
             resource.setGroupId(1346); // Admin Fact Check group
 
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
+            JSONObject jsonObject = new JSONObject(new FileReader(file));
 
             String title = (String) jsonObject.get("Fact Check");
             if(StringUtils.isEmpty(title))
