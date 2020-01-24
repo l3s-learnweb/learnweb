@@ -28,8 +28,8 @@
         </ui:fragment>
 
         <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
-            <p:outputLabel for="@next" value="#{msg.preview}:"/>
-            <p:inputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
+            <p:outputLabel value="#{msg.preview}:"/>
+            <h:outputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
         </ui:fragment>
 
         <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
@@ -76,8 +76,8 @@
         </ui:fragment>
 
         <ui:fragment rendered="#{addResourceBean.resource.thumbnail3 != null}">
-            <p:outputLabel for="@next" value="#{msg.preview}:"/>
-            <p:inputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
+            <p:outputLabel value="#{msg.preview}:"/>
+            <h:outputText escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
         </ui:fragment>
 
         <ui:fragment rendered="#{addResourceBean.resource.type eq 'glossary2'}">
