@@ -8,7 +8,9 @@
 
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>${jsfProjectStage}</param-value>
+        <param-value>Development</param-value>
+        <!--<param-value>Production</param-value>-->
+        <!--<param-value>${jsfProjectStage}</param-value>-->
     </context-param>
 
     <!-- PrimeFaces-->

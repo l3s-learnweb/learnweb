@@ -481,23 +481,24 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
                 <configuration>
+                    <warSourceDirectory>WebContent</warSourceDirectory>
                     <!--<packagingExcludes>resources/learnweb-layout/sass/</packagingExcludes>-->
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>xhtml</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>css</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>js</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
-                    <webResources>
-                        <resource>
-                            <directory>WebContent</directory>
-                            <filtering>true</filtering>
-                        </resource>
-                    </webResources>
+                    <!--<nonFilteredFileExtensions>-->
+                    <!--    <nonFilteredFileExtension>xhtml</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>svg</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>png</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>jpg</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>css</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>js</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>ico</nonFilteredFileExtension>-->
+                    <!--    <nonFilteredFileExtension>ico</nonFilteredFileExtension>-->
+                    <!--</nonFilteredFileExtensions>-->
+                    <!--<webResources>-->
+                    <!--    <resource>-->
+                    <!--        <directory>WebContent</directory>-->
+                    <!--        <filtering>true</filtering>-->
+                    <!--    </resource>-->
+                    <!--</webResources>-->
                 </configuration>
             </plugin>
         </plugins>
