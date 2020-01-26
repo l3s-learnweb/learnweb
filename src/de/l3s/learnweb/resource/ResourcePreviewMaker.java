@@ -264,7 +264,8 @@ public class ResourcePreviewMaker
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
-                if(!tmpDir.mkdir()) log.fatal("Couldn't create temp directory for thumbnail creation");
+                if(!tmpDir.mkdir())
+                    log.fatal("Couldn't create temp directory for thumbnail creation");
 
                 // get video details
                 ffProbeResult = this.getFFProbe(inputPath);
@@ -289,7 +290,8 @@ public class ResourcePreviewMaker
         // convert videos that are not in mp4 format
         try
         {
-            if (ffProbeResult == null) return;
+            if(ffProbeResult == null)
+                return;
 
             boolean isSupported = resource.getFormat().equals("video/mp4") &&
                     ffProbeResult.streams.stream().anyMatch(videoStream -> videoStream.codec_name.equals("h264"));
@@ -419,7 +421,7 @@ public class ResourcePreviewMaker
             {
                 p = pdfFile.getPage(page, true);
             }
-            catch(NoClassDefFoundError | Exception e)
+            catch(Throwable e)
             { // some PDFs with special graphics cause errors
                 log.debug("Skip PDF page with errors; page: " + page + "; resource: " + resource);
                 return;

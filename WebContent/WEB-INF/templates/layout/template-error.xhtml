@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <!--@elvariable id="pageTitle" type="java.lang.String"-->
+    <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
+
+    <f:view contentType="text/html">
+        <ui:insert name="metadata"/>
+
+        <h:head>
+            <ui:include src="parts/head.xhtml"/>
+            <title><h:outputText value="#{pageTitle} - " escape="false" rendered="#{!empty pageTitle}"/>#{msg['application.name']}</title>
+
+            <h:outputStylesheet name="learnweb-layout/css/styles.css"/>
+        </h:head>
+
+        <h:body styleClass="layout-body template-page">
+            <div class="layout-wrapper layout-wrapper-sidebar-inactive">
+                <header class="layout-header bg-primary">
+                    <div class="layout-container d-flex flex-row align-items-center">
+                        <div class="d-flex ml-sm-0 mr-auto">
+                            <a href="#{request.contextPath}/" class="header-element header-logo no-hover-bg">
+                                <h:graphicImage library="images" name="logos/logo_learnweb.png" alt="#{msg['application.name']} logo" styleClass="w-inherit"/>
+                            </a>
+                        </div>
+
+                        <h:form styleClass="d-flex mw-100 ml-auto mx-sm-0">
+                            <div class="header-element no-hover-bg row justify-content-end px-2">
+                                <ui:insert name="header_right"/>
+                            </div>
+                        </h:form>
+                    </div>
+                </header>
+
+                <div class="layout-main d-flex flex-column" id="main">
+                    <main class="layout-main-content">
+                        <ui:insert name="center_layout">
+                            <div class="container my-3">
+                                <ui:insert name="container_layout"/>
+                            </div>
+                        </ui:insert>
+                    </main>
+
+                    <ui:include src="parts/footer.xhtml"/>
+                </div>
+            </div>
+
+            <p:growl id="growl" rendered="#{not hideGrowl}" escape="false"/>
+        </h:body>
+    </f:view>
+</html>

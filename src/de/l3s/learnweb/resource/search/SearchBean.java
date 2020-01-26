@@ -14,8 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import de.l3s.learnweb.resource.ResourcePreviewMaker;
-import de.l3s.learnweb.resource.search.filters.Filter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.PrimeFaces;
@@ -29,12 +27,14 @@ import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
+import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.user.User;
 
@@ -84,9 +84,11 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         log.debug("mode/action: " + queryMode + "; filter: " + queryFilters + " - service: " + queryService + "; query:" + query);
 
-        if(isAjaxRequest()) return;
+        if(isAjaxRequest())
+            return;
 
-        if(null == queryMode) queryMode = getPreference("SEARCH_ACTION", "text");
+        if(null == queryMode)
+            queryMode = getPreference("SEARCH_ACTION", "text");
 
         if("text".equals(queryMode) || "web".equals(queryMode))
         {
@@ -145,7 +147,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public List<ResourceDecorator> getNextPage()
     {
-        if(!isSearched()) return null;
+        if(!isSearched())
+            return null;
 
         // don't log anything here.
         // this method will be called multiple times for each page
@@ -257,22 +260,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         catch(Exception e)
         {
             log.error("Can't log resource opened event", e);
-        }
-    }
-
-    public void logQuerySuggestion()
-    {
-        try
-        {
-            String query = getParameter("query");
-            String suggestions = getParameter("suggestions");
-            String market = getParameter("market");
-
-            getLearnweb().getSuggestionLogger().log(query, market, suggestions, getSessionId(), getUser());
-        }
-        catch(Exception e)
-        {
-            log.error("Can't log query suggestion", e);
         }
     }
 

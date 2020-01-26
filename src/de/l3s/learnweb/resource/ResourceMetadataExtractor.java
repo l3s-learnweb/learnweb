@@ -10,25 +10,16 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.l3s.util.UrlHelper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
-import org.xml.sax.SAXException;
 
-import de.l3s.boilerpipe.BoilerpipeExtractor;
-import de.l3s.boilerpipe.BoilerpipeProcessingException;
-import de.l3s.boilerpipe.extractors.CommonExtractors;
-import de.l3s.boilerpipe.sax.HTMLHighlighter;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
@@ -36,6 +27,7 @@ import de.l3s.learnweb.resource.office.FileUtility;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector.FileInfo;
 import de.l3s.util.StringHelper;
+import de.l3s.util.UrlHelper;
 
 /**
  * Helper for extract metadata from a Resource
@@ -58,9 +50,6 @@ public class ResourceMetadataExtractor
     private static final String IPERNITY_API_REQUEST = "http://api.ipernity.com/api/doc.get/json?api_key=***REMOVED***&extra=tags&doc_id=";
 
     private static final String base58alphabetString = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
-
-    private static final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
-    private static final HTMLHighlighter hh = HTMLHighlighter.newExtractingInstance();
 
     private static final int DESCRIPTION_LIMIT = 1400;
 
@@ -168,8 +157,10 @@ public class ResourceMetadataExtractor
 
             if(resource.getType() == ResourceType.website)
             {
+                /*
                 try
                 {
+
                     //ArticleExtractor.INSTANCE.getText(arg0)
                     String htmlContent = hh.process(new URL(resource.getUrl()), extractor);
                     Document jsoupDoc = Jsoup.parse(htmlContent);
@@ -177,17 +168,20 @@ public class ResourceMetadataExtractor
                     jsoupDoc.select("br").after("\\n");
                     jsoupDoc.select("p").before("\\n");
                     String str = jsoupDoc.html().replaceAll("\\\\n", "\n");
-
+                
                     log.debug("machine:" + resource.getMachineDescription());
                     log.debug("boiler :" + str);
                     resource.setTranscript(Jsoup.clean(str, "", Whitelist.none(), new OutputSettings().prettyPrint(false)));
-
+                
                 }
                 catch(IOException | BoilerpipeProcessingException | SAXException e)
                 {
                     Level logLevel = e.getMessage().contains("HTTP response code: 40") ? Level.WARN : Level.ERROR;
                     log.log(logLevel, "Can't extract content body (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
                 }
+                */
+                resource.setTranscript(resource.getMachineDescription());
+
             }
         }
         catch(JSONException | IOException e)

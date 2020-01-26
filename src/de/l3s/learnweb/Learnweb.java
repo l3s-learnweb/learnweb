@@ -7,9 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -31,7 +28,6 @@ import de.l3s.learnweb.resource.office.ConverterService;
 import de.l3s.learnweb.resource.office.HistoryManager;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentManager;
 import de.l3s.learnweb.resource.search.SearchLogManager;
-import de.l3s.learnweb.resource.search.SuggestionLogger;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.submission.SubmissionManager;
 import de.l3s.learnweb.resource.survey.SurveyManager;
@@ -82,7 +78,6 @@ public class Learnweb
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
     private final JobScheduler jobScheduler;
-    private final SuggestionLogger suggestionLogger;
     private final SurveyManager surveyManager;
     private final SubmissionManager submissionManager;
     private final WaybackCapturesLogger waybackCapturesLogger;
@@ -277,7 +272,6 @@ public class Learnweb
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
         timelineManager = new TimelineManager(this);
         jobScheduler = new JobScheduler(this);
-        suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
         searchLogManager = new SearchLogManager(this);
         surveyManager = new SurveyManager(this);
@@ -418,7 +412,6 @@ public class Learnweb
 
         jobScheduler.stopAllJobs();
         archiveUrlManager.onDestroy();
-        suggestionLogger.stop();
         waybackCapturesLogger.stop();
         searchLogManager.stop();
         logManager.onDestroy();
@@ -508,11 +501,6 @@ public class Learnweb
         resourceManager.resetCache();
         groupManager.resetCache();
         courseManager.resetCache();
-    }
-
-    public SuggestionLogger getSuggestionLogger()
-    {
-        return suggestionLogger;
     }
 
     public WaybackCapturesLogger getWaybackCapturesLogger()

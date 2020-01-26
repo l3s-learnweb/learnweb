@@ -129,7 +129,6 @@
 
             <h:form styleClass="d-none">
                 <p:remoteCommand name="setPreferenceRemote" actionListener="#{userBean.setPreferenceRemote()}" async="true" process="@this" partialSubmit="true" global="false"/>
-                <p:remoteCommand name="logQuerySuggestion" actionListener="${searchBean.logQuerySuggestion()}" async="true" process="@this" partialSubmit="true" global="false"/>
             </h:form>
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">

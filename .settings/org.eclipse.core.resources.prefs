@@ -1,8 +1,6 @@
 eclipse.preferences.version=1
-encoding//Resources/de/l3s/learnweb/lang/messages_uk.properties=UTF-8
-encoding//WebContent/lw/group/forum_post_edit.xhtml=UTF-8
-encoding//WebContent/lw/imprint.xhtml=UTF-8
-encoding//WebContent/lw/index.xhtml=UTF-8
-encoding//WebContent/lw/privacy_statement.xhtml=UTF-8
-encoding//WebContent/lw/survey/survey.xhtml=UTF-8
+encoding/WebContent=UTF-8
 encoding/<project>=UTF-8
+encoding/Resources=UTF-8
+encoding/src=UTF-8
+encoding/test=UTF-8

@@ -1,4 +1,4 @@
-/* global logQuerySuggestion, onUnloadCommand, setPreferenceRemote */
+/* global onUnloadCommand, setPreferenceRemote */
 
 /**
  * PrimeFaces LearnwebTheme Layout
@@ -44,14 +44,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
               suggestions.push(val);
             });
             response(suggestions);
-
-            setTimeout(() => {
-              logQuerySuggestion([
-                { name: 'query', value: term },
-                { name: 'market', value: myMarket },
-                { name: 'suggestions', value: suggestions },
-              ]);
-            }, 0);
           },
         });
       },
