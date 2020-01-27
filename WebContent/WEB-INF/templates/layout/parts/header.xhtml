@@ -34,7 +34,7 @@
 
             <h:form styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
-                    <i class="fa fa-bell #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
+                    <i class="fa fa-envelope-o #{messageBean.howManyNewMessages gt 0 ? ' has-badge' : null}" data-count="#{messageBean.howManyNewMessages}" aria-hidden="true"></i>
                 </h:outputLink>
 
 				<ui:include src="language_switch.xhtml"/>
