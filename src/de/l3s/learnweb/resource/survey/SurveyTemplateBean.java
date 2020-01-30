@@ -121,7 +121,7 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable
 
     public boolean isSurveyAssociatedWithResource() throws SQLException
     {
-        return getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(surveyId);
+        return getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(surveyId) != null;
     }
 
     public List<SurveyQuestion> getQuestions()

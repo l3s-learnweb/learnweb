@@ -9,6 +9,7 @@ import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
+import org.primefaces.PrimeFaces;
 
 @Named
 @ViewScoped
@@ -18,6 +19,7 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     private final Survey survey;
     private Survey surveyCopy;
     private final List<Survey> surveys;
+    private int associatedResourceId;
 
     public SurveyTemplatesBean() throws SQLException
     {
@@ -60,6 +62,16 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
         this.surveyCopy = copySurvey;
     }
 
+    public int getAssociatedResourceId()
+    {
+        return associatedResourceId;
+    }
+
+    public void setAssociatedResourceId(final int associatedResourceId)
+    {
+        this.associatedResourceId = associatedResourceId;
+    }
+
     public void onCopySurvey() throws SQLException
     {
         surveyCopy.setUserId(getUser().getId());
@@ -67,4 +79,32 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
 
         UtilBean.redirect("/lw/survey/template.jsf?survey_id=" + copyId);
     }
+
+    public void onEditSurvey(int surveyId) throws SQLException
+    {
+        SurveyResource associatedWithResource = getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(surveyId);
+        if(associatedWithResource != null)
+        {
+            this.associatedResourceId = associatedWithResource.getResourceId();
+            PrimeFaces.current().executeScript("PF('templateAlreadyAssociatedDialog').show()");
+        }
+        else
+        {
+            UtilBean.redirect("/lw/survey/template.jsf?survey_id=" + surveyId);
+        }
+    }
+
+    public void onDeleteSurvey(Survey survey) throws SQLException
+    {
+        if(getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(survey.getId()) == null)
+        {
+            getLearnweb().getSurveyManager().deleteSurvey(survey.getId());
+            surveys.remove(survey);
+        }
+        else
+        {
+            PrimeFaces.current().executeScript("PF('templateAlreadyAssociatedDialog').show()");
+        }
+    }
+
 }

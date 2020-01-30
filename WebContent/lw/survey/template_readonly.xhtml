@@ -1,0 +1,55 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+
+    <ui:param name="pageTitle" value="#{msg.survey}"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="hideGrowl" value="true"/>
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="survey_id" value="#{surveyTemplateBean.surveyId}" required="true" requiredMessage="Missing survey parameter"/>
+			<f:viewAction action="#{surveyTemplateBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
+
+	<ui:define name="breadcrumb_ext">
+		<p:menuitem value="#{msg['survey.survey_overview']}" url="survey/templates.jsf#"/>
+		<p:menuitem value="#{surveyTemplateBean.survey.title}" url="survey/template.jsf?survey_id=#{surveyTemplateBean.survey.id}"/>
+	</ui:define>
+
+
+	<ui:define name="center_layout">
+
+		<h:form id="form" rendered="#{surveyTemplateBean.survey != null}">
+			<p:growl id="growl" showDetail="true" sticky="true"/>
+			<p:panel>
+				<h:panelGroup>
+					<h:panelGroup id="questions">
+                        <h2>#{surveyTemplateBean.survey.title}</h2>
+						<c:forEach var="question" items="#{surveyTemplateBean.survey.questions}">
+							<div class="form-group">
+								<div class="d-flex flex-nowrap">
+                                    <ui:decorate template="/WEB-INF/templates/blocks/survey/question.xhtml">
+                                        <ui:param name="question" value="#{question}"/>
+                                        <ui:param name="update" value="#{false}"/>
+                                    </ui:decorate>
+								</div>
+							</div>
+						</c:forEach>
+					</h:panelGroup>
+
+                    <div class="d-flex mt-3">
+                            <p:commandButton value="#{msg.Print}" styleClass="alt-btn d-print-none">
+                                <p:printer target="questions"/>
+                            </p:commandButton>
+                    </div>
+				</h:panelGroup>
+			</p:panel>
+		</h:form>
+    </ui:define>
+</ui:composition>

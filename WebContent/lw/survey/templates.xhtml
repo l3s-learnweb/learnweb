@@ -24,12 +24,11 @@
 				</f:facet>
 
 				<p:column headerText="#{msg['title']}" styleClass="d-none d-sm-table-cell">
-					<h:outputText value="#{survey.title}"/>
+					<h:outputLink value="#{request.contextPath}/lw/survey/template_readonly.jsf">
+						<f:param name="survey_id" value="#{survey.id}"/>
+						<h:outputText value="#{survey.title}"/>
+					</h:outputLink>
 				</p:column>
-
-                <p:column headerText="#{msg['survey.creator_id']}" styleClass="d-none d-sm-table-cell">
-                    <h:outputText value="#{survey.userId}"/>
-                </p:column>
 
 				<p:column headerText="#{msg['description']}" styleClass="d-none d-md-table-cell">
 					<h:outputText value="#{survey.description}"/>
@@ -37,14 +36,18 @@
 
 				<p:column headerText="#{msg['options']}" styleClass="td-text-right">
 					<p:commandLink styleClass="icon-link" onsuccess="PF('copySurvey').show(); return false;" action="#{surveyTemplatesBean.setCopySurvey(survey)}" update="copySurvey" process="@this">
-						<i class="fa fa-files-o text-warning" aria-hidden="true"></i>
+						<i class="fa fa-fw fa-files-o text-warning" aria-hidden="true"></i>
 						<h:outputText value="#{msg['copy']}"/>
 					</p:commandLink>
-					<h:outputLink value="survey/template.jsf" styleClass="icon-link">
-						<f:param name="survey_id" value="#{survey.id}"/>
+					<p:commandLink actionListener="#{surveyTemplatesBean.onEditSurvey(survey.id)}" update="templateAssociated" styleClass="icon-link">
 						<i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
 						<h:outputText value="#{msg['edit']}"/>
-					</h:outputLink>
+					</p:commandLink>
+					<p:commandLink styleClass="icon-link"  action="#{surveyTemplatesBean.onDeleteSurvey(survey)}" update="form" process="@this">
+						<p:confirm header="#{msg['survey.delete_dialog_header']}" message="#{msg['survey.delete_template']}" icon="ui-icon-alert"/>
+						<i class="fa fa-fw fa-trash-o text-warning" aria-hidden="true"></i>
+						<h:outputText value="#{msg['delete']}"/>
+					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</h:form>
@@ -74,10 +77,16 @@
 						</p:textEditor>
 						<p:message for="@previous"/>
 					</div>
+                    <p:outputPanel layout="block" styleClass="d-flex flex-column">
+                        <p:outputLabel for="@next" value="#{msg['survey.permission_to_copy']}:" styleClass="font-weight-bold"/>
+                        <p:tooltip for="@next" value="#{msg['survey.permission_to_copy_explanation']}." position="right"/>
+                        <p:toggleSwitch value="#{surveyTemplatesBean.survey.permissionToCopy}"/>
+                    </p:outputPanel>
                 </div>
 				<p:commandButton value="#{msg['save']}" action="#{surveyTemplatesBean.onCreateSurvey}" styleClass="float-right" update="@form" process="@form"/>
 			</h:form>
 		</p:dialog>
+
 		<p:dialog header="#{msg['survey.copy_survey']}" styleClass="overflow-hidden" widgetVar="copySurvey" modal="true">
 			<h:form id="copySurvey">
 				<div class="d-flex flex-column mb-3">
@@ -104,8 +113,24 @@
 						<p:message for="@previous"/>
 					</div>
 				</div>
+                <p:outputPanel layout="block" styleClass="d-flex flex-column" rendered="#{surveyTemplatesBean.surveyCopy.permissionToCopy or surveyTemplatesBean.surveyCopy.userId == userBean.user.id}">
+                    <p:outputLabel for="@next" value="#{msg['survey.permission_to_copy']}:" styleClass="font-weight-bold"/>
+                    <p:tooltip for="@next" value="#{msg['survey.permission_to_copy_explanation']}." position="right"/>
+                    <p:toggleSwitch value="#{surveyTemplatesBean.surveyCopy.permissionToCopy}"/>
+                </p:outputPanel>
 				<p:commandButton value="#{msg['save']}" action="#{surveyTemplatesBean.onCopySurvey}" styleClass="float-right" update="@form" process="@form"/>
 			</h:form>
 		</p:dialog>
+
+		<p:dialog id="templateAssociated" widgetVar="templateAlreadyAssociatedDialog" styleClass="overflow-hidden" modal="true">
+			<h:form>
+				<h:outputText value="#{msg['survey.template_already_associated']} "/>
+				<h:outputLink value="group/resources.jsf" styleClass="icon-link">
+					<f:param name="resource_id" value="#{surveyTemplatesBean.associatedResourceId}"/>
+					<h:outputText value="#{msg['survey.resource']}."/>
+				</h:outputLink>
+			</h:form>
+		</p:dialog>
+
 	</ui:define>
 </ui:composition>

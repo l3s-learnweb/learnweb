@@ -144,6 +144,8 @@ public class SurveyManager
                 survey.setDescription(rs.getString("description"));
                 survey.setOrganizationId(rs.getInt("organization_id"));
                 survey.setUserId(rs.getInt("creator_id"));
+                survey.setDeleted(rs.getInt("deleted") == 1);
+                survey.setPermissionToCopy(rs.getInt("permission_to_copy") == 1);
             }
             else
             {
@@ -371,21 +373,25 @@ public class SurveyManager
         return users;
     }
 
-    // TODO extend to return list of associated resources. to inform the user which resources use the survey template. This information can also be shown in the survey overview.
-    protected boolean isSurveyAssociatedWithResource(int surveyId) throws SQLException
+    protected SurveyResource isSurveyAssociatedWithResource(int surveyId) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `survey_id`=? "))
         {
             select.setInt(1, surveyId);
             ResultSet rs = select.executeQuery();
-            return rs.next();
+            if(rs.next())
+            {
+                return createSurveyResource(rs);
+            }
         }
+
+        return null;
     }
 
     public List<Survey> getSurveysByOrganisation(int organisationId) throws SQLException
     {
         List<Survey> surveys = new ArrayList<>();
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE organization_id = ?"))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey` WHERE organization_id = ? and deleted=0"))
         {
             select.setInt(1, organisationId);
             ResultSet rs = select.executeQuery();
@@ -406,7 +412,20 @@ public class SurveyManager
         survey.setTitle(rs.getString("title").replaceAll("\\<.*?\\>", ""));
         survey.setDescription(rs.getString("description").replaceAll("\\<.*?\\>", ""));
         survey.setUserId(rs.getInt("creator_id"));
+        survey.setDeleted(rs.getInt("deleted") == 1);
+        survey.setPermissionToCopy(rs.getInt("permission_to_copy")==1);
         return survey;
+    }
+
+    private SurveyResource createSurveyResource(ResultSet rs) throws SQLException
+    {
+        SurveyResource surveyResource = new SurveyResource();
+        surveyResource.setResourceId(rs.getInt("resource_id"));
+        surveyResource.setSurveyId(rs.getInt("survey_id"));
+        surveyResource.setStart(rs.getDate("open_date"));
+        surveyResource.setStart(rs.getDate("close_date"));
+        surveyResource.setSaveable(rs.getInt("editable") == 1);
+        return surveyResource;
     }
 
     public void save(Survey survey) throws SQLException
@@ -426,12 +445,13 @@ public class SurveyManager
         // persists metadata
         if(survey.getId() <= 0)
         {
-            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, creator_id) VALUES (?, ?, ?,?)", Statement.RETURN_GENERATED_KEYS))
+            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, creator_id, permission_to_copy) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
             {
                 insert.setInt(1, survey.getOrganizationId());
                 insert.setString(2, survey.getTitle());
                 insert.setString(3, survey.getDescription());
                 insert.setInt(4, survey.getUserId());
+                insert.setInt(5, survey.isPermissionToCopy() ? 1 : 0);
                 insert.executeUpdate();
                 ResultSet rs = insert.getGeneratedKeys();
                 if(!rs.next())
@@ -441,13 +461,14 @@ public class SurveyManager
         }
         else
         {
-            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?,`title`=?,`description`=?, `creator_id`=? WHERE `survey_id`=?"))
+            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?, `title`=?, `description`=?, `creator_id`=?, `permission_to_copy`=? WHERE `survey_id`=?"))
             {
                 update.setInt(1, survey.getOrganizationId());
                 update.setString(2, survey.getTitle());
                 update.setString(3, survey.getDescription());
                 update.setInt(4, survey.getUserId());
-                update.setInt(5, survey.getId());
+                update.setInt(5, survey.isPermissionToCopy() ? 1 : 0);
+                update.setInt(6, survey.getId());
                 update.executeUpdate();
             }
         }
@@ -542,6 +563,7 @@ public class SurveyManager
         copy.setOrganizationId(survey.getOrganizationId());
         copy.setUserId(survey.getUserId());
         copy.setId(0);
+        copy.setPermissionToCopy(survey.isPermissionToCopy());
         for(SurveyQuestion question : copy.getQuestions())
         {
             question.setId(0);
@@ -553,6 +575,15 @@ public class SurveyManager
 
         save(copy);
         return copy.getId();
+    }
+
+    protected void deleteSurvey(int surveyId) throws SQLException
+    {
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `deleted`=1 WHERE `survey_id`=?"))
+        {
+            delete.setInt(1,surveyId);
+            delete.executeUpdate();
+        }
     }
 
 }

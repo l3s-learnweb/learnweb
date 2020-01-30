@@ -51,6 +51,11 @@
 						</p:outputPanel>
 						</c:forEach>
 				</h:panelGroup>
+				<div class="d-flex flex-column mb-3">
+					<p:outputLabel for="@next" value="#{msg['survey.permission_to_copy']}:" styleClass="font-weight-bold"/>
+					<p:tooltip for="@next" value="#{msg['survey.permission_to_copy_explanation']}." position="right"/>
+					<p:toggleSwitch value="#{surveyTemplateBean.survey.permissionToCopy}"/>
+				</div>
 				<div class="d-flex flex-nowrap justify-content-between">
 				<p:defaultCommand target="saveBtn"/>
 				<p:commandButton action="#{surveyTemplateBean.onAddEmptyQuestion}" value="#{msg['survey.add_question']}" onclick="PF('updateSurvey').show();" update="updateForm" process="@this"/>

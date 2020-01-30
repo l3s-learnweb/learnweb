@@ -31,6 +31,8 @@ public class Survey implements Serializable, HasId
     private String description;
     private int organizationId; // if <> 0 only the specified organization can use this survey
     private int userId; // user who created this survey
+    private boolean deleted;
+    private boolean permissionToCopy;
 
     private List<SurveyQuestion> questions = new ArrayList<>();
 
@@ -103,6 +105,26 @@ public class Survey implements Serializable, HasId
     public void setUserId(int userId)
     {
         this.userId = userId;
+    }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(final boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
+    public boolean isPermissionToCopy()
+    {
+        return permissionToCopy;
+    }
+
+    public void setPermissionToCopy(final boolean permissionToCopy)
+    {
+        this.permissionToCopy = permissionToCopy;
     }
 
 }
