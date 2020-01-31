@@ -135,39 +135,39 @@ public class FileManager
     public static void main(String[] args) throws SQLException
     {
     // delete files which are not stored on the server
-
+    
     FileManager fm = Learnweb.getInstance().getFileManager();
     List<File> files = fm.getAllFiles();
-
+    
     HashSet<Integer> set = new HashSet<Integer>();
-
+    
     for(File file : files)
     {
         if(file.actualFile == null)
         {
-
+    
     	set.add(file.getResourceId());
-
+    
     	//fm.delete(file);
         }
     }
-
+    
     Iterator<Integer> iter = set.iterator();
-
+    
     // delete the resources
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
-
+    
     while(iter.hasNext())
     {
         Integer id = iter.next();
-
+    
         if(id == 0)
     	continue;
-
+    
         rm.deleteResourcePermanent(id);
-
+    
     }
-
+    
     }
     */
 
@@ -354,9 +354,9 @@ public class FileManager
      * @param fileId
      * @return
      */
-    public String getThumbnailUrl(int fileId)
+    public String getThumbnailUrl(int fileId, int size)
     {
-        return basePath + fileId + "/thumbnail.png";
+        return basePath + fileId + "/thumbnail" + size + ".png";
     }
 
     private java.io.File createActualFile(File file)
@@ -382,9 +382,9 @@ public class FileManager
 
         /*
         Learnweb learnweb = Learnweb.getInstance();
-
+        
         findAbandonedFiles();
-
+        
         learnweb.onDestroy();
         */
     }

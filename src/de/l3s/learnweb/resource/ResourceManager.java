@@ -994,7 +994,7 @@ public class ResourceManager
 
         if(fileId != 0)
         {
-            url = learnweb.getFileManager().createUrl(fileId, prefix + ".png");
+            url = learnweb.getFileManager().getThumbnailUrl(fileId, thumbnailSize);
         }
         else if(url == null)
         {

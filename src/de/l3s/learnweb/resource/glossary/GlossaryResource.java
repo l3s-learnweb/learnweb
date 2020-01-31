@@ -17,6 +17,7 @@ import de.l3s.learnweb.resource.ResourceType;
 public class GlossaryResource extends Resource
 {
     private static final long serialVersionUID = 8388778401614338522L;
+    private static final String PATH = "/lw/glossary/glossary.jsf?resource_id=";
 
     private List<Locale> allowedLanguages = new ArrayList<>();
     private List<GlossaryEntry> entries = new LinkedList<>();
@@ -79,7 +80,6 @@ public class GlossaryResource extends Resource
         this.setThumbnail2(iconResource.getThumbnail2());
         this.setThumbnail3(iconResource.getThumbnail3());
         this.setThumbnail4(iconResource.getThumbnail4());
-        this.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + this.getId());
 
         this.setUser(getUser()); // added by rishita to fix copy bug; does this make sense? TODO: test
 
@@ -140,5 +140,11 @@ public class GlossaryResource extends Resource
             }
         }
         return tableView;
+    }
+
+    @Override
+    public String getUrl()
+    {
+        return Learnweb.getInstance().getServerUrl() + PATH + this.getId();
     }
 }

@@ -13,12 +13,12 @@ import java.util.Locale;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import de.l3s.learnweb.resource.ResourceType;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
 
@@ -358,7 +358,6 @@ public class GlossaryManager
         //Glossary Entries details
         List<GlossaryEntry> entries = getGlossaryEntries(glossaryResource.getId());
         glossaryResource.setEntries(entries);
-        glossaryResource.setUrl(Learnweb.getInstance().getServerUrl() + "/lw/glossary/glossary.jsf?resource_id=" + glossaryResource.getId());
     }
 
     public GlossaryResource getGlossaryResource(int resourceId) throws SQLException

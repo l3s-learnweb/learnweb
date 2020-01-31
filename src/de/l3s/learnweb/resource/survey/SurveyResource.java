@@ -16,6 +16,8 @@ public class SurveyResource extends Resource implements Serializable
 {
     private static final long serialVersionUID = 3431955030925189235L;
 
+    private static final String PATH = "/lw/survey/answer.jsf?resource_id=";
+
     private int surveyId;
     private Date start = null;
     private Date end = null;
@@ -216,6 +218,12 @@ public class SurveyResource extends Resource implements Serializable
     public void setSaveable(boolean editable)
     {
         this.saveable = editable;
+    }
+
+    @Override
+    public String getUrl()
+    {
+        return Learnweb.getInstance().getServerUrl() + PATH + this.getId();
     }
 
 }

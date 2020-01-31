@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -627,12 +626,12 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     @Override
     public void setTitle(String title)
     {
-        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())), 980) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(Jsoup.clean(title, Whitelist.none()), 980) : "no title";
     }
 
     public void setDescription(String description)
     {
-        this.description = description == null ? "" : StringEscapeUtils.unescapeHtml4(StringHelper.clean(description, Whitelist.simpleText()));
+        this.description = StringUtils.isNotEmpty(description) ? (StringHelper.clean(description, Whitelist.simpleText())) : "";
     }
 
     public void setUrl(String url)
