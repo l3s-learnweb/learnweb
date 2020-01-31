@@ -16,7 +16,6 @@ public class SurveyResource extends Resource implements Serializable
 {
     private static final long serialVersionUID = 3431955030925189235L;
 
-    private int resourceId;
     private int surveyId;
     private Date start = null;
     private Date end = null;
@@ -49,7 +48,6 @@ public class SurveyResource extends Resource implements Serializable
     public SurveyResource(SurveyResource other)
     {
         super(other);
-        setResourceId(other.getResourceId());
         setSurveyId(other.getSurveyId());
         setStart(other.getStart());
         setEnd(other.getEnd());
@@ -204,16 +202,6 @@ public class SurveyResource extends Resource implements Serializable
     public void setEnd(Date end)
     {
         this.end = end;
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(final int resourceId)
-    {
-        this.resourceId = resourceId;
     }
 
     /**

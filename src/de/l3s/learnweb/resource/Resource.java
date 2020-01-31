@@ -517,7 +517,8 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     /**
      * Creates a copy of a resource.<br/>
-     * Ratings and comments are not copied
+     * Ratings and comments are not copied<br/>
+     * (Ids are set to default this the Object isn't persisted yet).
      */
     @Override
     public Resource clone()
@@ -1922,14 +1923,15 @@ public class Resource extends AbstractResource implements Serializable // Abstra
 
     protected Object readResolve()
     {
-        // to make sure that there exists only one instance of each resource we interfere the deserialize process
+        // to make sure that there exists only one instance of each resource we interfere the deserialization process
         // if there exists a cached version of the resource we will return this instance
         // this process will fail during the start up of the server
 
         log.debug("Deserialize resource: " + id);
         try
         {
-            return Learnweb.getInstance().getResourceManager().getResource(id);
+            if(Learnweb.getInstance() != null)
+                return Learnweb.getInstance().getResourceManager().getResource(id);
         }
         catch(RuntimeException e)
         {

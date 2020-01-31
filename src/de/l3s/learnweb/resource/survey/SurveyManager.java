@@ -16,8 +16,8 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.survey.SurveyQuestion.QuestionType;
 import de.l3s.learnweb.user.User;
 import de.l3s.learnweb.user.UserManager;
@@ -373,6 +373,8 @@ public class SurveyManager
         return users;
     }
 
+    // TODO extend to return list of associated resources. to inform the user which resources use the survey template. This information can also be shown in the survey overview.
+    // TODO rename to getSurveyResourcesBySurveyId(int surveyId) check similar methods how they are returning surveyresource objects
     protected SurveyResource isSurveyAssociatedWithResource(int surveyId) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `survey_id`=? "))
@@ -381,7 +383,7 @@ public class SurveyManager
             ResultSet rs = select.executeQuery();
             if(rs.next())
             {
-                return createSurveyResource(rs);
+
             }
         }
 
@@ -413,19 +415,8 @@ public class SurveyManager
         survey.setDescription(rs.getString("description").replaceAll("\\<.*?\\>", ""));
         survey.setUserId(rs.getInt("creator_id"));
         survey.setDeleted(rs.getInt("deleted") == 1);
-        survey.setPermissionToCopy(rs.getInt("permission_to_copy")==1);
+        survey.setPermissionToCopy(rs.getInt("permission_to_copy") == 1);
         return survey;
-    }
-
-    private SurveyResource createSurveyResource(ResultSet rs) throws SQLException
-    {
-        SurveyResource surveyResource = new SurveyResource();
-        surveyResource.setResourceId(rs.getInt("resource_id"));
-        surveyResource.setSurveyId(rs.getInt("survey_id"));
-        surveyResource.setStart(rs.getDate("open_date"));
-        surveyResource.setStart(rs.getDate("close_date"));
-        surveyResource.setSaveable(rs.getInt("editable") == 1);
-        return surveyResource;
     }
 
     public void save(Survey survey) throws SQLException
@@ -555,6 +546,7 @@ public class SurveyManager
         }
     }
 
+    // TODO move to Survey.clone and refactor
     protected int copySurvey(Survey survey) throws SQLException
     {
         Survey copy = getSurvey(survey.getId());
@@ -581,7 +573,7 @@ public class SurveyManager
     {
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `deleted`=1 WHERE `survey_id`=?"))
         {
-            delete.setInt(1,surveyId);
+            delete.setInt(1, surveyId);
             delete.executeUpdate();
         }
     }

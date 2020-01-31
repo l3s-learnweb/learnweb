@@ -127,4 +127,13 @@ public class Survey implements Serializable, HasId
         this.permissionToCopy = permissionToCopy;
     }
 
+    /**
+     * Returns a copy of this Survey Template (Ids are set to default this the Object isn't persisted yet).
+     */
+    @Override
+    public Survey clone()
+    {
+        return null; // TODO implement
+    }
+
 }

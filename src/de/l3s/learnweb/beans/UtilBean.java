@@ -2,9 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -71,6 +69,11 @@ public class UtilBean implements Serializable
         }
     }
 
+    /**
+     * This method is intended only for special use cases. Discuss with project leader before using it.
+     *
+     * @param redirectPath
+     */
     public static void redirect(String redirectPath)
     {
         ExternalContext externalContext = getExternalContext();
