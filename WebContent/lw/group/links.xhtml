@@ -2,7 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
 <ui:param name="loginRequired" value="true"/>
@@ -16,9 +16,21 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{groupLinksBean.group.title}" url="group/overview.jsf?group_id=#{groupLinksBean.groupId}"/>
-    <p:menuitem value="#{msg.links}" url=""/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
+        <p:repeat var="groups" value="#{userBean.user.groups}">
+            <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+        </p:repeat>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/links.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.links}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="group_layout">

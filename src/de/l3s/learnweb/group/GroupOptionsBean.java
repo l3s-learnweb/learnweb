@@ -29,7 +29,6 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
 
     private int groupId;
     private Group group;
-
     private int editedGroupLeaderId;
     private int selectedResourceTargetGroupId;
 

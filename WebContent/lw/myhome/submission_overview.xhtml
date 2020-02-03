@@ -3,24 +3,30 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-				xmlns:p="http://primefaces.org/ui">
+				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
-    <ui:param name="helpText" value=""/>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
+<ui:param name="helpText" value=""/>
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
-			<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
-			<f:viewAction action="#{rightPaneBean.onLoad}"/>
-			<f:viewAction action="#{submissionBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
+		<f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
+		<f:viewAction action="#{rightPaneBean.onLoad}"/>
+		<f:viewAction action="#{submissionBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
-	</ui:define>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
+
+	<lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
@@ -37,70 +43,77 @@
 							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 		</h:form>
 
-		<h:panelGroup layout="block" id="resourcesWrapper">
-			<p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
-				<h:outputText value="#{msg.please_wait}"/>
-			</p:blockUI>
+	<h:panelGroup layout="block" id="resourcesWrapper">
+		<p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
+			<h:outputText value="#{msg.please_wait}"/>
+		</p:blockUI>
 
-			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true" draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
-				<h:form prependId="false" id="form">
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg.title}:"/>
-						<p:inputText value="#{submissionBean.selectedSubmission.title}" required="true"/>
-						<p:message for="@previous"/>
-					</div>
+		<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" styleClass="modal-dialog-select" responsive="true"
+				  draggable="false" resizable="false" modal="true" appendTo="@(body)" widgetVar="submission_edit_dialog">
+			<h:form prependId="false" id="form">
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.title}:"/>
+					<p:inputText value="#{submissionBean.selectedSubmission.title}" required="true"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg.course}:"/>
-						<p:selectOneMenu value="#{submissionBean.selectedSubmission.courseId}">
-							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
-							<f:ajax listener="#{submissionBean.onEditSurveyChangeCourse}" render="edit_dialog_survey_menu" onevent="courseChange"/>
-						</p:selectOneMenu>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.course}:"/>
+					<p:selectOneMenu value="#{submissionBean.selectedSubmission.courseId}">
+						<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+						<f:ajax listener="#{submissionBean.onEditSurveyChangeCourse}" render="edit_dialog_survey_menu" onevent="courseChange"/>
+					</p:selectOneMenu>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg.description}:"/>
-						<p:inputTextarea autoResize="1" maxHeight="20" rows="2" value="#{submissionBean.selectedSubmission.description}"/>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.description}:"/>
+					<p:inputTextarea autoResize="1" maxHeight="20" rows="2" value="#{submissionBean.selectedSubmission.description}"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-                        <p:calendar value="#{submissionBean.selectedSubmission.openDatetime}" id="editDialogOpenDate" binding="#{startDateComponent}" required="true" locale="#{userBean.locale}" navigator="true" showOn="button">
-                        </p:calendar>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
+					<p:calendar value="#{submissionBean.selectedSubmission.openDatetime}" id="editDialogOpenDate" binding="#{startDateComponent}"
+								required="true" locale="#{userBean.locale}" navigator="true" showOn="button">
+					</p:calendar>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-                        <p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}" id="editDialogCloseDate" required="true"  locale="#{userBean.locale}"  navigator="true" showOn="button">
-							<f:validator validatorId="dateRangeValidator" />
-							<f:attribute name="startDate" value="#{startDateComponent}" />
-                        </p:calendar>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
+					<p:calendar value="#{submissionBean.selectedSubmission.closeDatetime}" id="editDialogCloseDate" required="true"
+								locale="#{userBean.locale}" navigator="true" showOn="button">
+						<f:validator validatorId="dateRangeValidator"/>
+						<f:attribute name="startDate" value="#{startDateComponent}"/>
+					</p:calendar>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
-						<p:inputText value="#{submissionBean.selectedSubmission.noOfResources}" required="true"/>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
+					<p:inputText value="#{submissionBean.selectedSubmission.noOfResources}" required="true"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
-							<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');" global="false"/>
-						</p:selectBooleanCheckbox>
-					</div>
+				<div class="form-group">
+					<p:selectBooleanCheckbox value="#{submissionBean.selectedSubmission.surveyMandatory}"
+											 itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="editSurveyCheckBox">
+						<p:ajax update=":edit_dialog_survey_menu"
+								oncomplete="toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');" global="false"/>
+					</p:selectBooleanCheckbox>
+				</div>
 
-					<div class="form-group" id="edit_dialog_survey_text" style="display:none;">
-						<p:outputLabel for="@next" value="#{msg['survey']}:"/>
-						<p:selectOneMenu id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}" required="#{submissionBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
-							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
-							<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
-						</p:selectOneMenu>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group" id="edit_dialog_survey_text" style="display:none;">
+					<p:outputLabel for="@next" value="#{msg['survey']}:"/>
+					<p:selectOneMenu id="edit_dialog_survey_menu" value="#{submissionBean.selectedSubmission.surveyResourceId}"
+									 required="#{submissionBean.selectedSubmission.surveyMandatory}"
+									 requiredMessage="#{msg['Submission.survey_required']}">
+						<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
+						<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
+					</p:selectOneMenu>
+					<p:message for="@previous"/>
+				</div>
 
 					<div class="d-flex mt-3">
 						<p:defaultCommand target="saveBtn"/>
@@ -125,159 +138,166 @@
 						<p:message for="@previous"/>
 					</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg.course}:"/>
-						<p:selectOneMenu value="#{submissionBean.newSubmission.courseId}" required="true">
-							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
-							<f:ajax listener="#{submissionBean.onCreateSurveyChangeCourse}" render="create_dialog_survey_menu" onevent="courseChange"/>
-						</p:selectOneMenu>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.course}:"/>
+					<p:selectOneMenu value="#{submissionBean.newSubmission.courseId}" required="true">
+						<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+						<f:ajax listener="#{submissionBean.onCreateSurveyChangeCourse}" render="create_dialog_survey_menu" onevent="courseChange"/>
+					</p:selectOneMenu>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg.description}:"/>
-						<p:inputTextarea  id="description" autoResize="1" rows="2" maxHeight="20" value="#{submissionBean.newSubmission.description}"/>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg.description}:"/>
+					<p:inputTextarea id="description" autoResize="1" rows="2" maxHeight="20" value="#{submissionBean.newSubmission.description}"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
-                        <p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}"  required="true" binding="#{createStartDateComponent}" locale="#{userBean.locale}" navigator="true" showOn="button">
-                        </p:calendar>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.open_date']}:"/>
+					<p:calendar id="open_date" value="#{submissionBean.newSubmission.openDatetime}" required="true"
+								binding="#{createStartDateComponent}" locale="#{userBean.locale}" navigator="true" showOn="button">
+					</p:calendar>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
-                        <p:calendar id="close_date" required="true" value="#{submissionBean.newSubmission.closeDatetime}"   locale="#{userBean.locale}" navigator="true" showOn="button">
-							<f:validator validatorId="dateRangeValidator" />
-							<f:attribute name="startDate" value="#{createStartDateComponent}" />
-                        </p:calendar>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.close_date']}:"/>
+					<p:calendar id="close_date" required="true" value="#{submissionBean.newSubmission.closeDatetime}" locale="#{userBean.locale}"
+								navigator="true" showOn="button">
+						<f:validator validatorId="dateRangeValidator"/>
+						<f:attribute name="startDate" value="#{createStartDateComponent}"/>
+					</p:calendar>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
-						<p:inputText id="max_resources" value="#{submissionBean.newSubmission.noOfResources}" required="true"/>
-						<p:message for="@previous"/>
-					</div>
+				<div class="form-group">
+					<p:outputLabel for="@next" value="#{msg['Submission.max_resources']}:"/>
+					<p:inputText id="max_resources" value="#{submissionBean.newSubmission.noOfResources}" required="true"/>
+					<p:message for="@previous"/>
+				</div>
 
-					<div class="form-group">
-						<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}" widgetVar="surveyCheckBox" id="survey_checkbox">
-							<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');" global="false"/>
-						</p:selectBooleanCheckbox>
-					</div>
+				<div class="form-group">
+					<p:selectBooleanCheckbox value="#{submissionBean.newSubmission.surveyMandatory}" itemLabel="#{msg['Submission.survey_mandatory']}"
+											 widgetVar="surveyCheckBox" id="survey_checkbox">
+						<p:ajax update=":create_dialog_survey_menu"
+								oncomplete="toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');" global="false"/>
+					</p:selectBooleanCheckbox>
+				</div>
 
-					<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
-						<p:outputLabel for="@next" value="#{msg['survey']}:"/>
-						<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}" required="#{submissionBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">
-							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
-							<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
-						</p:selectOneMenu>
-						<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
-					</div>
+				<div class="form-group modal-dialog-select" id="create_dialog_survey_text" style="display:none;">
+					<p:outputLabel for="@next" value="#{msg['survey']}:"/>
+					<p:selectOneMenu id="create_dialog_survey_menu" value="#{submissionBean.newSubmission.surveyResourceId}"
+									 required="#{submissionBean.newSubmission.surveyMandatory}"
+									 requiredMessage="#{msg['Submission.survey_required']}">
+						<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
+						<f:selectItems value="#{submissionBean.editSurveyResourcesList}"/>
+					</p:selectOneMenu>
+					<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon"/>
+				</div>
 
-					<div class="text-right mt-3">
-						<p:commandButton value="#{msg.save}" id="create-dialog-sumbit-button" update=":submissions @form" actionListener="#{submissionBean.createNewSubmission()}"/>
-					</div>
-				</h:form>
-			</p:dialog>
+				<div class="text-right mt-3">
+					<p:commandButton value="#{msg.save}" id="create-dialog-sumbit-button" update=":submissions @form"
+									 actionListener="#{submissionBean.createNewSubmission()}"/>
+				</div>
+			</h:form>
+		</p:dialog>
 
-			<h:outputText id="no_submissions" rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
+		<h:outputText id="no_submissions"
+					  rendered="#{empty submissionBean.pastSubmissions and empty submissionBean.currentSubmissions and empty submissionBean.futureSubmissions}"
+					  value="#{msg['Submission.no_submissions_message']}"/>
 
-			<p:tabView id="submissions" styleClass="ui-tabs-transparent" pt:data-canSelectResources="true">
-				<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})" rendered="#{not empty submissionBean.currentSubmissions}">
-					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.currentSubmissions}"/>
-					</ui:decorate>
-				</p:tab>
+		<p:tabView id="submissions" styleClass="ui-tabs-transparent" pt:data-canSelectResources="true">
+			<p:tab title="#{msg['Submission.current_submissions']} (#{submissionBean.currentSubmissions.size()})"
+				   rendered="#{not empty submissionBean.currentSubmissions}">
+				<ui:decorate template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+					<ui:param name="submissions" value="#{submissionBean.currentSubmissions}"/>
+				</ui:decorate>
+			</p:tab>
 
-				<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})" rendered="#{not empty submissionBean.futureSubmissions}">
-					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.futureSubmissions}"/>
-					</ui:decorate>
-				</p:tab>
+			<p:tab title="#{msg['Submission.future_submissions']} (#{submissionBean.futureSubmissions.size()})"
+				   rendered="#{not empty submissionBean.futureSubmissions}">
+				<ui:decorate template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+					<ui:param name="submissions" value="#{submissionBean.futureSubmissions}"/>
+				</ui:decorate>
+			</p:tab>
 
-				<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})" rendered="#{not empty submissionBean.pastSubmissions}">
-					<ui:decorate  template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
-						<ui:param name="submissions" value="#{submissionBean.pastSubmissions}"/>
-					</ui:decorate>
-				</p:tab>
-			</p:tabView>
-		</h:panelGroup>
+			<p:tab title="#{msg['Submission.past_submissions']} (#{submissionBean.pastSubmissions.size()})"
+				   rendered="#{not empty submissionBean.pastSubmissions}">
+				<ui:decorate template="/WEB-INF/templates/blocks/submission/submission_card.xhtml">
+					<ui:param name="submissions" value="#{submissionBean.pastSubmissions}"/>
+				</ui:decorate>
+			</p:tab>
+		</p:tabView>
+	</h:panelGroup>
 
-		<script type="text/javascript">
-			function addSubmissionHeaderClickHandler(){
-				$('.submission_header').on('click', function(){
-					$(this).toggleClass('active');
-					$(this).siblings().slideToggle();
-					$(this).find(".fa-caret-right").toggleClass('open');
-				});
+	<script type="text/javascript">
+		function addSubmissionHeaderClickHandler() {
+			$('.submission_header').on('click', function () {
+				$(this).toggleClass('active');
+				$(this).siblings().slideToggle();
+				$(this).find('.fa-caret-right').toggleClass('open');
+			});
+		}
+
+		function clickCurrentSubmissions() {
+			$('#current_submissions > .submission_header').trigger('click');
+		}
+
+		var scrollPos;
+
+		function saveScrollPos(event) {
+			scrollPos = $(event.currentTarget).get(0).offsetTop;
+		}
+
+		function setScrollPos() {
+			$('.nano').nanoScroller({ scrollTop: scrollPos });
+		}
+
+		function toggleSurveySelectField(show, surveySelectType) {
+			var selectFieldIdPrefix = surveySelectType === 'edit' ? '#edit_dialog_survey' : '#create_dialog_survey';
+			if (show) {
+				$(selectFieldIdPrefix + '_text').show();
+				$(selectFieldIdPrefix + '_menu').show();
+			} else {
+				$(selectFieldIdPrefix + '_text').hide();
+				$(selectFieldIdPrefix + '_menu').hide();
+				$(selectFieldIdPrefix + '_menu_message').hide();
+			}
+		}
+
+		function courseChange(data) {
+			var status = data.status;
+			if (status === 'success') {
+				toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
+				toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
+			}
+		}
+
+		function confirmSubmissionDelete(submissionTitle) {
+			var status = confirm('Are you sure you want to delete this submission "' + submissionTitle + '" ?');
+			if (status) {
+				PF('submission_edit_dialog').hide();
 			}
 
-			function clickCurrentSubmissions(){
-				$('#current_submissions > .submission_header').trigger("click");
-			}
+			return status;
+		}
 
-			var scrollPos;
-			function saveScrollPos(event){
-				scrollPos = $(event.currentTarget).get(0).offsetTop;
-			}
-
-			function setScrollPos(){
-				$('.nano').nanoScroller({scrollTop: scrollPos});
-			}
-
-			function toggleSurveySelectField(show, surveySelectType)
-			{
-				var selectFieldIdPrefix = surveySelectType === "edit" ? "#edit_dialog_survey" : "#create_dialog_survey";
-				if(show)
-				{
-					$(selectFieldIdPrefix + '_text').show();
-					$(selectFieldIdPrefix + '_menu').show();
-				}
-				else
-				{
-					$(selectFieldIdPrefix + '_text').hide();
-					$(selectFieldIdPrefix + '_menu').hide();
-					$(selectFieldIdPrefix + '_menu_message').hide();
-				}
-			}
-
-			function courseChange(data)
-			{
-				var status = data.status;
-				if(status === "success")
-				{
-					toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
-					toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
-				}
-			}
-
-			function confirmSubmissionDelete(submissionTitle)
-			{
-				var status = confirm('Are you sure you want to delete this submission "' + submissionTitle +'" ?');
-				if(status)
-					PF('submission_edit_dialog').hide();
-
-				return status;
-			}
-
-			function  test() {
-				console.log(arguments);
-			}
+		function test() {
+			console.log(arguments);
+		}
 
 			function onResourcesUpdated() {
 				createSelectableArea('submissions');
 			}
 
-			$(document).ready(function(){
-				addSubmissionHeaderClickHandler();
-				toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
-				toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
-				$('#current_submissions .submission_header').click();
+		$(document).ready(function () {
+			addSubmissionHeaderClickHandler();
+			toggleSurveySelectField(PF('surveyCheckBox').input.is(':checked'), 'create');
+			toggleSurveySelectField(PF('editSurveyCheckBox').input.is(':checked'), 'edit');
+			$('#current_submissions .submission_header').click();
 
-			});
+		});
 
 			$(function () {
 				$(document).on('dblclick', '.res-item', openItems);
@@ -287,7 +307,7 @@
 		</script>
 	</ui:define>
 
-	<ui:define name="right_layout">
-		<ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
-	</ui:define>
+<ui:define name="right_layout">
+	<ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
+</ui:define>
 </ui:composition>

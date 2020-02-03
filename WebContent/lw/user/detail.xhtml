@@ -2,7 +2,7 @@
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
@@ -14,8 +14,12 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.myProfileTitle} #{msg.of} #{userDetailBean.user.username}" url="user/detail.jsf?user_id=#{userDetailBean.user.id}"/>
+	<ui:define name="breadcrumb">
+		<lw:breadcrumb-item link="user/detail.jsf?user_id=#{userDetailBean.userId}" title="#{msg.myProfileTitle}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
+
+		<lw:breadcrumb-item title="#{userDetailBean.user.username}"/>
 	</ui:define>
 
 	<ui:define name="center_layout">

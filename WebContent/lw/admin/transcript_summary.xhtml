@@ -1,14 +1,20 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 	<ui:param name="pageTitle" value="#{msg.transcript_summaries}"/>
 	<ui:param name="loginRequired" value="true"/>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.transcript_summaries}" url="admin/transcript_summary.jsf#"/>
+	<ui:define name="breadcrumb">
+		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
+
+		<lw:breadcrumb-item link="admin/transcript_summaries.jsf" title="#{msg.transcript_summaries}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+		</lw:breadcrumb-item>
 	</ui:define>
 
 	<ui:define name="center_layout">

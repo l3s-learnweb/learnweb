@@ -1,0 +1,39 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.moderator}"/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item title="#{msg.moderator}" link="moderator.jsf">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <p:panel rendered="#{userBean.user.admin}" header="#{msg.moderator}" styleClass="mb-3 ui-widget-content-p-0">
+        <div class="links-list">
+            <a href="admin/notification.jsf"><i class="ui-menuitem-icon fa fa-fw fa-envelope-open text-dark"></i>#{msg.send_notification}</a>
+            <a href="admin/users.jsf"><i class="ui-menuitem-icon fa fa-fw fa-users text-info"></i>#{msg.users}</a>
+            <a href="admin/courses.jsf"><i class="ui-menuitem-icon fa fa-fw fa-graduation-cap text-dark"></i>#{msg.courses}</a>
+            <a href="admin/organisation.jsf"><i class="ui-menuitem-icon fa fa-fw fa-sitemap text-dark"></i>#{msg.organisation}</a>
+            <a href="admin/text_analysis.jsf"><i class="ui-menuitem-icon fa fa-fw fa-area-chart text-info"></i>#{msg.text_analysis}</a>
+            <a href="admin/statistics.jsf"><i class="ui-menuitem-icon fa fa-fw fa-line-chart text-info"></i>#{msg.statistics}</a>
+            <a href="admin/detailed_transcript_log.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-warning"></i>#{msg.detailed_transcript_log}</a>
+            <a href="admin/simple_transcript_log.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-warning"></i>#{msg.simple_transcript_log}</a>
+            <a href="admin/transcript_summary.jsf"><i class="ui-menuitem-icon fa fa-fw fa-language text-dark"></i>#{msg.transcript_summaries}</a>
+            <a href="dashboard/glossary.jsf"><i class="ui-menuitem-icon fa fa-fw fa-bar-chart text-info"></i>#{msg.glossary_dashboard}</a>
+            <a href="dashboard/activity.jsf"><i class="ui-menuitem-icon fa fa-fw fa-line-chart text-info"></i>#{msg['Activity.dashboard']}</a>
+            <a href="dashboard/tracker.jsf"><i class="ui-menuitem-icon fa fa-fw fa-database text-dark"></i>#{msg['Tracker.dashboard']}</a>
+        </div>
+    </p:panel>
+
+
+
+</ui:define>
+</ui:composition>

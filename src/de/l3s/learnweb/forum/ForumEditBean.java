@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.faces.view.ViewScoped;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
@@ -25,6 +25,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
     private ForumPost post;
     private ForumTopic topic;
     private Group group;
+    private List<ForumTopic> topics;
 
     public void preRenderView() throws SQLException
     {
@@ -38,6 +39,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
         post = fm.getPostById(postId);
         topic = fm.getTopicById(post.getTopicId());
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+        topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
 
         if(!canEditPost())
             addMessage(FacesMessage.SEVERITY_ERROR, "no_view_right");
@@ -108,6 +110,11 @@ public class ForumEditBean extends ApplicationBean implements Serializable
             return true;
 
         return false;
+    }
+
+    public List<ForumTopic> getTopics()
+    {
+        return topics;
     }
 
 }

@@ -1,20 +1,22 @@
 package de.l3s.learnweb.forum;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
-import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.Length;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.Length;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
 
 @Named
 @ViewScoped

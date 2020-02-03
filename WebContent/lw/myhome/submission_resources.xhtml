@@ -3,7 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="pageTitle" value="#{msg['Submission.title']}"/>
 <ui:param name="loginRequired" value="true"/>
@@ -18,9 +18,16 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
-    <p:menuitem value="#{msg['Submission.title']}" url="myhome/submission_overview.jsf#"/>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item title="#{msg['Submission.title']}"/>
 </ui:define>
 
 <ui:define name="center_layout">
@@ -55,7 +62,8 @@
         </ui:fragment>
 
         <h:panelGroup layout="block" id="submissions" styleClass="mt-3">
-            <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container pt-3" pt:data-canSelectResources="true">
+            <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container pt-3"
+                          pt:data-canSelectResources="true">
                 <p:repeat var="res" value="#{submissionBean.selectedResources}">
                     <!--<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
                         &lt;!&ndash;<ui:fragment>
@@ -80,9 +88,11 @@
                     </h:outputLink>
                 </p:repeat>
 
-                <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}" class="res-empty-text"/>
+                <h:outputText value="No resources were submitted" rendered="#{empty submissionBean.selectedResources and submissionBean.submitted}"
+                              class="res-empty-text"/>
 
-                <h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block" rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
+                <h:panelGroup id="add_resource_sign" styleClass="my-auto mx-3" layout="block"
+                              rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
                     <a href="#" class="cancel" onclick="return false;">
                         <i class="fa fa-fw fa-3x fa-plus" aria-hidden="true"></i>
                         <span class="sr-only">Select a resource</span>
@@ -93,12 +103,14 @@
             </h:panelGroup>
 
             <h:form id="submit_resources_form" prependId="false">
-                <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}" update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();" rendered="#{not submissionBean.submitted}"/>
+                <p:commandButton id="submit_resources_button" value="#{msg.submit}" style="display:none;" action="#{submissionBean.actionSubmitItems}"
+                                 update=":submittedResourcesGrid :growl" onclick="return confirmSubmitMessage();"
+                                 rendered="#{not submissionBean.submitted}"/>
             </h:form>
         </h:panelGroup>
     </p:panel>
 
-    <h:panelGroup  styleClass="collapse p-0" layout="block" id="select_resources_modal">
+    <h:panelGroup styleClass="collapse p-0" layout="block" id="select_resources_modal">
         <p:panel styleClass="ui-panel-scroll-content mb-0">
             <f:facet name="header">
                 <h:outputFormat value="#{msg['Submission.lightbox_header']}">
@@ -145,8 +157,9 @@
       function confirmSubmitMessage() {
         const neededMoreResources = maxResourcesToSubmit - selected.size();
         let confirmMessage = 'Are you sure you want to submit? You will no longer be able to submit any more resources.';
-        if (neededMoreResources > 0)
+        if (neededMoreResources > 0) {
           confirmMessage = `You should select ${neededMoreResources} more resource${neededMoreResources > 1 ? 's' : ''} for your submission. ${confirmMessage}`;
+        }
         return confirm(confirmMessage);
       }
 
@@ -155,8 +168,8 @@
           alert(`Maximum allowed items limit exceeded. You can't choose more than ${maxResourcesToSubmit} items.`);
         } else {
           updateSelectedItemsCommand([
-            {name: 'action', value: 'update'},
-            {name: 'items', value: JSON.stringify(selected)}
+            { name: 'action', value: 'update' },
+            { name: 'items', value: JSON.stringify(selected) }
           ]);
           $.fancybox.close();
         }
@@ -164,13 +177,15 @@
 
       function updateMaxResources() {
         // When user delete an item the button has to be returned back
-        if (maxResourcesToSubmit > selected.size())
+        if (maxResourcesToSubmit > selected.size()) {
           $('#add_resource_sign').show();
-        else
+        } else {
           $('#add_resource_sign').hide();
+        }
 
-        if (selected.size() > 0)
+        if (selected.size() > 0) {
           $('#submit_resources_button').show();
+        }
       }
 
       function onResourcesUpdated() {

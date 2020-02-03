@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.myResourcesTitle}"/>
@@ -21,8 +21,10 @@
         </f:metadata>
     </ui:define>
 
-    <ui:define name="breadcrumb_ext">
-        <p:menuitem value="#{msg.myResourcesTitle}" url="myhome/resources.jsf#"/>
+    <ui:define name="breadcrumb">
+        <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
     </ui:define>
 
     <ui:define name="center_layout">

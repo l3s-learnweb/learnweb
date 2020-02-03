@@ -2,7 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="hideGrowl" value="true"/>
@@ -16,10 +16,26 @@
     </f:metadata>
 </ui:define>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{forumPostBean.group.title}" url="group/overview.jsf?group_id=#{forumPostBean.group.id}"/>
-    <p:menuitem value="#{msg.forum}" url="group/forum.jsf?group_id=#{forumPostBean.group.id}"/>
-    <p:menuitem value="#{forumPostBean.topic.title}" url="group/forum_post.jsf?topic_id=#{forumPostBean.topicId}"/>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
+        <p:repeat var="groups" value="#{userBean.user.groups}">
+            <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+        </p:repeat>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/forum.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.forum}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="group/forum_post.jsf?topic_id=#{forumEditBean.topic.id}" title="#{forumPostBean.topic.title}">
+        <p:repeat var="topic" value="#{forumPostBean.topics}">
+            <li><a href="group/forum_post.jsf?topic_id=#{topic.id}">#{topic.title}</a></li>
+        </p:repeat>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="group_layout">

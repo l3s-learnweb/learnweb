@@ -1,9 +1,9 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:p="http://primefaces.org/ui">
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.peer_assessment_pairing}"/>
@@ -17,8 +17,10 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{msg.peer_assessment_pairing}" url="admin/peer_assessment_pair.jsf?peer_assessment_id=#{adminPeerAssessmentPairBeen.peerAssessmentId}"/>
+	<ui:define name="breadcrumb">
+		<lw:breadcrumb-item link="myhome/peer_assessment_pair.jsf" title="#{msg.peer_assessment_pairing}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 	</ui:define>
 
 	<ui:define name="center_layout">

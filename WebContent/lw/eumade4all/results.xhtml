@@ -2,7 +2,7 @@
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-				xmlns:p="http://primefaces.org/ui">
+				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="pageTitle" value="Survey Result"/>
     <ui:param name="loginRequired" value="true"/>
@@ -15,8 +15,10 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{surveyResultBean.resource.title}" url="eumade4all/results.jsf?resource_id=#{surveyResultBean.surveyResourceId}"/>
+	<ui:define name="breadcrumb">
+		<lw:breadcrumb-item link="eumade4all/results.jsf?resource_id=#{surveyResultBean.surveyResourceId}" title="#{surveyResultBean.resource.title}">
+			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+		</lw:breadcrumb-item>
 	</ui:define>
 
 	<ui:define name="center_layout">

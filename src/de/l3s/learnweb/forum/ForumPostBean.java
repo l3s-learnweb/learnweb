@@ -1,21 +1,22 @@
 package de.l3s.learnweb.forum;
 
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.user.User;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
@@ -29,6 +30,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     private ForumTopic topic;
     private Group group;
     private ForumPost newPost;
+    private List<ForumTopic> topics;
 
     public ForumPostBean()
     {
@@ -46,6 +48,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         posts = fm.getPostsBy(topicId);
         topic = fm.getTopicById(topicId);
         group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+        topics = getLearnweb().getForumManager().getTopicsByGroup(group.getId());
 
         fm.incViews(topicId);
     }
@@ -151,7 +154,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     public void quotePost(ForumPost post) throws SQLException
     {
         String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
-        String newStr = post.getText().replaceAll("<blockquote>","<blockquote>&#160;&#160;&#160;&#160;").replace("</p>","</blockquote>");
+        String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;").replace("</p>", "</blockquote>");
         newPost.setText("<blockquote><strong>" + username + ":</strong>" + newStr + "</blockquote></br>");
     }
 
@@ -190,4 +193,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
         return newPost;
     }
 
+    public List<ForumTopic> getTopics()
+    {
+        return topics;
+    }
 }

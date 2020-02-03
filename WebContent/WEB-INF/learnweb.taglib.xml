@@ -58,4 +58,24 @@
         </attribute>
     </tag>
 
+    <tag>
+        <description><![CDATA[Breadcrumb-item is a singular item of the breadcrumbs navigation line.]]></description>
+        <tag-name>breadcrumb-item</tag-name>
+        <source>templates/blocks/breadcrumb/breadcrumb_item.xhtml</source>
+        
+        <attribute>
+            <description><![CDATA[Title defines a visible name of the breadcrumb item on the page.]]></description>
+            <name>title</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description><![CDATA[Link is the URL-link to the page that breadcrumb item defines.]]></description>
+            <name>link</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
 </facelet-taglib>

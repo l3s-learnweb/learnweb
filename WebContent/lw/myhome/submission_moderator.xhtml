@@ -3,7 +3,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
@@ -17,9 +17,16 @@
         </f:metadata>
     </ui:define>
 
-    <ui:define name="breadcrumb_ext">
-        <p:menuitem value="#{msg['Submission.overview_title']}" url="myhome/submission_overview.jsf#"/>
-        <p:menuitem value="#{submissionModeratorBean.submission.title}" url="myhome/submission_overview.jsf#"/>
+    <ui:define name="breadcrumb">
+        <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
+
+        <lw:breadcrumb-item link="myhome/submission_overview.jsf" title="#{msg['Submission.overview_title']}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
+        </lw:breadcrumb-item>
+
+        <lw:breadcrumb-item title="#{submissionModeratorBean.submission.title}" />
     </ui:define>
 
     <ui:define name="center_layout">

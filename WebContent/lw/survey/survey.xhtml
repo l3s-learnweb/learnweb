@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions">
+                xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions" xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="pageTitle" value="#{msg.survey}"/>
     <ui:param name="loginRequired" value="true"/>
@@ -20,9 +20,11 @@
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="breadcrumb_ext">
-		<p:menuitem value="#{surveyBean.resource.title}" url="myhome/submission_overview.jsf#"/>
-	</ui:define>
+    <ui:define name="breadcrumb">
+        <lw:breadcrumb-item link="survey/survey.jsf" title="#{surveyBean.resource.title}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
+    </ui:define>
 
 	<ui:define name="center_layout">
 

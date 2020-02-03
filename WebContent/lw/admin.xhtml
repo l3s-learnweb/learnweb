@@ -1,0 +1,28 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.admin}"/>
+
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item title="#{msg.admin}" link="admin.jsf">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
+
+<ui:define name="center_layout">
+    <p:panel rendered="#{userBean.user.admin}" header="#{msg.admin}" styleClass="mb-3 ui-widget-content-p-0">
+        <div class="links-list">
+            <a href="admin/organisations.jsf"><i class="ui-menuitem-icon fa fa-fw fa-sitemap text-dark"></i>#{msg.organisations}</a>
+            <a href="admin/banlist.jsf"><i class="ui-menuitem-icon fa fa-fw fa-ban text-danger"></i>#{msg.banlist}</a>
+            <a href="admin/requests.jsf"><i class="ui-menuitem-icon fa fa-fw fa-server text-info"></i>#{msg.ip_requests}</a>
+            <a href="admin/systemtools.jsf"><i class="ui-menuitem-icon fa fa-fw fa-desktop text-dark"></i>#{msg.system_tools}</a>
+            <a href="admin/announcements.jsf"><i class="ui-menuitem-icon fa fa-fw fa-bullhorn text-warning"></i>#{msg.announcements}</a>
+            <a href="survey/templates.jsf"><i class="ui-menuitem-icon fa fa-question-circle text-info"></i>#{msg['survey.survey_overview']}</a>
+        </div>
+    </p:panel>
+</ui:define>
+</ui:composition>

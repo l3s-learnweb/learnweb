@@ -243,5 +243,9 @@
     </filter-mapping>
     -->
 
+    <context-param>
+        <param-name>facelets.LIBRARIES</param-name>
+        <param-value>/WEB-INF/learnweb.taglib.xml</param-value>
+    </context-param>
 
 </web-app>

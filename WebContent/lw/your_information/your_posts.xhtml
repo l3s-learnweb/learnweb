@@ -2,14 +2,19 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Posts"/>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
-    <p:menuitem value="#{msg.posts}" url="your_information/your_posts.jsf#"/>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="your_information/your_post.jsf" title="Posts">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">

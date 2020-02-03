@@ -27,6 +27,7 @@
 
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
+            <h:outputScript library="learnweb-layout" name="js/breadcrumb.js"/>
             <h:outputScript library="vendor" name="jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js" target="body"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
@@ -66,11 +67,8 @@
 
                             <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
                                 <ui:fragment rendered="#{not hideBreadcrumbs}">
-                                    <div class="layout-breadcrumb mb-3">
-                                        <p:breadCrumb>
-                                            <p:menuitem value="Homepage" url="#{userBean.bannerLink}"/>
-                                            <ui:insert name="breadcrumb_ext"/>
-                                        </p:breadCrumb>
+                                    <div class="breadcrumb mb-3">      
+                                        <ui:insert name="breadcrumb"/>
 
                                         <div class="ml-auto">
                                             <ui:insert name="breadcrumb_right"/>

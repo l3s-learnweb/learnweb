@@ -1,13 +1,18 @@
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
 <ui:param name="pageTitle" value="Your Messages"/>
 
-<ui:define name="breadcrumb_ext">
-    <p:menuitem value="#{msg.your_information}" url="your_information/index.jsf"/>
-    <p:menuitem value="#{msg.messages}" url="your_information/your_messages.jsf#"/>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item link="your_information/your_messages.jsf" title="#{msg.messages}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
+    </lw:breadcrumb-item>
 </ui:define>
 
 <ui:define name="center_layout">
