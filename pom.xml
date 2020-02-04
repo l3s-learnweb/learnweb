@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>8.0.RC2</version>
+            <version>8.0.RC3</version>
         </dependency>
 
         <!-- ################ Apache commons ################ -->
@@ -100,13 +100,13 @@
             <artifactId>commons-csv</artifactId>
             <version>1.7</version>
         </dependency>
-        <!-- Required by primefaces (for FileUpload) -->
+        <!-- Required by PrimeFaces (for FileUpload) -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.4</version>
         </dependency>
-        <!-- Required by primefaces (for FileUpload, FileManager) -->
+        <!-- Required by PrimeFaces (for FileUpload, FileManager) -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -255,7 +255,7 @@
             <artifactId>jsoup</artifactId>
             <version>1.12.1</version>
         </dependency>
-        <!-- Required of primefaces (for CspPhaseListener, EscapeUtils) -->
+        <!-- Required by PrimeFaces (for CspPhaseListener, EscapeUtils) -->
         <dependency>
             <groupId>org.owasp.encoder</groupId>
             <artifactId>encoder</artifactId>
@@ -315,13 +315,13 @@
             <artifactId>prettytime</artifactId>
             <version>4.0.2.Final</version>
         </dependency>
-        <!-- Required by primefaces (for PDFExported) -->
+        <!-- Required by PrimeFaces (for PDFExported) -->
         <dependency>
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
             <version>2.1.7</version>
         </dependency>
-        <!-- Required by primefaces (for p:texteditor) -->
+        <!-- Required by PrimeFaces (for p:texteditor) -->
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
@@ -351,21 +351,12 @@
         <!--    <artifactId>jersey-multipart</artifactId>-->
         <!--    <version>1.19.4</version>-->
         <!--</dependency>-->
-        
-        <!-- ResourcePreviewMaker TODO check if Apache PDF box is better -->
+        <!-- Used to make a thumbnail of PDF in ResourcePreviewMaker -->
         <dependency>
-            <groupId>com.github.rjolly</groupId>
-            <artifactId>pdf-renderer</artifactId>
-            <version>140</version>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.18</version>
         </dependency>
-        
-        <!-- Was required by PDF renderer (which was used before maven) -->
-        <!--<dependency>-->
-        <!--    <groupId>de.intarsys.opensource</groupId>-->
-        <!--    <artifactId>jbig2</artifactId>-->
-        <!--    <version>5.5.1</version>-->
-        <!--</dependency>-->        
-        
         <!-- Cronjob manager -->
         <dependency>
             <groupId>it.sauronsoftware.cron4j</groupId>

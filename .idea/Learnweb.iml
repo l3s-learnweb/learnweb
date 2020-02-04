@@ -40,7 +40,7 @@
     <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.6.2" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.weld.servlet:weld-servlet-shaded:3.1.3.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.primefaces:primefaces:8.0.RC2" level="project" />
+    <orderEntry type="library" name="Maven: org.primefaces:primefaces:8.0.RC3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-csv:1.7" level="project" />
@@ -135,7 +135,8 @@
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-client:1.19.4" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-bundle:1.14" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:jsr311-api:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.rjolly:pdf-renderer:140" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:2.0.18" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:2.0.18" level="project" />
     <orderEntry type="library" name="Maven: it.sauronsoftware.cron4j:cron4j:2.2.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:4.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.13" level="project" />
@@ -144,15 +145,6 @@
     <orderEntry type="library" name="Maven: javax.validation:validation-api:2.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.3.4" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: de.l3s:boilerpipe:1.1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/WebContent/WEB-INF/lib/boilerpipe-1.1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module-library">
       <library name="Maven: rita:wordnet:1.0">
         <CLASSES>
@@ -172,9 +164,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Maven: org.processing:core:3.3.5" level="project" />
-    <orderEntry type="library" name="Maven: xerces:xercesImpl:2.12.0" level="project" />
-    <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />
-    <orderEntry type="library" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.22" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter:5.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.0" level="project" />

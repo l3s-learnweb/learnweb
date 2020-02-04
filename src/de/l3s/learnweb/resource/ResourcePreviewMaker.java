@@ -1,12 +1,11 @@
 package de.l3s.learnweb.resource;
 
-import java.io.ByteArrayOutputStream;
+import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
@@ -14,9 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.resource.File.TYPE;
@@ -33,6 +29,8 @@ import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.probe.FFmpegError;
 import net.bramp.ffmpeg.probe.FFmpegFormat;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  * Helper for create preview for a Resource
@@ -404,45 +402,25 @@ public class ResourcePreviewMaker
 
     public void processPdf(Resource resource, InputStream inputStream) throws IOException, SQLException
     {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);
-        IOUtils.copy(inputStream, out);
-        inputStream.close();
-        ByteBuffer buf = ByteBuffer.wrap(out.toByteArray());
-
-        PDFFile pdfFile = new PDFFile(buf); // Create PDF Print Page
-        int count = pdfFile.getNumPages();
+        PDDocument pdfDocument = PDDocument.load(inputStream);
+        PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
 
         // try page by page to get an image
-        for(int page = 1; page <= count; page++)
+        for (int p = 0, t = pdfDocument.getNumberOfPages(); p <= t; p++)
         {
-            PDFPage p;
-
             try
             {
-                p = pdfFile.getPage(page, true);
-            }
-            catch(Throwable e)
-            { // some PDFs with special graphics cause errors
-                log.debug("Skip PDF page with errors; page: " + page + "; resource: " + resource);
-                return;
-            }
+                BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(p, 300);
+                Image image = new Image(bufferedImage);
 
-            if(null == p)
-                continue;
-
-            int height = SIZE4_MAX_HEIGHT;
-            int width = (int) Math.ceil(height * p.getAspectRatio());
-            if(width > SIZE4_MAX_WIDTH)
+                createThumbnails(resource, image, false);
+                return; // stop as soon as we got one image
+            }
+            catch(IOException e)
             {
-                width = SIZE4_MAX_WIDTH;
-                height = (int) Math.ceil(width / p.getAspectRatio());
+                // some PDFs with special graphics cause errors
+                log.debug("Skip PDF page with errors; page: " + p + "; resource: " + resource);
             }
-
-            Image image = new Image(p.getImage(width, height, null, null, true, true));
-
-            createThumbnails(resource, image, false);
-
-            break; // stop as soon as we got one image
         }
     }
 
