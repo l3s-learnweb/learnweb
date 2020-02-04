@@ -42,7 +42,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Privacy_Tracker_disabled,
         Users_Hide_language_switch,
         Glossary_Add_Watermark,
-        Glossary_Mandatory_Description
+        Glossary_Mandatory_Description,
+        Glossary_Enable_Import // enables the glossary file import
     }
 
     private int id;

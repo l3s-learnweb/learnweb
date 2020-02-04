@@ -120,7 +120,7 @@
 						<h:outputText value="#{msg['Glossary.total_entries']} = #{glossaryBean.entryCount}" style="text-align:center;"
 									  styleClass="glossary_footer_text"></h:outputText>
                         <!--excel import button-->
-                        <p:commandLink styleClass="excel_import" ajax="false" onclick="PF('excel_import_dialog').show(); return false;">
+                        <p:commandLink styleClass="excel_import" ajax="false" onclick="PF('excel_import_dialog').show(); return false;" rendered="#{glossaryBean.optionImportEnabled}">
                             <p:graphicImage library="default" value="/resources/icon/excel_import.png" width="24"
                                             style="position:relative; text-align:center; display: block; " />
                         </p:commandLink>

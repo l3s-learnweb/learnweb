@@ -21,7 +21,6 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
@@ -68,6 +67,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private final List<SelectItem> availableTopicThree = new ArrayList<>();
 
     private boolean optionMandatoryDescription;
+    private boolean optionImportEnabled;
+
     private List<Locale> tableLanguageFilter;
 
     private boolean overwriteGlossary;
@@ -155,7 +156,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             pronounciationVoices.put(new Locale.Builder().setLanguage("uk").build(), "Ukrainian Female");
             pronounciationVoices.put(new Locale.Builder().setLanguage("vi").build(), "Vietnamese Male");
 
-
             // convert tree like glossary structure to flat table
             repaintTable();
 
@@ -164,6 +164,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             tableLanguageFilter = new ArrayList<>(glossaryResource.getAllowedLanguages());
 
             optionMandatoryDescription = user.getOrganisation().getOption(Option.Glossary_Mandatory_Description);
+            optionImportEnabled = user.getOrganisation().getOption(Option.Glossary_Enable_Import);
         }
         catch(Exception e)
         {
@@ -438,13 +439,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return languageMap;
     }
 
-    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException
+    public void onImportXls(FileUploadEvent fileUploadEvent) throws SQLException, IOException, IllegalAccessException
     {
         log.debug("parseXls");
 
         User user = getUser();
         if(user == null)
             return;
+
+        if(!optionImportEnabled)
+            throw new IllegalAccessException("This feature isn't enabled for your organization");
 
         //TODO check if user is moderator
         if(overwriteGlossary)
@@ -590,7 +594,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
         //set color and other parameters
         /*Color background = new Color(1f, 1f, 1f, 0.0f);
-
+        
         graphic.setColor(background);
         graphic.setBackground(background);*/
         graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
@@ -694,56 +698,56 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public List<ColumnModel> getColumns()
     {
         List<ColumnModel> columns = new ArrayList<>();
-
+    
         columns.add(new ColumnModel("uses", "uses"));
         columns.add(new ColumnModel("Pronunciation", "pronounciation"));
         columns.add(new ColumnModel("uses", "source"));
         columns.add(new ColumnModel("uses", "phraseology"));
-
+    
         return columns;
     }
-
-
+    
+    
     private void createDynamicColumns() {
         String[] columnKeys = columnTemplate.split(" ");
         columns = new ArrayList<ColumnModel>();
-
+    
         for(String columnKey : columnKeys) {
             String key = columnKey.trim();
-
+    
             if(VALID_COLUMN_KEYS.contains(key)) {
                 columns.add(new ColumnModel(columnKey.toUpperCase(), columnKey));
             }
         }
     }
-
+    
     public void updateColumns()
     {
         //reset table state
         UIComponent table = FacesContext.getCurrentInstance().getViewRoot().findComponent(":form:cars");
         table.setValueExpression("sortBy", null);
-
+    
         //update columns
         createDynamicColumns();
     }
-
+    
     static public class ColumnModel implements Serializable
     {
-
+    
         private String header;
         private String property;
-
+    
         public ColumnModel(String header, String property)
         {
             this.header = header;
             this.property = property;
         }
-
+    
         public String getHeader()
         {
             return header;
         }
-
+    
         public String getProperty()
         {
             return property;
@@ -764,6 +768,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         log.debug("Value changed");
     }
+
     public List<Locale> getTableLanguageFilter()
     {
         return tableLanguageFilter;
@@ -783,6 +788,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         log.debug("setter");
         this.overwriteGlossary = overwriteGlossary;
+    }
+
+    public boolean isOptionImportEnabled()
+    {
+        return optionImportEnabled;
     }
 
 }
