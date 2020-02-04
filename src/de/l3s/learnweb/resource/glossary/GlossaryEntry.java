@@ -14,7 +14,7 @@ public class GlossaryEntry implements Serializable
     private static final long serialVersionUID = 1251808024273639912L;
 
     private int id = -1;
-    private int originalEntryId = 0;
+    private int originalEntryId = 0; // This value is -1 when the entry has been imported from a file. When a glossary resource is copied we save for each entry the id of the original entry from which it was copied.
     private int resourceId;
     private boolean deleted;
     private int userId; // the user who created this entry
