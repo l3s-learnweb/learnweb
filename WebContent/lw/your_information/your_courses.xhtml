@@ -1,4 +1,3 @@
-<!-- after merging the new template rename this page to your_courses -->
 <ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -6,7 +5,7 @@
 				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="Your Cources"/>
+	<ui:param name="pageTitle" value="#{msg.courses} - #{msg.your_information}"/>
 
 	<ui:define name="breadcrumb">
 		<lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
@@ -20,7 +19,7 @@
 
 	<ui:define name="center_layout">
 	    <h:form>
-	        <p:dataTable id="cources_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
+	        <p:dataTable id="courses_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
 	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
 						 tableStyleClass="table-responsive">
 	            <f:facet name="header">
@@ -31,18 +30,23 @@
 					<h:panelGroup>
 						<h:commandLink styleClass="text-danger float-right p-1">
 							<i class="fa fa-fw fa-file-pdf-o" aria-hidden="true"></i>
-							<p:dataExporter type="pdf" target="cources_tbl" fileName="cources"/>
+							<p:dataExporter type="pdf" target="courses_tbl" fileName="courses"/>
 						</h:commandLink>
 
 						<h:commandLink styleClass="text-success float-right p-1">
-							<i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i>
-							<p:dataExporter type="xml" target="cources_tbl" fileName="cources"/>
+							<i class="fa fa-fw fa-file-excel-o" aria-hidden="true">xml</i>
+							<p:dataExporter type="xml" target="courses_tbl" fileName="courses"/>
 						</h:commandLink>
 
 						<h:commandLink styleClass="text-gray float-right p-1">
-							<i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
-							<p:dataExporter type="csv" target="cources_tbl" fileName="cources"/>
+							<i class="fa fa-fw fa-file-text-o" aria-hidden="true">csv</i>
+							<p:dataExporter type="csv" target="courses_tbl" fileName="courses"/>
 						</h:commandLink>
+
+                        <h:commandLink styleClass="text-gray float-right p-1">
+                            <i class="fa fa-fw fa-file-text-o" aria-hidden="true">xls</i>
+                            <p:dataExporter type="xls" target="courses_tbl" fileName="courses"/>
+                        </h:commandLink>
 					</h:panelGroup>
 	            </f:facet>
 	
