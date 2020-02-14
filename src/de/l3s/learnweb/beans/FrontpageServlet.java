@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Learnweb.SERVICE;
 
 /**
  * Redirects users to the Learnweb or ArchiveWeb Frontpage depending of the used domain
@@ -43,40 +42,14 @@ public class FrontpageServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // forward request to homepage depending on Learnweb installation
-        SERVICE service = null;
-        try
-        {
-            Learnweb learnweb = Learnweb.getInstance();
-            service = learnweb.getService();
-        }
-        catch(Exception e)
-        {
-            log.error("unhandled error", e);
-        }
-
-        boolean archiveWebRequest = isArchiveWebRequest(request);
 
         String contextPath = request.getContextPath();
         String folder = "/lw/";
 
-        if(service == SERVICE.AMA)
-            folder = "/ama/";
-        else if(archiveWebRequest)
-            folder = "/aw/";
-
         // redirect to HTTPS if Learnweb is not run locally or is accessed through http://archiveweb.l3s.uni-hannover.de which doesn't support HTTPS
-        if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
+        if(!Learnweb.isInDevelopmentMode() && request.getScheme().equals("http"))
         {
-            String server;
-
-            switch(service)
-            {
-            case AMA:
-                server = "https://network.ama-academy.eu";
-            default:
-                server = "https://learnweb.l3s.uni-hannover.de";
-            }
+            String server = "https://learnweb.l3s.uni-hannover.de";
 
             response.sendRedirect(server + contextPath + folder);
             return;

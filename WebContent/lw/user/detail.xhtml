@@ -62,7 +62,7 @@
 					</p:panelGrid>
 				</p:panel>
 
-				<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.user.username}" rendered="#{learnwebBean.learnweb.service != 'AMA'}">
+				<p:panel id="group_table" header="#{msg.groupsTitle} #{msg.of} #{userDetailBean.user.username}">
 					<ul class="list-unstyled">
 						<ui:repeat var="g" value="#{userDetailBean.user.groups}">
 							<li>

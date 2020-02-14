@@ -1,21 +1,27 @@
 package messages;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class ValidateMessagesTest
 {
-    private static final List<String> LOCALES = Arrays.asList("de", "de_DE_AMA", "de_DE_Archive", "en", "en_UK_Archive", "it", "pt", "es", "uk");
+    private static final List<String> LOCALES = Arrays.asList("de", "de_DE_Archive", "en", "en_UK_Archive", "it", "pt", "es", "uk");
     private static final String MESSAGES_PATH = "de/l3s/learnweb/lang/messages";
 
     @Test
     void validateAllMessages()
     {
-        for (String locale : LOCALES)
+        for(String locale : LOCALES)
         {
             ResourceBundle bundle = ResourceBundle.getBundle(MESSAGES_PATH, Locale.forLanguageTag(locale));
 
@@ -33,7 +39,7 @@ public class ValidateMessagesTest
 
     private static void validateMessages(final String locale, final Map<String, String> messages)
     {
-        for (Map.Entry<String, String> message : messages.entrySet())
+        for(Map.Entry<String, String> message : messages.entrySet())
         {
             try
             {

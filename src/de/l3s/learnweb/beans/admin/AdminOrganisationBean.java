@@ -106,7 +106,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     /**
      *
-     * @return list of supported locale variants. At the time of writing: AMA, Archive
+     * @return list of supported locale variants. At the time of writing: Archive
      */
     public List<String> getSupportedLanguageVariants()
     {

@@ -12,7 +12,6 @@
         <locale-config>
             <default-locale>en</default-locale>
             <supported-locale>de</supported-locale>
-            <supported-locale>de_DE_AMA</supported-locale>
             <supported-locale>de_DE_Archive</supported-locale>
             <supported-locale>en</supported-locale>
             <supported-locale>en_UK_Archive</supported-locale>

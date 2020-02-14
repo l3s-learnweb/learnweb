@@ -8,7 +8,6 @@ import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb.SERVICE;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.user.Organisation.Option;
 
@@ -64,7 +63,7 @@ public class UserDetailBean extends ApplicationBean
         if(null == user)
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid user id");
 
-        if(user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames) || getLearnweb().getService() == SERVICE.AMA)
+        if(user.getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             pageHidden = true;
     }
 

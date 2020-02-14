@@ -55,13 +55,6 @@ public class Learnweb
     private PropertiesBundle properties;
     private String serverUrl;
 
-    // list of Learnweb installations
-    public enum SERVICE
-    {
-        LEARNWEB,
-        AMA
-    }
-
     // Manager (Data Access Objects):
     private final ForumManager forumManager;
     private final ResourceManager resourceManager;
@@ -98,7 +91,6 @@ public class Learnweb
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
-    private final SERVICE service; // describes whether this instance runs for Learnweb or AMA
 
     /**
      * Use createInstance() first
@@ -174,13 +166,6 @@ public class Learnweb
             propertiesFileName = "learnweb";
             developmentMode = false;
         }
-        else if(workingDirectory.startsWith("/home/ama_user"))
-        {
-            propertiesFileName = "ama";
-            developmentMode = false;
-        }
-        else if((new File("C:\\programmieren\\philipp.ama")).exists())
-            propertiesFileName = "ama_local_philipp";
         else if((new File("C:\\programmieren\\philipp.lw")).exists())
             propertiesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.lw")).exists())
@@ -250,10 +235,6 @@ public class Learnweb
         Class.forName("org.mariadb.jdbc.Driver");
         connect();
 
-        service = SERVICE.valueOf(properties.getProperty("SERVICE"));
-        if(service == null)
-            throw new IllegalArgumentException("invalid property: SERVICE=" + properties.getProperty("SERVICE"));
-
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
         resourceManager = new ResourceManager(this);
@@ -302,10 +283,10 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isInDevelopmentMode() || getService() != SERVICE.LEARNWEB)
+        if(!isInDevelopmentMode())
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for service=" + SERVICE.LEARNWEB + "; development mode=" + isInDevelopmentMode());
+            log.debug("JobScheduler not started; development mode=" + isInDevelopmentMode());
     }
 
     public FileManager getFileManager()
@@ -570,16 +551,6 @@ public class Learnweb
     public BounceManager getBounceManager()
     {
         return bounceManager;
-    }
-
-    /**
-     * describes whether this instance runs for Learnweb or AMA
-     *
-     * @return
-     */
-    public SERVICE getService()
-    {
-        return service;
     }
 
     public PeerAssessmentManager getPeerAssessmentManager()
