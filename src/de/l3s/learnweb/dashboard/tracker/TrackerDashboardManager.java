@@ -1,17 +1,19 @@
 package de.l3s.learnweb.dashboard.tracker;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.dashboard.glossary.GlossaryEntryDescLang;
-import de.l3s.learnweb.dashboard.glossary.GlossaryUserActivity;
-import de.l3s.learnweb.dashboard.glossary.GlossaryUserTermsSummary;
-import de.l3s.util.StringHelper;
-import org.apache.log4j.Logger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.util.StringHelper;
 
 class TrackerDashboardManager
 {

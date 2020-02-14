@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.inject.Named;
-import javax.inject.Inject;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 

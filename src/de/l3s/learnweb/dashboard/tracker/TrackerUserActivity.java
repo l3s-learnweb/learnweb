@@ -1,11 +1,11 @@
 package de.l3s.learnweb.dashboard.tracker;
 
+import java.sql.SQLException;
+import java.time.Duration;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.StringHelper;
-
-import java.sql.SQLException;
-import java.time.Duration;
 
 public class TrackerUserActivity
 {

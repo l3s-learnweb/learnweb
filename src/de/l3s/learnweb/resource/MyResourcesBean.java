@@ -1,10 +1,21 @@
 package de.l3s.learnweb.resource;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.logging.Action;
-import de.l3s.util.StringHelper;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,16 +23,11 @@ import org.json.JSONObject;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.*;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.logging.Action;
+import de.l3s.util.StringHelper;
 
 @Named
 @ViewScoped

@@ -1,11 +1,11 @@
 package de.l3s.learnweb.resource;
 
+import java.sql.SQLException;
+import java.util.Date;
+
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
 import de.l3s.util.HasId;
-
-import java.util.Date;
-import java.sql.SQLException;
 
 /**
  * The abstract class which is extended by Resource and Folder.

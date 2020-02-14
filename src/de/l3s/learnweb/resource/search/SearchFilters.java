@@ -2,11 +2,15 @@ package de.l3s.learnweb.resource.search;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import de.l3s.learnweb.resource.ResourceType;
-import de.l3s.learnweb.resource.search.filters.Filter;
-import de.l3s.learnweb.resource.search.filters.FilterOption;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -18,6 +22,9 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.filters.FilterOption;
 import de.l3s.util.StringHelper;
 
 public class SearchFilters implements Serializable

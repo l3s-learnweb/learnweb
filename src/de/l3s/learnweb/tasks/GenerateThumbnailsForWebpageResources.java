@@ -5,16 +5,15 @@ import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.List;
 
-import de.l3s.util.UrlHelper;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.OnlineStatus;
-import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceManager;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.util.UrlHelper;
 
 /**
  * Find webpage resources that have no thumbnail and create it

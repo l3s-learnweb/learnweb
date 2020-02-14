@@ -1,11 +1,15 @@
 package de.l3s.learnweb.forum;
 
-import de.l3s.learnweb.Learnweb;
-
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import de.l3s.learnweb.Learnweb;
 
 public class ForumManager
 {

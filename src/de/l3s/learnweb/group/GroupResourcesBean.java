@@ -15,11 +15,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import de.l3s.learnweb.resource.*;
-import de.l3s.learnweb.resource.search.filters.Filter;
-import de.l3s.learnweb.resource.search.SearchMode;
-import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
-import de.l3s.util.HasId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -31,9 +26,23 @@ import org.primefaces.model.TreeNode;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
+import de.l3s.learnweb.resource.AbstractPaginator;
+import de.l3s.learnweb.resource.AbstractResource;
+import de.l3s.learnweb.resource.AddFolderBean;
+import de.l3s.learnweb.resource.AddResourceBean;
+import de.l3s.learnweb.resource.Folder;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.ResourceUpdateBatch;
+import de.l3s.learnweb.resource.RightPaneBean;
+import de.l3s.learnweb.resource.SelectLocationBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
+import de.l3s.learnweb.resource.search.SearchMode;
+import de.l3s.learnweb.resource.search.filters.Filter;
+import de.l3s.learnweb.resource.search.solrClient.SolrPaginator;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.HasId;
 
 @Named
 @ViewScoped

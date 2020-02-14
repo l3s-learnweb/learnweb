@@ -9,8 +9,8 @@ import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.jsoup.Jsoup;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.forum.ForumManager;

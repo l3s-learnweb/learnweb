@@ -1,8 +1,8 @@
 package de.l3s.learnweb.resource;
 
-import de.l3s.learnweb.user.User;
-
 import java.util.Date;
+
+import de.l3s.learnweb.user.User;
 
 public class EditLocker
 {

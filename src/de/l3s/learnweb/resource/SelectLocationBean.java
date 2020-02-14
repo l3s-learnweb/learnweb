@@ -1,20 +1,22 @@
 package de.l3s.learnweb.resource;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.User;
-import org.apache.log4j.Logger;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import java.io.Serializable;
-import java.sql.SQLException;
 
 @Named
 @ViewScoped

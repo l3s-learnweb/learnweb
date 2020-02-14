@@ -1,7 +1,5 @@
 package de.l3s.learnweb.resource;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class ResourceMetadataField implements Serializable
 {

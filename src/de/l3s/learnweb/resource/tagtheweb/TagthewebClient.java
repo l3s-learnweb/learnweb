@@ -1,15 +1,14 @@
 package de.l3s.learnweb.resource.tagtheweb;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.Resource;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.l3s.learnweb.resource.ResourceManager;
-import de.l3s.util.StringHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
@@ -22,6 +21,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceManager;
+import de.l3s.util.StringHelper;
 
 public class TagthewebClient
 {

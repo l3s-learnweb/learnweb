@@ -2,7 +2,6 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

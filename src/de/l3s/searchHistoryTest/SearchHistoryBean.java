@@ -3,7 +3,12 @@ package de.l3s.searchHistoryTest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.faces.context.FacesContext;
@@ -11,7 +16,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import de.l3s.learnweb.resource.tagtheweb.TagthewebClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -19,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.resource.tagtheweb.TagthewebClient;
 import de.l3s.learnweb.user.User;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Edge;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Query;

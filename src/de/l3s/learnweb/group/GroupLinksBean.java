@@ -8,9 +8,9 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
-import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;

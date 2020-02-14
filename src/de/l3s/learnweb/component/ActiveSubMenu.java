@@ -1,16 +1,17 @@
 package de.l3s.learnweb.component;
 
-import org.primefaces.component.api.UIOutcomeTarget;
-import org.primefaces.model.menu.MenuElement;
-import org.primefaces.model.menu.Submenu;
-
-import javax.faces.component.UIComponent;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.component.UIComponent;
+
+import org.primefaces.component.api.UIOutcomeTarget;
+import org.primefaces.model.menu.MenuElement;
+import org.primefaces.model.menu.Submenu;
 
 public class ActiveSubMenu implements Submenu, UIOutcomeTarget, Serializable
 {

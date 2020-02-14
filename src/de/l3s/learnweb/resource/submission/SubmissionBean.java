@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 
-import de.l3s.learnweb.resource.ResourceType;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +28,7 @@ import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
 import de.l3s.learnweb.user.User;

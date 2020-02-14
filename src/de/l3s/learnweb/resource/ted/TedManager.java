@@ -14,7 +14,6 @@ import java.util.TreeSet;
 
 import javax.ws.rs.core.MediaType;
 
-import de.l3s.learnweb.resource.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -36,6 +35,12 @@ import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
+import de.l3s.learnweb.resource.File;
+import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDecorator;
+import de.l3s.learnweb.resource.ResourcePreviewMaker;
+import de.l3s.learnweb.resource.ResourceService;
+import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.search.solrClient.FileInspector;
 import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 import de.l3s.learnweb.resource.ted.Transcript.Paragraph;

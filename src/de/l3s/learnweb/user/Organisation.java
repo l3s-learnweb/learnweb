@@ -1,6 +1,5 @@
 package de.l3s.learnweb.user;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import javax.faces.model.SelectItem;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.Length;
 
 import de.l3s.learnweb.Learnweb;

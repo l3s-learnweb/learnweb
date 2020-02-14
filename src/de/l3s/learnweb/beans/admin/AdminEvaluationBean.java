@@ -3,9 +3,9 @@ package de.l3s.learnweb.beans.admin;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 
 import org.apache.log4j.Logger;
 

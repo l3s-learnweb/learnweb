@@ -3,16 +3,16 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.faces.application.FacesMessage;
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
+import javax.inject.Named;
+import javax.validation.constraints.NotBlank;
 
 import org.apache.log4j.Logger;
-import javax.validation.constraints.NotBlank;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 

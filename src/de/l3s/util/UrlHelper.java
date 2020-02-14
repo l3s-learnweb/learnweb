@@ -1,13 +1,13 @@
 package de.l3s.util;
 
-import org.apache.log4j.Logger;
-
 import java.net.HttpURLConnection;
 import java.net.IDN;
 import java.net.URI;
-import java.net.URL;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.UnknownHostException;
+
+import org.apache.log4j.Logger;
 
 public final class UrlHelper
 {

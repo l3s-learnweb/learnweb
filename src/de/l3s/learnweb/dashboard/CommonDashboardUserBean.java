@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+
 import org.apache.commons.collections4.CollectionUtils;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.user.User;
-
-import javax.faces.application.FacesMessage;
 
 public abstract class CommonDashboardUserBean extends ApplicationBean
 {

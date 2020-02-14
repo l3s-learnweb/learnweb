@@ -1,15 +1,16 @@
 package de.l3s.learnweb.resource.search.solrClient;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.resource.AbstractPaginator;
-import de.l3s.learnweb.resource.ResourceDecorator;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.FacetField;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.FacetField;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.resource.AbstractPaginator;
+import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class SolrPaginator extends AbstractPaginator
 {

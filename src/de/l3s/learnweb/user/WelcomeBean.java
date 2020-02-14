@@ -2,8 +2,8 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 

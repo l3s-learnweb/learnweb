@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 

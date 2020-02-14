@@ -1,14 +1,15 @@
 package de.l3s.learnweb.resource;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.group.GroupManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.group.GroupManager;
 
 public class ResourceUpdateBatch
 {

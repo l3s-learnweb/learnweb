@@ -1,10 +1,10 @@
 package de.l3s.learnweb.dashboard.glossary;
 
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.user.User;
-
 import java.io.Serializable;
 import java.sql.SQLException;
+
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.user.User;
 
 public class GlossaryUserActivity implements Serializable
 {

@@ -1,9 +1,9 @@
 package de.l3s.learnweb.component;
 
+import javax.faces.component.FacesComponent;
+
 import org.primefaces.component.api.Widget;
 import org.primefaces.component.menu.AbstractMenu;
-
-import javax.faces.component.FacesComponent;
 
 @FacesComponent(createTag = true, tagName = "menu", namespace = "http://l3s.de/learnweb")
 public class LearnwebMenu extends AbstractMenu implements Widget

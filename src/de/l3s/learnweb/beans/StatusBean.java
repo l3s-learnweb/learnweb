@@ -6,8 +6,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
 import de.l3s.learnweb.Learnweb;
 

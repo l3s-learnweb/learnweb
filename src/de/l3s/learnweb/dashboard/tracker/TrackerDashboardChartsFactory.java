@@ -1,7 +1,8 @@
 package de.l3s.learnweb.dashboard.tracker;
 
-import org.apache.log4j.Logger;
 import java.time.format.DateTimeFormatter;
+
+import org.apache.log4j.Logger;
 
 class TrackerDashboardChartsFactory
 {
