@@ -65,17 +65,6 @@
             <h:panelGroup id="submittedResourcesGrid" layout="block" styleClass="res-grid border-top res-container pt-3"
                           pt:data-canSelectResources="true">
                 <p:repeat var="res" value="#{submissionBean.selectedResources}">
-                    <!--<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submissionBean.submitted}">
-                        &lt;!&ndash;<ui:fragment>
-                            <div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
-                                <div class="context-menu-item-wrapper">
-                                    <span class="context-menu-item-icon"/>
-                                    &lt;!&ndash;                        <span class="context-menu-item-content">Remove</span>&ndash;&gt;
-                                </div>
-                            </div>
-                        </ui:fragment>&ndash;&gt;
-                    </h:panelGroup>-->
-
                     <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                                   pt:data-itemType="resource"
                                   pt:data-itemId="#{res.id}">
@@ -208,7 +197,7 @@
 
         $(document).on('dblclick', '.res-item', openItems);
         onResourcesUpdated();
-        // createSelectable('submitResourcesGrid');
+        createSelectable('submitResourcesGrid');
       });
     </script>
 </ui:define>
