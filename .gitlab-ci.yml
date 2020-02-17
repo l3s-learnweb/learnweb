@@ -1,5 +1,9 @@
 image: node:latest
 
+job:
+  tags:
+    - docker
+
 stages:
   - build
   - lint
