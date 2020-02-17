@@ -11,7 +11,7 @@ cache:
 install_dependencies:
   stage: build
   tags:
-    - docker
+    - java
   script:
     - npm ci
   artifacts:
@@ -23,7 +23,7 @@ eslint:
   stage: lint
   when: always
   tags:
-    - docker
+    - java
   variables:
     CI_PROJECT_DIR: '/builds/Learnweb/Learnweb/'
   script:
@@ -37,6 +37,6 @@ stylelint:
   stage: lint
   when: always
   tags:
-    - docker
+    - java
   script:
     - npm run scss:lint -s
