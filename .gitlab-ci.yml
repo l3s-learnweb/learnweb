@@ -27,10 +27,11 @@ eslint:
   variables:
     CI_PROJECT_DIR: '/builds/Learnweb/Learnweb/'
   script:
-    - npx eslint --format gitlab WebContent/resources/learnweb-layout/js/**
-  artifacts:
-    reports:
-      codequality: eslint-codequality.json
+    - npm run js:lint -s
+#    - npx eslint --format gitlab WebContent/resources/learnweb-layout/js/**
+#  artifacts:
+#    reports:
+#      codequality: eslint-codequality.json
 
 # Lint SCSS using stylelint.
 stylelint:
