@@ -129,7 +129,7 @@
 	                                <ui:fragment rendered="#{groupOptionsBean.group.memberCountLimited}">
 	                                    #{msg.How_many_users_can_join_the_group}:
 	                                    <p:inputNumber value="#{groupOptionsBean.group.maxMemberCount}" style="max-width: 5rem;" styleClass="d-block"
-	                                                   minValue="1" maxValue="10000" decimalPlaces="0" thousandSeparator=""/>
+	                                                   minValue="#{groupOptionsBean.group.memberCount}" maxValue="10000" decimalPlaces="0" thousandSeparator=""/>
 	                                </ui:fragment>
 	                            </h:panelGroup>
 	                            <p:message for="@previous"/>
