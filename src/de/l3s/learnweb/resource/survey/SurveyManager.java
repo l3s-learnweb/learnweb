@@ -145,7 +145,7 @@ public class SurveyManager
                 survey.setOrganizationId(rs.getInt("organization_id"));
                 survey.setUserId(rs.getInt("creator_id"));
                 survey.setDeleted(rs.getInt("deleted") == 1);
-                survey.setPermissionToCopy(rs.getInt("permission_to_copy") == 1);
+                survey.setPublicTemplate(rs.getInt("public_template") == 1);
             }
             else
             {
@@ -373,21 +373,40 @@ public class SurveyManager
         return users;
     }
 
-    // TODO extend to return list of associated resources. to inform the user which resources use the survey template. This information can also be shown in the survey overview.
-    // TODO rename to getSurveyResourcesBySurveyId(int surveyId) check similar methods how they are returning surveyresource objects
-    protected SurveyResource isSurveyAssociatedWithResource(int surveyId) throws SQLException
+    /**
+     * Returns all survey resources by survey id
+     *
+     * @param surveyId
+     * @return
+     * @throws SQLException
+     */
+
+    public List<Resource> getSurveyResourcesBySurveyId(int surveyId) throws SQLException
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `survey_id`=? "))
+        return learnweb.getResourceManager().getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM `lw_resource` r JOIN `lw_survey_resource` sr ON r.`resource_id`=sr.`resource_id` WHERE `survey_id`=?", null, surveyId);
+    }
+
+    /**
+     * returns 'true' if survey associated with at least one resource
+     *
+     * @param surveyId
+     * @return
+     * @throws SQLException
+     */
+
+    public boolean isSurveyAssociatedWithResource(int surveyId) throws SQLException
+    {
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE survey_id=? LIMIT 1"))
         {
             select.setInt(1, surveyId);
             ResultSet rs = select.executeQuery();
             if(rs.next())
             {
-
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     public List<Survey> getSurveysByOrganisation(int organisationId) throws SQLException
@@ -411,11 +430,11 @@ public class SurveyManager
         Survey survey = new Survey();
         survey.setId(rs.getInt("survey_id"));
         survey.setOrganizationId(rs.getInt("organization_id"));
-        survey.setTitle(rs.getString("title").replaceAll("\\<.*?\\>", ""));
-        survey.setDescription(rs.getString("description").replaceAll("\\<.*?\\>", ""));
+        survey.setTitle(rs.getString("title"));
+        survey.setDescription(rs.getString("description"));
         survey.setUserId(rs.getInt("creator_id"));
         survey.setDeleted(rs.getInt("deleted") == 1);
-        survey.setPermissionToCopy(rs.getInt("permission_to_copy") == 1);
+        survey.setPublicTemplate(rs.getInt("public_template") == 1);
         return survey;
     }
 
@@ -436,13 +455,13 @@ public class SurveyManager
         // persists metadata
         if(survey.getId() <= 0)
         {
-            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, creator_id, permission_to_copy) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
+            try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_survey (organization_id, title, description, creator_id, public_template) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS))
             {
                 insert.setInt(1, survey.getOrganizationId());
                 insert.setString(2, survey.getTitle());
                 insert.setString(3, survey.getDescription());
                 insert.setInt(4, survey.getUserId());
-                insert.setInt(5, survey.isPermissionToCopy() ? 1 : 0);
+                insert.setInt(5, survey.isPublicTemplate() ? 1 : 0);
                 insert.executeUpdate();
                 ResultSet rs = insert.getGeneratedKeys();
                 if(!rs.next())
@@ -452,13 +471,13 @@ public class SurveyManager
         }
         else
         {
-            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?, `title`=?, `description`=?, `creator_id`=?, `permission_to_copy`=? WHERE `survey_id`=?"))
+            try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_survey` SET `organization_id`=?, `title`=?, `description`=?, `creator_id`=?, `public_template`=? WHERE `survey_id`=?"))
             {
                 update.setInt(1, survey.getOrganizationId());
                 update.setString(2, survey.getTitle());
                 update.setString(3, survey.getDescription());
                 update.setInt(4, survey.getUserId());
-                update.setInt(5, survey.isPermissionToCopy() ? 1 : 0);
+                update.setInt(5, survey.isPublicTemplate() ? 1 : 0);
                 update.setInt(6, survey.getId());
                 update.executeUpdate();
             }
@@ -518,7 +537,7 @@ public class SurveyManager
         }
     }
 
-    protected void saveQuestionOption(int questionId, SurveyQuestionOption option) throws SQLException
+    private void saveQuestionOption(int questionId, SurveyQuestionOption option) throws SQLException
     {
         if(option.getId() != 0)
         {
@@ -544,29 +563,6 @@ public class SurveyManager
                 option.setId(rs.getInt(1));
             }
         }
-    }
-
-    // TODO move to Survey.clone and refactor
-    protected int copySurvey(Survey survey) throws SQLException
-    {
-        Survey copy = getSurvey(survey.getId());
-        copy.setTitle(survey.getTitle());
-        copy.setDescription(survey.getDescription());
-        copy.setOrganizationId(survey.getOrganizationId());
-        copy.setUserId(survey.getUserId());
-        copy.setId(0);
-        copy.setPermissionToCopy(survey.isPermissionToCopy());
-        for(SurveyQuestion question : copy.getQuestions())
-        {
-            question.setId(0);
-            for(SurveyQuestionOption answer : question.getAnswers())
-            {
-                answer.setId(0);
-            }
-        }
-
-        save(copy);
-        return copy.getId();
     }
 
     protected void deleteSurvey(int surveyId) throws SQLException

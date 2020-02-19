@@ -2,15 +2,13 @@ package de.l3s.learnweb.resource.survey;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import org.primefaces.PrimeFaces;
-
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.UtilBean;
 
 @Named
 @ViewScoped
@@ -18,79 +16,48 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 669287762248912801L;
 
-    @Deprecated
-    private final Survey survey;
-
-    @Deprecated
-    private Survey surveyCopy;
-
     private Survey selectedSurvey;
-    private final List<Survey> surveys;
-    private int associatedResourceId;
+    private final List<Survey> surveys = new ArrayList<>();
 
     public SurveyTemplatesBean() throws SQLException
     {
-        survey = new Survey();
-        survey.setOrganizationId(getUser().getOrganisationId());
-        survey.setUserId(getUser().getId());
+        if(!isLoggedIn())
+            return;
 
-        surveys = getLearnweb().getSurveyManager().getSurveysByOrganisation(getUser().getOrganisationId());
+        List<Survey> allSurveysPerOrganisation = getLearnweb().getSurveyManager().getSurveysByOrganisation(getUser().getOrganisationId());
+        for (Survey survey : allSurveysPerOrganisation)
+        {
+            if(survey.isPublicTemplate() || getUser().getId() == survey.getUserId())
+                surveys.add(survey);
+        }
     }
 
-    @Deprecated
-    public void onCreateSurvey() throws SQLException
+    public Survey getSelectedSurvey()
     {
-        getLearnweb().getSurveyManager().save(survey);
+        return selectedSurvey;
+    }
 
-        // TODO refactor
-        UtilBean.redirect("/lw/survey/template.jsf?survey_id=" + survey.getId());
+    public void setSelectedSurvey(final Survey selectedSurvey)
+    {
+        this.selectedSurvey = selectedSurvey;
     }
 
     /**
      *
      * @return All surveys of the users organisation
-     * @throws SQLException
      */
-    public List<Survey> getSurveys() throws SQLException
+    public List<Survey> getSurveys()
     {
         return surveys;
     }
 
-    @Deprecated
-    public Survey getSurvey()
+    public void onCopySurvey(int surveyId) throws SQLException
     {
-        return survey;
-    }
-
-    @Deprecated
-    public Survey getSurveyCopy()
-    {
-        return surveyCopy;
-    }
-
-    public void setCopySurvey(Survey copySurvey)
-    {
-        this.surveyCopy = copySurvey;
-    }
-
-    public int getAssociatedResourceId()
-    {
-        return associatedResourceId;
-    }
-
-    @Deprecated
-    public void setAssociatedResourceId(final int associatedResourceId)
-    {
-        this.associatedResourceId = associatedResourceId;
-    }
-
-    public void onCopySurveyNew() throws SQLException // called when button in table is pressed
-    {
-        selectedSurvey = getSurvey().clone();
+        selectedSurvey = getLearnweb().getSurveyManager().getSurvey(surveyId).clone();
         selectedSurvey.setUserId(getUser().getId());
     }
 
-    public void onCreateSurveyNew() throws SQLException // called when button in table is pressed
+    public void onCreateSurvey()
     {
         selectedSurvey = new Survey();
         selectedSurvey.setOrganizationId(getUser().getOrganisationId());
@@ -106,51 +73,18 @@ public class SurveyTemplatesBean extends ApplicationBean implements Serializable
     public String onSave() throws SQLException
     {
         selectedSurvey.save();
-
         return "/lw/survey/template.xhtml?survey_id=" + selectedSurvey.getId() + "&faces-redirect=true";
-
     }
 
-    @Deprecated
-    public void onCopySurvey() throws SQLException
+    public String onEditSurvey(int surveyId)
     {
-        // TODO refactor
-        surveyCopy.setUserId(getUser().getId());
-        int copyId = getLearnweb().getSurveyManager().copySurvey(surveyCopy);
-
-        // TODO remove redirect, use JSF navigation https://www.tutorialspoint.com/jsf/jsf_page_navigation.htm
-        UtilBean.redirect("/lw/survey/template.jsf?survey_id=" + copyId);
-    }
-
-    public void onEditSurvey(int surveyId) throws SQLException
-    {
-        SurveyResource associatedWithResource = getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(surveyId);
-        if(associatedWithResource != null)
-        {
-            this.associatedResourceId = associatedWithResource.getId();
-            // TODO try to avoid using PrimeFaces.current . try using button onerror event or in this case disable the button and show add the tooltip to the button
-            PrimeFaces.current().executeScript("PF('templateAlreadyAssociatedDialog').show()");
-        }
-        else
-
-        {
-            // TODO remove redirect, use JSF navigation https://www.tutorialspoint.com/jsf/jsf_page_navigation.htm
-            UtilBean.redirect("/lw/survey/template.jsf?survey_id=" + surveyId);
-        }
+        return "/lw/survey/template.xhtml?survey_id=" + surveyId + "&faces-redirect=true";
     }
 
     public void onDeleteSurvey(Survey survey) throws SQLException
     {
-        if(getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(survey.getId()) == null)
-        {
-            getLearnweb().getSurveyManager().deleteSurvey(survey.getId());
-            surveys.remove(survey);
-        }
-        else
-        {
-            // TODO remove
-            PrimeFaces.current().executeScript("PF('templateAlreadyAssociatedDialog').show()");
-        }
+        getLearnweb().getSurveyManager().deleteSurvey(survey.getId());
+        surveys.remove(survey);
     }
 
 }

@@ -35,16 +35,19 @@
 			<p:growl id="growl" showDetail="true" sticky="true"/>
 			<p:panel>
 				<h:panelGroup id="questions">
-					<div class="d-flex flex-nowrap mb-4">
+					<div class="d-flex flex-nowrap mb-2">
 						<p:commandLink  styleClass="bg-transparent border-0 text-dark fa fa-pencil align-self-center mr-2" title="#{msg['edit']}" onclick="PF('updateSurveyTitle').show();" process="@this" global="false"/>
 						<h1><h:outputText value="#{surveyTemplateBean.survey.title}" escape="false"/></h1>
+					</div>
+					<div class="mb-4">
+						<h:outputText value="#{surveyTemplateBean.survey.description}" escape="false"/>
 					</div>
 					<c:forEach var="question" varStatus="questionStatus" items="#{surveyTemplateBean.questions}">
 						<p:outputPanel class="form-group" rendered="#{!question.deleted}">
 							<div class="d-flex flex-nowrap">
 								<p:outputPanel class="d-flex flex-column justify-content-center mr-2" rendered="#{userBean.user.admin}">
 									<p:commandLink actionListener="#{surveyTemplateBean.onMoveQuestionUp(question)}" rendered="#{!questionStatus.first}" styleClass="text-dark fa fa-angle-up align-self-center"
-                                                   title="#{msg['survey.up']}" update="form" process="@this"/> 
+                                                   title="#{msg['survey.up']}" update="form" process="@this"/>
 									<p:commandLink action="#{surveyTemplateBean.setCurrentQuestion(question)}" styleClass="text-dark fa fa-pencil align-self-center"
                                                    title="#{msg['edit']}" onsuccess="PF('updateSurvey').show();" update="updateForm" process="@this"/>
 									<p:commandLink action="#{surveyTemplateBean.onMoveQuestionDown(question)}" rendered="#{!questionStatus.last}" styleClass="text-dark fa fa-angle-down align-self-center"
@@ -59,14 +62,14 @@
 						</c:forEach>
 				</h:panelGroup>
 				<div class="d-flex flex-column mb-3">
-					<p:outputLabel for="@next" value="#{msg['survey.permission_to_copy']}:" styleClass="font-weight-bold"/>
-					<p:tooltip for="@next" value="#{msg['survey.permission_to_copy_explanation']}." position="right"/>
-					<p:toggleSwitch value="#{surveyTemplateBean.survey.permissionToCopy}"/>
+					<p:outputLabel for="@next" value="#{msg['public']}:" styleClass="font-weight-bold"/>
+					<p:tooltip for="@next" value="#{msg['survey.public_explanation']}." position="right"/>
+					<p:toggleSwitch id="copy" value="#{surveyTemplateBean.survey.publicTemplate}"/>
 				</div>
 				<div class="d-flex flex-nowrap justify-content-between">
-				<p:defaultCommand target="saveBtn"/>
-				<p:commandButton action="#{surveyTemplateBean.onAddEmptyQuestion}" value="#{msg['survey.add_question']}" onclick="PF('updateSurvey').show();" update="updateForm" process="@this"/>
-				<p:commandButton id="saveBtn" action="#{surveyTemplateBean.onSave}" value="#{msg['save']}" update="form" process="@this"/>
+					<p:defaultCommand target="saveBtn"/>
+					<p:commandButton action="#{surveyTemplateBean.onAddEmptyQuestion}" value="#{msg['survey.add_question']}" onclick="PF('updateSurvey').show();" update="updateForm" process="@this"/>
+					<p:commandButton id="saveBtn" action="#{surveyTemplateBean.onSave}" value="#{msg['save']}" update="form" process="@this copy"/>
 				</div> 
 			</p:panel>
 		</h:form>
@@ -74,6 +77,7 @@
         <p:dialog header="#{msg['survey.update_survey']}" styleClass="overflow-hidden" widgetVar="updateSurvey" modal="true">
             <ui:decorate template="/WEB-INF/templates/blocks/survey/updateQuestion.xhtml">
                 <ui:param name="question" value="#{surveyTemplateBean.currentQuestion}"/>
+				<ui:param name="associated" value="#{surveyTemplateBean.survey.surveyAssociatedWithResource}"></ui:param>
             </ui:decorate>
         </p:dialog>
 

@@ -32,9 +32,34 @@ public class Survey implements Serializable, HasId
     private int organizationId; // if <> 0 only the specified organization can use this survey
     private int userId; // user who created this survey
     private boolean deleted;
-    private boolean permissionToCopy;
+    private boolean publicTemplate; // specifies whether the template is public (if "true", other users in the organization see it in the list of templates and can copy it)
 
     private List<SurveyQuestion> questions = new ArrayList<>();
+
+    public Survey()
+    {
+
+    }
+
+    public Survey(Survey old)
+    {
+        setId(-1);
+        setTitle(old.getTitle());
+        setDescription(old.getDescription());
+        setOrganizationId(old.getOrganizationId());
+        setUserId(old.getUserId());
+        setDeleted(old.isDeleted());
+        setPublicTemplate(old.isPublicTemplate());
+        for(SurveyQuestion question : old.getQuestions())
+        {
+            question.setId(0);
+            for(SurveyQuestionOption answer : question.getAnswers())
+            {
+                answer.setId(0);
+            }
+            questions.add(question);
+        }
+    }
 
     @Override
     public int getId()
@@ -117,14 +142,14 @@ public class Survey implements Serializable, HasId
         this.deleted = deleted;
     }
 
-    public boolean isPermissionToCopy()
+    public boolean isPublicTemplate()
     {
-        return permissionToCopy;
+        return publicTemplate;
     }
 
-    public void setPermissionToCopy(final boolean permissionToCopy)
+    public void setPublicTemplate(final boolean publicTemplate)
     {
-        this.permissionToCopy = permissionToCopy;
+        this.publicTemplate = publicTemplate;
     }
 
     /**
@@ -133,7 +158,15 @@ public class Survey implements Serializable, HasId
     @Override
     public Survey clone()
     {
-        return null; // TODO implement
+        return new Survey(this);
+    }
+
+    /**
+     * returns 'true' if survey associated with at least one resource
+     */
+    public boolean isSurveyAssociatedWithResource() throws SQLException
+    {
+        return Learnweb.getInstance().getSurveyManager().isSurveyAssociatedWithResource(id);
     }
 
 }

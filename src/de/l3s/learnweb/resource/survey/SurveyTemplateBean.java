@@ -119,11 +119,6 @@ public class SurveyTemplateBean extends ApplicationBean implements Serializable
         question.setDeleted(true);
     }
 
-    public boolean isSurveyAssociatedWithResource() throws SQLException
-    {
-        return getLearnweb().getSurveyManager().isSurveyAssociatedWithResource(surveyId) != null;
-    }
-
     public List<SurveyQuestion> getQuestions()
     {
         return survey.getQuestions().stream().filter(question -> !question.isDeleted()).collect(Collectors.toList());
