@@ -456,6 +456,10 @@ public class ResourceMetadataExtractor
         return Long.toString(result);
     }
 
+    /**
+     * DANGER! This method will close inputStream :/
+     * ^ Add + if you get an error because of this.
+     */
     public FileInfo getFileInfo(InputStream inputStream, String fileName) throws IOException
     {
         return fileInspector.inspect(inputStream, fileName);

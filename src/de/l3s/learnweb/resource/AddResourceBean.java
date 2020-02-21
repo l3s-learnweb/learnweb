@@ -60,6 +60,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setResourceTypeGlossary()
     {
         GlossaryResource glossaryResource = new GlossaryResource();
+        glossaryResource.setUser(getUser());
+        glossaryResource.setSource(ResourceService.learnweb);
+        glossaryResource.setLocation("Learnweb");
+        glossaryResource.setStorageType(Resource.LEARNWEB_RESOURCE);
         glossaryResource.setDeleted(true);
         glossaryResource.setAllowedLanguages(getUser().getOrganisation().getGlossaryLanguages()); // by default select all allowed languages
 
@@ -149,9 +153,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource.setSource(ResourceService.learnweb);
         resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resource.getType()));
 
-        try(FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType())))
+        try
         {
             log.debug("Getting the fileInfo from uploaded file...");
+            FileInputStream sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType()));
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
             FileInfo info = rme.getFileInfo(sampleFile, resource.getFileName());
 
@@ -159,9 +164,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             File file = new File(TYPE.FILE_MAIN, info.getFileName(), info.getMimeType());
             file.setDownloadLogActivated(true);
 
+            // yes, we need to load it again, because `getFileInfo` closes stream
+            sampleFile = new FileInputStream(FileUtility.getSampleOfficeFile(resource.getType()));
             FileManager fileManager = getLearnweb().getFileManager();
             fileManager.save(file, sampleFile);
 
+            resource.setTitle(info.getTitle());
             resource.addFile(file);
             resource.setUrl(file.getUrl());
             resource.setFileUrl(file.getUrl());
@@ -219,7 +227,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-            reset();
         }
         catch(Exception e)
         {
