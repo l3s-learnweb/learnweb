@@ -451,11 +451,13 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
         if((resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()) && StringUtils.isNotEmpty(query))
         {
-            Search metaSearch = new Search(interweb, query, new SearchFilters(), getUser());
+            SearchFilters searchFilters = new SearchFilters();
+            Search metaSearch = new Search(interweb, query, searchFilters, getUser());
             metaSearch.setMode(searchMode);
-            metaSearch.setResultsPerService(20);
+            metaSearch.setResultsPerService(32);
             metaSearch.setConfigGroupResultsByField("location");
             metaSearch.setConfigResultsPerGroup(10);
+            searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
             resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup);
             Collections.sort(resourcesGroupedBySource);
