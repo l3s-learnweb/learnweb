@@ -207,8 +207,6 @@
             <version>3.4.3</version>
         </dependency>
 
-        
-
         <!-- ################ Dependencies missing in Java 11 (for backward compatibility) ################ -->
         <!-- XML library, used in Interweb client-->
         <dependency>
@@ -407,7 +405,6 @@
             <systemPath>${basedir}/WebContent/WEB-INF/lib/supportWN.jar</systemPath>
             <scope>system</scope>
         </dependency>
-
         <!-- Dependency of rita.wordnet -->
         <dependency>
             <groupId>org.processing</groupId>

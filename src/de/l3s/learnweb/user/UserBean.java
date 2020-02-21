@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.BaseMenuModel;
@@ -52,7 +51,6 @@ public class UserBean implements Serializable
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
 
     private Locale locale;
-    private transient PrettyTime localePrettyTime;
 
     private transient List<Group> newGroups = null;
 
@@ -250,8 +248,6 @@ public class UserBean implements Serializable
             log.error("Unsupported language: " + localeCode);
             break;
         }
-
-        localePrettyTime = null; // reset date formatter
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         // facesContext.getViewRoot().setLocale(locale);
@@ -658,14 +654,6 @@ public class UserBean implements Serializable
             cacheShowMessageAddResource = getUser().getResourceCount() == 0;
         }
         return cacheShowMessageAddResource;
-    }
-
-    public String getPrettyDate(Date date)
-    {
-        if(localePrettyTime == null)
-            localePrettyTime = new PrettyTime(locale);
-
-        return localePrettyTime.format(date);
     }
 
     public User getModeratorUser()
