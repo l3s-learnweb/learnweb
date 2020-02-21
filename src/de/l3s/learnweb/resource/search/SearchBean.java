@@ -459,7 +459,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setConfigResultsPerGroup(10);
             searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
             metaSearch.getResourcesByPage(2); // fetch resources
-            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup);
+            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup, searchService);
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;

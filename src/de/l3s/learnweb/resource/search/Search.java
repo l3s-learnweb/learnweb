@@ -426,7 +426,7 @@ public class Search implements Serializable
     /**
      * @return All resources that have been loaded
      */
-    public List<GroupedResources> getResourcesGroupedBySource(Integer limit)
+    public List<GroupedResources> getResourcesGroupedBySource(Integer limit, final ResourceService searchService)
     {
         List<GroupedResources> resourcesByGroups = new ArrayList<>();
 
@@ -436,6 +436,8 @@ public class Search implements Serializable
             resGroup.setGroupName(res.getLocation());
 
             //log.debug("getResourcesGroupedBySource: resource " + res.getId() + " location " + res.getLocation());
+
+            if (res.getLocation().equalsIgnoreCase(searchService.name())) continue;
 
             if(resourcesByGroups.contains(resGroup))
             {
