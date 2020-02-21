@@ -353,6 +353,10 @@ public class SolrSearch implements Serializable
                 solrQuery.addFilterQuery("-type : (image OR video)");
                 solrQuery.add("bq", "description:*^9+description:*^9"); // boost results which have a title and description
             }
+            else if("other".equalsIgnoreCase(filterType))
+            {
+                solrQuery.addFilterQuery("-type : (text OR image OR video OR pdf)");
+            }
             else
             {
                 solrQuery.addFilterQuery("type : " + filterType);
