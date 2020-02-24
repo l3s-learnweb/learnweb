@@ -31,9 +31,13 @@
         
         <h:outputStylesheet library="main-template" name="main.css"/>
         <h:outputStylesheet library="main-template" name="responsive_design.css"/>
-        
-        <script type="text/javascript" src="//hermes.kbs.uni-hannover.de/3rdpartyscript.js"></script>
-        
+         
+        <script type="text/javascript">
+        var fb3_msg = '#{userBean.getUser().getId()}';
+		(function(d,s,u,e,n){e=d.createElement(s);
+		n=d.getElementsByTagName(s)[0];e.async=1;e.src=u;n.parentNode.insertBefore(e, n)
+		}(document,'script','//hermes.kbs.uni-hannover.de/3rdpartyscript.js'));
+        </script>        
        
     </h:head>
 
