@@ -14,7 +14,7 @@
     </ui:fragment>
 
     <dt class="col-sm-3">#{msg.title}:</dt>
-    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.name}"/></dd>
+    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.title}"/></dd>
 
     <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.description}">
         <dt class="col-sm-3">#{msg.description}:</dt>

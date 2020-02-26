@@ -19,6 +19,15 @@ public class ResourceUpdateBatch
     private List<Folder> folders;
     private int failed = 0;
 
+    public ResourceUpdateBatch(List<Resource> resources, List<Folder> folders)
+    {
+        this.resources = new ArrayList<>();
+        this.folders = new ArrayList<>();
+
+        if (resources != null && !resources.isEmpty()) this.resources.addAll(resources);
+        if (folders != null && !folders.isEmpty()) this.folders.addAll(folders);
+    }
+
     public ResourceUpdateBatch(String json) throws SQLException
     {
         resources = new ArrayList<>();

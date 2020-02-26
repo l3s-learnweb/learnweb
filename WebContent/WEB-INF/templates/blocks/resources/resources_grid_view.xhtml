@@ -8,12 +8,12 @@
         <ui:repeat value="#{groupResourcesBean.subFolders}" var="folder">
             <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf"
                           pt:data-itemType="folder"
-                          pt:data-itemId="#{folder.folderId}"
+                          pt:data-itemId="#{folder.id}"
                           pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
                           pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
                           pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
                 <f:param name="group_id" value="#{groupResourcesBean.group.id}"/>
-                <f:param name="folder_id" value="#{folder.folderId}"/>
+                <f:param name="folder_id" value="#{folder.id}"/>
 
                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
                     <ui:param name="folder" value="#{folder}"/>

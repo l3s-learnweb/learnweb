@@ -414,10 +414,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             String action = params.get("action");
             ResourceUpdateBatch items = new ResourceUpdateBatch(params.get("items"));
 
+            Group targetGroup = selectLocationBean.getTargetGroup();
+            Folder targetFolder = selectLocationBean.getTargetFolder();
+
             switch(action)
             {
                 case "copy":
-                    this.copyResources(items);
+                    this.copyResources(items, targetGroup, targetFolder);
                     break;
                 case "move":
                     if(params.containsKey("destination"))
@@ -455,9 +458,8 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void copyResources(ResourceUpdateBatch items) throws SQLException
+    private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder) throws SQLException
     {
-        Group targetGroup = selectLocationBean.getTargetGroup();
         if(targetGroup == null) throw new IllegalArgumentException("group_resources.target_not_exists");
         if(!group.canViewResources(getUser())) throw new IllegalAccessError("group_resources.cant_be_copied");
         if(!targetGroup.canAddResources(getUser())) throw new IllegalAccessError("group_resources.target_permissions");
@@ -465,18 +467,26 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         for(Resource resource : items.getResources())
         {
             Resource newResource = resource.clone();
-            newResource.setGroupId(HasId.getIdOrDefault(selectLocationBean.getTargetGroup(), 0));
-            newResource.setFolderId(HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0));
+            newResource.setGroupId(HasId.getIdOrDefault(targetGroup, 0));
+            newResource.setFolderId(HasId.getIdOrDefault(targetFolder, 0));
             resource = getUser().addResource(newResource);
             log(Action.adding_resource, targetGroup.getId(), resource.getId());
         }
 
-        if (!items.getFolders().isEmpty())
+        for(Folder folder : items.getFolders())
         {
-            // TODO: implement copy folder
-            addGrowl(FacesMessage.SEVERITY_WARN, "Copying folders is not implemented yet.");
+            Folder newFolder = new Folder(folder);
+            newFolder.setGroupId(HasId.getIdOrDefault(targetGroup, 0));
+            newFolder.setParentFolderId(HasId.getIdOrDefault(targetFolder, 0));
+            newFolder.setUserId(getUser().getId());
+            newFolder.save();
+            log(Action.add_folder, targetGroup.getId(), newFolder.getId());
+
+            ResourceUpdateBatch copyChild = new ResourceUpdateBatch(folder.getResources(), folder.getSubFolders());
+            copyResources(copyChild, targetGroup, newFolder);
         }
 
+        // TODO: this message shows multiple times when copy folder with subfolders
         if(items.getTotal() > 0) addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotal());
     }
 
@@ -488,7 +498,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             if (selectLocationBean.getTargetGroup() != null)
             {
                 targetGroupId = selectLocationBean.getTargetGroup().getId();
-                targetFolderId = selectLocationBean.getTargetFolder().getId();
+                targetFolderId = HasId.getIdOrDefault(selectLocationBean.getTargetFolder(), 0);
             }
             else throw new IllegalArgumentException("group_resources.target_not_exists");
         }

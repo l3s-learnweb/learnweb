@@ -15,10 +15,10 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);
 
-    private int folderId = -1;
+    private int id = -1;
     private int groupId = -1;
     private int parentFolderId;
-    private String name;
+    private String title;
     private String description;
     private int userId = -1;
     private boolean deleted = false; // indicates whether this folder has been deleted
@@ -33,52 +33,43 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         super();
     }
 
-    public Folder(int groupId, String name)
+    public Folder(int id, int groupId, String title)
     {
-        this(-1, groupId, name, null);
+        this(id, groupId, title, null);
     }
 
-    public Folder(int groupId, String name, String description)
+    public Folder(int id, int groupId, String title, String description)
     {
-        this(-1, groupId, name, description);
-    }
-
-    public Folder(int folderId, int groupId, String name)
-    {
-        this(folderId, groupId, name, null);
-    }
-
-    public Folder(int folderId, int groupId, String name, String description)
-    {
-        super();
-        this.folderId = folderId;
+        this.id = id;
         this.groupId = groupId;
-        this.name = name;
+        this.title = title;
         this.description = description;
+    }
+
+    /**
+     * Copy constructor
+     */
+    public Folder(Folder another)
+    {
+        this.id = -1;
+        this.groupId = another.getGroupId();
+        this.parentFolderId = another.getParentFolderId();
+        this.title = another.getTitle();
+        this.description = another.getDescription();
+        this.userId = another.getUserId();
+        this.deleted = another.isDeleted();
     }
 
     @Override
     public int getId()
     {
-        return folderId;
+        return id;
     }
 
     @Override
     public void setId(int id)
     {
-        this.folderId = id;
-    }
-
-    @Deprecated
-    public int getFolderId()
-    {
-        return this.getId();
-    }
-
-    @Deprecated
-    public void setFolderId(int folderId)
-    {
-        this.setId(folderId);
+        this.id = id;
     }
 
     @Override
@@ -114,9 +105,9 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
         if(parentFolderId == 0)
             return null;
 
-        if(parentFolderId == folderId)
+        if(parentFolderId == id)
         {
-            log.warn("Folder " + folderId + " has itself as parent folder.");
+            log.warn("Folder " + id + " has itself as parent folder.");
             return null;
         }
 
@@ -148,25 +139,13 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @Override
     public String getTitle()
     {
-        return name;
+        return title;
     }
 
     @Override
     public void setTitle(String title)
     {
-        this.name = title;
-    }
-
-    @Deprecated
-    public String getName()
-    {
-        return this.getTitle();
-    }
-
-    @Deprecated
-    public void setName(String name)
-    {
-        this.setTitle(name);
+        this.title = title;
     }
 
     public String getDescription()
@@ -217,7 +196,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public List<Resource> getResources() throws SQLException
     {
-        return Learnweb.getInstance().getResourceManager().getResourcesByFolderId(folderId);
+        return Learnweb.getInstance().getResourceManager().getResourcesByFolderId(id);
     }
 
     public List<Resource> getResourcesSubset() throws SQLException
@@ -268,7 +247,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
                 folder = folder.getParentFolder();
             }
 
-            if(folderId != 0) sb.append(" > ").append(name);
+            if(id != 0) sb.append(" > ").append(title);
             sb.insert(0, getGroup() != null ? getGroup().getTitle() : "Private resources");
             prettyPath = sb.toString();
         }
@@ -279,7 +258,7 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     {
         if(subFolders == null)
         {
-            subFolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
+            subFolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, id);
         }
 
         return subFolders;
@@ -323,12 +302,12 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
 
     public int getCountResources() throws SQLException
     {
-        return Learnweb.getInstance().getGroupManager().getCountResources(groupId, folderId);
+        return Learnweb.getInstance().getGroupManager().getCountResources(groupId, id);
     }
 
     public int getCountSubFolders() throws SQLException
     {
-        return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, folderId);
+        return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, id);
     }
 
     public void clearCaches()
@@ -381,6 +360,6 @@ public class Folder extends AbstractResource implements Serializable, ResourceCo
     @Override
     public String toString()
     {
-        return this.name;
+        return this.title;
     }
 }

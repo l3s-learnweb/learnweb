@@ -97,7 +97,7 @@
                                 </li>
                                 <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}">
                                     <li data-folderId="#{folder.id}">
-                                        <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.name}</h:outputLink>
+                                        <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.title}</h:outputLink>
                                     </li>
                                 </p:repeat>
                             </ul>
@@ -117,7 +117,7 @@
                                                       pt:data-canEditResource="true"
                                                       pt:data-canDeleteResource="true">
                                             <f:param name="group_id" value="#{folder.groupId}"/>
-                                            <f:param name="folder_id" value="#{folder.folderId}"/>
+                                            <f:param name="folder_id" value="#{folder.id}"/>
 
                                             <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
                                                 <ui:param name="folder" value="#{folder}"/>
@@ -139,7 +139,7 @@
                                                   pt:data-canEditResource="true"
                                                   pt:data-canDeleteResource="true">
                                         <f:param name="group_id" value="#{folder.groupId}"/>
-                                        <f:param name="folder_id" value="#{folder.folderId}"/>
+                                        <f:param name="folder_id" value="#{folder.id}"/>
 
                                         <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
                                             <ui:param name="folder" value="#{folder}"/>
@@ -237,7 +237,7 @@
                         </p:treeNode>
 
                         <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                            <h:outputText value="#{node.name}"/>
+                            <h:outputText value="#{node.title}"/>
                         </p:treeNode>
                     </p:tree>
                 </h:form>

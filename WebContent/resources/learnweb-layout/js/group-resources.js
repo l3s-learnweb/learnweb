@@ -553,6 +553,7 @@ function createConfirmDialog(dialogId, successCallback) {
   $dialog.find('.collapse').hide();
   $dialog.find(`.type-${selected.getSelectedType()}`).show();
 
+  // TODO: this can be called twice. fix asap.
   $dialog.one('click', '.confirm', (e) => {
     PF(dialogId).hide();
     if (successCallback) successCallback();

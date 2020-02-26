@@ -81,7 +81,7 @@
                             rendered="#{not empty groupResourcesBean.group.subFolders}">
 
                         <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                            <h:outputText value="#{node.name}"/>
+                            <h:outputText value="#{node.title}"/>
                         </p:treeNode>
                     </p:tree>
 
@@ -196,7 +196,7 @@
                             </li>
                             <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}">
                                 <li data-folderId="#{folder.id}">
-                                    <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.name}</h:outputLink>
+                                    <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.title}</h:outputLink>
                                 </li>
                             </p:repeat>
                         </ul>
@@ -243,7 +243,7 @@
                 </p:treeNode>
 
                 <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                    <h:outputText value="#{node.name}"/>
+                    <h:outputText value="#{node.title}"/>
                 </p:treeNode>
             </p:tree>
         </h:form>
