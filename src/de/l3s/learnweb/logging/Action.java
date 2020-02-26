@@ -40,7 +40,7 @@ public enum Action
     group_adding_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // target_id = group_id; param = title
     group_adding_document(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // target_id = group_id; param = title
     opening_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
-    group_removing_resource(ActionTargetId.RESOURCE_ID, ActionCategory.GROUP), // target_id = resource id
+    group_removing_resource(ActionTargetId.RESOURCE_ID, ActionCategory.GROUP), // target_id = resource id TODO: replace by deleting_resource
     deleting_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // target_id = folder_id, param = folder name;
     downloading(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // target_id = resource_id, param = file_id
     group_deleting_link(ActionTargetId.GROUP_ID, ActionCategory.GROUP), // param = title of deleted link;

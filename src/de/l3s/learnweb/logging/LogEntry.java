@@ -79,159 +79,131 @@ public class LogEntry implements Serializable
 
         switch(action)
         {
-        case adding_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_adding_resource", resourceTitle, groupLink);
-            //description = usernameLink + " has added " + resource + " to " + group;
-            break;
-        case edit_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_edit_resource", resourceTitle);
-            //description = usernameLink + " has edited " + resource;
-            break;
-        case deleting_resource:
-            if(!StringUtils.isEmpty(params))
-                resourceTitle = "<b>" + params + "</b>";
-            description = usernameLink + UtilBean.getLocaleMessage("log_deleting_resource", resourceTitle); // resourceTitle
-            //description = usernameLink + " has deleted " + resourceTitle;
-            break;
-        case tagging_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_tagging_resource", resourceTitle, params);
-            //description = usernameLink + " has tagged " + resource + " with " + params;
-            break;
-        case commenting_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_commenting_resource", resourceTitle);
+            // Resource action
+            case adding_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_adding_resource", resourceTitle, groupLink);
+                break;
+            case deleting_resource:
+                if(!StringUtils.isEmpty(params)) resourceTitle = "<b>" + params + "</b>";
+                description = usernameLink + UtilBean.getLocaleMessage("log_deleting_resource", resourceTitle); // resourceTitle
+                break;
+            case edit_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_edit_resource", resourceTitle);
+                break;
+            case move_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_move_resource", resourceTitle);
+                break;
+            case opening_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_opening_resource", resourceTitle);
+                break;
+            case tagging_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_tagging_resource", resourceTitle, params);
+                break;
+            case commenting_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_commenting_resource", resourceTitle);
+                Comment comment = Learnweb.getInstance().getResourceManager().getComment(StringHelper.parseInt(params));
+                if(comment != null) description += " " + UtilBean.getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+                break;
+            case rating_resource:
+            case thumb_rating_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_thumb_rating_resource", resourceTitle);
+                break;
+            // case opening_url:
+            //     description = usernameLink + UtilBean.getLocaleMessage("log_opening_url_resource", params);
+            //     break;
+            case searching:
+                description = usernameLink + UtilBean.getLocaleMessage("log_searching_resource", params);
+                break;
+            case downloading:
+                description = usernameLink + UtilBean.getLocaleMessage("log_downloading", resourceTitle);
+                break;
+            case changing_office_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_document_changing", resourceTitle);
+                break;
+            case adding_resource_metadata:
+                description = usernameLink + UtilBean.getLocaleMessage("log_add_resource_metadata", params) + resourceTitle;
+                break;
 
-            Comment comment = Learnweb.getInstance().getResourceManager().getComment(StringHelper.parseInt(params));
+            // Folder actions
+            case add_folder:
+                description = usernameLink + UtilBean.getLocaleMessage("log_add_folder", params);
+                break;
+            case deleting_folder:
+                description = usernameLink + UtilBean.getLocaleMessage("log_deleting_folder", params);
+                break;
+            case move_folder:
+                description = usernameLink + UtilBean.getLocaleMessage("log_move_folder", params);
+                break;
+            case opening_folder:
+                description = usernameLink + UtilBean.getLocaleMessage("log_open_folder", params);
+                break;
 
-            if(comment != null)
-                description += " " + UtilBean.getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+            // Group actions
+            case group_joining:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_joining", groupLink);
+                break;
+            case group_leaving:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_leaving", groupLink);
+                break;
+            case group_creating:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_creating", groupLink);
+                break;
+            case group_deleting:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_deleting", groupTitle);
+                break;
+            case group_changing_title:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_title", groupLink);
+                break;
+            case group_changing_description:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_description", groupLink);
+                break;
+            case group_changing_leader:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_leader", groupLink);
+                break;
+            case group_adding_document:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_document", groupLink);
+                break;
+            case group_adding_link:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_link", groupLink);
+                break;
+            case group_deleting_link:
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_deleting_link", groupLink);
+                break;
+            case forum_topic_added:
+                String topicLink = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
+                description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
+                break;
+            case forum_post_added:
+                String topic = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
+                description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
+                break;
+            case group_removing_resource: // TODO: replace or implement
+                if(!StringUtils.isEmpty(params)) resourceTitle = "<b>" + params + "</b>";
+                description = usernameLink + UtilBean.getLocaleMessage("log_group_removing_resource", resourceTitle, groupLink);
+                break;
 
-            //description = usernameLink + " has commented on " + resource;
-            break;
-        case rating_resource:
-        case thumb_rating_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_thumb_rating_resource", resourceTitle);
-            //description = usernameLink + " has rated " + resource;
-            break;
-        case opening_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_opening_resource", resourceTitle);
-            //description = usernameLink + " has opened " + resource;
-            break;
-        /*
-        	case opening_url:
-        	    description = usernameLink + UtilBean.getLocaleMessage("log_opening_url_resource", params);
-        	    //description = usernameLink + " has opened the following url: " + params;
-        	    break;
-        */
-        case searching:
-            description = usernameLink + UtilBean.getLocaleMessage("log_searching_resource", params);
-            //description = usernameLink + " searched for \"" + params + "\"";
-            break;
-        case group_joining:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_joining", groupLink);
-            //description = usernameLink + " has joined the group " + group;
-            break;
-        case group_leaving:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_leaving", groupLink);
-            //description = usernameLink + " has left the group " + group;
-            break;
-        case group_creating:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_creating", groupLink);
-            //description = usernameLink + " has created the group " + group;
-            break;
-        case group_deleting:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_deleting", groupTitle);
-            //description = usernameLink + " has deleted the group " + groupTitle;
-            break;
-        case group_changing_title:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_title", groupLink);
-            //description = usernameLink + " has changed the title of group " + group;
-            break;
-        case group_changing_description:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_description", groupLink);
-            //description = usernameLink + " has changed the description of group " + group;
-            break;
-        case group_changing_leader:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_changing_leader", groupLink);
-            //description = usernameLink + " has changed the leader of group " + group;
-            break;
-        case group_adding_document:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_document", groupLink);
-            //description = usernameLink + " has added a document to " + group;
-            break;
-        case group_adding_link:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_adding_link", groupLink);
-            //description = usernameLink + " has added a link to " + group;
-            break;
-        case group_deleting_link:
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_deleting_link", groupLink);
-            //description = usernameLink + " has deleted a link from " + group;
-            break;
-        case group_removing_resource:
-            if(!StringUtils.isEmpty(params))
-                resourceTitle = "<b>" + params + "</b>";
-            description = usernameLink + UtilBean.getLocaleMessage("log_group_removing_resource", resourceTitle, groupLink);
-            //description = usernameLink + " has deleted " + resourceTitle + " from " + group;
-            break;
-        case downloading:
-            description = usernameLink + UtilBean.getLocaleMessage("log_downloading", resourceTitle);
-            //description = usernameLink + " has downloaded " + resource;
-            break;
-        case changing_office_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_document_changing", resourceTitle);
-            break;
+            // General actions
+            case login:
+                description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
+                break;
+            case logout:
+                description = usernameLink + UtilBean.getLocaleMessage("log_logout", params);
+                break;
+            case register:
+                description = usernameLink + UtilBean.getLocaleMessage("log_register", params);
+                break;
+            case changing_profile:
+                description = usernameLink + UtilBean.getLocaleMessage("log_change_profile", params);
+                break;
+            case submission_view_resource:
+                description = usernameLink + UtilBean.getLocaleMessage("log_submission_view_resource", params);
+                break;
+            case submission_submitted:
+                description = usernameLink + UtilBean.getLocaleMessage("log_submission_submit", params);
+                break;
 
-        case forum_topic_added:
-            String topicLink = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
-            description = usernameLink + "has added " + "<b>" + topicLink + "</b>" + " post";
-            break;
-
-        case forum_post_added:
-            String topic = "<a href=\"" + url + "group/forum_post.jsf?topic_id=" + targetId + "\" style=\" color:black;font-weight:bold\">" + params + "</a>";
-            description = usernameLink + "has replied to " + "<b>" + topic + "</b>" + " topic";
-            break;
-
-        case deleting_folder:
-            description = usernameLink + UtilBean.getLocaleMessage("log_deleting_folder", params);
-            break;
-
-        case add_folder:
-            description = usernameLink + UtilBean.getLocaleMessage("log_add_folder", params);
-            break;
-
-        case adding_resource_metadata:
-            description = usernameLink + UtilBean.getLocaleMessage("log_add_resource_metadata", params) + resourceTitle;
-            break;
-
-        case login:
-            description = usernameLink + UtilBean.getLocaleMessage("log_login", params);
-            break;
-
-        case changing_profile:
-            description = usernameLink + UtilBean.getLocaleMessage("log_change_profile", params);
-            break;
-
-        case submission_view_resource:
-            description = usernameLink + UtilBean.getLocaleMessage("log_submission_view_resource", params);
-            break;
-
-        case submission_submitted:
-            description = usernameLink + UtilBean.getLocaleMessage("log_submission_submit", params);
-            break;
-
-        case opening_folder:
-            description = usernameLink + UtilBean.getLocaleMessage("log_open_folder", params);
-            break;
-
-        case register:
-            description = usernameLink + UtilBean.getLocaleMessage("log_register", params);
-            break;
-
-        case logout:
-            description = usernameLink + UtilBean.getLocaleMessage("log_logout", params);
-            break;
-
-        default:
-            description = "no message for action " + action.name(); // should never happen;
+            default:
+                description = "no message for action " + action.name(); // should never happen;
         }
     }
 
