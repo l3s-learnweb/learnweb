@@ -234,7 +234,7 @@
         <h:outputText value="#{msg.add_to}:"/>
 
         <h:form>
-            <p:tree value="#{selectLocationBean.foldersTree}" var="node" styleClass="ui-tree-responsive" animate="true"
+            <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive" animate="true"
                     selectionMode="single" selection="#{selectLocationBean.targetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
                 <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 

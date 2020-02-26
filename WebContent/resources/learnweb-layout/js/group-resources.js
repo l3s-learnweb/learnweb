@@ -553,7 +553,7 @@ function createConfirmDialog(dialogId, successCallback) {
   $dialog.find('.collapse').hide();
   $dialog.find(`.type-${selected.getSelectedType()}`).show();
 
-  $dialog.on('click', '.confirm', (e) => {
+  $dialog.one('click', '.confirm', (e) => {
     PF(dialogId).hide();
     if (successCallback) successCallback();
     $(e.currentTarget).off();
