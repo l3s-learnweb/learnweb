@@ -392,6 +392,7 @@ function openResource(resourceId) {
 }
 
 function openFolder(folderId) {
+  selected.unselectAll();
   PF('learnweb').updateSearchParams({ folder_id: folderId, resource_id: null });
 
   commandOpenFolder([
@@ -553,8 +554,7 @@ function createConfirmDialog(dialogId, successCallback) {
   $dialog.find('.collapse').hide();
   $dialog.find(`.type-${selected.getSelectedType()}`).show();
 
-  // TODO: this can be called twice. fix asap.
-  $dialog.one('click', '.confirm', (e) => {
+  $dialog.off('click', '.confirm').one('click', '.confirm', (e) => {
     PF(dialogId).hide();
     if (successCallback) successCallback();
     $(e.currentTarget).off();

@@ -19,6 +19,9 @@ public class ResourceUpdateBatch
     private List<Folder> folders;
     private int failed = 0;
 
+    private int totalSize = 0;
+    private int totalFailed = 0;
+
     public ResourceUpdateBatch(List<Resource> resources, List<Folder> folders)
     {
         this.resources = new ArrayList<>();
@@ -81,13 +84,33 @@ public class ResourceUpdateBatch
         return folders;
     }
 
-    public int getTotal()
+    public int size()
     {
         return resources.size() + folders.size();
     }
 
-    public int getFailed()
+    public int failed()
     {
         return failed;
+    }
+
+    public int getTotalSize()
+    {
+        return totalSize + this.size();
+    }
+
+    public void addTotalSize(final int totalSize)
+    {
+        this.totalSize += totalSize;
+    }
+
+    public int getTotalFailed()
+    {
+        return totalFailed + failed;
+    }
+
+    public void addTotalFailed(final int totalFailed)
+    {
+        this.totalFailed += totalFailed;
     }
 }

@@ -420,7 +420,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             switch(action)
             {
                 case "copy":
-                    this.copyResources(items, targetGroup, targetFolder);
+                    this.copyResources(items, targetGroup, targetFolder, false);
                     break;
                 case "move":
                     if(params.containsKey("destination"))
@@ -446,7 +446,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
                     break;
             }
 
-            if(items.getFailed() > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.getFailed());
+            if(items.failed() > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.cant_be_processed", items.failed());
         }
         catch(IllegalArgumentException | IllegalAccessError e)
         {
@@ -458,7 +458,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder) throws SQLException
+    private void copyResources(final ResourceUpdateBatch items, final Group targetGroup, final Folder targetFolder, boolean isRecursion) throws SQLException
     {
         if(targetGroup == null) throw new IllegalArgumentException("group_resources.target_not_exists");
         if(!group.canViewResources(getUser())) throw new IllegalAccessError("group_resources.cant_be_copied");
@@ -483,11 +483,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             log(Action.add_folder, targetGroup.getId(), newFolder.getId());
 
             ResourceUpdateBatch copyChild = new ResourceUpdateBatch(folder.getResources(), folder.getSubFolders());
-            copyResources(copyChild, targetGroup, newFolder);
+            copyResources(copyChild, targetGroup, newFolder, true);
+
+            items.addTotalSize(copyChild.size());
+            items.addTotalFailed(copyChild.failed());
         }
 
-        // TODO: this message shows multiple times when copy folder with subfolders
-        if(items.getTotal() > 0) addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotal());
+        if(!isRecursion && items.getTotalSize() > 0) addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.copied_successfully", items.getTotalSize());
     }
 
     private void moveResources(ResourceUpdateBatch items, Integer targetGroupId, Integer targetFolderId) throws SQLException
@@ -536,9 +538,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
 
         if(skipped > 0) addGrowl(FacesMessage.SEVERITY_WARN, "group_resources.skipped", skipped);
-        if(items.getTotal() - skipped > 0)
+        if(items.size() - skipped > 0)
         {
-            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.getTotal() - skipped);
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.moved_successfully", items.size() - skipped);
             resetResources();
         }
     }
@@ -576,9 +578,9 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             if(rightPaneBean.isTheResourceClicked(resource)) rightPaneBean.resetPane();
         }
 
-        if(items.getTotal() - skipped > 0)
+        if(items.size() - skipped > 0)
         {
-            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", items.getTotal() - skipped);
+            addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", items.size() - skipped);
             resetResources();
         }
 
