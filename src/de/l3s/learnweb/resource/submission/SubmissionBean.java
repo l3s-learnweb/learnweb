@@ -46,7 +46,7 @@ import de.l3s.util.bean.BeanHelper;
 public class SubmissionBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2494290373382483709L;
-    private final static Logger log = Logger.getLogger(SubmissionBean.class);
+    private static final Logger log = Logger.getLogger(SubmissionBean.class);
 
     private int userId; //For checking specific user's submission
     private int courseId; //For retrieving submissions of specific course

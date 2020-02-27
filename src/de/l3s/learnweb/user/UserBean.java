@@ -43,8 +43,8 @@ import de.l3s.util.bean.BeanHelper;
 @SessionScoped
 public class UserBean implements Serializable
 {
-    private final static long serialVersionUID = -8577036953815676943L;
-    private final static Logger log = Logger.getLogger(UserBean.class);
+    private static final long serialVersionUID = -8577036953815676943L;
+    private static final Logger log = Logger.getLogger(UserBean.class);
 
     private int userId = 0;
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself

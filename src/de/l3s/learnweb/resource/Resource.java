@@ -35,7 +35,7 @@ import de.l3s.util.StringHelper;
 public class Resource extends AbstractResource implements Serializable // AbstractResultItem,
 {
     private static final long serialVersionUID = -8486919346993051937L;
-    private final static Logger log = Logger.getLogger(Resource.class);
+    private static final Logger log = Logger.getLogger(Resource.class);
 
     public static final char METADATA_SEPARATOR = ';';
 

@@ -9,7 +9,7 @@ import de.l3s.learnweb.user.Organisation;
 
 public class ChangeSettingsOfAllCourses
 {
-    private final static Logger log = Logger.getLogger(ChangeSettingsOfAllCourses.class);
+    private static final Logger log = Logger.getLogger(ChangeSettingsOfAllCourses.class);
 
     public static void main(String[] args) throws Exception
     {

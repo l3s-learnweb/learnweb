@@ -30,7 +30,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class SurveyManager
 {
-    private final static Logger log = Logger.getLogger(SurveyManager.class);
+    private static final Logger log = Logger.getLogger(SurveyManager.class);
     private final Learnweb learnweb;
 
     public SurveyManager(Learnweb learnweb)

@@ -26,7 +26,7 @@ import de.l3s.util.StringHelper;
 public class SubmissionModeratorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -2494182373382483709L;
-    private final static Logger log = Logger.getLogger(SubmissionModeratorBean.class);
+    private static final Logger log = Logger.getLogger(SubmissionModeratorBean.class);
 
     private int submissionId = -1;
 

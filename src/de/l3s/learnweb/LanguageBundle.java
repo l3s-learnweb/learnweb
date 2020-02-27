@@ -92,8 +92,8 @@ public class LanguageBundle extends ResourceBundle
         while(replacedAtLeastOneConstant);
     }
 
-    private final static String START_CONST = "#[";
-    private final static String END_CONST = "]";
+    private static final String START_CONST = "#[";
+    private static final String END_CONST = "]";
 
     private String substituteValue(String value)
     {

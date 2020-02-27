@@ -18,7 +18,7 @@ import de.l3s.learnweb.Learnweb;
 
 public class Sql
 {
-    private final static Logger log = Logger.getLogger(Sql.class);
+    private static final Logger log = Logger.getLogger(Sql.class);
 
     public static Object getSingleResult(String query) throws SQLException
     {

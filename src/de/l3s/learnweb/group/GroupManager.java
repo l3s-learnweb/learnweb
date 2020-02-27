@@ -45,8 +45,8 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
-    private final static String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
+    private static final String GROUP_COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count, g.hypothesis_link, g.hypothesis_token";
+    private static final String FOLDER_COLUMNS = "f.folder_id, f.deleted, f.group_id, f.parent_folder_id, f.name, f.description, f.user_id";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;

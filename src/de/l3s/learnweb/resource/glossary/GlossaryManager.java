@@ -24,7 +24,7 @@ import de.l3s.util.bean.BeanHelper;
 
 public class GlossaryManager
 {
-    private final static Logger log = Logger.getLogger(GlossaryManager.class);
+    private static final Logger log = Logger.getLogger(GlossaryManager.class);
     private final Learnweb learnweb;
 
     public GlossaryManager(Learnweb learnweb)

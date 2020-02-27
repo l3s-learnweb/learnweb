@@ -22,8 +22,8 @@ import de.l3s.learnweb.user.UserBean;
 @ApplicationScoped
 public class UtilBean implements Serializable
 {
-    private final static long serialVersionUID = 6252597111468136574L;
-    private final static Logger log = Logger.getLogger(UtilBean.class);
+    private static final long serialVersionUID = 6252597111468136574L;
+    private static final Logger log = Logger.getLogger(UtilBean.class);
 
     public static ExternalContext getExternalContext()
     {

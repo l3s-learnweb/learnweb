@@ -29,7 +29,7 @@ import de.l3s.util.StringHelper;
 
 public class TagthewebClient
 {
-    private final static Logger log = Logger.getLogger(TagthewebClient.class);
+    private static final Logger log = Logger.getLogger(TagthewebClient.class);
 
     private static String requestCategories(final String text, final String language) throws IOException
     {

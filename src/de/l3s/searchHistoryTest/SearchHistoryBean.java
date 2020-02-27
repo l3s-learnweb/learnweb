@@ -34,7 +34,7 @@ import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 @ViewScoped
 public class SearchHistoryBean extends ApplicationBean implements Serializable
 {
-    private final static Logger log = Logger.getLogger(SearchHistoryBean.class);
+    private static final Logger log = Logger.getLogger(SearchHistoryBean.class);
     private static final long serialVersionUID = -7682314831788865416L;
 
     private int userId;

@@ -26,8 +26,8 @@ import de.l3s.learnweb.user.UserManager;
  */
 public class SubmissionManager
 {
-    private final static String SUBMIT_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
-    private final static Logger log = Logger.getLogger(SurveyManager.class);
+    private static final String SUBMIT_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
+    private static final Logger log = Logger.getLogger(SurveyManager.class);
     public final static int SUBMISSION_ADMIN_USER_ID = 11212;
 
     private final Learnweb learnweb;

@@ -28,7 +28,7 @@ import de.l3s.learnweb.Learnweb;
  */
 public class RequestManager
 {
-    private final static Logger log = Logger.getLogger(RequestManager.class);
+    private static final Logger log = Logger.getLogger(RequestManager.class);
 
     private final Learnweb learnweb;
 

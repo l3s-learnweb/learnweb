@@ -18,7 +18,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = -7630987853810267209L;
 
     // the filter defines which log entries are show on this page
-    private final static Action[] FILTER = new Action[] {
+    private static final Action[] FILTER = new Action[] {
             Action.adding_resource,
             Action.commenting_resource,
             Action.edit_resource,

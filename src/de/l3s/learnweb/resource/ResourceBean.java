@@ -16,7 +16,7 @@ import de.l3s.learnweb.logging.Action;
 public class ResourceBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8834191417574642115L;
-    private final static Logger log = Logger.getLogger(ResourceBean.class);
+    private static final Logger log = Logger.getLogger(ResourceBean.class);
 
     private int id;
 

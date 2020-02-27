@@ -25,7 +25,7 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class RequestFilter implements Filter
 {
-    private final static Logger log = Logger.getLogger(RequestFilter.class);
+    private static final Logger log = Logger.getLogger(RequestFilter.class);
 
     private RequestManager requestManager;
     private ProtectionManager protectionManager;

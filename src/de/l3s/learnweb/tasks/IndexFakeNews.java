@@ -25,7 +25,7 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 @SuppressWarnings("unused")
 public class IndexFakeNews
 {
-    private final static Logger log = Logger.getLogger(IndexFakeNews.class);
+    private static final Logger log = Logger.getLogger(IndexFakeNews.class);
 
     private Learnweb learnweb;
 

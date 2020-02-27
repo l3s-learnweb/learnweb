@@ -16,7 +16,7 @@ import de.l3s.learnweb.resource.ResourceManager;
  */
 public class CheckAllResources
 {
-    private final static Logger log = Logger.getLogger(CheckAllResources.class);
+    private static final Logger log = Logger.getLogger(CheckAllResources.class);
 
     public static void main(String[] args) throws Exception
     {

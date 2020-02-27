@@ -22,7 +22,7 @@ public class UsersAddMissingProfilePictures
         new UsersAddMissingProfilePictures();
     }
 
-    private final static Logger log = Logger.getLogger(IndexFakeNews.class);
+    private static final Logger log = Logger.getLogger(IndexFakeNews.class);
 
     private Learnweb learnweb;
 

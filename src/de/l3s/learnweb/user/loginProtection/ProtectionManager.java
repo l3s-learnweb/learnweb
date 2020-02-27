@@ -40,7 +40,7 @@ import de.l3s.util.email.Mail;
  */
 public class ProtectionManager
 {
-    private final static Logger log = Logger.getLogger(ProtectionManager.class);
+    private static final Logger log = Logger.getLogger(ProtectionManager.class);
     private final Learnweb learnweb;
 
     private Map<String, AccessData> accessMap;
@@ -50,12 +50,12 @@ public class ProtectionManager
 
     private final String adminEmail;
     private int suspiciousAlertsCounter = 0;
-    private final static int SUSPICIOUS_EMAIL_THRESHOLD = 30;
+    private static final int SUSPICIOUS_EMAIL_THRESHOLD = 30;
 
-    private final static int ATTEMPTS_STEP = 50;
-    private final static int CAPTCHA_THRESHOLD = 3;
-    private final static int MINUTES_ANALYZED = 10;
-    private final static int BAN_THRESHOLD = 100;
+    private static final int ATTEMPTS_STEP = 50;
+    private static final int CAPTCHA_THRESHOLD = 3;
+    private static final int MINUTES_ANALYZED = 10;
+    private static final int BAN_THRESHOLD = 100;
 
     public ProtectionManager(Learnweb learnweb)
     {

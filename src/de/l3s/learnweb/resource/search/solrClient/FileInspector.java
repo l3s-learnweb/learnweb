@@ -24,7 +24,7 @@ import de.l3s.util.StringHelper;
 
 public class FileInspector
 {
-    private final static Logger log = Logger.getLogger(FileInspector.class);
+    private static final Logger log = Logger.getLogger(FileInspector.class);
     private SolrClient solrClient;
 
     public FileInspector(Learnweb learnweb)

@@ -12,7 +12,7 @@ import de.l3s.learnweb.user.OrganisationManager;
 
 public class OrganisationSetOption
 {
-    private final static Logger log = Logger.getLogger(OrganisationSetOption.class);
+    private static final Logger log = Logger.getLogger(OrganisationSetOption.class);
 
     private Learnweb learnweb;
 

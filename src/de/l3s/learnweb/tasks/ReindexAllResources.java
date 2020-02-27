@@ -11,7 +11,7 @@ import de.l3s.learnweb.resource.search.solrClient.SolrClient;
 
 public class ReindexAllResources
 {
-    private final static Logger log = Logger.getLogger(ReindexAllResources.class);
+    private static final Logger log = Logger.getLogger(ReindexAllResources.class);
 
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {

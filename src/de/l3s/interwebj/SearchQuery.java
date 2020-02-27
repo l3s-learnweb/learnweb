@@ -26,7 +26,7 @@ import de.l3s.learnweb.resource.ResourceType;
 
 public class SearchQuery implements Serializable
 {
-    private final static Logger log = Logger.getLogger(SearchQuery.class);
+    private static final Logger log = Logger.getLogger(SearchQuery.class);
 
     private static final long serialVersionUID = 681547180910687848L;
     private List<ResourceDecorator> results;

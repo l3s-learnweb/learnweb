@@ -27,9 +27,9 @@ import de.l3s.learnweb.user.User;
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4911923763255682055L;
-    private final static Logger log = Logger.getLogger(ResourceDetailBean.class);
+    private static final Logger log = Logger.getLogger(ResourceDetailBean.class);
 
-    private final static String hypothesisProxy = "https://via.hypothes.is/";
+    private static final String hypothesisProxy = "https://via.hypothes.is/";
 
     private Tag selectedTag;
     private String tagName;

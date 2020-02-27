@@ -35,10 +35,10 @@ import de.l3s.util.StringHelper;
  */
 public class FileManager
 {
-    private final static Logger log = Logger.getLogger(FileManager.class);
+    private static final Logger log = Logger.getLogger(FileManager.class);
 
     // if you change this, remember to change createFile()
-    private final static String COLUMNS = "file_id, resource_id, resource_file_number, name, mime_type, log_actived, timestamp";
+    private static final String COLUMNS = "file_id, resource_id, resource_file_number, name, mime_type, log_actived, timestamp";
 
     private final Learnweb learnweb;
     private final ICache<File> cache;

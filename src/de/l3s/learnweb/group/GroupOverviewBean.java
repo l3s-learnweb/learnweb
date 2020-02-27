@@ -26,7 +26,7 @@ public class GroupOverviewBean extends ApplicationBean implements Serializable
 
     private static final int MEMBERS_LIST_LIMIT = 12;
     private static final int ACTIVITY_LIST_LIMIT = 10;
-    private final static Action[] OVERVIEW_ACTIONS = {
+    private static final Action[] OVERVIEW_ACTIONS = {
             Action.forum_topic_added, Action.deleting_resource, Action.adding_resource, Action.group_joining,
             Action.group_leaving, Action.forum_post_added, Action.changing_office_resource
     };

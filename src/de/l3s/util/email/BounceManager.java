@@ -34,7 +34,7 @@ import de.l3s.learnweb.Learnweb;
  */
 public class BounceManager
 {
-    private final static Logger log = Logger.getLogger(BounceManager.class);
+    private static final Logger log = Logger.getLogger(BounceManager.class);
     private final Learnweb learnweb;
 
     private static final String login = "learnweb";

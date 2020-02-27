@@ -21,7 +21,7 @@ import com.google.api.services.drive.model.ParentReference;
 
 public class GoogleDriveManager
 {
-    private final static Logger log = Logger.getLogger(GoogleDriveManager.class);
+    private static final Logger log = Logger.getLogger(GoogleDriveManager.class);
 
     /** Application name. */
     private static final String APPLICATION_NAME = "LearnWeb";

@@ -36,13 +36,13 @@ import de.l3s.util.UrlHelper;
  */
 public class ResourceMetadataExtractor
 {
-    private final static Logger log = Logger.getLogger(ResourceMetadataExtractor.class);
+    private static final Logger log = Logger.getLogger(ResourceMetadataExtractor.class);
 
-    private final static String YOUTUBE_PATTERN = "https?://(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|</a>))[?=&+%\\w]*";
-    private final static String VIMEO_PATTERN = "https?://(?:www\\.)?(?:player\\.)?vimeo\\.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*";
-    private final static String FLICKR_PATTERN = "https?://(?:www\\.)?flickr\\.com/(?:photos/[^/]+/(\\d+))";
-    private final static String FLICKR_SHORT_PATTERN = "https?://(?:www\\.)?(?:flic\\.kr/p/|flickr\\.com/photo\\.gne\\?short=)(\\w+)";
-    private final static String IPERNITY_PATTERN = "https?://(?:www\\.)?ipernity\\.com/(?:doc/[^/]+/(\\d+))";
+    private static final String YOUTUBE_PATTERN = "https?://(?:[0-9A-Z-]+\\.)?(?:youtu\\.be/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|</a>))[?=&+%\\w]*";
+    private static final String VIMEO_PATTERN = "https?://(?:www\\.)?(?:player\\.)?vimeo\\.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*";
+    private static final String FLICKR_PATTERN = "https?://(?:www\\.)?flickr\\.com/(?:photos/[^/]+/(\\d+))";
+    private static final String FLICKR_SHORT_PATTERN = "https?://(?:www\\.)?(?:flic\\.kr/p/|flickr\\.com/photo\\.gne\\?short=)(\\w+)";
+    private static final String IPERNITY_PATTERN = "https?://(?:www\\.)?ipernity\\.com/(?:doc/[^/]+/(\\d+))";
 
     private static final String YOUTUBE_API_REQUEST = "https://www.googleapis.com/youtube/v3/videos?key=***REMOVED***&part=snippet&id=";
     private static final String VIMEO_API_REQUEST = "http://vimeo.com/api/v2/video/";

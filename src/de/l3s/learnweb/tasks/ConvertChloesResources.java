@@ -18,7 +18,7 @@ import de.l3s.learnweb.resource.ResourceManager;
  */
 public final class ConvertChloesResources
 {
-    private final static Logger log = Logger.getLogger(ConvertChloesResources.class);
+    private static final Logger log = Logger.getLogger(ConvertChloesResources.class);
 
     public static void main(String[] args) throws Exception
     {

@@ -39,18 +39,18 @@ import net.bramp.ffmpeg.probe.FFmpegProbeResult;
  */
 public class ResourcePreviewMaker
 {
-    private final static Logger log = Logger.getLogger(ResourcePreviewMaker.class);
+    private static final Logger log = Logger.getLogger(ResourcePreviewMaker.class);
 
-    private final static int BUFSIZE = 1024;
-    private final static int SIZE0_MAX_WIDTH = 150;
-    private final static int SIZE0_MAX_HEIGHT = 120;
-    private final static int SIZE1_WIDTH = 150;
-    private final static int SIZE2_MAX_WIDTH = 300;
-    private final static int SIZE2_MAX_HEIGHT = 220;
-    private final static int SIZE3_MAX_WIDTH = 500;
-    private final static int SIZE3_MAX_HEIGHT = 600;
-    private final static int SIZE4_MAX_WIDTH = 1280;
-    private final static int SIZE4_MAX_HEIGHT = 1024;
+    private static final int BUFSIZE = 1024;
+    private static final int SIZE0_MAX_WIDTH = 150;
+    private static final int SIZE0_MAX_HEIGHT = 120;
+    private static final int SIZE1_WIDTH = 150;
+    private static final int SIZE2_MAX_WIDTH = 300;
+    private static final int SIZE2_MAX_HEIGHT = 220;
+    private static final int SIZE3_MAX_WIDTH = 500;
+    private static final int SIZE3_MAX_HEIGHT = 600;
+    private static final int SIZE4_MAX_WIDTH = 1280;
+    private static final int SIZE4_MAX_HEIGHT = 1024;
 
     // file numbers. Was part of older Learnweb versions. Maybe it can't be for later use
 

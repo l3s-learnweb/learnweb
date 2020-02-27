@@ -25,7 +25,7 @@ import de.l3s.learnweb.user.User;
 @RequestScoped
 public class AdminEvaluationBean extends ApplicationBean
 {
-    private final static Logger log = Logger.getLogger(AdminEvaluationBean.class);
+    private static final Logger log = Logger.getLogger(AdminEvaluationBean.class);
 
     private List<User> users;
 

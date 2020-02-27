@@ -20,7 +20,7 @@ public class WaybackCapturesLogger
 {
     private static final Logger log = Logger.getLogger(WaybackCapturesLogger.class);
 
-    private final static Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
+    private static final Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
     private final Learnweb learnweb;
     private final LinkedBlockingQueue<Container> queue;
     private final Thread consumerThread;

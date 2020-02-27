@@ -19,8 +19,8 @@ import de.l3s.learnweb.resource.office.history.model.OfficeUser;
 public class HistoryManager
 {
     private final Learnweb learnweb;
-    private final static String HISTORY_COLUMNS = "history_id, resource_id, prev_ver_file_id, changes_id, last_save_date, doc_key, server_version, user_id";
-    private final static String CHANGE_COLUMNS = "history_change_id, user_id, resource_history_id, created_date";
+    private static final String HISTORY_COLUMNS = "history_id, resource_id, prev_ver_file_id, changes_id, last_save_date, doc_key, server_version, user_id";
+    private static final String CHANGE_COLUMNS = "history_change_id, user_id, resource_history_id, created_date";
 
     public HistoryManager(Learnweb learnweb)
     {

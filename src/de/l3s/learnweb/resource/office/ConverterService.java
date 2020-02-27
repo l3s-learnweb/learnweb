@@ -24,7 +24,7 @@ import de.l3s.learnweb.resource.office.converter.model.OfficeThumbnailParams;
 public class ConverterService
 {
 
-    private final static Logger log = Logger.getLogger(ConverterService.class);
+    private static final Logger log = Logger.getLogger(ConverterService.class);
     private final Learnweb learnweb;
 
     public ConverterRequest createThumbnailConverterRequest(File file)

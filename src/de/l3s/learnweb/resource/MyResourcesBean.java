@@ -33,8 +33,8 @@ import de.l3s.util.StringHelper;
 @ViewScoped
 public class MyResourcesBean extends ApplicationBean implements Serializable
 {
-    private final static long serialVersionUID = 5680533799976460331L;
-    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
+    private static final long serialVersionUID = 5680533799976460331L;
+    private static final Logger log = Logger.getLogger(MyResourcesBean.class);
 
     // Group base attributes
     private int groupId; // Current group id

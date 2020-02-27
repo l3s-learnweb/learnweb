@@ -23,12 +23,12 @@ import de.l3s.util.StringHelper;
  */
 public class OrganisationManager
 {
-    //private final static Logger log = Logger.getLogger(OrganisationManager.class);
+    //private static final Logger log = Logger.getLogger(OrganisationManager.class);
     private static final int FIELDS = 1;
-    private final static String[] COLUMNS = { "organisation_id", "title", "logout_page", "welcome_page", "welcome_message", "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language", "language_variant",
+    private static final String[] COLUMNS = { "organisation_id", "title", "logout_page", "welcome_page", "welcome_message", "options_field1", "default_search_text", "default_search_image", "default_search_video", "default_language", "language_variant",
             "banner_image_file_id", "glossary_languages", "css_file" };
-    private final static String SELECT = String.join(", ", COLUMNS);
-    private final static String SAVE = Sql.getCreateStatement("lw_organisation", COLUMNS);
+    private static final String SELECT = String.join(", ", COLUMNS);
+    private static final String SAVE = Sql.getCreateStatement("lw_organisation", COLUMNS);
 
     private Learnweb learnweb;
     private Map<Integer, Organisation> cache;

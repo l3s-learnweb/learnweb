@@ -41,7 +41,7 @@ import rita.wordnet.RiWordnet;
 @ViewScoped
 public class TedTranscriptBean extends ApplicationBean implements Serializable
 {
-    private final static Logger log = Logger.getLogger(TedTranscriptBean.class);
+    private static final Logger log = Logger.getLogger(TedTranscriptBean.class);
     private static final long serialVersionUID = -1803725556672379697L;
     //private static ILexicalDatabase db = new NictWordNet();
     //private static HashMap<String, RelatednessCalculator> rcs = new HashMap<String, RelatednessCalculator>();

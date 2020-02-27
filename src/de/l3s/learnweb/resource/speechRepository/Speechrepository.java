@@ -22,7 +22,7 @@ import de.l3s.learnweb.user.User;
 
 public class Speechrepository
 {
-    private final static Logger log = Logger.getLogger(Speechrepository.class);
+    private static final Logger log = Logger.getLogger(Speechrepository.class);
 
     public static void main(String[] args) throws Exception
     {

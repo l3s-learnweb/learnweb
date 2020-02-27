@@ -49,10 +49,10 @@ import de.l3s.util.StringHelper;
 
 public class TedManager
 {
-    private final static Logger log = Logger.getLogger(TedManager.class);
+    private static final Logger log = Logger.getLogger(TedManager.class);
 
-    private final static String TRANSCRIPT_COLUMNS = "`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
-    private final static String TRANSCRIPT_SELECTION_COLUMNS = "`resource_id`,`words_selected`,`user_annotation`,`start_offset`,`end_offset`";
+    private static final String TRANSCRIPT_COLUMNS = "`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
+    private static final String TRANSCRIPT_SELECTION_COLUMNS = "`resource_id`,`words_selected`,`user_annotation`,`start_offset`,`end_offset`";
 
     private final Learnweb learnweb;
 

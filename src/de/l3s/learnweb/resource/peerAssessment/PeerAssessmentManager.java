@@ -25,8 +25,8 @@ import de.l3s.util.email.Mail;
 
 public class PeerAssessmentManager
 {
-    private final static Logger log = Logger.getLogger(PeerAssessmentManager.class);
-    private final static String PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, assessment_survey_resource_id, `submission_id`";
+    private static final Logger log = Logger.getLogger(PeerAssessmentManager.class);
+    private static final String PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, assessment_survey_resource_id, `submission_id`";
 
     private final Learnweb learnweb;
 

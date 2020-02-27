@@ -20,7 +20,7 @@ import de.l3s.util.Sql;
 public class SearchHistoryManager
 {
 
-    private final static Logger log = Logger.getLogger(SearchHistoryManager.class);
+    private static final Logger log = Logger.getLogger(SearchHistoryManager.class);
     private final Learnweb learnweb;
 
     public SearchHistoryManager(Learnweb learnweb)

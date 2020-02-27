@@ -19,8 +19,8 @@ import de.l3s.learnweb.Learnweb;
  */
 public class FrontpageServlet extends HttpServlet
 {
-    private final static long serialVersionUID = 7083477034183456614L;
-    private final static Logger log = Logger.getLogger(FrontpageServlet.class);
+    private static final long serialVersionUID = 7083477034183456614L;
+    private static final Logger log = Logger.getLogger(FrontpageServlet.class);
 
     public FrontpageServlet()
     {

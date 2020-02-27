@@ -32,7 +32,7 @@ import de.l3s.learnweb.resource.ResourceDecorator;
 
 public class ArchiveUrlManager
 {
-    private final static Logger log = Logger.getLogger(ArchiveUrlManager.class);
+    private static final Logger log = Logger.getLogger(ArchiveUrlManager.class);
     private static ArchiveUrlManager instance;
     private final Learnweb learnweb;
 

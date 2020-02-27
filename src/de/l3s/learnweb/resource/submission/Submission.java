@@ -17,8 +17,8 @@ import de.l3s.learnweb.user.Course;
 
 public class Submission implements Serializable
 {
-    private final static long serialVersionUID = -3143872721852606973L;
-    private final static Logger log = Logger.getLogger(Submission.class);
+    private static final long serialVersionUID = -3143872721852606973L;
+    private static final Logger log = Logger.getLogger(Submission.class);
 
     private int id = -1;
     private int courseId;

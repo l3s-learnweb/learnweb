@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class ColorUtils
 {
-    private final static ImmutableList<String> colors = ImmutableList.of(
+    private static final ImmutableList<String> colors = ImmutableList.of(
             "#0071bc",
             "#6A4AA5",
             "#9f4488",

@@ -42,7 +42,7 @@ import de.l3s.learnweb.user.User;
 public class SaverServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7296371511069054378L;
-    private final static Logger log = Logger.getLogger(SaverServlet.class);
+    private static final Logger log = Logger.getLogger(SaverServlet.class);
 
     private static final String FILE_ID = "fileId";
     private static final String USER_ID = "userId";

@@ -23,7 +23,7 @@ public class HistoryServlet extends HttpServlet
 
     private static final long serialVersionUID = -1782046122568142569L;
 
-    private final static Logger logger = Logger.getLogger(HistoryServlet.class);
+    private static final Logger logger = Logger.getLogger(HistoryServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

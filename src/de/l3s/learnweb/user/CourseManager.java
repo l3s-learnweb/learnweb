@@ -28,10 +28,10 @@ import de.l3s.util.Sql;
 public class CourseManager
 {
     protected final static int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
-    private final static String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "options_field1" };
-    private final static String SELECT = String.join(", ", COLUMNS);
-    private final static String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
-    private final static Logger log = Logger.getLogger(CourseManager.class);
+    private static final String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "options_field1" };
+    private static final String SELECT = String.join(", ", COLUMNS);
+    private static final String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
+    private static final Logger log = Logger.getLogger(CourseManager.class);
 
     private Learnweb learnweb;
     private Map<Integer, Course> cache;

@@ -37,13 +37,13 @@ import de.l3s.util.bean.BeanHelper;
  */
 public class DownloadServlet extends HttpServlet
 {
-    private final static long serialVersionUID = 7083477094183456614L;
-    private final static Logger log = Logger.getLogger(DownloadServlet.class);
+    private static final long serialVersionUID = 7083477094183456614L;
+    private static final Logger log = Logger.getLogger(DownloadServlet.class);
 
-    private final static int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
-    private final static long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
-    private final static int BUFFER_SIZE = 10240; // = 10KB.
-    private final static String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
+    private static final int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
+    private static final long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
+    private static final int BUFFER_SIZE = 10240; // = 10KB.
+    private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
     private Learnweb learnweb;
     private FileManager fileManager;

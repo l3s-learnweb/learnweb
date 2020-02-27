@@ -33,7 +33,7 @@ import de.l3s.learnweb.resource.office.FileEditorBean;
 public class RightPaneBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1284318005787537321L;
-    private final static Logger log = Logger.getLogger(RightPaneBean.class);
+    private static final Logger log = Logger.getLogger(RightPaneBean.class);
 
     public enum RightPaneAction
     {

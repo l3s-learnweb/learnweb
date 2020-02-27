@@ -63,7 +63,7 @@ import de.l3s.util.URL;
 
 public class WaybackUrlManager
 {
-    private final static Logger log = Logger.getLogger(WaybackUrlManager.class);
+    private static final Logger log = Logger.getLogger(WaybackUrlManager.class);
     private static WaybackUrlManager instance;
     private final Learnweb learnweb;
     private LoadingCache<URL, UrlRecord> cache;

@@ -25,7 +25,7 @@ import de.l3s.learnweb.resource.Tag;
 
 public class SolrClient
 {
-    private final static Logger log = Logger.getLogger(SolrClient.class);
+    private static final Logger log = Logger.getLogger(SolrClient.class);
 
     private static SolrClient instance = null;
 
