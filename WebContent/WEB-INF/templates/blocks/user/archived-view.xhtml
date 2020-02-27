@@ -5,7 +5,7 @@
 				xmlns:p="http://primefaces.org/ui">
 
 <dl class="row mb-n2">
-	<ui:fragment rendered="${rightPaneBean.clickedResource.storageType == 2 and rightPaneBean.clickedResource.canEditResource(userBean.user)}">
+	<ui:fragment rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
 		<dt class="col-sm-4">#{msg.current_version}:</dt>
 		<dd class="col-sm-8">
 			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
@@ -19,7 +19,7 @@
 		</div>
 		<hr/>
 		<ul class="archive-snapshot-list list-unstyled mb-0 mt-3 w-100">
-			<ui:repeat var="ay" value="#{rightPaneBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
+			<ui:repeat var="ay" value="#{resourceDetailBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
 				<li class="row no-gutters align-items-baseline">
 					<p:button value="#{ay.key}" style="height: 25px;" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 w-100 col-3 col-md-2 mr-3" onclick="return false;"/>
 

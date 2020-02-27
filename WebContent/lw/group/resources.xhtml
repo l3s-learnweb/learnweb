@@ -17,9 +17,9 @@
     <f:metadata>
         <f:viewParam name="group_id" value="#{groupResourcesBean.groupId}"/>
         <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}"/>
-        <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
+        <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
         <f:viewAction action="#{groupResourcesBean.onLoad}"/>
-        <f:viewAction action="#{rightPaneBean.onLoad}"/>
+        <f:viewAction action="#{resourceDetailBean.onLoad}"/>
     </f:metadata>
 </ui:define>
 

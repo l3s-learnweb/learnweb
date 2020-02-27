@@ -19,7 +19,7 @@
                 <div class="activity-feed-slider activity-feed-added-resources">
                     <p:carousel value="#{summary.addedResources}" var="item" styleClass="ui-carousel-light" responsive="true" circular="true" breakpoint="-1">
                         <p:commandLink update=":right_pane" onstart="PF('learnweb').showRightPane();">
-                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
+                            <f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{item.resource}"/>
 
                             <div class="mx-auto" style="min-width:10rem;">
                                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
@@ -56,7 +56,7 @@
                     <p:carousel value="#{summary.updatedResources.keySet()}" var="item" styleClass="ui-carousel-light" responsive="true"
                                 circular="true" breakpoint="-1">
                         <p:commandLink update=":right_pane" onstart="PF('learnweb').showRightPane();">
-                            <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{item.resource}"/>
+                            <f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{item.resource}"/>
 
                             <div class="mx-auto" style="min-width:10rem;">
                                 <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">

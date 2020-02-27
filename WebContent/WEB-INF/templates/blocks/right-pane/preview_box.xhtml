@@ -42,15 +42,15 @@
         </ui:fragment>
 
         <ui:fragment rendered="#{res.type eq 'pdf'}">
-            <a data-fancybox="" data-type="iframe" data-src="#{res.url}" href="javascript:" class="preview-wrapper">
-                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto d-block" style="cursor:zoom-in;"/>
-            </a>
+            <div class="preview-wrapper">
+                <iframe src="#{res.url}" title="#{res.title}"></iframe>
+            </div>
         </ui:fragment>
 
-        <ui:fragment rendered="#{not empty res.thumbnail4 and not empty res.thumbnail3 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
-            <a data-fancybox="" data-caption="#{res.title}" href="#{res.thumbnail4.url}" class="preview-wrapper">
-                <img src="#{res.thumbnail3.url}" alt="#{res.title}" class="img-fluid mx-auto d-block" style="cursor:zoom-in;"/>
-            </a>
+        <ui:fragment rendered="#{not empty res.thumbnail4 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+            <div class="preview-wrapper">
+                <img src="#{res.thumbnail4.url}" alt="#{res.title}" class="img-fluid mx-auto d-block"/>
+            </div>
         </ui:fragment>
 
         <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail0 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
@@ -77,7 +77,7 @@
                     <div class="mr-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
                         <ui:fragment rendered="${res.archiveUrls.size() le 100}">
                             <ul class="archive-snapshot-list list-unstyled mb-0">
-                                <ui:repeat var="au" value="#{rightPaneBean.clickedResource.archiveUrls}">
+                                <ui:repeat var="au" value="#{res.archiveUrls}">
                                     <li style="width:12rem;">
                                         <a href="#{au.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
                                             <h:outputText value="#{au.timestamp}">

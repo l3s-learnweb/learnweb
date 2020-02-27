@@ -5,23 +5,23 @@
                 xmlns:p="http://primefaces.org/ui">
 
 <h:form id="edit_resource_form">
-    <p:remoteCommand name="onUnloadCommand" actionListener="#{rightPaneBean.releaseResourceIfLocked}"/>
-    <p:poll interval="60" listener="#{rightPaneBean.editActivityListener}"/>
+    <p:remoteCommand name="onUnloadCommand" actionListener="#{resourceDetailBean.releaseResourceIfLocked}"/>
+    <p:poll interval="60" listener="#{resourceDetailBean.editActivityListener}"/>
 
-    <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'text' or
-                             rightPaneBean.clickedResource.type eq 'website' or
-                             rightPaneBean.clickedResource.type eq 'pdf' or
-                             rightPaneBean.clickedResource.type eq 'video' or
-                             rightPaneBean.clickedResource.type eq 'image' or
-                             rightPaneBean.clickedResource.type eq 'audio'}">
+    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or
+                             resourceDetailBean.clickedResource.type eq 'website' or
+                             resourceDetailBean.clickedResource.type eq 'pdf' or
+                             resourceDetailBean.clickedResource.type eq 'video' or
+                             resourceDetailBean.clickedResource.type eq 'image' or
+                             resourceDetailBean.clickedResource.type eq 'audio'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
-            <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+            <ui:param name="res" value="#{resourceDetailBean.clickedResource}"/>
         </ui:decorate>
     </ui:fragment>
 
     <div class="fg-grid mb-3">
         <ui:decorate template="/WEB-INF/templates/blocks/resources/edit.xhtml">
-            <ui:param name="res" value="#{rightPaneBean.clickedAbstractResource}"/>
+            <ui:param name="res" value="#{resourceDetailBean.clickedAbstractResource}"/>
         </ui:decorate>
     </div>
 
@@ -31,15 +31,15 @@
             <p:commandButton styleClass="alt-btn" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}"
                              update=":right_pane" global="false" immediate="true" rendered="#{userBean.admin}"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()">
-                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="viewResource"/>
-                <f:setPropertyActionListener target="#{rightPaneBean.clickedResource}" value="#{rightPaneBean.clickedAbstractResource}"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.paneAction}" value="viewResource"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{resourceDetailBean.clickedAbstractResource}"/>
             </p:commandButton>
         </div>
         <div>
-            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" actionListener="#{rightPaneBean.cancelEditClickedResource}"
+            <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" actionListener="#{resourceDetailBean.cancelEditClickedResource}"
                              update=":right_pane" global="false" immediate="true"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
-            <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{rightPaneBean.editClickedResource}" update=":right_pane :growl" global="false"
+            <p:commandButton id="saveResourceButton" value="#{msg.save}" actionListener="#{resourceDetailBean.editClickedResource}" update=":right_pane :growl" global="false"
                              onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();resourceUpdatedHook();"/>
         </div>
     </div>

@@ -6,8 +6,8 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true"/>
-			<f:viewAction action="#{resourceBean.loadResource}"/>
+			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
+			<f:viewAction action="#{resourceDetailBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
@@ -27,8 +27,8 @@
 
 	<h:body>
 		<audio class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" controls="controls" preload="none" data-setup="{}"
-			   poster="#{resourceBean.resource.thumbnail3.url}" title="#{resourceBean.resource.title}">
-			<source src="#{resourceBean.resource.fileUrl}" type="#{resourceBean.resource.format}"/>
+			   poster="#{resourceDetailBean.clickedResource.thumbnail3.url}" title="#{resourceDetailBean.clickedResource.title}">
+			<source src="#{resourceDetailBean.clickedResource.fileUrl}" type="#{resourceDetailBean.clickedResource.format}"/>
 			<p class="vjs-no-js">To listen this audio please enable JavaScript, and consider upgrading to a web browser that supports HTML5 audio</p>
 		</audio>
 	</h:body>

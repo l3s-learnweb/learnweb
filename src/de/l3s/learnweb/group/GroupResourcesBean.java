@@ -32,9 +32,9 @@ import de.l3s.learnweb.resource.AddFolderBean;
 import de.l3s.learnweb.resource.AddResourceBean;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.ResourceUpdateBatch;
-import de.l3s.learnweb.resource.RightPaneBean;
 import de.l3s.learnweb.resource.SelectLocationBean;
 import de.l3s.learnweb.resource.search.SearchFilters;
 import de.l3s.learnweb.resource.search.SearchMode;
@@ -72,7 +72,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private transient TreeNode selectedTreeNode; // Selected node in the left Folder's panel
 
     @Inject
-    private RightPaneBean rightPaneBean;
+    private ResourceDetailBean resourceDetailBean;
 
     @Inject
     private AddFolderBean addFolderBean;
@@ -305,7 +305,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             }
 
             resetResources();
-            rightPaneBean.resetPane();
+            resourceDetailBean.resetPane();
         }
         catch(IllegalArgumentException | SQLException e)
         {
@@ -325,13 +325,13 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             if("folder".equals(itemType))
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                if(folder != null) rightPaneBean.setViewResource(folder);
+                if(folder != null) resourceDetailBean.setViewResource(folder);
                 else throw new IllegalArgumentException("Target folder does not exists!");
             }
             else if("resource".equals(itemType))
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null) rightPaneBean.setViewResource(resource);
+                if(resource != null) resourceDetailBean.setViewResource(resource);
                 else throw new IllegalArgumentException("Target resource does not exists!");
             }
             else throw new IllegalArgumentException("Unsupported element type!");
@@ -352,7 +352,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             int itemId = Integer.parseInt(params.get("itemId"));
 
             AbstractResource resource = getLearnweb().getGroupManager().getAbstractResource(itemType, itemId);
-            if(resource != null && resource.canEditResource(getUser())) rightPaneBean.setEditResource(resource);
+            if(resource != null && resource.canEditResource(getUser())) resourceDetailBean.setEditResource(resource);
             else addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it.");
         }
         catch(IllegalArgumentException | SQLException e)
@@ -375,28 +375,28 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             case "folder":
                 addFolderBean.reset();
                 addFolderBean.setTarget(group, currentFolder);
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFolder);
                 break;
             case "file":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.file);
                 break;
             case "url":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.website);
                 addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
                 break;
             case "glossary2":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.setResourceTypeGlossary();
                 break;
             case "survey":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.survey);
                 break;
             case "newFile":
                 ResourceType docType = ResourceType.parse(getParameter("docType"));
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFile);
                 addResourceBean.getResource().setType(docType);
                 break;
             default:
@@ -560,7 +560,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             folder.delete();
             log(Action.deleting_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
 
-            if(rightPaneBean.isTheResourceClicked(folder)) rightPaneBean.resetPane();
+            if(resourceDetailBean.isTheResourceClicked(folder)) resourceDetailBean.resetPane();
             if(folder.equals(currentFolder)) currentFolder = null;
         }
 
@@ -575,7 +575,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             resource.delete();
             log(Action.deleting_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
 
-            if(rightPaneBean.isTheResourceClicked(resource)) rightPaneBean.resetPane();
+            if(resourceDetailBean.isTheResourceClicked(resource)) resourceDetailBean.resetPane();
         }
 
         if(items.size() - skipped > 0)
@@ -716,14 +716,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.addFolderBean = addFolderBean;
     }
 
-    public RightPaneBean getRightPaneBean()
+    public ResourceDetailBean getResourceDetailBean()
     {
-        return rightPaneBean;
+        return resourceDetailBean;
     }
 
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
     {
-        this.rightPaneBean = rightPaneBean;
+        this.resourceDetailBean = resourceDetailBean;
     }
 
     public SelectLocationBean getSelectLocationBean()

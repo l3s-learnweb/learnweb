@@ -15,8 +15,8 @@
         const msg_timelineSeriesName = '#{msg["Archive.timeline_series_name"]}';
         const msg_timelineClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
         const msg_timelineTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
-        const translatedMonthsNames = ${rightPaneBean.monthNames};
-        const translatedShortMonthsNames = ${rightPaneBean.shortMonthNames};
+        const translatedMonthsNames = ${resourceDetailBean.monthNames};
+        const translatedShortMonthsNames = ${resourceDetailBean.shortMonthNames};
 
         Highcharts.setOptions({
             lang: {
@@ -29,8 +29,8 @@
 
         $(function() {
             if (document.getElementById("archive_timeline_container") != null) {
-                loadTimeline(#{rightPaneBean.archiveTimelineJsonData});
-                loadCalendar(#{rightPaneBean.archiveCalendarJsonData});
+                loadTimeline(#{resourceDetailBean.archiveTimelineJsonData});
+                loadCalendar(#{resourceDetailBean.archiveCalendarJsonData});
             }
         });
     </h:outputScript>
@@ -52,7 +52,7 @@
                     </a>
                 </div>
                 <div class="day-headers">
-                    <ui:repeat var="day" value="${rightPaneBean.shortWeekDays}">
+                    <ui:repeat var="day" value="${resourceDetailBean.shortWeekDays}">
                         <h:outputText value="#{day}" styleClass="day header"/>
                     </ui:repeat>
                 </div>

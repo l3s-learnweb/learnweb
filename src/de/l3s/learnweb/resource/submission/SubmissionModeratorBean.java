@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.RightPaneBean;
+import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
 import de.l3s.util.StringHelper;
 
@@ -34,7 +34,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     private SubmittedResources selectedUserSubmission;
 
     @Inject
-    private RightPaneBean rightPaneBean;
+    private ResourceDetailBean resourceDetailBean;
 
     public void onLoad()
     {
@@ -84,7 +84,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    rightPaneBean.setViewResource(resource);
+                    resourceDetailBean.setViewResource(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -97,14 +97,14 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
         }
     }
 
-    public RightPaneBean getRightPaneBean()
+    public ResourceDetailBean getResourceDetailBean()
     {
-        return rightPaneBean;
+        return resourceDetailBean;
     }
 
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
     {
-        this.rightPaneBean = rightPaneBean;
+        this.resourceDetailBean = resourceDetailBean;
     }
 
     public SubmittedResources getSelectedUserSubmission()

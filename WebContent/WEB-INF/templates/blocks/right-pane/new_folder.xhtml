@@ -37,12 +37,12 @@
         </div>
         <div>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true" actionListener="#{addFolderBean.reset}">
-                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.paneAction}" value="none"/>
             </p:commandButton>
 
             <p:commandButton id="addFolderButton" value="#{msg.create_folder}" update=":growl :right_pane"
                              action="#{addFolderBean.addFolder}" ajax="true" oncomplete="resourceAddedHook();">
-                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.paneAction}" value="none"/>
             </p:commandButton>
         </div>
     </div>

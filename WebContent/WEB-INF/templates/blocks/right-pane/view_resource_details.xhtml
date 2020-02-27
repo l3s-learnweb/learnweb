@@ -5,22 +5,24 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:lw="http://l3s.de/learnweb">
 
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
 <dl class="row mb-n2">
-	<ui:fragment rendered="${not empty rightPaneBean.clickedResource.fileName and rightPaneBean.clickedResource.source ne 'loro'}">
+	<ui:fragment rendered="${not empty res.fileName and res.source ne 'loro'}">
 		<dt class="col-sm-3">#{msg.file}:</dt>
 		<dd class="col-sm-9">
-			<a href="#{rightPaneBean.clickedResource.fileUrl}">
+			<a href="#{res.fileUrl}">
 				<i class="fa fa-fw fa-download" aria-hidden="true"></i>
-				#{rightPaneBean.clickedResource.fileName}
+				#{res.fileName}
 			</a>
 
-			<ui:fragment rendered="${not empty rightPaneBean.clickedResource.originalFile}">
+			<ui:fragment rendered="${not empty res.originalFile}">
 				<div>
-					<a href="#{rightPaneBean.clickedResource.originalFile.url}">
+					<a href="#{res.originalFile.url}">
 						<i class="fa fa-fw fa-download" aria-hidden="true"></i>
-						#{rightPaneBean.clickedResource.originalFile.name}
+						#{res.originalFile.name}
 					</a>
-					(Backup <h:outputText value="#{rightPaneBean.clickedResource.originalFile.lastModified}">
+					(Backup <h:outputText value="#{res.originalFile.lastModified}">
 						<f:convertDateTime type="date" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>)
 				</div>
@@ -28,10 +30,10 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="${empty rightPaneBean.clickedResource.fileName and rightPaneBean.clickedResource.type == 'file' }">
+	<ui:fragment rendered="${empty res.fileName and res.type == 'file' }">
 		<dt class="col-sm-3">#{msg.resource}:</dt>
 		<dd class="col-sm-9">
-			<a href="#{rightPaneBean.clickedResource.urlProxied}" target="_blank">#{rightPaneBean.clickedResource.url}</a>
+			<a href="#{res.urlProxied}" target="_blank">#{res.url}</a>
 		</dd>
 	</ui:fragment>
 
@@ -39,24 +41,23 @@
 		<dt class="col-sm-3">#{msg.relevance}:</dt>
 		<dd class="col-sm-9">
 			<h:form>
-				<p:rating value="#{resourceDetailBean.clickedResource.starRatingRounded}" cancel="false"
-						disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+				<p:rating value="#{res.starRatingRounded}" cancel="false" disabled="${res.isRatedByUser(userBean.user.id) or not res.canAnnotateResource(userBean.user)}">
 					<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="@form :growl"/>
 				</p:rating>
 
-				<h:outputText value="#{rightPaneBean.clickedResource.starRating}">
+				<h:outputText value="#{res.starRating}">
 					<f:convertNumber maxFractionDigits="1" minFractionDigits="1"/>
 				</h:outputText>
-				(<h:outputFormat value="#{msg.votes}"><f:param value="#{rightPaneBean.clickedResource.rateNumber}"/></h:outputFormat>)
+				(<h:outputFormat value="#{msg.votes}"><f:param value="#{res.rateNumber}"/></h:outputFormat>)
 			</h:form>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.group and rightPaneBean.clickedResource.type eq 'website' and not empty rightPaneBean.clickedResource.group.hypothesisLink}">
+	<ui:fragment rendered="#{not empty res.group and res.type eq 'website' and not empty res.group.hypothesisLink}">
 		<dt class="col-sm-3">#{msg.discuss}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="#{resourceDetailBean.hypothesisLink}">#{msg.link_to_discuss}</h:outputLink>
-			<h:outputLink value="#{rightPaneBean.clickedResource.group.hypothesisLink}">(#{msg.discuss_group_invite})</h:outputLink>
+			<h:outputLink value="#{res.group.hypothesisLink}">(#{msg.discuss_group_invite})</h:outputLink>
 
 			<h:outputLink value="discussion_help.jsf" target="_blank">
 				<f:param name="type" value="user"/>[?]
@@ -69,78 +70,78 @@
 		<dd class="col-sm-9">
 			<h:form>
 				<h:panelGrid columns="4">
-					<h:outputText value="+#{rightPaneBean.clickedResource.thumbUp}"/>
+					<h:outputText value="+#{res.thumbUp}"/>
 					<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="@form :growl" ariaLabel="Rate thump up">
-						<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+						<f:param name="resource_id" value="#{res.id}"/>
 						<i class="fa fa-fw fa-thumbs-up text-success" aria-hidden="true"></i>
 					</p:commandLink>
 
 					<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="@form :growl" ariaLabel="Rate thump down">
-						<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+						<f:param name="resource_id" value="#{res.id}"/>
 						<i class="fa fa-fw fa-thumbs-down text-danger" aria-hidden="true"></i>
 					</p:commandLink>
-					<h:outputText value="-#{rightPaneBean.clickedResource.thumbDown}"/>
+					<h:outputText value="-#{res.thumbDown}"/>
 				</h:panelGrid>
 			</h:form>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.author}">
+	<ui:fragment rendered="#{not empty res.author}">
 		<dt class="col-sm-3">#{msg.author}:</dt>
 		<dd class="col-sm-9">
-			<h:outputText value="#{rightPaneBean.clickedResource.author}"/>
+			<h:outputText value="#{res.author}"/>
 		</dd>
 	</ui:fragment>
 
 	<dt class="col-sm-3">#{msg.source}:</dt>
 	<dd class="col-sm-9">
-		<a href="#{rightPaneBean.clickedResource.urlProxied}"><h:outputText value="#{rightPaneBean.clickedResource.source.label}"/></a>
+		<a href="#{res.urlProxied}"><h:outputText value="#{res.source.label}"/></a>
 	</dd>
 
-	<ui:fragment rendered="${not empty rightPaneBean.clickedResource.group}">
+	<ui:fragment rendered="${not empty res.group}">
 		<dt class="col-sm-3">#{msg.group}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="group/overview.jsf">
-				<f:param name="group_id" value="#{rightPaneBean.clickedResource.group.id}"/>
-				<h:outputText value="#{rightPaneBean.clickedResource.group.title}"/>
+				<f:param name="group_id" value="#{res.group.id}"/>
+				<h:outputText value="#{res.group.title}"/>
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="${not empty rightPaneBean.clickedResource.originalGroup}">
+	<ui:fragment rendered="${not empty res.originalGroup}">
 		<dt class="col-sm-3">#{msg.copied_from}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="group/overview.jsf">
-				<f:param name="group_id" value="#{rightPaneBean.clickedResource.originalGroup.id}"/>
-				<h:outputText value="#{rightPaneBean.clickedResource.originalGroup.title}"/>
+				<f:param name="group_id" value="#{res.originalGroup.id}"/>
+				<h:outputText value="#{res.originalGroup.title}"/>
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.language}">
+	<ui:fragment rendered="#{not empty res.language}">
 		<dt class="col-sm-3">#{msg.language}:</dt>
 		<dd class="col-sm-9">
-			<p:repeat value="#{rightPaneBean.clickedResource.metadataMultiValue['language']}" var="language" varStatus="status">
+			<p:repeat value="#{res.metadataMultiValue['language']}" var="language" varStatus="status">
 				<h:outputText value="#{msg['language_' += language]}"/>
 				<h:outputText value=", " rendered="#{!status.last}" escape="false"/>
 			</p:repeat>
 		</dd>
 	</ui:fragment>
 
-	<ui:repeat var="entry" value="#{rightPaneBean.clickedResource.metadataEntries}">
+	<ui:repeat var="entry" value="#{res.metadataEntries}">
 		<ui:fragment rendered="#{not empty entry.value}">
 			<dt class="col-sm-3"><h:outputText value="#{utilBean.getLocaleMessage(entry.key, null)}"/>:</dt>
 
 			<dd class="col-sm-9">
 				<ui:fragment rendered="#{entry.key eq 'language_level'}">
-					<ui:repeat value="#{rightPaneBean.clickedResource.metadataMultiValue[entry.key]}" var="langLevel" varStatus="status">
+					<ui:repeat value="#{res.metadataMultiValue[entry.key]}" var="langLevel" varStatus="status">
 						<h:outputText value="#{langLevel}"/>
 						<h:outputText value=", " rendered="#{!status.last}" escape="false"/>
 					</ui:repeat>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{entry.key eq 'yell_target'}">
-					<p:repeat value="#{rightPaneBean.clickedResource.metadataMultiValue[entry.key]}" var="target">
+					<p:repeat value="#{res.metadataMultiValue[entry.key]}" var="target">
 						<ui:fragment rendered="#{target == 'Pre-school'}">
 							<i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
 						</ui:fragment>
@@ -159,7 +160,7 @@
 				</ui:fragment>
 
 				<ui:fragment rendered="#{entry.key eq 'yell_purpose'}">
-					<p:repeat value="#{rightPaneBean.clickedResource.metadataMultiValue[entry.key]}" var="purpose">
+					<p:repeat value="#{res.metadataMultiValue[entry.key]}" var="purpose">
 						<span class="text-nowrap d-inline-block">
 							<span class="bg-highlight">
 								<ui:fragment rendered="#{purpose == 'Speaking'}">
@@ -188,69 +189,69 @@
 		</ui:fragment>
 	</ui:repeat>
 
-	<ui:fragment rendered="${rightPaneBean.clickedResource.source == 'ted' or rightPaneBean.clickedResource.source == 'tedx'}">
+	<ui:fragment rendered="${res.source == 'ted' or res.source == 'tedx'}">
 		<dt class="col-sm-3">#{msg.transcript}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="ted_transcript.jsf">
-				<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+				<f:param name="resource_id" value="#{res.id}"/>
 				#{msg.link_to_transcript}
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{(userBean.optionContentAnnotationFieldEnabled and rightPaneBean.clickedResource.type eq 'website')}">
+	<ui:fragment rendered="#{(userBean.optionContentAnnotationFieldEnabled and res.type eq 'website')}">
 		<dt class="col-sm-3">#{msg.content}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="resource_transcript.jsf">
-				<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
+				<f:param name="resource_id" value="#{res.id}"/>
 				#{msg.link_to_content}
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="${not empty rightPaneBean.clickedResource.creationDate}">
+	<ui:fragment rendered="${not empty res.creationDate}">
 		<dt class="col-sm-3">#{msg.date}:</dt>
 		<dd class="col-sm-9">
-			<h:outputText value="#{rightPaneBean.clickedResource.creationDate}">
+			<h:outputText value="#{res.creationDate}">
 				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 			</h:outputText>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{rightPaneBean.clickedResource.folderId != 0}">
+	<ui:fragment rendered="#{res.folderId != 0}">
 		<dt class="col-sm-3">#{msg.path}:</dt>
 		<dd class="col-sm-9">
 			<h:outputLink value="group/resources.jsf">
-				<f:param name="group_id" value="#{rightPaneBean.clickedResource.groupId}"/>
-				<f:param name="folder_id" value="#{rightPaneBean.clickedResource.folderId}"/>
-				<f:param name="resource_id" value="#{rightPaneBean.clickedResource.id}"/>
-				#{rightPaneBean.clickedResource.prettyPath}
+				<f:param name="group_id" value="#{res.groupId}"/>
+				<f:param name="folder_id" value="#{res.folderId}"/>
+				<f:param name="resource_id" value="#{res.id}"/>
+				#{res.prettyPath}
 			</h:outputLink>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.description}">
+	<ui:fragment rendered="#{not empty res.description}">
 		<dt class="col-sm-3">#{msg.description}:</dt>
 		<dd class="col-sm-9">
-			<h:outputText value="#{rightPaneBean.clickedResource.descriptionHTML}" escape="false"/>
+			<h:outputText value="#{res.descriptionHTML}" escape="false"/>
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.tags or rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+	<ui:fragment rendered="#{not empty res.tags or res.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.tags}:</dt>
 		<dd class="col-sm-9">
 			<h:panelGroup layout="block" id="tags_list">
 				<ul class="list-inline list-unstyled mb-1">
-					<ui:repeat var="tag" value="#{rightPaneBean.clickedResource.tags}">
+					<ui:repeat var="tag" value="#{res.tags}">
 						<li class="list-inline-item mr-0 mb-1">
 							<p:linkButton outcome="/lw/search" value="#{tag.name}" styleClass="secondary-btn mr-0 rounded-0">
 								<f:param name="action" value="image"/>
 								<f:param name="query" value="#{tag.name}"/>
 							</p:linkButton>
 							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
-											 global="false" update=":right_pane :growl" process="@this"
+											 global="false" update=":tags_list :growl" process="@this"
 											 onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"
-											 rendered="#{rightPaneBean.clickedResource.canEditResource(userBean.user)}">
+											 rendered="#{res.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 							</p:commandButton>
 						</li>
@@ -258,7 +259,7 @@
 				</ul>
 			</h:panelGroup>
 
-			<h:form id="tag_input_form" rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+			<h:form id="tag_input_form" rendered="#{res.canAnnotateResource(userBean.user)}">
 				<div class="form-group mb-0">
 					<p:inputText value="#{resourceDetailBean.tagName}" id="tag_name" styleClass="flex-grow-1" placeholder="Enter new tag..."/>
 					<p:message for="@previous"/>
@@ -273,11 +274,11 @@
 		</dd>
 	</ui:fragment>
 
-	<ui:fragment rendered="#{not empty rightPaneBean.clickedResource.comments or rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+	<ui:fragment rendered="#{not empty res.comments or res.canAnnotateResource(userBean.user)}">
 		<dt class="col-sm-3">#{msg.comments}:</dt>
 		<dd class="col-sm-9">
 			<h:form styleClass="mb-2" id="new_comment_form">
-				<ui:fragment rendered="#{rightPaneBean.clickedResource.canAnnotateResource(userBean.user)}">
+				<ui:fragment rendered="#{res.canAnnotateResource(userBean.user)}">
 					<div class="form-group mb-0">
 						<p:inputTextarea rows="3" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true" styleClass="d-block"/>
 						<p:message for="@previous"/>
@@ -290,7 +291,7 @@
 				</ui:fragment>
 			</h:form>
 			<h:panelGroup layout="block" id="comments_list">
-				<ui:repeat var="comment" varStatus="status" value="#{rightPaneBean.clickedResource.comments}" rendered="#{not empty rightPaneBean.clickedResource.comments}">
+				<ui:repeat var="comment" varStatus="status" value="#{res.comments}" rendered="#{not empty res.comments}">
 					<div class="d-flex comment-entry bg-light p-2 #{!status.last ? 'mb-2' : ''}">
 						<img class="profile-picture mr-3" src="#{comment.user.image}" alt="Profile picture"/>
 
@@ -307,7 +308,7 @@
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>
 								<p:commandLink value="#{msg.delete}" styleClass="text-danger" action="#{resourceDetailBean.onDeleteComment}"
-											   ajax="true" update=":right_pane :growl" process="@this" onstart="return confirm('#{msg.delete_message_comments}');"
+											   ajax="true" update=":comments_list :growl" process="@this" onstart="return confirm('#{msg.delete_message_comments}');"
 											   rendered="#{resourceDetailBean.canEditComment(comment)}">
 									<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 								</p:commandLink>

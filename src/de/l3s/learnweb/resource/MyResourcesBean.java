@@ -55,7 +55,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private int selectedResourceTargetFolderId;
 
     @Inject
-    private RightPaneBean rightPaneBean;
+    private ResourceDetailBean resourceDetailBean;
 
     @Inject
     private AddResourceBean addResourceBean;
@@ -103,7 +103,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
 
         if(getParameter("save_url") != null)
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
     }
 
     public void updateBreadcrumb() throws SQLException
@@ -160,7 +160,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                 if(folder != null)
-                    rightPaneBean.setViewResource(folder);
+                    resourceDetailBean.setViewResource(folder);
                 else
                     throw new NullPointerException("Target folder does not exists");
             }
@@ -169,7 +169,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    rightPaneBean.setViewResource(resource);
+                    resourceDetailBean.setViewResource(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -180,7 +180,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 if(group != null)
                 {
                     Folder folder = new Folder(0, itemId, group.getTitle());
-                    rightPaneBean.setViewResource(folder);
+                    resourceDetailBean.setViewResource(folder);
                 }
                 else
                     throw new NullPointerException("Target group does not exists");
@@ -189,7 +189,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             {
                 Folder folder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
                 folder.setUserId(getUser().getId());
-                rightPaneBean.setViewResource(folder);
+                resourceDetailBean.setViewResource(folder);
             }
             else
             {
@@ -348,7 +348,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
                 {
-                    rightPaneBean.setEditResource(resource);
+                    resourceDetailBean.setEditResource(resource);
                 }
                 else
                 {
@@ -569,8 +569,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                     {
                         //int resourceGroupId = resource.getGroupId();
                         String resourceTitle = resource.getTitle();
-                        if(rightPaneBean.isTheResourceClicked(resource))
-                            rightPaneBean.resetPane();
+                        if(resourceDetailBean.isTheResourceClicked(resource))
+                            resourceDetailBean.resetPane();
 
                         getUser().deleteResource(resource);
                         numResources++;
@@ -594,7 +594,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "group_resources.deleted_successfully", numResources);
                 updateResources();
-                rightPaneBean.resetPane();
+                resourceDetailBean.resetPane();
             }
 
             if(numSkipped > 0)
@@ -630,28 +630,28 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         switch(type)
         {
             case "folder":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFolder);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFolder);
                 break;
             case "file":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.file);
                 break;
             case "url":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.website);
                 addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
                 break;
             case "glossary2":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.setResourceTypeGlossary();
                 break;
             case "survey":
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.survey);
                 break;
             case "newFile":
                 ResourceType docType = ResourceType.parse(getParameter("docType"));
-                rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newFile);
+                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFile);
                 addResourceBean.getResource().setType(docType);
                 break;
             default:
@@ -736,7 +736,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             if(addResourceBean.getFormStep() != 1) // necessary to avoid a conflict with uploaded resources
                 return;
 
-            rightPaneBean.setPaneAction(RightPaneBean.RightPaneAction.newResource);
+            resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
             addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
             addResourceBean.getResource().setUrl(url);
         }
@@ -812,14 +812,14 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         this.selectedTargetNode = selectedTargetNode;
     }
 
-    public RightPaneBean getRightPaneBean()
+    public ResourceDetailBean getResourceDetailBean()
     {
-        return rightPaneBean;
+        return resourceDetailBean;
     }
 
-    public void setRightPaneBean(RightPaneBean rightPaneBean)
+    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
     {
-        this.rightPaneBean = rightPaneBean;
+        this.resourceDetailBean = resourceDetailBean;
     }
 
     public AddResourceBean getAddResourceBean()

@@ -14,6 +14,7 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     this.overlay = this.body.find('.layout-overlay');
     this.wrapper = this.body.children('.layout-wrapper');
 
+    if (this.wrapper.length === 0) return;
     this.header = this.wrapper.children('.layout-header');
     this.menuButton = this.header.find('#menu-button');
 

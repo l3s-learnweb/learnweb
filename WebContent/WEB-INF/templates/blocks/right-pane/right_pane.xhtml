@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<p:panel header="#{rightPaneBean.panelTitle}" id="right_pane" styleClass="mb-0">
+<p:panel header="#{resourceDetailBean.panelTitle}" id="right_pane" styleClass="mb-0">
     <f:facet name="actions">
         <a href="#" class="layout-right-pane-close" aria-label="#{msg.close}">
             <i class="fa fa-times fa-inverse" aria-hidden="true"></i>
@@ -15,31 +15,31 @@
         <h:outputText value="#{msg.please_wait}"/>
     </p:blockUI>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFile'}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'newFile'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_file.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'newFolder'}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'newFolder'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_folder.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'newResource'}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'newResource'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_resource.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewResource'}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'viewResource'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'viewFolder' and rightPaneBean.clickedFolder != null}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'viewFolder' and resourceDetailBean.clickedFolder != null}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_folder.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'editResource' and rightPaneBean.clickedResource.id != -1}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_resource.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{rightPaneBean.paneAction == 'editFolder' and rightPaneBean.clickedFolder != null}">
+    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'editFolder' and resourceDetailBean.clickedFolder != null}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_folder.xhtml"/>
     </ui:fragment>
 </p:panel>

@@ -116,7 +116,7 @@
         </div>
         <div>
             <p:commandButton value="#{msg.cancel}" styleClass="secondary-btn" update=":right_pane" immediate="true" actionListener="#{addResourceBean.reset}">
-                <f:setPropertyActionListener target="#{rightPaneBean.paneAction}" value="none"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.paneAction}" value="none"/>
             </p:commandButton>
 
             <p:commandButton id="nextButton" value="#{msg.next}" action="#{addResourceBean.handleUrlInput}" update=":growl :add_resource_upload_form"
@@ -127,7 +127,7 @@
             <p:commandButton id="addResourceButton" value="#{msg.addResource}" ajax="true" action="#{addResourceBean.addResource}" update=":growl :right_pane"
                              oncomplete="resourceAddedHook();" rendered="#{addResourceBean.formStep != 1 or addResourceBean.resource.type eq 'glossary2' or addResourceBean.resource.type eq 'survey'}">
                 <f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
-                <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{addResourceBean.resource}"/>
+                <f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{addResourceBean.resource}"/>
             </p:commandButton>
         </div>
     </div>

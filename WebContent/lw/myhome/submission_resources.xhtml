@@ -12,8 +12,8 @@
     <f:metadata>
         <f:viewParam name="submission_id" value="#{submissionBean.submissionId}"/>
         <f:viewParam name="user_id" value="#{submissionBean.userId}"/>
-        <f:viewParam name="resource_id" value="#{rightPaneBean.resourceId}"/>
-        <f:viewAction action="#{rightPaneBean.onLoad}"/>
+        <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
+        <f:viewAction action="#{resourceDetailBean.onLoad}"/>
         <f:viewAction action="#{submissionBean.onLoad}"/>
     </f:metadata>
 </ui:define>

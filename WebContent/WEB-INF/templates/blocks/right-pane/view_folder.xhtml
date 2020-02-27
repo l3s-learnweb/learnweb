@@ -6,24 +6,24 @@
 
 <dl class="row">
     <dt class="col-sm-3">#{msg.group}:</dt>
-    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.group.title}"/></dd>
+    <dd class="col-sm-9"><h:outputText value="#{resourceDetailBean.clickedFolder.group.title}"/></dd>
 
-    <ui:fragment rendered="#{rightPaneBean.clickedFolder.parentFolder != null}">
+    <ui:fragment rendered="#{resourceDetailBean.clickedFolder.parentFolder != null}">
         <dt class="col-sm-3">#{msg.path}:</dt>
-        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.parentFolder.prettyPath}"/></dd>
+        <dd class="col-sm-9"><h:outputText value="#{resourceDetailBean.clickedFolder.parentFolder.prettyPath}"/></dd>
     </ui:fragment>
 
     <dt class="col-sm-3">#{msg.title}:</dt>
-    <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.title}"/></dd>
+    <dd class="col-sm-9"><h:outputText value="#{resourceDetailBean.clickedFolder.title}"/></dd>
 
-    <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.description}">
+    <ui:fragment rendered="#{not empty resourceDetailBean.clickedFolder.description}">
         <dt class="col-sm-3">#{msg.description}:</dt>
-        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.description}" escape="false"/></dd>
+        <dd class="col-sm-9"><h:outputText value="#{resourceDetailBean.clickedFolder.description}" escape="false"/></dd>
     </ui:fragment>
 
-    <ui:fragment rendered="#{not empty rightPaneBean.clickedFolder.user}">
+    <ui:fragment rendered="#{not empty resourceDetailBean.clickedFolder.user}">
         <dt class="col-sm-3">#{msg.created_by}:</dt>
-        <dd class="col-sm-9"><h:outputText value="#{rightPaneBean.clickedFolder.user.username}"/></dd>
+        <dd class="col-sm-9"><h:outputText value="#{resourceDetailBean.clickedFolder.user.username}"/></dd>
     </ui:fragment>
 </dl>
 

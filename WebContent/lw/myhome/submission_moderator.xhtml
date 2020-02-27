@@ -12,7 +12,7 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
-            <f:viewAction action="#{rightPaneBean.onLoad}"/>
+            <f:viewAction action="#{resourceDetailBean.onLoad}"/>
             <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
         </f:metadata>
     </ui:define>
@@ -97,7 +97,7 @@
                                         <div class="col-5 col-md-3">
                                             <h:form>
                                                 <p:commandLink update=":right_pane">
-                                                    <f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
+                                                    <f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{logEntry.resource}"/>
                                                     <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
                                                 </p:commandLink>
                                             </h:form>

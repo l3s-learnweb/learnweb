@@ -5,24 +5,24 @@
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui">
 
-<h:outputText value="This resource has been removed" rendered="${not rightPaneBean.clickedResource.canViewResource(userBean.user) and (rightPaneBean.clickedResource.deleted or rightPaneBean.clickedResource.groupId eq 0)}"/>
+<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 
-<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not rightPaneBean.clickedResource.canViewResource(userBean.user) and not (rightPaneBean.clickedResource.deleted or rightPaneBean.clickedResource.groupId eq 0)}"/>
+<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 
-<ui:fragment rendered="#{rightPaneBean.clickedResource.canViewResource(userBean.user)}">
-    <ui:fragment rendered="#{rightPaneBean.clickedResource.type eq 'spreadsheet' or
-                             rightPaneBean.clickedResource.type eq 'presentation' or
-                             rightPaneBean.clickedResource.type eq 'document' or
-                             rightPaneBean.clickedResource.type eq 'text' or
-                             rightPaneBean.clickedResource.type eq 'website' or
-                             rightPaneBean.clickedResource.type eq 'pdf' or
-                             rightPaneBean.clickedResource.type eq 'video' or
-                             rightPaneBean.clickedResource.type eq 'audio' or
-                             rightPaneBean.clickedResource.type eq 'image' or
-                             rightPaneBean.clickedResource.type eq 'glossary2' or
-                             rightPaneBean.clickedResource.type eq 'survey'}">
+<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">
+    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or
+                             resourceDetailBean.clickedResource.type eq 'presentation' or
+                             resourceDetailBean.clickedResource.type eq 'document' or
+                             resourceDetailBean.clickedResource.type eq 'text' or
+                             resourceDetailBean.clickedResource.type eq 'website' or
+                             resourceDetailBean.clickedResource.type eq 'pdf' or
+                             resourceDetailBean.clickedResource.type eq 'video' or
+                             resourceDetailBean.clickedResource.type eq 'audio' or
+                             resourceDetailBean.clickedResource.type eq 'image' or
+                             resourceDetailBean.clickedResource.type eq 'glossary2' or
+                             resourceDetailBean.clickedResource.type eq 'survey'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/preview_box.xhtml">
-            <ui:param name="res" value="#{rightPaneBean.clickedResource}"/>
+            <ui:param name="res" value="#{resourceDetailBean.clickedResource}"/>
         </ui:decorate>
     </ui:fragment>
 
@@ -31,11 +31,13 @@
             <p:ajax event="tabChange" global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide()"/>
 
             <p:tab title="#{msg.details_right_pane}">
-                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_details.xhtml"/>
+                <ui:decorate template="/WEB-INF/templates/blocks/right-pane/view_resource_details.xhtml">
+                    <ui:param name="res" value="#{resourceDetailBean.clickedResource}"/>
+                </ui:decorate>
             </p:tab>
 
             <p:tab title="#{msg.activity_right_pane}">
-                <p:repeat value="#{rightPaneBean.clickedResource.logs}" var="logEntry" varStatus="status">
+                <p:repeat value="#{resourceDetailBean.clickedResource.logs}" var="logEntry" varStatus="status">
                     <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
                         <ui:param name="status" value="#{status}"/>
                         <ui:param name="logEntry" value="#{logEntry}"/>
@@ -43,8 +45,8 @@
                 </p:repeat>
             </p:tab>
 
-            <c:if test="${not empty rightPaneBean.clickedResource.archiveUrls}">
-                <p:tab title="#{msg['Archive.versions']} (#{rightPaneBean.clickedResource.archiveUrls.size()})">
+            <c:if test="${not empty resourceDetailBean.clickedResource.archiveUrls}">
+                <p:tab title="#{msg['Archive.versions']} (#{resourceDetailBean.clickedResource.archiveUrls.size()})">
                     <ui:decorate template="/WEB-INF/templates/blocks/user/archived-view.xhtml"/>
                 </p:tab>
             </c:if>

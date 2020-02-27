@@ -33,7 +33,7 @@
 			<h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
 				<h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
 					<p:commandLink update=":right_pane" onclick="PF('learnweb').showRightPane();">
-						<f:setPropertyActionListener target="#{rightPaneBean.viewResource}" value="#{logEntry.resource}"/>
+						<f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{logEntry.resource}"/>
 						<img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
 					</p:commandLink>
 				</h:panelGroup>
