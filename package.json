@@ -19,15 +19,14 @@
     "js:lint": "eslint WebContent/resources/learnweb-layout/js/**"
   },
   "devDependencies": {
-    "browserslist": "^4.8.2",
-    "eslint": "^6.7.2",
+    "browserslist": "^4.9.0",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-compat": "^3.3.0",
-    "eslint-formatter-gitlab": "^1.1.0",
-    "sass": "^1.23.7",
-    "stylelint": "^12.0.0",
-    "stylelint-config-sass-guidelines": "^6.2.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-compat": "^3.5.1",
+    "sass": "^1.26.1",
+    "stylelint": "^13.2.0",
+    "stylelint-config-sass-guidelines": "^7.0.0",
     "stylelint-no-unsupported-browser-features": "^4.0.0"
   },
   "eslintConfig": {
