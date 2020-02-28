@@ -1,4 +1,4 @@
-/* global commandSelectResource, commandEditResource, commandBatchUpdateResources, commandCreateResource, commandOpenFolder, updateSelectedItemsCommand */
+/* global commandEditFolder, commandSelectResource, commandEditResource, commandBatchUpdateResources, commandCreateResource, commandOpenFolder, updateSelectedItemsCommand */
 
 
 class SelectResource {
@@ -414,7 +414,7 @@ function doAction(action, extraAttr1, extraAttr2) {
       commandCreateResource([{ name: 'type', value: 'newFile' }, { name: 'docType', value: extraAttr1 }]);
       break;
     case 'create-folder':
-      commandCreateResource([{ name: 'type', value: 'folder' }]);
+      $('#res_toolbar\\:menu_create_folder').trigger('click');
       break;
     case 'upload-file':
       commandCreateResource([{ name: 'type', value: 'file' }]);
@@ -500,8 +500,7 @@ function doAction(action, extraAttr1, extraAttr2) {
     case 'edit':
       if (selected.size() === 1) {
         const item = selected.getItem(0);
-        commandEditResource([
-          { name: 'itemType', value: item.type },
+        commandEditFolder([
           { name: 'itemId', value: item.id },
         ]);
       } else {

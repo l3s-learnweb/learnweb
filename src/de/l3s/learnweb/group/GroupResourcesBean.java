@@ -379,11 +379,6 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         // Set target view and defaults
         switch(type)
         {
-            case "folder":
-                addFolderBean.reset();
-                addFolderBean.setTarget(group, currentFolder);
-                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFolder);
-                break;
             case "file":
                 resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.file);

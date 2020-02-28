@@ -20,12 +20,14 @@ public class AddFolderBean extends ApplicationBean implements Serializable
     private Group targetGroup;
     private Folder targetFolder;
 
-    public void reset()
+    public void create(Group targetGroup, Folder targetFolder)
     {
-        folder = new Folder();
+        this.folder = new Folder();
+        this.targetGroup = targetGroup;
+        this.targetFolder = targetFolder;
     }
 
-    public void addFolder()
+    public void saveFolder()
     {
         try
         {
@@ -43,18 +45,11 @@ public class AddFolderBean extends ApplicationBean implements Serializable
             log(Action.add_folder, folder.getGroupId(), folder.getId(), folder.getTitle());
 
             addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", folder.getTitle());
-            reset();
         }
         catch(Exception e)
         {
             addErrorMessage(e);
         }
-    }
-
-    public void setTarget(Group targetGroup, Folder targetFolder)
-    {
-        this.targetGroup = targetGroup;
-        this.targetFolder = targetFolder;
     }
 
     public Group getTargetGroup()

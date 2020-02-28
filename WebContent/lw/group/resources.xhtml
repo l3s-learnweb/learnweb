@@ -61,6 +61,9 @@
                          update=":resourcesWrapper :group_folders_tree :right_pane :growl" global="false"
                          onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
                          oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
+
+        <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":growl :editFolderDialog"
+                         global="false" oncomplete="PF('editFolderDialog').show();return false;"/>
     </h:form>
 
     <p:blockUI block="resourceOverlay" widgetVar="resourcesOverlay">
@@ -91,7 +94,7 @@
             </div>
         </div>
         <div class="col-12 col-resources ui-panel ui-widget d-flex flex-column">
-            <h:form>
+            <h:form id="res_toolbar">
                 <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                     <f:facet name="left">
                         <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'grid'}">
@@ -111,7 +114,6 @@
                             <span class="ui-separator">
                                 <span class="ui-icon fa fa-ellipsis-v"/>
                             </span>
-
                     
                             <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();"
                                              type="button" />
@@ -120,7 +122,9 @@
 
                     <f:facet name="right">
                         <p:menuButton value="#{msg.add}" icon="fa fa-plus" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
-                            <p:menuitem value="#{msg.create_folder}" icon="fa fa-folder" onclick="doAction('create-folder');return false;"/>
+                            <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fa fa-folder" ajax="true" global="false"
+                                        oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
+                                        actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                             <p:separator/>
                             <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
                             <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
@@ -217,6 +221,9 @@
             </h:panelGroup>
         </div>
     </h:panelGroup>
+
+    <ui:decorate template="/WEB-INF/templates/blocks/modal/create_folder.xhtml"/>
+    <ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder.xhtml"/>
 
     <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
               modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">

@@ -19,10 +19,6 @@
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_file.xhtml"/>
     </ui:fragment>
 
-    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'newFolder'}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_folder.xhtml"/>
-    </ui:fragment>
-
     <ui:fragment rendered="#{resourceDetailBean.paneAction == 'newResource'}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/new_resource.xhtml"/>
     </ui:fragment>
@@ -37,10 +33,6 @@
 
     <ui:fragment rendered="#{resourceDetailBean.paneAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}">
         <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_resource.xhtml"/>
-    </ui:fragment>
-
-    <ui:fragment rendered="#{resourceDetailBean.paneAction == 'editFolder' and resourceDetailBean.clickedFolder != null}">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/edit_folder.xhtml"/>
     </ui:fragment>
 </p:panel>
 </ui:composition>

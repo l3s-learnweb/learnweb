@@ -613,25 +613,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         String type = getParameter("type");
 
         // Set target group and folder in beans
-        switch(type)
-        {
-            case "folder":
-                addFolderBean.reset();
-                addFolderBean.setTarget(group, selectedFolder);
-                break;
-            default:
-                addResourceBean.reset();
-                addResourceBean.setTarget(group, selectedFolder);
-                addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
-                break;
-        }
+        addResourceBean.reset();
+        addResourceBean.setTarget(group, selectedFolder);
+        addResourceBean.getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
 
         // Set target view and defaults
         switch(type)
         {
-            case "folder":
-                resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newFolder);
-                break;
             case "file":
                 resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
                 addResourceBean.getResource().setType(ResourceType.file);
