@@ -50,6 +50,7 @@ public class UserBean implements Serializable
     private transient User user; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in on an other account
 
+    private String searchQuery;
     private Locale locale;
 
     private transient List<Group> newGroups = null;
@@ -82,6 +83,22 @@ public class UserBean implements Serializable
         refreshLocale();
         storeMetadataInSession();
     }
+
+    public String getSearchQuery()
+    {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(final String searchQuery)
+    {
+        this.searchQuery = searchQuery;
+    }
+
+    public String search()
+    {
+        return "/lw/search.xhtml?query=" + searchQuery + "&action=" + getPreference("SEARCH_ACTION", "text") + "&faces-redirect=true";
+    }
+
 
     /**
      * This method sets values which are required by the Download Servlet
@@ -164,6 +181,12 @@ public class UserBean implements Serializable
         {
             user.onDestroy();
         }
+    }
+
+    public String getPreference(String key, String defaultValue)
+    {
+        String obj = getPreference(key);
+        return obj == null ? defaultValue : obj;
     }
 
     public String getPreference(String key)

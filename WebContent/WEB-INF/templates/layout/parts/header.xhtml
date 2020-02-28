@@ -2,7 +2,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <header class="layout-header bg-primary">
         <div class="layout-container d-flex">
@@ -17,20 +18,13 @@
                 </a>
             </div>
 
-            <ui:fragment rendered="#{userBean.loggedIn}">
-                <div class="d-flex order-1 order-md-0 search-wrapper flex-grow-1">
-                    <form action="#{request.contextPath}/lw/search.jsf" class="header-element no-hover-bg search-form w-100">
-                        <input type="hidden" name="action" value="#{searchBean.queryMode}"/>
-
-                        <label for="searchfield" class="d-none">#{msg.searchLabel}</label>
-                        <input id="searchfield" type="search" name="query" value="#{searchBean.query}" placeholder="#{msg.searchLabel}"/>
-
-                        <button id="searchbutton" title="#{msg.searchLabel}">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                    </form>
+            <h:form styleClass="d-flex order-1 order-md-0 search-wrapper flex-grow-1" rendered="#{userBean.loggedIn}">
+                <div class="header-element no-hover-bg search-form w-100">
+                    <p:outputLabel for="@next" styleClass="d-none" value="#{msg.searchLabel}"/>
+                    <p:inputText id="searchfield" value="#{userBean.searchQuery}" pt:placeholder="#{msg.searchLabel}" pt:type="search"/>
+                    <p:commandButton action="#{userBean.search}" title="#{msg.searchLabel}" icon="fa fa-search"/>
                 </div>
-            </ui:fragment>
+            </h:form>
 
             <h:form styleClass="d-flex ml-auto">
                 <h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" styleClass="header-element" rendered="#{userBean.loggedIn}">
