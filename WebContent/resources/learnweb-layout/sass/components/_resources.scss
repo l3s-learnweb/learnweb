@@ -13,49 +13,61 @@
 }
 
 .res-t-icon {
+  color: $ash;
   @include icon-simple('\f15b');
 
   &.t-text {
+    color: $blueDarker;
     @include icon-simple('\f0f6');
   }
 
   &.t-video {
+    color: $red;
     @include icon-simple('\f1c8');
   }
 
   &.t-image {
+    color: $red;
     @include icon-simple('\f1c5');
   }
 
   &.t-audio {
+    color: $red;
     @include icon-simple('\f1c7');
   }
 
   &.t-pdf {
+    color: $red;
     @include icon-simple('\f1c1');
   }
 
   &.t-website {
+    color: $cyanDarker;
     @include icon-simple('\f0ac');
   }
 
   &.t-spreadsheet {
+    color: $greenDarkest;
     @include icon-simple('\f1c3');
   }
 
   &.t-presentation {
+    color: $yellowDarkest;
     @include icon-simple('\f1c4');
   }
 
   &.t-document {
+    color: $blueDarker;
     @include icon-simple('\f1c2');
   }
 
   &.t-survey {
+    color: $cappuccino;
     @include icon-simple('\f19d');
   }
 
   &.t-glossary2 {
+    color: $purple;
     @include icon-simple('\f02d');
   }
 }
@@ -405,7 +417,7 @@ ul.res-filters {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: $font-size-lg;
+      font-size: 1.25rem;
       color: $gray-600;
       background: $gray-300;
     }
