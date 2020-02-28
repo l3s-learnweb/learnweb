@@ -6,7 +6,7 @@
 
     <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block" rendered="#{groupResourcesBean.query == null}">
         <ui:repeat value="#{groupResourcesBean.subFolders}" var="folder">
-            <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf"
+            <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" title="#{folder.description}"
                           pt:data-itemType="folder"
                           pt:data-itemId="#{folder.id}"
                           pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
