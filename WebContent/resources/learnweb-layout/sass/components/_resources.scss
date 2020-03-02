@@ -47,7 +47,7 @@
   }
 
   &.t-spreadsheet {
-    color: $greenDarkest;
+    color: $greenDarker;
     @include icon-simple('\f1c3');
   }
 
@@ -57,7 +57,7 @@
   }
 
   &.t-document {
-    color: $blueDarker;
+    color: $blue;
     @include icon-simple('\f1c2');
   }
 
@@ -678,19 +678,6 @@ ul.res-filters {
   z-index: 99999 !important;
 }
 
-.resource-preview {
-  iframe {
-    width: 100%;
-    min-height: 25rem;
-  }
-
-  .preview-wrapper {
-    display: block;
-    box-shadow: $box-shadow;
-    border: $border-width solid $border-color;
-  }
-}
-
 .myresource-listview { // TODO: check or remove
   padding-right: 7px;
   display: block;
@@ -758,3 +745,25 @@ ul.res-filters {
   }
 }
 
+.resource-view {
+  padding-right: $grid-gutter-width / 2;
+  padding-left: $grid-gutter-width / 2;
+  background: $dark;
+
+  .resource-preview {
+    padding: 2rem;
+
+    iframe {
+      width: 100%;
+      min-height: 25rem;
+    }
+
+    .preview-wrapper {
+      display: block;
+    }
+  }
+
+  .details-column {
+    background: $light;
+  }
+}
