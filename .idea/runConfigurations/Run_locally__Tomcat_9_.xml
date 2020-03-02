@@ -11,7 +11,6 @@
     <server-settings>
       <option name="BASE_DIRECTORY_NAME" value="Run_locally_(1)_Learnweb" />
       <option name="HTTP_PORT" value="8090" />
-      <option name="PRESERVE_SESSIONS" value="true" />
     </server-settings>
     <predefined_log_file enabled="true" id="Tomcat" />
     <predefined_log_file enabled="true" id="Tomcat Catalina" />
