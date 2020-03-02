@@ -44,7 +44,7 @@ public class RequestFilter implements Filter
 
                 if(!InetAddresses.isInetAddress(ip))
                 {
-                    log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));
+                    log.warn("Suspicious request: " + BeanHelper.getRequestSummary(req));
                     chain.doFilter(request, response);
                     return;
                 }

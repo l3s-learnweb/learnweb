@@ -86,7 +86,7 @@ public class DownloadServlet extends HttpServlet
             log.fatal("fatal error: ", e);
         }
 
-        testMail();
+        //testMail();
     }
 
     /**
