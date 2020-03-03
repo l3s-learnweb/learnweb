@@ -1,0 +1,286 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
+
+<h:form>
+    <p:remoteCommand name="commandSelectResource" actionListener="#{groupResourcesBean.commandSelectResource}" update=":right_pane :growl"
+                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+    <p:remoteCommand name="commandEditResource" actionListener="#{groupResourcesBean.commandEditResource}" update=":right_pane :growl"
+                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+    <p:remoteCommand name="commandCreateResource" actionListener="#{groupResourcesBean.commandCreateResource}" update=":right_pane :growl"
+                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
+    <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane :growl"
+                     global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
+
+    <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree :growl"
+                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+    <p:remoteCommand name="resourceAddedHook" actionListener="#{groupResourcesBean.resetResources}" update=":resourcesWrapper :group_folders_tree"
+                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+    <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
+                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+
+    <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{groupResourcesBean.commandBatchUpdateResources}"
+                     update=":resourcesWrapper :group_folders_tree :right_pane :growl" global="false"
+                     onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
+                     oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
+
+    <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":growl :editFolderDialog"
+                     global="false" oncomplete="PF('editFolderDialog').show();return false;"/>
+</h:form>
+
+<p:blockUI block="resourceOverlay" widgetVar="resourcesOverlay">
+    <h:outputText value="#{msg.please_wait}"/>
+</p:blockUI>
+
+<h:panelGroup styleClass="row no-gutters resources-panel mb-n3" layout="block">
+    <div class="col-12 col-folders ui-panel ui-widget flex-column d-none d-md-flex">
+        <div class="ui-panel-titlebar ui-widget-header">
+            <span class="ui-panel-title">#{msg.folders}</span>
+        </div>
+
+        <div class="ui-panel-content ui-widget-content flex-grow-1">
+            <h:form id="group_folders_tree">
+                <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" datakey="#{node.id}"
+                        selectionMode="single" selection="#{groupResourcesBean.selectedTreeNode}" onNodeClick="openFolder(node.data('datakey'));"
+                        styleClass="ui-tree-responsive ui-tree-no-root-icons" animate="true"
+                        rendered="#{not empty groupResourcesBean.group.subFolders}">
+
+                    <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                        <h:outputText value="#{node.title}"/>
+                    </p:treeNode>
+                </p:tree>
+
+                <h:outputText value="${msg.group_no_folders}" class="res-no-folders-text"
+                              rendered="#{empty groupResourcesBean.group.subFolders}"/>
+            </h:form>
+        </div>
+    </div>
+    <div class="col-12 col-resources ui-panel ui-widget d-flex flex-column">
+        <h:form id="res_toolbar">
+            <p:toolbar styleClass="d-flex align-items-center justify-content-between">
+                <f:facet name="left">
+                    <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'grid'}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="grid"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-table" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'table'}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'list'}">
+                        <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
+                    </p:commandButton>
+
+                    <ui:fragment rendered="#{userBean.admin}">
+                        <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
+                        <span class="ui-separator">
+                                <span class="ui-icon fa fa-ellipsis-v"/>
+                            </span>
+
+                        <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();"
+                                         type="button" />
+                    </ui:fragment>
+                </f:facet>
+
+                <f:facet name="right">
+                    <p:menuButton value="#{msg.add}" icon="fa fa-plus" rendered="#{groupResourcesBean.group.canAddResources(userBean.user)}">
+                        <p:menuitem id="menu_create_folder" value="#{msg.create_folder}" icon="fa fa-folder" ajax="true" global="false"
+                                    oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
+                                    actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:separator/>
+                        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
+                        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
+                        <p:separator/>
+                        <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" onclick="doAction('new-file', 'document');return false;"/>
+                        <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" onclick="doAction('new-file','spreadsheet');return false;"/>
+                        <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"/>
+                        <p:menuitem value="#{msg['Glossary.glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
+                    </p:menuButton>
+                </f:facet>
+            </p:toolbar>
+        </h:form>
+
+        <h:panelGroup id="resourceOverlay" layout="block" styleClass="ui-panel-content p-0 flex-grow-1 d-flex flex-column ui-loading-spin">
+            <h:panelGroup id="resourcesWrapper" layout="block">
+                <h:form id="resourcesFilters" styleClass="bg-gray200" rendered="#{groupResourcesBean.query != null || groupResourcesBean.searchFilters.filtersEnabled || !groupResourcesBean.paginator.isEmpty()}">
+                    <ul class="res-filters">
+                        <p:repeat value="#{groupResourcesBean.availableFilters}" var="filter">
+                            <li class="filter#{filter.disabled ? ' disabled' : (filter.active ? ' active' : null)}">
+                                    <span class="filter-title">
+                                        <span class="text-truncate">#{filter.title}</span>
+                                        <i class="fa fa-fw fa-caret-down" aria-hidden="true"></i>
+                                    </span>
+                                <ul class="filter-sub-bar collapse js-limited-list" data-visible-items="5">
+                                    <li class="#{!filter.active ? 'active' : null}">
+                                        <p:commandLink value="#{filter.anyTitle}" action="#{groupResourcesBean.changeFilters(filter.anyValue)}"
+                                                       update=":resourcesWrapper" global="false" onstart="PF('resourcesOverlay').show();"
+                                                       oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
+                                    </li>
+                                    <p:repeat value="#{filter.options}" var="item">
+                                        <li class="#{item.active ? 'active' : null}">
+                                            <p:commandLink action="#{groupResourcesBean.changeFilters(item.value)}"
+                                                           update=":resourcesWrapper" global="false" onstart="PF('resourcesOverlay').show();"
+                                                           oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();">
+                                                <span class="text-truncate">#{item.title}</span>
+                                                <h:outputText rendered="#{item.totalResults != null}" value=" (#{item.totalResults})"/>
+                                            </p:commandLink>
+                                        </li>
+                                    </p:repeat>
+                                    <li class="expand-list collapse">
+                                        <a href="#">#{msg.filter_carousel_all}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </p:repeat>
+
+                        <li class="search-box#{groupResourcesBean.query != null ? ' active' : null}">
+                            <p:commandLink id="search_filter_icon" styleClass="filter-title text-body"
+                                           onclick="$('#search_filter_form').show().find('input').trigger('focus');$(this).hide();return false;">
+                                <i class="fa fa-fw fa-search-plus" aria-hidden="true"></i>
+                            </p:commandLink>
+
+                            <div id="search_filter_form" class="res-search-form">
+                                <p:inputText value="#{groupResourcesBean.query}"/>
+
+                                <p:commandButton actionListener="${groupResourcesBean.onQueryChange()}" partialSubmit="true" process="@form"
+                                                 styleClass="text-body" update=":resourcesWrapper" icon="fa fa-fw fa-search-plus"
+                                                 oncomplete="onResourcesUpdated();"/>
+                            </div>
+                        </li>
+
+                        <h:panelGroup rendered="#{groupResourcesBean.searchFilters.filtersEnabled or groupResourcesBean.query != null}">
+                            <li class="clear-filters">
+                                <p:commandLink value="#{msg.clear_filters}" styleClass="filter-title text-body"
+                                               action="#{groupResourcesBean.clearFilters()}" update=":resourcesWrapper"
+                                               oncomplete="onResourcesUpdated();"/>
+                            </li>
+                        </h:panelGroup>
+                    </ul>
+                    <script>PrimeFaces.cw('LimitedList', 'me', { id: 'learnweb' });</script>
+                </h:form>
+
+                <h:panelGroup id="breadcrumbs" layout="block" rendered="#{not empty groupResourcesBean.breadcrumbs}">
+                    <ul class="res-breadcrumbs">
+                        <li data-folderId="0">
+                            <h:outputLink value="#" onclick="openFolder(0);return false;">#{groupResourcesBean.group.title}</h:outputLink>
+                        </li>
+                        <p:repeat var="folder" value="#{groupResourcesBean.breadcrumbs}">
+                            <li data-folderId="#{folder.id}">
+                                <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.title}</h:outputLink>
+                            </li>
+                        </p:repeat>
+                    </ul>
+                </h:panelGroup>
+
+                <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_view.xhtml">
+                    <ui:param name="view" value="#{groupResourcesBean.view}"/>
+                    <ui:param name="paginator" value="#{groupResourcesBean.paginator}"/>
+                    <ui:param name="canAddResources" value="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
+                    <ui:param name="canMoveResources" value="#{groupResourcesBean.group.canMoveResources(userBean.user)}"/>
+                    <ui:param name="query" value="#{groupResourcesBean.query}"/>
+                </ui:decorate>
+            </h:panelGroup>
+        </h:panelGroup>
+    </div>
+</h:panelGroup>
+
+<ui:decorate template="/WEB-INF/templates/blocks/modal/create_folder.xhtml"/>
+<ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder.xhtml"/>
+
+<p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+    <p>
+        <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="type-folder collapse"/>
+        <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="type-resource collapse"/>
+        <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="type-resources collapse"/>
+    </p>
+
+    <h:panelGroup layout="block" styleClass="text-right">
+        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
+        <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false;"/>
+    </h:panelGroup>
+</p:dialog>
+
+<p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+
+    <h:outputText value="#{msg.add_to}:"/>
+
+    <h:form>
+        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive" animate="true"
+                selectionMode="single" selection="#{selectLocationBean.targetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
+            <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
+
+            <p:treeNode type="group">
+                <h:outputText id="group" value="#{node.title}"/>
+            </p:treeNode>
+
+            <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                <h:outputText value="#{node.title}"/>
+            </p:treeNode>
+        </p:tree>
+    </h:form>
+
+    <div class="text-right mt-3">
+        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide();return false;"/>
+        <p:button value="#{msg.save}" styleClass="confirm" onclick="return false;"/>
+    </div>
+</p:dialog>
+
+<p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)"
+          modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+    <h:panelGrid columns="1">
+        <p:inputText id="modal_tag_name"/>
+    </h:panelGrid>
+
+    <div class="text-right mt-3">
+        <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTag').hide(); return false;"/>
+        <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
+    </div>
+</p:dialog>
+
+<ui:remove>
+    <p:dialog header="#{msg.download_group_resources}" widgetVar="dlg1" appendTo="@(body)"
+              modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">
+        <h:outputFormat value="#{msg.export_resources_warning}">
+            <f:param value="#{dialogBean.totalResourcesNum(groupResourcesBean.group.id)} "/>
+            <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.group.id)}"/>
+        </h:outputFormat>
+
+        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.group.id)}" tableStyleClass="table-responsive" scrollable="true"
+                     scrollHeight="150">
+            <p:column headerText="#{msg.external_resources}">
+                <h:outputText value="#{entry}"/>
+            </p:column>
+
+        </p:dataTable>
+        <!-- This needs to be rewritten. The group id should ne be passed this way !!!! -->
+        <h:inputHidden id="group_id" name="group_requested" value="#{groupResourcesBean.group.id}"/>
+        <h:commandLink value="#{msg.start_download}" action="#{dataExporterBean.requestGroupResources()}"/>
+    </p:dialog>
+</ui:remove>
+
+<h:outputScript>
+    /**
+     * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
+     */
+    function onResourcesUpdated() {
+        createSelectableArea('resourcesView');
+        createDragAndDrop('resourcesView', 'breadcrumbs', 'group_folders_tree');
+    }
+
+    $(function () {
+        $(document).on('dblclick', '.res-item', openItems);
+
+        createContextMenu();
+        createSelectable('resourcesView');
+        onResourcesUpdated();
+    });
+</h:outputScript>
+
+</ui:composition>

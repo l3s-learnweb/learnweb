@@ -2,9 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg.myResourcesTitle}"/>
@@ -12,11 +10,10 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="group_id" value="#{myResourcesBean.groupId}"/>
-            <f:viewParam name="folder_id" value="#{myResourcesBean.selectedFolderId}"/>
-            <f:viewParam name="save_url" value="#{myResourcesBean.urlToSave}"/>
+            <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}"/>
+            <f:viewParam name="save_url" value="#{groupResourcesBean.saveUrl}"/>
             <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
-            <f:viewAction action="#{myResourcesBean.onLoad}"/>
+            <f:viewAction action="#{groupResourcesBean.onLoad}"/>
             <f:viewAction action="#{resourceDetailBean.onLoad}"/>
         </f:metadata>
     </ui:define>
@@ -24,6 +21,10 @@
     <ui:define name="breadcrumb">
         <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
             <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
+
+        <lw:breadcrumb-item link="myhome/resources.jsf" title="#{msg.myPrivateResources}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_resources.xhtml"/>
         </lw:breadcrumb-item>
     </ui:define>
 
@@ -34,249 +35,7 @@
         <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
         <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
 
-        <p:outputPanel styleClass="m-0 panel-content bg-white">
-            <h:form>
-                <p:remoteCommand name="commandSelectResource" actionListener="#{myResourcesBean.actionSelectGroupItem}" update=":right_pane :growl"
-                                 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="commandEditResource" actionListener="#{myResourcesBean.actionEditGroupItem}" update=":right_pane :growl"
-                                 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-                <p:remoteCommand name="commandCreateResource" actionListener="#{myResourcesBean.actionCreateItem}" update=":right_pane :growl"
-                                 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-
-                <p:remoteCommand name="commandOpenFolder" actionListener="#{myResourcesBean.actionOpenFolder}" update=":resourcesWrapper :growl"
-                                 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-                <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
-                                 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-                <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
-                                 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-
-                <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{myResourcesBean.actionUpdateGroupItems}"
-                                 update=":resourcesView :right_pane :growl"
-                                 onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();"/>
-            </h:form>
-
-            <div class="row no-gutters resources-panel">
-                <div class="col-12 col-resources ui-panel ui-widget mb-n3">
-                    <h:form prependId="false">
-                        <p:toolbar styleClass="d-flex align-items-center justify-content-between">
-                            <f:facet name="left">
-                                <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{myResourcesBean.gridView}">
-                                    <f:setPropertyActionListener target="#{myResourcesBean.gridView}" value="false"/>
-                                </p:commandButton>
-
-                                <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{!myResourcesBean.gridView}">
-                                    <f:setPropertyActionListener target="#{myResourcesBean.gridView}" value="true"/>
-                                </p:commandButton>
-                            </f:facet>
-
-                            <f:facet name="right">
-                                <p:commandButton value="#{msg.create}" title="#{msg.create_folder}" icon="fa fa-folder" onclick="doAction('create-folder');return false;"/>
-
-                                <p:menuButton value="#{msg.add}" icon="fa fa-file">
-                                    <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" onclick="doAction('new-file', 'document');return false;"/>
-                                    <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" onclick="doAction('new-file','spreadsheet');return false;"/>
-                                    <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"/>
-                                    <p:separator/>
-                                    <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
-                                    <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
-                                    <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
-                                </p:menuButton>
-                            </f:facet>
-                        </p:toolbar>
-                    </h:form>
-
-                    <h:panelGroup id="resourcesWrapper" layout="block" styleClass="ui-panel-content p-0">
-                        <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
-                            <h:outputText value="#{msg.please_wait}"/>
-                        </p:blockUI>
-
-                        <h:panelGroup id="breadcrumbs" styleClass="bg-light" layout="block" rendered="#{not empty myResourcesBean.breadcrumb}">
-                            <ul class="res-breadcrumbs">
-                                <li data-folderId="0">
-                                    <h:link value="#{msg.myResourcesTitle}" outcome="/lw/myhome/resources.jsf"/>
-                                </li>
-                                <p:repeat var="folder" value="#{myResourcesBean.breadcrumb}">
-                                    <li data-folderId="#{folder.id}">
-                                        <h:outputLink value="#" onclick="openFolder(#{folder.id});return false;">#{folder.title}</h:outputLink>
-                                    </li>
-                                </p:repeat>
-                            </ul>
-                        </h:panelGroup>
-
-                        <h:panelGroup id="resourcesView" layout="block" styleClass="res-container res-contextmenu"
-                                      pt:data-canSelectResources="true"
-                                      pt:data-canMoveResources="false">
-
-                            <ui:fragment rendered="#{myResourcesBean.rootFolder}">
-                                <ui:repeat var="folder" value="#{myResourcesBean.folders}">
-                                    <h:panelGroup styleClass="res-grid" layout="block">
-                                        <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}"
-                                                      pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
-                                                      pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
-                                                      pt:data-canViewResource="true"
-                                                      pt:data-canEditResource="true"
-                                                      pt:data-canDeleteResource="true">
-                                            <f:param name="group_id" value="#{folder.groupId}"/>
-                                            <f:param name="folder_id" value="#{folder.id}"/>
-
-                                            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                                <ui:param name="folder" value="#{folder}"/>
-                                            </ui:decorate>
-                                        </h:outputLink>
-                                    </h:panelGroup>
-                                </ui:repeat>
-
-                                <hr class="w-100 mt-3"/>
-                                <h5 class="w-100 mx-3 mt-3">#{msg.myhomeVirtualFolders}</h5>
-                            </ui:fragment>
-
-                            <h:panelGroup id="folderGrid" styleClass="res-grid" layout="block">
-                                <ui:repeat var="folder" value="#{myResourcesBean.folders}">
-                                    <h:outputLink styleClass="d-block res-item text-decoration-none" value="group/resources.jsf" rendered="#{folder.groupId != 0}"
-                                                  pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
-                                                  pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
-                                                  pt:data-canViewResource="true"
-                                                  pt:data-canEditResource="true"
-                                                  pt:data-canDeleteResource="true">
-                                        <f:param name="group_id" value="#{folder.groupId}"/>
-                                        <f:param name="folder_id" value="#{folder.id}"/>
-
-                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_folder_block.xhtml">
-                                            <ui:param name="folder" value="#{folder}"/>
-                                        </ui:decorate>
-                                    </h:outputLink>
-                                </ui:repeat>
-                            </h:panelGroup>
-
-                            <ui:fragment rendered="#{myResourcesBean.gridView}">
-
-                                <h:panelGroup styleClass="res-grid" layout="block">
-                                    <ui:repeat var="res" value="#{myResourcesBean.resources}">
-
-                                        <h:panelGroup styleClass="d-block res-item text-decoration-none" layout="block"
-                                                      pt:data-itemType="resource"
-                                                      pt:data-itemId="#{res.id}"
-                                                      pt:data-canViewResource="true"
-                                                      pt:data-canEditResource="true"
-                                                      pt:data-canDeleteResource="true"
-                                                      pt:data-canAnnotateResource="true">
-
-                                            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                                <ui:param name="res" value="#{res}"/>
-                                                <ui:param name="showSelectIcon" value="true"/>
-                                            </ui:decorate>
-                                        </h:panelGroup>
-                                    </ui:repeat>
-                                </h:panelGroup>
-                            </ui:fragment>
-
-                            <ui:fragment rendered="#{!myResourcesBean.gridView}">
-                                <h:panelGroup styleClass="res-container-list" layout="block">
-                                    <ui:repeat var="res" value="#{myResourcesBean.resources}">
-
-                                        <h:panelGroup styleClass="d-block res-item text-decoration-none" layout="block"
-                                                      pt:data-itemType="resource"
-                                                      pt:data-itemId="#{res.id}"
-                                                      pt:data-canViewResource="true"
-                                                      pt:data-canEditResource="true"
-                                                      pt:data-canDeleteResource="true"
-                                                      pt:data-canAnnotateResource="true">
-
-                                            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_li.xhtml">
-                                                <ui:param name="res" value="#{res}"/>
-                                            </ui:decorate>
-                                        </h:panelGroup>
-                                    </ui:repeat>
-                                </h:panelGroup>
-                            </ui:fragment>
-
-                            <ul class="d-none" id="contextmenu_items">
-                                <li data-type="folder" data-action="open-folder" data-per="canviewresource" data-icon="fa-icon fa-folder-open-o">#{msg.open}</li>
-                                <li data-type="container" data-action="create-folder" data-per="canaddresources" data-icon="fa-icon fa-folder">#{msg.create_folder}</li>
-                                <li data-type="container" data-action="upload-file" data-per="canaddresources" data-icon="fa-icon fa-floppy-o">#{msg.upload_file}</li>
-                                <li data-type="container" data-action="add-website" data-per="canaddresources" data-icon="fa-icon fa-link">#{msg.upload_url}</li>
-                                <li data-type="resource" data-action="details" data-per="canviewresource" data-icon="fa-icon fa-eye">#{msg.details_right_pane}</li>
-                                <li data-type="resource" data-action="edit" data-per="caneditresource" data-icon="fa-icon fa-edit">#{msg.edit}</li>
-                                <li data-type="resource|resources" data-action="add-tag" data-per="canannotateresource" data-icon="fa-icon fa-tag">#{msg.addTag}</li>
-                                <li data-type="resource|resources" data-action="copy" data-per="canviewresource" data-icon="fa-icon fa-copy">#{msg.copy}</li>
-                                <li data-type="resource|resources" data-action="move" data-per="candeleteresource" data-icon="fa-icon fa-arrows-h">#{msg.move}</li>
-                                <li data-type="resource|resources" data-action="delete" data-per="candeleteresource" data-icon="fa-icon fa-trash">#{msg.removeFromGroup}</li>
-                            </ul>
-                        </h:panelGroup>
-                    </h:panelGroup>
-                </div>
-            </div>
-        </p:outputPanel>
-
-        <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)" closable="false"
-                  minWidth="540" modal="true">
-            <p>
-                <h:outputText value="#{msg.delete_confirm_dialog_content_folder}" styleClass="single-folder collapse"/>
-                <h:outputText value="#{msg.delete_confirm_dialog_content}" styleClass="single-resource"/>
-                <h:outputText value="#{msg.delete_confirm_dialog_content_plural}" styleClass="plural collapse"/>
-            </p>
-
-            <div class="text-right mt-3">
-                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('deleteConfirm').hide(); return false;"/>
-                <p:button value="#{msg.delete}" styleClass="confirm" onclick="return false"/>
-            </div>
-        </p:dialog>
-
-        <p:dialog id="selectDestinationDialog" header="#{msg.selectDestination}" widgetVar="selectDestination" appendTo="@(body)" closable="false"
-                  minWidth="540" modal="true">
-            <h:panelGrid columns="2">
-                <h:outputText value="#{msg.add_to}:"/>
-
-                <h:form>
-                    <p:tree id="folders_tree" value="#{selectLocationBean.groupsAndFoldersTree}" var="node" animate="true" dynamic="true" selectionMode="single"
-                            selection="#{selectLocationBean.targetNode}" style="max-height:28rem; overflow:auto;">
-                        <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
-
-                        <p:treeNode type="group">
-                            <h:outputText id="group" value="#{node.title}"/>
-                        </p:treeNode>
-
-                        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-                            <h:outputText value="#{node.title}"/>
-                        </p:treeNode>
-                    </p:tree>
-                </h:form>
-            </h:panelGrid>
-
-            <div class="text-right mt-3">
-                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('selectDestination').hide(); return false;"/>
-                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
-            </div>
-        </p:dialog>
-
-        <p:dialog id="addTagDialog" header="#{msg.addTag}" widgetVar="addTag" appendTo="@(body)" closable="false" minWidth="540" modal="true">
-            <h:panelGrid columns="1">
-                <p:inputText id="modal_tag_name"/>
-            </h:panelGrid>
-
-            <div class="text-right mt-3">
-                <p:button value="#{msg.cancel}" styleClass="secondary-btn" onclick="PF('addTag').hide(); return false;"/>
-                <p:button value="#{msg.save}" styleClass="confirm" onclick="return false"/>
-            </div>
-        </p:dialog>
-
-        <script type="application/javascript">
-            /**
-             * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
-             */
-            function onResourcesUpdated() {
-                createSelectableArea('resourcesView');
-                createDragAndDrop('resourcesView', 'breadcrumbs');
-            }
-
-            $(function () {
-                $(document).on('dblclick', '.res-item', openItems);
-
-                createContextMenu();
-                createSelectable('resourcesView');
-                onResourcesUpdated();
-            });
-        </script>
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_panel.xhtml"/>
     </ui:define>
 
     <ui:define name="right_layout">

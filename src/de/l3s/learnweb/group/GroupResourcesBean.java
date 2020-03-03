@@ -25,6 +25,7 @@ import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.AbstractPaginator;
 import de.l3s.learnweb.resource.AbstractResource;
@@ -58,6 +59,11 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         table,
         list
     }
+
+    // bean params
+    private int groupId;
+    private int folderId;
+    private String saveUrl;
 
     // Group base attributes
     private Group group; // current group
@@ -108,14 +114,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void setGroupId(int groupId)
     {
-        try
-        {
-            group = getLearnweb().getGroupManager().getGroupById(groupId);
-        }
-        catch(SQLException e)
-        {
-            addInvalidParameterMessage("group_id");
-        }
+        this.groupId = groupId;
     }
 
     public int getGroupId()
@@ -125,19 +124,22 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
     public void setFolderId(int folderId)
     {
-        try
-        {
-            if(folderId > 0) currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
-        }
-        catch(SQLException e)
-        {
-            addInvalidParameterMessage("folder_id");
-        }
+        this.folderId = folderId;
     }
 
     public int getFolderId()
     {
         return HasId.getIdOrDefault(currentFolder, 0);
+    }
+
+    public String getSaveUrl()
+    {
+        return saveUrl;
+    }
+
+    public void setSaveUrl(final String saveUrl)
+    {
+        this.saveUrl = saveUrl;
     }
 
     public void onLoad() throws SQLException
@@ -150,10 +152,46 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
             view = ResourceView.list;
         }
 
-        if(null != group)
+        if(groupId > 0)
         {
-            user.setActiveGroup(group);
-            group.setLastVisit(user);
+            try
+            {
+                group = getLearnweb().getGroupManager().getGroupById(groupId);
+
+                user.setActiveGroup(group);
+                group.setLastVisit(user);
+            }
+            catch(SQLException e)
+            {
+                addInvalidParameterMessage("group_id");
+            }
+        }
+        else
+        {
+            group = new Group(0, UtilBean.getLocaleMessage("myPrivateResources"));
+        }
+
+        if(folderId > 0)
+        {
+            try
+            {
+                currentFolder = getLearnweb().getGroupManager().getFolder(folderId);
+            }
+            catch(SQLException e)
+            {
+                addInvalidParameterMessage("folder_id");
+            }
+        }
+
+        if(saveUrl != null && !saveUrl.isEmpty())
+        {
+            if(addResourceBean.getFormStep() != 1) return; // necessary to avoid a conflict with uploaded resources
+
+            resourceDetailBean.setPaneAction(ResourceDetailBean.ViewAction.newResource);
+            addResourceBean.reset();
+            addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
+            addResourceBean.getResource().setType(ResourceType.website);
+            addResourceBean.getResource().setUrl(saveUrl);
         }
     }
 

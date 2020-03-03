@@ -262,6 +262,11 @@ public class SolrSearch implements Serializable
         if(filterGroupIds != null && !filterGroupIds.isEmpty())
         {
             solrQuery.addFilterQuery("groupId : (" + StringUtils.join(filterGroupIds, " OR ") + ")");
+
+            if (filterGroupIds.size() == 1 && filterGroupIds.contains(0))
+            {
+                solrQuery.addFilterQuery("ownerUserId: " + userId); // show only resources of the user
+            }
         }
         else
         {
