@@ -8,57 +8,65 @@
 	<ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+		<ui:fragment rendered="#{userBean.moderator}">
+			<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+			</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/transcript_summaries.jsf" title="#{msg.transcript_summaries}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-		</lw:breadcrumb-item>
+			<lw:breadcrumb-item link="admin/transcript_summaries.jsf" title="#{msg.transcript_summaries}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+			</lw:breadcrumb-item>
+		</ui:fragment>
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<h:form id="us_form" prependId="false" styleClass="form">
-			<p:blockUI block="transcript_table" widgetVar="transcriptTableOverlay">
-				<h:outputText value="#{msg.please_wait}"/>
-			</p:blockUI>
-			<p:panel header="#{msg.select_users}">
-				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
-				<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
-								 process="@form" update=":transcript_table" global="false" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
-			</p:panel>
-		</h:form>
+		<p:panel rendered="#{not userBean.moderator}">
+			<h:outputText value="#{msg.missing_authentication}"/>
+		</p:panel>
 
-		<h:form prependId="false" styleClass="mt-3">
-			<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" tableStyleClass="table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
-						 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-						 rowsPerPageTemplate="20,25,30">
-				<f:facet name="{Exporters}">
-					<h:commandLink>
-						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
-						<p:dataExporter type="xls" target="transcript_table" fileName="transcript_summaries"/>
-					</h:commandLink>
-				</f:facet>
+		<ui:fragment rendered="#{userBean.moderator}">
+			<h:form id="us_form" prependId="false" styleClass="form">
+				<p:blockUI block="transcript_table" widgetVar="transcriptTableOverlay">
+					<h:outputText value="#{msg.please_wait}"/>
+				</p:blockUI>
+				<p:panel header="#{msg.select_users}">
+					<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
+					<p:commandButton actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users"
+									 process="@form" update=":transcript_table" global="false" onstart="PF('transcriptTableOverlay').show()" oncomplete="PF('transcriptTableOverlay').hide()"/>
+				</p:panel>
+			</h:form>
 
-				<f:facet name="header">#{msg.transcript_logs}</f:facet>
+			<h:form prependId="false" styleClass="mt-3">
+				<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" tableStyleClass="table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
+							 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+							 rowsPerPageTemplate="20,25,30">
+					<f:facet name="{Exporters}">
+						<h:commandLink>
+							<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>
+							<p:dataExporter type="xls" target="transcript_table" fileName="transcript_summaries"/>
+						</h:commandLink>
+					</f:facet>
 
-				<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
-					<h:outputText value="#{log.user.username}"/>
-				</p:column>
+					<f:facet name="header">#{msg.transcript_logs}</f:facet>
 
-				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
-					<h:outputText value="#{log.resource.title}"/>
-				</p:column>
+					<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
+						<h:outputText value="#{log.user.username}"/>
+					</p:column>
 
-				<p:column headerText="#{msg.summary_type}" filterBy="#{log.summaryType}">
-					<h:outputText value="#{log.summaryType}"/>
-				</p:column>
+					<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
+						<h:outputText value="#{log.resource.title}"/>
+					</p:column>
 
-				<p:column headerText="#{msg.summary}">
-					<h:outputText value="#{log.summaryText}"/>
-				</p:column>
+					<p:column headerText="#{msg.summary_type}" filterBy="#{log.summaryType}">
+						<h:outputText value="#{log.summaryType}"/>
+					</p:column>
 
-			</p:dataTable>
-		</h:form>
+					<p:column headerText="#{msg.summary}">
+						<h:outputText value="#{log.summaryText}"/>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+		</ui:fragment>
 	</ui:define>
 </ui:composition>

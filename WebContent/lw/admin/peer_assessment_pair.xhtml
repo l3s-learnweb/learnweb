@@ -18,9 +18,12 @@
 	</ui:define>
 
 	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="myhome/peer_assessment_pair.jsf" title="#{msg.peer_assessment_pairing}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+		<ui:fragment rendered="#{userBean.moderator}">
+			<lw:breadcrumb-item link="myhome/peer_assessment_pair.jsf" title="#{msg.peer_assessment_pairing}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+			</lw:breadcrumb-item>
+		</ui:fragment>
+
 	</ui:define>
 
 	<ui:define name="center_layout">

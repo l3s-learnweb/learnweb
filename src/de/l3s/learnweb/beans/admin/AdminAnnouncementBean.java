@@ -29,11 +29,11 @@ public class AdminAnnouncementBean extends ApplicationBean implements Serializab
         if(getUser() == null)
             return;
 
-        if(!getUser().isAdmin())
+/*        if(!getUser().isAdmin())
         {
             addAccessDeniedMessage();
             return;
-        }
+        }*/
 
         if(announcementId == 0) // create new announcement
         {

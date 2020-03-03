@@ -18,21 +18,26 @@
 	</ui:define>
 
 	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+		<ui:fragment rendered="#{userBean.admin}">
+			<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+			</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-		</lw:breadcrumb-item>
+			<lw:breadcrumb-item link="survey/templates.jsf" title="#{msg['survey.survey_overview']}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+			</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
+			<lw:breadcrumb-item title="#{surveyTemplateBean.survey.title}"/>
+		</ui:fragment>
 	</ui:define>
 
 
 	<ui:define name="center_layout">
+		<p:panel rendered="#{not userBean.admin}">
+			<h:outputText value="#{msg.missing_authentication}"/>
+		</p:panel>
 
-		<h:form id="form" rendered="#{surveyTemplateBean.survey != null}">
+		<h:form id="form" rendered="#{surveyTemplateBean.survey != null and userBean.admin}">
 			<p:growl id="growl" showDetail="true" sticky="true"/>
 			<p:panel>
 				<h:panelGroup>

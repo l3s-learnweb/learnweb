@@ -16,19 +16,31 @@
 	</ui:define>
 
     <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
+        <lw:breadcrumb-item rendered="#{userBean.admin}" link="admin.jsf" title="#{msg.admin}">
             <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
         </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="admin/organisations.jsf" title="#{msg.organizations}">
+        <lw:breadcrumb-item rendered="#{userBean.admin}" link="admin/organisations.jsf" title="#{msg.organizations}">
             <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
         </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item title="#{adminOrganisationBean.selectedOrganisation.title}"/>
+        <lw:breadcrumb-item rendered="#{!userBean.admin and userBean.moderator}" link="moderator.jsf" title="#{msg.moderator}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+        </lw:breadcrumb-item>
+
+        <lw:breadcrumb-item rendered="#{!userBean.admin and userBean.moderator}" link="admin/organisation.jsf" title="#{msg.organization}">
+            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+        </lw:breadcrumb-item>
+
+        <lw:breadcrumb-item rendered="#{userBean.moderator}" title="#{adminOrganisationBean.selectedOrganisation.title}"/>
     </ui:define>
 
     <ui:define name="center_layout">
-        <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation}">
+        <p:panel rendered="#{not userBean.moderator}">
+            <h:outputText value="#{msg.missing_authentication}"/>
+        </p:panel>
+
+        <ui:fragment rendered="#{null ne adminOrganisationBean.selectedOrganisation and userBean.moderator}">
             <h:form id="editorganizationform">
                 <p:panel styleClass="mb-3" header="#{msg.welcome_message}">
                     <p:textEditor height="200" value="#{adminOrganisationBean.selectedOrganisation.welcomeMessage}">

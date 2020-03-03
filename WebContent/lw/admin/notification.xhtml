@@ -8,13 +8,15 @@
 	<ui:param name="pageTitle" value="#{msg.notification}"/>
 
 	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+		<ui:fragment rendered="#{userBean.moderator}">
+			<lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+			</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/notification.jsf" title="#{msg.send_notification}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-		</lw:breadcrumb-item>
+			<lw:breadcrumb-item link="admin/notification.jsf" title="#{msg.send_notification}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+			</lw:breadcrumb-item>
+		</ui:fragment>
 	</ui:define>
 
 	<ui:define name="center_layout">

@@ -8,17 +8,23 @@
     <ui:param name="pageTitle" value="#{msg.users}"/>
 
     <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+        <ui:fragment rendered="#{userBean.moderator}">
+            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+            </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="admin/users.jsf" title="#{msg.users}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-        </lw:breadcrumb-item>
+            <lw:breadcrumb-item link="admin/users.jsf" title="#{msg.users}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+            </lw:breadcrumb-item>
+        </ui:fragment>
     </ui:define>
 
     <ui:define name="center_layout">
-        <h:form>
+        <p:panel rendered="#{not userBean.moderator}">
+            <h:outputText value="#{msg.missing_authentication}"/>
+        </p:panel>
+
+        <h:form rendered="#{userBean.moderator}">
             <p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" tableStyleClass="table-responsive" paginatorPosition="bottom"
                          rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                          paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">

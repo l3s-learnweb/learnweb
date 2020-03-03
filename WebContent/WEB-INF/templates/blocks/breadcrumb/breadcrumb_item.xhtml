@@ -3,25 +3,27 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <div class="page-menu">
+    <ui:fragment rendered="#{empty rendered or rendered == true}">
+        <div class="page-menu">
 
-        <div class="breadcrumb-item  #{empty link? 'page-menu-no-link':''}">
-            <a href="#{link}" class="breadcrumb-item-title">
-                <span>
-                    #{title}
-                </span>
-            </a>
+            <div class="breadcrumb-item  #{empty link? 'page-menu-no-link':''}">
+                <a href="#{link}" class="breadcrumb-item-title">
+                    <span>
+                        #{title}
+                    </span>
+                </a>
 
-            <a href="#" class="breadcrumb-toggle">
-                <i class="fa fa-fw fa-angle-down"></i>
-            </a>
+                <a href="#" class="breadcrumb-toggle">
+                    <i class="fa fa-fw fa-angle-down"></i>
+                </a>
+            </div>
+
+            <ui:fragment rendered="#{not empty link}">
+                <ul>
+                    <ui:insert />
+                </ul>
+            </ui:fragment>
         </div>
-
-        <ui:fragment rendered="#{not empty link}">
-            <ul>
-                <ui:insert />
-            </ul>
-        </ui:fragment>
-    </div>
+    </ui:fragment>
 
 </ui:composition>

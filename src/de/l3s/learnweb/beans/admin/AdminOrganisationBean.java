@@ -49,12 +49,6 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
         if(getUser() == null)
             return;
 
-        if(!getUser().isModerator())
-        {
-            addAccessDeniedMessage();
-            return;
-        }
-
         if(organisationId > 0)
             setOrganisation(getLearnweb().getOrganisationManager().getOrganisationById(organisationId));
         else

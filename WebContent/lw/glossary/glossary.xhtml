@@ -17,18 +17,24 @@
     </ui:define>
 
     <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+        <ui:fragment rendered="#{glossaryBean.glossaryResource.groupId > 0}">
+            <lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+            </lw:breadcrumb-item>
+
+            <lw:breadcrumb-item link="group/resources.jsf?group_id=#{glossaryBean.glossaryResource.groupId}" title="#{glossaryBean.glossaryResource.group.title}" >
+                <p:repeat var="groups" value="#{userBean.user.groups}">
+                    <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+                </p:repeat>
+            </lw:breadcrumb-item>
+
+            <lw:breadcrumb-item link="group/resources.jsf?group_id=#{glossaryBean.glossaryResource.groupId}" title="#{msg.resources}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+            </lw:breadcrumb-item>
+        </ui:fragment>
+
+        <lw:breadcrumb-item rendered="#{glossaryBean.glossaryResource.groupId  == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
             <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
-
-        <lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
-            <p:repeat var="groups" value="#{userBean.user.groups}">
-                <li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-            </p:repeat>
-        </lw:breadcrumb-item>
-
-        <lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.resources}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
         </lw:breadcrumb-item>
 
         <lw:breadcrumb-item title="#{glossaryBean.glossaryResource.title}"/>

@@ -15,7 +15,11 @@
 </ui:define>
 
 <ui:define name="breadcrumb">
-    <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+    <lw:breadcrumb-item rendered="#{!userBean.moderator}" link="dashboard/index.jsf" title="#{msg.dashboard}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+
+    <lw:breadcrumb-item rendered="#{userBean.moderator}" link="moderator.jsf" title="#{msg.moderator}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 

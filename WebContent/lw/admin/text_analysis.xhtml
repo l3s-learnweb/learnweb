@@ -8,17 +8,23 @@
     <ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
     <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+        <ui:fragment rendered="#{userBean.moderator}">
+            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+            </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="admin/text_analysis.jsf" title="#{msg.text_analysis}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-        </lw:breadcrumb-item>
+            <lw:breadcrumb-item link="admin/text_analysis.jsf" title="#{msg.text_analysis}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+            </lw:breadcrumb-item>
+        </ui:fragment>
     </ui:define>
 
     <ui:define name="center_layout">
-        <p:panel header="#{msg.select_users}">
+        <p:panel rendered="#{not userBean.moderator}">
+            <h:outputText value="#{msg.missing_authentication}"/>
+        </p:panel>
+
+        <p:panel rendered="#{userBean.moderator}" header="#{msg.select_users}">
             <h:form id="anlyse_form">
                 <p:blockUI block="output" widgetVar="anlyseFormOverlay">
                     <h:outputText value="#{msg.please_wait}"/>

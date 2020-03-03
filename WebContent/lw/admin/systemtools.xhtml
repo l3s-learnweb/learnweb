@@ -8,13 +8,15 @@
 	<ui:param name="pageTitle" value="#{msg.system_tools}"/>
 
 	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+		<ui:fragment rendered="#{userBean.admin}">
+			<lw:breadcrumb-item link="admin.jsf" title="#{msg.admin}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+			</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="admin/systemtools.jsf" title="#{msg.system_tools}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
-		</lw:breadcrumb-item>
+			<lw:breadcrumb-item link="admin/systemtools.jsf" title="#{msg.system_tools}">
+				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_admin.xhtml"/>
+			</lw:breadcrumb-item>
+		</ui:fragment>
 	</ui:define>
 
 	<ui:define name="center_layout">

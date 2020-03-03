@@ -8,17 +8,23 @@
 	<ui:param name="pageTitle" value="#{msg.user_submissions}"/>
 
     <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
+        <ui:fragment rendered="#{userBean.moderator}">
+            <lw:breadcrumb-item link="moderator.jsf" title="#{msg.moderator}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+            </lw:breadcrumb-item>
 
-        <lw:breadcrumb-item link="admin/user_submissions.jsf" title="#{msg.user_submissions}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
-        </lw:breadcrumb-item>
+            <lw:breadcrumb-item link="admin/user_submissions.jsf" title="#{msg.user_submissions}">
+                <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
+            </lw:breadcrumb-item>
+        </ui:fragment>
     </ui:define>
 
 	<ui:define name="center_layout">
-        <p:dataTable value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-responsive"
+        <p:panel rendered="#{not userBean.moderator}">
+            <h:outputText value="#{msg.missing_authentication}"/>
+        </p:panel>
+
+        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-responsive"
                      rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
             <f:facet name="header">#{msg.submissions}</f:facet>
