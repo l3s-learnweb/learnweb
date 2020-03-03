@@ -4,8 +4,8 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
+<!--@elvariable id="view" type="de.l3s.learnweb.group.GroupResourcesBean.ResourceView"-->
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
-<!--@elvariable id="gridView" type="java.lang.Boolean"-->
 <!--@elvariable id="canAddResources" type="java.lang.Boolean"-->
 <!--@elvariable id="canMoveResources" type="java.lang.Boolean"-->
 <!--@elvariable id="query" type="java.lang.String"-->
@@ -19,12 +19,16 @@
         <h:outputText value="#{msg.search_results}" styleClass="text-muted"/>
     </h:panelGroup>
 
-    <ui:fragment rendered="#{!gridView}">
-        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
+    <ui:fragment rendered="#{view == 'grid'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_grid_view.xhtml"></ui:decorate>
     </ui:fragment>
 
-    <ui:fragment rendered="#{gridView}">
-        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_grid_view.xhtml"></ui:decorate>
+    <ui:fragment rendered="#{view == 'table'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_table_view.xhtml"></ui:decorate>
+    </ui:fragment>
+
+    <ui:fragment rendered="#{view == 'list'}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_list_view.xhtml"></ui:decorate>
     </ui:fragment>
 
     <h:outputText value="${msg.no_resources_found}" class="res-empty-text"

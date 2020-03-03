@@ -94,12 +94,16 @@
             <h:form>
                 <p:toolbar styleClass="d-flex align-items-center justify-content-between">
                     <f:facet name="left">
-                        <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.gridView}">
-                            <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="false"/>
+                        <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'grid'}">
+                            <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="grid"/>
                         </p:commandButton>
 
-                        <p:commandButton icon="fa fa-th" title="#{msg.grid_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{!groupResourcesBean.gridView}">
-                            <f:setPropertyActionListener target="#{groupResourcesBean.gridView}" value="true"/>
+                        <p:commandButton icon="fa fa-table" title="#{msg.table_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'table'}">
+                            <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="table"/>
+                        </p:commandButton>
+
+                        <p:commandButton icon="fa fa-list" title="#{msg.list_view}" update=":resourcesView @form" oncomplete="onResourcesUpdated();" rendered="#{groupResourcesBean.view != 'list'}">
+                            <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
                         </p:commandButton>
 
                         <ui:fragment rendered="#{userBean.admin}">
@@ -203,8 +207,8 @@
                     </h:panelGroup>
 
                     <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_view.xhtml">
+                        <ui:param name="view" value="#{groupResourcesBean.view}"/>
                         <ui:param name="paginator" value="#{groupResourcesBean.paginator}"/>
-                        <ui:param name="gridView" value="#{groupResourcesBean.gridView}"/>
                         <ui:param name="canAddResources" value="#{groupResourcesBean.group.canAddResources(userBean.user)}"/>
                         <ui:param name="canMoveResources" value="#{groupResourcesBean.group.canMoveResources(userBean.user)}"/>
                         <ui:param name="query" value="#{groupResourcesBean.query}"/>

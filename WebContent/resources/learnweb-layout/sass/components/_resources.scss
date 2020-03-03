@@ -263,6 +263,33 @@ ul.res-filters {
   }
 }
 
+.res-li {
+  display: flex;
+  padding: $grid-gutter-width / 2;
+  border-bottom: $border-width solid $themeSidebarDividerColor;
+
+  &:hover {
+    background: $gray-200;
+  }
+
+  .res-col {
+    align-self: center;
+    padding: 0 $grid-gutter-width / 2;
+  }
+
+  .res-col-type {
+    flex: 0 0 2rem;
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .res-col-description {
+    flex: 1 1 auto;
+    //align-self: start;
+  }
+}
+
 .res-row {
   display: flex;
   padding: $grid-gutter-width / 2;

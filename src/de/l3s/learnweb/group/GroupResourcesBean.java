@@ -52,12 +52,19 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GroupResourcesBean.class);
     private final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+    public enum ResourceView
+    {
+        grid,
+        table,
+        list
+    }
+
     // Group base attributes
     private Group group; // current group
     private Folder currentFolder;
 
     // Grid or List view of group resources
-    private boolean gridView = true; // TODO: should be changed to enum
+    private ResourceView view = ResourceView.grid;
     private final int pageSize;
 
     // In group search/filters
@@ -140,7 +147,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
 
         if(user.getOrganisation().getId() == 480)
         {
-            gridView = false;
+            view = ResourceView.list;
         }
 
         if(null != group)
@@ -656,14 +663,14 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         this.selectedTreeNode = selectedTreeNode;
     }
 
-    public boolean isGridView()
+    public ResourceView getView()
     {
-        return gridView;
+        return view;
     }
 
-    public void setGridView(boolean gridView)
+    public void setView(final ResourceView view)
     {
-        this.gridView = gridView;
+        this.view = view;
     }
 
     public String getQuery()

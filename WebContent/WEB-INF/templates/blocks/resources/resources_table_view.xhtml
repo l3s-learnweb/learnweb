@@ -4,7 +4,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-<h:panelGroup styleClass="res-container-list" layout="block">
+<h:panelGroup styleClass="res-container-table" layout="block">
     <ui:repeat value="#{groupResourcesBean.paginator.currentPage}" var="res">
         <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
                       pt:data-itemType="resource"
@@ -15,7 +15,7 @@
                       pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
             <f:param name="resource_id" value="#{res.resource.id}"/>
 
-            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_li.xhtml">
+            <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_row.xhtml">
                 <ui:param name="res" value="#{res.resource}"/>
             </ui:decorate>
         </h:outputLink>

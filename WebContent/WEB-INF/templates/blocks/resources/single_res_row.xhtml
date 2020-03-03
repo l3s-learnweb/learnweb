@@ -10,73 +10,8 @@
         <i class="fa res-t-icon t-#{res.type}" aria-hidden="true"></i>
     </div>
 
-    <div class="res-col res-col-preview">
-        <img class="res-image-simple" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"/>
-    </div>
-
     <div class="res-col res-col-description">
         <h6 class="mb-0 text-break">#{res.title}</h6>
-
-        <ui:fragment rendered="#{not empty res.language}">
-            <p class="text-muted small mb-0"><strong>Language:</strong> #{res.language}</p>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{not empty res.metadataMultiValue['language_level']}">
-            <p class="text-muted small mb-0">
-                <strong>Level (stats): </strong>
-                <ui:repeat value="#{res.metadataMultiValue['language_level']}" var="langLevel">
-                    <h:outputText value="#{langLevel}" styleClass="mr-1"/>
-                </ui:repeat>
-            </p>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_target']}">
-            <p class="text-muted small mb-0">
-                <strong>Target learner (stats):</strong>
-                <ui:repeat value="#{res.metadataMultiValue['yell_target']}" var="target">
-                    <ui:fragment rendered="#{target == 'Pre-school'}">
-                        <i class="fa fa-fw fa-circle text-success" aria-hidden="true"></i>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{target == 'Young learners'}">
-                        <i class="fa fa-fw fa-circle text-info" aria-hidden="true"></i>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{target == 'Teens'}">
-                        <i class="fa fa-fw fa-circle text-warning" aria-hidden="true"></i>
-                    </ui:fragment>
-                    <ui:fragment rendered="#{target == 'Teachers' or target == 'Adult learners'}">
-                        <i class="fa fa-fw fa-circle text-danger" aria-hidden="true"></i>
-                    </ui:fragment>
-
-                    <h:outputText value="#{target}"/>
-                </ui:repeat>
-            </p>
-        </ui:fragment>
-
-        <ui:fragment rendered="#{not empty res.metadataMultiValue['yell_purpose']}">
-            <p class="text-muted small mb-0">
-                <strong>Purpose of use (stats):</strong>
-                <ui:repeat value="#{res.metadataMultiValue['yell_purpose']}" var="purpose">
-                    <span class="text-nowrap d-inline-block">
-                        <span class="bg-highlight">
-                            <ui:fragment rendered="#{purpose == 'Speaking'}">
-                                 <i class="fa fa-fw fa-volume-up" aria-hidden="true"></i>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{purpose == 'Listening'}">
-                                 <i class="fa fa-fw fa-headphones" aria-hidden="true"></i>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{purpose == 'Writing'}">
-                                 <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-                            </ui:fragment>
-                            <ui:fragment rendered="#{purpose == 'Reading'}">
-                                <i class="fa fa-fw fa-book" aria-hidden="true"></i>
-                            </ui:fragment>
-
-                            <h:outputText value="#{purpose}"/>
-                        </span>
-                    </span>
-                </ui:repeat>
-            </p>
-        </ui:fragment>
     </div>
 </div>
 
