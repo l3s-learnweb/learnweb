@@ -143,6 +143,18 @@
 			</h:form>
 		</p:dialog>
 	</div>
+
+	<ul class="d-none" id="contextmenu_items">
+		<li data-action="add-annotation" data-class="" data-icon="fa-icon fa-plus">#{msg.add_annotation}</li>
+		<li data-action="edit-annotation" data-class="" data-icon="fa-icon fa-pencil">#{msg.edit_annotation}</li>
+		<li data-action="delete-annotation" data-class="" data-icon="fa-icon fa-minus">#{msg.delete_annotation}</li>
+		<li data-action="add-wordnet-definition" data-class="" data-icon="fa-icon fa-language">#{msg.add_wordnet_definition}</li>
+		<li data-action="delete-selection" data-class="" data-icon="fa-icon fa-trash">#{msg.delete_selection}</li>
+		<li data-action="colorpicker" data-class="color-picker-field" data-icon="fa-icon fa-folder">#{msg.color}</li>
+	</ul>
+	<div class="d-none">
+		<p id="delete_selection">#{msg.delete_selection}</p>
+	</div>
 </ui:define>
 
 </ui:composition>

@@ -336,9 +336,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             }
 
             if(pos.length == 0 && wordCount == 1)
-                synonymsList += "No synonyms";
+                synonymsList += getLocaleMessage("No definition available");
             else if(synonymsList.isEmpty())
-                synonymsList += "multiple";
+                synonymsList += getLocaleMessage("Multiple");
             PrimeFaces.current().ajax().addCallbackParam("synonyms", synonymsList);
         }
         else
