@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks;
+package de.l3s.learnweb.tasks.resources;
 
 import java.io.IOException;
 import java.sql.SQLException;

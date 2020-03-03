@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks;
+package de.l3s.learnweb.tasks.resources;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
