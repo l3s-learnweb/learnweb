@@ -5,14 +5,14 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Posts"/>
+<ui:param name="pageTitle" value="#{msg['forum.posts']} - #{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
     </lw:breadcrumb-item>
 
-    <lw:breadcrumb-item link="your_information/your_post.jsf" title="Posts">
+    <lw:breadcrumb-item link="your_information/your_post.jsf" title="#{msg['forum.posts']}">
         <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_your_info.xhtml"/>
     </lw:breadcrumb-item>
 </ui:define>
@@ -42,10 +42,15 @@
                         <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="posts_tbl" fileName="posts"/>
                     </h:commandLink>
+
+                    <h:commandLink styleClass="text-gray float-right p-1">
+                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="posts_tbl" fileName="posts"/>
+                    </h:commandLink>
                 </h:panelGroup>
             </f:facet>
 
-            <p:column headerText="Forum thread">
+            <p:column headerText="#{msg.forum_thread}">
                 <a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{post.topicId}" title="visit your post"><h:outputText value="#{yourPostsBean.postThreadTopics[post.topicId]}"/></a>
             </p:column>
 
@@ -61,13 +66,13 @@
                 <h:outputText value="#{post.category}"/>
             </p:column>
 
-            <p:column headerText="#{msg.posted_on}">
+            <p:column styleClass="first-letter-capitalize" headerText="#{msg.posted_on}">
                 <h:outputText value="#{post.date}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>
             </p:column>
 
-            <p:column headerText="#{msg.last_edited}">
+            <p:column headerText="#{msg.last_changes}">
                 <h:outputText value="#{post.lastEditDate}">
                     <f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/>
                 </h:outputText>

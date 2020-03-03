@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Search History"/>
+<ui:param name="pageTitle" value="#{msg.search_history} - #{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
@@ -41,6 +41,11 @@
                     <h:commandLink styleClass="text-gray float-right p-1">
                         <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="query_tbl" fileName="queries"/>
+                    </h:commandLink>
+
+                    <h:commandLink styleClass="text-gray float-right p-1">
+                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="query_tbl" fileName="queries"/>
                     </h:commandLink>
                 </h:panelGroup>
             </f:facet>

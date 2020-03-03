@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 
@@ -45,7 +46,13 @@ public class YourPostsBean extends ApplicationBean implements Serializable
         for(ForumPost post : userPosts)
         {
             try {
-                post.setText(Jsoup.parse(post.getText()).text());
+                StringBuilder allText = new StringBuilder();
+                String[] tds = StringUtils.substringsBetween(Jsoup.parse(post.getText()).outerHtml(), "<p>", "</p>");
+                for (String td : tds) {
+                    allText.append(td).append(" ");
+                }
+                post.setText(Jsoup.parse(allText.toString()).text());
+
                 postThreadTopics.put(post.getTopicId(), forumManager.getTopicById(post.getTopicId()).getTitle());
             } catch(Exception e) {
                 log.error("An error occurred during processing post " + post.getId(), e);

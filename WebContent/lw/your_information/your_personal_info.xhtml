@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Personal Information"/>
+<ui:param name="pageTitle" value="#{msg.personal_info} - #{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
@@ -32,7 +32,7 @@
                     <div class="container-fluid">
                         <div class="row my-2">
                             <div class="profile-statistics-panel col-4">
-                                <span class="profile-statistics">Personal data</span>
+                                <span class="profile-statistics">#{msg.personal_info}</span>
 
                                 <div class="stats">
                                     <div class="stats-numbers"><h:outputText value="#{msg.dateofbirth}"/></div>

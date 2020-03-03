@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
 
 <ui:param name="loginRequired" value="true"/>
-<ui:param name="pageTitle" value="Your Submissions"/>
+<ui:param name="pageTitle" value="#{msg.submissions} - #{msg.your_information}"/>
 
 <ui:define name="breadcrumb">
     <lw:breadcrumb-item link="your_information/index.jsf" title="#{msg.your_information}">
@@ -23,11 +23,11 @@
                 <div id="basic_header" class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all">
                     <span class="ui-panel-title"><h:outputText value="#{submission.title}"/></span>
                 </div>
-                <div id="basic_content" class="ui-panel-content ui-widget-content" style="">
-                    <div>Description: <h:outputText value="#{submission.description}"></h:outputText></div>
-                    <div>Open date: <h:outputText value="#{submission.openDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/></h:outputText></div>
-                    <div>Close date: <h:outputText value="#{submission.closeDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/></h:outputText></div>
-                    <div>Course: <h:outputText value="#{submission.course.title}"/></div>
+                <div id="basic_content" class="ui-panel-content ui-widget-content">
+                    <div>#{msg.description}: <h:outputText value="#{submission.description}"></h:outputText></div>
+                    <div>#{msg.open_date}: <h:outputText value="#{submission.openDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/></h:outputText></div>
+                    <div>#{msg.close_date}: <h:outputText value="#{submission.closeDatetime}"><f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}"/></h:outputText></div>
+                    <div>#{msg.course}: <h:outputText value="#{submission.course.title}"/></div>
 
                     <br/>
 

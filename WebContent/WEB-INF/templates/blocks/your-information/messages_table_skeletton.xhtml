@@ -27,6 +27,11 @@
                         <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
                         <p:dataExporter type="csv" target="messages_tbl" fileName="#{name_for_file}"/>
                     </h:commandLink>
+
+                    <h:commandLink styleClass="text-gray float-right p-1">
+                        <i class="fa fa-fw fa-file-text-o" aria-hidden="true"></i>
+                        <p:dataExporter type="xls" target="messages_tbl" fileName="#{name_for_file}"/>
+                    </h:commandLink>
                 </h:panelGroup>
             </f:facet>
 
