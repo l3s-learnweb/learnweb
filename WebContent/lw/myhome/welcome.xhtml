@@ -18,12 +18,7 @@
     <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
 
     <p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
-        <ui:fragment rendered="#{userBean.user.organisationId == 848}">
-            <ui:include src="/aw/guide.xhtml"/>
-        </ui:fragment>
-        <ui:fragment rendered="#{userBean.user.organisationId != 848}">
-            <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
-        </ui:fragment>
+        <ui:include src="/WEB-INF/templates/blocks/guide.xhtml"/>
     </p:panel>
 
     <p:panel rendered="#{welcomeBean.welcomeMessage.length() gt 5}" styleClass="mb-3">

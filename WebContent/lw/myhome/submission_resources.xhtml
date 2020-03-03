@@ -43,11 +43,6 @@
                          update=":submittedResourcesGrid" global="false" oncomplete="onResourcesUpdated()"/>
     </h:form>
 
-    <!-- only for eumade4all -->
-    <p:panel rendered="#{not submissionBean.submitted and not submissionBean.submissionOverviewReadOnly}">
-        <h3 class="text-danger mb-0">Remove your name and the university name from inside the uploaded files. Only the study number can be displayed inside the files.</h3>
-    </p:panel>
-
     <p:panel styleClass="mt-3" id="resourcesWrapper">
         <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
             <h:outputText value="#{msg.please_wait}"/>

@@ -48,13 +48,12 @@
 
                     <div class="d-flex mt-3">
                         <div class="mr-auto">
-                            <p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form"
-                                             oncomplete="$('.nano').nanoScroller({scrollTop: 0});">
+                            <p:commandButton value="#{msg.submit}" action="#{surveyBean.onSubmit()}" ajax="true" update=":message @form">
                                 <p:confirm message="#{msg['survey.submit_confirm']}" disabled="#{not surveyBean.resource.saveable}"/>
                             </p:commandButton>
 
                             <p:commandButton id="save" binding="#{save}" value="#{msg.save}" ajax="true" update="@form :message" process="@form"
-                                             actionListener="#{surveyBean.onSave()}" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"
+                                             actionListener="#{surveyBean.onSave()}" 
                                              rendered="#{surveyBean.resource.saveable}">
                             </p:commandButton>
                         </div>

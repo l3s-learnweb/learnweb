@@ -84,8 +84,6 @@ public class User implements Comparable<User>, Serializable, HasId
     private String credits;
     private boolean acceptTermsAndConditions = false;
 
-    private boolean destroyed = false;
-
     private Group activeGroup;
     private int activeGroupId;
 
@@ -118,10 +116,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void onDestroy()
     {
-        if(destroyed)
-            return;
-        destroyed = true;
-
         try
         {
             this.save();
@@ -142,7 +136,8 @@ public class User implements Comparable<User>, Serializable, HasId
         if(courses == null)
         {
             courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
-            if (!courses.isEmpty()) Collections.sort(courses);
+            if(!courses.isEmpty())
+                Collections.sort(courses);
         }
 
         return courses;
@@ -152,7 +147,8 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         for(Course course : getCourses())
         {
-            if(courseId == course.getId()) return true;
+            if(courseId == course.getId())
+                return true;
         }
 
         return false;
@@ -552,7 +548,7 @@ public class User implements Comparable<User>, Serializable, HasId
         }
         catch(MessagingException e)
         {
-            log.error("Can't send confirmation mail to " + toString());
+            log.error("Can't send confirmation mail to " + toString(), e);
         }
         return false;
     }
@@ -620,7 +616,8 @@ public class User implements Comparable<User>, Serializable, HasId
         {
             for(String part : name.split("[\\s\\.]+"))
             {
-                if(part.length() == 0) continue;
+                if(part.length() == 0)
+                    continue;
                 int index = StringUtils.isNumeric(part) ? (part.length() - 1) : 0; // if is number use last digit as initial
                 initials += part.charAt(index);
             }
@@ -644,11 +641,12 @@ public class User implements Comparable<User>, Serializable, HasId
         if(initials.startsWith(".")) // ui-avatars can't handle dots in the beginning
             initials = initials.replace(".", "X");
 
-        // TODO: we should do that locally
         String defaultAvatarUrl = "https://ui-avatars.com/api/" + initials + "/200/" + getDefaultColor() + "/ffffff";
 
-        if (email != null) return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode(defaultAvatarUrl);
-        else return defaultAvatarUrl;
+        if(email != null)
+            return "https://www.gravatar.com/avatar/" + MD5.hash(email) + "?d=" + StringHelper.urlEncode(defaultAvatarUrl);
+        else
+            return defaultAvatarUrl;
     }
 
     /**
@@ -741,7 +739,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setPassword(String password)
     {
-        if (password != null)
+        if(password != null)
         {
             this.password = PBKDF2.hashPassword(password);
             this.hashing = PasswordHashing.PBKDF2;

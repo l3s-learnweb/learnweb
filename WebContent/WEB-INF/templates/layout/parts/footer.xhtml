@@ -7,11 +7,8 @@
         <div class="layout-container p-3">            
             <a href="#{request.contextPath}/lw/imprint.jsf">#{msg['imprint.title']}</a> - 
 			<a href="#{request.contextPath}/lw/privacy_statement.jsf">#{msg['privacy_statement']}</a> - 
-			
-			<h:outputText value="#{msg.index_footer_text} "/>
-			<a href="mailto:#{msg['application.serverAdmin']}">
-				<h:outputText value="#{msg['application.serverAdmin']}"/>
-			</a>
+			<a href="#{request.contextPath}/lw/contact.jsf">#{msg['contact']}</a> -             
+			<h:outputText value="#{msg.index_footer_text} "/>			
         </div>
     </footer>
 

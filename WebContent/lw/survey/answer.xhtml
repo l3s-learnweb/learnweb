@@ -46,11 +46,8 @@
 
 					<div class="form-group">
 						<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA' or field.type eq 'AUTOCOMPLETE'}">
-							<!-- eumade4all special rule remove later   field.label.startsWith('QUALITATIVE FEEDBACK ON ') and  -->
-							<c:if test="#{not (field.label.startsWith('QUALITATIVE FEEDBACK ON ') and empty surveyBean.userAnswers.answers[field.id].trim())}">
-								<p:outputLabel value="#{field.label}"/>
-								<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
-							</c:if>
+							<p:outputLabel value="#{field.label}"/>
+							<p:outputLabel value="#{surveyBean.userAnswers.answers[field.id]}"/>
 						</c:if>
 
 						<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
@@ -71,19 +68,18 @@
 						</c:if>
 
 						<c:if test="#{field.type eq 'ONE_RADIO'}">
+                        <!--
 							<c:if test="#{not field.label.startsWith('OVERALL MARK') or not empty surveyBean.userAnswers.answers[field.id] and surveyBean.userAnswers.answers[field.id] ne 'Don\'t show'}">
-								<!-- eumade4all special rule remove later  -->
+								 eumade4all special rule remove later  -->
 								<p:outputLabel value="#{field.label}"/>
 								<p:selectOneRadio id="input_oneradio_#{field.id}" value="#{surveyBean.userAnswers.answers[field.id]}" label=""
 												  multiple="true" title="#{field.info}" required="#{field.required}" filter="#{field.optionsList.size() gt 8}"
-												  layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">
-									<!--
-									<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
-										special rule for eumade4all remove after the project:
-										-->
-									<f:selectItems value="#{field.getEUMadeAnswersWithout()}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
+												  layout="responsive" columns="10" filterMatchMode="startsWith" panelStyle="">									
+									<f:selectItems value="#{field.answers}" var="option" itemLabel="#{option}" itemValue="#{option}"/>>
 								</p:selectOneRadio>
-							</c:if>
+							<!-- 
+                            </c:if>
+                             -->
 						</c:if>
 
 						<c:if test="#{field.type eq 'MANY_CHECKBOX'}">

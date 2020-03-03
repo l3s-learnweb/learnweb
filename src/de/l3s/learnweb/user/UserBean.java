@@ -3,7 +3,6 @@ package de.l3s.learnweb.user;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +29,6 @@ import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.beans.FrontpageServlet;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.group.Group;
@@ -73,12 +71,7 @@ public class UserBean implements Serializable
         UIViewRoot viewRoot = FacesContext.getCurrentInstance().getViewRoot();
         locale = viewRoot != null ? viewRoot.getLocale() : externalContext.getRequestLocale();
 
-        HttpServletRequest httpRequest = (HttpServletRequest) externalContext.getRequest();
-
-        if(FrontpageServlet.isArchiveWebRequest(httpRequest))
-            activeOrganisationId = 848; // archiveweb
-        else
-            activeOrganisationId = 478; // public
+        activeOrganisationId = 478; // public
 
         refreshLocale();
         storeMetadataInSession();
@@ -98,7 +91,6 @@ public class UserBean implements Serializable
     {
         return "/lw/search.xhtml?query=" + searchQuery + "&action=" + getPreference("SEARCH_ACTION", "text") + "&faces-redirect=true";
     }
-
 
     /**
      * This method sets values which are required by the Download Servlet
@@ -531,8 +523,6 @@ public class UserBean implements Serializable
             final String su = Learnweb.getInstance().getServerUrl();
             BaseMenuModel model = new BaseMenuModel();
 
-            // TODO move localization to template do not call UtilBean.getLocaleMessage here
-
             // My resources
             ActiveSubMenu myResources = ActiveSubMenu.builder()
                     .label(UtilBean.getLocaleMessage("myResourcesTitle"))
@@ -564,8 +554,8 @@ public class UserBean implements Serializable
             }
             model.getElements().add(groupsBuilder.build());
 
-            // Moderator (menu hidden for user EUMADE4ALL; can be removed in 2020)
-            if(getUser().isModerator() && getUser().getId() != 12476)
+            // Moderator submenu
+            if(getUser().isModerator())
             {
                 ActiveSubMenu moderatorSubmenu = ActiveSubMenu.builder()
                         .label(UtilBean.getLocaleMessage("moderator"))
@@ -586,8 +576,8 @@ public class UserBean implements Serializable
                 model.getElements().add(moderatorSubmenu);
             }
 
-            // Admin (menu hidden for user EUMADE4ALL; can be removed in 2020)
-            if(getUser().isAdmin() && getUser().getId() != 12476)
+            // Admin submenu
+            if(getUser().isAdmin())
             {
                 ActiveSubMenu adminSubmenu = ActiveSubMenu.builder()
                         .label(UtilBean.getLocaleMessage("admin"))

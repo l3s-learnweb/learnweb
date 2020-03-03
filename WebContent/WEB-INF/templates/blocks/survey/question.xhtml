@@ -11,18 +11,18 @@
     <c:if test="#{question.type eq 'FULLWIDTH_HEADER'}">
         <div class="d-flex justify-content-center align-items-center my-3">
             <h3>
-                <h:outputText value="${question.label}" escape="false"/>
+                <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             </h3>
         </div>
     </c:if>
     <c:if test="#{question.type eq 'FULLWIDTH_DESCRIPTION'}">
         <div class="d-flex flex-column flex-grow-1 justify-content-center">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
         </div>
     </c:if>
     <c:if test="#{question.type eq 'INPUT_TEXT'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:inputText required="#{question.required and empty param[save.clientId]}" value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                          title="#{question.info}">
 
@@ -35,7 +35,7 @@
     </c:if>
     <c:if test="#{question.type eq 'INPUT_TEXTAREA'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:inputTextarea required="#{question.required and empty param[save.clientId]}" value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                              title="#{question.info}" rows="4">
                 <f:validateLength disabled="#{empty question.options}" minimum="#{question.options[0]}" maximum="#{question.options[1]}"/>
@@ -47,7 +47,7 @@
     </c:if>
     <c:if test="#{question.type eq 'AUTOCOMPLETE'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:autoComplete required="#{question.required and empty param[save.clientId]}"
                             value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                             completeMethod="#{question.completeText}"/>
@@ -58,7 +58,7 @@
     </c:if>
     <c:if test="#{question.type eq 'ONE_MENU' or question.type eq 'ONE_MENU_EDITABLE'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:selectOneMenu value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                              editable="#{question.type eq 'ONE_MENU_EDITABLE'}"
                              required="#{question.required and empty param[save.clientId]}"
@@ -74,7 +74,7 @@
     </c:if>
     <c:if test="#{question.type eq 'MULTIPLE_MENU'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:selectCheckboxMenu value="#{update ? question.answers : surveyBean.userAnswers.multipleAnswers[question.id]}"
                                   label="" multiple="true" title="#{question.info}"
                                   required="#{question.required and empty param[save.clientId]}"
@@ -91,7 +91,7 @@
     </c:if>
     <c:if test="#{question.type eq 'ONE_RADIO'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:selectOneRadio value="#{update ? '' : surveyBean.userAnswers.answers[question.id]}"
                               multiple="true" title="#{question.info}"
                               required="#{question.required and empty param[save.clientId]}"
@@ -108,7 +108,7 @@
     </c:if>
     <c:if test="#{question.type eq 'MANY_CHECKBOX'}">
         <div class="d-flex flex-column flex-grow-1">
-            <h:outputText value="${question.label}" escape="false"/>
+            <p:outputLabel value="${question.label}" escape="false" for="@next"/>
             <p:selectManyCheckbox value="#{update ? question.answers : surveyBean.userAnswers.multipleAnswers[question.id]}"
                                   label="" multiple="true" title="#{question.info}"
                                   required="#{question.required and empty param[save.clientId]}"

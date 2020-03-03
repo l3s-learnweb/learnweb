@@ -1,0 +1,75 @@
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg['contact']}"/>
+	<ui:param name="smallPage" value="true"/>
+	<ui:param name="hideBreadcrumbs" value="true"/>
+
+	<ui:define name="center_layout">
+		<p:panel header="#{msg['contact']}">
+
+            <dl class="row no-glutters" style="max-width: 40rem;">
+                <dt class="col-sm-4">#{msg['address']}</dt>
+                <dd class="col-sm-8">
+                    Forschungszentrum L3S<br /> 
+                    Appelstraße 9a<br /> 
+                    30167 Hannover<br /> 
+                    Germany
+                </dd>
+
+                <dt class="col-sm-4">
+                    <h:outputText value="#{msg['phone']}" />
+                </dt>
+                <dd class="col-sm-8">+49 511 762 17715</dd>
+
+                <dt class="col-sm-4">Fax</dt>
+                <dd class="col-sm-8">+49 511 762 17779</dd>
+
+                <dt class="col-sm-4">
+                    <h:outputText value="#{msg['email_address']}" />
+                </dt>
+                <dd class="col-sm-8">
+                    <h:outputText value="#{contactBean.encryptMailAddress(msg['application.serverAdmin'])}" escape="false" />                    
+                </dd>
+            </dl>
+        </p:panel>    
+        
+		<p:panel header="#{msg['send_notification']}">
+
+            <h:form id="contact-form">
+                
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.username}:"/>
+                    <p:inputText id="register_username" value="#{contactBean.name}" label="#{msg.name}" disabled="#{userBean.loggedIn}" />
+                    <p:message for="@previous"/>
+                </div>
+
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.email_address}:"/>
+                    <p:inputText id="register_email" value="#{contactBean.email}" label="#{msg.email_address}" required="true" type="email"/>
+                    <p:message for="@previous"/>
+                </div>
+
+                <div class="form-group">
+                    <p:outputLabel for="@next" value="#{msg.message}:"/>
+                    <p:inputTextarea id="register_description" value="#{contactBean.message}" label="#{msg.description}"
+                                     required="true" placeholder="#{msg.message}" rows="4" cols="50"/>
+                    <p:message for="@previous"/>
+                </div>
+
+                <ui:fragment rendered="#{not userBean.loggedIn}">
+                <div class="form-group mw-md" style="min-height: 78px;">
+                    <p:captcha label="Captcha" language="#{userBean.locale}" />
+                    <p:message for="@previous" />
+                </div>
+                </ui:fragment>
+                
+                <p:commandButton action="#{contactBean.sendMail}" value="#{msg.send}" ajax="false"/>
+            </h:form>
+                                        
+		</p:panel>
+	</ui:define>		
+</ui:composition>

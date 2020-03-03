@@ -23,7 +23,7 @@
 		</p:panel>
 
 		<h:form>
-			<p:panel header="#{msg.create_notification}" rendered="#{userBean.moderator}">
+			<p:panel header="#{msg.notification}" rendered="#{userBean.moderator}">
 				<div class="form-group">
 					<p:outputLabel for="@next" value="#{msg.title}:"/>
 					<p:inputText value="#{adminNotificationBean.title}" id="msg_title"/>
@@ -51,6 +51,8 @@
 					<p:message for="@previous"/>
 				</div>
 
+                
+                <p:outputLabel for="@next" value="#{msg.recipients}:"/>
 				<ui:include src="/WEB-INF/templates/blocks/user/user_select_form.xhtml"/>
 
 				<div class="form-group">

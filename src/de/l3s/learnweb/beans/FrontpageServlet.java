@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 
 /**
- * Redirects users to the Learnweb or ArchiveWeb Frontpage depending of the used domain
+ * Redirects users to HTTPS if not run locally
  *
  */
 public class FrontpageServlet extends HttpServlet
@@ -32,13 +32,6 @@ public class FrontpageServlet extends HttpServlet
         super.init(config);
     }
 
-    public static boolean isArchiveWebRequest(HttpServletRequest request)
-    {
-        String serverName = request.getServerName();
-
-        return serverName.equals("archiveweb.l3s.uni-hannover.de") || request.getServerName().equals("archiveweb.dev");
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
@@ -46,7 +39,7 @@ public class FrontpageServlet extends HttpServlet
         String contextPath = request.getContextPath();
         String folder = "/lw/";
 
-        // redirect to HTTPS if Learnweb is not run locally or is accessed through http://archiveweb.l3s.uni-hannover.de which doesn't support HTTPS
+        // redirect to HTTPS if Learnweb is not run locally
         if(!Learnweb.isInDevelopmentMode() && request.getScheme().equals("http"))
         {
             String server = "https://learnweb.l3s.uni-hannover.de";
