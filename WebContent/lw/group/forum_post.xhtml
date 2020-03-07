@@ -119,7 +119,7 @@
                                         <h:outputText value="#{msg.edit}"/>
                                     </h:outputLink>
 
-                                    <p:commandLink value="#{msg['ForumIndex.quote']}" oncomplete="PF('reply_post_dialog').show();" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
+                                    <p:commandLink value="#{msg['ForumIndex.quote']}" oncomplete="PF('reply_post_dialog').show();" rendered="#{forumPostBean.member}" actionListener="#{forumPostBean.quotePost(post)}" styleClass="mx-2"
                                                    update=":post_form:post_message" ajax="true"/>
                                 </div>
                             </div>

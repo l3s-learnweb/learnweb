@@ -154,7 +154,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     public void quotePost(ForumPost post) throws SQLException
     {
         String username = post.getUser() != null ? post.getUser().getUsername() : "Anonymous"; // can happen for old imported posts
-        String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;").replace("</p>", "</blockquote>");
+        String newStr = post.getText().replaceAll("<blockquote>", "<blockquote>&#160;&#160;&#160;&#160;");
         newPost.setText("<blockquote><strong>" + username + ":</strong>" + newStr + "</blockquote></br>");
     }
 
