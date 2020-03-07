@@ -36,7 +36,7 @@
 				<p:commandButton onstart="PF('anlyseFormOverlay').show()" oncomplete="PF('anlyseFormOverlay').hide()" global="false" actionListener="#{adminStatisticsBean.onGroupStatistics}" update=":growl output" value="#{msg.statistics_show}" process="@form"/>
 			</p:panel>
 
-			<p:dataTable id="output" var="entry" tableStyleClass="table-responsive" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
+			<p:dataTable id="output" var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">
 				<f:facet name="header">
 					#{msg.statistics}
 				</f:facet>

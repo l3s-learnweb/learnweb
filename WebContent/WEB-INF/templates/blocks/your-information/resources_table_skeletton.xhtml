@@ -6,9 +6,8 @@
 
     <h:form>
         <p:dataTable id="resources_tbl" value="#{resources}" var="item" rows="30" paginator="true" paginatorPosition="bottom"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyleClass="table-responsive">
-            <f:facet name="header">                
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+            <f:facet name="header">
                 <ui:insert name="header">#{msg.list_of_resourses}</ui:insert>
             </f:facet>
 
@@ -43,7 +42,7 @@
                 	<h:outputText value="#{item.title}"/>
                 </a>
             </p:column>
-            
+
             <p:column styleClass="d-none" headerText="#{msg.url}">
                 <h:outputText value="#{item.url}"/>
             </p:column>

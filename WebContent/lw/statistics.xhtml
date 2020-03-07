@@ -13,7 +13,7 @@
     </ui:define>
 
 	<ui:define name="container_layout">
-        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
+        <p:dataTable styleClass="mt-3" var="stat" value="#{statisticsBean.generalStatistics}">
             <f:facet name="header">#{msg.general_statistics}</f:facet>
 
             <p:column headerText="#{msg.description}" styleClass="text-left">
@@ -27,7 +27,7 @@
             </p:column>
         </p:dataTable>
 
-        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
+        <p:dataTable styleClass="mt-3" var="month" value="#{statisticsBean.activeUsersPerMonth}">
             <f:facet name="header">#{msg.active_users_per_month}</f:facet>
 
             <p:column headerText="#{msg.month}" styleClass="text-left">
@@ -43,7 +43,7 @@
             </p:column>
         </p:dataTable>
 
-        <p:dataTable tableStyleClass="table-responsive" styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
+        <p:dataTable styleClass="mt-3" var="row" value="#{statisticsBean.resourcesPerSource}">
             <f:facet name="header">#{msg.resource_count_per_source}</f:facet>
 
             <p:column headerText="#{msg.source}" styleClass="text-left">

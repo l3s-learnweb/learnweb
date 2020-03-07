@@ -20,12 +20,11 @@
 	<ui:define name="center_layout">
 	    <h:form>
 	        <p:dataTable id="courses_tbl" value="#{yourCoursesBean.userCourses}" var="course" rows="30" paginator="true" paginatorPosition="bottom"
-	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-						 tableStyleClass="table-responsive">
+	                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 	            <f:facet name="header">
 					<h:outputText value="#{msg['courses']}"/>
 	            </f:facet>
-	
+
 	            <f:facet name="{Exporters}">
 					<h:panelGroup>
 						<h:commandLink styleClass="text-danger float-right p-1">
@@ -49,19 +48,19 @@
                         </h:commandLink>
 					</h:panelGroup>
 	            </f:facet>
-	
+
 	            <p:column headerText="#{msg.name}">
 	                <h:outputText value="#{course.title}"/>
 	            </p:column>
-	
+
 	            <p:column headerText="#{msg.members_count}">
 	                <h:outputText value="#{course.memberCount}"/>
 	            </p:column>
-	
+
 	            <p:column headerText="#{msg.organization}">
 	                <h:outputText value="#{course.organisation.title}"/>
 	            </p:column>
-	
+
 	            <p:column headerText="#{msg.welcome_message}">
 	                <h:outputText value="#{course.welcomeMessage}"/>
 	            </p:column>

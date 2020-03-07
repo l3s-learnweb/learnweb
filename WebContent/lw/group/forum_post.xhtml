@@ -52,8 +52,8 @@
             </f:facet>
 
             <p:dataTable id="forum_post_table" var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" lazy="false"
-                             tableStyleClass="table-responsive h-100" styleClass="text-break"
-                             paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+                         tableStyleClass="h-100" styleClass="text-break" paginatorPosition="bottom"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
                     <p:column headerText="#{msg.author}" styleClass="py-2 text-center align-baseline w-15">
                         <h:link styleClass="d-block mb-1 font-weight-bold" value="#{post.user.username}" outcome="/lw/user/detail.jsf?user_id=#{post.userId}"/>

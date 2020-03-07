@@ -16,7 +16,7 @@
 
     <ui:define name="center_layout">
         <h:form id="my_groups">
-            <p:dataTable var="group" styleClass="mb-3" tableStyleClass="table-responsive" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+            <p:dataTable var="group" styleClass="mb-3" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
                 <f:facet name="header">
                     <div class="d-flex">
                         <div class="mr-auto">#{msg.myGroups}</div>
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                 </f:facet>
-                
+
                 <p:column headerText="#{msg.title}" sortBy="#{group.title}">
                     <h:outputLink value="group/resources.jsf">
                         <f:param name="group_id" value="#{group.id}"/>

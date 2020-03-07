@@ -26,7 +26,7 @@
 
 		<ui:fragment rendered="#{userBean.admin}">
 			<h:form id="form">
-				<p:dataTable var="survey" styleClass="mb-3" tableStyleClass="table-responsive" value="#{surveyTemplatesBean.surveys}" emptyMessage="#{msg['no_survey_found']}">
+				<p:dataTable var="survey" styleClass="mb-3" value="#{surveyTemplatesBean.surveys}" emptyMessage="#{msg['no_survey_found']}">
 					<f:facet name="header">
 						<div class="d-flex">
 							<div class="mr-auto">#{msg['surveys']}</div>

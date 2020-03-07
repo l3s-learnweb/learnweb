@@ -25,7 +25,7 @@
 		</p:panel>
 
 		<h:form rendered="#{userBean.moderator}">
-			<p:dataTable tableStyleClass="table-responsive" value="#{dashboard.trackerStatistics}" var="entry">
+			<p:dataTable value="#{dashboard.trackerStatistics}" var="entry">
 				<f:facet name="header">#{msg.tracker_statistic}</f:facet>
 
 				<p:columnGroup type="header">

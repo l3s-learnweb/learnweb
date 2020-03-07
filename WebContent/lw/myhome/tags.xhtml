@@ -19,7 +19,7 @@
 	</ui:define>
 
 	<ui:define name="center_layout">
-		<p:dataTable var="tag" value="#{userBean.user.tags}" tableStyleClass="table-responsive">
+		<p:dataTable var="tag" value="#{userBean.user.tags}">
 			<f:facet name="header">#{msg.myTags}</f:facet>
 
 			<p:column headerText="#{msg.tags}">

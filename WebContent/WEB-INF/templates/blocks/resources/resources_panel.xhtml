@@ -252,8 +252,7 @@
             <f:param value="#{dialogBean.externalResourcesNum(groupResourcesBean.group.id)}"/>
         </h:outputFormat>
 
-        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.group.id)}" tableStyleClass="table-responsive" scrollable="true"
-                     scrollHeight="150">
+        <p:dataTable var="entry" value="#{dialogBean.externalResourcesList(groupResourcesBean.group.id)}" scrollable="true" scrollHeight="150">
             <p:column headerText="#{msg.external_resources}">
                 <h:outputText value="#{entry}"/>
             </p:column>

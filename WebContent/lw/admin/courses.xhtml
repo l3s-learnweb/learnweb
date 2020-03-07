@@ -30,7 +30,7 @@
             <h:outputText value="#{msg.please_wait}. #{msg.courses_wait_message}"/>
         </p:blockUI>
 
-        <p:dataTable tableStyleClass="table-responsive" id="courses" var="course" value="#{adminCoursesBean.courses}">
+        <p:dataTable id="courses" var="course" value="#{adminCoursesBean.courses}">
             <f:facet name="header">
                 <div class="d-flex">
                     <div class="mr-auto">#{msg.courses}</div>

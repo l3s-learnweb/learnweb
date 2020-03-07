@@ -19,8 +19,7 @@
     <ui:define name="center_layout">
         <h:form id="other_groups" styleClass="mb-3">
             <ui:fragment rendered="#{not empty groupsBean.otherGroups}">
-                <p:dataTable tableStyleClass="table-responsive" lazy="false" var="group"
-                             value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
+                <p:dataTable lazy="false" var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}">
                     <f:facet name="header">
                         #{msg.otherGroups}
                     </f:facet>

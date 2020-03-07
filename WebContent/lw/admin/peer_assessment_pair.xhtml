@@ -43,7 +43,7 @@
 					</p:selectBooleanButton>
 				</p:panel>
 
-				<p:dataTable id="processTable" var="pair" value="#{adminPeerAssessmentPairBeen.pairs}" tableStyleClass="table-responsive" emptyMessage="#{msg.no_pairs_found}">
+				<p:dataTable id="processTable" var="pair" value="#{adminPeerAssessmentPairBeen.pairs}" emptyMessage="#{msg.no_pairs_found}">
 					<f:facet name="header">#{msg.pairsTitle}</f:facet>
 
 					<p:columnGroup type="header">

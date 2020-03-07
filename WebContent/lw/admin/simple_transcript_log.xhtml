@@ -34,10 +34,9 @@
             </h:form>
 
             <h:form prependId="false" styleClass="mt-3">
-                <p:dataTable paginatorPosition="bottom" id="transcript_table" tableStyleClass="table-responsive" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
-                             paginator="true"
-                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-                             rowsPerPageTemplate="20,25,30">
+                <p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
+                             paginator="true" rowsPerPageTemplate="20,25,30"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}">
                     <f:facet name="{Exporters}">
                         <h:commandLink>
                             <i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>

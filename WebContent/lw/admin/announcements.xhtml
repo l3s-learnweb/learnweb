@@ -30,12 +30,12 @@
             <h:outputText value="#{msg.please_wait}"/>
         </p:blockUI>
 
-        <p:dataTable var="news" tableStyleClass="table-responsive" value="#{adminAnnouncementsBean.announcements}">
+        <p:dataTable var="news" value="#{adminAnnouncementsBean.announcements}">
 			<f:facet name="header">
 				<div class="d-flex">
 					<div class="mr-auto">#{msg.announcements}</div>
 					<div class="d-md-block d-flex flex-column">
-						<h:outputLink value="admin/announcement.jsf?" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only alt-btn mt-2 mt-md-0 px-2">							
+						<h:outputLink value="admin/announcement.jsf?" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only alt-btn mt-2 mt-md-0 px-2">
                     		<f:param name="announcement_id" value="0"/>
 							#{msg.add}
 						</h:outputLink>

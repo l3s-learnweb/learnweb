@@ -30,7 +30,7 @@
 					<h:outputText value="#{msg.please_wait}"/>
 				</p:blockUI>
 
-				<p:dataTable tableStyleClass="table-responsive" id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
+				<p:dataTable id="processTable" var="process" value="#{adminSystemBean.databaseProcessList}" emptyMessage="no open connection">
 					<f:facet name="header">#{msg.database_connections}</f:facet>
 
 					<p:column headerText="#{msg.id}" sortBy="#{process.id}">
@@ -80,4 +80,4 @@
 			</h:form>
 		</ui:fragment>
 	</ui:define>
-</ui:composition> 
+</ui:composition>

@@ -24,7 +24,7 @@
             <h:outputText value="#{msg.missing_authentication}"/>
         </p:panel>
 
-        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.getUsers()}" var="user" tableStyleClass="table-responsive"
+        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.getUsers()}" var="user"
                      rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
             <f:facet name="header">#{msg.submissions}</f:facet>

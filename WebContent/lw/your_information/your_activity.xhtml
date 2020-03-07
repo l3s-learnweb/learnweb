@@ -20,8 +20,7 @@
 <ui:define name="center_layout">
     <h:form id="yourinformationform">
         <p:dataTable id="activities_tbl" value="#{yourActivityBean.userActions}" var="action" paginator="true" paginatorPosition="bottom" rows="30"
-                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-                     tableStyleClass="table-responsive">
+                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
             <f:facet name="header">
                 <h:outputText value="#{msg.activities}"/>
             </f:facet>

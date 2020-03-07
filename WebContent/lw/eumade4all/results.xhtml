@@ -24,7 +24,7 @@
 	<ui:define name="center_layout">
 		<h:form rendered="#{surveyResultBean.questionColumns ne null}">
 			<p:dataTable id="survey_result" var="result" value="#{surveyResultBean.resource.answersOfAllUsers}" paginator="true" rows="20"
-				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" tableStyleClass="table-responsive">
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
 				<f:facet name="{Exporters}">
 					<h:commandLink>
 						<i class="fa fa-fw fa-file-excel-o text-success" aria-hidden="true"></i>

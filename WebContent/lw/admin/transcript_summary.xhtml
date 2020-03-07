@@ -37,7 +37,7 @@
 			</h:form>
 
 			<h:form prependId="false" styleClass="mt-3">
-				<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" tableStyleClass="table-responsive" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
+				<p:dataTable paginatorPosition="bottom" id="transcript_table" var="log" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
 							 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 							 rowsPerPageTemplate="20,25,30">
 					<f:facet name="{Exporters}">
