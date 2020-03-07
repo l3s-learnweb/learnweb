@@ -795,4 +795,10 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     {
         return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
     }
+
+    public void deleteHard()
+    {
+        // TODO Auto-generated method stub
+
+    }
 }

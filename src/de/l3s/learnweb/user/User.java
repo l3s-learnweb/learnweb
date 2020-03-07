@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,8 +98,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private transient List<Course> courses;
     private transient List<Group> groups;
     private String imageUrl;
-    private transient Date lastLoginDate = null;
-    private transient Date currentLoginDate = null;
+    private transient Instant lastLoginDate = null;
     private int forumPostCount = -1;
     private transient Organisation organisation;
 
@@ -112,6 +112,7 @@ public class User implements Comparable<User>, Serializable, HasId
         groups = null;
         organisation = null;
         imageUrl = null;
+        forumPostCount = -1;
     }
 
     public void onDestroy()
@@ -225,11 +226,6 @@ public class User implements Comparable<User>, Serializable, HasId
         return Learnweb.getInstance().getResourceManager().addResource(resource, this);
     }
 
-    public void deleteResource(Resource resource) throws SQLException
-    {
-        Learnweb.getInstance().getResourceManager().deleteResource(resource);
-    }
-
     public List<Resource> getResources() throws SQLException
     {
         return Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
@@ -252,7 +248,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public String getUsername()
     {
-        if(getOrganisation().getId() == 1249 && getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
+        if(getOrganisation().getOption(Option.Privacy_Anonymize_usernames))
             return "Anonymous";
 
         return username;
@@ -443,6 +439,8 @@ public class User implements Comparable<User>, Serializable, HasId
 
         if(activeGroup == group)
             setActiveGroup(null);
+
+        clearCaches();
     }
 
     @Override
@@ -784,28 +782,24 @@ public class User implements Comparable<User>, Serializable, HasId
         this.timeZone = timeZone;
     }
 
-    public Date getLastLoginDate() throws SQLException
+    /**
+     * @return The dateTime of the last recorded login event of the user. Returns the registration date if the user has never logged in.
+     *         Note that this value is cached. Call {@link #updateLoginDate() updateLoginDate} to update it. This is useful to control whether the
+     *         current or the penultimate login time is returned.
+     * @throws SQLException
+     */
+    public Instant getLastLoginDate() throws SQLException
     {
         if(null == lastLoginDate)
         {
-            lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
+            updateLoginDate();
         }
         return lastLoginDate;
     }
 
-    public Date getCurrentLoginDate()
+    public void updateLoginDate() throws SQLException
     {
-        return currentLoginDate;
-    }
-
-    public void setCurrentLoginDate(Date currentLoginDate) throws SQLException
-    {
-        if(this.currentLoginDate != null)
-            lastLoginDate = this.currentLoginDate;
-        else
-            lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
-
-        this.currentLoginDate = currentLoginDate;
+        this.lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(getId()).orElse(registrationDate.toInstant());
     }
 
     @Override

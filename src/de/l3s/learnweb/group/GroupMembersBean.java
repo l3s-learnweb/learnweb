@@ -95,7 +95,7 @@ public class GroupMembersBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return false;
-        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames))
+        if(user.getOrganisation().getOption(Organisation.Option.Privacy_Anonymize_usernames))
             return true;
         return false;
     }

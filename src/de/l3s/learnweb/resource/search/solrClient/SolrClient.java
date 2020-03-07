@@ -92,7 +92,8 @@ public class SolrClient
         }
         catch(Throwable t)
         {
-            log.fatal("Couldn't reindex resource " + resource.toString(), t);
+            throw new RuntimeException("Couldn't reindex resource " + resource.getId(), t);
+            //log.fatal("Couldn't reindex resource " + resource.toString(), t);
         }
     }
 
@@ -285,7 +286,7 @@ public class SolrClient
 
             /*
             long indexedResources = countResources("*:*");
-
+            
             if(sendResources != indexedResources)
                 throw new RuntimeException(sendResources + " - " + indexedResources);
             */

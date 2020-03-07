@@ -1,4 +1,4 @@
-package de.l3s.learnweb.tasks;
+package de.l3s.learnweb.tasks.languageBundle;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

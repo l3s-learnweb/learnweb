@@ -156,6 +156,8 @@ public class UserBean implements Serializable
         this.activeOrganisation = user.getOrganisation();
 
         //clear caches
+        this.groupsTree = null;
+        this.sidebarMenuModel = null;
         this.newGroups = null;
         this.cacheShowMessageJoinGroup = true;
         this.cacheShowMessageAddResource = true;
@@ -506,8 +508,6 @@ public class UserBean implements Serializable
                 gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
             }
         }
-
-        //log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
 
         return groupsTree;
     }

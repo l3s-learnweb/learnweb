@@ -8,10 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -317,7 +320,8 @@ public class UserManager
 
     public User registerUser(String username, String password, String email, Course course) throws SQLException, IOException
     {
-        if(null == course) course = learnweb.getCourseManager().getCourseByWizard("default");
+        if(null == course)
+            course = learnweb.getCourseManager().getCourseByWizard("default");
 
         User user = new User();
         user.setUsername(username);
@@ -351,17 +355,22 @@ public class UserManager
     }
 
     /**
-     * Returns 1.1.1970 00:00:00 if the user never logged in
+     *
+     * @param userId
+     * @return The dateTime of the last recorded login event of the given user. Empty if the user has never logged in
+     * @throws SQLException
      */
-    public Date getLastLoginDate(int userId) throws SQLException
+    public Optional<Instant> getLastLoginDate(int userId) throws SQLException
     {
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1"))
         {
             select.setInt(1, userId);
             try(ResultSet rs = select.executeQuery())
             {
-                if(!rs.next()) return new Date(0);
-                return new Date(rs.getTimestamp(1).getTime());
+                if(!rs.next())
+                    return Optional.empty();
+
+                return Optional.of(rs.getObject("timestamp", Timestamp.class).toInstant());
             }
         }
     }
@@ -407,7 +416,8 @@ public class UserManager
             {
                 try(ResultSet rs = replace.getGeneratedKeys())
                 {
-                    if(!rs.next()) throw new SQLException("database error: no id generated");
+                    if(!rs.next())
+                        throw new SQLException("database error: no id generated");
 
                     user.setId(rs.getInt(1));
                     cache.put(user); // add the createUser to the cache
@@ -520,60 +530,49 @@ public class UserManager
 
     public void deleteUserHard(User user) throws SQLException
     {
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_log WHERE `user_id` = ?"))
+        if(user.getResources().size() > 40)
         {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
+            log.warn("delete user: " + user + " and his " + user.getResources().size() + " resorces?");
+            log.info("Delete user ");
         }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_gmail WHERE `user_id` = ?"))
+
+        String[] tables = { "lw_group_user", "lw_user_log", "lw_user_gmail", "lw_user_course", "lw_comment", "lw_resource_rating", "lw_resource_tag", "lw_thumb", "lw_survey_answer", "lw_survey_resource_user", "lw_glossary_entry", "lw_glossary_term", "lw_history_change",
+                "lw_news", "lw_resource_history", "lw_submit_resource", "lw_submit_status", "lw_transcript_actions", "lw_transcript_summary" };
+
+        for(String table : tables)
         {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `user_id` = ?"))
+            {
+                delete.setInt(1, user.getId());
+                //log.debug(delete);
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+            }
         }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user_course WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_comment WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_rating WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_thumb WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_survey_answer WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_survey_resource_user WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_forum_post WHERE `user_id` = ?"))
-        {
-            delete.setInt(1, user.getId());
-            delete.executeUpdate();
-        }
+
+        // TODO philipp: how to handle lw_forum_post.post_edit_user_id
+
+        /*
+         TODO philipp: how to handle topics. We can not just delete them
+         * topic_last_post_user_id
+        */
 
         for(Resource resource : user.getResources())
         {
-            resource.delete();
+            resource.deleteHard();
+        }
+
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM message WHERE `from_user` = ? OR `to_user` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.setInt(2, user.getId());
+            delete.executeUpdate();
+        }
+
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_user WHERE `user_id` = ?"))
+        {
+            delete.setInt(1, user.getId());
+            delete.executeUpdate();
         }
     }
 

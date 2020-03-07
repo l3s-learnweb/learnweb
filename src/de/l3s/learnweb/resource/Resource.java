@@ -577,7 +577,7 @@ public class Resource extends AbstractResource implements Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -1403,6 +1403,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     {
         setDeleted(true);
         this.save();
+    }
+
+    public void deleteHard() throws SQLException
+    {
+        Learnweb.getInstance().getResourceManager().deleteResourceHard(getId());
     }
 
     /**

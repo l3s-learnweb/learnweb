@@ -2,7 +2,6 @@ package de.l3s.learnweb.resource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -258,7 +257,7 @@ public class ResourceManager
         }
         catch(Exception e)
         {
-            log.error("Couldn't delete resource " + resourceId + " from SOLR", e);
+            throw new RuntimeException("Couldn't delete resource " + resourceId + " from SOLR", e);
         }
 
         // flag the resource as deleted
@@ -266,14 +265,6 @@ public class ResourceManager
         update.setInt(1, resourceId);
         update.executeUpdate();
         update.close();
-
-        /* this causes problems because a thumbnail can be used by multiple resources when they were copied
-        *
-        update = Learnweb.getConnectionStatic().prepareStatement("UPDATE `lw_file` SET deleted = 1 WHERE `resource_id` = ?");
-        update.setInt(1, resourceId);
-        update.executeUpdate();
-        update.close();
-        */
 
         // remove resource from cache
         cache.remove(resourceId);
@@ -286,46 +277,28 @@ public class ResourceManager
      * @param resourceId
      * @throws SQLException
      */
-    public void deleteResourcePermanent(int resourceId) throws SQLException
+    public void deleteResourceHard(int resourceId) throws SQLException
     {
-        deleteResource(resourceId);
+        log.debug("Hard delete resource: " + resourceId);
 
-        Connection connection = learnweb.getConnection();
+        deleteResource(resourceId); // clear cache and remove resource from SOLR
 
-        // delete the resource
-        PreparedStatement delete = connection.prepareStatement("DELETE FROM `lw_resource` WHERE `resource_id` = ?");
-        delete.setInt(1, resourceId);
-        delete.executeUpdate();
-        delete.close();
+        String[] tables = { "lw_comment", "lw_glossary_entry", "lw_glossary_resource", "lw_resource_archiveurl", "lw_resource_audience", "lw_resource_category", "lw_resource_category_tagtheweb", "lw_resource_history", "lw_resource_langlevel", "lw_resource_purpose",
+                "lw_resource_rating", "lw_resource_tag", "lw_submit_resource", "lw_survey_answer", "lw_survey_resource", "lw_survey_resource_user", "lw_thumb", "lw_transcript_actions", "lw_transcript_final_sel", "lw_transcript_selections", "lw_transcript_summary",
+                "ted_transcripts_paragraphs", "lw_resource" };
 
-        // delete the comments
-        delete = connection.prepareStatement("DELETE FROM `lw_comment` WHERE `resource_id` = ?");
-        delete.setInt(1, resourceId);
-        delete.executeUpdate();
-        delete.close();
+        for(String table : tables)
+        {
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `resource_id` = ?"))
+            {
+                delete.setInt(1, resourceId);
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+            }
+        }
 
-        // delete the ratings
-        delete = connection.prepareStatement("DELETE FROM `lw_thumb` WHERE `resource_id` = ?");
-        delete.setInt(1, resourceId);
-        delete.executeUpdate();
-        delete.close();
+        // TODO delete files (lw_file); but it's not possible yet because files are shared  when a resource is copied
 
-        // delete the resource
-        delete = connection.prepareStatement("DELETE FROM `lw_resource_rating` WHERE `resource_id` = ?");
-        delete.setInt(1, resourceId);
-        delete.executeUpdate();
-        delete.close();
-
-        // delete archived versions
-        delete = connection.prepareStatement("DELETE FROM `lw_resource_archiveurl` WHERE `resource_id` = ?");
-        delete.setInt(1, resourceId);
-        delete.executeUpdate();
-        delete.close();
-
-        // delete files?
-
-        // remove resource from cache
-        cache.remove(resourceId);
     }
 
     protected Resource saveResource(Resource resource) throws SQLException

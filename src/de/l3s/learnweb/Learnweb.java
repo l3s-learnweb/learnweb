@@ -400,7 +400,6 @@ public class Learnweb
         try
         {
             dbConnection.close();
-            //querydbConnection.close();
         }
         catch(SQLException e)
         {

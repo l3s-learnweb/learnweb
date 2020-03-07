@@ -138,7 +138,8 @@ public class LoginBean extends ApplicationBean implements Serializable
     {
         UtilBean.getUserBean().setUser(user); // logs the user in
         //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
-        user.setCurrentLoginDate(new Date());
+
+        user.updateLoginDate(); // the last login date has to be updated before we log a new login event
 
         if(moderatorUserId > 0)
             bean.log(Action.moderator_login, 0, 0);

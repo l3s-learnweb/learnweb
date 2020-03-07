@@ -238,7 +238,7 @@ public class CourseManager
 
     public void delete(Course course) throws SQLException
     {
-        delete(course, false);
+        deleteHard(course, false);
     }
 
     /**
@@ -249,7 +249,7 @@ public class CourseManager
      * @return The users who where not deleted because they are member of other courses.
      * @throws SQLException
      */
-    public List<User> delete(Course course, boolean force) throws SQLException
+    public List<User> deleteHard(Course course, boolean force) throws SQLException
     {
         if(!force && course.getMemberCount() > 0)
             throw new IllegalArgumentException("course can't be deleted, remove all members first");
@@ -267,6 +267,10 @@ public class CourseManager
             else
                 userManager.deleteUserHard(user);
         }
+        for(Group group : course.getGroups())
+        {
+            group.deleteHard();
+        }
 
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?"))
         {
@@ -279,21 +283,6 @@ public class CourseManager
             delete.executeUpdate();
         }
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_category` WHERE category_course_id = ?"))
-        {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE group_id IN(SELECT group_id FROM lw_group WHERE course_id = ?)"))
-        {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE group_id IN(SELECT group_id FROM lw_group WHERE course_id = ?)"))
-        {
-            delete.setInt(1, course.getId());
-            delete.executeUpdate();
-        }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group` WHERE course_id = ?"))
         {
             delete.setInt(1, course.getId());
             delete.executeUpdate();

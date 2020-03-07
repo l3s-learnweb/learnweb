@@ -79,7 +79,7 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getLearnweb().getCourseManager().delete(course, getUser().isAdmin());
+            getLearnweb().getCourseManager().deleteHard(course, getUser().isAdmin());
 
             log.info("Deleted course " + course);
             log(Action.course_delete, 0, course.getId());

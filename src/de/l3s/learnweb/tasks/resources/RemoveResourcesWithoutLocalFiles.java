@@ -1,6 +1,5 @@
 package de.l3s.learnweb.tasks.resources;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class RemoveResourcesWithoutLocalFiles
             try
             {
                 List<File> files = fileManager.getFilesByResource(resource.getId());
-                for (File file : files)
+                for(File file : files)
                 {
                     totalSize += file.getLength();
                 }

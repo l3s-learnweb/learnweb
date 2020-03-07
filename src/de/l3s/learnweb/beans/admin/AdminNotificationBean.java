@@ -36,7 +36,7 @@ public class AdminNotificationBean extends ApplicationBean
     private boolean sendEmail = false; // send the message also per mail
     private boolean moderatorCanSendMail = false;
     //Alana
-    private String[] listStudents;
+    private String[] listStudents; // TODO was created for alans interface. check if it can be removed
     private User user;
     private EmailValidator validator = new EmailValidator();
 

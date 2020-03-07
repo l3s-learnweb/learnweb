@@ -5,9 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -92,6 +93,26 @@ public class GroupManager
         return groups;
     }
 
+    private List<Group> getGroups2(String query, Object... params) throws SQLException
+    {
+        List<Group> groups = new LinkedList<>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement(query);
+
+        int i = 1;
+        for(Object param : params)
+            select.setObject(i++, param);
+
+        ResultSet rs = select.executeQuery();
+
+        while(rs.next())
+        {
+            groups.add(createGroup(rs));
+        }
+        select.close();
+
+        return groups;
+    }
+
     /**
      * Returns a list of all Groups a user belongs to
      *
@@ -121,13 +142,14 @@ public class GroupManager
     }
 
     /**
-     * Returns a list of Groups which belong to the defined course and were created after the specified date
+     * Returns a list of Groups which belong to the defined courses and were created after the specified date
      */
-    public List<Group> getGroupsByCourseId(List<Course> list, Date newerThan) throws SQLException
+    public List<Group> getGroupsByCourseId(List<Course> list, Instant newerThan) throws SQLException
     {
-        if (list.isEmpty()) return Collections.emptyList();
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
-        return getGroups(query, (int) (newerThan.getTime() / 1000));
+        if(list.isEmpty())
+            return Collections.emptyList();
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + HasId.implodeIds(list) + ") AND g.deleted = 0 AND `creation_time` > ? ORDER BY title";
+        return getGroups2(query, Timestamp.from(newerThan));//(int) (newerThan.getTime() / 1000));
     }
 
     /**
@@ -143,7 +165,8 @@ public class GroupManager
 
     public Group getGroupByTitleFilteredByOrganisation(String title, int organisationId) throws SQLException
     {
-        PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
+        PreparedStatement pstmtGetGroup = learnweb.getConnection()
+                .prepareStatement("SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
         pstmtGetGroup.setString(1, title);
         pstmtGetGroup.setInt(2, organisationId);
         ResultSet rs = pstmtGetGroup.executeQuery();
@@ -219,7 +242,8 @@ public class GroupManager
             sb.append(",").append(group.getId());
         String groupsIn = sb.substring(1);
 
-        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause
+        String query = "SELECT " + GROUP_COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") "
+                + publicCourseClause
                 + ") ORDER BY title";
 
         return getGroups(query);
@@ -565,8 +589,10 @@ public class GroupManager
     public void moveFolder(Folder folder, int newParentFolderId, int newGroupId) throws SQLException
     {
         // TODO: throw an error instead of silent ignore
-        if(folder.getId() == newParentFolderId) return; // if move to itself
-        if(folder.getGroupId() == newGroupId && folder.isParentOf(newParentFolderId)) return; // if move to own sub folder
+        if(folder.getId() == newParentFolderId)
+            return; // if move to itself
+        if(folder.getGroupId() == newGroupId && folder.isParentOf(newParentFolderId))
+            return; // if move to own sub folder
 
         int parentFolderId = folder.getParentFolderId();
         List<Folder> subFolders = folder.getSubFolders();
@@ -600,7 +626,8 @@ public class GroupManager
     public void moveResource(Resource resource, int newGroupId, int newFolderId) throws SQLException
     {
         // TODO: throw an error instead of silent ignore
-        if(resource.getGroupId() == newGroupId && resource.getFolderId() == newFolderId) return; // if move to the same folder
+        if(resource.getGroupId() == newGroupId && resource.getFolderId() == newFolderId)
+            return; // if move to the same folder
 
         resource.setGroupId(newGroupId);
         resource.setFolderId(newFolderId);
