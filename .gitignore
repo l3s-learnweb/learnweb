@@ -22,11 +22,9 @@
 .idea/**/dbnavigator.xml
 .idea/**/watcherTasks.xml
 
-# Gradle & Maven
+# Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-.idea/**/modules.xml
-.idea/**/*.iml
 
 # Output folder
 target
