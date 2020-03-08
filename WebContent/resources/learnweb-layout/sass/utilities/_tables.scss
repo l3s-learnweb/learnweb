@@ -1,13 +1,13 @@
 td.td-text-right {
   @extend .text-right;
 }
+
 td.td-text-center {
   @extend .text-center;
 }
 
 /* set background color for even/odd table cells. Used by the Glossary */
 .ui-datatable {
-
   table {
     table-layout: auto !important;
   }

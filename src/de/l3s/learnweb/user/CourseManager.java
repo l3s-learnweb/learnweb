@@ -137,14 +137,14 @@ public class CourseManager
 
         /*
         List<Course> courses = new CoursesList();
-
-
+        
+        
         for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
         {
             if(course.getOrganisationId() == organisationId)
                 courses.add(course);
         }
-
+        
         return courses;
         */
     }
@@ -282,12 +282,12 @@ public class CourseManager
             delete.setInt(1, course.getId());
             delete.executeUpdate();
         }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?"))
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_category` WHERE category_course_id = ?"))
         {
             delete.setInt(1, course.getId());
             delete.executeUpdate();
         }
-        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_category` WHERE category_course_id = ?"))
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?"))
         {
             delete.setInt(1, course.getId());
             delete.executeUpdate();

@@ -11,7 +11,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="course_id" value="#{adminCourseBean.courseId}" required="true" requiredMessage="#{msg.missing_parameter}"/>            
-            <f:viewAction action="#{adminCourseBean.onLoad}"/>
+            <f:viewAction action="#{adminCourseBean.onLoad()}"/>
 		</f:metadata>
 	</ui:define>
 

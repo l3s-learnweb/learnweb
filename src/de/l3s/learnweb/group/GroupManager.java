@@ -415,7 +415,7 @@ public class GroupManager
 
         List<User> members = group.getMembers();
 
-        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_link", "lw_user_log", "group_id" };
+        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_link", "lw_user_log", "lw_group" };
 
         for(String table : tables)
         {
