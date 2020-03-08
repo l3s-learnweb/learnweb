@@ -31,6 +31,7 @@
         </p:blockUI>
 
         <p:dataTable id="courses" var="course" value="#{adminCoursesBean.courses}">
+
             <f:facet name="header">
                 <div class="d-flex">
                     <div class="mr-auto">#{msg.courses}</div>
@@ -41,19 +42,29 @@
                 </div>
             </f:facet>
 
+            <p:column headerText="ID" sortBy="#{course.id}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
+                <h:outputText value="#{course.id}"/>
+            </p:column>
+
             <p:column headerText="#{msg.title}" sortBy="#{course.title}">
                 <h:outputText value="#{course.title}"/>
+            </p:column>
+            
+            <p:column headerText="#{msg.creation_date}" rendered="#{userBean.admin}" styleClass="td-text-center d-none d-md-table-cell">
+                <h:outputText value="#{course.creationTimestamp}">
+                    <f:convertDateTime dateStyle="default" timeStyle="short" type="localDateTime" timeZone="#{userBean.timeZone}"/>
+                </h:outputText>
             </p:column>
 
             <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
                 <h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}"/>
             </p:column>
 
-            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+            <p:column headerText="#{msg.members}" sortBy="#{course.memberCount}" styleClass="td-text-center d-none d-sm-table-cell">
                 <h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>
             </p:column>
 
-            <p:column headerText="#{msg.options}" styleClass="td-text-right">
+            <p:column headerText="#{msg.options}" styleClass="td-text-right mw-r15" >
                 <h:outputLink styleClass="icon-link" value="admin/course.jsf?course_id=#{course.id}">
                     <i class="fa fa-fw fa-pencil text-warning" aria-hidden="true"></i>
                     <h:outputText value="#{msg.edit}"/>

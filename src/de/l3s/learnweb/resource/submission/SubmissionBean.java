@@ -644,8 +644,8 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     }
 
     /* -------- Methods below are used for the admin users submissions page ---------*/
+    // TODO needs to be refatored. Has to be discussed first. Either move to other bean or integrate into Moderator user list or ....
 
-    // TODO move to other bean
     /**
      * To display the users for a particular course and the corresponding number of submissions
      * on the admin/users_submissions page

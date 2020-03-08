@@ -119,7 +119,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
             getUser().setActiveGroup(selectedGroup);
             log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
 
-            getUser().deleteGroup(selectedGroup);
+            selectedGroup.delete();
             myGroups = getUser().getGroups();
             joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
 

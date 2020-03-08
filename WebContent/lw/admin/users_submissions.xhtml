@@ -2,7 +2,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:lw="http://l3s.de/learnweb">
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.user_submissions}"/>
@@ -13,7 +14,7 @@
                 <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
             </lw:breadcrumb-item>
 
-            <lw:breadcrumb-item link="admin/user_submissions.jsf" title="#{msg.user_submissions}">
+            <lw:breadcrumb-item link="admin/users_submissions.jsf?course_id=${param['course_id']}" title="#{msg.user_submissions}">
                 <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_moderator.xhtml"/>
             </lw:breadcrumb-item>
         </ui:fragment>
@@ -24,7 +25,7 @@
             <h:outputText value="#{msg.missing_authentication}"/>
         </p:panel>
 
-        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.getUsers()}" var="user"
+        <p:dataTable rendered="#{userBean.moderator}" value="#{submissionBean.users}" var="user"
                      rows="50" paginatorPosition="bottom" paginator="true" rowsPerPageTemplate="50,100,500"
                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
             <f:facet name="header">#{msg.submissions}</f:facet>

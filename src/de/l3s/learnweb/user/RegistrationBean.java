@@ -75,14 +75,17 @@ public class RegistrationBean extends ApplicationBean implements Serializable
             else
             {
                 // special message for yell
-                if(course.getId() == 505) addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
-                else addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+                if(course.getId() == 505)
+                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
+                else
+                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
 
                 mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
                 affiliationRequired = course.getOption(Course.Option.Users_Require_affiliation);
                 studentIdRequired = course.getOption(Course.Option.Users_Require_student_id);
 
-                if(StringUtils.isNotEmpty(fastLogin)) return fastLogin();
+                if(StringUtils.isNotEmpty(fastLogin))
+                    return fastLogin();
             }
         }
         else

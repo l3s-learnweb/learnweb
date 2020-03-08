@@ -2,6 +2,7 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.BitSet;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class Course implements Serializable, Comparable<Course>, HasId
     private int nextXUsersBecomeModerator;
     @Length(max = 65000)
     private String welcomeMessage;
+    private LocalDateTime creationTimestamp;
 
     private BitSet options = new BitSet(Option.values().length);
 
@@ -294,6 +296,16 @@ public class Course implements Serializable, Comparable<Course>, HasId
     public String toString()
     {
         return "Course [id=" + id + ", title=" + title + "]";
+    }
+
+    public LocalDateTime getCreationTimestamp()
+    {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(LocalDateTime creationTimestamp)
+    {
+        this.creationTimestamp = creationTimestamp;
     }
 
     public void save() throws SQLException

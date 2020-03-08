@@ -3,6 +3,7 @@ package de.l3s.learnweb.user;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -28,7 +29,7 @@ import de.l3s.util.Sql;
 public class CourseManager
 {
     protected final static int FIELDS = 1; // number of options_fieldX fields, increase if Course.Options has more than 64 values
-    private static final String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "options_field1" };
+    private static final String[] COLUMNS = { "course_id", "title", "organisation_id", "default_group_id", "wizard_param", "next_x_users_become_moderator", "welcome_message", "timestamp_creation", "options_field1" };
     private static final String SELECT = String.join(", ", COLUMNS);
     private static final String SAVE = Sql.getCreateStatement("lw_course", COLUMNS);
     private static final Logger log = Logger.getLogger(CourseManager.class);
@@ -69,6 +70,7 @@ public class CourseManager
         course.setWizardParam(rs.getString("wizard_param"));
         course.setNextXUsersBecomeModerator(rs.getInt("next_x_users_become_moderator"));
         course.setWelcomeMessage(rs.getString("welcome_message"));
+        course.setCreationTimestamp(rs.getObject("timestamp_creation", LocalDateTime.class));
 
         long[] options = new long[FIELDS];
         for(int i = 0; i < FIELDS;)
@@ -135,14 +137,14 @@ public class CourseManager
 
         /*
         List<Course> courses = new CoursesList();
-        
-        
+
+
         for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
         {
             if(course.getOrganisationId() == organisationId)
                 courses.add(course);
         }
-        
+
         return courses;
         */
     }
@@ -179,14 +181,16 @@ public class CourseManager
     protected synchronized Course save(Course course) throws SQLException
     {
         if(course.getId() < 0) // the course is not yet stored at the database
-        { // we have to get a new id from the group manager
+        {
+            // TODO this is not necessary any more. Remove it and use auto increment of lw_course.course_id
+            // we have to get a new id from the group manager
             Group group = new Group();
             group.setTitle(course.getTitle());
             group.setDescription("Course");
 
             learnweb.getGroupManager().save(group);
             course.setId(group.getId());
-            learnweb.getGroupManager().deleteGroup(group);
+            group.delete();
 
             cache.put(course.getId(), course);
         }
@@ -200,7 +204,8 @@ public class CourseManager
             save.setString(5, course.getWizardParam());
             save.setInt(6, course.getNextXUsersBecomeModerator());
             save.setString(7, course.getWelcomeMessage());
-            save.setLong(8, course.getOptions()[0]);
+            save.setObject(8, course.getCreationTimestamp());
+            save.setLong(9, course.getOptions()[0]);
             save.executeUpdate();
         }
 

@@ -153,24 +153,18 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
 
     public List<User> getMembers() throws SQLException
     {
-        //long now = System.currentTimeMillis();
-
-        if(null == members)// || cacheTime < now - 3000L)
+        if(null == members)
         {
             members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
-            //cacheTime = now;
         }
         return members;
     }
 
     public int getMemberCount() throws SQLException
     {
-        //long now = System.currentTimeMillis();
-
-        if(-1 == memberCount)// || cacheTime < now - 3000L)
+        if(-1 == memberCount)
         {
             memberCount = Learnweb.getInstance().getGroupManager().getMemberCount(id);
-            //cacheTime = now;
         }
         return memberCount;
     }
@@ -796,9 +790,20 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
         return getCourse().getOption(Course.Option.Groups_Google_Docs_sign_in_enabled);
     }
 
-    public void deleteHard()
+    /**
+     * @see de.l3s.learnweb.group.GroupManager.deleteGroupHard
+     * @throws SQLException
+     */
+    public void deleteHard() throws SQLException
     {
-        // TODO Auto-generated method stub
+        Learnweb.getInstance().getGroupManager().deleteGroupHard(this);
+    }
 
+    /**
+     * Flags the group and deleted and removes all users from the group
+     */
+    public void delete() throws SQLException
+    {
+        Learnweb.getInstance().getGroupManager().deleteGroupSoft(this);
     }
 }

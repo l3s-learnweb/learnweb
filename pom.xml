@@ -46,12 +46,12 @@
             <artifactId>myfaces-bundle</artifactId>
             <version>2.3.6</version>
         </dependency>
-        <!-- TODO: Optional dependency of MyFaces, works without (uncomment in case of issues) -->
-        <!--<dependency>
+        <!-- Optional dependency of MyFaces. On my local machine it is missing when accessing any invalid page. Then the error-404 page can't be displayed (Philipp) -->
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
-        </dependency>-->
+        </dependency>
         <!-- TODO: Optional dependency of MyFaces, works without (uncomment in case of issues) -->
         <!--<dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>

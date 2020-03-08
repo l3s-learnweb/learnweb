@@ -8,9 +8,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import org.apache.log4j.Logger;
@@ -21,7 +21,7 @@ import de.l3s.learnweb.user.Course.Option;
 import de.l3s.learnweb.user.Organisation;
 
 @Named
-@SessionScoped // TODO this should not be session scoped. but right now it doesn't work without. need to update frontend
+@ViewScoped // TODO this should not be session scoped. but right now it doesn't work without. need to update frontend
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1276599881084055950L;
@@ -38,23 +38,10 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         Collections.sort(organisations);
     }
 
-    public void loadCourse() throws SQLException
+    public void onLoad() throws SQLException
     {
         if(getUser() == null) // not logged in
             return;
-
-        if(courseId == 0)
-        {
-            try
-            {
-                courseId = Integer.parseInt(getFacesContext().getExternalContext().getRequestParameterMap().get("course_id"));
-            }
-            catch(Exception e)
-            {
-                addGrowl(FacesMessage.SEVERITY_FATAL, "no course_id parameter");
-                return;
-            }
-        }
 
         course = getLearnweb().getCourseManager().getCourseById(courseId);
 
@@ -131,19 +118,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public void setCourseId(int courseId)
     {
-        if(courseId != this.courseId)
-        {
-            this.courseId = courseId;
-            try
-            {
-                loadCourse();
-            }
-            catch(SQLException e)
-            {
-                addErrorMessage(e);
-            }
-        }
-
+        this.courseId = courseId;
     }
 
     public int getCourseId()

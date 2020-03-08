@@ -126,7 +126,7 @@ public class File implements Serializable, HasId
     {
         if(null == actualFile)
         {
-            throw new IllegalStateException("The file should be saved first: FileManager.save()");
+            throw new IllegalStateException("Either the file has not been saved yet, use FileManager.save() first. Or the file isn't present on this machine.");
         }
         return actualFile;
     }
@@ -149,7 +149,8 @@ public class File implements Serializable, HasId
     public OutputStream getOutputStream() throws FileNotFoundException
     {
         // if the actual file doesn't exist it is replaced with an error image. Make sure that this image isn't changed
-        if(!exists()) throw new FileNotFoundException();
+        if(!exists())
+            throw new FileNotFoundException();
         return new FileOutputStream(getActualFile());
     }
 

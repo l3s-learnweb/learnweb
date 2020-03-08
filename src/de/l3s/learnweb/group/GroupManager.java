@@ -216,7 +216,7 @@ public class GroupManager
 
     /**
      * Returns all groups a user can join
-     * This are all groups of his courses except for groups he has already joined
+     * This are all groups of his courses except for groups he has already joined + groups that are open to everybody
      *
      * @param user
      * @return
@@ -377,12 +377,14 @@ public class GroupManager
         delete.close();
     }
 
-    public void deleteGroup(Group group) throws SQLException
+    void deleteGroupSoft(Group group) throws SQLException
     {
         for(Resource resource : group.getResources())
         {
             resource.delete();
         }
+
+        List<User> members = group.getMembers(); // load members before connection is deleted
 
         PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?");
         delete.setInt(1, group.getId());
@@ -393,6 +395,51 @@ public class GroupManager
         delete.setInt(1, group.getId());
         delete.execute();
         delete.close();
+
+        members.forEach(m -> m.clearCaches());
+
+        groupCache.remove(group.getId());
+    }
+
+    /**
+     * Deletes the group and all its resources permanently. Don't use this if you don't know exactly what you are doing!
+     *
+     * @throws SQLException
+     */
+    void deleteGroupHard(Group group) throws SQLException
+    {
+        for(Resource resource : group.getResources())
+        {
+            resource.deleteHard();
+        }
+
+        List<User> members = group.getMembers();
+
+        String[] tables = { "lw_forum_topic", "lw_group_folder", "lw_group_user", "lw_link", "lw_user_log", "group_id" };
+
+        for(String table : tables)
+        {
+            try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM " + table + " WHERE `group_id` = ?"))
+            {
+                delete.setInt(1, group.getId());
+                //log.debug(delete);
+                int numRowsAffected = delete.executeUpdate();
+                log.debug("Deleted " + numRowsAffected + " rows from " + table);
+            }
+        }
+
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_course SET default_group_id = 0 WHERE default_group_id = ?"))
+        {
+            update.setInt(1, group.getId());
+            update.executeUpdate();
+        }
+        try(PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE lw_user SET active_group_id = 0 WHERE active_group_id = ?"))
+        {
+            update.setInt(1, group.getId());
+            update.executeUpdate();
+        }
+
+        members.forEach(m -> m.clearCaches());
 
         groupCache.remove(group.getId());
     }

@@ -430,19 +430,6 @@ public class User implements Comparable<User>, Serializable, HasId
             setActiveGroup(null);
     }
 
-    public void deleteGroup(Group group) throws SQLException
-    {
-        Learnweb.getInstance().getGroupManager().deleteGroup(group);
-
-        if(null != groups)
-            groups.remove(group);
-
-        if(activeGroup == group)
-            setActiveGroup(null);
-
-        clearCaches();
-    }
-
     @Override
     public int compareTo(User o)
     {

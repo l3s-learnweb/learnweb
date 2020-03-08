@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -328,6 +329,7 @@ public class UserManager
         user.setEmail(email);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password);
+        user.setRegistrationDate(new Date());
         user.setPreferences(new HashMap<>());
         // TODO: we should create it by first request, now when we create a user
         user.setImage(user.getDefaultImageIS());
@@ -365,18 +367,21 @@ public class UserManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `lw_user_log` WHERE `user_id` = ? AND action = " + Action.login.ordinal() + " ORDER BY `lw_user_log`.`timestamp` DESC LIMIT 1"))
         {
             select.setInt(1, userId);
-            try(ResultSet rs = select.executeQuery())
-            {
-                if(!rs.next())
-                    return Optional.empty();
+            ResultSet rs = select.executeQuery();
 
-                return Optional.of(rs.getObject("timestamp", Timestamp.class).toInstant());
-            }
+            if(!rs.next())
+                return Optional.empty();
+
+            return Optional.of(rs.getObject("timestamp", Timestamp.class).toInstant());
         }
     }
 
     public User save(User user) throws SQLException
     {
+        // verify that the given obj is valid; added only attributes that had already caused problems in the past
+        Objects.requireNonNull(user.getRealUsername());
+        Objects.requireNonNull(user.getRegistrationDate());
+
         try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS))
         {
             if(user.getId() < 0) // the User is not yet stored at the database
@@ -530,6 +535,8 @@ public class UserManager
 
     public void deleteUserHard(User user) throws SQLException
     {
+        log.info("Delete user " + user);
+
         if(user.getResources().size() > 40)
         {
             log.warn("delete user: " + user + " and his " + user.getResources().size() + " resorces?");

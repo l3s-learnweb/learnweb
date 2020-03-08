@@ -122,7 +122,7 @@ public class OrganisationManager
             group.setDescription("Organisation");
             learnweb.getGroupManager().save(group);
             organisation.setId(group.getId());
-            learnweb.getGroupManager().deleteGroup(group);
+            group.delete();
 
             cache.put(organisation.getId(), organisation);
         }

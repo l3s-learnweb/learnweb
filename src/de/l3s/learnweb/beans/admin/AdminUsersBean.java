@@ -18,27 +18,31 @@ import de.l3s.learnweb.user.User;
 
 @Named
 @ViewScoped
-public class AdminUserBean extends ApplicationBean implements Serializable
+public class AdminUsersBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 155899638864937408L;
 
     private transient List<User> users;
+    private int courseId;
 
-    public AdminUserBean() throws SQLException
+    public void onLoad() throws SQLException
     {
         User user = getUser();
 
         if(null == user) // not logged in
             return;
 
-        Integer courseId = getParameterInt("course_id");
-
-        if(courseId != null)
+        if(courseId != 0)
         {
             Course course = getLearnweb().getCourseManager().getCourseById(courseId);
             if(null == course)
             {
                 addInvalidParameterMessage("course_id");
+                return;
+            }
+            if(!user.isAdmin() && !user.getCourses().contains(course)) // make sure that moderators can access only their own courses
+            {
+                addAccessDeniedMessage();
                 return;
             }
             users = course.getMembers();
@@ -94,7 +98,17 @@ public class AdminUserBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "Updated moderator settings for '" + targetUser.getUsername() + "'");
     }
 
-    public String concatGroups(List<Group> groups)
+    public int getCourseId()
+    {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId)
+    {
+        this.courseId = courseId;
+    }
+
+    public static String concatGroups(List<Group> groups)
     {
         return groups.stream().sorted().map(Group::getTitle).collect(Collectors.joining(", "));
     }
