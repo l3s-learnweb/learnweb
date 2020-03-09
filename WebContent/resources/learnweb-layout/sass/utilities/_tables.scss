@@ -10,6 +10,10 @@ td.td-text-center {
 .ui-datatable {
   table {
     table-layout: auto !important;
+
+    .ui-datatable-data tr td {
+      word-break: break-all;
+    }
   }
   
   .ui-datatable-data {
