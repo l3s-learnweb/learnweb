@@ -4,13 +4,13 @@
   "version": "1.0.0",
   "browserslist": [
     "> 0.5% in DE",
-    "not dead",
-    "edge >= 17",
-    "firefox >= 54",
-    "chrome >= 58",
-    "safari >= 10.1",
-    "opera >= 44",
-    "not ie >= 0"
+    "not edge < 17",
+    "not firefox < 54",
+    "not chrome < 58",
+    "not safari < 10.1",
+    "not opera < 44",
+    "not ie >= 0",
+    "not dead"
   ],
   "scripts": {
     "scss:watch": "sass WebContent/resources/learnweb-layout/sass:WebContent/resources/learnweb-layout/css --style=compressed --watch",
