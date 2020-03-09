@@ -2,6 +2,8 @@ package de.l3s.learnweb.user;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,6 +61,7 @@ public class UserBean implements Serializable
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
     private BaseMenuModel sidebarMenuModel;
+    private Instant sidebarMenuModelUpdate;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
 
     private int activeOrganisationId = 0;
@@ -517,7 +520,7 @@ public class UserBean implements Serializable
         if(!isLoggedIn())
             return null;
 
-        if(null == sidebarMenuModel)
+        if(null == sidebarMenuModel || sidebarMenuModelUpdate.isBefore(Instant.now().minus(Duration.ofMinutes(10))))
         {
             long start = System.currentTimeMillis();
             final String su = Learnweb.getInstance().getServerUrl();
@@ -593,6 +596,7 @@ public class UserBean implements Serializable
             }
 
             sidebarMenuModel = model;
+            sidebarMenuModelUpdate = Instant.now();
             long elapsedMs = System.currentTimeMillis() - start;
             log.info("Total time to build menu: " + elapsedMs + "ms.");
         }
