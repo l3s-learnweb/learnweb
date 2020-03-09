@@ -105,6 +105,11 @@ public class GroupOptionsBean extends ApplicationBean implements Serializable
             }
             if(editedGroupLeaderId != group.getLeaderUserId())
             {
+                if (group.getLeaderUserId() == getUser().getId() || editedGroupLeaderId == getUser().getId())
+                {
+                    getUserBean().setSidebarMenuModel(null);
+                }
+
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
