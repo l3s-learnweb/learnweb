@@ -79,7 +79,7 @@ public class LocalizeMessagesTest
 
     private static void writeCSV(String locale, Object key, Object en, Object loc, Object xy)
     {
-        if(CREATE_CSV_FILE)
+        if(CREATE_CSV_FILE && !"unused".equalsIgnoreCase((String) xy))
         {
             try
             {

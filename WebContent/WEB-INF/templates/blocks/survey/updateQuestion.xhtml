@@ -85,7 +85,7 @@
     <div class="d-flex flex-nowrap justify-content-between">
         <p:defaultCommand target="saveBtn"/>
         <p:commandButton value="#{msg['delete']}" actionListener="#{surveyTemplateBean.onDeleteQuestion(question)}" update="form" oncomplete="PF('updateSurvey').hide();" styleClass="float-left">
-            <p:confirm message="#{msg['survey.are_you_sure']}?"/>
+            <p:confirm message="#{msg['survey.are_you_sure']}"/>
         </p:commandButton>
         <p:commandButton id="saveBtn" value="#{msg['save']}" onclick="PF('updateSurvey').hide();" update="form" process="@form"/>
     </div>
