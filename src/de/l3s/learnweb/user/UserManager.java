@@ -3,7 +3,6 @@ package de.l3s.learnweb.user;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,14 +20,13 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
-import com.google.common.hash.Hashing;
-
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
+import de.l3s.util.SHA512;
 import de.l3s.util.Sql;
 
 /**
@@ -528,7 +526,7 @@ public class UserManager
         user.setProfession("");
         user.setStudentId("");
         user.setUsername("Anonym " + user.getId());
-        user.setEmailRaw(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
+        user.setEmailRaw(SHA512.hash(user.getEmail()));
 
         user.save();
     }
@@ -610,7 +608,7 @@ public class UserManager
         }
 
         user.setDeleted(true);
-        user.setEmailRaw(Hashing.sha512().hashString(user.getEmail(), StandardCharsets.UTF_8).toString());
+        user.setEmailRaw(SHA512.hash(user.getEmail()));
         user.setPasswordRaw("deleted user");
         user.setUsername(user.getRealUsername() + " (Deleted)");
         user.save();
