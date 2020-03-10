@@ -27,6 +27,13 @@ import de.l3s.learnweb.resource.search.filters.Filter;
 import de.l3s.learnweb.resource.search.filters.FilterOption;
 import de.l3s.util.StringHelper;
 
+/**
+ * Dear maintainer:
+ * Once you are done trying to 'optimize' this routine, and have realized what a terrible mistake that was,
+ * please increment the following counter as a warning to the next guy:
+ *
+ * total_hours_wasted_here = 48
+ */
 public class SearchFilters implements Serializable
 {
     private static final long serialVersionUID = 8012567994091306088L;
