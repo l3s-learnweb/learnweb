@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.context.PartialViewContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,14 +45,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public enum ViewAction
     {
-        none,
-        newResource,
         viewResource,
-        editResource,
-        newFolder,
-        editFolder,
-        viewFolder,
-        newFile
+        editResource
     }
 
     private Tag selectedTag;
@@ -58,16 +54,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private Comment clickedComment;
     private String newComment;
 
-    private int resourceId = 0; // url param, force resource view
+    // Url params
+    private int resourceId = 0;
+    private boolean editResource = false;
 
-    private ViewAction paneAction = ViewAction.none;
-    private AbstractResource clickedAbstractResource;
+    private Resource resource;
+    private ViewAction viewAction = ViewAction.viewResource;
 
     @Inject
     private FileEditorBean fileEditorBean;
-
-    @Inject
-    private AddResourceBean addResourceBean;
 
     public void onLoad()
     {
@@ -78,14 +73,17 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             try
             {
-                Resource resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-                if(resource == null)
+                Resource openResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+                if(openResource == null)
                 {
                     addInvalidParameterMessage("resource_id");
                     return;
                 }
 
-                setViewResource(resource);
+                setResource(openResource);
+                log(Action.opening_resource, resource.getGroupId(), resource.getId());
+
+                if (editResource) editResource();
             }
             catch(Exception e)
             {
@@ -104,9 +102,56 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         this.resourceId = resourceId;
     }
 
-    public void editClickedResource() throws SQLException
+    public boolean isEditResource()
     {
-        if (clickedAbstractResource == null || !clickedAbstractResource.canEditResource(getUser()))
+        return editResource;
+    }
+
+    public void setEditResource(final boolean editResource)
+    {
+        this.editResource = editResource;
+    }
+
+    public Resource getResource()
+    {
+        return resource;
+    }
+
+    public void setResource(Resource resource)
+    {
+        this.resource = resource;
+
+        if(resource != null && resource.isOfficeResource())
+            fileEditorBean.fillInFileInfo(resource);
+    }
+
+    public ViewAction getViewAction()
+    {
+        return viewAction;
+    }
+
+    public void setViewAction(ViewAction viewAction)
+    {
+        this.viewAction = viewAction;
+    }
+
+    public void editResource()
+    {
+        releaseResourceIfLocked();
+        if (!resource.lockResource(getUser()))
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
+            log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
+            return;
+        }
+
+        log(Action.opening_resource, resource.getGroupId(), resource.getId());
+        viewAction = ViewAction.editResource;
+    }
+
+    public void saveEdit() throws SQLException
+    {
+        if (resource == null || !resource.canEditResource(getUser()))
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceNotSelectedOrUserCanNotEditIt");
             return;
@@ -114,21 +159,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         try
         {
-            clickedAbstractResource.unlockResource(getUser());
-            clickedAbstractResource.save();
+            resource.save();
 
-            if (clickedAbstractResource instanceof Folder)
-            {
-                log(Action.edit_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
-                addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedAbstractResource.getTitle());
-            }
-            else
-            {
-                log(Action.edit_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId(), clickedAbstractResource.getTitle());
-                addMessage(FacesMessage.SEVERITY_INFO, "resourceUpdated", clickedAbstractResource.getTitle());
-            }
+            log(Action.edit_resource, resource.getGroupId(), resource.getId(), resource.getTitle());
+            addMessage(FacesMessage.SEVERITY_INFO, "resourceUpdated", resource.getTitle());
 
-            setViewResource(clickedAbstractResource);
+            resource.unlockResource(getUser());
+            viewAction = ViewAction.viewResource;
         }
         catch(SQLException e)
         {
@@ -136,178 +173,40 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void cancelEditClickedResource()
+    public void cancelEdit()
     {
-        if (clickedAbstractResource != null)
-        {
-            clickedAbstractResource.unlockResource(getUser());
-            setViewResource(clickedAbstractResource);
-        }
-    }
-
-    public String getPanelTitle()
-    {
-        switch(this.paneAction)
-        {
-            case newResource:
-                return UtilBean.getLocaleMessage("upload_resource");
-            case viewResource:
-                return UtilBean.getLocaleMessage("resource") + " - " + clickedAbstractResource.getTitle();
-            case editResource:
-                return UtilBean.getLocaleMessage("edit_resource") + " - " + clickedAbstractResource.getTitle();
-            case newFolder:
-                return UtilBean.getLocaleMessage("create_folder");
-            case editFolder:
-                return UtilBean.getLocaleMessage("edit_folder");
-            case viewFolder:
-                return UtilBean.getLocaleMessage("folder") + " - " + clickedAbstractResource.getTitle();
-            case newFile:
-                return UtilBean.getLocaleMessage("create") + " - " + addResourceBean.getResource().getType().toString();
-            default:
-                return UtilBean.getLocaleMessage("click_to_view_details");
-        }
-    }
-
-    public void resetPane()
-    {
-        clickedAbstractResource = null;
-        paneAction = ViewAction.none;
         releaseResourceIfLocked();
+        viewAction = ViewAction.viewResource;
     }
 
     public void releaseResourceIfLocked()
     {
-        if (clickedAbstractResource != null && clickedAbstractResource.isEditLocked())
+        if (resource != null && resource.isEditLocked())
         {
-            clickedAbstractResource.unlockResource(getUser());
-        }
-    }
-
-    public void setViewResource(AbstractResource resource)
-    {
-        releaseResourceIfLocked();
-        setClickedAbstractResource(resource);
-
-        if(resource == null)
-        {
-            resetPane();
-        }
-        else if(resource instanceof Folder)
-        {
-            paneAction = ViewAction.viewFolder;
-            log(Action.opening_folder, resource.getGroupId(), resource.getId());
-        }
-        else
-        {
-            paneAction = ViewAction.viewResource;
-            log(Action.opening_resource, resource.getGroupId(), resource.getId());
-        }
-    }
-
-    public void setEditResource(AbstractResource resource)
-    {
-        releaseResourceIfLocked();
-
-        if (!resource.lockResource(getUser()))
-        {
-            addGrowl(FacesMessage.SEVERITY_ERROR, "resourceLockedByAnotherUser", resource.getLockUsername());
-
-            if (resource instanceof Resource)
-            {
-                log(Action.lock_rejected_edit_resource, resource.getGroupId(), resource.getId());
-            }
-            else if (resource instanceof Folder)
-            {
-                log(Action.lock_rejected_edit_folder, resource.getGroupId(), resource.getId());
-            }
-            return;
-        }
-
-        setClickedAbstractResource(resource);
-
-        if(resource instanceof Folder)
-        {
-            paneAction = ViewAction.editFolder;
-            log(Action.opening_folder, resource.getGroupId(), resource.getId());
-        }
-        else
-        {
-            paneAction = ViewAction.editResource;
-            log(Action.opening_resource, resource.getGroupId(), resource.getId());
+            resource.unlockResource(getUser());
         }
     }
 
     public void editActivityListener()
     {
-        if (clickedAbstractResource != null && !clickedAbstractResource.lockerUpdate(getUser()))
+        if (resource != null && !resource.lockerUpdate(getUser()))
         {
+            releaseResourceIfLocked();
+            log(Action.lock_interrupted_returned_resource, resource.getGroupId(), resource.getId());
             addGrowl(FacesMessage.SEVERITY_ERROR, "resourceEditInterrupt");
-            setViewResource(clickedAbstractResource);
-            PrimeFaces.current().ajax().update(":right_pane");
 
-            if (clickedAbstractResource instanceof Resource)
-            {
-                log(Action.lock_interrupted_returned_resource, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
-            }
-            else if (clickedAbstractResource instanceof Folder)
-            {
-                log(Action.lock_interrupted_returned_folder, clickedAbstractResource.getGroupId(), clickedAbstractResource.getId());
-            }
+            viewAction = ViewAction.viewResource;
+            PrimeFaces.current().ajax().update(":resourceViewForm");
         }
-    }
-
-    public ViewAction getPaneAction()
-    {
-        return paneAction;
-    }
-
-    public void setPaneAction(ViewAction paneAction)
-    {
-        this.paneAction = paneAction;
-    }
-
-    public boolean isTheResourceClicked(AbstractResource resource)
-    {
-        return clickedAbstractResource != null && clickedAbstractResource.equals(resource);
-    }
-
-    public Folder getClickedFolder()
-    {
-        if(clickedAbstractResource instanceof Folder)
-            return (Folder) clickedAbstractResource;
-
-        return null;
-    }
-
-    public Resource getClickedResource()
-    {
-        if(clickedAbstractResource instanceof Resource)
-            return (Resource) clickedAbstractResource;
-
-        return null;
-    }
-
-    public AbstractResource getClickedAbstractResource()
-    {
-        return clickedAbstractResource;
-    }
-
-    public void setClickedAbstractResource(AbstractResource resource)
-    {
-        clickedAbstractResource = resource;
-
-        if(getClickedResource() != null && getClickedResource().isOfficeResource())
-            fileEditorBean.fillInFileInfo(getClickedResource());
     }
 
     /* Archive view utils  */
 
     /**
-     * The method is used from JS in archive_timeline_template.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml
      */
     public String getArchiveTimelineJsonData()
     {
-        Resource resource = getClickedResource();
         JSONArray highChartsData = new JSONArray();
         try
         {
@@ -330,11 +229,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * The method is used from JS in archive_timeline_template.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml
      */
     public String getArchiveCalendarJsonData()
     {
-        Resource resource = getClickedResource();
         JSONObject archiveDates = new JSONObject();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try
@@ -379,7 +277,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     /**
      * Function to localized month names for the calendar
-     * The method is used from JS in archive_timeline_template.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml
      */
     public String getMonthNames()
     {
@@ -391,7 +289,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     /**
      * Function to get localized short month names for the timeline
-     * The method is used from JS in archive_timeline_template.xhtml
+     * The method is used from JS in resource_view_archive_timeline.xhtml
      */
     public String getShortMonthNames()
     {
@@ -410,15 +308,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void archiveCurrentVersion()
     {
         boolean addToQueue = true;
-        if(getClickedResource().getArchiveUrls().size() > 0)
+        if(!resource.getArchiveUrls().isEmpty())
         {
-            long timeDifference = (new Date().getTime() - getClickedResource().getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+            long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
             addToQueue = timeDifference > 300;
         }
 
         if(addToQueue)
         {
-            String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(getClickedResource());
+            String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(resource);
             if(response.equalsIgnoreCase("archive_success"))
                 addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
             else if(response.equalsIgnoreCase("robots_error"))
@@ -435,7 +333,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getClickedResource().deleteTag(selectedTag);
+            resource.deleteTag(selectedTag);
             addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
         }
         catch(Exception e)
@@ -466,7 +364,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
         try
         {
-            Resource resource = getClickedResource();
             resource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
             log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
@@ -494,7 +391,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
             // first delete old thumbnails
             FileManager fileManager = getLearnweb().getFileManager();
-            Collection<File> files = getClickedResource().getFiles().values();
+            Collection<File> files = resource.getFiles().values();
             for(File file : files)
             {
                 if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
@@ -505,9 +402,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
 
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-            rpm.processResource(getClickedResource());
+            rpm.processResource(resource);
 
-            getClickedResource().save();
+            resource.save();
+            releaseResourceIfLocked();
+            viewAction = ViewAction.viewResource;
         }
         catch(Exception e)
         {
@@ -581,7 +480,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return true;
 
         Tag tag = (Tag) tagO;
-        User owner = getClickedResource().getTags().getElementOwner(tag);
+        User owner = resource.getTags().getElementOwner(tag);
         if(user.equals(owner))
             return true;
         return false;
@@ -604,9 +503,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            getClickedResource().deleteComment(clickedComment);
+            resource.deleteComment(clickedComment);
             addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-            log(Action.deleting_comment, getClickedResource().getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
+            log(Action.deleting_comment, resource.getGroupId(), clickedComment.getResourceId(), clickedComment.getId());
         }
         catch(Exception e)
         {
@@ -618,8 +517,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            Comment comment = getClickedResource().addComment(newComment, getUser());
-            log(Action.commenting_resource, getClickedResource().getGroupId(), getClickedResource().getId(), comment.getId());
+            Comment comment = resource.addComment(newComment, getUser());
+            log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId());
             addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
             newComment = "";
         }
@@ -638,7 +537,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
 
             FileManager fileManager = getLearnweb().getFileManager();
-            Collection<File> files = getClickedResource().getFiles().values();
+            Collection<File> files = resource.getFiles().values();
             for(File file : files)
             {
                 if(file.getType() == File.TYPE.THUMBNAIL_LARGE || file.getType() == File.TYPE.THUMBNAIL_MEDIUM || file.getType() == File.TYPE.THUMBNAIL_SMALL || file.getType() == File.TYPE.THUMBNAIL_SQUARED || file.getType() == File.TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
@@ -649,20 +548,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
 
             //Getting mime type
-            FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), getClickedResource().getFileName());
+            FileInspector.FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), resource.getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
             if(type.equals("application"))
                 type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
 
             if(type.equalsIgnoreCase("pdf"))
             {
-                rpm.processPdf(getClickedResource(), FileInspector.openStream(archiveUrl));
+                rpm.processPdf(resource, FileInspector.openStream(archiveUrl));
             }
             else
-                rpm.processArchivedVersion(getClickedResource(), archiveUrl);
+                rpm.processArchivedVersion(resource, archiveUrl);
 
-            getClickedResource().save();
-            log(Action.resource_thumbnail_update, getClickedResource().getGroupId(), getClickedResource().getId(), "");
+            resource.save();
+            log(Action.resource_thumbnail_update, resource.getGroupId(), resource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         }
         catch(Exception e)
@@ -712,20 +611,20 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         this.newComment = newComment;
     }
 
-    public boolean isStarRatedByUser() throws Exception
+    public boolean isStarRatedByUser() throws SQLException
     {
-        if(getUser() == null || null == getClickedResource())
+        if(getUser() == null || null == resource)
             return false;
 
-        return getClickedResource().isRatedByUser(getUser().getId());
+        return resource.isRatedByUser(getUser().getId());
     }
 
     public boolean isThumbRatedByUser() throws SQLException
     {
-        if(getUser() == null || null == getClickedResource())
+        if(getUser() == null || null == resource)
             return false;
 
-        return getClickedResource().isThumbRatedByUser(getUser().getId());
+        return resource.isThumbRatedByUser(getUser().getId());
     }
 
     public void handleRate(RateEvent rateEvent)
@@ -744,7 +643,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            getClickedResource().rate((Integer) rateEvent.getRating(), getUser());
+            resource.rate((Integer) rateEvent.getRating(), getUser());
         }
         catch(Exception e)
         {
@@ -753,7 +652,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(Action.rating_resource, getClickedResource().getGroupId(), getClickedResource().getId());
+        log(Action.rating_resource, resource.getGroupId(), resource.getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -774,7 +673,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            getClickedResource().thumbRate(getUser(), direction);
+            resource.thumbRate(getUser(), direction);
         }
         catch(Exception e)
         {
@@ -783,7 +682,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        log(Action.thumb_rating_resource, getClickedResource().getGroupId(), getClickedResource().getId());
+        log(Action.thumb_rating_resource, resource.getGroupId(), resource.getId());
 
         addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -800,7 +699,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String getHypothesisLink()
     {
-        return hypothesisProxy + getClickedResource().getUrl();
+        return hypothesisProxy + resource.getUrl();
     }
 
     /* Load beans  */
@@ -813,16 +712,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void setFileEditorBean(FileEditorBean fileEditorBean)
     {
         this.fileEditorBean = fileEditorBean;
-    }
-
-    public AddResourceBean getAddResourceBean()
-    {
-        return addResourceBean;
-    }
-
-    public void setAddResourceBean(AddResourceBean addResourceBean)
-    {
-        this.addResourceBean = addResourceBean;
     }
 
 }

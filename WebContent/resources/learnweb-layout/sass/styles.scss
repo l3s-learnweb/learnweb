@@ -26,13 +26,13 @@
 
 // Styles from 3rd-part developers
 // WARNING! Some of them is modified, you can update them if you need to tune styles, but be careful and never change class names.
-@import 'vendor/font-awesome-4.7.0/font-awesome'; // Icons
-@import 'vendor/bootstrap-4.4.1/bootstrap'; // Bootstrap grid and utils (No other components!)
-@import 'vendor/autocomplete';
-@import 'vendor/contextmenu';
-@import 'vendor/justified-gallery';
-@import 'vendor/responsive-calendar';
-@import 'vendor/california-theme-2.0.0/theme'; // California theme for PrimeFaces components
+@import '../../vendor/font-awesome-v4.7.0/font-awesome'; // Icons
+@import '../../vendor/bootstrap-v4.4.1/bootstrap'; // Bootstrap grid and utils (No other components!)
+@import '../../vendor/jquery.auto-complete-v1.0.7/autocomplete';
+@import '../../vendor/contextMenu-v2.9.0/contextmenu';
+@import '../../vendor/justifiedGallery-v3.7.0/justified-gallery';
+@import '../../vendor/responsive-calendar-v0.9.0/responsive-calendar';
+@import 'california-theme/theme'; // California theme (v2.0.0) for PrimeFaces components
 
 // Load layout styles, there should be only general styles like header, footer, left sidebar (menu) styles
 @import 'layouts/template';

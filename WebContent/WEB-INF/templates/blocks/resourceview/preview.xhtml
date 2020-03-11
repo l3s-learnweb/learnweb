@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+    <ui:fragment rendered="#{res.type ne 'file'}">
+        <div class="preview-wrapper d-flex">
+            <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
+                <div id="iframe_editor"></div>
+                <h:outputScript>
+                    const editorConfigValues = {
+                        user: {
+                            id: '#{userBean.user.id}',
+                            name: '#{userBean.user.username}'
+                        },
+                        documentType: '#{fileEditorBean.fileType}',
+                        document: {
+                            title: '#{res.fileName}',
+                            url: '#{fileEditorBean.fullFilesUrl}',
+                            fileType: '#{fileEditorBean.filesExtension}',
+                            key: '#{fileEditorBean.key}',
+                            resourceId: '#{res.id}',
+                            canBeEdited: '#{res.canEditResource(userBean.user)}'
+                        },
+                        historyUrl: '#{fileEditorBean.historyUrl}',
+                        callbackUrl: '#{fileEditorBean.callbackUrl}',
+                        clientUrl: '#{fileEditorBean.onlyOfficeClientUrl}'
+                    };
+                    $(function () {
+                      loadPreviewEditor();
+                    });
+                </h:outputScript>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{res.type eq 'video' or res.type eq 'audio'}">
+                <h:outputText value="#{res.embedded}" escape="false"/>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{res.type eq 'pdf'}">
+                <iframe src="#{res.url}" title="#{res.title}"></iframe>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{not empty res.thumbnail4 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+                <img src="#{res.thumbnail4.url}" alt="#{res.title}" class="img-fluid m-auto d-block"/>
+            </ui:fragment>
+
+            <ui:fragment rendered="#{empty res.thumbnail4 and not empty res.thumbnail0 and res.type ne 'pdf' and res.type ne 'video' and res.type ne 'audio' and not res.isOfficeResource()}">
+                <img src="#{res.largestThumbnail.url}" alt="#{res.title}" class="img-fluid m-auto d-block"/>
+            </ui:fragment>
+        </div>
+    </ui:fragment>
+
+</ui:composition>

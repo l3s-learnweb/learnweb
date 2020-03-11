@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+				xmlns:h="http://xmlns.jcp.org/jsf/html"
+				xmlns:f="http://xmlns.jcp.org/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<dl class="row mb-n2">
+	<ui:fragment rendered="#{res.canEditResource(userBean.user)}">
+		<p:button onclick="loadArchiveUrlsModal();return false;" icon="fa fa fa-camera-retro" styleClass="secondary-btn" title="#{msg['Archive.change_thumbnail']}"/>
+
+		<div id="modal_archive_urls" class="content-root collapse">
+			<div class="content-header text-center mb-3">
+				<h:outputText value="#{res.title}" escape="false" styleClass="h5"/>
+			</div>
+			<div class="d-flex h-100">
+				<div class="mr-3 archive-snapshots-wrapper content-scroll" style="width:14rem;">
+					<ui:fragment rendered="${res.archiveUrls.size() le 100}">
+						<ul class="archive-snapshot-list list-unstyled mb-0">
+							<ui:repeat var="au" value="#{res.archiveUrls}">
+								<li style="width:12rem;">
+									<a href="#{au.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
+										<h:outputText value="#{au.timestamp}">
+											<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+										</h:outputText>
+									</a>
+								</li>
+							</ui:repeat>
+						</ul>
+					</ui:fragment>
+					<ui:fragment rendered="${res.archiveUrls.size() gt 100}">
+						<ul class="archive-snapshot-list list-unstyled mb-0">
+							<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+								<li>
+									<p:button value="#{ay.key}" styleClass="outline-btn m-0 mb-1" onclick="return false;"/>
+									<ul class="list-unstyled pl-3 collapse">
+										<ui:repeat var="au2" value="#{ay.value}">
+											<li style="width:12rem;">
+												<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1 set-thumbnail">
+													<h:outputText value="#{au2.timestamp}">
+														<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+													</h:outputText>
+												</a>
+											</li>
+										</ui:repeat>
+									</ul>
+								</li>
+							</ui:repeat>
+						</ul>
+					</ui:fragment>
+				</div>
+				<div class="flex-grow-1">
+					<div class="archive-frame-wrapper border shadow content-scroll">
+						<iframe id="archive_iframe" data-src="#{res.lastArchivedObject.archiveUrl}" class="ui-blockui bg-center"></iframe>
+					</div>
+					<div class="row align-items-center mt-2">
+						<h:panelGroup rendered="${not empty res.thumbnailUpdateInfo}">
+							<div class="col-md">
+                                <span class="text-muted">
+                                    <h:outputText value="#{msg['Archive.thumbnail_update_info']}: "/>
+                                    <h:outputText value="#{res.thumbnailUpdateInfo.date}">
+                                        <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                    </h:outputText>
+                                    <h:outputText value=" (#{msg.by} #{res.thumbnailUpdateInfo.username})"/>
+                                </span>
+							</div>
+						</h:panelGroup>
+						<div class="col-md text-right">
+                            <span>
+                                <h:outputText value="#{msg['Archive.show_version']}: "/>
+                                <h:outputText id="archive_timestamp" value="#{res.lastArchivedObject.timestamp}">
+                                    <f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+                                </h:outputText>
+                                <p:button value="#{msg['Archive.set_thumbnail']}" styleClass="ml-2 alt-btn" onclick="updateThumbnail();return false;"/>
+                            </span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</ui:fragment>
+
+	<ui:fragment rendered="${res.storageType == 2 and res.canEditResource(userBean.user)}">
+		<dt class="col-sm-4">#{msg.current_version}:</dt>
+		<dd class="col-sm-8">
+			<p:commandButton id="archive_now_btn" form="archive_view_options" process="@this" action="#{resourceDetailBean.archiveCurrentVersion}"
+							 value="#{msg['Archive.now']}" update=":growl archive_view_options"/>
+		</dd>
+	</ui:fragment>
+
+	<h:form id="archive_view_options" styleClass="col-sm-12" prependId="false">
+		<div id="archive_timeline_view" class="my-2">
+			<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive_timeline.xhtml"/>
+		</div>
+		<hr/>
+		<ul class="archive-snapshot-list list-unstyled mb-0 mt-3 w-100">
+			<ui:repeat var="ay" value="#{res.archiveUrlsAsYears.entrySet().toArray()}">
+				<li class="row no-gutters align-items-baseline">
+					<p:button value="#{ay.key}" style="height: 25px;" styleClass="outline-btn m-0 mb-1 mt-1 mt-sm-0 w-100 col-3 col-md-2 mr-3" onclick="return false;"/>
+
+					<h:outputFormat value="#{msg.archive_stored}" escape="false">
+						<f:param value="#{ay.value.size()}"/>
+						<f:param value="#{ay.key}"/>
+					</h:outputFormat>
+
+					<div class="ml-0 ml-sm-3 list-unstyled pl-0 pl-sm-3 my-1 collapse col-12">
+						<div class="d-flex flex-wrap">
+							<ui:repeat var="au2" value="#{ay.value}">
+								<div style="width:12rem;" class="mx-2">
+									<a href="#{au2.archiveUrl}" target="_blank" class="w-100 m-0 mb-1">
+										<h:outputText value="#{au2.timestamp}">
+											<f:convertDateTime timeZone="#{userBean.timeZone}" type="both"/>
+										</h:outputText>
+									</a>
+								</div>
+							</ui:repeat>
+						</div>
+					</div>
+				</li>
+			</ui:repeat>
+		</ul>
+	</h:form>
+</dl>
+</ui:composition>

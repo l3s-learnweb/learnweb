@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+<!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+<p:tabView dynamic="true" cache="true" prependId="false">
+    <p:ajax event="tabChange" global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()"/>
+
+    <p:tab title="#{msg.details_right_pane}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_details.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </p:tab>
+
+    <p:tab title="#{msg.activity_right_pane}">
+        <p:repeat value="#{res.logs}" var="logEntry" varStatus="status">
+            <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+                <ui:param name="status" value="#{status}"/>
+                <ui:param name="logEntry" value="#{logEntry}"/>
+            </ui:decorate>
+        </p:repeat>
+    </p:tab>
+
+    <p:tab title="#{msg['Archive.versions']} (#{res.archiveUrls.size()})"
+           rendered="#{not empty res.archiveUrls}">
+        <ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view_archive.xhtml">
+            <ui:param name="res" value="#{res}"/>
+        </ui:decorate>
+    </p:tab>
+</p:tabView>
+
+</ui:composition>

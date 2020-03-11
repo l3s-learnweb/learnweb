@@ -1,210 +1,209 @@
-<ui:composition template="/WEB-INF/templates/blocks/group/template.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:lw="http://l3s.de/learnweb">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="hideGrowl" value="false"/>
-	<ui:param name="pageTitle" value="#{groupOptionsBean.group.title}"/>
-	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
-	<ui:param name="group" value="#{groupOptionsBean.group}"/>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="hideGrowl" value="false"/>
+<ui:param name="pageTitle" value="#{groupOptionsBean.group.title}"/>
+<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 
-	<ui:define name="metadata">
-	    <f:metadata>
-	        <f:viewParam name="group_id" value="#{groupOptionsBean.groupId}"/>
-	        <f:viewAction action="#{groupOptionsBean.onLoad}"/>
-	    </f:metadata>
-	</ui:define>
+<ui:define name="metadata">
+	<f:metadata>
+		<f:viewParam name="group_id" value="#{groupOptionsBean.groupId}"/>
+		<f:viewAction action="#{groupOptionsBean.onLoad}"/>
+	</f:metadata>
+</ui:define>
 
-	<ui:define name="breadcrumb">
-		<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
+<ui:define name="breadcrumb">
+	<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
-			<p:repeat var="groups" value="#{userBean.user.groups}">
-				<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-			</p:repeat>
-		</lw:breadcrumb-item>
+	<lw:breadcrumb-item link="group/resources.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{userBean.user.activeGroup.title}" >
+		<p:repeat var="groups" value="#{userBean.user.groups}">
+			<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
+		</p:repeat>
+	</lw:breadcrumb-item>
 
-		<lw:breadcrumb-item link="group/options.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.options}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
-		</lw:breadcrumb-item>
-	</ui:define>
+	<lw:breadcrumb-item link="group/options.jsf?group_id=#{userBean.user.activeGroup.id}" title="#{msg.options}">
+		<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
+	</lw:breadcrumb-item>
+</ui:define>
 
-	<ui:define name="group_layout">
-	    <ui:fragment rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
-	        <div class="row">
-	            <div class="col-md-6">
-	                <p:panel header="#{msg.edit_group}">
-	                    <h:form id="group_moderator_form">
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg.title}:"/>
-	                            <p:inputText id="edit_group_title" value="#{groupOptionsBean.editedGroupTitle}" required="true"/>
-	                            <p:message for="@previous"/>
-	                        </div>
+<ui:define name="center_layout">
+	<ui:fragment rendered="${groupOptionsBean.group.course.isModerator(userBean.user) || groupOptionsBean.group.isLeader(userBean.user)}">
+		<div class="row">
+			<div class="col-md-6">
+				<p:panel header="#{msg.edit_group}">
+					<h:form id="group_moderator_form">
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg.title}:"/>
+							<p:inputText id="edit_group_title" value="#{groupOptionsBean.editedGroupTitle}" required="true"/>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg.description}:"/>
-	                            <p:textEditor id="edit_group_description" widgetVar="editorWidget" value="#{groupOptionsBean.editedGroupDescription}" height="150">
-	                                <f:facet name="toolbar">
-	                                        <span class="ql-formats">
-	                                            <button class="ql-bold"></button>
-	                                            <button class="ql-italic"></button>
-	                                            <button class="ql-underline"></button>
-	                                            <button class="ql-strike"></button>
-	                                            <button class="ql-list" value="ordered"></button>
-	                                            <button class="ql-list" value="bullet"></button>
-	                                            <button class="ql-link"></button>
-	                                        </span>
-	                                </f:facet>
-	                            </p:textEditor>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg.description}:"/>
+							<p:textEditor id="edit_group_description" widgetVar="editorWidget" value="#{groupOptionsBean.editedGroupDescription}" height="150">
+								<f:facet name="toolbar">
+										<span class="ql-formats">
+											<button class="ql-bold"></button>
+											<button class="ql-italic"></button>
+											<button class="ql-underline"></button>
+											<button class="ql-strike"></button>
+											<button class="ql-list" value="ordered"></button>
+											<button class="ql-list" value="bullet"></button>
+											<button class="ql-link"></button>
+										</span>
+								</f:facet>
+							</p:textEditor>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg.leader}:"/>
-	                            <p:selectOneMenu id="edit_group_leader" value="#{groupOptionsBean.editedGroupLeaderId}" immediate="true" required="true">
-	                                <f:selectItems value="#{groupOptionsBean.membersSelectItemList}"/>
-	                            </p:selectOneMenu>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg.leader}:"/>
+							<p:selectOneMenu id="edit_group_leader" value="#{groupOptionsBean.editedGroupLeaderId}" immediate="true" required="true">
+								<f:selectItems value="#{groupOptionsBean.membersSelectItemList}"/>
+							</p:selectOneMenu>
+							<p:message for="@previous"/>
+						</div>
 
-							<ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
+						<ui:fragment rendered="#{groupOptionsBean.hypothesisEnabled}">
+							<div class="form-group">
+								<p:outputLabel for="@next">
+								#{msg.hypothesis_group_link}:
+								<h:outputLink value="discussion_help.jsf" target="_blank">
+										<f:param name="type" value="admin"/>[?]
+								</h:outputLink>
+								</p:outputLabel>
+								<p:inputText id="set_hypothesis_link" value="#{groupOptionsBean.newHypothesisLink}"/>
+								<p:message for="@previous"/>
+							</div>
+
+							<ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
 								<div class="form-group">
 									<p:outputLabel for="@next">
-	                                #{msg.hypothesis_group_link}:
-	                                <h:outputLink value="discussion_help.jsf" target="_blank">
+								#{msg.hypothesis_token}:
+								<h:outputLink value="discussion_help.jsf" target="_blank" rendered="#{empty groupOptionsBean.newHypothesisToken}">
 											<f:param name="type" value="admin"/>[?]
-	                                </h:outputLink>
+								</h:outputLink>
 									</p:outputLabel>
-									<p:inputText id="set_hypothesis_link" value="#{groupOptionsBean.newHypothesisLink}"/>
+									<p:inputText id="set_hypothesis_token" value="#{groupOptionsBean.newHypothesisToken}"/>
 									<p:message for="@previous"/>
 								</div>
 
-								<ui:fragment rendered="#{not empty groupOptionsBean.newHypothesisLink}">
-									<div class="form-group">
-										<p:outputLabel for="@next">
-                                    #{msg.hypothesis_token}:
-                                    <h:outputLink value="discussion_help.jsf" target="_blank" rendered="#{empty groupOptionsBean.newHypothesisToken}">
-												<f:param name="type" value="admin"/>[?]
-                                    </h:outputLink>
-										</p:outputLabel>
-										<p:inputText id="set_hypothesis_token" value="#{groupOptionsBean.newHypothesisToken}"/>
-										<p:message for="@previous"/>
-									</div>
-
-									<div class="form-group">
-										<h:outputLink value="admin/group_discussion_activity.jsf" rendered="#{not empty groupOptionsBean.newHypothesisToken}">
-											<f:param name="groupID" value="#{groupOptionsBean.groupId}"/>
-                                    Discussion Activity
-                                </h:outputLink>
-									</div>
-								</ui:fragment>
+								<div class="form-group">
+									<h:outputLink value="admin/group_discussion_activity.jsf" rendered="#{not empty groupOptionsBean.newHypothesisToken}">
+										<f:param name="groupID" value="#{groupOptionsBean.groupId}"/>
+								Discussion Activity
+							</h:outputLink>
+								</div>
 							</ui:fragment>
+						</ui:fragment>
 
-							<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_moderator_form"/>
-	                    </h:form>
-	                </p:panel>
+						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_moderator_form"/>
+					</h:form>
+				</p:panel>
 
-	                <p:panel header="#{msg.options}">
-	                    <h:form id="group_security_form">
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
-	                            <p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="grid" columns="1">
-	                                <f:selectItems value="#{groupOptionsBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
-	                            </p:selectOneRadio>
-	                            <p:message for="@previous"/>
-	                        </div>
+				<p:panel header="#{msg.options}">
+					<h:form id="group_security_form">
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['policy.title.join']}" styleClass="h5"/>
+							<p:selectOneRadio value="#{groupOptionsBean.group.policyJoin}" layout="grid" columns="1">
+								<f:selectItems value="#{groupOptionsBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+							</p:selectOneRadio>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
-	                            <p:selectBooleanButton value="#{groupOptionsBean.group.memberCountLimited}" style="max-width: 5rem;" styleClass="d-block"
-	                                                   onLabel="#{msg.yes}" offLabel="#{msg.no}" onIcon="ui-icon-check" offIcon="ui-icon-close">
-	                                <p:ajax update="member_limit_input"/>
-	                            </p:selectBooleanButton>
-	                            <h:panelGroup id="member_limit_input">
-	                                <ui:fragment rendered="#{groupOptionsBean.group.memberCountLimited}">
-	                                    #{msg.How_many_users_can_join_the_group}:
-	                                    <p:inputNumber value="#{groupOptionsBean.group.maxMemberCount}" style="max-width: 5rem;" styleClass="d-block"
-	                                                   minValue="#{groupOptionsBean.group.memberCount}" maxValue="10000" decimalPlaces="0" thousandSeparator=""/>
-	                                </ui:fragment>
-	                            </h:panelGroup>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['Limit_number_of_members']}:" styleClass="h5"/>
+							<p:selectBooleanButton value="#{groupOptionsBean.group.memberCountLimited}" style="max-width: 5rem;" styleClass="d-block"
+												   onLabel="#{msg.yes}" offLabel="#{msg.no}" onIcon="ui-icon-check" offIcon="ui-icon-close">
+								<p:ajax update="member_limit_input"/>
+							</p:selectBooleanButton>
+							<h:panelGroup id="member_limit_input">
+								<ui:fragment rendered="#{groupOptionsBean.group.memberCountLimited}">
+									#{msg.How_many_users_can_join_the_group}:
+									<p:inputNumber value="#{groupOptionsBean.group.maxMemberCount}" style="max-width: 5rem;" styleClass="d-block"
+												   minValue="#{groupOptionsBean.group.memberCount}" maxValue="10000" decimalPlaces="0" thousandSeparator=""/>
+								</ui:fragment>
+							</h:panelGroup>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['policy.title.add']}" styleClass="h5"/>
-	                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAdd}" layout="grid" columns="1">
-	                                <f:selectItems value="#{groupOptionsBean.group.policyAddOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
-	                            </p:selectOneRadio>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['policy.title.add']}" styleClass="h5"/>
+							<p:selectOneRadio value="#{groupOptionsBean.group.policyAdd}" layout="grid" columns="1">
+								<f:selectItems value="#{groupOptionsBean.group.policyAddOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+							</p:selectOneRadio>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['policy.title.edit']}" styleClass="h5"/>
-	                            <p:selectOneRadio value="#{groupOptionsBean.group.policyEdit}" layout="grid" columns="1">
-	                                <f:selectItems value="#{groupOptionsBean.group.policyEditOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
-	                            </p:selectOneRadio>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['policy.title.edit']}" styleClass="h5"/>
+							<p:selectOneRadio value="#{groupOptionsBean.group.policyEdit}" layout="grid" columns="1">
+								<f:selectItems value="#{groupOptionsBean.group.policyEditOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+							</p:selectOneRadio>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['policy.title.view']}" styleClass="h5"/>
-	                            <p:selectOneRadio value="#{groupOptionsBean.group.policyView}" layout="grid" columns="1">
-	                                <f:selectItems value="#{groupOptionsBean.group.policyViewOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
-	                            </p:selectOneRadio>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['policy.title.view']}" styleClass="h5"/>
+							<p:selectOneRadio value="#{groupOptionsBean.group.policyView}" layout="grid" columns="1">
+								<f:selectItems value="#{groupOptionsBean.group.policyViewOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+							</p:selectOneRadio>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg['policy.title.annotate']}" styleClass="h5"/>
-	                            <p:selectOneRadio value="#{groupOptionsBean.group.policyAnnotate}" layout="grid" columns="1">
-	                                <f:selectItems value="#{groupOptionsBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
-	                            </p:selectOneRadio>
-	                            <p:message for="@previous"/>
-	                        </div>
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg['policy.title.annotate']}" styleClass="h5"/>
+							<p:selectOneRadio value="#{groupOptionsBean.group.policyAnnotate}" layout="grid" columns="1">
+								<f:selectItems value="#{groupOptionsBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"/>
+							</p:selectOneRadio>
+							<p:message for="@previous"/>
+						</div>
 
-	                        <ui:fragment rendered="#{groupOptionsBean.group.restrictionForumCategoryEnabled}">
-	                            <div class="form-group">
-	                                <p:outputLabel for="@next" value="#{msg['Miscellaneous']}" styleClass="h5"/>
-	                                <p:selectBooleanCheckbox id="restriction_mandatory_forum_category" value="#{groupOptionsBean.group.restrictionForumCategoryRequired}" itemLabel="#{msg['policy.forum_category']}"/>
-	                                <p:message for="@previous"/>
-	                            </div>
-	                        </ui:fragment>
+						<ui:fragment rendered="#{groupOptionsBean.group.restrictionForumCategoryEnabled}">
+							<div class="form-group">
+								<p:outputLabel for="@next" value="#{msg['Miscellaneous']}" styleClass="h5"/>
+								<p:selectBooleanCheckbox id="restriction_mandatory_forum_category" value="#{groupOptionsBean.group.restrictionForumCategoryRequired}" itemLabel="#{msg['policy.forum_category']}"/>
+								<p:message for="@previous"/>
+							</div>
+						</ui:fragment>
 
-	                        <p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_security_form"/>
-	                    </h:form>
-	                </p:panel>
-	            </div>
-	            <div class="col-md-6">
-	                <p:panel header="#{msg.copy_resources}">
-	                    <h:form id="group_copy_form">
-	                        <div class="form-group">
-	                            <p:outputLabel for="@next" value="#{msg.copy_all_resources}"/>
-	                            <p:selectOneMenu value="#{groupOptionsBean.selectedResourceTargetGroupId}">
-	                                <f:selectItems var="g" value="#{groupOptionsBean.userCopyableGroups}" itemLabel="#{g.title}" itemValue="#{g.id}"/>
-	                            </p:selectOneMenu>
-	                        </div>
+						<p:commandButton value="#{msg.save}" action="#{groupOptionsBean.onGroupEdit}" update=":growl :group_security_form"/>
+					</h:form>
+				</p:panel>
+			</div>
+			<div class="col-md-6">
+				<p:panel header="#{msg.copy_resources}">
+					<h:form id="group_copy_form">
+						<div class="form-group">
+							<p:outputLabel for="@next" value="#{msg.copy_all_resources}"/>
+							<p:selectOneMenu value="#{groupOptionsBean.selectedResourceTargetGroupId}">
+								<f:selectItems var="g" value="#{groupOptionsBean.userCopyableGroups}" itemLabel="#{g.title}" itemValue="#{g.id}"/>
+							</p:selectOneMenu>
+						</div>
 
-	                        <p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl"
-	                                         onstart="return confirm('#{utilBean.getLocaleMessage('group_copy_resources_question', groupOptionsBean.group.resources.size())}');"/>
-	                    </h:form>
-	                </p:panel>
+						<p:commandButton value="#{msg.copy}" action="#{groupOptionsBean.copyGroup}" process="@form" update=":growl"
+										 onstart="return confirm('#{utilBean.getLocaleMessage('group_copy_resources_question', groupOptionsBean.group.resources.size())}');"/>
+					</h:form>
+				</p:panel>
 
-	                <p:panel header="#{msg['Miscellaneous']}">
-	                    <h:form id="group_delete_form">
-	                        <p:commandButton value="#{msg.delete_group}" title="#{msg.delete}"
-	                                         action="#{groupsBean.deleteGroup}" ajax="false" process="@this"
-	                                         onclick="return confirm('#{utilBean.getLocaleMessage('group_delete_question', groupOptionsBean.group.title)}')">
-	                            <f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
-	                        </p:commandButton>
-	                    </h:form>
-	                </p:panel>
-	            </div>
-	        </div>
-	    </ui:fragment>
-	</ui:define>
+				<p:panel header="#{msg['Miscellaneous']}">
+					<h:form id="group_delete_form">
+						<p:commandButton value="#{msg.delete_group}" title="#{msg.delete}"
+										 action="#{groupsBean.deleteGroup}" ajax="false" process="@this"
+										 onclick="return confirm('#{utilBean.getLocaleMessage('group_delete_question', groupOptionsBean.group.title)}')">
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupOptionsBean.group}"/>
+						</p:commandButton>
+					</h:form>
+				</p:panel>
+			</div>
+		</div>
+	</ui:fragment>
+</ui:define>
 </ui:composition>

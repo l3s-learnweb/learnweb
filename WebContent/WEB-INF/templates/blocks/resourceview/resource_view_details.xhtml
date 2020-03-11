@@ -250,7 +250,7 @@
 							</p:linkButton>
 							<p:commandButton action="#{resourceDetailBean.onDeleteTag}" icon="fa fa-times" styleClass="secondary-btn rounded-0"
 											 global="false" update=":tags_list :growl" process="@this"
-											 onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"
+											 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();"
 											 rendered="#{res.canEditResource(userBean.user)}">
 								<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 							</p:commandButton>
@@ -267,7 +267,7 @@
 
 				<p:commandButton actionListener="#{resourceDetailBean.addTag}" value="#{msg.addTag}"
 								 update=":tags_list :growl tag_name" partialSubmit="true" process="@form"
-								 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();">
+								 global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 					<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 				</p:commandButton>
 			</h:form>
@@ -285,7 +285,7 @@
 					</div>
 
 					<p:commandButton value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment}" update=":comments_list @form :growl" process="@form"
-									 global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();">
+									 global="false" onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide();">
 						<f:setPropertyActionListener target="#{activityResourceBean.reloadLogs}" value="true"/>
 					</p:commandButton>
 				</ui:fragment>

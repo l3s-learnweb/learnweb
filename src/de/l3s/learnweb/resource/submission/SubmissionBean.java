@@ -27,7 +27,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.logging.Action;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.Resource.ResourceViewRights;
-import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceType;
 import de.l3s.learnweb.resource.peerAssessment.PeerAssessmentPair;
@@ -67,9 +66,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
 
     private List<User> users; //To fetch list of users for a given course
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
-
-    @Inject
-    private ResourceDetailBean resourceDetailBean;
 
     public void onLoad() throws SQLException
     {
@@ -153,34 +149,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
     public List<Resource> getSelectedResources()
     {
         return selectedResources;
-    }
-
-    public void actionSelectGroupItem()
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
-        // TODO Dupe: same as SubmissionModeratorBean.actionSelectGroupItem
-        try
-        {
-            String itemType = params.get("itemType");
-            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
-
-            if(itemType != null && itemType.equals("resource") && itemId > 0)
-            {
-                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null)
-                {
-                    resourceDetailBean.setViewResource(resource);
-                }
-                else
-                    throw new NullPointerException("Target resource does not exists");
-            }
-
-        }
-        catch(NullPointerException | SQLException e)
-        {
-            log.error(e);
-        }
     }
 
     public void actionUpdateSelectedItems()
@@ -311,9 +279,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
                             getLearnweb().getSubmissionManager().deleteSubmissionResource(submissionId, resource.getId(), userId);
                         }
                     }
-
-                    if(resourceDetailBean.isTheResourceClicked(resource))
-                        resourceDetailBean.resetPane();
                 }
             }
 
@@ -352,16 +317,6 @@ public class SubmissionBean extends ApplicationBean implements Serializable
         {
             log.error("Exception while parsing selected items in actionAddSelectedItems", e);
         }
-    }
-
-    public ResourceDetailBean getResourceDetailBean()
-    {
-        return resourceDetailBean;
-    }
-
-    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
-    {
-        this.resourceDetailBean = resourceDetailBean;
     }
 
     public int getSubmissionId()

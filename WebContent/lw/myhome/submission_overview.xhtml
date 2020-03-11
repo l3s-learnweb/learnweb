@@ -12,8 +12,6 @@
 <ui:define name="metadata">
 	<f:metadata>
 		<f:viewParam name="user_id" value="#{submissionBean.userId}"/>
-		<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
-		<f:viewAction action="#{resourceDetailBean.onLoad}"/>
 		<f:viewAction action="#{submissionBean.onLoad}"/>
 	</f:metadata>
 </ui:define>
@@ -28,20 +26,10 @@
 	</lw:breadcrumb-item>
 </ui:define>
 
-	<ui:define name="center_layout">
-		<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
-		<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
-		<h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
-		<h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
-
-		<h:form>
-			<p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
-							 global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-			<p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
-							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-			<p:remoteCommand name="resourceUpdatedHook" update=":submissions"
-							 global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-		</h:form>
+<ui:define name="center_layout">
+	<h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+	<h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
+	<h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
 
 	<h:panelGroup layout="block" id="resourcesWrapper">
 		<p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
@@ -287,9 +275,9 @@
 			console.log(arguments);
 		}
 
-			function onResourcesUpdated() {
-				createSelectableArea('submissions');
-			}
+		function onResourcesUpdated() {
+			createSelectableArea('submissions');
+		}
 
 		$(document).ready(function () {
 			addSubmissionHeaderClickHandler();
@@ -299,15 +287,11 @@
 
 		});
 
-			$(function () {
-				$(document).on('dblclick', '.res-item', openItems);
-				createSelectable('resourcesView');
-				onResourcesUpdated();
-			});
-		</script>
-	</ui:define>
-
-<ui:define name="right_layout">
-	<ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
+		$(function () {
+			$(document).on('dblclick', '.res-item', openItems);
+			createSelectable('resourcesView');
+			onResourcesUpdated();
+		});
+	</script>
 </ui:define>
 </ui:composition>

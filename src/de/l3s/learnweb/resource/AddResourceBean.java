@@ -57,7 +57,45 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         formStep = 1;
     }
 
-    public void setResourceTypeGlossary()
+    public void create(final String type, Group targetGroup, Folder targetFolder)
+    {
+        // Set target group and folder in beans
+        this.reset();
+        this.setTarget(targetGroup, targetFolder);
+
+        // Set target view and defaults
+        switch(type)
+        {
+            case "file":
+                this.resource.setType(ResourceType.file);
+                break;
+            case "url":
+            case "website":
+                this.resource.setType(ResourceType.website);
+                this.resource.setStorageType(Resource.WEB_RESOURCE);
+                break;
+            case "glossary":
+                this.setResourceTypeGlossary();
+                break;
+            case "survey":
+                this.resource.setType(ResourceType.survey);
+                break;
+            case "document":
+                this.resource.setType(ResourceType.document);
+                break;
+            case "spreadsheet":
+                this.resource.setType(ResourceType.spreadsheet);
+                break;
+            case "presentation":
+                this.resource.setType(ResourceType.presentation);
+                break;
+            default:
+                log.error("Unsupported item type: " + type);
+                break;
+        }
+    }
+
+    private void setResourceTypeGlossary()
     {
         GlossaryResource glossaryResource = new GlossaryResource();
         glossaryResource.setUser(getUser());
@@ -139,7 +177,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             createThumbnailThread.join(1000); // wait for a second. If this take longer
 
             log.debug("Next step");
-            this.formStep++;
+            formStep++;
         }
         catch(Exception e)
         {
@@ -147,7 +185,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void createDocument()
+    private void createDocument()
     {
         log.debug("Creating new document...");
         resource.setSource(ResourceService.learnweb);
@@ -192,6 +230,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void addResource()
     {
+        if (this.resource.isOfficeResource())
+        {
+            this.createDocument();
+            return;
+        }
+
         try
         {
             if(!targetGroup.canAddResources(getUser()))

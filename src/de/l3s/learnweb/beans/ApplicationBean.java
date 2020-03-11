@@ -52,7 +52,7 @@ public class ApplicationBean
         if(null == FacesContext.getCurrentInstance())
             return false;
 
-        return FacesContext.getCurrentInstance().isPostback();
+        return FacesContext.getCurrentInstance().isPostback() || FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest();
     }
 
     protected static FacesContext getFacesContext()

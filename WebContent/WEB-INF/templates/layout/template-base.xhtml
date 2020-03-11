@@ -9,10 +9,6 @@
     <!--@elvariable id="pageTitle" type="java.lang.String"-->
     <!--@elvariable id="helpText" type="java.lang.String"-->
     <!--@elvariable id="hideGrowl" type="java.lang.Boolean"-->
-    <!--@elvariable id="hideBreadcrumbs" type="java.lang.Boolean"-->
-
-    <!--@elvariable id="loginRequired" type="java.lang.Boolean"-->
-    <!--@elvariable id="smallPage" type="java.lang.Boolean"-->
 
     <f:view locale="#{userBean.locale}" contentType="text/html">
         <ui:insert name="metadata"/>
@@ -27,8 +23,6 @@
 
             <h:outputScript library="primefaces" name="jquery/jquery.js"/>
             <h:outputScript library="learnweb-layout" name="js/layout.js"/>
-            <h:outputScript library="learnweb-layout" name="js/breadcrumb.js"/>
-            <h:outputScript library="vendor" name="jquery.auto-complete-v1.0.7/jquery.auto-complete.min.js" target="body"/>
 
             <ui:fragment rendered="#{userBean.trackingEnabled}">
                 <script>
@@ -43,54 +37,7 @@
         </h:head>
 
         <h:body styleClass="layout-body ui-loading">
-            <div class="layout-overlay ui-widget-overlay"></div>
-
-            <div class="layout-wrapper #{userBean.loggedIn and not userBean.getPreference('HIDE_SIDEBAR') ? null : 'layout-wrapper-sidebar-inactive'}">
-                <ui:include src="parts/header.xhtml"/>
-
-                <ui:fragment rendered="#{userBean.loggedIn}">
-                    <ui:include src="parts/sidebar.xhtml"/>
-                </ui:fragment>
-
-                <div class="layout-main d-flex flex-column" id="main">
-                    <main class="layout-main-content #{smallPage or loginRequired and !userBean.loggedIn? 'container':''}">
-                        <ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
-                            <p:messages id="message" showDetail="false" showSummary="true" escape="false"/>
-
-                            <ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
-                                <p:panel header="#{msg.loginTitle}">
-                                	<div class="mw-md">
-                                		<ui:include src="/WEB-INF/templates/blocks/user/login-form.xhtml"/>
-                                	</div>
-                                </p:panel>
-                            </ui:fragment>
-
-                            <ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
-                                <ui:fragment rendered="#{not hideBreadcrumbs}">
-                                    <div class="breadcrumb mb-3">      
-                                        <ui:insert name="breadcrumb"/>
-
-                                        <div class="ml-auto">
-                                            <ui:insert name="breadcrumb_right"/>
-                                        </div>
-                                    </div>
-                                </ui:fragment>
-
-                                <div class="row no-gutters">
-                                    <div class="col layout-main-pane">
-                                        <ui:insert name="center_layout"/>
-                                    </div>
-                                </div>
-                            </ui:fragment>
-                        </ui:fragment>
-                        <ui:fragment rendered="#{learnwebBean.maintenanceMode}">
-                            <h2 class="text-danger">#{msg.service_unavailable}</h2>
-                        </ui:fragment>
-                    </main>
-
-                    <ui:include src="parts/footer.xhtml"/>
-                </div>
-            </div>
+            <ui:insert name="body_content"/>
 
             <p:growl id="growl" rendered="#{not hideGrowl}" escape="false"/>
 

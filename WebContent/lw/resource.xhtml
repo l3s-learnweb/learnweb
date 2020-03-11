@@ -1,50 +1,91 @@
-<ui:composition template="/WEB-INF/templates/layout/template.xhtml"
+<ui:composition template="/WEB-INF/templates/layout/template-base.xhtml"
 				xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
-				xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+				xmlns:p="http://primefaces.org/ui">
 
-    <ui:param name="pageTitle" value="#{resourceBean.resource.title}"/>
-    <ui:param name="smallPage" value="true"/>
+    <ui:param name="pageTitle" value="#{resourceDetailBean.resource.title}"/>
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true"/>
-			<f:viewAction action="#{resourceBean.loadResource}"/>
+			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" required="true"/>
+			<f:viewParam name="edit" value="#{resourceDetailBean.editResource}" required="false"/>
+			<f:viewAction action="#{resourceDetailBean.onLoad}"/>
 		</f:metadata>
 	</ui:define>
 
-	<ui:define name="breadcrumb">
-		<ui:fragment rendered="#{resourceBean.resource.groupId > 0}">
-			<lw:breadcrumb-item link="myhome/groups.jsf" title="#{msg.myGroups}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-			</lw:breadcrumb-item>
+	<ui:define name="body_content">
+		<h:outputScript library="primefaces" name="jquery/jquery.js"/>
+		<h:outputScript library="learnweb-layout" name="js/resource-view.js" target="body"/>
 
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{resourceBean.resource.groupId}" title="#{resourceBean.resource.group.title}" >
-				<p:repeat var="groups" value="#{userBean.user.groups}">
-					<li><a href="group/resources.jsf?group_id=#{groups.id}">#{groups.title}</a></li>
-				</p:repeat>
-			</lw:breadcrumb-item>
+		<h:form styleClass="d-none">
+			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":growl"
+							 global="false" onstart="PF('resourceViewForm').show();" oncomplete="PF('resourceViewForm').hide();"/>
+		</h:form>
 
-			<lw:breadcrumb-item link="group/resources.jsf?group_id=#{resourceBean.resource.groupId}" title="#{msg.resources}">
-				<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_my_groups.xhtml"/>
-			</lw:breadcrumb-item>
+		<h:outputText value="This resource has been removed" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
+
+		<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.resource.canViewResource(userBean.user) and not (resourceDetailBean.resource.deleted or resourceDetailBean.resource.groupId eq 0)}"/>
+
+		<ui:fragment rendered="#{not userBean.loggedIn}"><p>You need to login to access this resource.</p></ui:fragment>
+
+		<ui:fragment rendered="#{resourceDetailBean.resource.canViewResource(userBean.user)}">
+			<div class="res-view">
+				<div class="row">
+					<div class="col res-view-embedded d-flex justify-content-center align-items-center">
+						<ui:decorate template="/WEB-INF/templates/blocks/resourceview/preview.xhtml">
+							<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+						</ui:decorate>
+					</div>
+					<div class="col col-lg-4 res-view-details">
+						<div class="res-view-controls">
+							<div class="mr-auto">
+								<p:commandButton id="resEditBtn" icon="fa fa-pencil" styleClass="secondary-btn ui-button-lg" title="#{msg.edit_resource}"
+												 action="#{resourceDetailBean.editResource}" update=":resourceViewForm" global="false" form="resourceViewForm"
+												 onstart="PF('detailsOverlay').show();" oncomplete="PF('detailsOverlay').hide()" onsuccess="$('#resEditBtn').hide();"/>
+
+								<ui:decorate template="/WEB-INF/templates/blocks/resourceview/controls.xhtml">
+									<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+								</ui:decorate>
+							</div>
+							<div class="ml-auto">
+								<p:button icon="fa fa-eye-slash" styleClass="secondary-btn ui-button-lg" title="#{msg.toggle_details}"
+										  onclick="$('.res-view-details').toggleClass('collapse-details');$('.ui-icon', this).toggleClass('fa-eye-slash fa-eye');return false;"/>
+
+								<p:commandButton icon="fa fa-times" styleClass="secondary-btn ui-button-lg show-in-iframe" title="#{msg.close}"
+										  		 action="#{resourceDetailBean.cancelEdit}" immediate="true" form="resourceViewForm"
+												 onstart="parent.$.fancybox.close();"/>
+							</div>
+						</div>
+
+						<div class="res-view-panel">
+							<h1>
+								<a href="#{resourceDetailBean.resource.learnwebUrl}">
+									<h:outputText value="#{resourceDetailBean.resource.title}" escape="false"/>
+								</a>
+							</h1>
+
+							<h:form id="resourceViewForm" prependId="false" styleClass="resource-details">
+								<p:blockUI block="resourceViewForm" widgetVar="detailsOverlay">
+									<h:outputText value="#{msg.please_wait}"/>
+								</p:blockUI>
+
+								<ui:fragment rendered="#{resourceDetailBean.viewAction == 'viewResource'}">
+									<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_view.xhtml">
+										<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+									</ui:decorate>
+								</ui:fragment>
+
+								<ui:fragment rendered="#{resourceDetailBean.viewAction == 'editResource'}">
+									<ui:decorate template="/WEB-INF/templates/blocks/resourceview/resource_edit.xhtml">
+										<ui:param name="res" value="#{resourceDetailBean.resource}"/>
+									</ui:decorate>
+								</ui:fragment>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
 		</ui:fragment>
-
-		<lw:breadcrumb-item rendered="#{resourceBean.resource.groupId  == -1}" link="myhome/resources.jsf" title="#{msg.myResourcesTitle}">
-			<ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-		</lw:breadcrumb-item>
-
-		<lw:breadcrumb-item title="#{resourceBean.resource.title}"/>
-	</ui:define>
-
-	<ui:define name="center_layout">
-
-		<h1><a href="#{resourceBean.resource.learnwebUrl}"><h:outputText value="#{resourceBean.resource.title}" escape="false"/></a></h1>
-	
-		<ui:fragment rendered="#{not userBean.loggedIn}">
-		<p>You need to login to access this resource.</p>
-		</ui:fragment>
-
 	</ui:define>		
 </ui:composition>

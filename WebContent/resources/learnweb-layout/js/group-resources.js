@@ -1,4 +1,4 @@
-/* global commandEditFolder, commandSelectResource, commandEditResource, commandBatchUpdateResources, commandCreateResource, commandOpenFolder, updateSelectedItemsCommand */
+/* global commandEditFolder, commandBatchUpdateResources, commandOpenFolder */
 
 
 class SelectResource {
@@ -382,18 +382,37 @@ function createDragAndDrop(resContainerId, resBreadcrumbsId, foldersTreeId) {
   }
 }
 
-function openResource(resourceId) {
-  PF('learnweb').updateSearchParams({ resource_id: resourceId });
-
-  commandSelectResource([
-    { name: 'itemType', value: 'resource' },
-    { name: 'itemId', value: resourceId },
-  ]);
+function openResource(resourceId, edit = false) {
+  $.fancybox.open($('[data-resview="true"]'), {
+    defaultType: 'iframe',
+    closeExisting: true,
+    arrows: false,
+    infobar: false,
+    toolbar: false,
+    slideClass: 'p-0',
+    hash: false,
+    iframe: {
+      css: {
+        height: '100%',
+        width: '100%',
+      },
+    },
+    onInit: (instance) => {
+      for (let i = 0, l = instance.group.length; i < l; ++i) {
+        const itemId = instance.group[i].opts.$orig.data('itemid');
+        if (String(itemId) === String(resourceId)) {
+          instance.currIndex = instance.group[i].index;
+          if (edit) instance.group[i].src += '&edit=true';
+          break;
+        }
+      }
+    },
+  });
 }
 
 function openFolder(folderId) {
   selected.unselectAll();
-  PF('learnweb').updateSearchParams({ folder_id: folderId, resource_id: null });
+  PF('learnweb').updateSearchParams({ folder_id: folderId });
 
   commandOpenFolder([
     { name: 'folderId', value: folderId },
@@ -410,23 +429,14 @@ function openGroup(groupId) {
 
 function doAction(action, extraAttr1, extraAttr2) {
   switch (action) {
-    case 'new-file':
-      commandCreateResource([{ name: 'type', value: 'newFile' }, { name: 'docType', value: extraAttr1 }]);
-      break;
     case 'create-folder':
       $('#res_toolbar\\:menu_create_folder').trigger('click');
       break;
     case 'upload-file':
-      commandCreateResource([{ name: 'type', value: 'file' }]);
+      $('#res_toolbar\\:menu_upload_file').trigger('click');
       break;
     case 'add-website':
-      commandCreateResource([{ name: 'type', value: 'url' }]);
-      break;
-    case 'add-glossary2':
-      commandCreateResource([{ name: 'type', value: 'glossary2' }]);
-      break;
-    case 'add-survey':
-      commandCreateResource([{ name: 'type', value: 'survey' }]);
+      $('#res_toolbar\\:menu_upload_url').trigger('click');
       break;
     case 'open-folder': {
       const last = selected.getItem(selected.size() - 1);
@@ -486,17 +496,6 @@ function doAction(action, extraAttr1, extraAttr2) {
         console.error('No resources selected.');
       }
       break;
-    case 'details':
-      if (selected.size() === 1) {
-        const item = selected.getItem(0);
-        commandSelectResource([
-          { name: 'itemType', value: item.type },
-          { name: 'itemId', value: item.id },
-        ]);
-      } else {
-        console.error('No resources selected.');
-      }
-      break;
     case 'edit':
       if (selected.size() === 1) {
         const item = selected.getItem(0);
@@ -505,10 +504,7 @@ function doAction(action, extraAttr1, extraAttr2) {
             { name: 'itemId', value: item.id },
           ]);
         } else {
-          commandEditResource([
-            { name: 'itemType', value: item.type },
-            { name: 'itemId', value: item.id },
-          ]);
+          openResource(item.id, true);
         }
       } else {
         console.error('No resources selected.');
@@ -521,18 +517,10 @@ function doAction(action, extraAttr1, extraAttr2) {
             { name: 'action', value: 'delete' },
             { name: 'items', value: JSON.stringify(selected) },
           ]);
-          PF('learnweb').updateSearchParams({ resource_id: null });
         });
       } else {
         console.error('No resources selected.');
       }
-      break;
-    case 'remove':
-      updateSelectedItemsCommand([
-        { name: 'action', value: 'remove' },
-        { name: 'items', value: JSON.stringify(selected) },
-      ]);
-      PF('learnweb').updateSearchParams({ resource_id: null });
       break;
     default:
       console.error('Unimplemented or unsupported action: ', action);

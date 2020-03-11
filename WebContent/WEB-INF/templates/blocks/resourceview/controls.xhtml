@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <!--@elvariable id="res" type="de.l3s.learnweb.resource.Resource"-->
+
+    <p:linkButton outcome="/lw/glossary/glossary" icon="fa fa-window-maximize" styleClass="secondary-btn ui-button-lg" title="#{msg['Glossary.open']}" rendered="#{res.type eq 'glossary2'}">
+        <f:param name="resource_id" value="#{res.id}"/>
+    </p:linkButton>
+
+    <p:linkButton outcome="/lw/survey/survey" icon="fa fa-window-maximize" styleClass="secondary-btn ui-button-lg" title="#{msg['survey.open']}" rendered="#{res.type eq 'survey'}">
+        <f:param name="resource_id" value="#{res.id}"/>
+    </p:linkButton>
+
+    <p:linkButton outcome="/lw/survey/results" icon="fa fa-list-alt" styleClass="secondary-btn ui-button-lg" value="#{msg['survey.open_results']}" rendered="#{res.type eq 'survey' and userBean.user.moderator}">
+        <f:param name="resource_id" value="#{res.id}"/>
+    </p:linkButton>
+
+    <p:linkButton href="#{res.urlProxied}" target="_blank" icon="fa fa-external-link" styleClass="secondary-btn ui-button-lg" title="#{res.url}" rendered="#{res.type eq 'text' or res.type eq 'website' or res.type eq 'pdf'}"/>
+
+    <ui:fragment rendered="#{res.isOfficeResource() and not res.isOffline()}">
+        <p:button onclick="loadModalEditor();return false;" value="Open editor" icon="fa fa-arrows-alt"/>
+
+        <div class="collapse" id="modal_editor_wrapper">
+            <div id="modal_editor"></div>
+        </div>
+    </ui:fragment>
+</ui:composition>

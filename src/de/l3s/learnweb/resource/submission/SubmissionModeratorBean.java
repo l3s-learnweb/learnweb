@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,10 +12,7 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.resource.Resource;
-import de.l3s.learnweb.resource.ResourceDetailBean;
 import de.l3s.learnweb.resource.submission.SubmissionManager.SubmittedResources;
-import de.l3s.util.StringHelper;
 
 /**
  * @author Philipp
@@ -32,9 +28,6 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
 
     private Submission submission;
     private SubmittedResources selectedUserSubmission;
-
-    @Inject
-    private ResourceDetailBean resourceDetailBean;
 
     public void onLoad()
     {
@@ -66,45 +59,6 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     public Submission getSubmission()
     {
         return submission;
-    }
-
-    // methods required to show resources in right panel
-    public void actionSelectGroupItem()
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-
-        // TODO Dupe: same as SubmissionBean.actionSelectGroupItem
-        try
-        {
-            String itemType = params.get("itemType");
-            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
-
-            if(itemType != null && itemType.equals("resource") && itemId > 0)
-            {
-                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null)
-                {
-                    resourceDetailBean.setViewResource(resource);
-                }
-                else
-                    throw new NullPointerException("Target resource does not exists");
-            }
-
-        }
-        catch(NullPointerException | SQLException e)
-        {
-            log.error(e);
-        }
-    }
-
-    public ResourceDetailBean getResourceDetailBean()
-    {
-        return resourceDetailBean;
-    }
-
-    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
-    {
-        this.resourceDetailBean = resourceDetailBean;
     }
 
     public SubmittedResources getSelectedUserSubmission()

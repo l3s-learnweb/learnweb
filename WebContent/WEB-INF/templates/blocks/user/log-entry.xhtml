@@ -3,7 +3,7 @@
 				xmlns:h="http://xmlns.jcp.org/jsf/html"
 				xmlns:f="http://xmlns.jcp.org/jsf/core"
 				xmlns:lw="http://l3s.de/learnweb"
-				xmlns:p="http://primefaces.org/ui">
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <!--@elvariable id="showPreview" type="java.lang.Boolean"-->
 <!--@elvariable id="status" type="javax.servlet.jsp.jstl.core.LoopTagStatus"-->
@@ -31,12 +31,13 @@
 
 		<ui:fragment rendered="#{showPreview}">
 			<h:panelGroup rendered="#{not empty logEntry.resource}" layout="block" styleClass="resource-log-snippet mt-2">
-				<h:panelGroup rendered="#{not empty logEntry.resource.thumbnail1}" layout="block" styleClass="resource-preview">
-					<p:commandLink update=":right_pane" onclick="PF('learnweb').showRightPane();">
-						<f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{logEntry.resource}"/>
-						<img src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}" class="res-image-simple"/>
-					</p:commandLink>
-				</h:panelGroup>
+				<h:outputLink styleClass="resource-preview mx-auto" style="min-width:10rem;" value="resource.jsf" pt:data-fancybox="resource" rendered="#{not empty logEntry.resource.thumbnail1}">
+					<f:param name="resource_id" value="#{logEntry.resource.id}"/>
+
+					<ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
+						<ui:param name="res" value="#{logEntry.resource}"/>
+					</ui:decorate>
+				</h:outputLink>
 
 				<div class="resource-details pl-3">
 					<h:outputText value="#{logEntry.resource.shortDescription}" escape="false" styleClass="mb-1"/>

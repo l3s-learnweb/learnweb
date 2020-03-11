@@ -17,8 +17,6 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -655001215017199006L;
 
-    private Resource resource;
-
     private File mainFile;
     private String filesExtension;
     private String fileType;
@@ -33,8 +31,6 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
         if(FileUtility.canBeViewed(filesExtension))
         {
-            this.resource = resource;
-
             mainFile = resource.getFile(TYPE.FILE_MAIN);
             fullFilesUrl = resource.getFileUrl();
             fileType = FileUtility.getFileType(resource.getFileName());
@@ -45,11 +41,6 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         {
             resource.setOnlineStatus(OnlineStatus.OFFLINE);
         }
-    }
-
-    public Resource getResource()
-    {
-        return resource;
     }
 
     public String getFilesExtension()

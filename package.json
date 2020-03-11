@@ -113,6 +113,7 @@
     },
     "ignoreFiles": [
       "**/node_modules/**",
+      "**/california-theme/**",
       "**/vendor/**"
     ]
   }

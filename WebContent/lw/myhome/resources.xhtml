@@ -12,9 +12,7 @@
         <f:metadata>
             <f:viewParam name="folder_id" value="#{groupResourcesBean.folderId}"/>
             <f:viewParam name="save_url" value="#{groupResourcesBean.saveUrl}"/>
-            <f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}"/>
             <f:viewAction action="#{groupResourcesBean.onLoad}"/>
-            <f:viewAction action="#{resourceDetailBean.onLoad}"/>
         </f:metadata>
     </ui:define>
 
@@ -32,13 +30,8 @@
         <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
         <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
         <h:outputScript library="vendor" name="contextMenu-v2.9.0/jquery.contextMenu.min.js" target="body"/>
-        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
         <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
 
-        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources_panel.xhtml"/>
-    </ui:define>
-
-    <ui:define name="right_layout">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
+        <ui:decorate template="/WEB-INF/templates/blocks/resources/resources.xhtml"/>
     </ui:define>
 </ui:composition>

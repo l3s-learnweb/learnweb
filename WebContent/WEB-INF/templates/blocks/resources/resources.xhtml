@@ -8,26 +8,14 @@
 <!--@elvariable id="paginator" type="de.l3s.learnweb.resource.AbstractPaginator"-->
 
 <h:form>
-    <p:remoteCommand name="commandSelectResource" actionListener="#{groupResourcesBean.commandSelectResource}" update=":right_pane :growl"
-                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-    <p:remoteCommand name="commandEditResource" actionListener="#{groupResourcesBean.commandEditResource}" update=":right_pane :growl"
-                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-    <p:remoteCommand name="commandCreateResource" actionListener="#{groupResourcesBean.commandCreateResource}" update=":right_pane :growl"
-                     global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-    <p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":right_pane :growl"
-                     global="false" onstart="PF('rightPaneOverlay').show();" oncomplete="PF('rightPaneOverlay').hide();"/>
-
     <p:remoteCommand name="commandOpenFolder" actionListener="#{groupResourcesBean.commandOpenFolder}" update=":resourcesWrapper :group_folders_tree :growl"
                      global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
     <p:remoteCommand name="resourceAddedHook" actionListener="#{groupResourcesBean.resetResources}" update=":resourcesWrapper :group_folders_tree"
                      global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-    <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"
-                     global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
     <p:remoteCommand name="commandBatchUpdateResources" actionListener="#{groupResourcesBean.commandBatchUpdateResources}"
-                     update=":resourcesWrapper :group_folders_tree :right_pane :growl" global="false"
-                     onstart="PF('resourcesOverlay').show();PF('rightPaneOverlay').show();"
-                     oncomplete="PF('resourcesOverlay').hide();PF('rightPaneOverlay').hide();onResourcesUpdated();"/>
+                     update=":resourcesWrapper :group_folders_tree :growl" global="false"
+                     onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
 
     <p:remoteCommand name="commandEditFolder" actionListener="#{editFolderBean.commandEditFolder}" update=":growl :editFolderDialog"
                      global="false" oncomplete="PF('editFolderDialog').show();return false;"/>
@@ -76,14 +64,10 @@
                         <f:setPropertyActionListener target="#{groupResourcesBean.view}" value="list"/>
                     </p:commandButton>
 
+                    <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
                     <ui:fragment rendered="#{userBean.admin}">
-                        <!-- TODO: The download dialog and its bean must be improved before it can be shown -->
-                        <span class="ui-separator">
-                                <span class="ui-icon fa fa-ellipsis-v"/>
-                            </span>
-
-                        <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();"
-                                         type="button" />
+                        <span class="ui-separator"><span class="ui-icon fa fa-ellipsis-v"/></span>
+                        <p:commandButton title="#{msg.download_group_resources}" icon="fa fa-cloud-download" onclick="PF('dlg1').show();" type="button" />
                     </ui:fragment>
                 </f:facet>
 
@@ -93,13 +77,28 @@
                                     oncomplete="PF('createFolderDialog').show();return false;" update=":createFolderDialog"
                                     actionListener="#{addFolderBean.create(groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:separator/>
-                        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;"/>
-                        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;"/>
+                        <p:menuitem id="menu_upload_file" value="#{msg.upload_file}" icon="fa fa-cloud-upload" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('file', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:menuitem id="menu_upload_url" value="#{msg.upload_url}" icon="fa fa-link" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('url', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                         <p:separator/>
-                        <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" onclick="doAction('new-file', 'document');return false;"/>
-                        <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" onclick="doAction('new-file','spreadsheet');return false;"/>
-                        <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" onclick="doAction('new-file', 'presentation');return false;"/>
-                        <p:menuitem value="#{msg['Glossary.glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary2'); return false;"/>
+                        <p:menuitem value="#{msg.office_document}" icon="fa fa-file-word-o" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('document', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:menuitem value="#{msg.office_spreadsheet}" icon="fa fa-file-excel-o" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('spreadsheet', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:menuitem value="#{msg.office_presentation}" icon="fa fa-file-powerpoint-o" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('presentation', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:menuitem value="#{msg['Glossary.glossary']}" icon="fa fa-book" ajax="true" global="false"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('glossary', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
+                        <p:menuitem value="#{msg.survey}" icon="fa fa-graduation-cap" ajax="true" global="false" rendered="#{userBean.admin}"
+                                    oncomplete="PF('createResourceDialog').show();return false;" update=":createResourceDialog"
+                                    actionListener="#{addResourceBean.create('survey', groupResourcesBean.group, groupResourcesBean.currentFolder)}"/>
                     </p:menuButton>
                 </f:facet>
             </p:toolbar>
@@ -189,8 +188,9 @@
     </div>
 </h:panelGroup>
 
-<ui:decorate template="/WEB-INF/templates/blocks/modal/create_folder.xhtml"/>
-<ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder.xhtml"/>
+<ui:decorate template="/WEB-INF/templates/blocks/modal/create_resource_dialog.xhtml"/>
+<ui:decorate template="/WEB-INF/templates/blocks/modal/create_folder_dialog.xhtml"/>
+<ui:decorate template="/WEB-INF/templates/blocks/modal/edit_folder_dialog.xhtml"/>
 
 <p:dialog id="deleteConfirmDialog" header="#{msg.delete_resource}" widgetVar="deleteConfirm" appendTo="@(body)"
           modal="true" resizable="false" draggable="false" responsive="true" closeOnEscape="true">

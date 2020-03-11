@@ -1,7 +1,11 @@
 @import 'parts/header';
 @import 'parts/menu';
-@import 'parts/right-pane';
 @import 'parts/sidebar';
+
+html,
+body {
+  height: 100%;
+}
 
 body,
 .layout-container {
@@ -84,5 +88,17 @@ body,
     width: 100%;
     height: 100%;
     z-index: 990 !important;
+  }
+}
+
+.hide-in-iframe {
+  body.in-iframe & {
+    display: none !important;
+  }
+}
+
+.show-in-iframe {
+  body:not(.in-iframe) & {
+    display: none !important;
   }
 }

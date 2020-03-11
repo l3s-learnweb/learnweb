@@ -2,84 +2,33 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:lw="http://l3s.de/learnweb">
 
-    <ui:param name="loginRequired" value="true"/>
-    <ui:param name="pageTitle" value="#{msg.activity_stream}"/>
-    <ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
+<ui:param name="loginRequired" value="true"/>
+<ui:param name="pageTitle" value="#{msg.activity_stream}"/>
+<ui:param name="helpText" value="#{msg.myhomeActivityHelp}"/>
 
-    <ui:define name="breadcrumb">
-        <lw:breadcrumb-item link="myhome/activity.jsf" title="#{msg.activity_stream}">
-            <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
-        </lw:breadcrumb-item>
-    </ui:define>
+<ui:define name="breadcrumb">
+    <lw:breadcrumb-item link="myhome/activity.jsf" title="#{msg.activity_stream}">
+        <ui:decorate template="/WEB-INF/templates/blocks/breadcrumb/nav_list_first.xhtml"/>
+    </lw:breadcrumb-item>
+</ui:define>
 
-    <ui:define name="center_layout">
-        <h:form>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesView"/>
-            <p:remoteCommand name="resourceUpdatedHook" update=":resourcesView"/>
-            <p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl" oncomplete="PF('learnweb').showRightPane();"/>
-        </h:form>
+<ui:define name="center_layout">
+    <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
+    <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
 
-        <h:panelGroup id="resourcesView" layout="block">
-            <!-- dummy for right pane -->
-        </h:panelGroup>
+    <p:panel header="#{msg.activity_stream}">
+        #{msg.activity_message}
 
-        <p:panel header="#{msg.activity_stream}">
-            #{msg.activity_message}
-
-            <p:repeat value="#{activityResourceBean.newsList}" var="logEntry" varStatus="status">
-                <div class="#{status.last ? 'pt-3' : 'py-3 border-bottom'}">
-                    <div class="d-flex align-items-center log-entry">
-                        <img class="profile-picture mr-3" src="#{logEntry.userImage}" alt="Profile picture"/>
-
-                        <div class="log-details">
-                            <p class="mb-0 log-description">
-                                <h:outputText value="#{logEntry.description}" escape="false"/>
-                                <h:panelGroup rendered="#{logEntry.queryNeeded}">
-                                    <h:outputText value=" #{msg.with_query}" escape="false"/>
-                                    <h:outputLink styleClass="log-query" value="search.jsf">
-                                        <h:outputText value=" #{logEntry.resource.query}" escape="false"/>
-                                        <f:param name="query" value="#{logEntry.resource.query}"/>
-                                        <f:param name="action" value="web"/>
-                                    </h:outputLink>
-                                    <h:outputText value=" #{msg.from_source} #{logEntry.resource.source.label} " escape="false"/>
-                                </h:panelGroup>
-                            </p>
-                            <p class="small font-weight-light mb-0 log-date">
-                                <lw:timeAgo date="#{logEntry.date}"/>
-                            </p>
-                        </div>
-                    </div>
-
-                    <h:panelGroup styleClass="mt-3" layout="block" rendered="#{not empty logEntry.resource}">
-                        <h:panelGroup layout="block" styleClass="res-container">
-                            <h:panelGroup styleClass="res-grid" layout="block">
-                                <ui:repeat var="res" value="#{logEntry.resource}">
-                                    <h:panelGroup styleClass="res-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-                                        <ui:decorate template="/WEB-INF/templates/blocks/resources/single_res_block.xhtml">
-                                            <ui:param name="res" value="#{res}"/>
-                                        </ui:decorate>
-                                    </h:panelGroup>
-                                </ui:repeat>
-                            </h:panelGroup>
-                        </h:panelGroup>
-                    </h:panelGroup>
-
-                    <h:panelGroup styleClass="mt-3" rendered="#{logEntry.resource!=null}">
-                        <h:outputText value="#{msg.tags}: " escape="false" rendered="#{not empty logEntry.resource.tagsAsString}"/>
-                        <h:outputText value=" #{logEntry.resource.tagsAsString} " rendered="#{not empty logEntry.resource.tagsAsString}" escape="false"/>
-                    </h:panelGroup>
-                </div>
-            </p:repeat>
-        </p:panel>
-
-    </ui:define>
-
-    <ui:define name="right_layout">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"></ui:decorate>
-    </ui:define>
-
+        <ui:repeat value="#{activityResourceBean.newsList}" var="logEntry" varStatus="status">
+            <ui:decorate template="/WEB-INF/templates/blocks/user/log-entry.xhtml">
+                <ui:param name="showPreview" value="true"/>
+                <ui:param name="status" value="#{status}"/>
+                <ui:param name="logEntry" value="#{logEntry}"/>
+            </ui:decorate>
+        </ui:repeat>
+    </p:panel>
+</ui:define>
 </ui:composition>

@@ -160,3 +160,9 @@ function attachEditor(elementId, editorType, configValues) {
 
   window.docEditor = docEditor;
 }
+
+$(() => {
+  if (window.self !== window.top) {
+    $(document.body).addClass('in-iframe');
+  }
+});

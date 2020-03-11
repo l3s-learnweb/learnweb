@@ -3,7 +3,8 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:p="http://primefaces.org/ui" xmlns:lw="http://l3s.de/learnweb">
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:lw="http://l3s.de/learnweb">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="pageTitle" value="#{msg['Submission.overview_title']}"/>
@@ -12,7 +13,6 @@
     <ui:define name="metadata">
         <f:metadata>
             <f:viewParam name="submission_id" value="#{submissionModeratorBean.submissionId}"/>
-            <f:viewAction action="#{resourceDetailBean.onLoad}"/>
             <f:viewAction action="#{submissionModeratorBean.onLoad}"/>
         </f:metadata>
     </ui:define>
@@ -32,17 +32,6 @@
     <ui:define name="center_layout">
         <h:outputStylesheet library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.css"/>
         <h:outputScript library="vendor" name="fancybox-v3.5.7/jquery.fancybox.min.js" target="body"/>
-        <h:outputScript library="learnweb-layout" name="js/right-pane.js" target="body"/>
-        <h:outputScript library="learnweb-layout" name="js/group-resources.js" target="body"/>
-
-        <h:form>
-            <p:remoteCommand name="commandSelectResource" actionListener="#{submissionBean.actionSelectGroupItem}" update=":right_pane :growl"
-                             global="false" onstart="PF('rightPaneOverlay').show();PF('learnweb').showRightPane();" oncomplete="PF('rightPaneOverlay').hide()"/>
-            <p:remoteCommand name="resourceAddedHook" update=":resourcesWrapper"
-                             global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-            <p:remoteCommand name="resourceUpdatedHook" update=":user_submissions"
-                             global="false" onstart="PF('resourcesOverlay').show();" oncomplete="PF('resourcesOverlay').hide();onResourcesUpdated();"/>
-        </h:form>
 
         <h:panelGroup layout="block" id="resourcesWrapper">
             <p:blockUI block="resourcesWrapper" widgetVar="resourcesOverlay">
@@ -91,18 +80,13 @@
                                 </div>
                             </div>
 
-                            <h:panelGroup rendered="#{logEntry.resource!=null}">
+                            <h:panelGroup rendered="#{logEntry.resource != null}">
                                 <div class="row">
-                                    <ui:fragment rendered="#{not empty logEntry.resource.thumbnail3}">
-                                        <div class="col-5 col-md-3">
-                                            <h:form>
-                                                <p:commandLink update=":right_pane">
-                                                    <f:setPropertyActionListener target="#{resourceDetailBean.viewResource}" value="#{logEntry.resource}"/>
-                                                    <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
-                                                </p:commandLink>
-                                            </h:form>
-                                        </div>
-                                    </ui:fragment>
+                                    <h:outputLink styleClass="col-5 col-md-3" value="resource.jsf" pt:data-fancybox="resource" rendered="#{not empty logEntry.resource.thumbnail3}">
+                                        <f:param name="resource_id" value="#{logEntry.resource.id}"/>
+
+                                        <img class="w-100" src="#{logEntry.resource.thumbnail1.url}" alt="#{logEntry.resource.title}"/>
+                                    </h:outputLink>
 
                                     <div class="col-auto d-flex flex-column mt-2">
                                         <span>
@@ -119,6 +103,7 @@
                             <h:panelGroup id="resourceGrid" styleClass="res-grid mt-3" layout="block" rendered="#{not empty userSubmission.resources}">
                                 <ui:repeat value="#{userSubmission.resources}" var="res">
                                     <h:outputLink styleClass="d-block res-item text-decoration-none" value="resource.jsf"
+                                                  pt:data-fancybox="resource"
                                                   pt:data-itemType="resource"
                                                   pt:data-itemId="#{res.id}">
                                         <f:param name="resource_id" value="#{res.id}"/>
@@ -135,23 +120,5 @@
                 </h:panelGroup>
             </p:panel>
         </h:panelGroup>
-        <script type="application/javascript">
-            /**
-             * This event is fired every time when resources reloaded from backend, here you can update event listeners to use new elements
-             */
-            function onResourcesUpdated() {
-                createSelectableArea('user_submissions');
-            }
-
-            $(function () {
-                $(document).on('dblclick', '.res-item', openItems);
-                createSelectable('resourcesView');
-                onResourcesUpdated();
-            });
-        </script>
-    </ui:define>
-
-    <ui:define name="right_layout">
-        <ui:decorate template="/WEB-INF/templates/blocks/right-pane/right_pane.xhtml"/>
     </ui:define>
 </ui:composition>

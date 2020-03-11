@@ -73,8 +73,8 @@ public enum Action
 
     lock_rejected_edit_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // when one user editing resource and another one want to edit the same resource, but locker is not allowed it
     lock_interrupted_returned_resource(ActionTargetId.RESOURCE_ID, ActionCategory.RESOURCE), // when first user which edit resource after inactive time returns to editing, but locker is no longer belongs to it
-    lock_rejected_edit_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
-    lock_interrupted_returned_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER),
+    lock_rejected_edit_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // unused now, folders can be interrupted
+    lock_interrupted_returned_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // unused now, folders can be interrupted
     deleted_user_soft(ActionTargetId.USER_ID, ActionCategory.USER),
     deleted_user_hard(ActionTargetId.USER_ID, ActionCategory.USER),
     move_folder(ActionTargetId.FOLDER_ID, ActionCategory.FOLDER), // target_id = folder_id, param = folder name;

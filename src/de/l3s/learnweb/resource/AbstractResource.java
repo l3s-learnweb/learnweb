@@ -66,7 +66,7 @@ public abstract class AbstractResource implements HasId
 
     public boolean lockResource(User user)
     {
-        if(isEditPossible())
+        if(user != null && isEditPossible())
         {
             editLocker = new EditLocker(user);
             return true;

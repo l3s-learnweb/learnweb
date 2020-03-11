@@ -18,9 +18,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
     this.header = this.wrapper.children('.layout-header');
     this.menuButton = this.header.find('#menu-button');
 
-    this.rightPane = this.body.find('.layout-right-pane');
-    this.isRightPaneOpen = false;
-
     this._bindEvents();
 
     let currentRequest;
@@ -65,12 +62,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
       this.getWidgetVarById(e.currentTarget.id.replace('_modal', '')).hide();
     });
 
-    this.overlay.on('mouseup', () => {
-      if (this.isRightPaneOpen) {
-        this.hideRightPane();
-      }
-    });
-
     this.menuButton.off('click').on('click', (e) => {
       if (this.isDesktop()) {
         this.wrapper.removeClass('layout-wrapper-sidebar-mobile-active');
@@ -88,17 +79,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
       e.preventDefault();
     });
-
-    this.rightPane.on('click', '.layout-right-pane-close', (e) => {
-      this.hideRightPane();
-      this.updateSearchParams({ resource_id: null });
-
-      e.preventDefault();
-    });
-
-    if (this.rightPane.find('#right_pane_content div:not(.ui-blockui-content)').length) {
-      this.showRightPane();
-    }
   },
 
   updateSearchParams(searchParams, cleanExisting) {
@@ -116,20 +96,6 @@ PrimeFaces.widget.LearnwebTheme = PrimeFaces.widget.BaseWidget.extend({
 
     const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?${sp.toString()}`;
     window.history.pushState({ url: newUrl }, '', newUrl);
-  },
-
-  showRightPane() {
-    setTimeout(() => {
-      this.body.addClass('right-pane-open');
-      this.isRightPaneOpen = true;
-      this.resize();
-    }, 200); // this is required because on double click the overlay closes immediately
-  },
-
-  hideRightPane() {
-    this.body.removeClass('right-pane-open');
-    this.isRightPaneOpen = false;
-    this.resize();
   },
 
   isDesktop() {
@@ -278,8 +244,27 @@ function setPreference(prefKey, prefValue) {
  */
 $(() => {
   // We created a PrimeFaces widget without an active element, so we need manually tell PrimeFaces to run it
-  // After that, we can access any method of it by using `PF('learnweb')`, like `PF('learnweb').showRightPane();`
+  // After that, we can access any method of it by using `PF('learnweb')`
   PrimeFaces.cw('LearnwebTheme', 'learnweb', { id: 'learnweb' });
+
+  if ($.fancybox && $('[data-fancybox="resource"]').length) {
+    $().fancybox({
+      selector: '[data-fancybox="resource"]',
+      defaultType: 'iframe',
+      closeExisting: true,
+      arrows: false,
+      infobar: false,
+      toolbar: false,
+      slideClass: 'p-0',
+      hash: false,
+      iframe: {
+        css: {
+          height: '100%',
+          width: '100%',
+        },
+      },
+    });
+  }
 
   // This code is executed after all "on-page-ready" listeners
   $(() => $('.ui-loading').removeClass('ui-loading'));
@@ -293,6 +278,21 @@ PrimeFaces.widget.Dialog.prototype.show = (((_show) => function () {
   _show.call(this);
   this.resetPosition();
 })(PrimeFaces.widget.Dialog.prototype.show));
+
+/**
+ * Update p:linkButton focus styles
+ */
+PrimeFaces.widget.LinkButton = PrimeFaces.widget.BaseWidget.extend({
+  init(cfg) {
+    this._super(cfg);
+    PrimeFaces.skinButton(this.jq);
+
+    const button = this.jq;
+    this.jq.children('a')
+      .on('focus', () => button.addClass('ui-state-focus'))
+      .on('blur', () => button.removeClass('ui-state-focus ui-state-active'));
+  },
+});
 
 // noinspection JSUnusedGlobalSymbols
 /**
