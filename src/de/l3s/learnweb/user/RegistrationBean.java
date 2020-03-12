@@ -137,12 +137,15 @@ public class RegistrationBean extends ApplicationBean implements Serializable
             log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId(), null, user);
         }
 
-        if(mailRequired && !user.isEmailConfirmed())
+        if((mailRequired || StringUtils.isNotEmpty(email)) && !user.isEmailConfirmed())
         {
             user.sendEmailConfirmation();
-            confirmRequiredBean.setLoggedInUser(user);
 
-            return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+            if (mailRequired)
+            {
+                confirmRequiredBean.setLoggedInUser(user);
+                return "/lw/user/confirm_required.xhtml?faces-redirect=true";
+            }
         }
 
         return LoginBean.loginUser(this, user);

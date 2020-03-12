@@ -144,6 +144,16 @@ public class User implements Comparable<User>, Serializable, HasId
         return courses;
     }
 
+    public boolean isEmailRequired() throws SQLException
+    {
+        for (Course course : getCourses())
+        {
+            if (course.getOption(Course.Option.Users_Require_mail_address)) return true;
+        }
+
+        return false;
+    }
+
     public boolean isMemberOfCourse(int courseId) throws SQLException
     {
         for(Course course : getCourses())
