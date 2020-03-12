@@ -500,9 +500,16 @@ function doAction(action, extraAttr1, extraAttr2) {
     case 'edit':
       if (selected.size() === 1) {
         const item = selected.getItem(0);
-        commandEditFolder([
-          { name: 'itemId', value: item.id },
-        ]);
+        if (item.type === 'folder') {
+          commandEditFolder([
+            { name: 'itemId', value: item.id },
+          ]);
+        } else {
+          commandEditResource([
+            { name: 'itemType', value: item.type },
+            { name: 'itemId', value: item.id },
+          ]);
+        }
       } else {
         console.error('No resources selected.');
       }
