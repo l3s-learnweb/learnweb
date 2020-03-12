@@ -59,15 +59,15 @@
 							</p:commandLink>
 						</p:column>
 
-						<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.first_topic']}" filterable="true" filterBy="#{item.topicOne}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicOne}">
 							<h:outputText value="#{item.topicOne}" pt:data-itemId="#{item.entryId}" id="cell1" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.second_topic']}" filterable="true" filterBy="#{item.topicTwo}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicTwo}">
 							<h:outputText value="#{item.topicTwo}" pt:data-itemId="#{item.entryId}" id="cell2" />
 						</p:column>
-						<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
+						<p:column headerText="#{msg['Glossary.third_topic']}" filterable="true" filterBy="#{item.topicThree}" filterMatchMode="contains"
 							filterStyle="width: 90%;" sortBy="#{item.topicThree}">
 							<h:outputText value="#{item.topicThree}" pt:data-itemId="#{item.entryId}" id="cell3" />
 						</p:column>
@@ -145,7 +145,7 @@
                         <div class="p-grid">
 
 							<h:form id="import_form" prependId="false">
-							<h:panelGroup rendered="#{userBean.moderator}" styleClass="p-col-12">
+							<h:panelGroup rendered="false" styleClass="p-col-12">
 								<!-- disabled until completed -->
                                 <h:outputFormat value="#{msg['Glossary.overwrite_question']}" />
 								 <br/>
