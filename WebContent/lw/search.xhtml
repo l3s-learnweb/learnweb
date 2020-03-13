@@ -194,9 +194,9 @@
 
                     <div class="fg-row">
                         <h:outputText value="#{msg.add_to}:" escape="false"/>
-                        <p:tree value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true"
-                                 selectionMode="single" selection="#{searchBean.selectedNode}">
-                            <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+                        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
+                                animate="true" selectionMode="single" selection="#{selectLocationBean.targetNode}">
+                            <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
                             <p:treeNode type="group">
                                 <h:outputText id="group" value="#{node.title}"/>

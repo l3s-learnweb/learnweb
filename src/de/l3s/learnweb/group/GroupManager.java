@@ -27,6 +27,7 @@ import de.l3s.learnweb.group.Group.POLICY_VIEW;
 import de.l3s.learnweb.resource.AbstractResource;
 import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
+import de.l3s.learnweb.resource.ResourceContainer;
 import de.l3s.learnweb.resource.search.solrClient.SolrSearch;
 import de.l3s.learnweb.user.Course;
 import de.l3s.learnweb.user.Organisation.Option;
@@ -848,43 +849,43 @@ public class GroupManager
         return category;
     }
 
-    public TreeNode getFoldersTree(Group group, int selectedFolderId) throws SQLException
+    public TreeNode getFoldersTree(Group group, int activeFolder) throws SQLException
     {
-        if(group == null)
-            return null;
+        if(group == null) return null;
 
-        TreeNode root = new DefaultTreeNode("GroupFolders");
-        TreeNode rootFolder = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), root);
-        if(selectedFolderId == 0)
+        TreeNode treeNode = new DefaultTreeNode("GroupFolders");
+        TreeNode rootNode = new DefaultTreeNode("folder", new Folder(0, group.getId(), group.getTitle()), treeNode);
+        if(activeFolder == 0)
         {
-            rootFolder.setSelected(true);
-            rootFolder.setExpanded(true);
+            rootNode.setSelected(true);
+            rootNode.setExpanded(true);
         }
-        getChildNodesRecursively(group.getId(), 0, rootFolder, selectedFolderId);
-        return root;
+        getChildNodesRecursively(rootNode, group, activeFolder);
+        return treeNode;
     }
 
-    public void getChildNodesRecursively(int groupId, int parentFolderId, TreeNode parent, int selectedFolderId) throws SQLException
+    public void getChildNodesRecursively(TreeNode parentNode, ResourceContainer container, int activeFolderId) throws SQLException
     {
-        for(Folder folder : this.getFolders(groupId, parentFolderId))
+        List<Folder> folders = container.getSubFolders();
+        for(Folder folder : folders)
         {
-            TreeNode folderNode = new DefaultTreeNode("folder", folder, parent);
-            if(folder.getId() == selectedFolderId)
+            TreeNode folderNode = new DefaultTreeNode("folder", folder, parentNode);
+            if(folder.getId() == activeFolderId)
             {
                 folderNode.setSelected(true);
                 folderNode.setExpanded(true);
-                expandParent(folderNode);
+                expandToNode(folderNode);
             }
-            getChildNodesRecursively(groupId, folder.getId(), folderNode, selectedFolderId);
+            getChildNodesRecursively(folderNode, folder, activeFolderId);
         }
     }
 
-    private void expandParent(TreeNode treeNode)
+    private void expandToNode(TreeNode treeNode)
     {
         if(treeNode.getParent() != null)
         {
             treeNode.getParent().setExpanded(true);
-            expandParent(treeNode.getParent());
+            expandToNode(treeNode.getParent());
         }
     }
 

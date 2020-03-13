@@ -45,7 +45,7 @@
 
         <div class="ui-panel-content ui-widget-content flex-grow-1">
             <h:form id="group_folders_tree">
-                <p:tree value="#{groupResourcesBean.getFoldersTree(groupResourcesBean.group)}" var="node" datakey="#{node.id}"
+                <p:tree value="#{groupResourcesBean.foldersTree}" var="node" datakey="#{node.id}"
                         selectionMode="single" selection="#{groupResourcesBean.selectedTreeNode}" onNodeClick="openFolder(node.data('datakey'));"
                         styleClass="ui-tree-responsive ui-tree-no-root-icons" animate="true"
                         rendered="#{not empty groupResourcesBean.group.subFolders}">
@@ -212,8 +212,8 @@
     <h:outputText value="#{msg.add_to}:"/>
 
     <h:form>
-        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive" animate="true"
-                selectionMode="single" selection="#{selectLocationBean.targetNode}" style="max-height:50vh;min-width:300px;overflow:auto;">
+        <p:tree value="#{selectLocationBean.groupsAndFoldersTree}" var="node" styleClass="ui-tree-responsive ui-tree-limited"
+                animate="true" selectionMode="single" selection="#{selectLocationBean.targetNode}">
             <p:ajax event="select" listener="#{selectLocationBean.onTargetNodeSelect}"/>
 
             <p:treeNode type="group">

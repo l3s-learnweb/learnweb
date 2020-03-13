@@ -81,6 +81,12 @@ body {
     }
   }
 
+  .ui-dialog {
+    @include media-breakpoint-up(md) {
+      min-width: map-get($grid-breakpoints, 'sm');
+    }
+  }
+
   .ui-dialog-content .ui-tree {
     &:hover {
       border: 1px solid $inputHoverBorderColor;
@@ -88,43 +94,50 @@ body {
     border-color: $inputBorderColor;
   }
 
-  .ui-tree.ui-tree-responsive {
-    border: 0;
-    padding: 0;
-    background: none;
-    width: auto;
+  .ui-tree {
+    &.ui-tree-limited {
+      max-height: 50vh;
+      overflow: auto;
+    }
 
-    &:hover {
+    &.ui-tree-responsive {
       border: 0;
-    }
-
-    .ui-tree-container {
       padding: 0;
-      overflow: hidden;
-    }
+      background: none;
+      width: auto;
 
-    .ui-treenode-content {
-      display: flex;
-      align-items: center;
-
-      .ui-treenode-leaf-icon {
-        min-width: 16px;
+      &:hover {
+        border: 0;
       }
 
-      .ui-treenode-label {
-        @include text-truncate;
-      }
-    }
-
-    .ui-treenode {
-      &.ui-droppable-active {
-        background: lighten($themePrimaryAltColor, 30%);
-        border: 1px dashed $themePrimaryAltColor;
+      .ui-tree-container {
+        padding: 0;
+        overflow: hidden;
       }
 
-      &.ui-droppable-hover {
-        background: $themePrimaryAltColorDarker;
-        border: 1px solid $themePrimaryAltColorDarker;
+      .ui-treenode-content {
+        display: flex;
+        align-items: center;
+
+        .ui-treenode-leaf-icon {
+          min-width: 16px;
+        }
+
+        .ui-treenode-label {
+          @include text-truncate;
+        }
+      }
+
+      .ui-treenode {
+        &.ui-droppable-active {
+          background: lighten($themePrimaryAltColor, 30%);
+          border: 1px dashed $themePrimaryAltColor;
+        }
+
+        &.ui-droppable-hover {
+          background: $themePrimaryAltColorDarker;
+          border: 1px solid $themePrimaryAltColorDarker;
+        }
       }
     }
   }

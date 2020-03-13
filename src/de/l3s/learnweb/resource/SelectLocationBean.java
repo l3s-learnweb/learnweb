@@ -2,6 +2,8 @@ package de.l3s.learnweb.resource;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -16,6 +18,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.group.GroupManager;
+import de.l3s.learnweb.group.PrivateGroup;
 import de.l3s.learnweb.user.User;
 
 @Named
@@ -25,17 +28,12 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 6699391944318695838L;
     private static final Logger log = Logger.getLogger(SelectLocationBean.class);
 
-    private static final long TREE_CACHE_MS = 15_000L;
-
     private Group targetGroup;
     private Folder targetFolder;
 
     private transient TreeNode targetNode;
-
-    private transient long groupsTreeTime = 0L;
-    private transient long foldersTreeTime = 0L;
     private transient DefaultTreeNode groupsTree;
-    private transient DefaultTreeNode foldersTree;
+    private Instant groupsTreeUpdate;
 
     public Group getTargetGroup()
     {
@@ -99,45 +97,25 @@ public class SelectLocationBean extends ApplicationBean implements Serializable
         if (user == null)
             return null;
 
-        if(groupsTree == null || groupsTreeTime < (System.currentTimeMillis() - TREE_CACHE_MS))
+        if(groupsTree == null || groupsTreeUpdate.isBefore(Instant.now().minus(Duration.ofSeconds(15))))
         {
-            groupsTree = new DefaultTreeNode("GroupsAndFoldersTree");
+            GroupManager gm = Learnweb.getInstance().getGroupManager();
+            DefaultTreeNode treeNode = new DefaultTreeNode("WriteAbleGroups");
 
-            TreeNode myResourcesNode = new DefaultTreeNode("group", new Group(0, UtilBean.getLocaleMessage("myPrivateResources")), groupsTree);
-            myResourcesNode.setSelected(true);
+            Group privateGroup = new PrivateGroup(UtilBean.getLocaleMessage("myPrivateResources"), getUser());
+            TreeNode privateGroupNode = new DefaultTreeNode("group", privateGroup, treeNode);
+            privateGroupNode.setSelected(true);
 
             for(Group group : user.getWriteAbleGroups())
             {
-                TreeNode groupNode = new DefaultTreeNode("group", group, groupsTree);
-                GroupManager gm = Learnweb.getInstance().getGroupManager();
-                gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+                TreeNode groupNode = new DefaultTreeNode("group", group, treeNode);
+                gm.getChildNodesRecursively(groupNode, group, 0);
             }
-            groupsTreeTime = System.currentTimeMillis();
+
+            groupsTree = treeNode;
+            groupsTreeUpdate = Instant.now();
         }
 
         return groupsTree;
-    }
-
-    public TreeNode getFoldersTree() throws SQLException
-    {
-        User user = getUser();
-        if (user == null || targetGroup == null)
-            return null;
-
-        if(foldersTree == null || foldersTreeTime < (System.currentTimeMillis() - TREE_CACHE_MS))
-        {
-            foldersTree = new DefaultTreeNode("FoldersTree");
-
-            TreeNode rootFolder = new DefaultTreeNode("folder", new Folder(0, targetGroup.getId(), targetGroup.getTitle()), foldersTree);
-            if (targetFolder == null) rootFolder.setSelected(true);
-            rootFolder.setExpanded(true);
-
-            GroupManager gm = Learnweb.getInstance().getGroupManager();
-            gm.getChildNodesRecursively(targetGroup.getId(), 0, rootFolder, targetFolder != null ? targetFolder.getId() : 0);
-
-            foldersTreeTime = System.currentTimeMillis();
-        }
-
-        return foldersTree;
     }
 }

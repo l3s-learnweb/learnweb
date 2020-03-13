@@ -12,26 +12,24 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.TreeNode;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.group.Group;
 import de.l3s.learnweb.logging.Action;
-import de.l3s.learnweb.resource.Folder;
 import de.l3s.learnweb.resource.Resource;
 import de.l3s.learnweb.resource.ResourceDecorator;
 import de.l3s.learnweb.resource.ResourceMetadataExtractor;
 import de.l3s.learnweb.resource.ResourcePreviewMaker;
 import de.l3s.learnweb.resource.ResourceService;
 import de.l3s.learnweb.resource.ResourceType;
+import de.l3s.learnweb.resource.SelectLocationBean;
 import de.l3s.learnweb.resource.search.Search.GroupedResources;
 import de.l3s.learnweb.resource.search.SearchFilters.FILTERS;
 import de.l3s.learnweb.resource.search.filters.Filter;
@@ -57,9 +55,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private SearchFilters searchFilters;
 
     private ResourceDecorator selectedResource;
-    private TreeNode selectedNode;
-    private int selectedResourceTargetGroupId = 0;
-    private int selectedResourceTargetFolderId = 0;
 
     private SearchMode searchMode;
     private ResourceService searchService;
@@ -70,6 +65,9 @@ public class SearchBean extends ApplicationBean implements Serializable
     private static final int minResourcesPerGroup = 2;
 
     private List<GroupedResources> resourcesGroupedBySource = null;
+
+    @Inject
+    private SelectLocationBean selectLocationBean;
 
     public SearchBean()
     {
@@ -183,16 +181,16 @@ public class SearchBean extends ApplicationBean implements Serializable
             }
 
             newResource.setQuery(query);
-            //These metadata entries are not required while storing resource at the database
+            // These metadata entries are not required while storing resource at the database
             newResource.getMetadata().remove("first_timestamp");
             newResource.getMetadata().remove("last_timestamp");
 
-            log.debug("Add resource); group: " + selectedResourceTargetGroupId + "; folder: " + selectedResourceTargetFolderId);
-
             // add resource to a group if selected
-            newResource.setGroupId(selectedResourceTargetGroupId);
-            newResource.setFolderId(selectedResourceTargetFolderId);
-            user.setActiveGroup(selectedResourceTargetGroupId);
+            newResource.setGroup(selectLocationBean.getTargetGroup());
+            newResource.setFolder(selectLocationBean.getTargetFolder());
+            user.setActiveGroup(selectLocationBean.getTargetGroup());
+
+            log.debug("Add resource); group: " + newResource.getGroupId() + "; folder: " + newResource.getFolderId());
 
             // we need to check whether a Bing result is a PDF, Word or other document
             if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals(ResourceService.bing))
@@ -212,7 +210,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             createThumbnailThread.start();
 
             search.logResourceSaved(selectedResource.getRank(), getUser(), newResource.getId());
-            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResource.getRank());
+            log(Action.adding_resource, newResource.getGroupId(), newResource.getId(), search.getId() + " - " + selectedResource.getRank());
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         }
@@ -393,40 +391,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         this.selectedResource = decoratedResource;
     }
 
-    public TreeNode getSelectedNode()
-    {
-        return selectedNode;
-    }
-
-    public void setSelectedNode(TreeNode selectedNode)
-    {
-        this.selectedNode = selectedNode;
-    }
-
-    public void onNodeSelect(NodeSelectEvent event)
-    {
-        String type = event.getTreeNode().getType();
-
-        if("group".equals(type))
-        {
-            Group group = (Group) event.getTreeNode().getData();
-            if(group != null)
-            {
-                selectedResourceTargetGroupId = group.getId();
-                selectedResourceTargetFolderId = 0;
-            }
-        }
-        else if("folder".equals(type))
-        {
-            Folder folder = (Folder) event.getTreeNode().getData();
-            if(folder != null)
-            {
-                selectedResourceTargetGroupId = folder.getGroupId();
-                selectedResourceTargetFolderId = folder.getId();
-            }
-        }
-    }
-
     public String getView()
     {
         return view;
@@ -463,5 +427,15 @@ public class SearchBean extends ApplicationBean implements Serializable
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;
+    }
+
+    public SelectLocationBean getSelectLocationBean()
+    {
+        return selectLocationBean;
+    }
+
+    public void setSelectLocationBean(final SelectLocationBean selectLocationBean)
+    {
+        this.selectLocationBean = selectLocationBean;
     }
 }

@@ -22,8 +22,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.BaseMenuModel;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -34,7 +32,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.component.ActiveSubMenu;
 import de.l3s.learnweb.group.Group;
-import de.l3s.learnweb.group.GroupManager;
 import de.l3s.learnweb.user.Organisation.Option;
 import de.l3s.util.StringHelper;
 import de.l3s.util.bean.BeanHelper;
@@ -58,8 +55,6 @@ public class UserBean implements Serializable
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
 
-    private long groupsTreeCacheTime = 0L;
-    private DefaultTreeNode groupsTree;
     private BaseMenuModel sidebarMenuModel;
     private Instant sidebarMenuModelUpdate;
     private HashMap<String, String> anonymousPreferences = new HashMap<>(); // preferences for users who are not logged in
@@ -159,7 +154,6 @@ public class UserBean implements Serializable
         this.activeOrganisation = user.getOrganisation();
 
         //clear caches
-        this.groupsTree = null;
         this.sidebarMenuModel = null;
         this.newGroups = null;
         this.cacheShowMessageJoinGroup = true;
@@ -480,39 +474,6 @@ public class UserBean implements Serializable
     {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         return viewId.contains("group/resources.xhtml");
-    }
-
-    /**
-     * returns the groups tree where the user can add resources to
-     *
-     * @return
-     * @throws SQLException
-     */
-    public TreeNode getWriteAbleGroupsTree() throws SQLException
-    {
-        if(!isLoggedIn())
-            return null;
-
-        if(null == groupsTree || groupsTreeCacheTime + 10000L < System.currentTimeMillis())
-        {
-            groupsTreeCacheTime = System.currentTimeMillis();
-            groupsTree = new DefaultTreeNode("WriteAbleGroups");
-
-            GroupManager gm = Learnweb.getInstance().getGroupManager();
-            Group myResources = new Group(0, UtilBean.getLocaleMessage("myPrivateResources"));
-            TreeNode myResourcesNode = new DefaultTreeNode("group", myResources, groupsTree);
-            myResourcesNode.setSelected(true);
-
-            for(Group group : getUser().getWriteAbleGroups())
-            {
-                // group /lw/myhome/resources.jsf?group_id=#{node.id}">#{node.title}
-                // folder /lw/myhome/resources.jsf?folder_id=#{node.folderId}&amp;resource_id=0&amp;group_id=#{node.groupId}"
-                TreeNode groupNode = new DefaultTreeNode("group", group, groupsTree);
-                gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
-            }
-        }
-
-        return groupsTree;
     }
 
     public MenuModel getSidebarMenuModel() throws SQLException

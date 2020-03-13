@@ -168,7 +168,7 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
         }
         else
         {
-            group = new Group(0, UtilBean.getLocaleMessage("myPrivateResources"));
+            group = new PrivateGroup(UtilBean.getLocaleMessage("myPrivateResources"), getUser());
         }
 
         if(folderId > 0)
@@ -293,12 +293,12 @@ public class GroupResourcesBean extends ApplicationBean implements Serializable
     {
         if (folders == null)
         {
-            folders = getLearnweb().getGroupManager().getFolders(group.getId(), HasId.getIdOrDefault(currentFolder, 0));
+            folders = currentFolder == null ? group.getSubFolders() : currentFolder.getSubFolders();
         }
         return folders;
     }
 
-    public TreeNode getFoldersTree(Group group) throws SQLException
+    public TreeNode getFoldersTree() throws SQLException
     {
         if (foldersTree == null)
         {

@@ -30,6 +30,7 @@ import de.l3s.learnweb.logging.LogEntry;
 import de.l3s.learnweb.resource.File.TYPE;
 import de.l3s.learnweb.resource.archive.ArchiveUrl;
 import de.l3s.learnweb.user.User;
+import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
 public class Resource extends AbstractResource implements Serializable // AbstractResultItem,
@@ -325,6 +326,11 @@ public class Resource extends AbstractResource implements Serializable // Abstra
     public void setFolderId(int folderId)
     {
         this.folderId = folderId;
+    }
+
+    public void setFolder(Folder folder)
+    {
+        this.folderId = HasId.getIdOrDefault(folder, 0);
     }
 
     public Folder getFolder() throws SQLException

@@ -113,10 +113,10 @@ public class Group implements Comparable<Group>, HasId, Serializable, ResourceCo
     // caches
     private String categoryTitle;
     private String categoryAbbreviation;
-    private transient List<Link> documentLinks;
-    private transient List<User> members;
-    private transient List<Link> links;
-    private transient List<Folder> folders;
+    protected transient List<Link> documentLinks;
+    protected transient List<User> members;
+    protected transient List<Link> links;
+    protected transient List<Folder> folders;
     private transient Course course;
     private long cacheTime = 0L;
     private int resourceCount = -1;
