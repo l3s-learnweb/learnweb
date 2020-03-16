@@ -154,6 +154,8 @@ public class LogManager
 
         Set<Action> actions = new HashSet<>(Action.getActionsByCategory(ActionCategory.RESOURCE));
         actions.remove(Action.opening_resource);
+        actions.remove(Action.lock_interrupted_returned_resource);
+        actions.remove(Action.lock_rejected_edit_resource);
         StringBuilder sb = new StringBuilder();
         for(Action action : actions)
         {
