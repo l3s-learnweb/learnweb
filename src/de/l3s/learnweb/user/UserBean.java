@@ -436,46 +436,6 @@ public class UserBean implements Serializable
         return 0;
     }
 
-    /**
-     * Model for the group menu
-     *
-     * @return
-     */
-    public LinkedList<DefaultSubMenu> getGroupMenu()
-    {
-        LinkedList<DefaultSubMenu> menu = new LinkedList<>();
-        Integer groupId = ApplicationBean.getParameterInt("group_id");
-
-        try
-        {
-            for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
-            {
-                DefaultSubMenu submenu = new DefaultSubMenu();
-                submenu.setLabel(group.getLongTitle());
-                submenu.setId(Integer.toString(group.getId()));
-
-                if(groupId != null && groupId.equals(group.getId()))
-                {
-                    submenu.setExpanded(true);
-                }
-
-                menu.add(submenu);
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Can't create menu model", e);
-        }
-
-        return menu;
-    }
-
-    public boolean isGroupResourcesPage()
-    {
-        String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-        return viewId.contains("group/resources.xhtml");
-    }
-
     public MenuModel getSidebarMenuModel() throws SQLException
     {
         if(!isLoggedIn())

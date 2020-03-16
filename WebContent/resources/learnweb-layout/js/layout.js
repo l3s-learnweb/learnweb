@@ -208,7 +208,12 @@ PrimeFaces.widget.LearnwebMenu = PrimeFaces.widget.BaseWidget.extend({
   },
 
   markCurrentMenuItem() {
-    const currentPath = window.location.href;
+    let currentPath = window.location.href;
+    if (currentPath.includes('groups_')) {
+      const replace = currentPath.substring(currentPath.indexOf('_'), currentPath.indexOf('.'));
+      currentPath = currentPath.replace(replace, '');
+    }
+
     this.menuitemLinks.filter((i, el) => currentPath.indexOf(el.href) === 0).each((i, el) => {
       const $activeMenuLink = $(el);
       const $activeMenuItem = $activeMenuLink.closest('.ui-menuitem');
